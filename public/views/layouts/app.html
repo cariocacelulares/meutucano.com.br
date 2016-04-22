@@ -1,0 +1,40 @@
+<div class="page-sidebar" data-pages="sidebar">
+    <div static-include="views/partials/menu.html"></div>
+</div>
+<div class="page-container">
+    <div class="header">
+        <div class="pull-left sm-table">
+            <div class="header-inner">
+                <div class="brand inline">
+                    <img src="assets/img/logo-image.png" alt="logo" data-src="assets/img/logo-image.png" height="22">
+                </div>
+                <a ng-click="App.openSearch()" class="search-link" data-toggle="search"><i class="fa fa-search"></i><span class="bold">Buscar</span> no tucano</a>
+            </div>
+        </div>
+        <div class="pull-right">
+            <div class="visible-lg visible-md m-t-10">
+                <div class="pull-left p-r-15 b-r b-grey m-r-15" style="margin-top: 2px;" ng-controller="UploadController as Upload">
+                    <button ngf-select ngf-change="Upload.upload($files)" ngf-multiple="true" class="btn btn-success btn-cons"><i class="fa fa-upload"></i>&nbsp; Upload</button>
+                </div>
+                <div class="pull-left p-r-10 fs-12 font-heading" style="margin-top: 5px; line-height: 14px;">
+                    <span ng-bind="::App.user.name"></span><br>
+                    <span class="small hint-text">Administrador</span>
+                </div>
+                <button ng-click="App.logout()" class="btn btn-danger pull-right m-l-10" style="margin-top: 2px;"><i class="fa fa-sign-out"></i></button>
+            </div>
+            <!-- END User Info-->
+        </div>
+        <div static-include="views/partials/metas.html"></div>
+    </div>
+    <div class="page-content-wrapper">
+        <div class="content">
+            <div class="container-fluid container-fixed-lg m-t-20">
+                <div ui-view></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div ng-show="App.searchOpen" static-include="views/partials/search.html"></div>
+
+<!--<div static-include="views/partials/chat.html"></div>-->

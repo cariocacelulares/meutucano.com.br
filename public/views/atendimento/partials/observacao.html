@@ -1,0 +1,11 @@
+<h6 class="font-montserrat no-margin text-uppercase text-master bold">Adicionar observação</h6>
+<form ng-submit="Observacao.save()" novalidate="novalidate">
+    <div class="form-group m-t-20">
+        <textarea class="form-control" id="observacao" ng-model="Observacao.observacao" placeholder="Informe a observação do pedido" style="min-height: 140px;"></textarea>
+    </div>
+    <div class="pull-right">
+        <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
+        <button busy="Salvando..." type="submit" class="btn btn-primary">Salvar</button>
+    </div>
+    <div class="clearfix"></div>
+</form>

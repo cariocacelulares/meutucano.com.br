@@ -1,0 +1,86 @@
+{
+  "name": "satellizer",
+  "description": "Token-based AngularJS Authentication",
+  "version": "0.14.0",
+  "scripts": {
+    "start": "node ./examples/server/node/server.js",
+    "test": "karma start"
+  },
+  "main": "satellizer.js",
+  "homepage": "https://github.com/sahat/satellizer",
+  "bugs": {
+    "url": "https://github.com/sahat/satellizer/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sahat/satellizer.git"
+  },
+  "author": {
+    "name": "Sahat Yalkabov",
+    "email": "sahat@me.com",
+    "url": "http://sahatyalkabov.com"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-complexity": "~0.3.2",
+    "gulp-plumber": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "~1.5.2",
+    "gulp-header": "~1.7.1",
+    "karma": "^0.13.21",
+    "karma-coverage": "^0.5.3",
+    "karma-jasmine": "^0.3.7",
+    "karma-phantomjs-launcher": "^1.0.0"
+  },
+  "license": "MIT",
+  "tags": [
+    "authentication",
+    "login",
+    "token",
+    "jwt",
+    "angularjs",
+    "angular",
+    "auth",
+    "facebook",
+    "google",
+    "linkedin",
+    "twitter",
+    "foursquare",
+    "github",
+    "yahoo",
+    "oauth",
+    "oauth 1.0",
+    "oauth 2.0",
+    "oauth2",
+    "oauth1",
+    "sign-in",
+    "social",
+    "twitch"
+  ],
+  "gitHead": "56ead50881873dd40aaf82ad2701d9c412c32d27",
+  "_id": "satellizer@0.14.0",
+  "_shasum": "a08657e39713b48bf7754fd2f705394bbc971d7e",
+  "_from": "satellizer@*",
+  "_npmVersion": "3.6.0",
+  "_nodeVersion": "5.6.0",
+  "_npmUser": {
+    "name": "sahat",
+    "email": "sakhat@gmail.com"
+  },
+  "dist": {
+    "shasum": "a08657e39713b48bf7754fd2f705394bbc971d7e",
+    "tarball": "http://registry.npmjs.org/satellizer/-/satellizer-0.14.0.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "sahat",
+      "email": "sakhat@gmail.com"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-6-west.internal.npmjs.com",
+    "tmp": "tmp/satellizer-0.14.0.tgz_1456253773375_0.16997054452076554"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/satellizer/-/satellizer-0.14.0.tgz"
+}

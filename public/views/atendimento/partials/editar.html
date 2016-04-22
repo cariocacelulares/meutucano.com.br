@@ -1,0 +1,45 @@
+<h6 class="font-montserrat no-margin text-uppercase text-master bold">Editar rastreio</h6>
+<form ng-submit="Editar.save()" novalidate="novalidate">
+    <div class="row m-t-20">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="rastreio">Rastreio</label>
+                <input class="form-control" id="rastreio" ng-model="Editar.rastreio.rastreio" placeholder="Código de rastreio" required />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-5">
+            <div class="form-group">
+                <label for="cep">CEP</label>
+                <input class="form-control" id="cep" ng-model="Editar.cep" placeholder="CEP" required ui-br-cep-mask />
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-group">
+                <label for="data">Data de envio</label>
+                <div class="date-picker">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input class="form-control" id="data" ng-model="Editar.rastreio.data_envio_readable" placeholder="Envio" required ui-date-mask />
+                        <div class="picker-wrap">
+                            <date-picker ng-model="Editar.rastreio.data_envio_readable"></date-picker>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="prazo">Prazo</label>
+                <input class="form-control" id="prazo" ng-model="Editar.rastreio.prazo" placeholder="Prazo" required />
+            </div>
+        </div>
+    </div>
+    <div class="pull-right m-t-10">
+        <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
+        <button busy="Salvando..." type="submit" class="btn btn-primary">Salvar</button>
+    </div>
+    <div class="clearfix"></div>
+</form>

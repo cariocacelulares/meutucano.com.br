@@ -1,0 +1,126 @@
+<h6 class="font-montserrat no-margin text-uppercase text-master bold">Pedido de informação</h6>
+<form ng-submit="Pi.save()" novalidate="novalidate">
+    <div class="row m-t-20">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="codigo">Código da PI</label>
+                <div ng-class="{'input-group': !Pi.fullSend && !Pi.preSend}">
+                    <input ng-disabled="Pi.fullSend || Pi.preSend" id="codigo" class="form-control" ng-model="Pi.pi.codigo_pi" placeholder="Código da PI" required>
+                    <span ng-if="!Pi.fullSend && !Pi.preSend" class="input-group-btn">
+                        <button type="button" ng-click="Pi.openPi()" class="btn btn-success"><i class="fa fa-link"></i>&nbsp; Abrir PI</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="motivo">Motivo</label>
+                <select ng-disabled="Pi.fullSend || Pi.preSend"  ng-model="Pi.pi.motivo_status" id="motivo" class="form-control" required>
+                    <option value="0">Outro</option>
+                    <option value="2">Atraso</option>
+                    <option value="3">Extravio</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div ng-if="Pi.preSend || Pi.fullSend">
+        <hr>
+        <div ng-if="!Pi.fullSend" class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i>&nbsp; Incluir as informações abaixo apenas quando houver resposta dos correios.</div>
+        <div class="row m-t-10">
+            <div ng-class="{'col-md-12': Pi.pi.motivo_status == '0', 'col-md-3': Pi.pi.motivo_status !== '0'}">
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select ng-readonly="Pi.fullSend"  ng-model="Pi.pi.status" id="status" class="form-control" required>
+                        <option value="" disabled selected hidden>Procedênica</option>
+                        <option value="0">Improcedente</option>
+                        <option value="1">Procedente</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3" ng-if="Pi.pi.motivo_status != '0'">
+                <div class="form-group">
+                    <label for="motivo">Data de pagamento</label>
+                    <div class="date-picker">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input ng-readonly="Pi.fullSend"  class="form-control" id="data" ng-model="Pi.pi.data_pagamento_readable" placeholder="Data de pgto." required ui-date-mask />
+                            <div class="picker-wrap">
+                                <date-picker ng-model="Pi.pi.data_pagamento_readable"></date-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3" ng-if="Pi.pi.motivo_status != '0'">
+                <div class="form-group">
+                    <label for="valor">Valor pago</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                        <input ng-readonly="Pi.fullSend"  class="form-control" id="valor" ng-model="Pi.pi.valor_pago" placeholder="Valor ressarcido" required ui-number-mask />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3" ng-if="Pi.pi.motivo_status != '0'">
+                <div class="form-group">
+                    <label for="acao">Ação realizada</label>
+                    <select ng-readonly="Pi.fullSend"  ng-model="Pi.pi.acao" id="acao" class="form-control" required>
+                        <option value="" disabled selected hidden>Ação realizada</option>
+                        <option value="0">Reenvio</option>
+                        <option value="1">Cancelamento</option>
+                        <option value="2">Outro</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-10" ng-if="Pi.pi.motivo_status == 3 && Pi.pi.acao == 0">
+            <div class="col-md-4" ng-if="Pi.pi.acao == 0">
+                <div class="form-group">
+                    <label for="rastreio">Código de rastreio</label>
+                    <input ng-readonly="Pi.fullSend"  class="form-control" id="rastreio" ng-model="Pi.pi.rastreio_ref.rastreio" placeholder="Novo código" required />
+                </div>
+            </div>
+            <div class="col-md-4" ng-if="Pi.pi.acao == 0">
+                <div class="form-group">
+                    <label for="valor_frete">Valor do frete</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                        <input ng-readonly="Pi.fullSend"  class="form-control" id="valor_frete" ng-model="Pi.pi.rastreio_ref.valor" placeholder="Valor do novo frete" ui-number-mask required />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="pago_cliente">Pago pelo cliente</label>
+                    <select ng-readonly="Pi.fullSend"  ng-model="Pi.pi.pago_cliente" id="pago_cliente" class="form-control" required>
+                        <option value="0">Não</option>
+                        <option value="1">Sim</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div ng-if="Pi.pi.acao == 0 && !Pi.fullSend" class="alert alert-info"><i class="fa fa-info"></i>&nbsp; O Meu Tucano irá criar um novo rastreio com esse código para esse pedido.</div>
+        <div class="row m-t-10" ng-if="Pi.pi.motivo_status == 3 && Pi.pi.acao == 1">
+            <div class="col-md-12" ng-if="Pi.pi.acao == 1">
+                <div class="form-group">
+                    <label for="protocolo">Protocolo</label>
+                    <input ng-readonly="Pi.fullSend"  class="form-control" id="protocolo" ng-model="Pi.pi.protocolo" placeholder="Protocolo de cancelamento" required />
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-10">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="observacoes">Observações</label>
+                    <textarea ng-readonly="Pi.fullSend"  class="form-control" id="observacoes" ng-model="Pi.pi.observacoes" placeholder="Observacões gerais"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pull-right m-t-10">
+        <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
+        <button ng-disabled="Pi.fullSend" busy="Salvando..." type="submit" class="btn btn-primary">Salvar</button>
+    </div>
+    <div class="clearfix"></div>
+</form>

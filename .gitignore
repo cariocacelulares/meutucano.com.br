@@ -1,0 +1,8 @@
+/storage
+.env
+_ide_helper.php
+_ide_helper_models.php
+/node_modules
+/vendor
+/public/bower_components
+/.idea
