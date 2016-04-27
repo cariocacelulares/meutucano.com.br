@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7a16d4303617a06dd71e40c72c76b8d8",
-    "content-hash": "41cfcc24d735491f27101da364055cdf",
+    "hash": "ac82984e0d3310362dd32724c0873252",
+    "content-hash": "1a85908ebfb3cef5f0e4b95f79b5e333",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -533,16 +533,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.2.29",
+            "version": "dev-carioca",
             "source": {
                 "type": "git",
-                "url": "https://github.com/laravel/framework.git",
-                "reference": "e3d644eb131f18c5f3d28ff7bc678bc797091f20"
+                "url": "https://github.com/diego3g/framework.git",
+                "reference": "9e58277b04d4f76f2da1b64ebe609cc4265ce3cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/e3d644eb131f18c5f3d28ff7bc678bc797091f20",
-                "reference": "e3d644eb131f18c5f3d28ff7bc678bc797091f20",
+                "url": "https://api.github.com/repos/diego3g/framework/zipball/9e58277b04d4f76f2da1b64ebe609cc4265ce3cb",
+                "reference": "9e58277b04d4f76f2da1b64ebe609cc4265ce3cb",
                 "shasum": ""
             },
             "require": {
@@ -603,7 +603,7 @@
             },
             "require-dev": {
                 "aws/aws-sdk-php": "~3.0",
-                "mockery/mockery": "~0.9.2",
+                "mockery/mockery": "~0.9.4",
                 "pda/pheanstalk": "~3.0",
                 "phpunit/phpunit": "~4.1",
                 "predis/predis": "~1.0",
@@ -621,7 +621,8 @@
                 "predis/predis": "Required to use the redis cache and queue drivers (~1.0).",
                 "pusher/pusher-php-server": "Required to use the Pusher broadcast driver (~2.0).",
                 "symfony/css-selector": "Required to use some of the crawler integration testing tools (2.8.*|3.0.*).",
-                "symfony/dom-crawler": "Required to use most of the crawler integration testing tools (2.8.*|3.0.*)."
+                "symfony/dom-crawler": "Required to use most of the crawler integration testing tools (2.8.*|3.0.*).",
+                "symfony/psr-http-message-bridge": "Required to psr7 bridging features (0.2.*)."
             },
             "type": "library",
             "extra": {
@@ -641,7 +642,6 @@
                     "Illuminate\\": "src/Illuminate/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -657,7 +657,11 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2016-04-03 01:43:55"
+            "support": {
+                "issues": "https://github.com/laravel/framework/issues",
+                "source": "https://github.com/laravel/framework"
+            },
+            "time": "2016-04-20 17:14:52"
         },
         {
             "name": "league/flysystem",
@@ -1067,16 +1071,16 @@
         },
         {
             "name": "nfephp-org/nfephp",
-            "version": "v4.0.40",
+            "version": "dev-carioca",
             "source": {
                 "type": "git",
-                "url": "https://github.com/nfephp-org/nfephp.git",
-                "reference": "29cb6dfa45465455f0ebe4f1aedd4cc7952e9d49"
+                "url": "https://github.com/diego3g/nfephp.git",
+                "reference": "5b5ce72b14b00b15bff7d48d57f161db400c3aa9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nfephp-org/nfephp/zipball/29cb6dfa45465455f0ebe4f1aedd4cc7952e9d49",
-                "reference": "29cb6dfa45465455f0ebe4f1aedd4cc7952e9d49",
+                "url": "https://api.github.com/repos/diego3g/nfephp/zipball/5b5ce72b14b00b15bff7d48d57f161db400c3aa9",
+                "reference": "5b5ce72b14b00b15bff7d48d57f161db400c3aa9",
                 "shasum": ""
             },
             "require": {
@@ -1141,7 +1145,6 @@
                     "./libs/Extras/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0+",
                 "LGPL-3.0+"
@@ -1165,7 +1168,10 @@
                 "nfephp",
                 "sped"
             ],
-            "time": "2016-04-05 16:29:41"
+            "support": {
+                "source": "https://github.com/diego3g/nfephp/tree/carioca"
+            },
+            "time": "2016-04-20 17:16:59"
         },
         {
             "name": "nikic/php-parser",
@@ -1575,16 +1581,16 @@
         },
         {
             "name": "stavarengo/php-sigep",
-            "version": "dev-master",
+            "version": "dev-carioca",
             "source": {
                 "type": "git",
-                "url": "https://github.com/stavarengo/php-sigep.git",
-                "reference": "ec7460d7b26399334cc9bc4d0a3cc3af0abc0116"
+                "url": "https://github.com/diego3g/php-sigep.git",
+                "reference": "08476ee336d82794bed3f02332a65d2c1fec6589"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stavarengo/php-sigep/zipball/749ccd3709c1646846c4cab83d4d0412cf781d87",
-                "reference": "ec7460d7b26399334cc9bc4d0a3cc3af0abc0116",
+                "url": "https://api.github.com/repos/diego3g/php-sigep/zipball/08476ee336d82794bed3f02332a65d2c1fec6589",
+                "reference": "08476ee336d82794bed3f02332a65d2c1fec6589",
                 "shasum": ""
             },
             "require": {
@@ -1603,7 +1609,6 @@
                     "PhpSigep": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1618,7 +1623,10 @@
                 "correios",
                 "sigep"
             ],
-            "time": "2016-03-29 14:40:31"
+            "support": {
+                "source": "https://github.com/diego3g/php-sigep/tree/carioca"
+            },
+            "time": "2016-04-20 17:19:27"
         },
         {
             "name": "stavarengo/php-sigep-fpdf",
@@ -3142,6 +3150,74 @@
                 "zf2"
             ],
             "time": "2016-04-06 15:44:10"
+        },
+        {
+            "name": "zizaco/entrust",
+            "version": "5.2.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Zizaco/entrust.git",
+                "reference": "b749bff868026336dec1ba1a16c150728697353d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Zizaco/entrust/zipball/b749bff868026336dec1ba1a16c150728697353d",
+                "reference": "b749bff868026336dec1ba1a16c150728697353d",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/cache": "~5.0",
+                "illuminate/console": "~5.0",
+                "illuminate/support": "~5.0",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "illuminate/database": "~5.0",
+                "mockery/mockery": "dev-master",
+                "phpunit/phpunit": "~4.1",
+                "sami/sami": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/commands"
+                ],
+                "psr-4": {
+                    "Zizaco\\Entrust\\": "src/Entrust/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andrew Elkins",
+                    "homepage": "http://andrewelkins.com"
+                },
+                {
+                    "name": "Zizaco Zizuini",
+                    "email": "zizaco@gmail.com"
+                },
+                {
+                    "name": "Ben Batschelet",
+                    "homepage": "http://github.com/bbatsche"
+                },
+                {
+                    "name": "Michele Angioni",
+                    "email": "michele.angioni@gmail.com"
+                }
+            ],
+            "description": "This package provides a flexible way to add Role-based Permissions to Laravel",
+            "keywords": [
+                "acl",
+                "auth",
+                "illuminate",
+                "laravel",
+                "permission",
+                "roles"
+            ],
+            "time": "2016-03-24 15:24:42"
         }
     ],
     "packages-dev": [
@@ -4814,11 +4890,27 @@
             "time": "2015-02-23 05:43:08"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "alias": "5.2.29.0",
+            "alias_normalized": "5.2.29.0",
+            "version": "dev-carioca",
+            "package": "laravel/framework"
+        },
+        {
+            "alias": "1.0.x-dev",
+            "alias_normalized": "1.0.9999999.9999999-dev",
+            "version": "dev-carioca",
+            "package": "stavarengo/php-sigep"
+        }
+    ],
     "minimum-stability": "stable",
     "stability-flags": {
+        "laravel/framework": 20,
         "stavarengo/php-sigep": 20,
         "stavarengo/php-sigep-fpdf": 20,
+        "nfephp-org/nfephp": 20,
+        "zizaco/entrust": 20,
         "xethron/migrations-generator": 20,
         "way/generators": 20
     },

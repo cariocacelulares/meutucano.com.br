@@ -61,7 +61,7 @@
         /**
          * REST interceptor
          */
-        .run(function(Restangular, $http, $state, apiUrl) {
+        .run(function(Restangular, $http, $state, apiUrl, toaster) {
             Restangular.setErrorInterceptor(function(response, deferred, responseHandler) {
                 if (response.status === 401) { // Atualiza token expirado
                     $http.get(apiUrl + '/token', {
@@ -78,6 +78,12 @@
                 } else if ([400].indexOf(response.status) >= 0) { // Redireciona ao login caso token seja inválido
                     localStorage.removeItem('user');
                     $state.go('login');
+                } else { // Erros de API
+                    if (!response.data.msg) {
+                        toaster.pop('error', 'Erro', 'Não foi possível processar a operação, contate o administrador!');
+                    } else {
+                        toaster.pop('error', 'Erro', response.data.msg);
+                    }
                 }
 
                 return true;

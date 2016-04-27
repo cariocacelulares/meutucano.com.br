@@ -6,14 +6,15 @@
     "type": "project",
     "require": {
         "php": ">=5.5.9",
-        "laravel/framework": "5.2.*",
+        "laravel/framework": "dev-carioca as 5.2.29.0",
         "tymon/jwt-auth": "0.5.*",
         "barryvdh/laravel-ide-helper": "^2.1",
         "barryvdh/laravel-debugbar": "^2.2",
-        "stavarengo/php-sigep": "dev-master",
+        "stavarengo/php-sigep": "dev-carioca as 1.0.x-dev",
         "stavarengo/php-sigep-fpdf": "dev-master",
         "itbz/fpdf": "^1.7",
-        "nfephp-org/nfephp": "^4.0"
+        "nfephp-org/nfephp": "dev-carioca",
+        "zizaco/entrust": "5.2.x-dev"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -60,12 +61,26 @@
         ]
     },
     "config": {
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+        "minimum-stability": "dev",
+        "secure-http": false
     },
     "repositories": {
-        "repo-name": {
+        "generators": {
             "type": "git",
             "url": "git@github.com:jamisonvalenta/Laravel-4-Generators.git"
+        },
+        "framework": {
+            "type": "vcs",
+            "url": "https://github.com/diego3g/framework.git"
+        },
+        "php-sigep": {
+            "type": "vcs",
+            "url": "https://github.com/diego3g/php-sigep.git"
+        },
+        "nfephp": {
+            "type": "vcs",
+            "url": "https://github.com/diego3g/nfephp.git"
         }
     }
 }
