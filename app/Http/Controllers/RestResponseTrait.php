@@ -14,7 +14,7 @@ trait RestResponseTrait
     {
         $response = [
             'code' => 201,
-            'status' => 'succcess',
+            'status' => 'success',
             'data' => $data
         ];
         return response()->json($response, $response['code']);
@@ -28,7 +28,7 @@ trait RestResponseTrait
     {
         $response = [
             'code' => 200,
-            'status' => 'succcess',
+            'status' => 'success',
             'data' => $data
         ];
         return response()->json($response, $response['code']);
@@ -42,7 +42,7 @@ trait RestResponseTrait
     {
         $response = [
             'code' => 200,
-            'status' => 'succcess',
+            'status' => 'success',
             'data' => $data
         ];
         return response()->json($response, $response['code']);

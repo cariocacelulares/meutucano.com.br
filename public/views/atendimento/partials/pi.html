@@ -52,7 +52,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3" ng-if="Pi.pi.motivo_status != '0'">
+            <div ng-class="{'col-md-6': Pi.pi.motivo_status == '2', 'col-md-3': Pi.pi.motivo_status == '3'}" ng-if="Pi.pi.motivo_status != '0'">
                 <div class="form-group">
                     <label for="valor">Valor pago</label>
                     <div class="input-group">
@@ -61,7 +61,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3" ng-if="Pi.pi.motivo_status != '0'">
+            <div class="col-md-3" ng-if="Pi.pi.motivo_status == '3'">
                 <div class="form-group">
                     <label for="acao">Ação realizada</label>
                     <select ng-readonly="Pi.fullSend"  ng-model="Pi.pi.acao" id="acao" class="form-control" required>

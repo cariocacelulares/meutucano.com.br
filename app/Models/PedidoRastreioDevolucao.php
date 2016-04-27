@@ -19,6 +19,11 @@ class PedidoRastreioDevolucao extends \Eloquent
     protected $primaryKey = 'rastreio_id';
 
     /**
+     * @var bool
+     */
+    public $incrementing = false;
+
+    /**
      * @var array
      */
     protected $fillable = [

@@ -14,6 +14,11 @@ class PedidoImposto extends \Eloquent
     /**
      * @var bool
      */
+    public $incrementing = false;
+
+    /**
+     * @var bool
+     */
     public $timestamps = false;
 
     /**

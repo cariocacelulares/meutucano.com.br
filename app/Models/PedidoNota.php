@@ -12,6 +12,11 @@ class PedidoNota extends \Eloquent
     protected $primaryKey = 'pedido_id';
 
     /**
+     * @var bool
+     */
+    public $incrementing = false;
+
+    /**
      * @var array
      */
     protected $fillable = [
@@ -43,7 +48,7 @@ class PedidoNota extends \Eloquent
      */
     public function getNumeroAttribute()
     {
-        return substr($this->pedido_id, 0, -1);
+        return (substr($this->pedido_id, 0, -1)) ?: $this->pedido_id;
     }
 
     /**
@@ -53,7 +58,7 @@ class PedidoNota extends \Eloquent
      */
     public function getSerieAttribute()
     {
-        return substr($this->pedido_id, -1);
+        return (substr($this->pedido_id, -1)) ?: 1;
     }
 }
 

@@ -14,6 +14,11 @@ class PedidoRastreioPi extends \Eloquent
     protected $primaryKey = 'rastreio_id';
 
     /**
+     * @var bool
+     */
+    public $incrementing = false;
+
+    /**
      * @var array
      */
     protected $fillable = [
@@ -23,6 +28,7 @@ class PedidoRastreioPi extends \Eloquent
         'status',
         'data_pagamento',
         'valor_pago',
+        'pago_cliente',
         'protocolo',
         'acao',
         'observacoes'

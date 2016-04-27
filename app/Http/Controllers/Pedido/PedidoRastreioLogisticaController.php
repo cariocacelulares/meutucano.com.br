@@ -73,6 +73,11 @@ class PedidoRastreioLogisticaController extends Controller
                 $rastreio->save();
             }
 
+            if (Input::has('acao')) {
+                $rastreio_ref->status = 5;
+                $rastreio_ref->save();
+            }
+
             return $this->showResponse([$logistica]);
         } catch (\Exception $ex) {
             $data = ['exception' => $ex->getMessage() . $ex->getLine()];

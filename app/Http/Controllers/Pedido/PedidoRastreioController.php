@@ -3,7 +3,6 @@
 use App\Http\Controllers\RestControllerTrait;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Models\Pedido;
 use App\Models\PedidoRastreio;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
@@ -56,39 +55,6 @@ class PedidoRastreioController extends Controller
             ->get();
 
         return $this->listResponse($pedidos);
-    }
-
-    /**
-     * Devolução
-     *
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function devolucao($id)
-    {
-        try {
-            $model = self::MODEL;
-
-            $endereco = Pedido::findOrFail($id)->endereco;
-            $rastreio = $model::findOrFail($id);
-
-            $endereco->cep = Input::get('cep');
-            $endereco->save();
-
-            $rastreio->rastreio   = Input::get('rastreio');
-
-            if (strlen(Input::get('data_envio')) > 10)
-                $rastreio->data_envio = Carbon::createFromFormat('Y-m-d\TH:i:s.uP', Input::get('data_envio'))->format('Y-m-d');
-
-            $rastreio->prazo      = Input::get('prazo');
-
-            $rastreio->save();
-
-            return $this->showResponse(['endereco' => $endereco, 'rastreio' => $rastreio]);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
-        }
     }
 
     /**

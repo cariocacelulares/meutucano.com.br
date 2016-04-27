@@ -12,6 +12,11 @@ class Produto extends \Eloquent
     protected $primaryKey = 'sku';
 
     /**
+     * @var bool
+     */
+    public $incrementing = false;
+
+    /**
      * @var array
      */
     protected $fillable = [

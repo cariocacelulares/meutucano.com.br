@@ -26,8 +26,6 @@
             vm.searchOpen = false;
         });
 
-        //TODO: Recreate XML, nota, etiqueta and cancelar functions
-
         /**
          * Logout
          */

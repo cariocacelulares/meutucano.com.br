@@ -84,7 +84,9 @@ class PedidoRastreioPiController extends Controller
                 $rastreio->prazo      = PedidoRastreioController::deadline(Input::get('rastreio_ref.rastreio'), $rastreio_ref->pedido->endereco->cep);
 
                 $rastreio->save();
+            }
 
+            if (Input::has('status')) {
                 $rastreio_ref->status = 8;
                 $rastreio_ref->save();
             } else {
