@@ -78,6 +78,8 @@
                 } else if ([400].indexOf(response.status) >= 0) { // Redireciona ao login caso token seja inválido
                     localStorage.removeItem('user');
                     $state.go('login');
+                } else if ([403].indexOf(response.status) >= 0) { // Acesso negado ao recurso
+                    toaster.pop('error', 'Acesso negado', 'Você não possui acesso para concluir essa ação, contate o administrador!');
                 } else { // Erros de API
                     if (!response.data.msg) {
                         toaster.pop('error', 'Erro', 'Não foi possível processar a operação, contate o administrador!');
@@ -95,6 +97,29 @@
          */
         .config(function($httpProvider) {
             $httpProvider.interceptors.push("ToasterInterceptor");
+        })
+
+        /**
+         * Permissions to routes
+         */
+        .run(function($rootScope, $state) {
+            $rootScope.$on('$stateChangeStart', function(event, toState) {
+                if (toState.data && toState.data.roles) {
+                    var block = true;
+                    angular.forEach(toState.data.roles, function(role) {
+                        if (_.find($rootScope.currentUser.roles, {name: role})) {
+                            block = false;
+                        }
+                    });
+
+                    if (block) {
+                        event.preventDefault();
+                        $state.go('app.dashboard');
+                    }
+                }
+
+                return true;
+            });
         })
 
     ;

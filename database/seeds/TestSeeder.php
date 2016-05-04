@@ -16,6 +16,26 @@ class TestSeeder extends \Illuminate\Database\Seeder {
      */
     public function run()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+        $cliente  = factory(Cliente::class)->create([
+            'id' => 999
+        ]);
+        $endereco = factory(ClienteEndereco::class)->make([
+            'id' => 999
+        ]);
+        $cliente->enderecos()->save($endereco);
+
+        factory(Pedido::class)->create([
+            'id'                  => 999,
+            'cliente_id'          => $cliente->id,
+            'cliente_endereco_id' => $endereco->id,
+        ]);
+
+        factory(Produto::class)->create([
+            'sku' => 999
+        ]);
+
         foreach(range(1, 10) as $pedido_id) {
             $cliente  = factory(Cliente::class)->create();
             $endereco = factory(ClienteEndereco::class)->make();
@@ -40,12 +60,16 @@ class TestSeeder extends \Illuminate\Database\Seeder {
                 'pedido_id' => $pedido_id,
             ]);
 
-            $produto = factory(Produto::class)->create();
+            $produto = factory(Produto::class)->create([
+                'sku' => $pedido_id
+            ]);
 
             factory(PedidoProduto::class)->create([
                 'pedido_id'   => $pedido_id,
                 'produto_sku' => $produto->sku
             ]);
         }
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

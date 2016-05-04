@@ -1,5 +1,6 @@
 <?php namespace Tests;
 
+use App\Models\Role;
 use App\Models\Usuario;
 use Illuminate\Contracts\Console\Kernel;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -55,13 +56,19 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
      */
     protected function setAuthUser()
     {
-        if (!$user = Usuario::find(1))
+        if (!$this->authUser) {
+            $role = new Role(['name' => 'admin']);
+            $role->save();
+
             $user = factory(Usuario::class)->create([
                 'id' => 1
             ]);
 
-        $this->authUser  = $user;
-        $this->userToken = JWTAuth::fromUser($user);
+            $user->attachRole($role);
+
+            $this->authUser  = $user;
+            $this->userToken = JWTAuth::fromUser($user);
+        }
     }
 }
 

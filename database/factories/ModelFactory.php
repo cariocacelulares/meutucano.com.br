@@ -85,10 +85,11 @@ $factory->define(\App\Models\PedidoRastreio::class, function (Faker\Generator $f
  */
 $factory->define(\App\Models\PedidoNota::class, function (Faker\Generator $faker) {
     return [
-        'pedido_id' => 999,
-        'data'      => $faker->dateTimeThisMonth->format('Y-m-d'),
-        'chave'     => str_random(44),
-        'arquivo'   => str_random(30) . '.xml',
+        'pedido_id'  => 999,
+        'usuario_id' => 1,
+        'data'       => $faker->dateTimeThisMonth->format('Y-m-d'),
+        'chave'      => str_random(44),
+        'arquivo'    => str_random(30) . '.xml',
     ];
 });
 
@@ -116,5 +117,18 @@ $factory->define(\App\Models\PedidoProduto::class, function (Faker\Generator $fa
         'produto_sku' => 999,
         'valor'       => $faker->randomFloat(2, 500, 3000),
         'quantidade'  => $faker->randomNumber(1),
+    ];
+});
+
+/**
+ * PedidoProduto
+ */
+$factory->define(\App\Models\UsuarioSenha::class, function (Faker\Generator $faker) {
+    return [
+        'usuario_id'  => 1,
+        'site'        => str_random(),
+        'url'         => $faker->url,
+        'usuario'     => $faker->userName,
+        'senha'       => $faker->password,
     ];
 });

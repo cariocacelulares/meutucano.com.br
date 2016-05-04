@@ -31,6 +31,7 @@ return [
         6 => 'Retirada',
         7 => 'Tratado',
         8 => 'Solucionado',
+        9 => 'Fantasma',
     ],
 
     /**
@@ -57,6 +58,15 @@ return [
             'cep'         => '89160-314',
             'uf'          => 'SC',
             'cidade'      => 'RIO DO SUL',
+        ]
+    ],
+
+    'anymarket' => [
+        'api' => [
+            'usuario' => 'dev@cariocacelulares.com.br',
+            'senha'   => '123',
+            'token'   => 'LG1457642434456R-1352804551',
+            'url'     => 'http://sandbox-api.anymarket.com.br/v2',
         ]
     ]
 ];

@@ -20,11 +20,85 @@ Route::group(['prefix' => '/api'], function() {
     Route::group(['middleware' => 'jwt.auth'], function() {
 //        Route::controller('metas', 'Meta\MetaController');
 
-        /**
-         * REST routes
-         */
-        Route::post('upload', 'UploadController@upload');
+        Route::post('upload', [
+            'middleware' => ['role:admin|gestor|atendimento|faturamento'],
+            'uses' => 'UploadController@upload'
+        ]);
         Route::get('search',  'SearchController@search');
+        Route::get('notas/xml/{id}',          'Pedido\PedidoNotaController@xml');
+        Route::get('notas/danfe/{id}',        'Pedido\PedidoNotaController@danfe');
+        Route::get('rastreios/etiqueta/{id}', 'Pedido\PedidoRastreioController@etiqueta');
+        Route::get('minhas-senhas',           'Interno\UsuarioSenhaController@currentUserPasswords');
+
+        /**
+         * Atendimento
+         */
+        Route::group(['middleware' => ['role:admin|atendimento']], function() {
+            /**
+             * Rastreios
+             */
+            Route::put('rastreios/refresh_all',         'Pedido\PedidoRastreioController@refreshAll');
+            Route::put('rastreios/refresh_status/{id}', 'Pedido\PedidoRastreioController@refreshStatus');
+            Route::put('rastreios/edit/{id}',           'Pedido\PedidoRastreioController@edit');
+            rest('rastreios', 'Pedido\PedidoRastreioController');
+
+            /**
+             * PI's
+             */
+            Route::put('pis/edit/{id}', 'Pedido\PedidoRastreioPiController@edit');
+            rest('pis', 'Pedido\PedidoRastreioPiController');
+
+            /**
+             * Devoluções
+             */
+            Route::put('devolucoes/edit/{id}', 'Pedido\PedidoRastreioDevolucaoController@edit');
+            rest('devolucoes', 'Pedido\PedidoRastreioDevolucaoController');
+
+            /**
+             * Logística reversa
+             */
+            Route::put('logisticas/edit/{id}', 'Pedido\PedidoRastreioLogisticaController@edit');
+            rest('logisticas', 'Pedido\PedidoRastreioLogisticaController');
+        });
+
+        /**
+         * Faturamento
+         */
+        Route::group(['middleware' => ['role:admin|faturamento']], function() {
+
+            /**
+             * Listagem de notas por usuário
+             */
+            Route::get('notas/faturamento', 'Pedido\PedidoNotaController@notasFaturamento');
+
+            /**
+             * Código de rastreio
+             */
+            Route::get('codigos/gerar/{servico}', 'Codigo\FaturamentoCodigoController@generateCode');
+        });
+
+        /**
+         * Administração
+         */
+        Route::group(['middleware' => ['role:admin']], function() {
+
+            /**
+             * Listagem de notas por usuário
+             */
+            Route::get('notas/faturamento', 'Pedido\PedidoNotaController@notasFaturamento');
+
+            /**
+             * Código de rastreio
+             */
+            Route::get('codigos/gerar/{servico}', 'Codigo\FaturamentoCodigoController@generateCode');
+
+            /**
+             * Usuários
+             */
+            rest('usuarios', 'Interno\UsuarioController');
+            rest('senhas', 'Interno\UsuarioSenhaController');
+            Route::get('senhas/usuario/{id}', 'Interno\UsuarioSenhaController@userPassword');
+        });
 
         /**
          * Pedidos
@@ -32,37 +106,9 @@ Route::group(['prefix' => '/api'], function() {
         rest('pedidos', 'Pedido\PedidoController');
 
         /**
-         * Rastreios
-         */
-        Route::put('rastreios/refresh_all',         'Pedido\PedidoRastreioController@refreshAll');
-        Route::put('rastreios/refresh_status/{id}', 'Pedido\PedidoRastreioController@refreshStatus');
-        Route::put('rastreios/edit/{id}',           'Pedido\PedidoRastreioController@edit');
-        Route::get('rastreios/etiqueta/{id}',       'Pedido\PedidoRastreioController@etiqueta');
-        rest('rastreios', 'Pedido\PedidoRastreioController');
-
-        /**
          * Notas
          */
-        Route::get('notas/xml/{id}', 'Pedido\PedidoNotaController@xml');
-        Route::get('notas/danfe/{id}', 'Pedido\PedidoNotaController@danfe');
         rest('notas', 'Pedido\PedidoNotaController');
-
-        /**
-         * PI's
-         */
-        Route::put('pis/edit/{id}', 'Pedido\PedidoRastreioPiController@edit');
-        rest('pis', 'Pedido\PedidoRastreioPiController');
-
-        /**
-         * Devoluções
-         */
-        Route::put('devolucoes/edit/{id}', 'Pedido\PedidoRastreioDevolucaoController@edit');
-        rest('devolucoes', 'Pedido\PedidoRastreioDevolucaoController');
-
-        /**
-         * Logística reversa
-         */
-        Route::put('logisticas/edit/{id}', 'Pedido\PedidoRastreioLogisticaController@edit');
-        rest('logisticas', 'Pedido\PedidoRastreioLogisticaController');
     });
 });
+

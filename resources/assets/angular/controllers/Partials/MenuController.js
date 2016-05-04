@@ -38,18 +38,6 @@
         };
 
         /**
-         * Check permission for menu
-         *
-         * @param menu
-         * @returns {boolean}
-         */
-        vm.permissaoMenu = function(menu) {
-
-
-            return true;
-        };
-
-        /**
          * Retrieve menu itens
          * @type {*[]}
          */
@@ -62,7 +50,7 @@
             {
                 title: 'Atendimento',
                 icon: 'fa-user-md',
-                grupo: ['atendimento'],
+                roles: ['admin', 'atendimento'],
                 sub: [
                     {
                         title: 'Rastreio',
@@ -74,40 +62,15 @@
             {
                 title: 'Faturamento',
                 icon: 'fa-barcode',
-                sref: $state.href('app.faturamento.etiqueta')
-            },
-            {
-                title: 'Gestor',
-                icon: 'fa-money',
-                grupo: ['gestor'],
-                sub: [
-                    {
-                        title: 'Painel',
-                        icon: 'fa-dashboard',
-                        sref: $state.href('app.gestor.dashboard')
-                    },
-                    {
-                        title: 'Monitoramento',
-                        icon: 'fa-user-secret',
-                        sref: $state.href('app.gestor.monitoramento.marketplace')
-                    },
-                    {
-                        title: 'Relatórios',
-                        icon: 'fa-file-pdf-o',
-                        sub: [
-                            {title: 'Por marketplace', sref: $state.href('app.gestor.estatisticas.marketplace')},
-                            {title: 'Por estado', sref: $state.href('app.gestor.estatisticas.estado')},
-                            {title: 'Por produto', sref: $state.href('app.gestor.estatisticas.produto')}
-                        ]
-                    }
-                ]
+                roles: ['admin', 'faturamento'],
+                sref: $state.href('app.faturamento.notas')
             },
             {
                 title: 'Interno',
                 icon: 'fa-desktop',
                 sub: [
-                    {title: 'Usuários', sref: $state.href('app.interno.usuarios.list'), grupo: ['admin']},
-                    {title: 'Minhas senhas', sref: $state.href('app.interno.usuarios.edit', {id: $rootScope.currentUser.id})}
+                    {title: 'Usuários', icon: 'fa-users', sref: $state.href('app.interno.usuarios'), roles: ['admin']},
+                    {title: 'Minhas senhas', icon: 'fa-key', sref: $state.href('app.interno.senhas.minhas')}
                 ]
             }
         ];

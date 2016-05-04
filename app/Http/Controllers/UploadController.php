@@ -12,6 +12,7 @@ use App\Models\PedidoRastreio;
 use App\Models\Produto;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
  * Class UploadController
@@ -29,7 +30,7 @@ class UploadController extends Controller
     public function upload()
     {
         try {
-            $usuario  = Input::get('usuario');
+            $fantasma = Input::get('fantasma');
             $arquivos = Input::file('arquivos');
             $test     = Input::get('test', false);
 
@@ -185,7 +186,7 @@ class UploadController extends Controller
                  */
                 $nota = PedidoNota::findOrNew($idPedido);
                 $nota->pedido_id  = $idPedido;
-                $nota->usuario_id = $usuario;
+                $nota->usuario_id = JWTAuth::parseToken()->authenticate()->id;
                 $nota->data       = $dataNota;
                 $nota->chave      = $chave;
                 $nota->arquivo    = $notaArquivo;
@@ -249,6 +250,7 @@ class UploadController extends Controller
                     $pedidoRastreio->servico    = $metodoEnvio;
                     $pedidoRastreio->valor      = $freteTotal;
                     $pedidoRastreio->prazo      = $prazoEntrega;
+                    $pedidoRastreio->status     = ($fantasma) ? 9 : 0;
 
                     $pedidoRastreio->save();
                 }
@@ -289,8 +291,6 @@ class UploadController extends Controller
                 }
 
                 $uploadCount++;
-
-
             }
 
             $data = ['msg' => sprintf('Foram importados %d arquivo(s) de %d enviado(s).', $uploadCount, count($arquivos))];

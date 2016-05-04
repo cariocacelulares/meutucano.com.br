@@ -51,6 +51,8 @@ return [
 
         Way\Generators\GeneratorsServiceProvider::class,
         Xethron\MigrationsGenerator\MigrationsGeneratorServiceProvider::class,
+
+        Zizaco\Entrust\EntrustServiceProvider::class,
     ],
 
 
@@ -90,6 +92,8 @@ return [
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
 
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
+
+        'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
     ],
 
 ];

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 trait RestControllerTrait
 {
     use RestResponseTrait;
+
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */

@@ -13,7 +13,7 @@
          *
          * @param files
          */
-        vm.upload = function (files) {
+        vm.upload = function (files, ghost) {
             if (files && files.length) {
                 $rootScope.$broadcast('loading');
                 Upload.upload({
@@ -21,7 +21,7 @@
                     headers: {Authorization: 'Bearer '+ localStorage.getItem("satellizer_token")},
                     data: {
                         arquivos: files,
-                        usuario: $rootScope.currentUser.id
+                        fantasma: ghost
                     }
                 }).success(function (response) {
                     $rootScope.$broadcast('upload');

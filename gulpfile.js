@@ -4,7 +4,6 @@ require('laravel-elixir-angular');
 
 elixir(function(mix) {
     mix
-        .phpUnit()
         .sass('app.scss', 'public/assets/css', 'app.css')
         .angular("resources/assets/angular/controllers/", "public/assets/js/src/", "controllers.js")
         .angular("resources/assets/angular/services/",    "public/assets/js/src/", "services.js")

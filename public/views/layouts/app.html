@@ -13,12 +13,15 @@
         </div>
         <div class="pull-right">
             <div class="visible-lg visible-md m-t-10">
-                <div class="pull-left p-r-15 b-r b-grey m-r-15" style="margin-top: 2px;" ng-controller="UploadController as Upload">
-                    <button ngf-select ngf-change="Upload.upload($files)" ngf-multiple="true" class="btn btn-success btn-cons"><i class="fa fa-upload"></i>&nbsp; Upload</button>
+                <div roles="admin|gestor|atendimento|faturamento" class="pull-left p-r-15 b-r b-grey m-r-15" style="margin-top: 2px;" ng-controller="UploadController as Upload">
+                    <div class="btn-group">
+                        <button title="Fazer upload de notas normais" ngf-select ngf-change="Upload.upload($files, false)" ngf-multiple="true" class="btn btn-success btn-cons m-r-0"><i class="fa fa-upload"></i>&nbsp; Upload</button>
+                        <button title="Fazer upload de notas fantasmas" ngf-select ngf-change="Upload.upload($files, true)" ngf-multiple="true" class="btn btn-warning m-l-0"><i class="fa fa-snapchat-ghost"></i></button>
+                    </div>
                 </div>
                 <div class="pull-left p-r-10 fs-12 font-heading" style="margin-top: 5px; line-height: 14px;">
                     <span ng-bind="::App.user.name"></span><br>
-                    <span class="small hint-text">Administrador</span>
+                    <small class="hint-text" ng-bind="::App.user.email"></small>
                 </div>
                 <button ng-click="App.logout()" class="btn btn-danger pull-right m-l-10" style="margin-top: 2px;"><i class="fa fa-sign-out"></i></button>
             </div>
@@ -36,5 +39,3 @@
 </div>
 
 <div ng-show="App.searchOpen" static-include="views/partials/search.html"></div>
-
-<!--<div static-include="views/partials/chat.html"></div>-->

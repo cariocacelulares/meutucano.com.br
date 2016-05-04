@@ -30,7 +30,10 @@
                  */
                 .state('app.atendimento', {
                     url: '/atendimento',
-                    templateUrl: 'views/layouts/default.html'
+                    templateUrl: 'views/layouts/default.html',
+                    data: {
+                        roles: ['admin', 'atendimento']
+                    }
                 })
 
                 .state('app.atendimento.rastreio', {
@@ -39,6 +42,56 @@
                     controller: 'RastreioController as Rastreio'
                 })
 
+                /**
+                 * Faturamento
+                 */
+                .state('app.faturamento', {
+                    url: '/faturamento',
+                    templateUrl: 'views/layouts/default.html',
+                    data: {
+                        roles: ['admin', 'faturamento']
+                    }
+                })
+
+                .state('app.faturamento.notas', {
+                    url: '/notas',
+                    templateUrl: 'views/faturamento/notas.html',
+                    controller: 'FaturamentoController as Faturamento'
+                })
+
+                /**
+                 * Usuários
+                 */
+                .state('app.interno', {
+                    url: '/interno',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.interno.usuarios', {
+                    url: '/usuarios',
+                    templateUrl: 'views/interno/usuarios.html',
+                    controller: 'UsuarioController as Usuario',
+                    data: {
+                        roles: ['admin']
+                    }
+                })
+
+                .state('app.interno.senhas', {
+                    url: '/senhas',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.interno.senhas.usuario', {
+                    url: '/usuario/{id}',
+                    templateUrl: 'views/interno/senhas/usuario.html',
+                    controller: 'UsuarioSenhaController as UsuarioSenha'
+                })
+
+                .state('app.interno.senhas.minhas', {
+                    url: '/minhas',
+                    templateUrl: 'views/interno/senhas/minhas.html',
+                    controller: 'MinhaSenhaController as MinhaSenha'
+                })
             ;
         });
 })();

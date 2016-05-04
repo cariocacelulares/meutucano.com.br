@@ -15,7 +15,7 @@ class CreateClienteEnderecosTable extends Migration {
 		Schema::create('cliente_enderecos', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('cliente_id')->unsigned();
+			$table->integer('cliente_id')->unsigned()->index('ClienteEnderecoCliente');
 			$table->integer('cep')->unsigned();
 			$table->string('rua', 250)->nullable()->default('');
 			$table->string('numero', 20)->nullable();

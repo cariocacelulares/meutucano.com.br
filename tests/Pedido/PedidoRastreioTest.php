@@ -39,7 +39,7 @@ class PedidoRastreioTest extends TestCase
             'data_envio' => '2016-04-10',
             'rastreio'   => 'PJ123BR',
             'prazo'      => '5',
-            'status'     => '2',
+            'status'     => '0',
         ], $rastreio->getAttributes());
 
         $endereco = $rastreio->pedido->endereco;
@@ -56,7 +56,7 @@ class PedidoRastreioTest extends TestCase
             'rastreio'   => 'PJ123BR',
             'prazo'      => '5',
             'data_envio' => '2016-04-10',
-            'status'     => 0
+            'status'     => 3
         ]);
         $rastreio->save();
 
@@ -71,7 +71,7 @@ class PedidoRastreioTest extends TestCase
         ]);
 
         $rastreio = PedidoRastreio::find(1);
-        $this->assertEquals(2, $rastreio->status);
+        $this->assertEquals(3, $rastreio->status);
     }
 
     /**

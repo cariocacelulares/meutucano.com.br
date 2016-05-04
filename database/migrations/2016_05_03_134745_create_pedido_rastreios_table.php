@@ -15,8 +15,8 @@ class CreatePedidoRastreiosTable extends Migration {
 		Schema::create('pedido_rastreios', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('pedido_id')->unsigned();
-			$table->integer('rastreio_ref_id')->unsigned()->nullable();
+			$table->integer('pedido_id')->unsigned()->index('PedidoRastreioPedido');
+			$table->integer('rastreio_ref_id')->unsigned()->nullable()->index('PedidoRastreioRastreioRef');
 			$table->boolean('tipo')->default(0);
 			$table->date('data_envio');
 			$table->string('rastreio', 20)->default('');

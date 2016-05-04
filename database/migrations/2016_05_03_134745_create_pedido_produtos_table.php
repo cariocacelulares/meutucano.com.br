@@ -15,8 +15,8 @@ class CreatePedidoProdutosTable extends Migration {
 		Schema::create('pedido_produtos', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('pedido_id')->unsigned();
-			$table->integer('produto_sku')->unsigned();
+			$table->integer('pedido_id')->unsigned()->index('PedidoProdutoPedido');
+			$table->integer('produto_sku')->unsigned()->index('PedidoProdutoProduto');
 			$table->decimal('valor', 10);
 			$table->integer('quantidade')->unsigned()->default(1);
 		});

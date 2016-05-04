@@ -1,0 +1,62 @@
+<div class="row m-b-20">
+    <div class="col-md-6">
+        <div class="widget-16-header">
+            <span class="icon-thumbnail bg-master-light pull-left text-master"><i class="fa fa-key"></i></span>
+            <div class="pull-left">
+                <strong class="page-title no-margin font-montserrat all-caps fs-13">Senhas</strong><br>
+                <small class="small-hint">Senhas para acessos internos.</small>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="pull-right">
+            <button ng-click="UsuarioSenha.create()" class="btn btn-primary" style="margin-top: 3px;"><i class="fa fa-user-plus"></i>&nbsp; Nova</button>
+        </div>
+    </div>
+</div>
+<hr>
+<table class="table m-b-0" cellpadding="0" cellspacing="0" ts-wrapper>
+    <thead>
+    <tr>
+        <th width="200" class="text-center">Serviço</th>
+        <th>Link</th>
+        <th width="200">Usuário</th>
+        <th width="200">Senha</th>
+        <th width="130" style="min-width: 130px;"></th>
+    </tr>
+    </thead>
+    <tbody ng-if="UsuarioSenha.loading">
+    <tr>
+        <td colspan="50">
+            <div class="progress-circle-indeterminate m-t-20 m-b-20" style="display: block;"></div>
+        </td>
+    </tr>
+    </tbody>
+    <tbody ng-if="UsuarioSenha.senhas && !UsuarioSenha.loading">
+    <tr ng-repeat="senha in UsuarioSenha.senhas" ts-repeat>
+        <td class="text-center" ng-bind="senha.site"></td>
+        <td>
+            <a target="_blank" ng-if="senha.url" ng-href="{{ senha.url }}">Acessar</a>
+        </td>
+        <td ng-bind="senha.usuario"></td>
+        <td ng-bind="senha.senha"></td>
+        <td>
+            <div class="dropdown">
+                <button class="btn btn-info dropdown-toggle" type="button">
+                    <i class="fa fa-cog"></i>&nbsp; Ações
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a title="Editar senha" ng-click="UsuarioSenha.editar(senha)"><i class="fa fa-edit"></i>&nbsp; Editar</a>
+                    </li>
+                    <li>
+                        <a title="Deletar senha" ng-click="UsuarioSenha.destroy(senha.id)"><i class="fa fa-trash"></i>&nbsp; Deletar</a>
+                    </li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>

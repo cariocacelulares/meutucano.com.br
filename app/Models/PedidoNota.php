@@ -1,4 +1,5 @@
 <?php namespace App\Models;
+use Carbon\Carbon;
 
 /**
  * Class PedidoNota
@@ -21,12 +22,17 @@ class PedidoNota extends \Eloquent
      */
     protected $fillable = [
         'pedido_id',
+        'usuario_id',
         'data',
         'chave',
         'arquivo'
     ];
 
+    /**
+     * @var array
+     */
     protected $appends = [
+        'created_at_readable',
         'numero',
         'serie'
     ];
@@ -59,6 +65,15 @@ class PedidoNota extends \Eloquent
     public function getSerieAttribute()
     {
         return (substr($this->pedido_id, -1)) ?: 1;
+    }
+
+    /**
+     * Return readable created_at
+     *
+     * @return string
+     */
+    protected function getCreatedAtReadableAttribute() {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y H:i');
     }
 }
 

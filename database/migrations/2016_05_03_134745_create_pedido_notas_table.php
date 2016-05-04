@@ -15,7 +15,7 @@ class CreatePedidoNotasTable extends Migration {
 		Schema::create('pedido_notas', function(Blueprint $table)
 		{
 			$table->integer('pedido_id')->unsigned()->primary();
-			$table->integer('usuario_id')->unsigned();
+			$table->integer('usuario_id')->unsigned()->index('UsuarioNotaUsuario');
 			$table->date('data');
 			$table->string('chave', 50)->default('');
 			$table->string('arquivo', 250)->nullable();

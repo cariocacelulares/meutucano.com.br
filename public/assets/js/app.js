@@ -18,6 +18,7 @@
             'ngOnload',
             'tableSort',
             'mp.datePicker',
-            'ui.utils.masks'
+            'ui.utils.masks',
+            'angular-clipboard'
         ]);
 })();

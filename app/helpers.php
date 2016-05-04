@@ -1,12 +1,12 @@
 <?php
 
-/**
- * Define REST route
- *
- * @param $path
- * @param $controller
- */
 if (!function_exists('rest')) {
+    /**
+     * Define REST route
+     *
+     * @param $path
+     * @param $controller
+     */
     function rest($path, $controller)
     {
         Route::resource($path, $controller,
@@ -14,13 +14,13 @@ if (!function_exists('rest')) {
     }
 }
 
-/**
- * Format date as timestamp
- *
- * @param $data
- * @return int
- */
 if (!function_exists('dataToTimestamp')) {
+    /**
+     * Format date as timestamp
+     *
+     * @param $data
+     * @return int
+     */
     function dataToTimestamp($data){
         $ano = substr($data, 6,4);
         $mes = substr($data, 3,2);
@@ -29,13 +29,13 @@ if (!function_exists('dataToTimestamp')) {
     }
 }
 
-/**
- * Sum 1 day to timestamp
- *
- * @param $data
- * @return bool|string
- */
 if (!function_exists('Soma1dia')) {
+    /**
+     * Sum 1 day to timestamp
+     *
+     * @param $data
+     * @return bool|string
+     */
     function Soma1dia($data){
         $datetime = DateTime::createFromFormat('d/m/Y', $data);
         date_add($datetime, date_interval_create_from_date_string('1 days'));
@@ -43,14 +43,14 @@ if (!function_exists('Soma1dia')) {
     }
 }
 
-/**
- * Sum util days to the date
- *
- * @param $xDataInicial
- * @param $xSomarDias
- * @return bool|string
- */
 if (!function_exists('SomaDiasUteis')) {
+    /**
+     * Sum util days to the date
+     *
+     * @param $xDataInicial
+     * @param $xSomarDias
+     * @return bool|string
+     */
     function SomaDiasUteis($xDataInicial, $xSomarDias)
     {
         $dia = 86400;

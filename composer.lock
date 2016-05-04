@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ac82984e0d3310362dd32724c0873252",
-    "content-hash": "1a85908ebfb3cef5f0e4b95f79b5e333",
+    "hash": "3166a608afead417a9a6202f9b8a5f9c",
+    "content-hash": "964917b6029ed136cfd82ff276dec5ce",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -1585,12 +1585,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/diego3g/php-sigep.git",
-                "reference": "08476ee336d82794bed3f02332a65d2c1fec6589"
+                "reference": "4543127ac62738f760df5d76acf8621f6e1d8eca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/diego3g/php-sigep/zipball/08476ee336d82794bed3f02332a65d2c1fec6589",
-                "reference": "08476ee336d82794bed3f02332a65d2c1fec6589",
+                "url": "https://api.github.com/repos/diego3g/php-sigep/zipball/4543127ac62738f760df5d76acf8621f6e1d8eca",
+                "reference": "4543127ac62738f760df5d76acf8621f6e1d8eca",
                 "shasum": ""
             },
             "require": {
@@ -1626,7 +1626,7 @@
             "support": {
                 "source": "https://github.com/diego3g/php-sigep/tree/carioca"
             },
-            "time": "2016-04-20 17:19:27"
+            "time": "2016-04-28 18:30:08"
         },
         {
             "name": "stavarengo/php-sigep-fpdf",
@@ -1660,6 +1660,49 @@
             ],
             "description": "Unofficial FPDF library - Cópia do FPDF 1.7 usado pelo projeto stavarengo/php-sigep.",
             "time": "2015-11-12 15:10:30"
+        },
+        {
+            "name": "sunra/php-simple-html-dom-parser",
+            "version": "v1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sunra/php-simple-html-dom-parser.git",
+                "reference": "a0b80ace086c7e09085669205e1b3c2c9c7a453c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sunra/php-simple-html-dom-parser/zipball/a0b80ace086c7e09085669205e1b3c2c9c7a453c",
+                "reference": "a0b80ace086c7e09085669205e1b3c2c9c7a453c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Sunra\\PhpSimple\\HtmlDomParser": "Src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "sunra",
+                    "email": "sunra@yandex.ru",
+                    "homepage": "http://github.com/sunra"
+                }
+            ],
+            "description": "Composer adaptation of: A HTML DOM parser written in PHP5+ let you manipulate HTML in a very easy way! Require PHP 5+. Supports invalid HTML. Find tags on an HTML page with selectors just like jQuery. Extract contents from HTML in a single line.",
+            "homepage": "https://github.com/sunra/php-simple-html-dom-parser",
+            "keywords": [
+                "dom",
+                "html",
+                "parser"
+            ],
+            "time": "2013-05-04 14:32:03"
         },
         {
             "name": "swiftmailer/swiftmailer",

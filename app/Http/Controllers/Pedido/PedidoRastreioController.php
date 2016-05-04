@@ -19,6 +19,7 @@ use PhpSigep\Model\Remetente;
 use PhpSigep\Model\ServicoAdicional;
 use PhpSigep\Model\ServicoDePostagem;
 use PhpSigep\Pdf\CartaoDePostagem;
+use Sunra\PhpSimple\HtmlDomParser;
 
 /**
  * Class PedidoNotaController
@@ -39,10 +40,12 @@ class PedidoRastreioController extends Controller
      */
     public function index()
     {
+        $model = self::MODEL;
+
         $fromDate = date("Y-m-d", strtotime("-1 month"));
         $toDate   = date("Y-m-d");
 
-        $pedidos = PedidoRastreio::with([
+        $pedidos = $model::with([
             'rastreioRef',
             'pi', 'pi.rastreioRef',
             'devolucao', 'devolucao.rastreioRef',
@@ -144,18 +147,18 @@ class PedidoRastreioController extends Controller
      */
     private function refresh($rastreio)
     {
-        $rastreamentoUrl = sprintf("http://developers.agenciaideias.com.br/correios/rastreamento/json/%s", $rastreio->rastreio);
-        $contents = file_get_contents($rastreamentoUrl);
-        $result = json_decode($contents, true);
-
-        $ultimoEvento = $result[sizeof($result) - 1];
+        $ultimoEvento = $this->lastStatus($rastreio->rastreio);
 
         $prazoEntrega = date('d/m/Y', strtotime($rastreio->data_envio));
         $prazoEntrega = \SomaDiasUteis($prazoEntrega, $rastreio->prazo);
         $prazoEntrega = date('Ymd', \dataToTimestamp($prazoEntrega));
 
         $status = 1;
-        if (strpos($ultimoEvento['detalhes'], 'Por favor, entre em contato conosco clicando') !== false) {
+        if (!$ultimoEvento['acao']) {
+            $status = $rastreio->status;
+        } elseif (strpos($ultimoEvento['detalhes'], 'por favor, entre em contato conosco clicando') !== false) {
+            $status = 3;
+        } elseif(strpos($ultimoEvento['acao'], 'fluxo postal') !== false) {
             $status = 3;
         } elseif (strpos($ultimoEvento['acao'], 'devolvido ao remetente') !== false) {
             $status = 5;
@@ -190,7 +193,8 @@ class PedidoRastreioController extends Controller
             $servicoPostagem = 40010;
         }
 
-        $correios = sprintf("http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx?nCdEmpresa=&sDsSenha=&sCepOrigem=%s&sCepDestino=%s&nVlPeso=1&nCdFormato=1&nVlComprimento=16&nVlAltura=10&nVlLargura=12&sCdMaoPropria=n&nVlValorDeclarado=100&sCdAvisoRecebimento=n&nCdServico=%s&nVlDiametro=0&StrRetorno=xml",
+        $correios = sprintf(
+            "http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx?nCdEmpresa=&sDsSenha=&sCepOrigem=%s&sCepDestino=%s&nVlPeso=1&nCdFormato=1&nVlComprimento=16&nVlAltura=10&nVlLargura=12&sCdMaoPropria=n&nVlValorDeclarado=100&sCdAvisoRecebimento=n&nCdServico=%s&nVlDiametro=0&StrRetorno=xml",
             Config::get('tucano.cep'),
             $cep,
             $servicoPostagem
@@ -199,6 +203,59 @@ class PedidoRastreioController extends Controller
         $prazoEntrega = $correios->cServico->PrazoEntrega;
 
         return $prazoEntrega;
+    }
+
+    /**
+     * Return the history from correios
+     *
+     * @param array|string $codigos
+     * @return array
+     */
+    public function historico($codigos)
+    {
+        $codigos = (!is_array($codigos)) ? [$codigos] : $codigos;
+
+        $detalhes = [];
+        foreach ($codigos as $key => $item) {
+            $correios = sprintf(
+                'http://websro.correios.com.br/sro_bin/txect01$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS=%s',
+                $item
+            );
+
+            $content = HtmlDomParser::file_get_html($correios);
+
+            $detalhes[$key]['codigo'] = $item;
+            $historico = [];
+            if (sizeof($content->find('table tr')) > 1) {
+                foreach ($content->find('table tr') as $index => $row) {
+                    if ($row->find('td', 0)->plaintext == 'Data')
+                        continue;
+
+                    if (sizeof($row->find('td')) > 1) {
+                        $historico[$index]['local'] = mb_strtolower(utf8_encode($row->find('td', 1)->plaintext));
+                        $historico[$index]['acao'] = mb_strtolower(utf8_encode($row->find('td', 2)->plaintext));
+                        $historico[$index]['detalhes'] = '';
+                    } else {
+                        $historico[$index - 1]['detalhes'] = mb_strtolower(utf8_encode($row->find('td', 0)->plaintext));
+                    }
+                }
+            }
+
+            $detalhes[$key]['historico'] = $historico;
+        }
+
+        return (sizeof($detalhes) == 1) ? $detalhes[0] : $detalhes;
+    }
+
+    /**
+     * Return last status from rastreio
+     *
+     * @param $codigoRastreio
+     * @return mixed
+     */
+    public function lastStatus($codigoRastreio)
+    {
+        return reset($this->historico($codigoRastreio)['historico']);
     }
 
     /**

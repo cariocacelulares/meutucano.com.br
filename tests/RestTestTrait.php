@@ -1,5 +1,7 @@
 <?php namespace Tests;
 
+use App\Models\PedidoNota;
+
 trait RestTestTrait
 {
     /**
@@ -48,6 +50,7 @@ trait RestTestTrait
         $c     = self::CONTROLLER;
         $model = $c::MODEL;
 
+        PedidoNota::destroy(1);
         $modelFactory = factory($model)->make();
         $attrs = $modelFactory->getAttributes();
 

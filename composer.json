@@ -14,7 +14,8 @@
         "stavarengo/php-sigep-fpdf": "dev-master",
         "itbz/fpdf": "^1.7",
         "nfephp-org/nfephp": "dev-carioca",
-        "zizaco/entrust": "5.2.x-dev"
+        "zizaco/entrust": "5.2.x-dev",
+        "sunra/php-simple-html-dom-parser": "v1.5.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
