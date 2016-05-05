@@ -35,6 +35,7 @@
     "ng-busy": "^0.2.0",
     "ng-onload": "^0.2.1",
     "restangular": "^1.5.2",
-    "satellizer": "^0.14.0"
+    "satellizer": "^0.14.0",
+    "raphael": "^2.2.0"
   }
 }

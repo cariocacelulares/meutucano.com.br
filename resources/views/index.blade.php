@@ -42,7 +42,7 @@
     <script src="assets/js/angular-pt_BR.js"></script>
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="bower_components/raphael/raphael-min.js"></script>
+    <script src="bower_components/raphael/raphael.min.js"></script>
     <script src="bower_components/morris.js/morris.min.js"></script>
     <script src="bower_components/angular-morris-chart/src/angular-morris-chart.min.js"></script>
 
