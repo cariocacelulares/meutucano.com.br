@@ -7,7 +7,7 @@
         /**
          * Paths
          */
-        .constant('apiUrl', 'http://localhost/dev/tucanov3/public/api')
+        .constant('apiUrl', 'http://192.168.2.170/tucano/public/api')
 
         /**
          * Auth config

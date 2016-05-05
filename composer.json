@@ -9,7 +9,6 @@
         "laravel/framework": "dev-carioca as 5.2.29.0",
         "tymon/jwt-auth": "0.5.*",
         "barryvdh/laravel-ide-helper": "^2.1",
-        "barryvdh/laravel-debugbar": "^2.2",
         "stavarengo/php-sigep": "dev-carioca as 1.0.x-dev",
         "stavarengo/php-sigep-fpdf": "dev-master",
         "itbz/fpdf": "^1.7",
@@ -24,7 +23,8 @@
         "symfony/css-selector": "2.8.*|3.0.*",
         "symfony/dom-crawler": "2.8.*|3.0.*",
         "xethron/migrations-generator": "dev-l5",
-        "way/generators": "dev-feature/laravel-five-stable"
+        "way/generators": "dev-feature/laravel-five-stable",
+        "barryvdh/laravel-debugbar": "^2.2"
     },
     "autoload": {
         "classmap": [
