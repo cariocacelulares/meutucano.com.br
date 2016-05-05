@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('MenuController', MenuController);
 
-    function MenuController($state, $rootScope) {
+    function MenuController($state) {
         var vm = this;
 
         /**

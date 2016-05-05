@@ -53,30 +53,7 @@ if (!function_exists('SomaDiasUteis')) {
      */
     function SomaDiasUteis($xDataInicial, $xSomarDias)
     {
-        $dia = 86400;
-        $datas = array();
-        $datas['pascoa'] = easter_date(date('Y'));
-        $datas['sexta_santa'] = $datas['pascoa'] - (2 * $dia);
-        $datas['carnaval'] = $datas['pascoa'] - (46 * $dia);
-        $datas['carnaval2'] = $datas['pascoa'] - (47 * $dia);
-        $datas['corpus_cristi'] = $datas['pascoa'] + (60 * $dia);
-        $feriados = [
-            '01/01',
-            '02/02',
-            date('d/m', $datas['carnaval']),
-            date('d/m', $datas['carnaval2']),
-            date('d/m', $datas['sexta_santa']),
-            date('d/m', $datas['pascoa']),
-            '21/04',
-            '01/05',
-            date('d/m', $datas['corpus_cristi']),
-            '07/09',
-            '20/09',
-            '12/10',
-            '02/11',
-            '15/11',
-            '25/12'
-        ];
+        $feriados = \Config::get('tucano.feriados');
 
         for ($j = 1; $j <= $xSomarDias; $j++) {
             $xDataInicial = Soma1dia($xDataInicial);
@@ -90,5 +67,46 @@ if (!function_exists('SomaDiasUteis')) {
             }
         }
         return $xDataInicial;
+    }
+}
+
+if (!function_exists('diasUteisPeriodo')) {
+    /**
+     * Sum util days to the date
+     *
+     * @param $dataInicial
+     * @param $dataFinal
+     * @param bool $apenasPerido
+     * @return bool|string
+     */
+    function diasUteisPeriodo($dataInicial, $dataFinal, $apenasPerido = false)
+    {
+        $feriados = \Config::get('tucano.feriados');
+
+        $inicio = DateTime::createFromFormat('d/m/Y', $dataInicial);
+        $final  = DateTime::createFromFormat('d/m/Y', $dataFinal);
+
+        $diasTotal = $final->diff($inicio)->days + 1;
+        $period = new DatePeriod($inicio, new DateInterval('P1D'), $final);
+
+        $diasMes = [];
+        foreach ($period as $datePeriod) {
+            if (in_array($datePeriod->format('d/m'), $feriados)) {
+                $diasTotal--;
+            } else if (in_array($datePeriod->format('w'), ['0', '6'])) {
+                $diasTotal--;
+            } else if ($apenasPerido == false) {
+                if (array_key_exists($datePeriod->format('n'), $diasMes))
+                    $diasMes[$datePeriod->format('n')]++;
+                else
+                    $diasMes[$datePeriod->format('n')] = 1;
+            }
+        }
+
+        if ($apenasPerido) {
+            return $diasTotal;
+        } else {
+            return ['total' => $diasTotal, 'mes' => $diasMes];
+        }
     }
 }

@@ -5,11 +5,42 @@
         .module('MeuTucano')
         .controller('AppController', AppController);
 
-    function AppController($auth, $state, $rootScope, focus, apiUrl, $window, $httpParamSerializer, ngDialog) {
+    function AppController($auth, $state, $rootScope, focus, apiUrl, $window, $httpParamSerializer, ngDialog, Restangular, $interval) {
         var vm = this;
 
         vm.searchOpen = false;
         vm.user = $rootScope.currentUser;
+        vm.metas = {};
+        vm.loadingMetas = false;
+
+        $rootScope.$on('upload', function() {
+            vm.loadMeta();
+        });
+
+        $rootScope.$on('loading', function() {
+            vm.loadingMetas = true;
+        });
+
+        $rootScope.$on('stop-loading', function() {
+            vm.loadingMetas = false;
+        });
+
+        vm.loadMeta = function() {
+            vm.loadingMetas = true;
+
+            Restangular.one('metas/atual').customGET().then(function(metas) {
+                vm.metas = metas;
+                vm.loadingMetas = false;
+            });
+        };
+        vm.loadMeta();
+
+        /**
+         * Timeout metas
+         */
+        $interval(function() {
+            vm.loadMeta();
+        }, 60000);
 
         /**
          * Open search overlay

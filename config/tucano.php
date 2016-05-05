@@ -19,6 +19,27 @@ return [
     'sedex' => ['DJ', 'DN', 'DM', 'DU', 'DV', 'DW'],
 
     /**
+     * Feriados
+     */
+    'feriados' => [
+        '01/01',
+        '02/02',
+        date('d/m', (easter_date(date('Y'))) - (46 * 86400)),
+        date('d/m', (easter_date(date('Y'))) - (47 * 86400)),
+        date('d/m', (easter_date(date('Y'))) - (2 * 86400)),
+        date('d/m', (easter_date(date('Y')))),
+        '21/04',
+        '01/05',
+        date('d/m', (easter_date(date('Y'))) + (60 * 86400)),
+        '07/09',
+        '20/09',
+        '12/10',
+        '02/11',
+        '15/11',
+        '25/12'
+    ],
+
+    /**
      * Status de rastreio
      */
     'status' => [
@@ -61,6 +82,9 @@ return [
         ]
     ],
 
+    /**
+     * Acesso da API da AnyMarket
+     */
     'anymarket' => [
         'api' => [
             'usuario' => 'dev@cariocacelulares.com.br',
