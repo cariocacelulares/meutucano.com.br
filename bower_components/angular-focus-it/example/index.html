@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Angular FocusIt module</title>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+	<script src="../angular-focus-it.min.js"></script>
+	<script src="app.js"></script>
+</head>
+<body ng-app="app">
+
+	<div ng-controller="HomeCtrl">
+
+		<h1>Angular FocusIt module</h1>
+		<p>AngularJs module to focus an HTML input element.</p>
+
+		<br>
+
+		<h3>Examples</h3>
+
+		<fieldset>
+			<legend>Focus trigged by controller</legend>
+
+			<input id="name" type="text" placeholder="Name">
+
+			<button type="button" ng-click="focusName()">Set Focus</button>
+		</fieldset>
+		
+		<br>
+
+		<fieldset>
+			<legend>Focus on click event</legend>
+			
+			<button type="button" focus-id="age" focus-on="click">Focus age</button>
+			<input id="age" type="number" placeholder="Age">
+		</fieldset>
+
+		<br>
+
+		<fieldset>
+			<legend>Focus on mouse over event</legend>
+
+			<label focus-id="country" focus-on="mouseover">Country</label>
+			<input id="country" type="text">
+		</fieldset>
+
+		<br>
+
+		<fieldset>
+			<legend>Focus on change event</legend>
+
+			<select focus-id="nextInput" focus-on="change">
+				<option value="0"></option>
+				<option value="1">Value 1</option>
+				<option value="2">Value 2</option>
+			</select>
+
+			<input type="text" id="nextInput" placeholder="Next input">
+		</fieldset>
+
+	</div>
+
+</body>
+</html>

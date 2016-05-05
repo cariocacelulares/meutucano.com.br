@@ -30,9 +30,9 @@
     </body>
 
     <!-- Application Dependencies -->
-    <script src="node_modules/angular/angular.min.js"></script>
-    <script src="node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
-    <script src="node_modules/satellizer/satellizer.min.js"></script>
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="bower_components/satellizer/satellizer.min.js"></script>
     <script src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
     <script src="bower_components/angular-focus-it/angular-focus-it.min.js"></script>
     <script src="bower_components/ng-busy/build/angular-busy.min.js"></script>

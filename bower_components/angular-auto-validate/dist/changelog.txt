@@ -1,0 +1,221 @@
+v1.19.3 30/11/2015
+Fixed a problem with ng-model-options updateOn blur/default with debounce not validating - a bit of a tricky problem!
+
+v1.19.2 30/11/2015
+Added ability for the library to delay showing validation hints on an element while async validators are firing.
+This functionality is enabled by default - to disbale it change the 'waitForAsyncValidators' option in the defaultFormValidationOptions
+on the validation provider. Or on a per form basis by adding the attribute wait-for-async-validators="true|false" on
+a form. See http://plnkr.co/edit/3YXEQAU051N4gFCRPi7S?p=preview for a demo.
+
+v1.19.1 16/11/2015
+Fixed problem with the de-bounce function in the ngModel decorator.
+Option added to the validator service to automatically scroll to the first invalid input.
+
+v1.19.0 25/10/2015
+Possible breaking change fixing i18n caching issue with en-us and en-gb files.  The default language
+is now 'default' and not en-gb.
+New Turkish translation.
+Updated German translation
+IE10 speed improvement when validating a form.
+The BS3 modifier no longer adds the has-feedback class if state icons are not enabled.
+Fixed issue when serialising the form controller to json
+You can now add the attribute disable-auto-validate="true" to an element and it won't validate.
+
+v1.18.17 2/09/2015
+Added pt-pt and zh-tw lang files
+
+v1.18.16 03/09/2015
+Fixes issue (https://github.com/jonsamwell/angular-auto-validate/issues/88) where the node is a comment.
+Fixes issue with validation error message placement with checkboxes and radio groups for the BS3 modifier.
+
+V1.18.15 01/09/2015
+Added nl-nl (Dutch) language file thanks to <Jonathan voor de Poorte>
+Added zh-cn (simplified chinese) language file thanks to <https://github.com/bwlee>
+Foundation modifier now checks for either the 'columns' or 'column' class as you can you either with foundation 5.
+Fixed issue https://github.com/jonsamwell/angular-auto-validate/issues/85 supportsNgModelOptions logic mistake
+
+V1.18.14 23/08/2015
+Fixed issue with globally changing default form validation options.
+
+V1.18.13 21/08/2015
+Added a default value for the form option validateOnFormSubmit in the validator.
+
+V1.18.12 20/08/2015
+Added the ability to defer validation until after a form submit by adding the attribute 'validate-on-form-submit="true"'
+to the form element.
+
+V1.18.11 20/08/2015
+Fixed issue ngModelDecorator not working with angular-material due to incorrect pre and post function invocations
+
+V1.18.10 03/08/2015
+Fixed issue #61 with globally disabling the library and enabling it for a particular form
+
+V1.18.9 03/08/2015
+Fixed #68
+Setting form to untouched and pristine when a form reset is requested
+
+V1.18.8 03/08/2015
+Reset a form programatically is now possible via the resetForm method on the form controllers autoValidateFormOptions object
+or by raising the event 'form:{formName}:reset on the controllers scope.  The formName is the value in the name attribute
+on the form tag which also corresponds to the formController.$name property.
+Fixes issue with removing external validation raised in https://github.com/jonsamwell/angular-auto-validate/issues/39
+
+V1.18.7 01/08/2015
+Added Spanish i18n file.
+Fixed issue https://github.com/jonsamwell/angular-auto-validate/issues/73
+Added the ability to reset the form via the form controller (https://github.com/jonsamwell/angular-auto-validate/issues/82)
+
+V1.18.6 16/04/2015
+Increased limit on findWithClassElementAsc in BS3Modifier to find an element.
+Fixed issues with globally disabling validation and only applying it on certain forms.
+
+V1.18.5 18/03/2015
+Fixed issue where a form would not validate when the submit button was clicked.
+
+V1.18.4 16/03/2015
+Added form attr option 'removeExternalValidationErrorsOnSubmit' to clear all the external validation warnings
+on an element when a form is validated.  Note: this is true by default so you don't need to include the attribute on the
+parent form.
+
+V1.18.3 16/03/2015
+Fixed typo in all lang files submitted by @priyank2005.
+Fixed issue with disabling validation on sub forms.
+
+V1.18.02 10/03/2015
+Fixed null ref issue when a control doesn't have a parent form so no autoValidateOptions were defined.
+
+V1.18.01 09/03/2015
+Fixed build issue which didn't include the new form options directive
+Applied a bit more sense to the version number.
+
+V1.17.23 09/03/2015
+Added Brazilian Portuguese i18n file translated by 'Silvana Marx Nakle'.
+Raised the recursion limit to find the parent form when using the registerCustomFormControl.
+Added the ability to disable validation on a form basis and also validate non visible elements on a form basis.
+BREAKING CHANGE to validateElement on the validationManger.  The third parameter is now the parent form's
+autoValidateFormOptions object on the form controller.  This can be left blank and will be found by the
+validationManager.
+
+V1.16.22 19/02/2015
+Fixed an issue with IE8 when iterating through the form child controls collect when a form is being validated.
+Added the ability to disable validation messages from appearing on elements.
+
+V1.15.22 13/02/2015
+Fixed issue #32: register-custom-form-control not validating via debounce due to missing force flag.
+Thanks to help from @abobwhite @slupekdev @pjwalmsley. Added a check in the validationManager
+to validate elements that have the register-custom-form-control directive on them.
+
+Fixed issue #33: ErrorMessageResolver uses non "ng-" prefixed attribute as default and can cause conflict with browser defaults (IE9).
+The default error message resolve now checks for the ng- attribute first rather than the
+non ng- attribute to fixed an issue with IE9.
+
+V1.14.22 28/01/2015
+Added check to makeDefault method on the BS3 element modifier to check the element is wrapped in a proper
+bs3 form structure.
+
+V1.13.22 - 06/12/2014
+ng-submit-force now validates the form before calling the ngSumbit function if it is true.
+Fixed a problem with the bootstrap 3 element modifier that set the has-error class on the parent form if it couldn't find
+a control-group css class on a parent.  If an invalid element structure is come across it will log an error.
+
+V1.12.21 - 01/12/2014
+Added Italian i18n translation from @flaviodelbianco
+
+v1.11.21 - 14/11/2014
+We have a weird situation some users are encountering where a custom control is valid but the ngModel is report it isn't and thus no valid error type can be found
+
+v1.10.21 - 11/11/2014
+Fixed version not being replace in the dist files.
+
+v1.9.21 - 11/11/2014
+Added ability to remove external validation (i.e. validation from the server applied via the ngModel or form controller).
+Update to spelling mistake in the german i18n file.
+
+v1.8.21 - 16/10/2014
+Elements are now only validated if they are not hidden.
+
+v1.7.21 - 16/10/2014
+Fixed issue the RC release of angular 1.3.0 which was throwing a 'link is undefined' error in the ngModelDecorator.
+WARNING: THIS COULD BE A BREAKING CHANGE TO PREVIOUS VERSIONS OF THIS LIBRARY - I have done my best to test but you never know.
+
+v1.6.20 - 12/09/2014
+ru-ru language file contributed.  Fixed issue with msg override attribute and double quoting if invalid quote characters are used.
+
+v1.5.20 - 30/08/2014
+Added a fix for the bootstrap 3 element modifier not handling styling elements with input-group-addon elements - tweaked css.
+
+v1.4.20 - 30/08/2014
+Added a fix for the bootstrap 3 element modifier not handling styling elements with input-group-addon elements.
+
+v1.3.20 - 27/08/2014
+Fixed issue when submitting a form - the ngSubmit handler ignored the form validation disable attribute disable-dynamic-validation
+and validated the form.
+
+v1.2.20 - 26/08/2014
+Added the ability to disable the modules validation for a whole form by adding the attribute disable-dynamic-validation
+on the form attribute.
+
+v1.1.20 - 20/08/2014
+Now following http://semver.org versions.  Added the concept of being able to register a custom form control so that it
+is included in the form validation process.  If you have a custom form control that should be validated i.e.
+<my-custom-element>...</my-custom-element> it will not be part of the forms HTMLFormControlsCollection and thus won't be
+included in the form submission element validation iteration although it will be on the Angular FormController (if it has a name attribute).
+So adding the directive register-custom-form-control="" to the control root and autoValidate will include it in the form
+(submission) validation process.
+
+v1.0.20 - 18/08/2014
+Resolve issue with child elements of directives with an isolated scope being validated when they are not user input controls.
+
+v1.0.19 - 14/08/2014
+Fixed problem with a control inside a directive with a custom scope being validated in the validateForm method of the
+validation controller.  This was happening for button elements only.
+
+v1.0.18 - 07/08/2014
+Renamed the debounce service to jcs-debounce as it was conflicting a service with the same name in angular-strap v2.
+
+v1.0.17 - 07/08/2014
+Added the ability to disable visual styling of an element in valid and invalid states at an element level.
+
+v1.0.16 - 06/08/2014
+Added the ability to override the error message type for an error message type to allow for custom error messages.
+
+v1.0.15 - 02/08/2014
+When $setPristine() is called on a ngModel controller this now returns the element to its default visual state.
+
+v1.0.14 - 31/07/2014
+Added German culture file contributed by https://github.com/miseeger
+
+v1.0.13 - 28/07/2014
+When the form is reset the $setPristine is called on the controls associated ngModel controller to ensure validation isn't fired
+again and makes performs validation again.
+Added the ability to globally enable/disable valid and invalid element styling.
+
+v1.0.12 - 28/07/2014
+Fixed bug with unbind reset listen on the formReset directive.
+
+v1.0.11 - 28/07/2014
+Added functionality to reset a form and remove all validation styling.
+
+v1.0.10 - 25/07/2014
+Ensured culture files are loaded with lowercase culture codes.
+
+v1.0.9 - 21/07/2014
+Fixed error with the foundation5ElementModifier not removing the '.error' class from a nested input element.
+
+v1.0.8 - 20/07/2014
+Fixed typo errors in docs and removed un-needed bower components
+
+v1.0.7 - 20/07/2014
+Update i18n resource retrieval path to match the bower installed path.
+
+v1.0.6 - 20/07/2014
+Added i18n to defaultMessageResolver and updated the docs.
+Added fr-FR.json language file - it you can translate PR the repo with a new language file (or email me) thanks!
+Fixed problem with the bootstrap3ElementModifier appending the error message and error icon in the wrong place if the form was a .form-horizontal.
+
+v1.0.5 - 16/07/2014
+Changed the bootstrap3ElementModifier to add a class of '.help-block' to the error message element instead of '.help-text'.
+
+v1.0.4 - 10/07/2014
+Fixed error with ngModelDecorator that meant it would not work in Angular1.3+.
+

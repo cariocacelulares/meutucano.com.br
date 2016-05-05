@@ -1,0 +1,26 @@
+{
+  "name": "angular-date-picker",
+  "main": [
+    "angular-date-picker.js",
+    "angular-date-picker.css"
+  ],
+  "homepage": "https://github.com/myplanet/angular-date-picker",
+  "description": "Lightweight Calendar for Angular",
+  "authors": [
+    "Ates Goral <ates.g@myplanet.com>"
+  ],
+  "keywords": [
+    "angular",
+    "calendar",
+    "date"
+  ],
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*"
+  ]
+}

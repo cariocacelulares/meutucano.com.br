@@ -1,0 +1,35 @@
+{
+  "name": "angular-focus-it",
+  "version": "1.0.3",
+  "authors": [
+    "Everton Inocencio <hewerthomn@gmail.com>"
+  ],
+  "description": "AngularJS module to focus an html input element",
+  "main": "angular-focus-it.js",
+  "keywords": [
+    "angular",
+    "focus",
+    "focusit",
+    "focus-it"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "vendor",
+    "test",
+    "tests"
+  ],
+  "homepage": "http://github.com/hewerthomn/angular-focus-it",
+  "_release": "1.0.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.0.3",
+    "commit": "7e985a2e6c408748f8730ba41b456f0d13319c93"
+  },
+  "_source": "https://github.com/hewerthomn/angular-focus-it.git",
+  "_target": "^1.0.3",
+  "_originalSource": "angular-focus-it",
+  "_direct": true
+}

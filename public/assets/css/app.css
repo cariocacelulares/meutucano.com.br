@@ -266,12 +266,14 @@ th.tablesort-desc, th.tablesort-asc {
       .chat-windows .chat-window.minimized button.attach {
         display: none; }
 
-.form-control {
-  border: 1px solid #ddd !important; }
-  .form-control[readonly] {
-    color: #2c2c2c !important; }
-  .form-control:focus {
-    background: #FFF !important; }
+.form-control[readonly] {
+  color: #2c2c2c !important; }
+
+.form-control:focus {
+  background: #FFF !important; }
+
+input:focus {
+  background: #FFF !important; }
 
 .table.table-hover tbody tr:hover td,
 .table.table-hover tbody tr.detailed td {

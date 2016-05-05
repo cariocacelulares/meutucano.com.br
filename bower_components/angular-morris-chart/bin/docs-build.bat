@@ -1,0 +1,2 @@
+cd ../
+gulp build
