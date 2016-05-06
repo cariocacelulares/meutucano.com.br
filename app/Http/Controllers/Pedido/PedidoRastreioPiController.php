@@ -8,6 +8,7 @@ use App\Models\PedidoRastreioPi;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
  * Class PedidoRastreioPiController
@@ -36,6 +37,7 @@ class PedidoRastreioPiController extends Controller
             $rastreio_ref = PedidoRastreio::find($id);
 
             $pi->rastreio_id = $id;
+            $pi->usuario_id  = JWTAuth::parseToken()->authenticate()->id;
             $pi->fill(Input::only(['codigo_pi', 'motivo_status', 'status', 'valor_pago', 'acao', 'protocolo', 'pago_cliente', 'observacoes']));
 
             if (Input::get('data_pagamento_readable'))

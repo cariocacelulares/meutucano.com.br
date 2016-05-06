@@ -28,6 +28,7 @@ class PedidoRastreioDevolucao extends \Eloquent
      */
     protected $fillable = [
         'rastreio_id',
+        'usuario_id',
         'motivo',
         'acao',
         'protocolo',

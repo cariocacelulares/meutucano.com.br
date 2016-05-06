@@ -3,12 +3,11 @@
 use App\Http\Controllers\RestControllerTrait;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Models\Pedido;
 use App\Models\PedidoRastreio;
 use App\Models\PedidoRastreioDevolucao;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
  * Class PedidoRastreioDevolucaoController
@@ -37,6 +36,7 @@ class PedidoRastreioDevolucaoController extends Controller
             $rastreio_ref = PedidoRastreio::find($id);
 
             $devolucao->rastreio_id = $id;
+            $devolucao->usuario_id  = JWTAuth::parseToken()->authenticate()->id;
             $devolucao->fill(Input::only(['motivo', 'acao', 'protocolo', 'pago_cliente', 'observacoes']));
             $devolucao->save();
 

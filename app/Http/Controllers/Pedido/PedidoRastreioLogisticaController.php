@@ -8,6 +8,7 @@ use App\Models\PedidoRastreioLogistica;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
  * Class PedidoRastreioLogisticaController
@@ -36,6 +37,7 @@ class PedidoRastreioLogisticaController extends Controller
             $rastreio_ref = PedidoRastreio::find($id);
 
             $logistica->rastreio_id = $id;
+            $logistica->usuario_id  = JWTAuth::parseToken()->authenticate()->id;
             $logistica->fill(Input::only(['autorizacao', 'motivo', 'acao', 'protocolo', 'observacoes']));
 
             if (Input::get('data_postagem_readable'))

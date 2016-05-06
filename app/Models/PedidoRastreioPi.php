@@ -23,6 +23,7 @@ class PedidoRastreioPi extends \Eloquent
      */
     protected $fillable = [
         'rastreio_id',
+        'usuario_id',
         'codigo_pi',
         'motivo_status',
         'status',
