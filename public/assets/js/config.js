@@ -4,16 +4,32 @@
     angular
         .module('MeuTucano')
 
-        /**
-         * Paths
-         */
-        .constant('apiUrl', 'http://192.168.2.170/tucano/public/api')
+        .config(function(envServiceProvider) {
+            envServiceProvider.config({
+                domains: {
+                    development: ['localhost'],
+                    production:  ['192.168.2.170']
+                },
+                vars: {
+                    development: {
+                        apiUrl: 'http://localhost/dev/tucanov3/public/api'
+                    },
+                    production: {
+                        apiUrl: 'http://192.168.2.170/tucano/public/index.php/api'
+                    }
+                }
+            });
+
+
+
+            envServiceProvider.check();
+        })
 
         /**
          * Auth config
          */
-        .config(function($authProvider, apiUrl) {
-            $authProvider.loginUrl = apiUrl + '/authenticate';
+        .config(function($authProvider, envServiceProvider) {
+            $authProvider.loginUrl = envServiceProvider.read('apiUrl') + '/authenticate';
         })
 
         /**
@@ -48,8 +64,8 @@
         /**
          * REST
          */
-        .config(function(RestangularProvider, apiUrl) {
-            RestangularProvider.setBaseUrl(apiUrl);
+        .config(function(RestangularProvider, envServiceProvider) {
+            RestangularProvider.setBaseUrl(envServiceProvider.read('apiUrl'));
 
             RestangularProvider.setResponseExtractor(function(response) {
                 return response.data;
@@ -61,10 +77,10 @@
         /**
          * REST interceptor
          */
-        .run(function(Restangular, $http, $state, apiUrl, toaster) {
+        .run(function(Restangular, $http, $state, envService, toaster) {
             Restangular.setErrorInterceptor(function(response, deferred, responseHandler) {
                 if (response.status === 401) { // Atualiza token expirado
-                    $http.get(apiUrl + '/token', {
+                    $http.get(envService.read('apiUrl') + '/token', {
                         headers: {Authorization: 'Bearer '+ localStorage.getItem("satellizer_token")}
                     }).error(function() {
                         localStorage.removeItem('user');

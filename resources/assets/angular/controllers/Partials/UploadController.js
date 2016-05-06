@@ -5,19 +5,20 @@
         .module('MeuTucano')
         .controller('UploadController', UploadController);
 
-    function UploadController(Upload, toaster, apiUrl, $rootScope) {
+    function UploadController(Upload, toaster, envService, $rootScope) {
         var vm = this;
 
         /**
          * Upload notas
          *
          * @param files
+         * @param ghost
          */
         vm.upload = function (files, ghost) {
             if (files && files.length) {
                 $rootScope.$broadcast('loading');
                 Upload.upload({
-                    url: apiUrl + '/upload',
+                    url: envService.read('apiUrl') + '/upload',
                     headers: {Authorization: 'Bearer '+ localStorage.getItem("satellizer_token")},
                     data: {
                         arquivos: files,

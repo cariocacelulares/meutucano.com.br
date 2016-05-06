@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('AuthController', AuthController);
 
-    function AuthController($auth, $http, $state, $rootScope, focus, apiUrl) {
+    function AuthController($auth, $http, $state, $rootScope, focus, envService) {
         var vm = this;
 
         vm.username = localStorage.getItem('lastUser');
@@ -28,7 +28,7 @@
             };
 
             $auth.login(credentials).then(function() {
-                return $http.get(apiUrl + '/authenticate/user');
+                return $http.get(envService.read('apiUrl') + '/authenticate/user');
             }).then(function(response) {
                 vm.loading = false;
                 var user = JSON.stringify(response.data.user);

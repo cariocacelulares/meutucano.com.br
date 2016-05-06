@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('AppController', AppController);
 
-    function AppController($auth, $state, $rootScope, focus, apiUrl, $window, $httpParamSerializer, ngDialog, Restangular, $interval) {
+    function AppController($auth, $state, $rootScope, focus, envService, $window, $httpParamSerializer, ngDialog, Restangular, $interval) {
         var vm = this;
 
         vm.searchOpen = false;
@@ -80,7 +80,7 @@
                 token: localStorage.getItem("satellizer_token")
             };
 
-            $window.open(apiUrl + '/notas/xml/' + pedido_id + '?' + $httpParamSerializer(auth));
+            $window.open(envService.read('apiUrl') + '/notas/xml/' + pedido_id + '?' + $httpParamSerializer(auth));
         };
 
         /**
@@ -93,7 +93,7 @@
                 token: localStorage.getItem("satellizer_token")
             };
 
-            $window.open(apiUrl + '/notas/danfe/' + pedido_id + '?' + $httpParamSerializer(auth));
+            $window.open(envService.read('apiUrl') + '/notas/danfe/' + pedido_id + '?' + $httpParamSerializer(auth));
         };
 
         /**
@@ -106,7 +106,7 @@
                 token: localStorage.getItem("satellizer_token")
             };
 
-            $window.open(apiUrl + '/rastreios/etiqueta/' + rastreio_id + '?' + $httpParamSerializer(auth));
+            $window.open(envService.read('apiUrl') + '/rastreios/etiqueta/' + rastreio_id + '?' + $httpParamSerializer(auth));
         };
 
         /**
