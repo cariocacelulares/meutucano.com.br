@@ -52,7 +52,6 @@ return [
         6 => 'Retirada',
         7 => 'Tratado',
         8 => 'Solucionado',
-        9 => 'Fantasma',
     ],
 
     /**

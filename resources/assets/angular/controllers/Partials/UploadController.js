@@ -12,17 +12,15 @@
          * Upload notas
          *
          * @param files
-         * @param ghost
          */
-        vm.upload = function (files, ghost) {
+        vm.upload = function (files) {
             if (files && files.length) {
                 $rootScope.$broadcast('loading');
                 Upload.upload({
                     url: envService.read('apiUrl') + '/upload',
                     headers: {Authorization: 'Bearer '+ localStorage.getItem("satellizer_token")},
                     data: {
-                        arquivos: files,
-                        fantasma: ghost
+                        arquivos: files
                     }
                 }).success(function (response) {
                     $rootScope.$broadcast('upload');

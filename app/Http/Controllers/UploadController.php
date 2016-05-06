@@ -30,7 +30,6 @@ class UploadController extends Controller
     public function upload()
     {
         try {
-            $fantasma = Input::get('fantasma');
             $arquivos = Input::file('arquivos');
             $test     = Input::get('test', false);
 
@@ -250,7 +249,6 @@ class UploadController extends Controller
                     $pedidoRastreio->servico    = $metodoEnvio;
                     $pedidoRastreio->valor      = $freteTotal;
                     $pedidoRastreio->prazo      = $prazoEntrega;
-                    $pedidoRastreio->status     = ($fantasma) ? 9 : 0;
 
                     $pedidoRastreio->save();
                 }

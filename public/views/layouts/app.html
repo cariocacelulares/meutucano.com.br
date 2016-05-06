@@ -15,8 +15,7 @@
             <div class="visible-lg visible-md m-t-10">
                 <div roles="admin|gestor|atendimento|faturamento" class="pull-left p-r-15 b-r b-grey m-r-15" style="margin-top: 2px;" ng-controller="UploadController as Upload">
                     <div class="btn-group">
-                        <button title="Fazer upload de notas normais" ngf-select ngf-change="Upload.upload($files, false)" ngf-multiple="true" class="btn btn-success btn-cons m-r-0"><i class="fa fa-upload"></i>&nbsp; Upload</button>
-                        <button title="Fazer upload de notas fantasmas" ngf-select ngf-change="Upload.upload($files, true)" ngf-multiple="true" class="btn btn-warning m-l-0"><i class="fa fa-snapchat-ghost"></i></button>
+                        <button title="Fazer upload de notas" ngf-select ngf-change="Upload.upload($files)" ngf-multiple="true" class="btn btn-success btn-cons m-r-0"><i class="fa fa-upload"></i>&nbsp; Upload</button>
                     </div>
                 </div>
                 <div class="pull-left p-r-10 fs-12 font-heading" style="margin-top: 5px; line-height: 14px;">
