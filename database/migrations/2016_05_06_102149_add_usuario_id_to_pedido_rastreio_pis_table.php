@@ -26,8 +26,8 @@ class AddUsuarioIdToPedidoRastreioPisTable extends Migration
     public function down()
     {
         Schema::table('pedido_rastreio_pis', function (Blueprint $table) {
-            $table->dropColumn('usuario_id');
             $table->dropForeign('PiUsuario');
+            $table->dropColumn('usuario_id');
         });
     }
 }

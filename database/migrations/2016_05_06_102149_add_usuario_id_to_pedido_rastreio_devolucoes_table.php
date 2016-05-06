@@ -26,8 +26,8 @@ class AddUsuarioIdToPedidoRastreioDevolucoesTable extends Migration
     public function down()
     {
         Schema::table('pedido_rastreio_devolucoes', function (Blueprint $table) {
-            $table->dropColumn('usuario_id');
             $table->dropForeign('DevolucaoUsuario');
+            $table->dropColumn('usuario_id');
         });
     }
 }

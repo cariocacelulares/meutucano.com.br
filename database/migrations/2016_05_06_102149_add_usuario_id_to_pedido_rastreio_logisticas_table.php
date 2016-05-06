@@ -26,8 +26,8 @@ class AddUsuarioIdToPedidoRastreioLogisticasTable extends Migration
     public function down()
     {
         Schema::table('pedido_rastreio_logisticas', function (Blueprint $table) {
-            $table->dropColumn('usuario_id');
             $table->dropForeign('LogisticaUsuario');
+            $table->dropColumn('usuario_id');
         });
     }
 }
