@@ -42,7 +42,7 @@ class PedidoRastreioController extends Controller
     {
         $model = self::MODEL;
 
-        $fromDate = date("Y-m-d", strtotime("-1 month"));
+        $fromDate = date("Y-m-d", strtotime("-7 days"));
         $toDate   = date("Y-m-d");
 
         $pedidos = $model::with([

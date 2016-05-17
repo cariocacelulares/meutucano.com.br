@@ -8,6 +8,7 @@ use App\Models\Pedido;
 use App\Models\PedidoNota;
 use App\Models\PedidoProduto;
 use App\Models\Produto;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 
@@ -36,15 +37,20 @@ class MetaController extends Controller
             $mes = PedidoProduto::autoJoin('inner', Pedido::class, 'pedido', 'pedido_id')
                 ->autoJoin('inner', Produto::class, 'produto', 'produto_sku')
                 ->autoJoin('inner', PedidoNota::class, 'nota', 'pedido_id')
+                ->join('clientes', 'clientes.id', '=', 'pedido.cliente_id')
                 ->select(DB::raw(
                     'sum(pedido_produtos.valor * pedido_produtos.quantidade * IF (pedido.total >= 0, 1, -1)) AS total'
                 ))
-                ->where(DB::raw('MONTH(nota.data)'), '=', date('n'));
+                ->whereNotIn('clientes.taxvat', \Config::get('tucano.excluir_cnpj'))
+                ->where(DB::raw('MONTH(nota.data)'), '=', date('n'))
+                ->where(DB::raw('YEAR(nota.data)'), '=', date('Y'));
 
             /**
              * Calcula os valores até agora
              */
-            $atualAno            = Pedido::where(DB::raw('MONTH(created_at)'), '=', date('n'))->sum('total');
+             $atualAno = Pedido::autoJoin('inner', PedidoNota::class, 'nota')
+                ->where(DB::raw('YEAR(nota.data)'), '=', date('Y'))->sum('total');
+
             $atualMesSmartphones = with(clone($mes))->where('produto.ncm', '85171231')->first('total');
             $atualMesOutros      = with(clone($mes))->where('produto.ncm', '<>' , '85171231')->first('total');
 

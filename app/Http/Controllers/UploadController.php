@@ -11,6 +11,7 @@ use App\Models\PedidoProduto;
 use App\Models\PedidoRastreio;
 use App\Models\Produto;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -21,22 +22,6 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class UploadController extends Controller
 {
     use RestResponseTrait;
-
-    public function scan() {
-        $xml = glob(base_path('notas/*.{xml}'), GLOB_BRACE);
-
-        $count = 0;
-        foreach ($xml as $nota) {
-            $notaArquivo = basename($nota);
-            $xml = simplexml_load_file(base_path('notas/' . $notaArquivo));
-
-            $this->uploadNota($notaArquivo, $xml, 1);
-
-            $count++;
-        }
-
-        echo $count;
-    }
 
     /**
      * Upload
@@ -93,6 +78,9 @@ class UploadController extends Controller
     private function uploadNota($notaArquivo, $xml, $usuario = false) {
         $nfe = $xml->NFe->infNFe;
 
+        if (!$nfe)
+            return true;
+
         /**
          * Cliente
          */
@@ -140,6 +128,7 @@ class UploadController extends Controller
         $idPedido = substr($chave, 25, 10);
 
         $pedido = Pedido::findOrNew($idPedido);
+        if ($pedido->exists) return true;
 
         /**
          * Marketplace
@@ -178,7 +167,7 @@ class UploadController extends Controller
         $operacao = $produtos[0]->prod->CFOP;
 
         if (!in_array((int) $operacao, array_merge(Config::get('tucano.operacoes'), Config::get('tucano.devolucao'))))
-            return;
+            return true;
 
         /**
          * Total
@@ -248,8 +237,9 @@ class UploadController extends Controller
              */
             $freteTotal = null;
             if ($posInicial = strpos(strtoupper($nfe->infAdic->infCpl), 'FRETE')) {
-                preg_match('/[0-9]{2,3}\.[0-9]{2}/', substr($nfe->infAdic->infCpl, $posInicial, 25), $frete);
-                $freteTotal = $frete[0];
+                preg_match('/[0-9]{2,3}\.[0-9]{2}/', substr($nfe->infAdic->infCpl, $posInicial, 40), $frete);
+                if ($frete)
+                    $freteTotal = $frete[0];
             }
 
             /**
@@ -317,5 +307,7 @@ class UploadController extends Controller
 
             $pedidoProduto->save();
         }
+
+        return true;
     }
 }

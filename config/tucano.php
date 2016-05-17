@@ -55,6 +55,16 @@ return [
     ],
 
     /**
+     * Excluir CNPJs da meta
+     */
+    'excluir_cnpj' => [
+        '06971234000162',
+        '06971234000243',
+        '06971234000324',
+        '10722871000172',
+    ],
+
+    /**
      * Configurações de contrato com correios
      */
     'correios' => [
