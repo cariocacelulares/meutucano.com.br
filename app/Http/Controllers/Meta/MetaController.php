@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MetaMes;
 use App\Models\MetaAno;
 use App\Models\Pedido;
+use App\Models\PedidoNota;
 use App\Models\PedidoProduto;
 use App\Models\Produto;
 use Illuminate\Support\Facades\DB;
@@ -34,10 +35,11 @@ class MetaController extends Controller
 
             $mes = PedidoProduto::autoJoin('inner', Pedido::class, 'pedido', 'pedido_id')
                 ->autoJoin('inner', Produto::class, 'produto', 'produto_sku')
+                ->autoJoin('inner', PedidoNota::class, 'nota', 'pedido_id')
                 ->select(DB::raw(
                     'sum(pedido_produtos.valor * pedido_produtos.quantidade * IF (pedido.total >= 0, 1, -1)) AS total'
                 ))
-                ->where(DB::raw('MONTH(pedido.created_at)'), '=', date('n'));
+                ->where(DB::raw('MONTH(nota.data)'), '=', date('n'));
 
             /**
              * Calcula os valores até agora
