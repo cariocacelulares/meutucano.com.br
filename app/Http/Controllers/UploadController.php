@@ -23,6 +23,7 @@ class UploadController extends Controller
 {
     use RestResponseTrait;
 
+    
     /**
      * Upload
      *
