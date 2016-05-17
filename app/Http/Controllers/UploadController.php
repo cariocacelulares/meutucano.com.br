@@ -28,7 +28,7 @@ class UploadController extends Controller
         $count = 0;
         foreach ($xml as $nota) {
             $notaArquivo = basename($nota);
-            $xml = simplexml_load_file(storage_path('app/public/nota/' . $notaArquivo));
+            $xml = simplexml_load_file(base_path('notas/' . $notaArquivo));
 
             $this->uploadNota($notaArquivo, $xml, 1);
 
