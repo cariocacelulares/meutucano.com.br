@@ -75,12 +75,6 @@ Route::group(['prefix' => '/api'], function() {
              * Código de rastreio
              */
             Route::get('codigos/gerar/{servico}', 'Codigo\FaturamentoCodigoController@generateCode');
-        });
-
-        /**
-         * Administração
-         */
-        Route::group(['middleware' => ['role:admin']], function() {
 
             /**
              * Listagem de notas por usuário
@@ -91,6 +85,12 @@ Route::group(['prefix' => '/api'], function() {
              * Código de rastreio
              */
             Route::get('codigos/gerar/{servico}', 'Codigo\FaturamentoCodigoController@generateCode');
+        });
+
+        /**
+         * Administração
+         */
+        Route::group(['middleware' => ['role:admin']], function() {
 
             /**
              * Usuários
