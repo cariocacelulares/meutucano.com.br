@@ -80,7 +80,7 @@
                 token: localStorage.getItem("satellizer_token")
             };
 
-            $window.open(envService.read('apiUrl') + '/notas/xml/' + pedido_id + '?' + $httpParamSerializer(auth));
+            $window.open(envService.read('apiUrl') + '/notas/xml/' + pedido_id + '?' + $httpParamSerializer(auth), 'xml');
         };
 
         /**
@@ -93,7 +93,7 @@
                 token: localStorage.getItem("satellizer_token")
             };
 
-            $window.open(envService.read('apiUrl') + '/notas/danfe/' + pedido_id + '?' + $httpParamSerializer(auth));
+            $window.open(envService.read('apiUrl') + '/notas/danfe/' + pedido_id + '?' + $httpParamSerializer(auth), 'danfe');
         };
 
         /**
@@ -106,7 +106,7 @@
                 token: localStorage.getItem("satellizer_token")
             };
 
-            $window.open(envService.read('apiUrl') + '/rastreios/etiqueta/' + rastreio_id + '?' + $httpParamSerializer(auth));
+            $window.open(envService.read('apiUrl') + '/rastreios/etiqueta/' + rastreio_id + '?' + $httpParamSerializer(auth), 'etiqueta');
         };
 
         /**

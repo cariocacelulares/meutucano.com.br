@@ -49,7 +49,9 @@ class MetaController extends Controller
              * Calcula os valores até agora
              */
              $atualAno = Pedido::autoJoin('inner', PedidoNota::class, 'nota')
-                ->where(DB::raw('YEAR(nota.data)'), '=', date('Y'))->sum('total');
+                 ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
+                 ->whereNotIn('clientes.taxvat', \Config::get('tucano.excluir_cnpj'))
+                 ->where(DB::raw('YEAR(nota.data)'), '=', date('Y'))->sum('total');
 
             $atualMesSmartphones = with(clone($mes))->where('produto.ncm', '85171231')->first('total');
             $atualMesOutros      = with(clone($mes))->where('produto.ncm', '<>' , '85171231')->first('total');
