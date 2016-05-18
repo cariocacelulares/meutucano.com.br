@@ -1,5 +1,7 @@
 <?php namespace App\Models;
+
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class PedidoNota
@@ -7,6 +9,8 @@ use Carbon\Carbon;
  */
 class PedidoNota extends \Eloquent
 {
+    use SoftDeletes;
+
     /**
      * @var string
      */

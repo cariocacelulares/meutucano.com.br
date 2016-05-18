@@ -57,7 +57,7 @@
                     <label for="valor">Valor pago</label>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
-                        <input ng-readonly="Pi.fullSend"  class="form-control" id="valor" ng-model="Pi.pi.valor_pago" placeholder="Valor ressarcido" ui-number-mask />
+                        <input class="form-control" id="valor" ng-model="Pi.pi.valor_pago" placeholder="Valor ressarcido" ui-number-mask />
                     </div>
                 </div>
             </div>
@@ -120,7 +120,7 @@
 
     <div class="pull-right m-t-10">
         <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
-        <button ng-disabled="Pi.fullSend" busy="Salvando..." type="submit" class="btn btn-primary">Salvar</button>
+        <button busy="Salvando..." type="submit" class="btn btn-primary">Salvar</button>
     </div>
     <div class="clearfix"></div>
 </form>

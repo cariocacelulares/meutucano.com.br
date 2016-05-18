@@ -19,7 +19,8 @@
                 rastreio: vm.rastreio.rastreio,
                 data_envio: vm.rastreio.data_envio_readable,
                 prazo: vm.rastreio.prazo,
-                cep: vm.cep
+                cep: vm.cep,
+                status: vm.rastreio.status
             };
 
             Restangular.one('rastreios/edit', vm.rastreio.id).customPUT(infoEdit).then(function() {

@@ -38,17 +38,11 @@ class PedidoRastreioPiController extends Controller
 
             $pi->rastreio_id = $id;
             $pi->usuario_id  = JWTAuth::parseToken()->authenticate()->id;
-            $pi->fill(Input::only(['codigo_pi', 'motivo_status', 'status', 'valor_pago', 'acao', 'protocolo', 'pago_cliente', 'observacoes']));
-
-            if (Input::get('data_pagamento_readable'))
-                $pi->data_pagamento = Carbon::createFromFormat('d/m/Y', Input::get('data_pagamento_readable'))->format('Y-m-d');
-
-            $pi->save();
 
             /**
              * Create new rastreio
              */
-            if (Input::get('rastreio_ref.rastreio')) {
+            if (Input::get('rastreio_ref.rastreio') && $pi->acao == null) {
                 $rastreio = new PedidoRastreio();
 
                 $rastreio->pedido_id       = $rastreio_ref->pedido->id;
@@ -87,6 +81,13 @@ class PedidoRastreioPiController extends Controller
 
                 $rastreio->save();
             }
+
+            $pi->fill(Input::only(['codigo_pi', 'motivo_status', 'status', 'valor_pago', 'acao', 'protocolo', 'pago_cliente', 'observacoes']));
+
+            if (Input::get('data_pagamento_readable'))
+                $pi->data_pagamento = Carbon::createFromFormat('d/m/Y', Input::get('data_pagamento_readable'))->format('Y-m-d');
+
+            $pi->save();
 
             if (Input::has('status')) {
                 $rastreio_ref->status = 8;

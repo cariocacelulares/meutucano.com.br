@@ -42,6 +42,7 @@ class MetaController extends Controller
                     'sum(pedido_produtos.valor * pedido_produtos.quantidade * IF (pedido.total >= 0, 1, -1)) AS total'
                 ))
                 ->whereNotIn('clientes.taxvat', \Config::get('tucano.excluir_cnpj'))
+                ->whereNull('pedido.deleted_at')
                 ->where(DB::raw('MONTH(nota.data)'), '=', date('n'))
                 ->where(DB::raw('YEAR(nota.data)'), '=', date('Y'));
 

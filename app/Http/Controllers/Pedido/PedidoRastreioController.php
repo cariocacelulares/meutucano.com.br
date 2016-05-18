@@ -80,13 +80,15 @@ class PedidoRastreioController extends Controller
             $rastreio->rastreio   = Input::get('rastreio');
             $rastreio->data_envio = Carbon::createFromFormat('d/m/Y', Input::get('data_envio'))->format('Y-m-d');
             $rastreio->prazo      = Input::get('prazo');
+            $rastreio->status     = Input::get('status');
 
             $rastreio->save();
 
             /**
              * Atualiza o rastreio
              */
-            $this->refresh($rastreio);
+            if (Input::get('status') == 0)
+                $this->refresh($rastreio);
 
             return $this->showResponse(['endereco' => $endereco, 'rastreio' => $rastreio]);
         } catch (\Exception $ex) {
@@ -160,7 +162,7 @@ class PedidoRastreioController extends Controller
             $status = 3;
         } elseif(strpos($ultimoEvento['acao'], 'fluxo postal') !== false) {
             $status = 3;
-        } elseif (strpos($ultimoEvento['acao'], 'devolvido ao remetente') !== false) {
+        } elseif ((strpos($ultimoEvento['acao'], 'devolvido ao remetente') !== false) || strpos($ultimoEvento['acao'], 'devolução ao remetente') !== false) {
             $status = 5;
         } elseif (strpos($ultimoEvento['acao'], 'entrega efetuada') !== false) {
             $status = 4;

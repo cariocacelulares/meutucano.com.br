@@ -20,6 +20,18 @@
         vm.resultadoBusca = {};
         vm.buscaLoading = false;
 
+        $rootScope.$on('upload', function() {
+            vm.load();
+        });
+
+        $rootScope.$on('loading', function() {
+            vm.buscaLoading = true;
+        });
+
+        $rootScope.$on('stop-loading', function() {
+            vm.buscaLoading = false;
+        });
+
         /**
          * Close search overlay
          */

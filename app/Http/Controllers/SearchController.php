@@ -45,7 +45,7 @@ class SearchController extends Controller
         /**
          * Rastreios
          */
-        $busca['rastreios'] = PedidoRastreio::with(['pi', 'pi.rastreio', 'rastreioRef'])
+        $busca['rastreios'] = PedidoRastreio::with(['pi', 'pi.rastreio', 'pi.rastreioRef'])
             ->autoJoin('left', PedidoRastreioPi::class, 'pi')
             ->autoJoin('inner', Pedido::class, 'pedido', 'pedido_id')
             ->where('pedido_rastreios.rastreio', 'LIKE', '%' . $query . '%')

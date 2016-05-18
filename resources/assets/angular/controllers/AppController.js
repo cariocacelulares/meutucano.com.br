@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('AppController', AppController);
 
-    function AppController($auth, $state, $rootScope, focus, envService, $window, $httpParamSerializer, ngDialog, Restangular, $interval) {
+    function AppController($auth, $state, $rootScope, focus, envService, $window, $httpParamSerializer, ngDialog, Restangular, $interval, toaster) {
         var vm = this;
 
         vm.searchOpen = false;
@@ -72,7 +72,6 @@
 
         /**
          * Generate XML
-         *
          * @param pedido_id
          */
         vm.printXML = function(pedido_id) {
@@ -85,7 +84,6 @@
 
         /**
          * Generate DANFE
-         *
          * @param pedido_id
          */
         vm.printDanfe = function(pedido_id) {
@@ -111,6 +109,7 @@
 
         /**
          * Abrir PI
+         * @param rastreio
          */
         vm.pi = function(rastreio) {
             ngDialog.open({
@@ -126,6 +125,7 @@
 
         /**
          * Devolução
+         * @param rastreio
          */
         vm.devolucao = function(rastreio) {
             ngDialog.open({
@@ -141,6 +141,7 @@
 
         /**
          * Logística reversa
+         * @param rastreio
          */
         vm.logistica = function(rastreio) {
             ngDialog.open({
@@ -151,6 +152,18 @@
                 data: {
                     rastreio: rastreio
                 }
+            });
+        };
+
+        /**
+         * Cancela nota
+         * @param pedido_id
+         */
+        vm.cancelar = function(pedido_id) {
+            Restangular.one('pedidos', pedido_id).remove().then(function() {
+                $rootScope.$broadcast('upload');
+                vm.loadMeta();
+                toaster.pop('success', 'Sucesso!', 'Pedido deletado com sucesso!');
             });
         };
     }

@@ -1,6 +1,7 @@
 <?php namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class PedidoRastreio
@@ -8,6 +9,8 @@ use Carbon\Carbon;
  */
 class PedidoRastreio extends \Eloquent
 {
+    use SoftDeletes;
+
     /**
      * @var array
      */

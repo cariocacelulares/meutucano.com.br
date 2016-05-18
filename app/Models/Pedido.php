@@ -1,6 +1,7 @@
 <?php namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Pedido
@@ -8,6 +9,8 @@ use Carbon\Carbon;
  */
 class Pedido extends \Eloquent
 {
+    use SoftDeletes;
+
     /**
      * @var array
      */
@@ -27,6 +30,23 @@ class Pedido extends \Eloquent
     protected $appends = [
         'created_at_readable'
     ];
+
+    /**
+     * Set soft delete cascade
+     */
+    protected static function boot() {
+        parent::boot();
+
+        static::deleting(function($pedido) {
+            $pedido->nota()->delete();
+            $pedido->rastreios()->delete();
+        });
+
+        static::restoring(function($pedido) {
+            $pedido->nota()->withTrashed()->restore();
+            $pedido->rastreios()->withTrashed()->restore();
+        });
+    }
 
     /**
      * Nota fiscal

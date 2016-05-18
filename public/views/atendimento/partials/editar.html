@@ -1,10 +1,26 @@
 <h6 class="font-montserrat no-margin text-uppercase text-master bold">Editar rastreio</h6>
 <form ng-submit="Editar.save()" novalidate="novalidate">
     <div class="row m-t-20">
-        <div class="col-md-12">
+        <div class="col-md-6">
             <div class="form-group">
                 <label for="rastreio">Rastreio</label>
                 <input class="form-control" id="rastreio" ng-model="Editar.rastreio.rastreio" placeholder="Código de rastreio" required />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select class="form-control" id="status" ng-model="Editar.rastreio.status">
+                    <option value="0">Automático</option>
+                    <option value="1">Normal</option>
+                    <option value="2">Atrasado</option>
+                    <option value="3">Extraviado</option>
+                    <option value="4">Entregue</option>
+                    <option value="5">Devolvido</option>
+                    <option value="6">Retirada</option>
+                    <option value="7">Tratado</option>
+                    <option value="8">Solucionado</option>
+                </select>
             </div>
         </div>
     </div>
