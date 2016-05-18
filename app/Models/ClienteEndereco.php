@@ -20,8 +20,18 @@ class ClienteEndereco extends \Eloquent
         'uf'
     ];
 
+    /**
+     * @var array
+     */
     protected $appends = [
         'cep_readable'
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'cep' => 'string'
     ];
 
     /**
