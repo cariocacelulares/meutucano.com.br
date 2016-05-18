@@ -142,5 +142,5 @@
 })();
 
 
-tableSortModule.filter('parseDate', function () { return function (input) { return moment(input, 'DD/MM/YYYY'); }; });
+tableSortModule.filter('parseDate', function () { return function (input) { return moment(input, 'YYYY-MM-DD'); }; });
 tableSortModule.filter('parseDateTime', function () { return function (input) { return moment(input, 'DD/MM/YYYY HH:mm:ss'); }; });
