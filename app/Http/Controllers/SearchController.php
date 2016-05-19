@@ -31,31 +31,33 @@ class SearchController extends Controller
         /**
          * Pedidos
          */
-        $busca['pedidos'] = Pedido::with(['cliente', 'nota'])
-            ->autoJoin('inner', PedidoNota::class, 'nota')
-            ->autoJoin('inner', Cliente::class, 'cliente', 'cliente_id', 'id')
-            ->where('pedidos.id', 'LIKE', '%' . $query . '%')
+        $busca = Pedido::with([
+            'nota',
+            'cliente',
+            'rastreios', 'rastreios.rastreioRef',
+            'rastreios.pedido', 'rastreios.pedido.cliente', 'rastreios.pedido.endereco',
+            'rastreios.pi', 'rastreios.pi.rastreioRef',
+            'rastreios.devolucao', 'rastreios.devolucao.rastreioRef',
+            'rastreios.logistica', 'rastreios.logistica.rastreioRef',
+        ])
+            ->join('pedido_notas', 'pedidos.id', '=', 'pedido_notas.pedido_id')
+            ->join('clientes', 'pedidos.cliente_id', '=', 'clientes.id')
+            ->leftJoin('pedido_rastreios', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
+            ->leftJoin('pedido_rastreio_pis', 'pedido_rastreios.id', '=', 'pedido_rastreio_pis.rastreio_id')
+            ->leftJoin('pedido_rastreio_logisticas', 'pedido_rastreios.id', '=', 'pedido_rastreio_logisticas.rastreio_id')
+
+            ->orWhere('pedidos.id', 'LIKE', '%' . $query . '%')
             ->orWhere('pedidos.codigo_marketplace', 'LIKE', '%' . $query . '%')
-            ->orWhere('cliente.nome', 'LIKE', '%' . $query . '%')
-            ->take(6)
+            ->orWhere('clientes.nome', 'LIKE', '%' . $query . '%')
+            ->orWhere('pedido_rastreios.rastreio', 'LIKE', '%' . $query . '%')
+            ->orWhere('pedido_rastreio_pis.codigo_pi', 'LIKE', '%' . $query . '%')
+            ->orWhere('pedido_rastreio_logisticas.autorizacao', 'LIKE', '%' . $query . '%')
+
+            ->groupBy('pedidos.id')
+            ->orderBy('pedidos.created_at', 'DESC')
+
             ->get([
                 'pedidos.*'
-            ]);
-
-        /**
-         * Rastreios
-         */
-        $busca['rastreios'] = PedidoRastreio::with(['pi', 'pi.rastreio', 'pi.rastreioRef'])
-            ->autoJoin('left', PedidoRastreioPi::class, 'pi')
-            ->autoJoin('inner', Pedido::class, 'pedido', 'pedido_id')
-            ->where('pedido_rastreios.rastreio', 'LIKE', '%' . $query . '%')
-            ->orWhere('pedido_rastreios.pedido_id', 'LIKE', '%' . $query . '%')
-            ->orWhere('pedido.codigo_marketplace', 'LIKE', '%' . $query . '%')
-            ->orWhere('pi.codigo_pi', 'LIKE', '%' . $query . '%')
-            ->orWhere('pi.protocolo', 'LIKE', '%' . $query . '%')
-            ->take(3)
-            ->get([
-                'pedido_rastreios.*'
             ]);
 
         return $this->listResponse($busca);

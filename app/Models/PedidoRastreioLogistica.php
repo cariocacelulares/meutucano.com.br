@@ -31,8 +31,12 @@ class PedidoRastreioLogistica extends \Eloquent
         'observacoes'
     ];
 
+    /**
+     * @var array
+     */
     protected $appends = [
-        'data_postagem_readable'
+        'data_postagem_readable',
+        'created_at_readable',
     ];
 
     /**
@@ -63,5 +67,14 @@ class PedidoRastreioLogistica extends \Eloquent
      */
     protected function getDataPostagemReadableAttribute() {
         return ($this->data_postagem) ? Carbon::createFromFormat('Y-m-d', $this->data_postagem)->format('d/m/Y') : null;
+    }
+
+    /**
+     * Return readable created_at
+     *
+     * @return string
+     */
+    protected function getCreatedAtReadableAttribute() {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y');
     }
 }

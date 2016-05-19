@@ -37,6 +37,13 @@ class PedidoRastreioDevolucao extends \Eloquent
     ];
 
     /**
+     * @var array
+     */
+    protected $appends = [
+        'created_at_readable'
+    ];
+
+    /**
      * Rastreio
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -55,5 +62,14 @@ class PedidoRastreioDevolucao extends \Eloquent
     public function rastreioRef()
     {
         return $this->hasOne(PedidoRastreio::class, 'rastreio_ref_id');
+    }
+
+    /**
+     * Return readable created_at
+     *
+     * @return string
+     */
+    protected function getCreatedAtReadableAttribute() {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y');
     }
 }

@@ -1,4 +1,5 @@
 <h6 class="font-montserrat no-margin text-uppercase text-master bold">Logística reversa</h6>
+<p class="m-t-5 hint-text small" ng-if="Logistica.logistica.created_at">Aberto em: <span ng-bind="Logistica.logistica.created_at_readable"></span></p>
 <form ng-submit="Logistica.save()" novalidate="novalidate">
     <div class="row m-t-10">
         <div class="col-md-6">

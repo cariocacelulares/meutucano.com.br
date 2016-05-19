@@ -41,6 +41,7 @@ class PedidoRastreioPi extends \Eloquent
     protected $appends = [
         'status_description',
         'data_pagamento_readable',
+        'created_at_readable',
     ];
 
     /**
@@ -81,5 +82,14 @@ class PedidoRastreioPi extends \Eloquent
      */
     protected function getDataPagamentoReadableAttribute() {
         return ($this->data_pagamento) ? Carbon::createFromFormat('Y-m-d', $this->data_pagamento)->format('d/m/Y') : null;
+    }
+
+    /**
+     * Return readable created_at
+     *
+     * @return string
+     */
+    protected function getCreatedAtReadableAttribute() {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y');
     }
 }

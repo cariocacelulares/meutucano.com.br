@@ -490,3 +490,7 @@ select.form-control:invalid { color: #AAA; }
 .showIfLast td:after {
     content: 'Nenhum resultado encontrado.' !important;
 }
+
+.clear-l {
+    clear: left;
+}
