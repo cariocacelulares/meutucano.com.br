@@ -17,6 +17,8 @@ Route::group(['prefix' => '/api'], function() {
     Route::get('authenticate/user', 'AuthenticateController@getAuthenticatedUser');
     Route::get('token', 'AuthenticateController@refreshToken');
 
+    Route::get('scan', 'SearchController@scan');
+
     Route::group(['middleware' => 'jwt.auth'], function() {
         Route::controller('metas', 'Meta\MetaController');
 
