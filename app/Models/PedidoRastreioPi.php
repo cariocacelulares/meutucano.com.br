@@ -45,6 +45,16 @@ class PedidoRastreioPi extends \Eloquent
     ];
 
     /**
+     * @var array
+     */
+    protected $casts = [
+        'motivo_status' => 'string',
+        'status' => 'string',
+        'acao' => 'string',
+        'pago_cliente' => 'string',
+    ];
+
+    /**
      * Rastreio
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

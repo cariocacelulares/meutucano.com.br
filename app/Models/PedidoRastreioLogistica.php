@@ -40,6 +40,14 @@ class PedidoRastreioLogistica extends \Eloquent
     ];
 
     /**
+     * @var array
+     */
+    protected $casts = [
+        'motivo' => 'string',
+        'acao' => 'string',
+    ];
+
+    /**
      * Rastreio
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
