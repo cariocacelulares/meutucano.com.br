@@ -19,26 +19,6 @@ class SearchController extends Controller
 {
     use RestResponseTrait;
 
-    public function scan() {
-        $notas = glob(storage_path('app/public/nota/*.{xml}'), GLOB_BRACE);
-
-        foreach ($notas as $nota) {
-            $xml = simplexml_load_file($nota);
-            try {
-                $nfe = $xml->NFe->infNFe;
-
-                $info = $nfe->infAdic->infCpl;
-
-                if (strpos($info, '359561064445917') !== false) {
-                    echo $nota;
-                    break;
-                }
-            } catch (\Exception $e) {
-                continue;
-            }
-        }
-    }
-
     /**
      * Busca de pedidos
      *
