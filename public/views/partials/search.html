@@ -53,7 +53,7 @@
                                             <span class="small hint-text b-r b-grey p-r-10 m-r-5" ng-bind="rastreio.servico"></span>
                                             <span class="small hint-text b-r b-grey p-r-10 m-r-5" ng-bind-html="(rastreio.prazo + ' dias') | highlight:Search.search"></span>
                                             <span class="small hint-text" ng-bind="rastreio.data_envio_readable"></span><br>
-                                            <span class="fs-12 bold ellipsis m-t-15" ng-bind-html="rastreio.rastreio | highlight:Search.search"></span>
+                                            <a class="fs-12 bold ellipsis m-t-15" target="_blank" ng-href="http://websro.correios.com.br/sro_bin/txect01$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS={{ rastreio.rastreio }}" ng-bind-html="rastreio.rastreio | highlight:Search.search"></a>
                                             <div ng-class="{
                                             'alert-danger': rastreio.status == 3 || rastreio.status == 5 || rastreio.status == 6,
                                             'alert-warning': rastreio.status == 2,
