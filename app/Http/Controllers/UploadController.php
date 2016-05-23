@@ -196,7 +196,7 @@ class UploadController extends Controller
         /**
          * Data da nota
          */
-        $datetimeNota = \DateTime::createFromFormat('Y-m-d', substr($nfe->ide->dhEmi, 0, 10));
+        $datetimeNota = \DateTime::createFromFormat('Y-m-d\TH:i:sP', $nfe->ide->dhEmi);
         $dataNota = $datetimeNota->format('Y-m-d');
 
         /**
@@ -245,11 +245,15 @@ class UploadController extends Controller
             /**
              * Data de envio
              */
-            $dataEnvio = $datetimeNota->add(date_interval_create_from_date_string('+1 day'));
-            if ($dataEnvio->format('w') == '6') {
-                $dataEnvio = $dataEnvio->add(date_interval_create_from_date_string('+2 day'));
-            } else if ($dataEnvio->format('w') == '0') {
-                $dataEnvio = $dataEnvio->add(date_interval_create_from_date_string('+1 day'));
+            if ($datetimeNota->format('w') == '5' && $datetimeNota->format('H') <= 14) {
+                $dataEnvio = $datetimeNota;
+            } else {
+                $dataEnvio = $datetimeNota->add(date_interval_create_from_date_string('+1 day'));
+                if ($dataEnvio->format('w') == '6') {
+                    $dataEnvio = $dataEnvio->add(date_interval_create_from_date_string('+2 day'));
+                } else if ($dataEnvio->format('w') == '0') {
+                    $dataEnvio = $dataEnvio->add(date_interval_create_from_date_string('+1 day'));
+                }
             }
 
             $dataEnvio = $dataEnvio->format('Y-m-d');
