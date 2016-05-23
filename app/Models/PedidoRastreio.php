@@ -99,7 +99,7 @@ class PedidoRastreio extends \Eloquent
      */
     protected function getStatusDescriptionAttribute()
     {
-        return ($this->status) ? \Config::get('tucano.status')[$this->status] : null;
+        return ($this->status >= 0) ? \Config::get('tucano.status')[$this->status] : null;
     }
 
     /**

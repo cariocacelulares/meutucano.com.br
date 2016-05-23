@@ -129,7 +129,6 @@ class UploadController extends Controller
         $idPedido = substr($chave, 25, 10);
 
         $pedido = Pedido::findOrNew($idPedido);
-        if ($pedido->exists) return true;
 
         /**
          * Marketplace
