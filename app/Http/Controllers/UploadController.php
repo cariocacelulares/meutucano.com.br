@@ -23,7 +23,6 @@ class UploadController extends Controller
 {
     use RestResponseTrait;
 
-
     /**
      * Upload
      *
@@ -291,6 +290,30 @@ class UploadController extends Controller
         $imposto->save();
 
         /**
+         * IMEI's
+         */
+        $lastPos = 0;
+        $positions = [];
+        while (($lastPos = stripos($nfe->infAdic->infCpl, 'PROD.:', $lastPos))!== false) {
+            $positions[] = $lastPos;
+            $lastPos = $lastPos + strlen('PROD.:');
+        }
+
+        $produtoImei = [];
+        foreach ($positions as $key => $pos) {
+          $posFind = ' | ';
+          if ((sizeof($positions) - 1) == $key)
+            $posFind = '-';
+
+          $lineProduto = substr($nfe->infAdic->infCpl, $pos, (stripos($nfe->infAdic->infCpl, $posFind, $pos) - $pos));
+
+          $skuProduto = (int) substr($lineProduto, stripos($lineProduto, '.: ') + 3, 5);
+          $imeis = trim(substr($lineProduto, stripos($lineProduto, 'S/N') + 5));
+
+          $produtoImei[$skuProduto] = $imeis;
+        }
+
+        /**
          * Produtos
          */
         foreach ($produtos as $item) {
@@ -308,6 +331,7 @@ class UploadController extends Controller
             $pedidoProduto->produto_sku = (int) $item->prod->cProd;
             $pedidoProduto->valor       = $item->prod->vUnCom;
             $pedidoProduto->quantidade  = $item->prod->qCom;
+            $pedidoProduto->imei        = array_key_exists((int) $item->prod->cProd, $produtoImei) ? $produtoImei[(int) $item->prod->cProd] : '';
 
             $pedidoProduto->save();
         }

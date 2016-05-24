@@ -13,7 +13,8 @@ class PedidoProduto extends \Eloquent
         'pedido_id',
         'produto_sku',
         'valor',
-        'quantidade'
+        'quantidade',
+        'imei'
     ];
 
     /**

@@ -22,6 +22,25 @@ class PedidoRastreioDevolucaoController extends Controller
     protected $validationRules = [];
 
     /**
+     * Get list of pending devolucoes
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function index()
+    {
+        $pedidos = PedidoRastreio::with([
+            'rastreioRef',
+            'devolucao', 'devolucao.rastreioRef',
+            'pedido', 'pedido.cliente', 'pedido.nota', 'pedido.endereco'
+        ])
+            ->rightJoin('pedido_rastreio_devolucoes as devolucao', 'devolucao.rastreio_id', '=', 'pedido_rastreios.id')
+            ->whereNull('devolucao.acao')
+            ->orderBy('devolucao.created_at', 'DESC')
+            ->get(['pedido_rastreios.*']);
+
+        return $this->listResponse($pedidos);
+    }
+
+    /**
      * Edit information about PI
      *
      * @param $id

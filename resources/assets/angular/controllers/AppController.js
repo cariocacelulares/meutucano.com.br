@@ -156,6 +156,22 @@
         };
 
         /**
+         * Editar rastreio
+         * @param rastreio
+         */
+        vm.editar = function(rastreio) {
+            ngDialog.open({
+                template: 'views/atendimento/partials/editar.html',
+                className: 'ngdialog-theme-default',
+                controller: 'EditarController',
+                controllerAs: 'Editar',
+                data: {
+                    rastreio: rastreio
+                }
+            });
+        };
+
+        /**
          * Cancela nota
          * @param pedido_id
          */

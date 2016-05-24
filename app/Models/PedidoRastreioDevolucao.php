@@ -40,6 +40,7 @@ class PedidoRastreioDevolucao extends \Eloquent
      * @var array
      */
     protected $appends = [
+        'motivo_description',
         'created_at_readable'
     ];
 
@@ -71,6 +72,10 @@ class PedidoRastreioDevolucao extends \Eloquent
     public function rastreioRef()
     {
         return $this->hasOne(PedidoRastreio::class, 'rastreio_ref_id');
+    }
+
+    protected function getMotivoDescriptionAttribute() {
+        return ($this->motivo >= 0) ? \Config::get('tucano.devolucao_status')[$this->motivo] : null;
     }
 
     /**

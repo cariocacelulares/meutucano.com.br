@@ -56,6 +56,16 @@
                         title: 'Rastreio',
                         icon: 'fa-truck',
                         sref: $state.href('app.atendimento.rastreio')
+                    },
+                    {
+                        title: 'PI\'s pendentes' ,
+                        icon: 'fa-warning',
+                        sref: $state.href('app.atendimento.pis')
+                    },
+                    {
+                        title: 'Devoluções pendentes',
+                        icon: 'fa-undo',
+                        sref: $state.href('app.atendimento.devolucoes')
                     }
                 ]
             },

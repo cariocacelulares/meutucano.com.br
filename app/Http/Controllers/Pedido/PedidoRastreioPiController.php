@@ -23,6 +23,25 @@ class PedidoRastreioPiController extends Controller
     protected $validationRules = [];
 
     /**
+     * Get list of pending pi's
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function index()
+    {
+        $pedidos = PedidoRastreio::with([
+            'rastreioRef',
+            'pi', 'pi.rastreioRef',
+            'pedido', 'pedido.cliente', 'pedido.nota', 'pedido.endereco'
+        ])
+            ->rightJoin('pedido_rastreio_pis as pi', 'pi.rastreio_id', '=', 'pedido_rastreios.id')
+            ->whereNull('pi.status')
+            ->orderBy('pi.created_at', 'DESC')
+            ->get(['pedido_rastreios.*']);
+
+        return $this->listResponse($pedidos);
+    }
+
+    /**
      * Edit information about PI
      *
      * @param $id

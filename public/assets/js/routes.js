@@ -42,6 +42,18 @@
                     controller: 'RastreioController as Rastreio'
                 })
 
+                .state('app.atendimento.pis', {
+                    url: '/pis',
+                    templateUrl: 'views/atendimento/pis.html',
+                    controller: 'PiListController as Pi'
+                })
+
+                .state('app.atendimento.devolucoes', {
+                    url: '/devolucoes',
+                    templateUrl: 'views/atendimento/devolucoes.html',
+                    controller: 'DevolucaoListController as Devolucao'
+                })
+
                 /**
                  * Faturamento
                  */

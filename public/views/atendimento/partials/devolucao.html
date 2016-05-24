@@ -23,7 +23,7 @@
         <div class="col-md-12">
             <div class="form-group">
                 <label for="acao">Ação realizada</label>
-                <select ng-readonly="Devolucao.fullSend"  ng-model="Devolucao.devolucao.acao" id="acao" class="form-control" required>
+                <select ng-model="Devolucao.devolucao.acao" id="acao" class="form-control">
                     <option value="">Ação realizada</option>
                     <option value="0">Reenvio</option>
                     <option value="1">Cancelamento</option>
@@ -35,7 +35,7 @@
         <div class="col-md-4" ng-if="Devolucao.devolucao.acao == 0">
             <div class="form-group">
                 <label for="rastreio">Código de rastreio</label>
-                <input ng-readonly="Devolucao.fullSend"  class="form-control" id="rastreio" ng-model="Devolucao.devolucao.rastreio_ref.rastreio" placeholder="Novo código" required />
+                <input class="form-control" id="rastreio" ng-model="Devolucao.devolucao.rastreio_ref.rastreio" placeholder="Novo código" required />
             </div>
         </div>
         <div class="col-md-4" ng-if="Devolucao.devolucao.acao == 0">
@@ -43,14 +43,14 @@
                 <label for="valor_frete">Valor do frete</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
-                    <input ng-readonly="Devolucao.fullSend"  class="form-control" id="valor_frete" ng-model="Devolucao.devolucao.rastreio_ref.valor" placeholder="Valor do novo frete" ui-number-mask required />
+                    <input class="form-control" id="valor_frete" ng-model="Devolucao.devolucao.rastreio_ref.valor" placeholder="Valor do novo frete" ui-number-mask required />
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="form-group">
                 <label for="pago_cliente">Pago pelo cliente</label>
-                <select ng-readonly="Devolucao.fullSend"  ng-model="Devolucao.devolucao.pago_cliente" id="pago_cliente" class="form-control" required>
+                <select ng-model="Devolucao.devolucao.pago_cliente" id="pago_cliente" class="form-control" required>
                     <option value="0">Não</option>
                     <option value="1">Sim</option>
                 </select>
@@ -63,7 +63,7 @@
         <div class="col-md-12">
             <div class="form-group">
                 <label for="protocolo">Protocolo</label>
-                <input ng-readonly="Devolucao.fullSend"  class="form-control" id="protocolo" ng-model="Devolucao.devolucao.protocolo" placeholder="Protocolo de cancelamento" required />
+                <input class="form-control" id="protocolo" ng-model="Devolucao.devolucao.protocolo" placeholder="Protocolo de cancelamento" required />
             </div>
         </div>
     </div>
@@ -71,14 +71,14 @@
         <div class="col-md-12">
             <div class="form-group">
                 <label for="observacoes">Observações</label>
-                <textarea ng-readonly="Devolucao.fullSend"  class="form-control" id="observacoes" ng-model="Devolucao.devolucao.observacoes" placeholder="Observacões gerais"></textarea>
+                <textarea class="form-control" id="observacoes" ng-model="Devolucao.devolucao.observacoes" placeholder="Observacões gerais"></textarea>
             </div>
         </div>
     </div>
 
     <div class="pull-right m-t-10">
         <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
-        <button ng-disabled="Devolucao.fullSend" busy="Salvando..." type="submit" class="btn btn-primary">Salvar</button>
+        <button busy="Salvando..." type="submit" class="btn btn-primary">Salvar</button>
     </div>
     <div class="clearfix"></div>
 </form>

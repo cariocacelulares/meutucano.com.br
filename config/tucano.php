@@ -54,6 +54,17 @@ return [
         8 => 'Solucionado',
     ],
 
+    'devolucao_status' => [
+        0 => 'Endereço insuficiente',
+        1 => 'Não procurado (Retirada)',
+        2 => 'Endereço incorreto',
+        3 => 'Destinatário desconhecido',
+        4 => 'Recusado',
+        5 => 'Defeito',
+        6 => 'Mudança',
+        7 => 'Outro'
+    ],
+
     /**
      * Excluir CNPJs da meta
      */

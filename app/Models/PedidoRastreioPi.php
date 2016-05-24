@@ -100,6 +100,6 @@ class PedidoRastreioPi extends \Eloquent
      * @return string
      */
     protected function getCreatedAtReadableAttribute() {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y');
+        return ($this->created_at) ? Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y') : null;
     }
 }

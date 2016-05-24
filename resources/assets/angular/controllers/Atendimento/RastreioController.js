@@ -66,21 +66,6 @@
                 }
             });
         };
-
-        /**
-         * Editar
-         */
-        vm.editar = function(rastreio) {
-            ngDialog.open({
-                template: 'views/atendimento/partials/editar.html',
-                className: 'ngdialog-theme-default',
-                controller: 'EditarController',
-                controllerAs: 'Editar',
-                data: {
-                    rastreio: rastreio
-                }
-            });
-        };
     }
 
 })();
