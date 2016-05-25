@@ -10,7 +10,7 @@ return [
     'locale' => 'pt',
     'fallback_locale' => 'pt',
 
-    'key' => env('APP_KEY'),
+    'key' => env('APP_KEY', 'carioquinha20161carioquinha20161'),
 
     'cipher' => 'AES-256-CBC',
     'log' => env('APP_LOG', 'single'),
