@@ -53,7 +53,7 @@
                 roles: ['admin', 'atendimento'],
                 sub: [
                     {
-                        title: 'Rastreio',
+                        title: 'Rastreios importantes',
                         icon: 'fa-truck',
                         sref: $state.href('app.atendimento.rastreio')
                     },

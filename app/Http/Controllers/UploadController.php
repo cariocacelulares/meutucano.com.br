@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Http\Controllers\Pedido\PedidoRastreioController;
+use App\Http\Controllers\Pedido\PedidoNotaController;
 use App\Http\Requests;
 use App\Models\Cliente;
 use App\Models\ClienteEndereco;
@@ -13,6 +14,7 @@ use App\Models\Produto;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
@@ -70,7 +72,7 @@ class UploadController extends Controller
             $data = ['msg' => sprintf('Foram importados %d arquivo(s) de %d enviado(s).', $uploadCount, count($arquivos))];
             return $this->createdResponse($data);
         } catch (\Exception $e) {
-            $data = ['exception' => $e->getMessage() . $e->getLine()];
+            $data = ['exception' => $e->getMessage() . $e->getFile() . $e->getLine()];
             return $this->clientErrorResponse($data);
         }
     }
@@ -334,6 +336,29 @@ class UploadController extends Controller
             $pedidoProduto->imei        = array_key_exists((int) $item->prod->cProd, $produtoImei) ? $produtoImei[(int) $item->prod->cProd] : '';
 
             $pedidoProduto->save();
+        }
+
+        /**
+         * Envia e-mail de compra
+         */
+        if ($nfe->dest->email) {
+            $nome  = (string) $nfe->dest->xNome;
+            $email = (string) $nfe->dest->email;
+            $dataHora = date('His');
+            Mail::send('emails.compra', [
+                'nome' => $nfe->dest->xNome,
+                'produtos' => $produtos,
+                'rastreio' => $rastreio
+            ], function($message) use ($idPedido, $dataHora, $email, $nome) {
+                with(new PedidoNotaController())->danfe($idPedido, 'F', storage_path('app/public/' . $dataHora . '.pdf'));
+
+                $message
+                    ->attach(storage_path('app/public/' . $dataHora . '.pdf'), ['as' => 'nota.pdf', 'mime' => 'application/pdf'])
+                    ->to($email)
+                    ->subject('Obrigado por comprar na Carioca Celulares On-line');
+            });
+
+            unlink(storage_path('app/public/' . $dataHora . '.pdf'));
         }
 
         return true;

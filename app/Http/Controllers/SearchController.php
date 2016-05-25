@@ -45,6 +45,7 @@ class SearchController extends Controller
             ->leftJoin('pedido_rastreios', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
             ->leftJoin('pedido_rastreio_pis', 'pedido_rastreios.id', '=', 'pedido_rastreio_pis.rastreio_id')
             ->leftJoin('pedido_rastreio_logisticas', 'pedido_rastreios.id', '=', 'pedido_rastreio_logisticas.rastreio_id')
+            ->leftJoin('pedido_produtos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
 
             ->orWhere('pedidos.id', 'LIKE', '%' . $query . '%')
             ->orWhere('pedidos.codigo_marketplace', 'LIKE', '%' . $query . '%')
@@ -52,6 +53,7 @@ class SearchController extends Controller
             ->orWhere('pedido_rastreios.rastreio', 'LIKE', '%' . $query . '%')
             ->orWhere('pedido_rastreio_pis.codigo_pi', 'LIKE', '%' . $query . '%')
             ->orWhere('pedido_rastreio_logisticas.autorizacao', 'LIKE', '%' . $query . '%')
+            ->orWhere('pedido_produtos.imei', 'LIKE', '%' . $query . '%')
 
             ->groupBy('pedidos.id')
             ->orderBy('pedidos.created_at', 'DESC')

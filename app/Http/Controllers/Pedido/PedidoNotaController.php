@@ -61,7 +61,7 @@ class PedidoNotaController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function danfe($id)
+    public function danfe($id, $retorno = 'I', $caminhoArquivo = false)
     {
         $model = self::MODEL;
 
@@ -77,14 +77,14 @@ class PedidoNotaController extends Controller
                     'A4',
                     public_path('assets/img/logocarioca.jpg'),
                     public_path('assets/img/watermark.jpg'),
-                    'I',
+                    $retorno,
                     ''
                 );
 
-                $nomeDanfe = substr($nota->arquivo, 0, -4) . '.pdf';
+                $nomeDanfe = ($caminhoArquivo) ?: substr($nota->arquivo, 0, -4) . '.pdf';
 
                 $danfe->montaDANFE('P', 'A4', 'L');
-                $danfe->printDANFE($nomeDanfe, 'I');
+                $danfe->printDANFE($nomeDanfe, $retorno);
             }
         }
 

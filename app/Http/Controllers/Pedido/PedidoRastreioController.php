@@ -42,9 +42,6 @@ class PedidoRastreioController extends Controller
     {
         $model = self::MODEL;
 
-        $fromDate = date("Y-m-d", strtotime("-7 days"));
-        $toDate   = date("Y-m-d");
-
         $pedidos = $model::with([
             'rastreioRef',
             'pi', 'pi.rastreioRef',
@@ -53,7 +50,6 @@ class PedidoRastreioController extends Controller
             'pedido', 'pedido.cliente', 'pedido.nota', 'pedido.endereco'
         ])
             ->whereIn('status', [2, 3, 6])
-            ->orWhereBetween('data_envio', [$fromDate, $toDate])
             ->orderBy('data_envio')
             ->get();
 
