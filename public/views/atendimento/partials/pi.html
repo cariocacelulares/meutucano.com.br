@@ -16,7 +16,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="motivo">Motivo</label>
-                <select ng-disabled="Pi.fullSend || Pi.preSend"  ng-model="Pi.pi.motivo_status" id="motivo" class="form-control" required>
+                <select ng-model="Pi.pi.motivo_status" id="motivo" class="form-control" required>
                     <option value="0">Outro</option>
                     <option value="2">Atraso</option>
                     <option value="3">Extravio</option>
@@ -113,7 +113,7 @@
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="observacoes">Observações</label>
-                    <textarea ng-readonly="Pi.fullSend"  class="form-control" id="observacoes" ng-model="Pi.pi.observacoes" placeholder="Observacões gerais"></textarea>
+                    <textarea class="form-control" id="observacoes" ng-model="Pi.pi.observacoes" placeholder="Observacões gerais"></textarea>
                 </div>
             </div>
         </div>

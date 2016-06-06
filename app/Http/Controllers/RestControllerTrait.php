@@ -40,18 +40,15 @@ trait RestControllerTrait
     public function store(Request $request)
     {
         $m = self::MODEL;
-        try
-        {
+        try {
             $v = \Validator::make($request->all(), $this->validationRules);
 
-            if($v->fails())
-            {
+            if($v->fails()) {
                 throw new \Exception("ValidationException");
             }
             $data = $m::create(\Request::all());
             return $this->createdResponse($data);
-        }catch(\Exception $ex)
-        {
+        } catch(\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
