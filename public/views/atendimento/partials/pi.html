@@ -32,7 +32,7 @@
             <div ng-class="{'col-md-12': Pi.pi.motivo_status == '0', 'col-md-3': Pi.pi.motivo_status !== '0'}">
                 <div class="form-group">
                     <label for="status">Status</label>
-                    <select ng-readonly="Pi.fullSend"  ng-model="Pi.pi.status" id="status" class="form-control">
+                    <select ng-model="Pi.pi.status" id="status" class="form-control">
                         <option value="" disabled selected hidden>Procedênica</option>
                         <option value="0">Improcedente</option>
                         <option value="1">Procedente</option>
@@ -45,7 +45,7 @@
                     <div class="date-picker">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            <input ng-readonly="Pi.fullSend"  class="form-control" id="data" ng-model="Pi.pi.data_pagamento_readable" placeholder="Data de pgto." ui-date-mask />
+                            <input class="form-control" id="data" ng-model="Pi.pi.data_pagamento_readable" placeholder="Data de pgto." ui-date-mask />
                             <div class="picker-wrap">
                                 <date-picker ng-model="Pi.pi.data_pagamento_readable"></date-picker>
                             </div>
@@ -65,7 +65,7 @@
             <div class="col-md-3" ng-if="Pi.pi.motivo_status == '3'">
                 <div class="form-group">
                     <label for="acao">Ação realizada</label>
-                    <select ng-readonly="Pi.fullSend"  ng-model="Pi.pi.acao" id="acao" class="form-control">
+                    <select ng-model="Pi.pi.acao" id="acao" class="form-control">
                         <option value="" disabled selected hidden>Ação realizada</option>
                         <option value="0">Reenvio</option>
                         <option value="1">Cancelamento</option>
@@ -78,7 +78,7 @@
             <div class="col-md-4" ng-if="Pi.pi.acao == 0">
                 <div class="form-group">
                     <label for="rastreio">Código de rastreio</label>
-                    <input ng-readonly="Pi.fullSend"  class="form-control" id="rastreio" ng-model="Pi.pi.rastreio_ref.rastreio" placeholder="Novo código" required />
+                    <input class="form-control" id="rastreio" ng-model="Pi.pi.rastreio_ref.rastreio" placeholder="Novo código" required />
                 </div>
             </div>
             <div class="col-md-4" ng-if="Pi.pi.acao == 0">
@@ -86,14 +86,14 @@
                     <label for="valor_frete">Valor do frete</label>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
-                        <input ng-readonly="Pi.fullSend"  class="form-control" id="valor_frete" ng-model="Pi.pi.rastreio_ref.valor" placeholder="Valor do novo frete" ui-number-mask required />
+                        <input class="form-control" id="valor_frete" ng-model="Pi.pi.rastreio_ref.valor" placeholder="Valor do novo frete" ui-number-mask required />
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="pago_cliente">Pago pelo cliente</label>
-                    <select ng-readonly="Pi.fullSend"  ng-model="Pi.pi.pago_cliente" id="pago_cliente" class="form-control" required>
+                    <select ng-model="Pi.pi.pago_cliente" id="pago_cliente" class="form-control" required>
                         <option value="0">Não</option>
                         <option value="1">Sim</option>
                     </select>
@@ -105,7 +105,7 @@
             <div class="col-md-12" ng-if="Pi.pi.acao == 1">
                 <div class="form-group">
                     <label for="protocolo">Protocolo</label>
-                    <input ng-readonly="Pi.fullSend"  class="form-control" id="protocolo" ng-model="Pi.pi.protocolo" placeholder="Protocolo de cancelamento" required />
+                    <input class="form-control" id="protocolo" ng-model="Pi.pi.protocolo" placeholder="Protocolo de cancelamento" required />
                 </div>
             </div>
         </div>
