@@ -74,32 +74,6 @@
                 </div>
             </div>
         </div>
-        <div class="row m-t-10" ng-if="Pi.pi.motivo_status == 3 && Pi.pi.acao == 0">
-            <div class="col-md-4" ng-if="Pi.pi.acao == 0">
-                <div class="form-group">
-                    <label for="rastreio">Código de rastreio</label>
-                    <input class="form-control" id="rastreio" ng-model="Pi.pi.rastreio_ref.rastreio" placeholder="Novo código" required />
-                </div>
-            </div>
-            <div class="col-md-4" ng-if="Pi.pi.acao == 0">
-                <div class="form-group">
-                    <label for="valor_frete">Valor do frete</label>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
-                        <input class="form-control" id="valor_frete" ng-model="Pi.pi.rastreio_ref.valor" placeholder="Valor do novo frete" ui-number-mask required />
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="pago_cliente">Pago pelo cliente</label>
-                    <select ng-model="Pi.pi.pago_cliente" id="pago_cliente" class="form-control" required>
-                        <option value="0">Não</option>
-                        <option value="1">Sim</option>
-                    </select>
-                </div>
-            </div>
-        </div>
         <div ng-if="Pi.pi.acao == 0 && !Pi.fullSend" class="alert alert-info"><i class="fa fa-info"></i>&nbsp; O Meu Tucano irá criar um novo rastreio com esse código para esse pedido.</div>
         <div class="row m-t-10" ng-if="Pi.pi.motivo_status == 3 && Pi.pi.acao == 1">
             <div class="col-md-12" ng-if="Pi.pi.acao == 1">
