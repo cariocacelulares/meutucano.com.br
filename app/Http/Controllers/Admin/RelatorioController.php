@@ -25,7 +25,7 @@ class RelatorioController extends Controller
     public function icms()
     {
         $notas = PedidoNota::with(['pedido', 'pedido.imposto', 'pedido.endereco'])
-            ->where(DB::raw('MONTH(pedido_notas.data)'), '=', date('n'))
+            ->where(DB::raw('MONTH(pedido_notas.data)'), '=', date('n', strtotime("-1 month")))
             ->where(DB::raw('YEAR(pedido_notas.data)'), '=', date('Y'))
             ->get();
 
