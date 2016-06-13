@@ -62,8 +62,12 @@
                                             }" class="alert m-b-0 m-t-10" style="width: 120px">
                                                 <strong ng-bind="rastreio.status_description"></strong>
                                             </div>
-                                            <div class="small hint-text b-r b-grey p-r-10 m-r-5 m-t-10" ng-if="rastreio.rastreio_ref">
+                                            <div class="small hint-text p-r-10 m-r-5 m-t-10" ng-if="rastreio.rastreio_ref">
                                                 Reenvio de: <span ng-bind="rastreio.rastreio_ref.rastreio"></span>
+                                            </div>
+                                            <div class="small hint-text p-r-10 m-r-5 m-t-10" ng-if="rastreio.pi">
+                                                <span ng-bind="rastreio.pi.status_description"></span><br>
+                                                PI <strong ng-bind="rastreio.pi.codigo_pi"></strong> aberta em <strong ng-bind="rastreio.pi.created_at_readable"></strong>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
