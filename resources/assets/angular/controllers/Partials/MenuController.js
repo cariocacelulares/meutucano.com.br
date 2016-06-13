@@ -76,6 +76,14 @@
                 sref: $state.href('app.faturamento.notas')
             },
             {
+                title: 'Administração',
+                icon: 'fa-gavel',
+                roles: ['admin'],
+                sub: [
+                    {title: 'Relatório ICMS', icon: 'fa-file-pdf-o', sref: $state.href('app.admin.icms')}
+                ]
+            },
+            {
                 title: 'Interno',
                 icon: 'fa-desktop',
                 sub: [

@@ -4,6 +4,7 @@ return [
     /**
      * CEP Padrão de envio
      */
+    'uf'  => 'SC',
     'cep' => '89160314',
 
     /**

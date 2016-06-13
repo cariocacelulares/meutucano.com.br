@@ -98,6 +98,11 @@ Route::group(['prefix' => '/api'], function() {
             rest('usuarios', 'Interno\UsuarioController');
             rest('senhas', 'Interno\UsuarioSenhaController');
             Route::get('senhas/usuario/{id}', 'Interno\UsuarioSenhaController@userPassword');
+
+            /**
+             * Admin
+             */
+            Route::get('relatorios/icms', 'Admin\RelatorioController@icms');
         });
 
         /**

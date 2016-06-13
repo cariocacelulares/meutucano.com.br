@@ -72,6 +72,23 @@
                 })
 
                 /**
+                 * Admin
+                 */
+                .state('app.admin', {
+                    url: '/admin',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.admin.icms', {
+                    url: '/icms',
+                    templateUrl: 'views/admin/icms.html',
+                    controller: 'IcmsController as Icms',
+                    data: {
+                        roles: ['admin']
+                    }
+                })
+
+                /**
                  * Usuários
                  */
                 .state('app.interno', {

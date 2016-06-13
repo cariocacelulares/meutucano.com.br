@@ -59,6 +59,16 @@ class Pedido extends \Eloquent
     }
 
     /**
+     * Imposto
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function imposto()
+    {
+        return $this->hasOne('App\Models\PedidoImposto');
+    }
+
+    /**
      * Produtos
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
