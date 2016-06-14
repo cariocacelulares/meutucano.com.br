@@ -45,36 +45,6 @@ class PedidoRastreioLogisticaController extends Controller
 
             $logistica->save();
 
-            /**
-             * Create new rastreio
-             */
-            if (Input::get('rastreio_ref.rastreio')) {
-                $rastreio = new PedidoRastreio();
-
-                $rastreio->pedido_id       = $rastreio_ref->pedido->id;
-                $rastreio->tipo            = 1;
-                $rastreio->rastreio_ref_id = $logistica->rastreio_id;
-
-                /**
-                 * Tipo de envio
-                 */
-                $tipoRastreio    = substr(Input::get('rastreio_ref.rastreio'), 0, 2);
-                $metodoEnvio     = null;
-                if (in_array($tipoRastreio, Config::get('tucano.pac'))) {
-                    $metodoEnvio = 'PAC';
-                } elseif (in_array($tipoRastreio, Config::get('tucano.sedex'))) {
-                    $metodoEnvio = 'SEDEX';
-                }
-
-                $rastreio->data_envio = $logistica->data_postagem;
-                $rastreio->rastreio   = Input::get('rastreio_ref.rastreio');
-                $rastreio->servico    = $metodoEnvio;
-                $rastreio->valor      = Input::get('rastreio_ref.valor', 0);
-                $rastreio->prazo      = PedidoRastreioController::deadline(Input::get('rastreio_ref.rastreio'), $rastreio_ref->pedido->endereco->cep);
-
-                $rastreio->save();
-            }
-
             if (Input::has('acao')) {
                 $rastreio_ref->status = 5;
                 $rastreio_ref->save();

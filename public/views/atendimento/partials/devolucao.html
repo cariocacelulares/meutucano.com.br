@@ -5,7 +5,7 @@
         <div class="col-md-12">
             <div class="form-group">
                 <label for="motivo">Motivo</label>
-                <select ng-readonly="Devolucao.fullSend" ng-model="Devolucao.devolucao.motivo" id="motivo" class="form-control" required>
+                <select ng-model="Devolucao.devolucao.motivo" id="motivo" class="form-control" required>
                     <option value="" disabled selected hidden>Motivo</option>
                     <option value="0">Endereço insuficiente</option>
                     <option value="1">Não procurado (Retirada)</option>
@@ -30,34 +30,6 @@
                 </select>
             </div>
         </div>
-    </div>
-    <div class="row m-t-10" ng-if="Devolucao.devolucao.acao == 0">
-        <div class="col-md-4" ng-if="Devolucao.devolucao.acao == 0">
-            <div class="form-group">
-                <label for="rastreio">Código de rastreio</label>
-                <input class="form-control" id="rastreio" ng-model="Devolucao.devolucao.rastreio_ref.rastreio" placeholder="Novo código" required />
-            </div>
-        </div>
-        <div class="col-md-4" ng-if="Devolucao.devolucao.acao == 0">
-            <div class="form-group">
-                <label for="valor_frete">Valor do frete</label>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
-                    <input class="form-control" id="valor_frete" ng-model="Devolucao.devolucao.rastreio_ref.valor" placeholder="Valor do novo frete" ui-number-mask required />
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="pago_cliente">Pago pelo cliente</label>
-                <select ng-model="Devolucao.devolucao.pago_cliente" id="pago_cliente" class="form-control" required>
-                    <option value="0">Não</option>
-                    <option value="1">Sim</option>
-                </select>
-            </div>
-        </div>
-        <div class="clearfix"></div>
-        <div ng-if="!Devolucao.fullSend" class="alert alert-info"><i class="fa fa-info"></i>&nbsp; O Meu Tucano irá criar um novo rastreio com esse código para esse pedido.</div>
     </div>
     <div class="row m-t-10" ng-if="Devolucao.devolucao.acao == 1 && Devolucao.rastreio.pedido.marketplace !== 'MERCADOLIVRE'"">
         <div class="col-md-12">

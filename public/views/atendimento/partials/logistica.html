@@ -5,13 +5,13 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="autorizacao">Autorização de postagem</label>
-                <input ng-disabled="Logistica.fullSend || Logistica.preSend" id="autorizacao" class="form-control" ng-model="Logistica.logistica.autorizacao" placeholder="Código da autorização" required>
+                <input id="autorizacao" class="form-control" ng-model="Logistica.logistica.autorizacao" placeholder="Código da autorização" required>
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
                 <label for="motivo">Motivo</label>
-                <select ng-disabled="Logistica.fullSend || Logistica.preSend" ng-model="Logistica.logistica.motivo" id="motivo" class="form-control" required>
+                <select ng-model="Logistica.logistica.motivo" id="motivo" class="form-control" required>
                     <option value="" disabled selected hidden>Motivo</option>
                     <option value="0">Defeito</option>
                     <option value="1">Arrependimento</option>
@@ -30,7 +30,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="acao">Ação realizada</label>
-                    <select ng-readonly="Logistica.fullSend"  ng-model="Logistica.logistica.acao" id="acao" class="form-control" required>
+                    <select ng-model="Logistica.logistica.acao" id="acao" class="form-control" required>
                         <option value="" disabled selected hidden>Ação realizada</option>
                         <option value="0">Reenvio</option>
                         <option value="1">Cancelamento</option>
@@ -43,7 +43,7 @@
                     <div class="date-picker">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            <input ng-readonly="Logistica.fullSend"  class="form-control" id="data" ng-model="Logistica.logistica.data_postagem_readable" placeholder="Data de postagem" required ui-date-mask />
+                            <input class="form-control" id="data" ng-model="Logistica.logistica.data_postagem_readable" placeholder="Data de postagem" required ui-date-mask />
                             <div class="picker-wrap">
                                 <date-picker ng-model="Logistica.logistica.data_postagem_readable"></date-picker>
                             </div>
@@ -52,28 +52,11 @@
                 </div>
             </div>
         </div>
-        <div class="row" ng-if="Logistica.logistica.acao == 0">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="valor_frete">Valor do frete</label>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
-                        <input ng-readonly="Logistica.fullSend"  class="form-control" id="valor_frete" ng-model="Logistica.logistica.rastreio_ref.valor" placeholder="Valor do frete" ui-number-mask required />
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="rastreio">Código de rastreio</label>
-                    <input ng-readonly="Logistica.fullSend"  class="form-control" id="rastreio" ng-model="Logistica.logistica.rastreio_ref.rastreio" placeholder="Novo código" required />
-                </div>
-            </div>
-        </div>
         <div class="row" ng-if="Logistica.logistica.acao == 1 && Logistica.rastreio.pedido.marketplace !== 'MERCADOLIVRE'">
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="protocolo">Protocolo</label>
-                    <input ng-readonly="Logistica.fullSend"  class="form-control" id="protocolo" ng-model="Logistica.logistica.protocolo" placeholder="Protocolo de cancelamento" required />
+                    <input class="form-control" id="protocolo" ng-model="Logistica.logistica.protocolo" placeholder="Protocolo de cancelamento" required />
                 </div>
             </div>
         </div>
@@ -83,14 +66,14 @@
         <div class="col-md-12">
             <div class="form-group">
                 <label for="observacoes">Observações</label>
-                <textarea ng-readonly="Logistica.fullSend"  class="form-control" id="observacoes" ng-model="Logistica.logistica.observacoes" placeholder="Observacões gerais"></textarea>
+                <textarea class="form-control" id="observacoes" ng-model="Logistica.logistica.observacoes" placeholder="Observacões gerais"></textarea>
             </div>
         </div>
     </div>
 
     <div class="pull-right m-t-10">
         <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
-        <button ng-disabled="Logistica.fullSend" busy="Salvando..." type="submit" class="btn btn-primary">Salvar</button>
+        <button busy="Salvando..." type="submit" class="btn btn-primary">Salvar</button>
     </div>
     <div class="clearfix"></div>
 </form>
