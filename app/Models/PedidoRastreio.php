@@ -39,7 +39,7 @@ class PedidoRastreio extends \Eloquent
      * @var array
      */
     protected $casts = [
-        'status' => 'string'
+        'status' => 'string',
     ];
 
     /**

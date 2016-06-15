@@ -9,7 +9,7 @@
         var vm = this;
 
         vm.rastreio = angular.copy($scope.ngDialogData.rastreio);
-        vm.cep      = angular.copy($scope.ngDialogData.rastreio.pedido.endereco.cep);
+        vm.cep      = angular.copy($scope.ngDialogData.rastreio.pedido.endereco.cep_readable);
 
         /**
          * Save the observation

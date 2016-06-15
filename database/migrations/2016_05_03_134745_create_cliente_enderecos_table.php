@@ -16,7 +16,7 @@ class CreateClienteEnderecosTable extends Migration {
 		{
 			$table->increments('id');
 			$table->integer('cliente_id')->unsigned()->index('ClienteEnderecoCliente');
-			$table->integer('cep')->unsigned();
+			$table->string('cep', 10)->default('');
 			$table->string('rua', 250)->nullable()->default('');
 			$table->string('numero', 20)->nullable();
 			$table->string('complemento', 200)->nullable();

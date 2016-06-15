@@ -267,7 +267,7 @@ class UploadController extends Controller
             /**
              * Salva o rastreio
              */
-            $pedidoRastreio = PedidoRastreio::firstOrNew(['pedido_id' => $idPedido, 'tipo' => 0]);
+            $pedidoRastreio = PedidoRastreio::firstOrNew(['pedido_id' => $idPedido, 'tipo' => 0, 'rastreio' => $rastreio]);
             $pedidoRastreio->pedido_id  = $idPedido;
             $pedidoRastreio->rastreio   = $rastreio;
             $pedidoRastreio->data_envio = $dataEnvio;

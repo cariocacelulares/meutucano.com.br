@@ -50,6 +50,12 @@ class ClienteEndereco extends \Eloquent
      * @return string
      */
     protected function getCepReadableAttribute() {
-        return substr($this->cep, 0, 5) . '-' . substr($this->cep, -3);
+        if (strlen($this->cep) == 8) {
+            return substr($this->cep, 0, 5) . '-' . substr($this->cep, -3);
+        } elseif (strlen($this->cep) == 7) {
+            $this->cep = '0' . $this->cep;
+
+            return $this->getCepReadableAttribute();
+        }
     }
 }
