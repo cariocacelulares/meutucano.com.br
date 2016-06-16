@@ -39,7 +39,7 @@ class RelatorioController extends Controller
             $relatorio[] = 'R$' . (count($nota->pedido->imposto) ? number_format($nota->pedido->imposto->icms_remetente, 2, ',', '.') : '0,00') . ';';
             $relatorio[] = $nota->pedido->endereco->uf . ';';
             $relatorio[] = 'R$' . (count($nota->pedido->imposto) ? number_format($nota->pedido->imposto->icms_destinatario, 2, ',', '.') : '0,00') . ';';
-            $relatorio[] = 'R$' . abs($nota->pedido->total);
+            $relatorio[] = 'R$' . number_format(abs($nota->pedido->total), 2, ',', '.');
             $relatorio[] = "\r\n";
         }
 
