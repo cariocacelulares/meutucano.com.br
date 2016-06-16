@@ -36,9 +36,9 @@ class RelatorioController extends Controller
             $relatorio[] = ((in_array($nota->pedido->operacao, \Config::get('tucano.operacoes'))) ? 'VENDA' : 'DEVOLUCAO') . ';';
             $relatorio[] = $nota->numero . ';';
             $relatorio[] = \Config::get('tucano.uf'). ';';
-            $relatorio[] = 'R$' . (count($nota->pedido->imposto) ? $nota->pedido->imposto->icms_remetente : '0,00') . ';';
+            $relatorio[] = 'R$' . (count($nota->pedido->imposto) ? number_format($nota->pedido->imposto->icms_remetente, 2, ',', '.') : '0,00') . ';';
             $relatorio[] = $nota->pedido->endereco->uf . ';';
-            $relatorio[] = 'R$' . (count($nota->pedido->imposto) ? $nota->pedido->imposto->icms_destinatario : '0,00') . ';';
+            $relatorio[] = 'R$' . (count($nota->pedido->imposto) ? number_format($nota->pedido->imposto->icms_destinatario, 2, ',', '.') : '0,00') . ';';
             $relatorio[] = 'R$' . abs($nota->pedido->total);
             $relatorio[] = "\r\n";
         }
