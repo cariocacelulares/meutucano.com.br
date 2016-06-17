@@ -6,6 +6,9 @@ Route::get('/', function () {
 });
 
 
+Route::get('/api/feed', 'AnymarketController@feedSale');
+Route::get('/api/nfe', 'NfeController@makeNfe');
+
 /**
  * API
  */
