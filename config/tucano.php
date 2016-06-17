@@ -1,17 +1,56 @@
 <?php
 
 return [
+    'versao' => '3.0.0',
+
     /**
-     * CEP Padrão de envio
+     * Padrão empresa
      */
     'uf'  => 'SC',
     'cep' => '89160314',
+    'cnpj' => '14619408000150',
+
+    /**
+     * Estados/UF
+     */
+    'estados_uf' => [
+        "AC" => "Acre",
+        "AL" => "Alagoas",
+        "AM" => "Amazonas",
+        "AP" => "Amapá",
+        "BA" => "Bahia",
+        "CE" => "Ceará",
+        "DF" => "Distrito Federal",
+        "ES" => "Espírito Santo",
+        "GO" => "Goiás",
+        "MA" => "Maranhão",
+        "MT" => "Mato Grosso",
+        "MS" => "Mato Grosso do Sul",
+        "MG" => "Minas Gerais",
+        "PA" => "Pará",
+        "PB" => "Paraíba",
+        "PR" => "Paraná",
+        "PE" => "Pernambuco",
+        "PI" => "Piauí",
+        "RJ" => "Rio de Janeiro",
+        "RN" => "Rio Grande do Norte",
+        "RO" => "Rondônia",
+        "RS" => "Rio Grande do Sul",
+        "RR" => "Roraima",
+        "SC" => "Santa Catarina",
+        "SE" => "Sergipe",
+        "SP" => "São Paulo",
+        "TO" => "Tocantins"
+    ],
 
     /**
      * Operações fiscais
      */
     'operacoes' => [5102, 5405, 6102, 6108, 6910],
     'devolucao' => [1202, 2202, 1411],
+
+    'venda_externa' => 6108,
+    'venda_interna' => 5102,
 
     /**
      * Iniciais frete
@@ -108,10 +147,125 @@ return [
      */
     'anymarket' => [
         'api' => [
-            'usuario' => 'dev@cariocacelulares.com.br',
-            'senha'   => '123',
-            'token'   => 'LG1457642434456R-1352804551',
-            'url'     => 'http://sandbox-api.anymarket.com.br/v2',
+            'token'   => 'LG1445362480868R-803354070',
+            'url'     => 'http://api.anymarket.com.br/v2',
         ]
-    ]
+    ],
+
+    /**
+     * Dados padrões da Nfe
+     */
+    'nfe' => [
+        'config' => [
+            'atualizacao'        => '2016-06-17 11:02:00',
+            'tpAmb'              => '2',
+            'pathXmlUrlFileNFe'  => 'nfe_ws3_mod55.xml',
+            'pathXmlUrlFileCTe'  => 'cte_ws2.xml',
+            'pathXmlUrlFileMDFe' => 'mdfe_ws1.xml',
+            'pathXmlUrlFileCLe'  => '',
+            'pathXmlUrlFileNFSe' => '',
+            'pathNFeFiles'       => storage_path('app/nfe/nfe'),
+            'pathCTeFiles'       => storage_path('app/nfe/cte'),
+            'pathMDFeFiles'      => storage_path('app/nfe/mdfe'),
+            'pathCLeFiles'       => storage_path('app/nfe/cle'),
+            'pathNFSeFiles'      => storage_path('app/nfe/nfse'),
+            'pathCertsFiles'     => storage_path('app/nfe/certs/'),
+            'siteUrl'            => 'http://localhost/dev/tucanov3/public/',
+            'schemesNFe'         => 'PL_008h',
+            'schemesCTe'         => 'PL_CTe_200',
+            'schemesMDFe'        => 'PL_MDFe_100',
+            'schemesCLe'         => '',
+            'schemesNFSe'        => '',
+            'razaosocial'        => 'CARIOCA CELULARES ON-LINE LTDA ME',
+            'siglaUF'            => 'SC',
+            'cnpj'               => '14619408000150',
+            'tokenIBPT'          => '',
+            'tokenNFCe'          => '',
+            'tokenNFCeId'        => '',
+            'certPfxName'        => 'certificado2016.pfx',
+            'certPassword'       => 'CARIOCA2016',
+            'certPhrase'         => '',
+            'aDocFormat'         => [
+                'format'       => 'P',
+                'paper'        => 'A4',
+                'southpaw'     => '1',
+                'pathLogoFile' => public_path('assets/img/carioca.png'),
+                'logoPosition' => 'L',
+                'font'         => 'Times',
+                'printer'      => ''
+            ],
+            'aMailConf'  => [
+                'mailAuth'         => '1',
+                'mailFrom'         => 'roberto@myapp.local',
+                'mailSmtp'         => 'smtp.myapp.local',
+                'mailUser'         => 'roberto@myapp.local',
+                'mailPass'         => 'heslo$',
+                'mailProtocol'     => 'ssl',
+                'mailPort'         => '587',
+                'mailFromMail'     => null,
+                'mailFromName'     => null,
+                'mailReplayToMail' => null,
+                'mailReplayToName' => null,
+                'mailImapHost'     => null,
+                'mailImapPort'     => null,
+                'mailImapSecurity' => null,
+                'mailImapNocerts'  => null,
+                'mailImapBox'      => null
+            ],
+            'aProxyConf' => [
+                'proxyIp' => '',
+                'proxyPort' => '',
+                'proxyUser' => '',
+                'proxyPass' => ''
+            ],
+        ],
+        'versao' => '3.10',
+
+        // Valores padrão
+        'default' => [
+            'cUF' => 42,
+
+            // Venda
+            'venda' => [
+                'natOp'    => 'VENDA DE MERCADORIA ADQUIRIDA OU RECEBIDA DE TERC',
+                'indPag'   => 0,
+                'mod'      => 55,
+                'tpNf'     => 1,
+                'cMunFG'   => '4214805',
+                'tpImp'    => 1,
+                'tpEmis'   => 1,
+                'finNFe'   => 1,
+                'indFinal' => 1,
+                'indPres'  => 2,
+                'procEmi'  => 0,
+            ],
+
+            // Devolução
+            'devolucao' => [],
+
+            // Dados do emitente
+            'emitente' => [
+                'CNPJ'  => '14619408000150',
+                'xNome' => 'CARIOCA CELULARES ON-LINE LTDA ME',
+                'xFant' => 'CARIOCA ON-LINE',
+                'IE'    => '257538828',
+                'IM'    => '3370',
+                'CNAE'  => '4752100',
+                'CRT'   => '3',
+                'enderEmit' => [
+                    'xLgr'    => 'AVENIDA OSCAR BARCELOS',
+                    'nro'     => '1876',
+                    'xCpl'    => 'SALA 01',
+                    'xBairro' => 'CENTRO',
+                    'cMun'    => '4214805',
+                    'xMun'    => 'RIO DO SUL',
+                    'UF'      => 'SC',
+                    'CEP'     => '89160314',
+                    'cPais'   => '1058',
+                    'xPais'   => 'Brasil',
+                    'fone'    => '4735213280',
+                ],
+            ],
+        ],
+    ],
 ];
