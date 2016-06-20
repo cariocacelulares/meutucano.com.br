@@ -174,17 +174,15 @@ class AnymarketController extends Controller
     public function feedSale() // Primeiro pedido 31/05/2015 17:08
     {
         $last = AnymarketFeed::where('tipo', '=', 'pedidos')->orderBy('created_at', 'DESC')->first();
-        echo $lastDate = $this->parseDate($last->created_at, true);
+        $lastDate = $this->parseDate($last->created_at, true);
 
-        die();
-
-        $pedidos = $this->request('/orders', ['limit' => 100, 'createdAfter' => '2016-06-20T03:00:00Z']);
+        $pedidos = $this->request('/orders', ['limit' => 100, 'createdAfter' => $lastDate]);
 
         if ($pedidos['content']) {
             AnymarketFeed::create(['tipo' => 'pedidos']);
+        } else {
+            die();
         }
-
-
 
         foreach ($pedidos['content'] as $an_pedido) {
             $pedido = null;
