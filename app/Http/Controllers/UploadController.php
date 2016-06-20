@@ -129,7 +129,7 @@ class UploadController extends Controller
         $chave = $xml->protNFe->infProt->chNFe;
         $idPedido = substr($chave, 25, 10);
 
-        $pedido = Pedido::findOrNew($idPedido);
+        $pedido = Pedido::withTrashed()->findOrNew($idPedido);
 
         /**
          * Marketplace
@@ -203,7 +203,7 @@ class UploadController extends Controller
         /**
          * Salva a nota
          */
-        $nota = PedidoNota::findOrNew($idPedido);
+        $nota = PedidoNota::withTrashed()->findOrNew($idPedido);
         $nota->pedido_id  = $idPedido;
         $nota->usuario_id = ($usuario) ?: JWTAuth::parseToken()->authenticate()->id;
         $nota->data       = $dataNota;

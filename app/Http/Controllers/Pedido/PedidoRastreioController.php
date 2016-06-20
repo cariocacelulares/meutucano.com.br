@@ -143,7 +143,7 @@ class PedidoRastreioController extends Controller
      * @param $rastreio
      * @return mixed
      */
-    private function refresh($rastreio)
+    public function refresh($rastreio)
     {
         $ultimoEvento = $this->lastStatus($rastreio->rastreio);
 
@@ -166,6 +166,10 @@ class PedidoRastreioController extends Controller
             $status = 6;
         } elseif ($prazoEntrega < date('Ymd')) {
             $status = 2;
+        }
+
+        if ($rastreio->status == 0 && ($rastreio->status != $status)) {
+            $rastreio->data_envio = Carbon::createFromFormat('d/m/Y H:i', $this->firstStatus($rastreio->rastreio)['data'])->format('Y-m-d');
         }
 
         $rastreio->status = $status;
@@ -230,8 +234,9 @@ class PedidoRastreioController extends Controller
                         continue;
 
                     if (sizeof($row->find('td')) > 1) {
+                        $historico[$index]['data']  = mb_strtolower(utf8_encode($row->find('td', 0)->plaintext));
                         $historico[$index]['local'] = mb_strtolower(utf8_encode($row->find('td', 1)->plaintext));
-                        $historico[$index]['acao'] = mb_strtolower(utf8_encode($row->find('td', 2)->plaintext));
+                        $historico[$index]['acao']  = mb_strtolower(utf8_encode($row->find('td', 2)->plaintext));
                         $historico[$index]['detalhes'] = '';
                     } else {
                         $historico[$index - 1]['detalhes'] = mb_strtolower(utf8_encode($row->find('td', 0)->plaintext));
@@ -254,6 +259,17 @@ class PedidoRastreioController extends Controller
     public function lastStatus($codigoRastreio)
     {
         return reset($this->historico($codigoRastreio)['historico']);
+    }
+
+    /**
+     * Return first status from rastreio
+     *
+     * @param $codigoRastreio
+     * @return mixed
+     */
+    public function firstStatus($codigoRastreio)
+    {
+        return end($this->historico($codigoRastreio)['historico']);
     }
 
     /**
