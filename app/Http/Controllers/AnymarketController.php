@@ -173,17 +173,18 @@ class AnymarketController extends Controller
      */
     public function feedSale() // Primeiro pedido 31/05/2015 17:08
     {
-        $last = AnymarketFeed::where('tipo', '=', 'pedidos')->orderBy('created_at', 'DESC')->first();
+        $last = AnymarketFeed::where('tipo', '=', '0')->orderBy('created_at', 'DESC')->first();
         $lastDate = $this->parseDate($last->created_at, true);
 
         $pedidos = $this->request('/orders', ['limit' => 100, 'createdAfter' => $lastDate]);
 
-        if ($pedidos['content']) {
-            AnymarketFeed::create(['tipo' => 'pedidos']);
+        if (array_key_exists('content', $pedidos)) {
+            AnymarketFeed::create(['tipo' => '0']);
         } else {
-            die();
+            return 'Nenhum pedido para importar';
         }
 
+        $count = 0;
         foreach ($pedidos['content'] as $an_pedido) {
             $pedido = null;
 
@@ -321,6 +322,9 @@ class AnymarketController extends Controller
                 }
             }
 
+            $count++;
         }
+
+        return $count . ' pedidos importado(s)';
     }
 }

@@ -11,7 +11,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\RefreshRastreios::class
+        Commands\RefreshRastreios::class,
+        Commands\AnymarketImportPedidos::class
     ];
 
     /**
@@ -22,7 +23,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('refresh:rastreios')
+        $schedule->command('refresh:rastreios')
             ->twiceDaily(1, 12);
+
+        $schedule->command('anymarket:pedidos')
+            ->everyThirtyMinutes();
     }
 }
