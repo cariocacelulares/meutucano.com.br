@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('refresh:rastreios')
             ->twiceDaily(1, 12);
 
-        $schedule->command('anymarket:pedidos')
-            ->everyThirtyMinutes();
+        // $schedule->command('anymarket:pedidos')
+        //     ->everyThirtyMinutes();
     }
 }
