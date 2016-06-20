@@ -8,10 +8,46 @@ return [
     'cep' => '89160314',
 
     /**
+     * Estados/UF
+     */
+    'estados_uf' => [
+        "AC" => "Acre",
+        "AL" => "Alagoas",
+        "AM" => "Amazonas",
+        "AP" => "Amapá",
+        "BA" => "Bahia",
+        "CE" => "Ceará",
+        "DF" => "Distrito Federal",
+        "ES" => "Espírito Santo",
+        "GO" => "Goiás",
+        "MA" => "Maranhão",
+        "MT" => "Mato Grosso",
+        "MS" => "Mato Grosso do Sul",
+        "MG" => "Minas Gerais",
+        "PA" => "Pará",
+        "PB" => "Paraíba",
+        "PR" => "Paraná",
+        "PE" => "Pernambuco",
+        "PI" => "Piauí",
+        "RJ" => "Rio de Janeiro",
+        "RN" => "Rio Grande do Norte",
+        "RO" => "Rondônia",
+        "RS" => "Rio Grande do Sul",
+        "RR" => "Roraima",
+        "SC" => "Santa Catarina",
+        "SE" => "Sergipe",
+        "SP" => "São Paulo",
+        "TO" => "Tocantins"
+    ],
+
+    /**
      * Operações fiscais
      */
     'operacoes' => [5102, 5405, 6102, 6108, 6910],
     'devolucao' => [1202, 2202, 1411],
+
+    'venda_interna' => 5102,
+    'venda_externa' => 6108,
 
     /**
      * Iniciais frete
@@ -108,10 +144,8 @@ return [
      */
     'anymarket' => [
         'api' => [
-            'usuario' => 'dev@cariocacelulares.com.br',
-            'senha'   => '123',
-            'token'   => 'LG1457642434456R-1352804551',
-            'url'     => 'http://sandbox-api.anymarket.com.br/v2',
+            'token'   => 'LG1445362480868R-803354070',
+            'url'     => 'http://api.anymarket.com.br/v2',
         ]
     ]
 ];

@@ -1,7 +1,8 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Controllers\Pedido\PedidoRastreioController;
+use App\Http\Controllers\AnymarketController;
 use App\Http\Controllers\Pedido\PedidoNotaController;
+use App\Http\Controllers\Pedido\PedidoRastreioController;
 use App\Http\Requests;
 use App\Models\Cliente;
 use App\Models\ClienteEndereco;
@@ -127,9 +128,6 @@ class UploadController extends Controller
          * Chave
          */
         $chave = $xml->protNFe->infProt->chNFe;
-        $idPedido = substr($chave, 25, 10);
-
-        $pedido = Pedido::findOrNew($idPedido);
 
         /**
          * Marketplace
@@ -151,6 +149,33 @@ class UploadController extends Controller
         } elseif (strpos(strtoupper($nfe->infAdic->infCpl), 'GROUPON') !== false) {
             $marketplace = 'GROUPON';
         }
+
+        /**
+         * Pedido
+         */
+        $pedido = null;
+        $idMarketplace = null;
+        preg_match('/PEDIDO [0-9]{2,}\-?([0-9]{6,})?\w+/', $nfe->infAdic->infCpl, $codPedido);
+        if ($codPedido) {
+            $pedido['marketPlace'] = $marketplace;
+            $pedido['marketPlaceId'] = substr($codPedido[0], strpos($codPedido[0], ' ') + 1);
+            $idMarketplace = with(new AnymarketController())->parseMarketplaceId($pedido);
+
+            $pedido = Pedido::withTrashed()->where('codigo_marketplace', '=', $idMarketplace)->first();
+        }
+
+        if ($pedido == null) {
+            $idPedido = substr($chave, 25, 10);
+            $pedido = Pedido::withTrashed()->findOrNew($idPedido);
+
+            if ($idMarketplace) {
+                $pedido->codigo_marketplace = $idMarketplace;
+            }
+        } else {
+            $idPedido = $pedido->id;
+        }
+
+        $pedido->deleted_at = null;
 
         /**
          * Produtos
@@ -203,12 +228,13 @@ class UploadController extends Controller
         /**
          * Salva a nota
          */
-        $nota = PedidoNota::findOrNew($idPedido);
+        $nota = PedidoNota::withTrashed()->findOrNew($idPedido);
         $nota->pedido_id  = $idPedido;
         $nota->usuario_id = ($usuario) ?: JWTAuth::parseToken()->authenticate()->id;
         $nota->data       = $dataNota;
         $nota->chave      = $chave;
         $nota->arquivo    = $notaArquivo;
+        $nota->deleted_at = null;
 
         $nota->save();
 

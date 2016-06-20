@@ -59,7 +59,7 @@ class AnymarketController extends Controller
      * @param  array  $an_pedido
      * @return string
      */
-    private function parseMarketplaceId($an_pedido = null)
+    public function parseMarketplaceId($an_pedido = null)
     {
         if ($an_pedido['marketPlace'] === 'B2W') {
             if (substr($an_pedido['marketPlaceId'], 0, 1) !== '0') {
@@ -127,7 +127,7 @@ class AnymarketController extends Controller
     private function parseDate($date = null, $toUtc = false)
     {
         if ($toUtc === true) {
-            return Carbon::createFromFormat('Y-m-d H:i:s', $date, 'America/Sao_Paulo')->setTimezone('UTC')->format('Y-m-d\TH:i:sZ');
+            return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d\TH:i:s');
         }
 
         return Carbon::createFromFormat('Y-m-d\TH:i:sZ', $date, 'UTC')->setTimezone('America/Sao_Paulo')->format('Y-m-d H:i:s');
@@ -174,12 +174,17 @@ class AnymarketController extends Controller
     public function feedSale() // Primeiro pedido 31/05/2015 17:08
     {
         $last = AnymarketFeed::where('tipo', '=', 'pedidos')->orderBy('created_at', 'DESC')->first();
+        echo $lastDate = $this->parseDate($last->created_at, true);
 
-        $pedidos = $this->request('/orders', ['limit' => 50, 'createdAfter' => '2016-06-16T11:00:00Z']);
+        die();
 
-        if ($pedidos) {
-            // AnymarketFeed::create(['tipo' => 'pedidos']);
+        $pedidos = $this->request('/orders', ['limit' => 100, 'createdAfter' => '2016-06-20T03:00:00Z']);
+
+        if ($pedidos['content']) {
+            AnymarketFeed::create(['tipo' => 'pedidos']);
         }
+
+
 
         foreach ($pedidos['content'] as $an_pedido) {
             $pedido = null;
@@ -318,10 +323,6 @@ class AnymarketController extends Controller
                 }
             }
 
-            echo $idPedido . '<br>';
         }
-
-        echo '<pre>';
-        print_r($pedidos['content']);
     }
 }
