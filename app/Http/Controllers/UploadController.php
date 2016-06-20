@@ -130,6 +130,7 @@ class UploadController extends Controller
         $idPedido = substr($chave, 25, 10);
 
         $pedido = Pedido::withTrashed()->findOrNew($idPedido);
+        $pedido->deleted_at = null;
 
         /**
          * Marketplace
@@ -209,6 +210,7 @@ class UploadController extends Controller
         $nota->data       = $dataNota;
         $nota->chave      = $chave;
         $nota->arquivo    = $notaArquivo;
+        $nota->deleted_at = null;
 
         $nota->save();
 
