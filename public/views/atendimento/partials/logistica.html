@@ -30,7 +30,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="acao">Ação realizada</label>
-                    <select ng-model="Logistica.logistica.acao" id="acao" class="form-control" required>
+                    <select ng-model="Logistica.logistica.acao" id="acao" class="form-control">
                         <option value="" disabled selected hidden>Ação realizada</option>
                         <option value="0">Reenvio</option>
                         <option value="1">Cancelamento</option>
@@ -43,7 +43,7 @@
                     <div class="date-picker">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            <input class="form-control" id="data" ng-model="Logistica.logistica.data_postagem_readable" placeholder="Data de postagem" required ui-date-mask />
+                            <input class="form-control" id="data" ng-model="Logistica.logistica.data_postagem_readable" placeholder="Data de postagem" ui-date-mask />
                             <div class="picker-wrap">
                                 <date-picker ng-model="Logistica.logistica.data_postagem_readable"></date-picker>
                             </div>
@@ -56,7 +56,7 @@
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="protocolo">Protocolo</label>
-                    <input class="form-control" id="protocolo" ng-model="Logistica.logistica.protocolo" placeholder="Protocolo de cancelamento" required />
+                    <input class="form-control" id="protocolo" ng-model="Logistica.logistica.protocolo" placeholder="Protocolo de cancelamento" />
                 </div>
             </div>
         </div>
