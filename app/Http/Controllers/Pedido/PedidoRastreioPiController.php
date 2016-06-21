@@ -108,7 +108,7 @@ class PedidoRastreioPiController extends Controller
 
             $pi->save();
 
-            if (Input::has('status')) {
+            if (Input::has('valor_pago')) {
                 $rastreio_ref->status = 8;
                 $rastreio_ref->save();
             } else {
