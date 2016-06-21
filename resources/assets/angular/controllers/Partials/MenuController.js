@@ -48,8 +48,47 @@
                 icon: 'fa-dashboard'
             },
             {
-                title: 'Atendimento',
-                icon: 'fa-user-md',
+                title: 'Pedidos',
+                icon: 'fa-cubes'
+            },
+            {
+                title: 'Clientes',
+                icon: 'fa-users'
+            },
+            {
+                title: 'Produtos',
+                icon: 'fa-dropbox',
+                sub: [
+                    { title: 'Produtos', icon: 'fa-list' },
+                    { title: 'Linhas', icon: 'fa-list-alt' },
+                    { title: 'Marcas', icon: 'fa-list-alt' },
+                    { title: 'Assistência', icon: 'fa-wrench' },
+                ]
+            },
+            {
+                title: 'Movimentações',
+                icon: 'fa-exchange',
+                sub: [
+                    { title: 'Entrada', icon: 'fa-mail-reply' },
+                    { title: 'Saída', icon: 'fa-mail-forward' },
+                    { title: 'Defeito', icon: 'fa-chain-broken' },
+                    { title: 'Transportadoras', icon: 'fa-truck' },
+                    { title: 'Fornecedores', icon: 'fa-building' },
+                    { title: 'Formas de pagamento', icon: 'fa-money' },
+                    { title: 'Operação fiscal', icon: 'fa-percent' }
+                ]
+            },
+            {
+                title: 'Financeiro',
+                icon: 'fa-money',
+                sub: [
+                    { title: 'Contas a pagar/receber', icon: 'fa-credit-card' },
+                    { title: 'Plano de contas', icon: 'fa-list' },
+                ]
+            },
+            {
+                title: 'Rastreios',
+                icon: 'fa-truck',
                 roles: ['admin', 'atendimento'],
                 sub: [
                     {
@@ -70,27 +109,33 @@
                 ]
             },
             {
-                title: 'Faturamento',
-                icon: 'fa-barcode',
-                roles: ['admin', 'faturamento'],
-                sref: $state.href('app.faturamento.notas')
+                title: 'Relatórios',
+                icon: 'fa-pie-chart',
+                sub: [
+                    {title: 'Caixa diário', icon: 'fa-money'},
+                    {title: 'ICMS mensal', icon: 'fa-file-pdf-o', sref: $state.href('app.admin.icms')}
+                ]
             },
             {
-                title: 'Administração',
-                icon: 'fa-gavel',
+                title: 'Configurações',
+                icon: 'fa-cog',
                 roles: ['admin'],
                 sub: [
-                    {title: 'Relatório ICMS', icon: 'fa-file-pdf-o', sref: $state.href('app.admin.icms')}
+                    {
+                        title: 'Dados da empresa',
+                        icon: 'fa-info'
+                    },
+                    {
+                        title: 'Impostos da nota',
+                        icon: 'fa-percent'
+                    },
+                    {
+                        title: 'Usuários',
+                        icon: 'fa-users',
+                        sref: $state.href('app.interno.usuarios')
+                    }
                 ]
             },
-            {
-                title: 'Interno',
-                icon: 'fa-desktop',
-                sub: [
-                    {title: 'Usuários', icon: 'fa-users', sref: $state.href('app.interno.usuarios'), roles: ['admin']},
-                    {title: 'Minhas senhas', icon: 'fa-key', sref: $state.href('app.interno.senhas.minhas')}
-                ]
-            }
         ];
     }
 
