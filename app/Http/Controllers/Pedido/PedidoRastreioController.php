@@ -103,7 +103,7 @@ class PedidoRastreioController extends Controller
         try {
             $model = self::MODEL;
 
-            $rastreios = $model::whereNotIn('status', [2, 4, 5, 7, 8])->get();
+            $rastreios = $model::whereNotIn('status', [2, 3, 4, 5, 7, 8])->get();
 
             foreach ($rastreios as $rastreio) {
                 $this->refresh($rastreio);
