@@ -173,6 +173,8 @@ class AnymarketController extends Controller
      */
     public function feedSale() // Primeiro pedido 31/05/2015 17:08
     {
+        die();
+
         $last = AnymarketFeed::where('tipo', '=', '0')->orderBy('created_at', 'DESC')->first();
         $lastDate = $this->parseDate($last->created_at, true);
 
