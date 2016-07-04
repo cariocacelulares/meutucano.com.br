@@ -82,6 +82,7 @@ class PedidoNotaController extends Controller
 
                 $message
                     ->attach(storage_path('app/public/' . $dataHora . '.pdf'), ['as' => 'nota.pdf', 'mime' => 'application/pdf'])
+                    ->from('vendas@cariocacelulares.com.br', 'Carioca Celulares Online')
                     ->to($email)
                     ->subject('Nota fiscal de compra na Carioca Celulares Online');
             });
