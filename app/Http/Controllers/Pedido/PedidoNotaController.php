@@ -5,6 +5,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\PedidoNota;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Mail;
 use NFePHP\Extras\Danfe;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -50,6 +52,43 @@ class PedidoNotaController extends Controller
             if (file_exists($file_path)) {
                 return response()->make(file_get_contents($file_path), '200')->header('Content-Type', 'text/xml');
             }
+        }
+
+        return $this->notFoundResponse();
+    }
+
+    /**
+     * Send e-mail to customer
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function email($id)
+    {
+        $model = self::MODEL;
+
+        if ($nota = $model::find($id)) {
+            $email = Input::get('email');
+            $dataHora = date('His');
+
+            if (!$nota->pedido->cliente->email) {
+                $cliente = $nota->pedido->cliente;
+                $cliente->email = $email;
+                $cliente->save();
+            }
+
+            Mail::send('emails.danfe', [], function($message) use ($id, $dataHora, $email) {
+                with(new PedidoNotaController())->danfe($id, 'F', storage_path('app/public/' . $dataHora . '.pdf'));
+
+                $message
+                    ->attach(storage_path('app/public/' . $dataHora . '.pdf'), ['as' => 'nota.pdf', 'mime' => 'application/pdf'])
+                    ->to($email)
+                    ->subject('Nota fiscal de compra na Carioca Celulares Online');
+            });
+
+            unlink(storage_path('app/public/' . $dataHora . '.pdf'));
+
+            return $this->showResponse([]);
         }
 
         return $this->notFoundResponse();

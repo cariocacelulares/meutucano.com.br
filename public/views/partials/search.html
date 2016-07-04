@@ -38,6 +38,9 @@
                                                     <a ng-click="App.cancelar(pedido.id)"><i class="fa fa-trash-o"></i>&nbsp; Cancelar</a>
                                                 </li>
                                                 <li>
+                                                    <a ng-click="App.email(pedido.id, pedido.cliente.email)"><i class="fa fa-envelope-o"></i>&nbsp; E-mail</a>
+                                                </li>
+                                                <li>
                                                     <a ng-click="App.printXML(pedido.id)"><i class="fa fa-file-code-o"></i>&nbsp; XML</a>
                                                 </li>
                                                 <li>
@@ -79,6 +82,9 @@
                                                 <ul class="dropdown-menu">
                                                     <li>
                                                         <a title="Editar" ng-click="App.editar(rastreio)"><i class="fa fa-edit"></i>&nbsp; Editar</a>
+                                                    </li>
+                                                    <li>
+                                                        <a title="Observação" ng-click="App.observacao(rastreio)"><i class="fa fa-comment"></i>&nbsp; Observação</a>
                                                     </li>
                                                     <li>
                                                         <a title="Devolução" ng-click="App.devolucao(rastreio)"><i class="fa fa-undo"></i>&nbsp; Devolução</a>

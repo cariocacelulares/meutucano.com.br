@@ -30,6 +30,8 @@ Route::group(['prefix' => '/api'], function() {
         Route::get('search',  'SearchController@search');
         Route::get('notas/xml/{id}',          'Pedido\PedidoNotaController@xml');
         Route::get('notas/danfe/{id}',        'Pedido\PedidoNotaController@danfe');
+        Route::post('notas/email/{id}',        'Pedido\PedidoNotaController@email');
+        
         Route::get('rastreios/etiqueta/{id}', 'Pedido\PedidoRastreioController@etiqueta');
         Route::get('minhas-senhas',           'Interno\UsuarioSenhaController@currentUserPasswords');
 

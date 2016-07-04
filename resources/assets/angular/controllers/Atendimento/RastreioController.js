@@ -51,21 +51,6 @@
                 toaster.pop('success', 'Sucesso!', 'Rastreios atualizados com sucesso!');
             });
         };
-
-        /**
-         * Observação
-         */
-        vm.observacao = function(rastreio) {
-            ngDialog.open({
-                template: 'views/atendimento/partials/observacao.html',
-                className: 'ngdialog-theme-default',
-                controller: 'ObservacaoController',
-                controllerAs: 'Observacao',
-                data: {
-                    rastreio: rastreio
-                }
-            });
-        };
     }
 
 })();
