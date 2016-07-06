@@ -103,7 +103,7 @@ class PedidoRastreioController extends Controller
         try {
             $model = self::MODEL;
 
-            $rastreios = $model::whereNotIn('status', [2, 4, 5, 7, 8])->get();
+            $rastreios = $model::whereNotIn('status', [2, 3, 4, 5, 7, 8])->get();
 
             foreach ($rastreios as $rastreio) {
                 $this->refresh($rastreio);
@@ -201,7 +201,15 @@ class PedidoRastreioController extends Controller
             $cep,
             $servicoPostagem
         );
-        $correios = simplexml_load_file($correios);
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $correios);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, POST);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $string = curl_exec($ch);   
+
+        $correios = simplexml_load_string($string);
         $prazoEntrega = $correios->cServico->PrazoEntrega;
 
         return $prazoEntrega;

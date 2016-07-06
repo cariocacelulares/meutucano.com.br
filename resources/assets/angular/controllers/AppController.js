@@ -108,6 +108,23 @@
         };
 
         /**
+         * Enviar nota por e-mail
+         * @param rastreio
+         */
+        vm.email = function(pedido_id, email) {
+            ngDialog.open({
+                template: 'views/atendimento/partials/email.html',
+                className: 'ngdialog-theme-default ngdialog-big',
+                controller: 'EmailController',
+                controllerAs: 'Email',
+                data: {
+                    pedido_id: pedido_id,
+                    email: email
+                }
+            });
+        };
+
+        /**
          * Abrir PI
          * @param rastreio
          */
@@ -180,6 +197,22 @@
                 $rootScope.$broadcast('upload');
                 vm.loadMeta();
                 toaster.pop('success', 'Sucesso!', 'Pedido deletado com sucesso!');
+            });
+        };
+
+        /**
+         * Observação
+         * @param rastreio
+         */
+        vm.observacao = function(rastreio) {
+            ngDialog.open({
+                template: 'views/atendimento/partials/observacao.html',
+                className: 'ngdialog-theme-default',
+                controller: 'ObservacaoController',
+                controllerAs: 'Observacao',
+                data: {
+                    rastreio: rastreio
+                }
             });
         };
     }

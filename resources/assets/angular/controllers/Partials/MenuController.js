@@ -49,6 +49,7 @@
             },
             {
                 title: 'Pedidos',
+                sref: $state.href('app.pedidos.index'),
                 icon: 'fa-cubes'
             },
             {

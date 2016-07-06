@@ -89,6 +89,23 @@
                 })
 
                 /**
+                 * Pedidos
+                 */
+                .state('app.pedidos', {
+                    url: '/pedidos',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.pedidos.index', {
+                    url: '/list',
+                    templateUrl: 'views/pedido/list.html',
+                    controller: 'PedidoListController as PedidoList',
+                    data: {
+                        roles: ['admin']
+                    }
+                })
+
+                /**
                  * Usuários
                  */
                 .state('app.interno', {

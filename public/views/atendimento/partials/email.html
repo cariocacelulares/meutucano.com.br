@@ -1,0 +1,16 @@
+<h6 class="font-montserrat no-margin text-uppercase text-master bold">Enviar DANFE por e-mail</h6>
+<form ng-submit="Email.save()" novalidate="novalidate">
+    <div class="row m-t-20">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="rastreio">E-mail</label>
+                <input class="form-control" id="rastreio" ng-model="Email.email" placeholder="E-mail para enviar" required />
+            </div>
+        </div>
+    </div>
+    <div class="pull-right m-t-10">
+        <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
+        <button busy="Salvando..." type="submit" class="btn btn-primary">Salvar</button>
+    </div>
+    <div class="clearfix"></div>
+</form>

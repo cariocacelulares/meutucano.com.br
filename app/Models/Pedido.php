@@ -31,7 +31,18 @@ class Pedido extends \Eloquent
      * @var array
      */
     protected $appends = [
-        'created_at_readable'
+        'created_at_readable',
+        'marketplace_readable'
+    ];
+
+    /**
+     * @var array
+     */
+    protected $with = [
+        'cliente',
+        'endereco',
+        'nota',
+        'rastreios',
     ];
 
     /**
@@ -116,7 +127,25 @@ class Pedido extends \Eloquent
      *
      * @return string
      */
-    protected function getCreatedAtReadableAttribute() {
+    protected function getCreatedAtReadableAttribute() 
+    {
         return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y');
+    }
+
+    /**
+     * Return readable marketplace description
+     * 
+     * @return string 
+     */
+    protected function getMarketplaceReadableAttribute() 
+    {
+        switch ($this->marketplace) {
+            case 'WALMART':
+                return 'Walmart';
+            case 'MERCADOLIVRE':
+                return 'ML ' . ucfirst(strtolower($this->marketplace_adicional));
+            default:
+                return $this->marketplace;
+        }
     }
 }
