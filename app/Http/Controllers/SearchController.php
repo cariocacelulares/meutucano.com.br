@@ -1082,6 +1082,11 @@ class SearchController extends Controller
                 ->where('id', '=', $dev)
                 ->first();
 
+            if (!$pedido) {
+                echo $dev . '<br>';
+                continue;
+            }
+
             if (sizeof($notaVenda) == 0) {
                 preg_match('/número:\ ?[0-9]{4,5}/', $output, $notaVenda);
             }
