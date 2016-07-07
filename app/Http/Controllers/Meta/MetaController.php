@@ -34,28 +34,28 @@ class MetaController extends Controller
             $metaMesSmartphones = MetaMes::where(['ano'  => $ano, 'mes'  => $mes, 'tipo' => 0])->first();
             $metaMesOutros      = MetaMes::where(['ano'  => $ano, 'mes'  => $mes, 'tipo' => 1])->first();
 
-            $mes = PedidoProduto::autoJoin('inner', Pedido::class, 'pedido', 'pedido_id')
-                ->autoJoin('inner', Produto::class, 'produto', 'produto_sku')
-                ->autoJoin('inner', PedidoNota::class, 'nota', 'pedido_id')
-                ->join('clientes', 'clientes.id', '=', 'pedido.cliente_id')
+            $mes = PedidoProduto::join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
+                ->join('produtos', 'produtos.sku', '=', 'pedido_produtos.produto_sku')
+                ->join('pedido_notas', 'pedido_notas.pedido_id', '=', 'pedidos.id')
+                ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
                 ->select(DB::raw(
-                    'sum(pedido_produtos.valor * pedido_produtos.quantidade * IF (pedido.total >= 0, 1, -1)) AS total'
+                    'sum(pedido_produtos.valor * pedido_produtos.quantidade * IF (pedidos.total >= 0, 1, -1)) AS total'
                 ))
                 ->whereNotIn('clientes.taxvat', \Config::get('tucano.excluir_cnpj'))
-                ->whereNull('pedido.deleted_at')
-                ->where(DB::raw('MONTH(nota.data)'), '=', date('n'))
-                ->where(DB::raw('YEAR(nota.data)'), '=', date('Y'));
+                ->whereNull('pedidos.deleted_at')
+                ->where(DB::raw('MONTH(pedido_notas.data)'), '=', date('n'))
+                ->where(DB::raw('YEAR(pedido_notas.data)'), '=', date('Y'));
 
             /**
              * Calcula os valores até agora
              */
-             $atualAno = Pedido::autoJoin('inner', PedidoNota::class, 'nota')
+             $atualAno = Pedido::join('pedido_notas', 'pedido_notas.pedido_id', '=', 'pedidos.id')
                  ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
                  ->whereNotIn('clientes.taxvat', \Config::get('tucano.excluir_cnpj'))
-                 ->where(DB::raw('YEAR(nota.data)'), '=', date('Y'))->sum('total');
+                 ->where(DB::raw('YEAR(pedido_notas.data)'), '=', date('Y'))->sum('total');
 
-            $atualMesSmartphones = with(clone($mes))->where('produto.ncm', '85171231')->first('total');
-            $atualMesOutros      = with(clone($mes))->where('produto.ncm', '<>' , '85171231')->first('total');
+            $atualMesSmartphones = with(clone($mes))->where('produtos.ncm', '85171231')->first('total');
+            $atualMesOutros      = with(clone($mes))->where('produtos.ncm', '<>' , '85171231')->first('total');
 
             /**
              * Dias úteis
@@ -102,6 +102,7 @@ class MetaController extends Controller
 
             return $this->showResponse($response);
         } catch (\Exception $e) {
+            echo $e->getMessage() . $e->getLine();
             return $this->notFoundResponse();
         }
     }
