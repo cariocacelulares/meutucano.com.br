@@ -1092,19 +1092,19 @@ class SearchController extends Controller
             }
 
             if (sizeof($notaVenda) > 0) {
-                echo $dev . 
-                    ';' . str_replace(':', '', substr($notaVenda[0], -5)) . 
-                    ';' . Carbon::createFromFormat('Y-m-d', $pedido->nota->data)->format('d/m/Y') .
-                    ';R$' . number_format($pedido->total * -1, 2, ',', '.') .
-                    ';' . $pedido->produtos[0]->produto->titulo .
-                    ';' . $pedido->endereco->uf . '<br>';
+                echo '"' . $dev . 
+                    '","' . str_replace(':', '', substr($notaVenda[0], -5)) . 
+                    '","' . Carbon::createFromFormat('Y-m-d', $pedido->nota->data)->format('d/m/Y') .
+                    '","R$' . number_format($pedido->total * -1, 2, ',', '.') .
+                    '","' . $pedido->produtos[0]->produto->titulo .
+                    '","' . $pedido->endereco->uf . '"<br>';
             } else {
-                echo $dev . 
-                    ';' . 'SEM VENDA' . 
-                    ';' . Carbon::createFromFormat('Y-m-d', $pedido->nota->data)->format('d/m/Y') .
-                    ';R$' . number_format($pedido->total * -1, 2, ',', '.') .
-                    ';' . $pedido->produtos[0]->produto->titulo .
-                    ';' . $pedido->endereco->uf . '<br>';
+                echo '"' . $dev . 
+                    '","' . 'SEM VENDA' . 
+                    '","' . Carbon::createFromFormat('Y-m-d', $pedido->nota->data)->format('d/m/Y') .
+                    '","R$' . number_format($pedido->total * -1, 2, ',', '.') .
+                    '","' . $pedido->produtos[0]->produto->titulo .
+                    '","' . $pedido->endereco->uf . '"<br>';
             }
         }
     }
