@@ -573,7 +573,7 @@ class SearchController extends Controller
 
         $remove = [];
         $achou  = [];
-        $files = glob(storage_path('app/public/nota/*00002*.xml'));
+        $files = glob(storage_path('app/public/nota/*.xml'));
         $files = array_reverse($files);
         foreach ($files as $nota) {
             $output = file_get_contents($nota);
@@ -617,9 +617,9 @@ class SearchController extends Controller
                     $chave = $xml->protNFe->infProt->chNFe;
                     $idPedido = (int) substr($chave, 25, 10);
                     $achou[]  = $busca . ';' . $nfe->dest->enderDest->UF . ';' . $idPedido . '<br>';
-                    // unset($imei[array_search($busca, $imei)]);
+                    unset($imei[array_search($busca, $imei)]);
 
-                    break;
+                    // break;
                  }
             }
 
