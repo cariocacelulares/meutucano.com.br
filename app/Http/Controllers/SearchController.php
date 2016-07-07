@@ -573,7 +573,7 @@ class SearchController extends Controller
 
         $remove = [];
         $achou  = [];
-        $files = glob(storage_path('app/public/nota/*42160414619408000150550010000208741000202201*'));
+        $files = glob(storage_path('app/public/nota/*00100002*.xml'));
         $files = array_reverse($files);
         foreach ($files as $nota) {
             $output = file_get_contents($nota);
