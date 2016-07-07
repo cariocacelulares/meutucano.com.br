@@ -577,8 +577,10 @@ class SearchController extends Controller
         $files = array_reverse($files);
         foreach ($files as $nota) {
             $output = file_get_contents($nota);
-            if (!($xml = simplexml_load_string($output)))
+            if (substr($output, 0, 5) !== '<?xml')
                 continue;
+
+            $xml = simplexml_load_string($output);
 
             $nfe = $xml->NFe->infNFe;
 
