@@ -21,7 +21,7 @@ class SearchController extends Controller
 
     public function imei() 
     {
-        $imei = [
+        $imeiBusca = [
             '355461060906802',
             '358972060251277',
             '359000060583173',
@@ -568,6 +568,7 @@ class SearchController extends Controller
             '356315061957744',
             '356315061957702'
         ];
+        $imei = array_merge([], $imeiBusca);
 
         set_time_limit(0);
 
@@ -616,7 +617,7 @@ class SearchController extends Controller
                 if (strpos(strtoupper($nfe->infAdic->infCpl), $busca) !== false) {
                     $chave = $xml->protNFe->infProt->chNFe;
                     $idPedido = (int) substr($chave, 25, 10);
-                    $achou[]  = $busca . ';' . $nfe->dest->enderDest->UF . ';' . $idPedido . '<br>';
+                    $achou[$busca]  = $busca . ';' . $nfe->dest->enderDest->UF . ';' . $idPedido . '<br>';
                     unset($imei[array_search($busca, $imei)]);
 
                     // break;
@@ -626,7 +627,15 @@ class SearchController extends Controller
             // break;
         }
 
-        echo implode('', array_reverse($achou));
+        foreach ($imeiBusca as $teste) {
+            if (array_key_exists($teste, $achou)) {
+                echo $achou[$teste];
+            } else {
+                echo $teste . '<br>';
+            }
+        }
+
+        // echo implode('', array_reverse($achou));
         print_r($imei);
     }
 
