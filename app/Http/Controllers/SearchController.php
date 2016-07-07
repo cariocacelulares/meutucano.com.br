@@ -617,7 +617,7 @@ class SearchController extends Controller
                     $chave = $xml->protNFe->infProt->chNFe;
                     $idPedido = (int) substr($chave, 25, 10);
                     $achou[]  = $busca . ';' . $nfe->dest->enderDest->UF . ';' . $idPedido . '<br>';
-                    unset($imei[array_search($busca, $imei)]);
+                    // unset($imei[array_search($busca, $imei)]);
 
                     break;
                  }
