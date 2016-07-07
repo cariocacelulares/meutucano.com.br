@@ -576,9 +576,8 @@ class SearchController extends Controller
         $files = glob(storage_path('app/public/nota/') . '*.xml');
         $files = array_reverse($files);
         foreach ($files as $nota) {
-            $xml = simplexml_load_file($nota);
-
-            if (!$xml)
+            $output = file_get_contents($nota);
+            if (!($xml = simplexml_load_string($output)))
                 continue;
 
             $nfe = $xml->NFe->infNFe;
