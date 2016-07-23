@@ -7,7 +7,7 @@ Route::get('/', function () {
 
 
 // Route::get('/api/feed', 'AnymarketController@feedSale');
-// Route::get('/api/nfe', 'NfeController@makeNfe');
+Route::get('/api/buscaimei', 'SearchController@imei');
 
 /**
  * API
