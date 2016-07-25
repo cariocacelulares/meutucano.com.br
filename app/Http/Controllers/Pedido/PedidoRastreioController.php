@@ -224,24 +224,28 @@ class PedidoRastreioController extends Controller
                 $item
             );
 
-            $content = HtmlDomParser::file_get_html($correios);
-
-            $detalhes[$key]['codigo'] = $item;
             $historico = [];
-            if (sizeof($content->find('table tr')) > 1) {
-                foreach ($content->find('table tr') as $index => $row) {
-                    if ($row->find('td', 0)->plaintext == 'Data')
-                        continue;
+            $detalhes[$key]['codigo'] = $item;
+            
+            try {
+                $content = HtmlDomParser::file_get_html($correios);
+                if (sizeof($content->find('table tr')) > 1) {
+                    foreach ($content->find('table tr') as $index => $row) {
+                        if ($row->find('td', 0)->plaintext == 'Data')
+                            continue;
 
-                    if (sizeof($row->find('td')) > 1) {
-                        $historico[$index]['data']  = mb_strtolower(utf8_encode($row->find('td', 0)->plaintext));
-                        $historico[$index]['local'] = mb_strtolower(utf8_encode($row->find('td', 1)->plaintext));
-                        $historico[$index]['acao']  = mb_strtolower(utf8_encode($row->find('td', 2)->plaintext));
-                        $historico[$index]['detalhes'] = '';
-                    } else {
-                        $historico[$index - 1]['detalhes'] = mb_strtolower(utf8_encode($row->find('td', 0)->plaintext));
+                        if (sizeof($row->find('td')) > 1) {
+                            $historico[$index]['data']  = mb_strtolower(utf8_encode($row->find('td', 0)->plaintext));
+                            $historico[$index]['local'] = mb_strtolower(utf8_encode($row->find('td', 1)->plaintext));
+                            $historico[$index]['acao']  = mb_strtolower(utf8_encode($row->find('td', 2)->plaintext));
+                            $historico[$index]['detalhes'] = '';
+                        } else {
+                            $historico[$index - 1]['detalhes'] = mb_strtolower(utf8_encode($row->find('td', 0)->plaintext));
+                        }
                     }
                 }
+            } catch (\Exception $e) {
+                
             }
 
             $detalhes[$key]['historico'] = $historico;
