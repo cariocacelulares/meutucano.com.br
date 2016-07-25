@@ -113,7 +113,7 @@ Route::group(['prefix' => '/api'], function() {
         /**
          * Pedidos
          */
-        // rest('pedidos', 'Pedido\PedidoController');
+        rest('pedidos', 'Pedido\PedidoController');
 
         /**
          * Notas
@@ -121,6 +121,5 @@ Route::group(['prefix' => '/api'], function() {
         rest('notas', 'Pedido\PedidoNotaController');
     });
 
-    rest('pedidos', 'Pedido\PedidoController');
 });
 
