@@ -36,9 +36,15 @@ class FaturamentoCodigoController extends Controller
             $etiqueta = new Etiqueta();
             $etiqueta->setEtiquetaSemDv($servico . $codigo->atual);
 
-            $response['codigo'] = $etiqueta->getEtiquetaComDv() . 'BR';
+            return $response['codigo'] = $etiqueta->getEtiquetaComDv() . 'BR';
         }
 
         return $this->showResponse($response);
+    }
+
+    public function codigos() {
+        for ($i = 0; $i < 150; $i++) {
+            echo $this->generateCode(0) . '<br>';
+        }
     }
 }

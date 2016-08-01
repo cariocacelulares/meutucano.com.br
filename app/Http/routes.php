@@ -6,8 +6,8 @@ Route::get('/', function () {
 });
 
 
-// Route::get('/api/feed', 'AnymarketController@feedSale');
-Route::get('/api/buscaimei', 'SearchController@imei');
+Route::get('/api/skyhub/pedidos', 'SkyhubController@pedidoTeste');
+Route::get('/api/codigos', 'Codigo\FaturamentoCodigoController@codigos');
 
 /**
  * API

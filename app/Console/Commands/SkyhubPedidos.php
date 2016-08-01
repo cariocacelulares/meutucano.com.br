@@ -1,23 +1,23 @@
 <?php namespace App\Console\Commands;
 
-use App\Http\Controllers\AnymarketController;
+use App\Http\Controllers\SkyhubController;
 use Illuminate\Console\Command;
 
-class AnymarketImportPedidos extends Command
+class SkyhubPedidos extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'anymarket:pedidos';
+    protected $signature = 'skyhub:pedidos';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Importa pedidos da anymarket';
+    protected $description = 'Importa pedidos aprovados da Skyhub';
 
     /**
      * Execute the console command.
@@ -26,7 +26,7 @@ class AnymarketImportPedidos extends Command
      */
     public function handle()
     {
-        $count = with(new AnymarketController())->feedSale();
-        $this->comment($count);
+        $return = with(new SkyhubController())->getPedidos();
+        $this->comment($return);
     }
 }

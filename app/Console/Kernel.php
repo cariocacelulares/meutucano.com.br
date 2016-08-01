@@ -12,7 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\RefreshRastreios::class,
-        Commands\AnymarketImportPedidos::class
+        Commands\SkyhubPedidos::class
     ];
 
     /**
