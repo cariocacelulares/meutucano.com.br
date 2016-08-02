@@ -66,7 +66,7 @@ class PedidoRastreioController extends Controller
 
         foreach ($pedidos as $id) {
             $rastreio = PedidoRastreio::find($id);
-            $rastreio->prazoEntrega = self::deadline($rastreio->rastreio, $rastreio->pedido->endereco->cep);
+            $rastreio->prazo = self::deadline($rastreio->rastreio, $rastreio->pedido->endereco->cep);
             $rastreio->save();
         }
     }
