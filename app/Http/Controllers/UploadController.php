@@ -371,20 +371,20 @@ class UploadController extends Controller
             $nome  = (string) $nfe->dest->xNome;
             $email = (string) $nfe->dest->email;
             $dataHora = date('His');
-            Mail::send('emails.compra', [
-                'nome' => $nfe->dest->xNome,
-                'produtos' => $produtos,
-                'rastreio' => $rastreio
-            ], function($message) use ($idPedido, $dataHora, $email, $nome) {
-                with(new PedidoNotaController())->danfe($idPedido, 'F', storage_path('app/public/' . $dataHora . '.pdf'));
+            // Mail::send('emails.compra', [
+            //     'nome' => $nfe->dest->xNome,
+            //     'produtos' => $produtos,
+            //     'rastreio' => $rastreio
+            // ], function($message) use ($idPedido, $dataHora, $email, $nome) {
+            //     with(new PedidoNotaController())->danfe($idPedido, 'F', storage_path('app/public/' . $dataHora . '.pdf'));
 
-                $message
-                    ->attach(storage_path('app/public/' . $dataHora . '.pdf'), ['as' => 'nota.pdf', 'mime' => 'application/pdf'])
-                    ->to($email)
-                    ->subject('Obrigado por comprar na Carioca Celulares On-line');
-            });
+            //     $message
+            //         ->attach(storage_path('app/public/' . $dataHora . '.pdf'), ['as' => 'nota.pdf', 'mime' => 'application/pdf'])
+            //         ->to($email)
+            //         ->subject('Obrigado por comprar na Carioca Celulares On-line');
+            // });
 
-            unlink(storage_path('app/public/' . $dataHora . '.pdf'));
+            // unlink(storage_path('app/public/' . $dataHora . '.pdf'));
         }
 
         return true;
