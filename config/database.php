@@ -10,7 +10,7 @@ return [
             'driver' => 'mysql',
             'host' => env('DB_HOST', 'localhost'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'tucano'),
+            'database' => env('DB_DATABASE', 'meutucano'),
             'username' => env('DB_USERNAME', 'dev'),
             'password' => env('DB_PASSWORD', 'carioca5102'),
             'charset' => 'utf8',
