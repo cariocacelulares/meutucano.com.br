@@ -33,6 +33,44 @@ class PedidoRastreioController extends Controller
 
     protected $validationRules = [];
 
+    public function teste() {
+        $pedidos = [
+            22362,
+            22365,
+            21785,
+            21790,
+            21797,
+            21800,
+            21803,
+            21834,
+            21899,
+            22072,
+            22073,
+            22074,
+            22077,
+            22078,
+            22079,
+            22080,
+            22081,
+            22082,
+            22083,
+            22086,
+            22087,
+            22476,
+            22474,
+            22472,
+            22471,
+            22470,
+            22468
+        ];
+
+        foreach ($pedidos as $id) {
+            $rastreio = PedidoRastreio::find($id);
+            $rastreio->prazoEntrega = self::deadline($rastreio->rastreio, $rastreio->pedido->endereco->cep);
+            $rastreio->save();
+        }
+    }
+
     /**
      * Return active rastreios
      *
