@@ -1119,12 +1119,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/diego3g/nfephp.git",
-                "reference": "5b5ce72b14b00b15bff7d48d57f161db400c3aa9"
+                "reference": "00371b8fa95fd6135bcd0ddf7896024848e8ed3b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/diego3g/nfephp/zipball/5b5ce72b14b00b15bff7d48d57f161db400c3aa9",
-                "reference": "5b5ce72b14b00b15bff7d48d57f161db400c3aa9",
+                "url": "https://api.github.com/repos/diego3g/nfephp/zipball/00371b8fa95fd6135bcd0ddf7896024848e8ed3b",
+                "reference": "00371b8fa95fd6135bcd0ddf7896024848e8ed3b",
                 "shasum": ""
             },
             "require": {
@@ -1215,7 +1215,7 @@
             "support": {
                 "source": "https://github.com/diego3g/nfephp/tree/carioca"
             },
-            "time": "2016-04-20 17:16:59"
+            "time": "2016-07-12 22:54:50"
         },
         {
             "name": "nikic/php-parser",
