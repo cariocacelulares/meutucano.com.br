@@ -14,7 +14,7 @@
         "itbz/fpdf": "^1.7",
         "nfephp-org/nfephp": "dev-carioca",
         "zizaco/entrust": "5.2.x-dev",
-        "sunra/php-simple-html-dom-parser": "v1.5.0",
+        "sunra/php-simple-html-dom-parser": "^1.5",
         "guzzlehttp/guzzle": "~5.0",
         "swiftmailer/swiftmailer": "^5.4"
     },

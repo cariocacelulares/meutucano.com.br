@@ -36,6 +36,11 @@ Route::group(['prefix' => '/api'], function() {
         Route::get('minhas-senhas',           'Interno\UsuarioSenhaController@currentUserPasswords');
 
         /**
+         * Template ML
+         */
+        Route::get('templateml/gerar', 'Marketing\TemplatemlController@generateTemplate');
+
+        /**
          * Atendimento
          */
         Route::group(['middleware' => ['role:admin|atendimento']], function() {

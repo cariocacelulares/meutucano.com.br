@@ -84,6 +84,13 @@
                 ]
             },
             {
+                title: 'Marketing',
+                icon: 'fa-bullhorn',
+                sub: [
+                    {title: 'Template ML', icon: 'fa-clipboard', sref: $state.href('app.marketing.templateml')}
+                ]
+            },
+            {
                 title: 'Interno',
                 icon: 'fa-desktop',
                 sub: [
