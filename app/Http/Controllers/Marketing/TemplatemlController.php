@@ -30,8 +30,8 @@ class TemplatemlController extends Controller
         foreach ($info as $key => $productInfo) {
             $htmlInfo[] = sprintf('
                 <tr>
-                  <td style="border-bottom: 1px solid #ccc;font-weight:bold;">%s</td>
-                  <td align="right" style="border-bottom: 1px solid #ccc;">%s</td>
+                  <td style="border-bottom: 1px solid #ccc;font-weight:bold;padding:12px 0;">%s</td>
+                  <td align="right" style="border-bottom: 1px solid #ccc;padding:12px 0;">%s</td>
                 </tr>', 
                 $productInfo->find('.additional', 0)->find('strong', 0)->innertext,
                 $productInfo->find('.additional', 0)->find('p', 0)->innertext);
@@ -57,7 +57,7 @@ class TemplatemlController extends Controller
                         </td>
                         <td width="10"></td>
                         <td width="425">
-                          <table cellspacing="0" cellpadding="12" width="425" style="font-family: Arial, sans-serif; font-size: 13px;">
+                          <table cellspacing="0" cellpadding="0" width="425" style="font-family: Arial, sans-serif; font-size: 13px;">
                             %s
                           </table>
                         </td>
