@@ -44,7 +44,7 @@ class TemplatemlController extends Controller
               <tbody>      
                 <tr>      
                   <td colspan="2" width="910"> 
-                    <img src="images/template_01.jpg" width="910" height="287" border="0">
+                    <img src="http://acao.cariocacelulares.com.br/templateml/images/template_01.jpg" width="910" height="287" border="0">
                   </td>   
                 </tr>     
                 <tr>      
@@ -68,17 +68,17 @@ class TemplatemlController extends Controller
                 </tr>  
                 <tr>      
                   <td colspan="2" width="910"> 
-                    <img src="images/template_03.jpg" width="910" height="497" border="0">
+                    <img src="http://acao.cariocacelulares.com.br/templateml/images/template_03.jpg" width="910" height="497" border="0">
                   </td>   
                 </tr>  
                 <tr>      
                   <td colspan="2" width="910"> 
-                    <img src="images/template_04.jpg" width="910" height="671" border="0">
+                    <img src="http://acao.cariocacelulares.com.br/templateml/images/template_04.jpg" width="910" height="671" border="0">
                   </td>   
                 </tr>  
                 <tr>      
                   <td colspan="2" width="910"> 
-                    <img src="images/template_05.jpg" width="910" height="314" border="0">
+                    <img src="http://acao.cariocacelulares.com.br/templateml/images/template_05.jpg" width="910" height="314" border="0">
                   </td>   
                 </tr>       
               </tbody>
