@@ -182,12 +182,6 @@ class SkyhubController extends Controller
             }
 
             $this->request(
-                sprintf('/queues/orders/%s', $s_pedido['code']), 
-                [],
-                'DELETE'
-            );
-
-            $this->request(
                 sprintf('/orders/%s/exported', $s_pedido['code']), 
                 ['json' => [
                     "exported" => true
@@ -215,6 +209,7 @@ class SkyhubController extends Controller
 
         if ($pedidos) {
             foreach ($pedidos['orders'] as $s_pedido) {
+                // print_r($s_pedido);
                 $this->importPedido($s_pedido);
             }  
         }
@@ -231,6 +226,12 @@ class SkyhubController extends Controller
 
         if ($s_pedido) {
             $this->importPedido($s_pedido);
+
+            $this->request(
+                sprintf('/queues/orders/%s', $s_pedido['code']), 
+                [],
+                'DELETE'
+            );
         }
     }
 
