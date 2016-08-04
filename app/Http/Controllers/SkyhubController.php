@@ -147,19 +147,21 @@ class SkyhubController extends Controller
                 ? \Config::get('tucano.venda_interna')
                 : \Config::get('tucano.venda_externa');
 
+            $codMarketplace = $this->parseMarketplaceId(
+                $marketplace, 
+                substr($s_pedido['code'], strpos($s_pedido['code'], '-') + 1)
+            );
+
             $pedido = Pedido::firstOrCreate([
                 'cliente_id'          => $cliente->id, 
                 'cliente_endereco_id' => $clienteEndereco->id, 
-                'codigo_skyhub'       => $s_pedido['code']
+                'codigo_marketplace'  => $codMarketplace
             ]);
             $pedido->cliente_id          = $cliente->id;
             $pedido->cliente_endereco_id = $clienteEndereco->id;
             $pedido->codigo_skyhub       = $s_pedido['code'];
             $pedido->frete_skyhub        = $s_pedido['shipping_cost'];
-            $pedido->codigo_marketplace  = $this->parseMarketplaceId(
-                $marketplace, 
-                substr($s_pedido['code'], strpos($s_pedido['code'], '-') + 1)
-            );
+            $pedido->codigo_marketplace  = $codMarketplace;
             $pedido->marketplace         = $marketplace;
             $pedido->operacao            = $operacao;
             $pedido->total               = $s_pedido['total_ordered'];
