@@ -214,7 +214,7 @@ class SkyhubController extends Controller
         $pedidos = $this->request('/orders?per_page=100&filters[sync_status][]=NOT_SYNCED');
 
         if ($pedidos) {
-            foreach ($pedidos as $s_pedido) {
+            foreach ($pedidos['orders'] as $s_pedido) {
                 $this->importPedido($s_pedido);
             }  
         }
