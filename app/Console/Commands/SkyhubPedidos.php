@@ -26,7 +26,7 @@ class SkyhubPedidos extends Command
      */
     public function handle()
     {
-        $return = with(new SkyhubController())->getPedidos();
+        $return = with(new SkyhubController())->queue();
         $this->comment($return);
     }
 }
