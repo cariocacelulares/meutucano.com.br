@@ -189,8 +189,6 @@ class SkyhubController extends Controller
                 'PUT'
             );
 
-            $countImportado++;
-
             return sprintf('Pedido %s importado', $s_pedido['code']);
         } catch (\Exception $e) {
             \Log::error('Pedido ' . $s_pedido['code'] . ' não importado: ' . $e->getMessage() . ' - ' . $e->getLine());
