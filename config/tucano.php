@@ -52,7 +52,7 @@ return [
     /**
      * Iniciais frete
      */
-    'pac'   => ['PE', 'PI', 'PJ'],
+    'pac'   => ['PE', 'PI', 'PJ', 'PL'],
     'sedex' => ['DJ', 'DN', 'DM', 'DU', 'DV', 'DW'],
 
     /**

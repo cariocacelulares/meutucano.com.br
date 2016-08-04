@@ -58,7 +58,7 @@ class PedidoNota extends \Eloquent
      */
     public function getNumeroAttribute()
     {
-        return (substr($this->pedido_id, 0, -1)) ?: $this->pedido_id;
+        return (int) (substr($this->chave, 25, 9)) ?: $this->pedido_id;
     }
 
     /**

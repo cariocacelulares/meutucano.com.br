@@ -3,6 +3,7 @@
 use App\Http\Controllers\RestControllerTrait;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\SkyhubController;
 use App\Models\PedidoNota;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
@@ -129,5 +130,17 @@ class PedidoNotaController extends Controller
         }
 
         return $this->notFoundResponse();
+    }
+
+    /**
+     * Fatura pedido
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function faturar($pedido_id)
+    {
+        return with(new SkyhubController())->orderInvoice($pedido_id);
+        // return $this->notFoundResponse();
     }
 }

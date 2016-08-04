@@ -7,20 +7,18 @@
         .config(function(envServiceProvider) {
             envServiceProvider.config({
                 domains: {
-                    development: ['192.168.2.109'],
+                    development: ['localhost'],
                     production:  ['192.168.2.170']
                 }, 
                 vars: {
                     development: {
-                        apiUrl: 'http://192.168.2.109/dev/tucanov3/public/api'
+                        apiUrl: 'http://localhost/dev/tucanov3/public/api'
                     },
                     production: {
-                        apiUrl: 'http://192.168.2.170/tucano/public/index.php/api'
+                        apiUrl: 'http://192.168.2.170/meutucano/public/index.php/api'
                     }
                 }
             });
-
-
 
             envServiceProvider.check();
         })

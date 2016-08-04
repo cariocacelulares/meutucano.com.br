@@ -51,7 +51,7 @@
                 vm.codigo.rastreio = response.codigo;
 
                 if (response.hasOwnProperty('error')) {
-                    vm.codigo.rastreio = 'Códigos esgotados!';
+                    vm.codigo.rastreio = 'Códigos esgotados!'; 
                     toaster.pop('error', 'Erro', response.error);
                 }
 
@@ -59,6 +59,15 @@
                     toaster.pop('warning', 'Atenção', response.msg);
                 }
                 vm.codigo.mensagem = response.msg;
+            });
+        };
+
+        /**
+         * Faturar pedido
+         */
+        vm.faturar = function(pedido_id) {
+            Restangular.one("notas/faturar", pedido_id).customGET().then(function(response) {
+                toaster.pop('success', 'Sucesso!', 'Pedido faturado com sucesso!');
             });
         };
     }

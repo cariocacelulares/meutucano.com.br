@@ -102,6 +102,20 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="m-t-15 p-t-15 b-t b-grey">
+                                        <button ng-if="rastreio.observacao" ng-click="App.observacao(rastreio)" class="btn btn-default btn-xs">
+                                            <i class="fa fa-comment"></i>&nbsp; Obs
+                                        </button>
+                                        <button ng-if="rastreio.devolucao" ng-click="App.devolucao(rastreio)" class="btn btn-default btn-xs">
+                                            <i class="fa fa-undo"></i>&nbsp; Devolução
+                                        </button>
+                                        <button ng-if="rastreio.logistica" ng-click="App.logistica(rastreio)" class="btn btn-default btn-xs">
+                                            <i class="fa fa-exchange"></i>&nbsp; Logística
+                                        </button>
+                                        <button ng-if="rastreio.pi" ng-click="App.pi(rastreio)" class="btn btn-default btn-xs">
+                                            <i class="fa fa-warning"></i>&nbsp; PI
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
