@@ -7,7 +7,6 @@ Route::get('/', function () {
 
 
 Route::get('/api/skyhub/pedidos', 'SkyhubController@getPedidos');
-Route::get('/api/codigos', 'Codigo\FaturamentoCodigoController@codigos');
 
 /**
  * API
