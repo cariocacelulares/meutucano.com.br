@@ -209,7 +209,6 @@ class SkyhubController extends Controller
 
         if ($pedidos) {
             foreach ($pedidos['orders'] as $s_pedido) {
-                // print_r($s_pedido);
                 $this->importPedido($s_pedido);
             }  
         }

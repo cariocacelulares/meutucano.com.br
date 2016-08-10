@@ -39,6 +39,6 @@ class PedidoProduto extends \Eloquent
      */
     public function pedido()
     {
-        return $this->hasOne(Pedido::class);
+        return $this->belongsTo(Pedido::class);
     }
 }
