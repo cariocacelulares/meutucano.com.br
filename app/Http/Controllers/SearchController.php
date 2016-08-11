@@ -1348,6 +1348,10 @@ class SearchController extends Controller
                 echo Carbon::createFromFormat('Y-m-d', $pedidoProduto->pedido->nota->data)->format('d/m/Y') . ',';
                 echo $pedidoProduto->pedido->cliente->nome;
                 echo '<br>';
+            } else {
+                echo $i;
+                echo ',,,';
+                echo '<br>';
             }
         }
     }
