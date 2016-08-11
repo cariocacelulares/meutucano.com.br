@@ -24,6 +24,10 @@ class SearchController extends Controller
 
     public function difa()
     {
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
+
         $notas = PedidoNota::with(['pedido', 'pedido.imposto', 'pedido.endereco'])
             ->where(\DB::raw('YEAR(pedido_notas.data)'), '=', date('Y'))
             ->get();
@@ -85,8 +89,6 @@ class SearchController extends Controller
                 $nota->pedido->imposto->icms_destinatario = $difa;
                 $nota->pedido->imposto->save();
             }
-
-            break;
         }
     }
 
