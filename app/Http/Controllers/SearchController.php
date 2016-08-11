@@ -9,6 +9,7 @@ use App\Models\PedidoNota;
 use App\Models\PedidoRastreio;
 use App\Models\PedidoRastreioPi;
 use App\Models\PedidoProduto;
+use App\Models\PedidoImposto;
 use App\Models\Produto;
 use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;
@@ -20,6 +21,74 @@ use Carbon\Carbon;
 class SearchController extends Controller
 {
     use RestResponseTrait;
+
+    public function difa()
+    {
+        $notas = PedidoNota::with(['pedido', 'pedido.imposto', 'pedido.endereco'])
+            ->where(\DB::raw('YEAR(pedido_notas.data)'), '=', date('Y'))
+            ->get();
+
+        $difaEstado = [
+            'AC' => 4,
+            'AL' => 4,
+            'AP' => 4.4,
+            'AM' => 4.4,
+            'BA' => 4.4,
+            'CE' => 4,
+            'DF' => 4.4,
+            'ES' => 4,
+            'GO' => 4,
+            'MA' => 4.4,
+            'MT' => 4,
+            'MS' => 4,
+            'MG' => 2.4,
+            'PR' => 4,
+            'PB' => 4.4,
+            'PA' => 2.4,
+            'PE' => 4.4,
+            'PI' => 4,
+            'RJ' => 2.4,
+            'RN' => 4.4,
+            'RS' => 2.4,
+            'RO' => 4.2,
+            'RR' => 4,
+            'SP' => 2.4,
+            'SE' => 4.4,
+            'TO' => 4.4 
+        ];
+
+        foreach ($notas as $nota) {
+            // 172, 173
+            if ($imposto = $nota->pedido->imposto) {
+
+                $skus = [];
+                if ($produtos = $nota->pedido->produtos) {
+                    $skus = array_pluck($produtos->toArray(), 'produto_sku');
+                }
+
+                $estadoCliente = $nota->pedido->endereco->uf;
+
+                if ($estadoCliente == 'SC')
+                    continue;
+
+                $difaCalculo = ($difaEstado[$estadoCliente] / 100);
+
+                if (in_array(172, $skus) || in_array(173, $skus)) {
+                    $baseCalculo = $nota->pedido->total * 0.2;
+                } else {
+                    $baseCalculo = $nota->pedido->total;
+                }
+
+                $difa = $difaCalculo * $baseCalculo;
+                $difa = round($difa, 2);
+
+                $nota->pedido->imposto->icms_destinatario = $difa;
+                $nota->pedido->imposto->save();
+            }
+
+            break;
+        }
+    }
 
     /**
      * Busca de pedidos
