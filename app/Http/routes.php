@@ -7,7 +7,6 @@ Route::get('/', function () {
 
 
 Route::get('/api/skyhub/pedidos', 'SkyhubController@getPedidos');
-Route::get('/api/difa', 'SearchController@difa');
 
 /**
  * API
