@@ -5,14 +5,11 @@ Route::get('/', function () {
     return view('index');
 });
 
-
-// Route::get('/api/feed', 'AnymarketController@feedSale');
-Route::get('/api/buscaimei', 'SearchController@imei');
-
 /**
  * API
  */
 Route::group(['prefix' => '/api'], function() {
+    
     /**
      * Auth
      */
@@ -34,6 +31,11 @@ Route::group(['prefix' => '/api'], function() {
         
         Route::get('rastreios/etiqueta/{id}', 'Pedido\PedidoRastreioController@etiqueta');
         Route::get('minhas-senhas',           'Interno\UsuarioSenhaController@currentUserPasswords');
+
+        /**
+         * Template ML
+         */
+        Route::get('templateml/gerar', 'Marketing\TemplatemlController@generateTemplate');
 
         /**
          * Atendimento
@@ -75,6 +77,7 @@ Route::group(['prefix' => '/api'], function() {
              * Listagem de notas por usuário
              */
             Route::get('notas/faturamento', 'Pedido\PedidoNotaController@notasFaturamento');
+            Route::get('notas/faturar/{pedido_id}', 'Pedido\PedidoNotaController@faturar');
 
             /**
              * Código de rastreio

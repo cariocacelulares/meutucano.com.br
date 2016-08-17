@@ -34,7 +34,7 @@ class PedidoRastreioController extends Controller
     protected $validationRules = [];
 
     /**
-     * Return active rastreios
+     * Retorna os rastreios importantes
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -57,7 +57,7 @@ class PedidoRastreioController extends Controller
     }
 
     /**
-     * Edit information about rastreio
+     * Altera informações do rastreio
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
@@ -94,7 +94,7 @@ class PedidoRastreioController extends Controller
     }
 
     /**
-     * Refresh all rastreios
+     * Atualiza status de todos rastreios
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -138,7 +138,7 @@ class PedidoRastreioController extends Controller
     }
 
     /**
-     * Refresh the status from rastreio
+     * Atualiza status do rastreio
      *
      * @param $rastreio
      * @return mixed
@@ -179,7 +179,7 @@ class PedidoRastreioController extends Controller
     }
 
     /**
-     * Return prazo de entrega  correios
+     * Retorna o prazo de entrega dos correios
      *
      * @param $codigoRastreio
      * @param $cep
@@ -187,11 +187,11 @@ class PedidoRastreioController extends Controller
      */
     public static function deadline($codigoRastreio, $cep)
     {
-        $tipoRastreio    = substr($codigoRastreio, 0, 2);
+        $tipoRastreio    = substr($codigoRastreio, 0, 1);
         $servicoPostagem = null;
-        if (in_array($tipoRastreio, Config::get('tucano.pac'))) {
+        if ($tipoRastreio == 'P') {
             $servicoPostagem = 41106;
-        } elseif (in_array($tipoRastreio, Config::get('tucano.sedex'))) {
+        } elseif ($tipoRastreio == 'D') {
             $servicoPostagem = 40010;
         }
 
@@ -216,7 +216,7 @@ class PedidoRastreioController extends Controller
     }
 
     /**
-     * Return the history from correios
+     * Retorna o histórico de um rastreio nos correios
      *
      * @param array|string $codigos
      * @return array
@@ -232,24 +232,28 @@ class PedidoRastreioController extends Controller
                 $item
             );
 
-            $content = HtmlDomParser::file_get_html($correios);
-
-            $detalhes[$key]['codigo'] = $item;
             $historico = [];
-            if (sizeof($content->find('table tr')) > 1) {
-                foreach ($content->find('table tr') as $index => $row) {
-                    if ($row->find('td', 0)->plaintext == 'Data')
-                        continue;
+            $detalhes[$key]['codigo'] = $item;
+            
+            try {
+                $content = HtmlDomParser::file_get_html($correios);
+                if (sizeof($content->find('table tr')) > 1) {
+                    foreach ($content->find('table tr') as $index => $row) {
+                        if ($row->find('td', 0)->plaintext == 'Data')
+                            continue;
 
-                    if (sizeof($row->find('td')) > 1) {
-                        $historico[$index]['data']  = mb_strtolower(utf8_encode($row->find('td', 0)->plaintext));
-                        $historico[$index]['local'] = mb_strtolower(utf8_encode($row->find('td', 1)->plaintext));
-                        $historico[$index]['acao']  = mb_strtolower(utf8_encode($row->find('td', 2)->plaintext));
-                        $historico[$index]['detalhes'] = '';
-                    } else {
-                        $historico[$index - 1]['detalhes'] = mb_strtolower(utf8_encode($row->find('td', 0)->plaintext));
+                        if (sizeof($row->find('td')) > 1) {
+                            $historico[$index]['data']  = mb_strtolower(utf8_encode($row->find('td', 0)->plaintext));
+                            $historico[$index]['local'] = mb_strtolower(utf8_encode($row->find('td', 1)->plaintext));
+                            $historico[$index]['acao']  = mb_strtolower(utf8_encode($row->find('td', 2)->plaintext));
+                            $historico[$index]['detalhes'] = '';
+                        } else {
+                            $historico[$index - 1]['detalhes'] = mb_strtolower(utf8_encode($row->find('td', 0)->plaintext));
+                        }
                     }
                 }
+            } catch (\Exception $e) {
+                
             }
 
             $detalhes[$key]['historico'] = $historico;
@@ -259,7 +263,7 @@ class PedidoRastreioController extends Controller
     }
 
     /**
-     * Return last status from rastreio
+     * Retorna o último status de um rastreio nos correios
      *
      * @param $codigoRastreio
      * @return mixed
@@ -270,7 +274,7 @@ class PedidoRastreioController extends Controller
     }
 
     /**
-     * Return first status from rastreio
+     * Retorna o primeiro status de um rastreio nos correios
      *
      * @param $codigoRastreio
      * @return mixed
@@ -281,7 +285,7 @@ class PedidoRastreioController extends Controller
     }
 
     /**
-     * Generate etiqueta
+     * Gera o PDF da etiqueta dos correios
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response

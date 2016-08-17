@@ -48,13 +48,7 @@ return [
 
     'venda_interna' => 5102,
     'venda_externa' => 6108,
-
-    /**
-     * Iniciais frete
-     */
-    'pac'   => ['PE', 'PI', 'PJ'],
-    'sedex' => ['DJ', 'DN', 'DM', 'DU', 'DV', 'DW'],
-
+    
     /**
      * Feriados
      */
@@ -140,12 +134,13 @@ return [
     ],
 
     /**
-     * Acesso da API da AnyMarket
+     * Skyhub
      */
-    'anymarket' => [
+    'skyhub' => [
         'api' => [
-            'token'   => 'LG1445362480868R-803354070',
-            'url'     => 'http://api.anymarket.com.br/v2',
+            'email' => 'dev@cariocacelulares.com.br',
+            'token' => 'ciBmtUvQviXkcey7tkPb',
+            'url'   => 'http://in.skyhub.com.br',
         ]
     ]
 ];

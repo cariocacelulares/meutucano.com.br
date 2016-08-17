@@ -16,7 +16,7 @@ use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 class AuthenticateController extends Controller
 {
     /**
-     * Try to auth user
+     * Autentica usuário
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -37,7 +37,7 @@ class AuthenticateController extends Controller
     }
 
     /**
-     * Return auth user
+     * Retorna o usuário autenticado
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -59,7 +59,8 @@ class AuthenticateController extends Controller
     }
 
     /**
-     * Refresh token
+     * Atualiza o token do JWT
+     * 
      * @return mixed
      * @throws AccessDeniedHttpException
      * @throws BadRequestHttpException

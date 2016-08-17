@@ -1,6 +1,7 @@
 <?php namespace App\Models;
 
 use Carbon\Carbon;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
  * Class PedidoRastreioPi
@@ -8,6 +9,13 @@ use Carbon\Carbon;
  */
 class PedidoRastreioPi extends \Eloquent
 {
+    use RevisionableTrait;
+
+    /**
+     * @var boolean
+     */
+    protected $revisionCreationsEnabled = true;
+
     /**
      * @var string
      */
@@ -21,19 +29,7 @@ class PedidoRastreioPi extends \Eloquent
     /**
      * @var array
      */
-    protected $fillable = [
-        'rastreio_id',
-        'usuario_id',
-        'codigo_pi',
-        'motivo_status',
-        'status',
-        'data_pagamento',
-        'valor_pago',
-        'pago_cliente',
-        'protocolo',
-        'acao',
-        'observacoes'
-    ];
+    protected $fillable = ['*'];
 
     /**
      * @var array
@@ -49,9 +45,9 @@ class PedidoRastreioPi extends \Eloquent
      */
     protected $casts = [
         'motivo_status' => 'string',
-        'status' => 'string',
-        'acao' => 'string',
-        'pago_cliente' => 'string',
+        'status'        => 'string',
+        'acao'          => 'string',
+        'pago_cliente'  => 'string',
     ];
 
     /**

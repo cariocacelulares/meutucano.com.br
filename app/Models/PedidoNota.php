@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
  * Class PedidoNota
@@ -9,7 +10,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class PedidoNota extends \Eloquent
 {
-    use SoftDeletes;
+    use SoftDeletes, 
+        RevisionableTrait;
 
     /**
      * @var string
@@ -24,13 +26,7 @@ class PedidoNota extends \Eloquent
     /**
      * @var array
      */
-    protected $fillable = [
-        'pedido_id',
-        'usuario_id',
-        'data',
-        'chave',
-        'arquivo'
-    ];
+    protected $fillable = ['*'];
 
     /**
      * @var array
@@ -58,7 +54,7 @@ class PedidoNota extends \Eloquent
      */
     public function getNumeroAttribute()
     {
-        return (substr($this->pedido_id, 0, -1)) ?: $this->pedido_id;
+        return (int) (substr($this->chave, 25, 9)) ?: $this->pedido_id;
     }
 
     /**

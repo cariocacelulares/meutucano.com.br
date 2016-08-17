@@ -1,5 +1,7 @@
 <?php namespace App\Models;
+
 use Carbon\Carbon;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
  * Class PedidoRastreioLogistica
@@ -7,6 +9,13 @@ use Carbon\Carbon;
  */
 class PedidoRastreioLogistica extends \Eloquent
 {
+    use RevisionableTrait;
+
+    /**
+     * @var boolean
+     */
+    protected $revisionCreationsEnabled = true;
+
     /**
      * @var string
      */
@@ -20,16 +29,7 @@ class PedidoRastreioLogistica extends \Eloquent
     /**
      * @var array
      */
-    protected $fillable = [
-        'rastreio_id',
-        'usuario_id',
-        'autorizacao',
-        'motivo',
-        'acao',
-        'protocolo',
-        'data_postagem',
-        'observacoes'
-    ];
+    protected $fillable = ['*'];
 
     /**
      * @var array
@@ -44,7 +44,7 @@ class PedidoRastreioLogistica extends \Eloquent
      */
     protected $casts = [
         'motivo' => 'string',
-        'acao' => 'string',
+        'acao'   => 'string',
     ];
 
     /**

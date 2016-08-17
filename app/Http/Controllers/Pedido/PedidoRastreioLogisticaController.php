@@ -23,7 +23,7 @@ class PedidoRastreioLogisticaController extends Controller
     protected $validationRules = [];
 
     /**
-     * Edit information about PI
+     * Altera informações da logística
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response

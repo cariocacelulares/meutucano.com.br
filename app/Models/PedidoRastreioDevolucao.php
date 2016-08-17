@@ -1,6 +1,7 @@
 <?php namespace App\Models;
 
 use Carbon\Carbon;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
  * Class PedidoRastreioDevolucao
@@ -8,10 +9,17 @@ use Carbon\Carbon;
  */
 class PedidoRastreioDevolucao extends \Eloquent
 {
+    use RevisionableTrait;
+
     /**
      * @var string
      */
     protected $table = 'pedido_rastreio_devolucoes';
+
+    /**
+     * @var boolean
+     */
+    protected $revisionCreationsEnabled = true;
 
     /**
      * @var string
@@ -26,15 +34,7 @@ class PedidoRastreioDevolucao extends \Eloquent
     /**
      * @var array
      */
-    protected $fillable = [
-        'rastreio_id',
-        'usuario_id',
-        'motivo',
-        'acao',
-        'protocolo',
-        'pago_cliente',
-        'observacoes'
-    ];
+    protected $fillable = ['*'];
 
     /**
      * @var array
@@ -48,8 +48,8 @@ class PedidoRastreioDevolucao extends \Eloquent
      * @var array
      */
     protected $casts = [
-        'motivo' => 'string',
-        'acao' => 'string',
+        'motivo'       => 'string',
+        'acao'         => 'string',
         'pago_cliente' => 'string',
     ];
 
@@ -63,7 +63,6 @@ class PedidoRastreioDevolucao extends \Eloquent
         return $this->belongsTo(PedidoRastreio::class);
     }
 
-
     /**
      * Rastreio Ref
      *
@@ -74,6 +73,11 @@ class PedidoRastreioDevolucao extends \Eloquent
         return $this->hasOne(PedidoRastreio::class, 'rastreio_ref_id');
     }
 
+    /**
+     * Descrição do motivo
+     * 
+     * @return string
+     */
     protected function getMotivoDescriptionAttribute() {
         return ($this->motivo >= 0) ? \Config::get('tucano.devolucao_status')[$this->motivo] : null;
     }

@@ -1,24 +1,19 @@
 <?php namespace App\Models;
 
+use Venturecraft\Revisionable\RevisionableTrait;
+
 /**
  * Class ClienteEndereco
  * @package App\Models
  */
 class ClienteEndereco extends \Eloquent
 {
+    use RevisionableTrait;
+
     /**
      * @var array
      */
-    protected $fillable = [
-        'cliente_id',
-        'cep',
-        'rua',
-        'numero',
-        'complemento',
-        'bairro',
-        'cidade',
-        'uf'
-    ];
+    protected $guarded = ['id'];
 
     /**
      * @var array

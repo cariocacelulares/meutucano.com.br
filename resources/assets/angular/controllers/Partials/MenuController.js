@@ -116,11 +116,22 @@
                     {title: 'Caixa diário', icon: 'fa-money'},
                     {title: 'ICMS mensal', icon: 'fa-file-pdf-o', sref: $state.href('app.admin.icms')}
                 ]
-            },
+            }, 
             {
                 title: 'Configurações',
                 icon: 'fa-cog',
                 roles: ['admin'],
+            },
+            {
+                title: 'Marketing',
+                icon: 'fa-bullhorn',
+                sub: [
+                    {title: 'Template ML', icon: 'fa-clipboard', sref: $state.href('app.marketing.templateml')}
+                ]
+            },
+            {
+                title: 'Interno',
+                icon: 'fa-desktop',
                 sub: [
                     {
                         title: 'Dados da empresa',

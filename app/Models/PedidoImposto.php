@@ -24,14 +24,7 @@ class PedidoImposto extends \Eloquent
     /**
      * @var array
      */
-    protected $fillable = [
-        'pedido_id',
-        'icms',
-        'pis',
-        'cofins',
-        'icms_destinatario',
-        'icms_remetente',
-    ];
+    protected $fillable = ['*'];
 
     /**
      * Pedido

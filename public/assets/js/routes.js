@@ -122,6 +122,23 @@
                     }
                 })
 
+                /**
+                 * Marketing
+                 */
+                .state('app.marketing', {
+                    url: '/marketing',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.marketing.templateml', {
+                    url: '/templateml',
+                    templateUrl: 'views/marketing/templateml.html',
+                    controller: 'TemplatemlController as Templateml'
+                })
+
+                /**
+                 * Interno
+                 */
                 .state('app.interno.senhas', {
                     url: '/senhas',
                     templateUrl: 'views/layouts/default.html'

@@ -12,7 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\RefreshRastreios::class,
-        Commands\AnymarketImportPedidos::class
+        Commands\SkyhubPedidos::class
     ];
 
     /**
@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('refresh:rastreios')
             ->twiceDaily(1, 12);
 
-        // $schedule->command('anymarket:pedidos')
-        //     ->everyThirtyMinutes();
+        $schedule->command('skyhub:pedidos')
+            ->everyMinute();
     }
 }

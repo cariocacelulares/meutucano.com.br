@@ -23,7 +23,8 @@ class PedidoRastreioPiController extends Controller
     protected $validationRules = [];
 
     /**
-     * Get list of pending pi's
+     * Retorna uma lista de PI's pendentes de ação
+     * 
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function index()
@@ -42,7 +43,7 @@ class PedidoRastreioPiController extends Controller
     }
 
     /**
-     * Edit information about PI
+     * Altera informações da PI
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
@@ -57,49 +58,6 @@ class PedidoRastreioPiController extends Controller
 
             $pi->rastreio_id = $id;
             $pi->usuario_id  = JWTAuth::parseToken()->authenticate()->id;
-
-            /**
-             * Create new rastreio
-             */
-            // if (Input::get('rastreio_ref.rastreio') && $pi->acao == null) {
-            //     $rastreio = new PedidoRastreio();
-
-            //     $rastreio->pedido_id       = $rastreio_ref->pedido->id;
-            //     $rastreio->tipo            = 1;
-            //     $rastreio->rastreio_ref_id = $pi->rastreio_id;
-
-            //     /**
-            //      * Data de envio
-            //      */
-            //     $datetimeNota = \DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
-            //     $dataEnvio = $datetimeNota->add(date_interval_create_from_date_string('+1 day'));
-            //     if ($dataEnvio->format('w') == '6') {
-            //         $dataEnvio = $dataEnvio->add(date_interval_create_from_date_string('+2 day'));
-            //     } else if ($dataEnvio->format('w') == '0') {
-            //         $dataEnvio = $dataEnvio->add(date_interval_create_from_date_string('+1 day'));
-            //     }
-            //     
-            //     $dataEnvio = $dataEnvio->format('Y-m-d');
-
-            //     /**
-            //      * Tipo de envio
-            //      */
-            //     $tipoRastreio    = substr(Input::get('rastreio_ref.rastreio'), 0, 2);
-            //     $metodoEnvio     = null;
-            //     if (in_array($tipoRastreio, Config::get('tucano.pac'))) {
-            //         $metodoEnvio = 'PAC';
-            //     } elseif (in_array($tipoRastreio, Config::get('tucano.sedex'))) {
-            //         $metodoEnvio = 'SEDEX';
-            //     }
-
-            //     $rastreio->data_envio = $dataEnvio;
-            //     $rastreio->rastreio   = Input::get('rastreio_ref.rastreio');
-            //     $rastreio->servico    = $metodoEnvio;
-            //     $rastreio->valor      = Input::get('rastreio_ref.valor', 0);
-            //     $rastreio->prazo      = PedidoRastreioController::deadline(Input::get('rastreio_ref.rastreio'), $rastreio_ref->pedido->endereco->cep);
-
-            //     $rastreio->save();
-            // }
 
             $pi->fill(Input::only(['codigo_pi', 'motivo_status', 'status', 'valor_pago', 'acao', 'protocolo', 'pago_cliente', 'observacoes']));
 

@@ -22,7 +22,8 @@ class PedidoRastreioDevolucaoController extends Controller
     protected $validationRules = [];
 
     /**
-     * Get list of pending devolucoes
+     * Retorna uma lista de devoluções pendentes de ação
+     * 
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function index()
@@ -41,7 +42,7 @@ class PedidoRastreioDevolucaoController extends Controller
     }
 
     /**
-     * Edit information about PI
+     * Altera informações sobre a devolução
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response

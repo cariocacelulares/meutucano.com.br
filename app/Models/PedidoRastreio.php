@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
  * Class PedidoRastreio
@@ -9,22 +10,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class PedidoRastreio extends \Eloquent
 {
-    use SoftDeletes;
+    use SoftDeletes, 
+        RevisionableTrait;
+
+    /**
+     * @var boolean
+     */
+    protected $revisionCreationsEnabled = true;
 
     /**
      * @var array
      */
-    protected $fillable = [
-        'pedido_id',
-        'rastreio_ref_id',
-        'data_envio',
-        'rastreio',
-        'servico',
-        'valor',
-        'prazo',
-        'observacao',
-        'status',
-    ];
+    protected $guarded = ['id'];
 
     /**
      * @var array

@@ -1,11 +1,20 @@
 <?php namespace App\Models;
 
+use Venturecraft\Revisionable\RevisionableTrait;
+
 /**
  * Class Produto
  * @package App\Models
  */
 class Produto extends \Eloquent
 {
+    use RevisionableTrait;
+
+    /**
+     * @var boolean
+     */
+    protected $revisionCreationsEnabled = true;
+
     /**
      * @var string
      */
@@ -19,11 +28,5 @@ class Produto extends \Eloquent
     /**
      * @var array
      */
-    protected $fillable = [
-        'sku',
-        'titulo',
-        'custo',
-        'ncm',
-        'ean',
-    ];
+    protected $fillable = ['*'];
 }

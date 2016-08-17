@@ -9,13 +9,7 @@ class PedidoProduto extends \Eloquent
     /**
      * @var array
      */
-    protected $fillable = [
-        'pedido_id',
-        'produto_sku',
-        'valor',
-        'quantidade',
-        'imei'
-    ];
+    protected $fillable = ['*'];
 
     /**
      * @var bool
@@ -39,6 +33,6 @@ class PedidoProduto extends \Eloquent
      */
     public function pedido()
     {
-        return $this->hasOne(Pedido::class);
+        return $this->belongsTo(Pedido::class);
     }
 }

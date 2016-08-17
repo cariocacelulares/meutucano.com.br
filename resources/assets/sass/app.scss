@@ -47,7 +47,7 @@
         float: left;
     }
 }
-
+ 
 [ng-click] {
     cursor: pointer;
 }
@@ -58,8 +58,9 @@
 
 .page-sidebar {
     transition: all 0.2s ease;
+    overflow-y: scroll; 
 
-    &:hover {
+    &:hover { 
         left: 0;
     }
 }

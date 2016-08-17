@@ -3,6 +3,7 @@
 use App\Http\Controllers\RestControllerTrait;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\SkyhubController;
 use App\Models\PedidoNota;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
@@ -22,6 +23,11 @@ class PedidoNotaController extends Controller
 
     protected $validationRules = [];
 
+    /**
+     * Retorna notas faturadas pelo usuário atual
+     * 
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function notasFaturamento()
     {
         $model = self::MODEL;
@@ -37,7 +43,7 @@ class PedidoNotaController extends Controller
     }
 
     /**
-     * Generate XML from nota
+     * Gera o XML da nota fiscal
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
@@ -58,7 +64,7 @@ class PedidoNotaController extends Controller
     }
 
     /**
-     * Send e-mail to customer
+     * Envia um e-mail ao cliente com a nota fiscal
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
@@ -96,7 +102,7 @@ class PedidoNotaController extends Controller
     }
 
     /**
-     * Generate DANFE from nota
+     * Gera o arquivo PDF da DANFe
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
@@ -129,5 +135,16 @@ class PedidoNotaController extends Controller
         }
 
         return $this->notFoundResponse();
+    }
+
+    /**
+     * Envia os dados de faturamento para a Skyhub
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function faturar($pedido_id)
+    {
+        return with(new SkyhubController())->orderInvoice($pedido_id);
     }
 }

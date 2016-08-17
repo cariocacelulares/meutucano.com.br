@@ -1,6 +1,6 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Controllers\AnymarketController;
+use App\Http\Controllers\SkyhubController;
 use App\Http\Controllers\Pedido\PedidoNotaController;
 use App\Http\Controllers\Pedido\PedidoRastreioController;
 use App\Http\Requests;
@@ -157,9 +157,8 @@ class UploadController extends Controller
         $idMarketplace = null;
         preg_match('/PEDIDO [0-9]{2,}\-?([0-9]{6,})?\w+/', $nfe->infAdic->infCpl, $codPedido);
         if ($codPedido) {
-            $pedido['marketPlace'] = $marketplace;
-            $pedido['marketPlaceId'] = substr($codPedido[0], strpos($codPedido[0], ' ') + 1);
-            $idMarketplace = with(new AnymarketController())->parseMarketplaceId($pedido);
+            $codigoMarketplace = substr($codPedido[0], strpos($codPedido[0], ' ') + 1);
+            $idMarketplace     = with(new SkyhubController())->parseMarketplaceId($marketplace, $codigoMarketplace);
 
             $pedido = Pedido::withTrashed()->where('codigo_marketplace', '=', $idMarketplace)->first();
         }
@@ -251,11 +250,11 @@ class UploadController extends Controller
             /**
              * Serviço de envio
              */
-            $tipoRastreio    = substr($rastreio, 0, 2);
+            $tipoRastreio    = substr($rastreio, 0, 1);
             $metodoEnvio     = null;
-            if (in_array($tipoRastreio, Config::get('tucano.pac'))) {
+            if ($tipoRastreio == 'P') {
                 $metodoEnvio = 'PAC';
-            } elseif (in_array($tipoRastreio, Config::get('tucano.sedex'))) {
+            } elseif ($tipoRastreio == 'D') {
                 $metodoEnvio = 'SEDEX';
             }
 
@@ -322,7 +321,7 @@ class UploadController extends Controller
          */
         $lastPos = 0;
         $positions = [];
-        while (($lastPos = stripos($nfe->infAdic->infCpl, 'PROD.:', $lastPos))!== false) {
+        while (($lastPos = stripos($nfe->infAdic->infCpl, 'PROD.:', $lastPos)) !== false) {
             $positions[] = $lastPos;
             $lastPos = $lastPos + strlen('PROD.:');
         }

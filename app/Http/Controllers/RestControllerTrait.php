@@ -16,7 +16,7 @@ trait RestControllerTrait
     public function index()
     {
         $m = self::MODEL;
-        return $this->listResponse($m::take(20)->get());
+        return $this->listResponse($m::take(20)->orderBy('created_at', 'DESC')->get());
     }
 
     /**

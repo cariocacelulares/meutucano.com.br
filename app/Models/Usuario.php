@@ -12,21 +12,16 @@ class Usuario extends Authenticatable
     use EntrustUserTrait;
 
     /**
-     * The attributes that are mass assignable.
-     *
      * @var array
      */
-    protected $fillable = [
-        'name', 'username', 'email', 'password',
-    ];
+    protected $guarded = ['id'];
 
     /**
-     * The attributes excluded from the model's JSON form.
-     *
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 
+        'remember_token',
     ];
 
     /**
