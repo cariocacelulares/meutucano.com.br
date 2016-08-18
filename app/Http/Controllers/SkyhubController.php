@@ -7,6 +7,7 @@ use App\Models\PedidoProduto;
 use App\Models\Produto;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * Class SkyhubController
@@ -146,8 +147,6 @@ class SkyhubController extends Controller
      */
     public function importPedido($s_pedido) {
         try {
-            $this->updateStockData($s_pedido);
-
             $clienteFone = (sizeof($s_pedido['customer']['phones']) > 1) 
                 ? $s_pedido['customer']['phones'][1] 
                 : $s_pedido['customer']['phones'][0];
@@ -223,7 +222,14 @@ class SkyhubController extends Controller
 
             return sprintf('Pedido %s importado', $s_pedido['code']);
         } catch (\Exception $e) {
-            \Log::error('Pedido ' . $s_pedido['code'] . ' não importado: ' . $e->getMessage() . ' - ' . $e->getLine());
+            $error = 'Pedido ' . $s_pedido['code'] . ' não importado: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $s_pedido;
+
+            Mail::send('emails.error', [
+                'error' => $error
+            ], function ($m) {
+                $m->from('dev@cariocacelulares.com.br', 'Meu Tucano');
+                $m->to('dev.cariocacelulares@gmail.com', 'DEV')->subject('Erro no sistema!');
+            });
             return false;
         }
     }
@@ -290,7 +296,14 @@ class SkyhubController extends Controller
 
             return true;
         } catch (\Exception $e) {
-            \Log::error('Não foi possível atualizar o estoque no Magento: ' . $e->getMessage() . ' - ' . $e->getLine());
+            $error = 'Não foi possível alterar estoque no Magento: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $s_pedido;
+
+            Mail::send('emails.error', [
+                'error' => $error
+            ], function ($m) {
+                $m->from('dev@cariocacelulares.com.br', 'Meu Tucano');
+                $m->to('dev.cariocacelulares@gmail.com', 'DEV')->subject('Erro no sistema!');
+            });
             return false;
         }
     }
@@ -321,13 +334,15 @@ class SkyhubController extends Controller
         $s_pedido = $this->request('/queues/orders');
 
         if ($s_pedido) {
-            $this->importPedido($s_pedido);
+            if ($this->importPedido($s_pedido)) {
+                $this->updateStockData($s_pedido);
 
-            $this->request(
-                sprintf('/queues/orders/%s', $s_pedido['code']), 
-                [],
-                'DELETE'
-            );
+                $this->request(
+                    sprintf('/queues/orders/%s', $s_pedido['code']), 
+                    [],
+                    'DELETE'
+                );
+            }
         }
     }
 
@@ -372,7 +387,14 @@ class SkyhubController extends Controller
                 return true;
 
             } catch (\Exception $e) {
-                \Log::error('Pedido ' . $id . ' não faturado: ' . $e->getMessage() . ' - ' . $e->getLine());
+                $error = 'Pedido não faturado: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $pedido;
+
+                Mail::send('emails.error', [
+                    'error' => $error
+                ], function ($m) {
+                    $m->from('dev@cariocacelulares.com.br', 'Meu Tucano');
+                    $m->to('dev.cariocacelulares@gmail.com', 'DEV')->subject('Erro no sistema!');
+                });
                 return false;
             }
         }
@@ -408,7 +430,14 @@ class SkyhubController extends Controller
 
             return true;
         } catch (\Exception $e) {
-            \Log::error('Não foi possível alterar status do pedido na Skyhub. ' . $e->getMessage() . ' - ' . $e->getLine());
+            $error = 'Não foi possível alterar o status do pedido na Skyhub: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $pedido;
+
+            Mail::send('emails.error', [
+                'error' => $error
+            ], function ($m) {
+                $m->from('dev@cariocacelulares.com.br', 'Meu Tucano');
+                $m->to('dev.cariocacelulares@gmail.com', 'DEV')->subject('Erro no sistema!');
+            });
             return false;
         }
     }
