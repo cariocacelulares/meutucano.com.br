@@ -146,7 +146,7 @@ class SkyhubController extends Controller
      */
     public function importPedido($s_pedido) {
         try {
-            // $this->updateStockData($s_pedido);
+            $this->updateStockData($s_pedido);
 
             $clienteFone = (sizeof($s_pedido['customer']['phones']) > 1) 
                 ? $s_pedido['customer']['phones'][1] 
