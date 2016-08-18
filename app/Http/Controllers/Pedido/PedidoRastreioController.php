@@ -20,6 +20,7 @@ use PhpSigep\Model\ServicoAdicional;
 use PhpSigep\Model\ServicoDePostagem;
 use PhpSigep\Pdf\CartaoDePostagem;
 use Sunra\PhpSimple\HtmlDomParser;
+use App\Http\Controllers\SkyhubController;
 
 /**
  * Class PedidoNotaController
@@ -161,6 +162,12 @@ class PedidoRastreioController extends Controller
         } elseif ((strpos($ultimoEvento['acao'], 'devolvido ao remetente') !== false) || strpos($ultimoEvento['acao'], 'devolução ao remetente') !== false) {
             $status = 5;
         } elseif (strpos($ultimoEvento['acao'], 'entrega efetuada') !== false) {
+            $rastreio->pedido->status = 3;
+            $rastreio->pedido->save();
+
+            if ($rastreio->pedido->codigo_skyhub) {
+                with(new SkyhubController())->refreshStatus($rastreio->pedido);
+            }
             $status = 4;
         } elseif (strpos($ultimoEvento['acao'], 'aguardando retirada') !== false) {
             $status = 6;

@@ -166,6 +166,7 @@ class UploadController extends Controller
         if ($pedido == null) {
             $idPedido = substr($chave, 25, 10);
             $pedido = Pedido::withTrashed()->findOrNew($idPedido);
+            $pedido->status = 2;
 
             if ($idMarketplace) {
                 $pedido->codigo_marketplace = $idMarketplace;

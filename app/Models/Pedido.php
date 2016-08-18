@@ -31,6 +31,7 @@ class Pedido extends \Eloquent
      * @var array
      */
     protected $appends = [
+        'status_description',
         'created_at_readable'
     ];
 
@@ -109,6 +110,16 @@ class Pedido extends \Eloquent
     public function endereco()
     {
         return $this->hasOne(ClienteEndereco::class, 'id', 'cliente_endereco_id');
+    }
+
+    /**
+     * Retorna o status de um pedido legível
+     * 
+     * @return string 
+     */
+    protected function getStatusDescriptionAttribute()
+    {
+        return ($this->status) ? \Config::get('tucano.pedido_status')[$this->status] : 'Desconhecido';
     }
 
     /**
