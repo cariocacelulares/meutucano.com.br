@@ -97,6 +97,18 @@ return [
     ],
 
     /**
+     * Status do pedido
+     */
+    'pedido_status' => [
+        0 => 'Pendente',
+        1 => 'Pago',
+        2 => 'Enviado',
+        3 => 'Entregue',
+        4 => 'Segurado',
+        5 => 'Cancelado'
+    ],
+
+    /**
      * Excluir CNPJs da meta
      */
     'excluir_cnpj' => [
@@ -141,6 +153,17 @@ return [
             'email' => 'dev@cariocacelulares.com.br',
             'token' => 'ciBmtUvQviXkcey7tkPb',
             'url'   => 'http://in.skyhub.com.br',
+        ]
+    ],
+
+    /**
+     * Magento
+     */
+    'magento' => [
+        'api' => [
+            'host' => 'http://www.cariocacelulares.com.br/api/v2_soap/?wsdl',
+            'user' => 'carioca',
+            'key'  => '#@carioca2016'
         ]
     ]
 ];

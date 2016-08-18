@@ -28,7 +28,8 @@ class Pedido extends \Eloquent
      */
     protected $appends = [
         'created_at_readable',
-        'marketplace_readable'
+        'marketplace_readable',
+        'status_description'
     ];
 
     /**
@@ -38,7 +39,7 @@ class Pedido extends \Eloquent
         'cliente',
         'endereco',
         'nota',
-        'rastreios',
+        'rastreios'
     ];
 
     /**
@@ -116,6 +117,16 @@ class Pedido extends \Eloquent
     public function endereco()
     {
         return $this->hasOne(ClienteEndereco::class, 'id', 'cliente_endereco_id');
+    }
+
+    /**
+     * Retorna o status de um pedido legível
+     * 
+     * @return string 
+     */
+    protected function getStatusDescriptionAttribute()
+    {
+        return ($this->status) ? \Config::get('tucano.pedido_status')[$this->status] : 'Desconhecido';
     }
 
     /**

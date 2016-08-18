@@ -85,7 +85,27 @@ class SkyhubController extends Controller
     }
 
     /**
-     * Realiza um request na API da Skyhub
+     * Retorna o status do tucano baseado no status do marketplace
+     * 
+     * @param  string  $status 
+     * @param  boolean $reverse Caso true, retorna o status no marketplace 
+     * @return int|string       
+     */
+    public function parseMarketplaceStatus($status, $reverse = false)
+    {
+        $statusConvert = [
+            'NEW'       => 0,
+            'APPROVED'  => 1,
+            'SHIPPED'   => 2,
+            'DELIVERED' => 3,
+            'CANCELED'  => 5
+        ];
+
+        return (!$reverse) ? $statusConvert[$status] : array_search($status, $statusConvert);
+    }
+
+    /**
+     * Creates an HTTP request to Anymarket API
      *
      * @param  string $url
      * @param  array  $params
@@ -119,13 +139,15 @@ class SkyhubController extends Controller
     }
 
     /**
-     * Importa um pedido para o Tucano
+     * Importa um pedido da Skyhub para o Tucano
      *     
-     * @param $s_pedido
-     * @return bool|string
+     * @param  SkyhubPedido $s_pedido
+     * @return string|boolean 
      */
     public function importPedido($s_pedido) {
         try {
+            $this->updateStockData($s_pedido);
+
             $clienteFone = (sizeof($s_pedido['customer']['phones']) > 1) 
                 ? $s_pedido['customer']['phones'][1] 
                 : $s_pedido['customer']['phones'][0];
@@ -172,6 +194,8 @@ class SkyhubController extends Controller
             $pedido->operacao            = $operacao;
             $pedido->total               = $s_pedido['total_ordered'];
             $pedido->estimated_delivery  = substr($s_pedido['estimated_delivery'], 0, 10);
+            $pedido->status              = $this->parseMarketplaceStatus($s_pedido['status']['type']);
+            $pedido->created_at          = substr($s_pedido['placed_at'], 0, 10) . ' ' . substr($s_pedido['placed_at'], 11, 8);
 
             $pedido->save();
 
@@ -205,7 +229,74 @@ class SkyhubController extends Controller
     }
 
     /**
-     * Importa todos pedidos não sincronizados
+     * Atualiza todos status dos pedidos da Skyhub
+     * 
+     * @return void
+     */
+    public function updateAllStatuses()
+    {
+        $pedidos = Pedido::whereNotNull('codigo_skyhub')->get();
+        foreach ($pedidos as $pedido) {
+            $s_pedido           = $this->request('/orders/' . $pedido['codigo_skyhub']);
+
+            $pedido->status     = $this->parseMarketplaceStatus($s_pedido['status']['type']);
+            $pedido->created_at = substr($s_pedido['placed_at'], 0, 10) . ' ' . substr($s_pedido['placed_at'], 11, 8);
+
+            if ($pedido->rastreio) {
+                if ($pedido->rastreio->status == 4) {
+                    $pedido->status = 3;
+                }
+            }
+
+            $pedido->save();
+
+            if ($pedido->rastreio) {
+                if ($pedido->rastreio->status == 4) {
+                    $this->refreshStatus($pedido);
+                }
+            }
+        }
+    }
+
+    /**
+     * Update stock data from Magento
+     *     
+     * @param  SkyhubPedido $s_pedido
+     * @return boolean 
+     */
+    protected function updateStockData($s_pedido)
+    {
+        try {
+            $dataPedido = Carbon::createFromFormat('Y-m-d', substr($s_pedido['placed_at'], 0, 10))->format('Ymd');
+            
+            //TODO: Remover essa linha de código
+            if ($dataPedido <= 20160818) 
+                return false;
+            //-----
+
+            $newStatus = $this->parseMarketplaceStatus($s_pedido['status']['type']);
+
+            foreach ($s_pedido['items'] as $s_produto) {
+                $stockChange[$s_produto['product_id']] = $s_produto['qty'];
+            }
+
+            if ($pedido = Pedido::where('codigo_skyhub', '=', $s_pedido['code'])->first()) {
+                if (($newStatus != $pedido->status) && $newStatus == 5) {
+                    with(new MagentoController())->updateInventory($stockChange);
+                }
+            } elseif ($newStatus != 5) {
+                with(new MagentoController())->updateInventory($stockChange, false);
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            \Log::error('Não foi possível atualizar o estoque no Magento: ' . $e->getMessage() . ' - ' . $e->getLine());
+            return false;
+        }
+    }
+
+    /**
+     * GET orders from SkyHub
      * 
      * @return void 
      */
@@ -279,9 +370,78 @@ class SkyhubController extends Controller
                     'POST'
                 );
 
+                return true;
+
             } catch (\Exception $e) {
                 \Log::error('Pedido ' . $id . ' não faturado: ' . $e->getMessage() . ' - ' . $e->getLine());
+                return false;
             }
+        }
+    }
+
+    /**
+     * Marca um pedido como entregue na Skyhub
+     * 
+     * @param  Pedido $pedido 
+     * @return boolean         
+     */
+    public function refreshStatus($pedido)
+    {
+        try {
+            switch ($pedido->status) {
+                case 3: {
+                    $this->request(
+                        sprintf('/orders/%s/delivery', $pedido->codigo_skyhub), 
+                        [],
+                        'POST'
+                    );
+                    break;
+                }
+                case 5: {
+                    $this->request(
+                        sprintf('/orders/%s/cancel', $pedido->codigo_skyhub), 
+                        [],
+                        'POST'
+                    );
+                    break;
+                }
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            \Log::error('Não foi possível alterar status do pedido na Skyhub. ' . $e->getMessage() . ' - ' . $e->getLine());
+            return false;
+        }
+    }
+
+    /**
+     * Cancela pedidos com mais de 3 dias úteis de pagamento pendente
+     * 
+     * @return void 
+     */
+    public function cancelOldOrders()
+    {
+        try {
+            $pedidos = Pedido::where('status', '=', 0)->get();
+
+            $cancelados = 0;
+            foreach ($pedidos as $pedido) {
+                $dataPedido = Carbon::createFromFormat('Y-m-d H:i:s', $pedido->created_at)->format('d/m/Y');
+
+                if (diasUteisPeriodo($dataPedido, date('d/m/Y'), true) > 4) {
+                    $pedido->status = 5;
+                    $pedido->save();
+
+                    with(new SkyhubController())->refreshStatus($pedido);
+
+                    $cancelados++;
+                }
+            }
+
+            return sprintf('%s pedido(s) cancelado(s) na Skyhub', $cancelados);
+        } catch (\Exception $e) {
+            \Log::error('Não foi possível cancelar o pedido na Skyhub' . $e->getMessage() . ' - ' . $e->getLine());
+            return false;
         }
     }
 }

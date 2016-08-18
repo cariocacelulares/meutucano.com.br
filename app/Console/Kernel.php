@@ -12,7 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\RefreshRastreios::class,
-        Commands\SkyhubPedidos::class
+        Commands\SkyhubPedidos::class,
+        Commands\SkyhubCancelOldOrders::class
     ];
 
     /**
@@ -28,5 +29,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('skyhub:pedidos')
             ->everyMinute();
+
+        $schedule->command('skyhub:cancel')
+            ->daily();
     }
 }
