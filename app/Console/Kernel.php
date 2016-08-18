@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('skyhub:pedidos')
             ->everyMinute();
 
-        // $schedule->command('skyhub:cancel')
-        //     ->daily();
+        $schedule->command('skyhub:cancel')
+            ->daily();
     }
 }
