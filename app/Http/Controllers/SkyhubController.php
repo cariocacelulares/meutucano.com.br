@@ -429,7 +429,7 @@ class SkyhubController extends Controller
 
                     with(new SkyhubController())->refreshStatus($pedido);
 
-                    $cancelados++''
+                    $cancelados++;
                 }
             }
 
