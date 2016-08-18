@@ -2,8 +2,6 @@
   "private": true,
   "devDependencies": {
     "gulp": "^3.8.8",
-    "karma-chrome-launcher": "^0.2.3",
-    "karma-jasmine": "^0.3.8",
     "laravel-elixir-angular": "^1.0.1",
     "laravel-elixir-ng-annotate": "^1.0.1"
   },
