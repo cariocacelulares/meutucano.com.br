@@ -242,14 +242,18 @@ class SkyhubController extends Controller
             $pedido->status     = $this->parseMarketplaceStatus($s_pedido['status']['type']);
             $pedido->created_at = substr($s_pedido['placed_at'], 0, 10) . ' ' . substr($s_pedido['placed_at'], 11, 8);
 
-            if ($pedido->rastreio->status == 4) {
-                $pedido->status = 3;
+            if ($pedido->rastreio) {
+                if ($pedido->rastreio->status == 4) {
+                    $pedido->status = 3;
+                }
             }
 
             $pedido->save();
 
-            if ($pedido->rastreio->status == 4) {
-                $this->refreshStatus($pedido);
+            if ($pedido->rastreio) {
+                if ($pedido->rastreio->status == 4) {
+                    $this->refreshStatus($pedido);
+                }
             }
         }
     }
