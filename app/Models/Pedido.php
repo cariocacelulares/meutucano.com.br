@@ -29,7 +29,9 @@ class Pedido extends \Eloquent
     protected $appends = [
         'created_at_readable',
         'marketplace_readable',
-        'status_description'
+        'status_description',
+        'can_prioritize',
+        'can_hold',
     ];
 
     /**
@@ -39,7 +41,8 @@ class Pedido extends \Eloquent
         'cliente',
         'endereco',
         'nota',
-        'rastreios'
+        'rastreios',
+        'produtos',
     ];
 
     /**
@@ -120,6 +123,16 @@ class Pedido extends \Eloquent
     }
 
     /**
+     * Comentários
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comentarios()
+    {
+        return $this->hasMany(PedidoComentario::class)->orderBy('created_at');
+    }
+
+    /**
      * Retorna o status de um pedido legível
      * 
      * @return string 
@@ -154,5 +167,47 @@ class Pedido extends \Eloquent
             default:
                 return $this->marketplace;
         }
+    }
+
+    /**
+     * Return can_hold
+     *
+     * @return string
+     */
+    protected function getCanHoldAttribute() 
+    {
+        $can = false;
+
+        switch ($this->status) {
+            case 0: $can = true; break;
+            case 1: $can = true; break;
+            case 2: $can = false; break;
+            case 3: $can = false; break;
+            case 4: $can = false; break;
+            case 5: $can = false; break;
+        }
+
+        return $can;
+    }
+
+    /**
+     * Return can_prioritize
+     *
+     * @return string
+     */
+    protected function getCanPrioritizeAttribute() 
+    {
+        $can = false;
+
+        switch ($this->status) {
+            case 0: $can = true; break;
+            case 1: $can = true; break;
+            case 2: $can = false; break;
+            case 3: $can = false; break;
+            case 4: $can = false; break;
+            case 5: $can = false; break;
+        }
+
+        return $can;
     }
 }

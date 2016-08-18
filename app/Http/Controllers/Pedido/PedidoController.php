@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Pedido;
 
+use Carbon\Carbon;
 use App\Http\Controllers\RestControllerTrait;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -25,4 +26,47 @@ class PedidoController extends Controller
     const MODEL = Pedido::class;
 
     protected $validationRules = [];
+
+    public function prioridade($pedido_id) {
+        $m = self::MODEL;
+
+        try {
+            $prioridade = \Request::get('priorizado');
+            $prioridade = (int)$prioridade ? 1 : null;
+
+            $data = $m::find($pedido_id);
+            $data->priorizado = $prioridade;
+            $data->save();
+
+            return $this->showResponse($data);
+        } catch(\Exception $ex) {
+            $data = ['exception' => $ex->getMessage()];
+            return $this->clientErrorResponse($data);
+        }
+    }
+
+    public function alterarStatus($pedido_id) {
+        $m = self::MODEL;
+
+        try {
+            $status = \Request::get('status');
+
+            if (!$status && $status !== 0) {
+                throw new Exception('"status" parameter not found!', 1);
+            }
+
+            $data = $m::find($pedido_id);
+            $data->status = $status;
+            $data->save();
+
+            if ($status == 5) {
+                $data->delete();
+            }
+            
+            return $this->showResponse($data);
+        } catch(\Exception $ex) {
+            $data = ['exception' => $ex->getMessage()];
+            return $this->clientErrorResponse($data);
+        }
+    }
 }
