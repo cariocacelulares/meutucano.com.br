@@ -15,7 +15,7 @@ Route::group(['prefix' => '/api'], function() {
     Route::get('authenticate/user', 'AuthenticateController@getAuthenticatedUser');
     Route::get('token', 'AuthenticateController@refreshToken');
 
-    Route::group(['middleware' => /*'jwt.auth'*/'guest'], function() {
+    Route::group(['middleware' => 'jwt.auth'], function() {
         Route::controller('metas', 'Meta\MetaController');
 
         Route::post('upload', [

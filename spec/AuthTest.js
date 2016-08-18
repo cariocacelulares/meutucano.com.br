@@ -1,3 +1,0 @@
-describe("auth", function() {
-
-});
