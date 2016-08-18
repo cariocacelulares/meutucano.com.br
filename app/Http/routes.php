@@ -6,10 +6,6 @@ Route::get('/', function () {
 });
 
 
-Route::get('/api/skyhub/pedidos', 'SkyhubController@getPedidos');
-Route::get('/api/skyhub/status',  'SkyhubController@updateAllStatuses');
-Route::get('/api/skyhub/cancel',  'SkyhubController@cancelOldOrders');
-
 /**
  * API
  */
