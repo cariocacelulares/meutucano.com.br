@@ -17,6 +17,16 @@ class PedidoProduto extends \Eloquent
     public $timestamps = false;
 
     /**
+     * @var array
+     */
+    protected $with = ['produto'];
+
+    /**
+     * @var array
+     */
+    protected $appends = ['total'];
+
+    /**
      * Produto
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -34,5 +44,15 @@ class PedidoProduto extends \Eloquent
     public function pedido()
     {
         return $this->belongsTo(Pedido::class);
+    }
+
+    /**
+     * Return readable created_at
+     *
+     * @return string
+     */
+    protected function getTotalAttribute() 
+    {
+        return $this->valor * $this->quantidade;
     }
 }

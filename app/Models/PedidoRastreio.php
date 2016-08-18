@@ -40,6 +40,11 @@ class PedidoRastreio extends \Eloquent
     ];
 
     /**
+     * @var array
+     */
+    protected $with = ['pi', 'logistica', 'devolucao'];
+
+    /**
      * Pedido
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

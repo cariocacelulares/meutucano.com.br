@@ -1,6 +1,4 @@
 <?php
-
-
 Route::get('/', function () {
     return view('index');
 });
@@ -17,7 +15,7 @@ Route::group(['prefix' => '/api'], function() {
     Route::get('authenticate/user', 'AuthenticateController@getAuthenticatedUser');
     Route::get('token', 'AuthenticateController@refreshToken');
 
-    Route::group(['middleware' => 'jwt.auth'], function() {
+    Route::group(['middleware' => /*'jwt.auth'*/'guest'], function() {
         Route::controller('metas', 'Meta\MetaController');
 
         Route::post('upload', [
@@ -116,13 +114,19 @@ Route::group(['prefix' => '/api'], function() {
         /**
          * Pedidos
          */
+        Route::put('pedidos/status/{pedido_id}', 'Pedido\PedidoController@alterarStatus');
+        Route::put('pedidos/prioridade/{pedido_id}', 'Pedido\PedidoController@prioridade');
         rest('pedidos', 'Pedido\PedidoController');
 
         /**
          * Notas
          */
         rest('notas', 'Pedido\PedidoNotaController');
+
+        /**
+         * Comentarios
+         */
+        Route::get('comentarios/{pedido_id}', 'Pedido\PedidoComentarioController@commentsFromOrder');
+        rest('comentarios', 'Pedido\PedidoComentarioController');
     });
-
 });
-

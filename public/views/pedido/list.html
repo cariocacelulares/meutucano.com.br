@@ -103,35 +103,9 @@
                 </div>
             </td>
             <td>
-                <div class="dropdown">
-                    <button class="btn btn-info dropdown-toggle" type="button">
-                        <i class="fa fa-cog"></i>&nbsp; Ações
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a title="Editar pedido" ng-click="App.editar(rastreio)"><i class="fa fa-edit"></i>&nbsp; Editar</a>
-                        </li>
-                        <li>
-                            <a title="Devolução" ng-click="App.devolucao(rastreio)"><i class="fa fa-undo"></i>&nbsp; Devolução</a>
-                        </li>
-                        <li>
-                            <a title="Logística reversa" ng-click="App.logistica(rastreio)"><i class="fa fa-exchange"></i>&nbsp; Logística</a>
-                        </li>
-                        <li>
-                            <a title="Pedido de informação" ng-click="App.pi(rastreio)"><i class="fa fa-exclamation-triangle"></i>&nbsp; PI</a>
-                        </li>
-                        <li>
-                            <a ng-click="App.printXML(pedido.pedido_id)"><i class="fa fa-file-code-o"></i>&nbsp; XML</a>
-                        </li>
-                        <li>
-                            <a ng-click="App.printDanfe(pedido.pedido_id)"><i class="fa fa-file-pdf-o"></i>&nbsp; DANFE</a>
-                        </li>
-                        <li>
-                            <a ng-click="App.printEtiqueta(pedido.id)"><i class="fa fa-tag"></i>&nbsp; Etiqueta</a>
-                        </li>
-                    </ul>
-                </div>
+                <a class="btn btn-info" ng-href="#/app/pedidos/{{ pedido.id }}">
+                    <i class="fa fa-eye"></i>
+                </a>
             </td>
         </tr>
     </tbody>

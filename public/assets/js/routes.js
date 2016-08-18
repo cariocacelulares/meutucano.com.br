@@ -78,8 +78,8 @@
                     url: '/admin',
                     templateUrl: 'views/layouts/default.html'
                 })
-
-                .state('app.admin.icms', {
+ 
+                .state('app.admin.icms', { 
                     url: '/icms',
                     templateUrl: 'views/admin/icms.html',
                     controller: 'IcmsController as Icms',
@@ -103,6 +103,12 @@
                     data: {
                         roles: ['admin']
                     }
+                })
+
+                .state('app.pedidos.detalhe', {
+                    url: '/{id}',
+                    templateUrl: 'views/pedido/detalhe.html',
+                    controller: 'PedidoDetalheController as PedidoDetalhe'
                 })
 
                 /**

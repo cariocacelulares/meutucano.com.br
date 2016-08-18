@@ -32,6 +32,7 @@ class PedidoNota extends \Eloquent
      * @var array
      */
     protected $appends = [
+        'data_readable',
         'created_at_readable',
         'numero',
         'serie'
@@ -75,5 +76,14 @@ class PedidoNota extends \Eloquent
     protected function getCreatedAtReadableAttribute() {
         return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y H:i');
     }
-}
 
+    /**
+     * Return readable created_at
+     *
+     * @return string
+     */
+    protected function getDataReadableAttribute() 
+    {
+        return Carbon::createFromFormat('Y-m-d', $this->data)->format('d/m/Y');
+    }
+}
