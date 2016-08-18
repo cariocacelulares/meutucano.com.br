@@ -427,7 +427,7 @@ class SkyhubController extends Controller
             foreach ($pedidos as $pedido) {
                 $dataPedido = Carbon::createFromFormat('Y-m-d H:i:s', $pedido->created_at)->format('d/m/Y');
 
-                if (diasUteisPeriodo($dataPedido, date('d/m/Y'), true) > 3) {
+                if (diasUteisPeriodo($dataPedido, date('d/m/Y'), true) > 4) {
                     $pedido->status = 5;
                     $pedido->save();
 
