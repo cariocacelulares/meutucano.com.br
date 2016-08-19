@@ -1,0 +1,219 @@
+// Page container
+#page-container {
+    @extend .page-container;
+}
+
+// Menu sidebar
+@media only screen and (min-width: 980px) {
+    body.menu-behind .header .brand {
+        width: 65px !important;
+    }
+
+    .sidebar-menu {
+        margin-top: 50px;
+    }
+}
+
+#page-sidebar {
+    @extend .page-sidebar; 
+    transition: 50ms left linear 200ms;
+    transform: translateX(0deg);
+    overflow-y: scroll; 
+
+    &:hover { 
+        left: 0;
+    }
+
+    .sidebar-menu .menu-items > li {
+        color: $color-info-light;
+
+        a {
+            padding-right: 5px;
+            width: 70%;
+        }
+
+        > * {
+            color: inherit;
+        }
+    }
+
+    .sub-menu {
+        display: block !important;
+        overflow: hidden;
+
+        &.ng-hide {
+            display: none !important;
+        }
+    }
+}
+
+// Header
+#main-header {
+    @extend .header;
+    border: 0;
+    border-bottom: 1px solid $panel-border-color;
+
+    #logo-search {
+        &,
+        div,
+        a {
+            float: left;
+            line-height: 60px;
+        }
+
+        div {
+            padding: 0 20px;
+        }
+
+        a {
+            span {
+                font-weight: bold;
+            }
+        }
+    }
+
+    #header-actions {
+        float: right;
+        margin-top: 10px;
+
+        #header-upload {
+            margin-top: 2px;
+
+            button {
+                margin-right: 0;
+            }
+        }
+
+        #user-info {
+            float: left;
+            margin-top: 5px;
+            line-height: 14px;
+            padding-right: 10px;
+            font-size: 12px;
+
+            small {
+                opacity: .7;
+            }
+        }
+
+        .logout {
+            float: right;
+            margin: 2px 0 0 10px;
+        }
+    }
+
+    #header-info {
+        float: right;
+        margin: 9px 50px 0 0;
+
+        > div {
+            float: left;
+            padding-right: 15px;
+            margin-right: 15px;
+            border-right: 1px solid $color-info-lighter;
+
+            &:last-child {
+                border: 0;
+                padding-right: 0;
+                margin-right: 0;
+            }
+
+            > strong {
+                @extend .font-montserrat;
+                @extend .clear;
+                font-size: 10px;
+                text-transform: uppercase;
+            }
+
+            p {
+                @extend .small;
+                opacity: .7;
+                margin-bottom: 0;
+            }
+
+            div > span {
+                opacity: .7;
+                font-size: 10px;
+                padding-left: 5px;
+            }
+        }
+    }
+}
+
+// Content
+.page-content-wrapper .content {
+    margin-bottom: 10px;
+        
+    > div {
+        margin-top: 10px;
+    } 
+}
+
+// Outros
+.ngdialog.ngdialog-theme-default .ngdialog-content {
+    background: #FFF !important;
+}
+
+.ngdialog-big {
+    padding-top: 80px !important;
+
+    .ngdialog-content {
+        width: 700px !important;
+    }
+}
+
+.col-xs-5ths,
+.col-sm-5ths,
+.col-md-5ths,
+.col-lg-5ths {
+    position: relative;
+    min-height: 1px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.col-xs-5ths {
+    width: 20%;
+    float: left;
+}
+
+@media (min-width: 768px) {
+    .col-sm-5ths {
+        width: 20%;
+        float: left;
+    }
+}
+
+@media (min-width: 992px) {
+    .col-md-5ths {
+        width: 20%;
+        float: left;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-lg-5ths {
+        width: 20%;
+        float: left;
+    }
+}
+
+.date-picker {
+    position: relative;
+    z-index: 999;
+
+    .picker-wrap {
+        display: none;
+        position: absolute;
+        z-index: 999;
+        top: 35px;
+
+        &:hover {
+            display: block;
+        }
+    }
+
+    input:focus + .picker-wrap {
+        display: block;
+    }
+} 

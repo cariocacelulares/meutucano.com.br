@@ -1,0 +1,235 @@
+//
+// Table
+// --------------------------------------------------
+
+.table {
+    margin-top: 5px;
+    thead {
+        tr {
+            th {
+                text-transform: uppercase;
+                font-weight: 600;
+                font-family:'Montserrat';
+                font-size: 13px;
+                padding-top: 14px;
+                padding-bottom: 14px;
+                vertical-align: middle;
+                border-bottom: 1px solid fade($color-master-light, 70%);
+                color:fade($color-master-dark, 35%);
+                &[class*='sorting_'] {
+                    color:$color-master-dark;
+                }
+                &:first-child {
+                    padding-left: 18px !important;
+                }
+                &:last-child {
+                    text-align: right;
+                    padding-left: 0 !important;
+                    padding-right: 30px !important;
+                }
+                .btn {
+                    margin-top: -20px;
+                    margin-bottom: -20px;
+                }
+            }
+        }
+    }
+    tbody {
+        tr {
+            td {
+                background: #fff;
+                border-bottom: 1px solid fade($color-master-light, 70%);
+                border-top: 0px;
+                padding:20px;
+                font-size: 13.5px;
+                .btn {
+                    background:fade($color-master-dark, 7%);
+                    display: inline-block;
+                    margin: 5px;
+                    border-radius: 4px;
+                    //padding: 5px;
+                    //color: #62605a;
+                    &:hover {
+                        background:fade($color-master-dark, 15%);
+                    }
+                }
+                &[class*='sorting_'] {
+                    color:#000;
+                }
+                &:last-child {
+                    text-align: right;
+                }
+            }
+            &.selected td {
+                background: $color-warning-lighter;
+            }
+        }
+    }
+    &.table-hover {
+        tbody {
+            tr {
+                &:hover td {
+                    background: $color-complete-lighter !important;
+                }
+                &.selected:hover td{
+                    background: $color-warning-lighter !important;
+                }
+            }
+        }
+    }
+    &.table-striped {
+        tbody {
+            tr {
+                td {
+                    /*padding: 19px;*/
+                    background: $body-background !important;
+                }
+                &:nth-child(2n+1) td {
+                    background: #fff !important;
+                }
+            }
+        }
+    }
+    &.table-condensed {
+        table-layout: fixed;
+        thead {
+            tr {
+                th {
+                    padding-left: 20px;
+                    padding-right: 20px;
+                }
+            }
+        }
+        tbody {
+            tr {
+                td {
+                    padding-top: 12px;
+                    padding-bottom: 12px;
+                }
+            }
+        }
+        thead tr th, tbody tr td, tbody tr td * {
+            white-space: nowrap;
+            vertical-align: middle;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        &.table-detailed {
+            & > tbody > tr {
+                &.shown {
+                    & > td {
+                        background: $color-warning-lighter;
+                        &:first-child:before {
+                            content:"\f078";
+                            display: inline-block;
+                            margin-right: 8px;
+                            font-family: 'FontAwesome';
+                        }
+                    }
+                    & + tr {
+                        & > td {
+                            background: fade($body-background, 40%);
+                            padding: 0px 40px;
+                            .table-inline{
+                                background: transparent;
+                                tr,td{
+                                background: transparent;
+                                font-weight: 600;
+                                }
+                            }
+                        }
+                    }
+                }
+                & > td {
+                    &:hover {
+                        cursor: pointer;
+                    }
+                    &:first-child:before {
+                        content:"\f054";
+                        display: inline-block;
+                        margin-right: 8px;
+                        font-family: 'FontAwesome';
+                    }
+                }
+            }
+            .table-inline {
+                td {
+                    border: none;
+                    text-align: left;
+                    &:last-child {
+                        text-align: right;
+                    }
+                }
+            }
+        }
+    }
+    &.table-borderless{
+        & > tbody{
+            & > tr{
+                & > td{
+                    border-bottom: 0px;
+                }
+            }
+        }
+    }
+}
+.fht-table {
+    margin-bottom: 0 !important;
+}
+
+// DataTable 
+// --------------------------------------------------
+
+.table.dataTable.no-footer{
+    border: none;
+}
+.dataTables_scroll{
+    &:hover{
+        .dataTables_scrollBody:before{
+            content: "";
+            top: 0;
+            height: 0;
+        }
+    }
+}
+.dataTables_scrollBody {
+    overflow-y: auto;
+    border:none !important;
+    &:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 60px;
+        bottom: 0;
+        background: transparent;
+    }
+
+}
+.dataTables_wrapper .dataTables_paginate{
+    margin: 0;
+}
+.dataTables_wrapper .dataTables_paginate ul > li.disabled a{
+    opacity: .5;
+}
+.dataTables_wrapper .dataTables_paginate ul > li > a {
+    padding: 5px 10px;
+    color: $color-master;
+}
+.dataTables_wrapper .dataTables_info{
+     clear: none;
+    font-size: 12px;
+    margin-top: 11px;
+    padding: 0 13px;
+    color: $color-master;
+}
+.dataTables_wrapper .dataTables_paginate ul > li {
+    display: inline-block;
+    padding-left: 0;
+}
+.dataTables_scrollHeadInner{
+    padding-right: 0 !important;
+}
+.export-options-container{
+    position: relative;
+}

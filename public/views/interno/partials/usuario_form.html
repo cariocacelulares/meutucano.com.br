@@ -1,38 +1,30 @@
-<h6 class="font-montserrat no-margin text-uppercase text-master bold">Gerenciando usuário</h6>
-<form ng-submit="Form.save()" novalidate="novalidate">
-    <div class="row m-t-20">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label for="username">Usuário</label>
-                <input class="form-control" id="username" ng-model="Form.usuario.username" placeholder="Usuário de acesso ao sistema" required />
-            </div>
+<h6 class="font-alt-bold-upper">Gerenciando usuário</h6>
+<form ng-submit="Form.save()" novalidate="novalidate" class="form-default">
+    <div class="row">
+        <div class="col-md-6 form-group">
+            <label for="username">Usuário</label>
+            <input id="username" ng-model="Form.usuario.username" placeholder="Usuário de acesso ao sistema" required />
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                <label for="name">Nome</label>
-                <input class="form-control" id="name" ng-model="Form.usuario.name" placeholder="Nome para identificação" required />
-            </div>
+        <div class="col-md-6 form-group">
+            <label for="name">Nome</label>
+            <input id="name" ng-model="Form.usuario.name" placeholder="Nome para identificação" required />
         </div>
     </div>
-    <div class="row m-t-10">
-        <div class="col-md-12">
-            <div class="form-group">
-                <label for="email">E-mail</label>
-                <input class="form-control" id="email" ng-model="Form.usuario.email" placeholder="E-mail para envio de notificações" required />
-            </div>
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <label for="email">E-mail</label>
+            <input id="email" ng-model="Form.usuario.email" placeholder="E-mail para envio de notificações" required />
         </div>
     </div>
-    <div class="row m-t-10">
-        <div class="col-md-12">
-            <div class="form-group">
-                <label for="password">Senha</label>
-                <input type="password" class="form-control" id="password" ng-model="Form.usuario.password" placeholder="Senha para acesso" />
-            </div>
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <label for="password">Senha</label>
+            <input type="password" id="password" ng-model="Form.usuario.password" placeholder="Senha para acesso" />
         </div>
     </div>
-    <div class="row m-t-10">
+    <div class="row m-t-15">
         <div class="col-md-12">
-            <h6 class="font-montserrat no-margin text-uppercase text-master bold">Permissões</h6>
+            <h6 class="font-alt-bold-upper">Permissões</h6>
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -79,7 +71,7 @@
             </div>
         </div>
     </div>
-    <div class="pull-right m-t-10">
+    <div class="pull-right m-t-15">
         <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
         <button busy="Salvando..." type="submit" class="btn btn-primary">Salvar</button>
     </div>

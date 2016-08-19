@@ -7,12 +7,10 @@
 
         <title>Meu Tucano</title>
 
-        <link rel="stylesheet" href="assets/css/bootstrap.css" />
-        <link rel="stylesheet" href="assets/css/pages.css" />
+        <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
         <link rel="stylesheet" href="assets/css/app.css" />
 
         <link rel="stylesheet" href="assets/css/toaster.css" />
-        <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" />
         <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.min.css" />
         <link rel="stylesheet" href="bower_components/morris.js/morris.css" />
         <link rel="stylesheet" href="bower_components/ng-dialog/css/ngDialog.min.css" />
@@ -73,6 +71,7 @@
 
     <script src="assets/js/src/services.js"></script>
     <script src="assets/js/src/directives.js"></script>
+    <script src="assets/js/src/components.js"></script>
     <script src="assets/js/src/controllers.js"></script>
     <script src="assets/js/src/components.js"></script>
     <script src="assets/js/src/models.js"></script>

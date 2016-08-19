@@ -1,0 +1,44 @@
+#page-header {
+    margin-bottom: 20px;
+
+    .title-bar {
+        > span {
+            position: relative;
+            float: left;
+            height: 40px;
+            width: 40px;
+            line-height: 40px;
+            margin-right: 14px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 16px;
+            color: $color-master;
+            background-color: $color-master-light;
+        }
+
+        div {
+            float: left;
+
+            strong {
+                @extend .clear;
+                font-family: Montserrat, Helvetica, Arial, sans-serif;
+                font-size: 13px;
+                text-transform: uppercase;
+                font-weight: bold;
+            }
+
+            small {
+                @extend .clear;
+                line-height: 18px;
+                font-size: 90%;
+            }
+        }
+    }
+
+    .button-bar { 
+        [class*='btn'] {
+            float: right;
+            margin-top: 3px;
+        }
+    }
+}

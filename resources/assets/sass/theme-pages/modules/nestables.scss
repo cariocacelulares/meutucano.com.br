@@ -1,0 +1,59 @@
+// 
+// Nestables
+// http://dbushell.github.io/Nestable/
+// --------------------------------------------------
+
+.dd-handle{
+	border-color: fade($color-master-light, 70%);
+	color:$color-master;
+	&:hover{
+		background-color: $color-master-lightest
+	}
+}
+
+.dark {
+	.dd-handle{
+	color:$color-master;
+	background: $color-master-lighter;
+		&:hover{
+			background-color: $color-master-lightest
+		}
+	}
+	.dd-placeholder{
+		background-color:$color-master-light;
+	}
+
+}
+
+.dd3-content{
+	background:#fff;
+	border-color: fade($color-master-light, 70%);
+	color:$color-master;
+	&:hover{
+		background-color: $color-master-lightest
+	}
+}
+
+.dd3-handle{
+	background:transparent;
+	&:before{
+		color:$color-master;
+	}
+}
+
+.dd-placeholder{
+	background:$color-master-lighter;
+	border-color: fade($color-master, 35%);
+}
+
+.dd-empty{
+	background-image:none;
+	background:$color-master-lighter;
+	border-color: fade($color-master, 50%);
+}
+
+@media only screen and (min-width: 700px) { 
+	.dd {
+	width: 100%;
+	}
+}

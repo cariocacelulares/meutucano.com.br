@@ -1,0 +1,61 @@
+.table {
+    border: 1px solid $color-master-lighter;
+    width: 100%;
+    max-width: 100%;
+
+    &.table-hover tbody tr {
+        &:hover td,
+        &.detailed td {
+            background: $color-master-lighter !important;
+            cursor: pointer;
+        }
+    }
+
+    thead th {
+        padding: 14px 12px;
+        text-align: left;
+        color: $color-master-lightest !important;
+        background: $color-info;
+    }
+
+    tbody {
+        &.loading {
+            td {
+                @extend .progress-circle-indeterminate;
+                margin: 20px 0;
+                display: block;
+            }
+        }
+    }
+
+    tr {
+        border-bottom: 1px solid $color-master-lighter;
+
+        &:last-child {
+            border: 0;
+        }
+
+        &.table-filter th {
+            background: $color-master-lightest;
+        }
+        
+        td {
+            vertical-align: middle !important;
+            padding: 12px !important;
+        }
+    }
+
+    th.tablesort-desc, 
+    th.tablesort-asc {
+        background: $color-info-dark !important;
+    }
+
+    .date-picker-date-time td {
+        padding: 0;
+    }
+
+    button {
+        padding: 6px 17px;
+        color: $color-master-lightest;
+    }
+}

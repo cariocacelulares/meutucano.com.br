@@ -1,0 +1,231 @@
+//
+// Notifications
+// --------------------------------------------------
+
+// Badges
+// --------------------------------------------------
+
+.badge {
+    text-shadow: none;
+    font-family: $base-font-family;
+    font-weight: 600;
+    background-color: $color-master-light;
+    font-size: 11px;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-bottom: 4px;
+    color: $color-master;
+}
+.badge-success {
+    background-color: $color-success;
+    color:  $color-white ;
+}
+.badge-warning {
+    background-color: $color-warning;
+    color:  $color-white ;
+}
+.badge-important {
+    background-color: $color-danger;
+    color:  $color-white ;
+}
+.badge-danger {
+    background-color: $color-danger;
+    color:  $color-white ;
+}
+.badge-info {
+    background-color: $color-info;
+    color:  $color-white ;
+}
+.badge-inverse {
+    background-color: $color-complete-darker;
+    color:  $color-white ;
+}
+.badge-white {
+    background-color:  $color-white ;
+    color: $color-master;
+}
+.badge-disable {
+    background-color: $color-master-dark;
+    color: $color-master;
+}
+
+// Notification popup
+// --------------------------------------------------
+
+.notification-toggle{
+    &:before{
+        border-bottom:0px !important;
+    }
+    &:after{
+        border-bottom:0px !important;
+    }
+}
+.notification-panel{
+    background-color: #fff;
+    border:1px solid $color-master-light;
+    .notification-body{
+        height: 350px;
+        position: relative;
+        overflow: hidden;
+        .notification-item{
+            position: relative;
+            margin-left: 25px;
+            background-color: $color-master-lightest;
+
+            &.unread{
+                background-color: $color-complete-lighter;
+                &:before{
+                    color:$color-complete-light;
+                }
+            }
+            padding-right: 20px;
+            .heading{
+                height: 44px;
+                line-height: 44px;
+                margin-right: 5px;
+                background: #fff;
+                border-bottom: 1px solid $color-master-light;
+                position: relative;
+                &:after{
+                    content:'';
+                    position: absolute;
+                    width: 5px;
+                    height: 100%;
+                    background-color: #fff;
+                    right: 0;
+                    top: 1px;
+
+                }
+            }
+            .more-details{
+                display: none;
+            }
+            &:before{
+                content: '\25CF';
+                font-size: 10px;
+                position: absolute;
+                height: 44px;
+                right: 9px;
+                vertical-align: middle;
+                line-height: 44px;
+                color:  mix($color-master, #fff, 40%);
+            }
+        }
+    }
+    .notification-footer{
+        padding: 10px;
+        display: block;
+        border-top:1px solid $color-master-light;
+        a{
+            color: $color-master;
+        }
+    }
+}
+
+
+// Pages Notification customizations
+body > .pgn-wrapper[data-position="top"] {
+    top: $layout-header-height;
+    left: $layout-sidepanel-width-collapsed;
+}
+body > .pgn-wrapper[data-position="bottom"] {
+    left: $layout-sidepanel-width-collapsed;
+}
+
+body > .pgn-wrapper[data-position$='-left'] {
+    left: $layout-sidepanel-width-collapsed + 20px;
+    right: auto;
+}
+
+body > .pgn-wrapper[data-position^='top-'] {
+    top: $layout-header-height + 20px;
+    bottom: auto;
+}
+
+
+body > .pgn-wrapper[data-position^='top-'] .pgn-flip {
+    top: -30px - $layout-header-height;
+}
+
+.pgn-circle .alert .close {
+    margin-top: -4px;
+    }
+body > .pgn-wrapper{
+    z-index: $zIndex-notifications;
+}
+// Simple alerts
+// --------------------------------------------------
+
+.alerts-container{
+    position: fixed;
+    width: 350px;
+    right: 20px;
+    z-index: 999;
+    top: $layout-header-height + 20px;
+    &[data-placement$='-left']{
+        left: $layout-sidepanel-width-collapsed + 30px;
+        right: auto;
+    }
+    &[data-placement$='-right']{
+        right: 20px;
+        left: auto;
+    }
+    &[data-placement^='top-']{
+         top: $layout-header-height + 20px;
+        bottom: auto;
+    }
+    &[data-placement^='bottom-']{
+        top: auto;
+        bottom: 20px;
+    }
+
+    &[data-placement='bottom-right'], &[data-placement='bottom-left']{
+        .alert:last-child{
+            margin-bottom: 0;
+        }
+    }
+    .alert{
+        position: relative;
+        .close{
+            position: absolute;
+            right: 9px;
+            top: 15px;
+        }
+    }
+    
+}
+
+
+// Notifications demo
+// --------------------------------------------------
+
+.notification-positions{
+    border-radius: 4px;
+    border:3px dashed $color-master-light;
+    height: 370px;
+    position: relative;
+    
+    & > div > .position:not(:only-child){
+        max-width: 50%;
+    }
+    .position{
+        padding: 15px;
+        img{
+            border:3px solid transparent;
+        }
+        &:hover{
+            cursor: pointer;
+        }
+        &.active img{
+            border-color:#0090d9;
+        }
+        &.pull-top, &.pull-bottom{
+                left: 0;
+                right: 0;
+
+            }
+            img{
+                width: 100%;
+            }
+    }  
+}

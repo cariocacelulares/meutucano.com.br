@@ -43,7 +43,7 @@
         vm.editar = function(usuario) {
             ngDialog.open({
                 template: 'views/interno/partials/usuario_form.html',
-                className: 'ngdialog-theme-default',
+                className: 'ngdialog-theme-default user-form',
                 controller: 'UsuarioEditarController',
                 controllerAs: 'Form',
                 data: {
@@ -58,7 +58,7 @@
         vm.create = function() {
             ngDialog.open({
                 template: 'views/interno/partials/usuario_form.html',
-                className: 'ngdialog-theme-default',
+                className: 'ngdialog-theme-default user-form',
                 controller: 'UsuarioNovoController',
                 controllerAs: 'Form'
             });

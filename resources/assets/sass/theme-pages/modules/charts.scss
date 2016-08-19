@@ -1,0 +1,503 @@
+.line-chart{
+
+    // Vertical bar on hover in interactive chart
+    .nvd3 line.nv-guideline{
+        stroke-width:30px;
+        stroke-opacity:.08;
+        //stroke: $color-success;
+    }
+    // filled area 
+    .nvd3 .nv-groups path.nv-area{
+         fill-opacity : .1;
+    }
+    // Line
+    .nvd3 .nv-groups path.nv-line{
+        stroke-opacity:.3;
+    }
+    // grid lines
+    .nvd3 .nv-axis line{
+        stroke-opacity: .5;
+    }
+    // Line colors
+    &[data-line-color="success"]{
+         .nvd3 line.nv-guideline{
+            stroke: $color-success;
+        }
+    }
+    &[data-line-color="master"]{
+         .nvd3 line.nv-guideline,
+         .nvd3 .nv-groups path.nv-line,
+        .nvd3.nv-line .nvd3.nv-scatter .nv-groups .nv-point {
+            stroke: $color-master;
+        }
+    }
+
+    // Fill colors
+    &[data-area-color="success"]{
+        .nvd3 .nv-groups path.nv-area{
+            fill: $color-success;
+        }
+    }
+    &[data-area-color="master"]{
+        .nvd3 .nv-groups path.nv-area{
+            fill: $color-master;
+        }
+    }
+
+
+    &[data-x-grid="false"]{
+        .nv-x .tick line { 
+            display: none; 
+        }  
+    } 
+    &[data-y-grid="false"]{
+        .nv-y .tick line { 
+            display: none; 
+        }  
+    } 
+
+    &[data-points="true"]{
+        .nvd3.nv-line .nvd3.nv-scatter .nv-groups .nv-point {
+            fill-opacity: 1;
+            fill: #fff;
+            stroke-opacity: .5;
+        }
+    } 
+
+    // Line widths
+     &[data-stroke-width="1"]{
+        .nvd3 .nv-groups path.nv-line{
+            stroke-width:1px;
+        }
+        .nvd3.nv-line .nvd3.nv-scatter .nv-groups .nv-point{
+            stroke-width:2px;
+        }
+    }
+    &[data-stroke-width="2"]{
+        .nvd3 .nv-groups path.nv-line{
+            stroke-width:2px;
+        }
+        .nvd3.nv-line .nvd3.nv-scatter .nv-groups .nv-point{
+            stroke-width:3px;
+        }
+    }
+    &[data-stroke-width="3"]{
+        .nvd3 .nv-groups path.nv-line{
+            stroke-width:3px;
+        }
+        .nvd3.nv-line .nvd3.nv-scatter .nv-groups .nv-point{
+            stroke-width:4px;
+        }
+    }
+
+    .tick text{
+        fill: fade($color-master, 50%);
+    }
+
+    .nvd3.nv-scatter .nv-groups .nv-point.hover, 
+    .nvd3 .nv-groups .nv-point.hover{
+        fill: inherit !important;
+        stroke: inherit !important;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+// //drag bar
+// .nvd3 .nv-indexLine{
+//     display: none;
+// }
+
+// // y-axis line
+// .nvd3 .nv-axis path{
+//     opacity: 0;
+// }
+
+
+// //Google Stock Chart - Range Filter 
+// .range-filter{
+//     & > div{
+//         & > div:nth-child(2){
+//            & > svg{
+//              & > g{
+//                 & > rect:nth-child(3), & > rect:nth-child(4){
+//                     fill:#fff;
+//                     fill-opacity:0.65;
+//                 }
+//                 & > g{
+//                     & > path:nth-child(2),& > path:nth-child(3),& > path:nth-child(4){
+//                         display: none;
+//                     }
+//                     & > path:nth-child(1){
+//                         stroke:$color-success;
+//                     }
+//                 }               
+//              }
+//            }
+//         }
+//     }
+// }
+
+// .no-shadow-points{
+//     & >  div{
+//         & > div{
+//             & > svg{
+//                 & > g {
+//                     & > g:nth-child(2){
+//                         & > g{
+//                             & > circle:nth-child(1),& > circle:nth-child(2),& > circle:nth-child(3){
+//                                 display: none;
+//                             }
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }
+
+// .line-chart {
+//     &.stroke-width-sm {
+//         .nv-groups path.nv-line {
+//             stroke-width: 1px;
+//         }
+//     }
+//     &.stroke-width-md {
+//         .nv-groups path.nv-line {
+//             stroke-width: 2px;
+//         }
+//     }
+//     &.stroke-width-lg {
+//         .nv-groups path.nv-line {
+//             stroke-width: 4px;
+//         }
+//     }
+//     &.stroke-opacity-solid {
+//         .nv-groups path.nv-line {
+//             stroke-opacity: 1;
+//         }
+//     }
+//     .nvd3 .nv-groups path.nv-area {
+//         fill-opacity: 0.14;
+//     }
+//     .nv-groups path.nv-line {
+//         stroke-width: 2px;
+//         stroke-opacity: 0.47;
+//     }
+//     .nvd3.nv-line .nvd3.nv-scatter .nv-groups .nv-point {
+//         stroke-opacity: 0.67;
+//         stroke-width: 2px;
+//         fill: #fff;
+//         fill-opacity: 1;
+//     }
+//     .nvd3 {
+//         .nv-groups path.nv-area{
+//         fill-opacity: 0.14;
+//         }
+//         .nv-axis line{
+//             stroke:#f0f0f1;
+//         }
+//     }
+// }
+// .x-grid-hide{
+//     .nv-x{
+//         line{
+//             fill:0;
+//             stroke: 0;
+//         }
+//     }
+// }
+// .y-axis-hide{
+//     .nvd3 .nv-y .domain{
+//         stroke:0;
+//     }
+// }
+
+// .highlight-x{
+//     .tick .major{
+//         &:hover{
+//             fill:#ddd;
+//         }
+//     }
+// }
+
+// .area-only{
+//     .nvd3 .nv-groups path.nv-line{
+//         stroke-width:0;
+//     }
+// }
+// //hide horizontal/vertical grid lines
+// .hide-grid-x .nv-x.nv-axis .tick.major line, .hide-grid-y .nv-y.nv-axis .tick.major line {
+//     display: none;
+// }
+// // axis label text color including min max labels
+// .nv-x.nv-axis .tick.major text, .nv-y.nv-axis .tick.major text, .nv-axisMaxMin{
+// 	fill: #b8b8b8;
+// }
+// // y axis border color
+// .nvd3 .nv-axis path{
+// 	stroke: #dce0e8;
+// }
+// /*** Company Revenue chart ***/
+// .year-range{
+// 	.btn-group{
+// 		width: 100%;
+// 		.btn{
+// 			width: 25%;
+//             line-height: 37px;
+//             background: $color-master-lighter;
+//             border: none !important;
+//             &.active{
+//                 background: $color-master-light;
+//             }
+//             &:not(:last-child):after{
+//                 width: 1px;
+//                 background: #dce0e8;
+//                 position: absolute;
+//                 right: 1px;
+//                 top: 10px;
+//                 bottom: 10px;
+//                 content: "";
+//             }
+//         }
+//     }
+// }
+// #company-revenue-chart{
+// 	background: #fff;
+//     position: relative;
+//     height: calc(~'100% - 69px');
+    
+//     display: table;
+//     width: 100%;
+//     svg{
+//         position: absolute;
+//          height: 100%;
+//         width: 100%;
+//         left: 0;
+//         top: 0;
+//         right: 0;
+//         bottom: 0;
+//     }
+//     // .nv-y.nv-axis .tick.major *{
+//     //     opacity: 0;
+//     // }
+//     // .nv-y.nv-axis .tick.major:nth-child(3n){
+//     //     *{
+//     //         opacity: 1;
+//     //     }
+        
+//     // }
+
+//     .y-axis .tick.major text, .x-axis .tick.major text{
+//          fill: #b8b8b8;
+//         font-family: 'Open Sans';
+//         font-size: 12px;
+//         stroke-width: 0;
+//     }
+//     .y-axis .tick.major line, .x-axis .tick.major line{
+//         display: none;
+//     }
+//     .y-axis .domain, .x-axis .domain{
+//         fill: none;
+//         stroke:#dce0e8;
+//         stroke-width:1px;
+//         shape-rendering: crispEdges;
+//     }
+//     .y-grid{
+//         stroke:#f1f3f6;
+//         fill:none;
+//         stroke-width:1px;
+//         shape-rendering: crispEdges;
+//     }
+
+// }
+// .company-stat-box{
+// 	overflow: hidden;
+// 	background: $color-master-lighter;
+//      padding: 10px 17px;
+//     @include transition(color .3s ease);
+//     &:hover{
+//         cursor: pointer;
+//     }
+//     &.active{
+//         background: $color-master-light;
+//     }
+// 	// &.disabled{
+// 	// 	*{
+// 	// 		color: #dce0e8 !important;
+// 	// 	}
+// 	// 	.progress-bar-success{
+// 	// 		background: #dce0e8;
+// 	// 	}
+// 	// }
+//     .company-name{
+//         padding-top: 4px;
+//         .fa-circle{
+//             font-size: 11px;
+//             padding-bottom: 6px;
+//             vertical-align: bottom;
+//         }
+//     }
+// }
+
+
+// .nvtooltip{
+// 	border-color: #f0f0f0;
+// 	@include border-radius(3px);
+// 	h3{
+// 		background-color:transparent;
+// 	}
+// 	transition-delay: 50ms;
+//     -moz-transition-delay: 50ms;
+//     -webkit-transition-delay: 50ms;
+// }
+
+
+// #site-visits-chart {
+//     // background: #fff;
+//     position: relative;
+//     height: 100%;
+    
+//     display: table;
+//     width: 100%;
+
+//     .y.axis, .x.axis{
+//         display: none;
+//     }
+//     svg {
+//         font-family: 'Lato',Arial,serif;
+//         font-size: 10px;
+//         font-weight: 700;
+//         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
+
+//         bottom: 0;
+//         height: 100%;
+//         left: 0;
+//         position: absolute;
+//         right: 0;
+//         top: 0;
+//         width: 100%;
+
+
+//     }
+//     text.country-title {
+//         font-size: 14px;
+//         fill: $color-master;
+//     }
+//     text.instructions {
+//         font-size: 16px;
+//     }
+//     g.context g.brush rect.background {
+//         fill: rgba(0, 0, 0, 0.1);
+//     }
+//     g.context g.axis path {
+//         stroke-opacity: 0;
+//     }
+//     g.context g.axis line {
+//         stroke-opacity: 0.1;
+//     }
+//     g.android path.chart {
+//         fill: fade($color-success,50%);
+//     }
+//     g.ios path.chart {
+//         fill: $color-success-lighter;
+//     }
+//     g.windows path.chart {
+//         fill: $color-complete-lighter;
+//     }
+//     g.linux path.chart {
+//         fill: $color-primary-lighter;
+//     }
+//     g.total path.chart {
+//         fill: fade($color-primary, 50%);
+//     }
+//     .axis path, .axis line {
+//         fill: none;
+//         shape-rendering: crispedges;
+//         stroke: #aaa;
+//     }
+//     .brush .extent {
+//         fill-opacity: 0.125;
+//         shape-rendering: crispedges;
+//         stroke: #f09f8c;
+//     }
+//     g.context rect.background {
+//         fill: rgb(200, 200, 255);
+//         visibility: visible !important;
+//     }
+
+//     .visitsCountHeading, .rangeSelect{
+//         font-size: 14px;
+//         fill:$color-master;
+
+//     }
+
+//     .visitsCount{
+//         font-size: 24px;
+//         fill:$color-success;
+//         font-weight: bold;
+//     }
+
+//     .visitsCountIncrease{
+//         font-size: 12px;
+//         fill:#b8b8b8;
+//     }
+// }
+
+// .weather-forecast-daily{
+//     .timeslot > div:hover{
+//         background: $color-master-lighter;
+//     }
+// }
+// .weather-forecast-weekly{
+//     .forecast-day{
+//     & > div{
+//         width: 104%;
+//     }
+// }
+// .forecast-carousel{
+
+//     .owl-stage{
+//         .owl-item:first-child{
+//             & > div{
+//                 margin: 0 auto;
+//                 width: 58%;
+//             }
+           
+//         }
+//     }
+//     .owl-controls{
+//         left: 50%;
+//         margin-left: -18px;
+//     }
+//     .owl-pagination .owl-dot {
+//         &.active{
+//             span{
+//                 background: $color-master;
+//             }
+//         }
+//         span{
+//         margin-right:0 ;
+//         width: 8px;
+//         height: 8px;
+//         background: #c5c5c5;
+//         }
+//     }
+
+// }
+// }
+
+
+//     .jqstooltip {
+//       -webkit-box-sizing: content-box;
+//       -moz-box-sizing: content-box;
+//       box-sizing: content-box;
+//     }

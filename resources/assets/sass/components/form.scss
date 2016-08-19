@@ -1,0 +1,49 @@
+form {
+    width: 100%;
+
+    input:focus {
+        background-color: $color-white !important;
+    }
+
+    &.form-default .form-group {
+        label {
+            @extend .clear;
+            font-family: $font-alt;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: $color-master-dark;
+        }
+
+        &.has-success input {
+            border-color: $color-success;
+        }
+
+        &.has-error input {
+            border-color: $color-danger;
+        }
+
+        input {    
+            font-family: Arial,sans-serif;
+            height: 35px;
+            min-height: 35px;
+            line-height: normal;
+            width: 100%;
+            padding: 9px 12px;
+            font-size: 14px;
+            font-weight: 400;
+            vertical-align: middle;
+            outline: 0;
+            box-shadow: none;
+            border-radius: 2px;
+            border: 1px solid $color-master-light;
+            color: $color-master;
+            background-color: $color-white;
+            transition: all 200ms linear 0ms;
+
+            &:focus {
+                border: 1px solid darken($color-master-light, 10%);
+            }
+        }
+    }
+}
