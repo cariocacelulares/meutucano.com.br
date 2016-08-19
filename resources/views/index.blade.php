@@ -66,12 +66,16 @@
 
     <script src="bower_components/angular-clipboard/angular-clipboard.js"></script>
 
+    <script src="bower_components/ngstorage/ngStorage.min.js"></script>
+
     <!-- Application Scripts -->
     <script src="assets/js/app.js"></script>
 
     <script src="assets/js/src/services.js"></script>
     <script src="assets/js/src/directives.js"></script>
     <script src="assets/js/src/controllers.js"></script>
+    <script src="assets/js/src/components.js"></script>
+    <script src="assets/js/src/models.js"></script>
 
     <script src="assets/js/config.js"></script>
     <script src="assets/js/routes.js"></script>

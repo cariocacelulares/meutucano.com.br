@@ -1,5 +1,5 @@
 <div class="row m-b-20">
-    <div class="col-md-6">
+    <div class="col-md-12">
         <div class="widget-16-header">
             <span class="icon-thumbnail bg-master-light pull-left text-master"><i class="fa fa-cubes"></i></span>
             <div class="pull-left">
@@ -9,65 +9,21 @@
             <div class="clearfix"></div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="pull-right">
-            <!-- <button ng-click="PedidoList.refreshAll()" class="btn btn-primary" style="margin-top: 3px;"><i class="fa fa-refresh"></i>&nbsp; Atualizar</button> -->
-        </div>
-    </div>
 </div>
 <hr>
-<table class="table m-b-0" cellpadding="0" cellspacing="0" ts-wrapper>
+<table-header data="PedidoList.tableHeader"></table-header>
+<table class="table">
     <thead>
         <tr>
-            <th class="text-center" ts-criteria="id" width="160">Código</th>
-            <th class="text-center" ts-criteria="marketplace" width="150">Marketplace</th>
+            <th class="text-center" width="160">Código</th>
+            <th class="text-center" width="150">Marketplace</th>
             <th>Cliente</th>
-            <th class="text-center" ts-criteria="prazo|parseInt" width="120">Valor</th>
-            <th class="text-center" ts-criteria="data_envio|parseDate" ts-default width="120">Data</th>
-            <th ts-criteria="status" width="150">Status</th>
-            <th width="130" style="min-width: 130px;"></th>
+            <th class="text-center" width="120">Valor</th>
+            <th class="text-center" width="120">Data</th>
+            <th width="150">Status</th>
+            <th width="75" style="min-width: 75px;"></th>
         </tr>
-        <tr class="table-filter">
-            <th>
-                <input class="form-control big" ng-model="PedidoList.busca.pedido.nota.chave" placeholder="Nº do pedido" ng-model-options="{debounce:500}" />
-            </th>
-            <th>
-                <select ng-model="PedidoList.busca.status" class="small form-control">
-                    <option value="">Todos</option>
-                    <option value="b2w">B2W</option>
-                    <option value="cnova">CNOVA</option>
-                    <option value="mercadolivre">Mercado Livre</option>
-                    <option value="walmart">Walmart</option>
-                    <option value="site">E-commerce</option>
-                </select>
-            </th>
-            <th>
-                <input class="form-control big" ng-model="PedidoList.busca.pedido.cliente.nome" placeholder="Nome do cliente" ng-model-options="{debounce:500}" />
-            </th>
-            <th>
-                <input class="form-control small" ng-model="PedidoList.busca.prazo" placeholder="Valor" ng-model-options="{debounce:500}"  />
-            </th>
-            <th>
-                <div class="date-picker">
-                    <input class="form-control small" ng-model="PedidoList.busca.data_envio_readable" ng-change="App.changeDate()" placeholder="Data"  />
-                    <div class="picker-wrap">
-                        <date-picker ng-model="PedidoList.busca.data_envio_readable"></date-picker>
-                    </div>
-                </div>
-            </th>
-            <th>
-                <select ng-model="PedidoList.busca.status" class="small form-control">
-                    <option value="">Todos</option>
-                    <option value="2">Pendente</option>
-                    <option value="3">Pago</option>
-                    <option value="6">Faturado</option>
-                    <option value="6">Enviado</option>
-                    <option value="6">Concluído</option>
-                    <option value="6">Cancelado</option>
-                </select>
-            </th>
-            <th colspan="2"></th>
-        </tr>
+        <tr class="table-filter" static-include="views/pedido/list_filter.html"></tr>
     </thead>
     <tbody ng-if="PedidoList.loading">
         <tr>
@@ -76,14 +32,14 @@
             </td>
         </tr>
     </tbody>
-    <tbody ng-if="PedidoList.pedidos && !PedidoList.loading">
-        <tr ng-repeat="pedido in PedidoList.pedidos | filter:PedidoList.busca:strict" ts-repeat>
+    <tbody ng-if="PedidoList.tableData.data && !PedidoList.loading">
+        <tr ng-repeat="pedido in PedidoList.tableData.data">
             <td class="text-center" ng-bind="pedido.codigo_marketplace || 'Sem código'"></td>
             <td class="text-center">
                 <strong ng-bind="pedido.marketplace_readable"></strong>
             </td>
             <td>
-                <strong ng-bind="pedido.cliente.nome"></strong>
+                <strong ng-bind="pedido.cliente.nome | uppercase"></strong>
                 <br>
                 <small>
                     <span ng-bind="pedido.cliente.fone"></span> - CEP: <strong ng-bind="pedido.endereco.cep_readable"></strong> -
@@ -94,16 +50,16 @@
             <td class="text-center" ng-bind="pedido.created_at_readable"></td>
             <td class="status status-{{ pedido.status }}">
                 <div style="display: block;" ng-class="{
-                        'alert-danger': pedido.status == 3 || pedido.status == 5 || pedido.status == 6,
+                        'alert-danger': pedido.status == 5 || pedido.status == 4,
                         'alert-warning': pedido.status == 2,
-                        'alert-success': pedido.status == 4,
-                        'alert-info': pedido.status == 1 || pedido.status == 7 || pedido.status == 8
+                        'alert-success': pedido.status == 3,
+                        'alert-info': pedido.status == 1
                         }" class="alert m-b-0">
                     <strong ng-bind="pedido.status_description"></strong>
                 </div>
             </td>
-            <td>
-                <a class="btn btn-info" ng-href="#/app/pedidos/{{ pedido.id }}">
+            <td class="text-center">
+                <a class="btn btn-info" ui-sref="app.pedidos.detalhe({id: pedido.id})">
                     <i class="fa fa-eye"></i>
                 </a>
             </td>

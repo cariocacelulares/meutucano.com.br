@@ -5,34 +5,51 @@
         .module('MeuTucano')
         .controller('PedidoListController', PedidoListController);
 
-    function PedidoListController($rootScope, Restangular, toaster) {
+    function PedidoListController(Pedido, Filter, TableHeader) {
         var vm = this;
 
-        vm.pedidos = [];
-        vm.loading = false;
-
-        $rootScope.$on('upload', function() {
-            vm.load();
-        });
-
-        $rootScope.$on('loading', function() {
-            vm.loading = true;
-        });
- 
-        $rootScope.$on('stop-loading', function() {
-            vm.loading = false;
+        /**
+         * Filtros
+         * @type {Filter}
+         */
+        vm.filterList = Filter.init('pedidos', vm, {
+            'pedidos.codigo_marketplace': 'LIKE',
+            'clientes.nome':              'LIKE'
         });
 
         /**
-         * Load notas
+         * Cabeçalho da tabela
+         * @type {TableHeader}
          */
-        vm.load = function() {
-            vm.pedidos = [];
-            vm.loading = true;
+        vm.tableHeader = TableHeader.init('pedidos', vm);
 
-            Restangular.all('pedidos').getList().then(function(pedidos) {
-                vm.pedidos = pedidos;
-                vm.loading = false;
+        vm.load = function() {
+            vm.loading = true; 
+ 
+            Pedido.getList({
+                fields:   ['pedidos.*'],
+                orderBy:  'pedidos.created_at',
+                order:    'DESC',
+                filter:   vm.filterList.parse(),
+                page:     vm.tableHeader.pagination.page,
+                per_page: vm.tableHeader.pagination.per_page, 
+                join: [
+                    {
+                        table:       'clientes',
+                        onTable:     'clientes.id',
+                        operator:    '=',
+                        targetTable: 'pedidos.cliente_id'
+                    },
+                    {
+                        table:       'pedido_notas',
+                        onTable:     'pedido_notas.pedido_id',
+                        operator:    '=',
+                        targetTable: 'pedidos.id'
+                    }
+                ]
+            }).then(function(response) {
+                vm.tableData = response;
+                vm.loading   = false; 
             });
         };
         vm.load();

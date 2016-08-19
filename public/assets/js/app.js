@@ -19,6 +19,7 @@
             'tableSort',
             'mp.datePicker',
             'ui.utils.masks',
-            'angular-clipboard'
+            'angular-clipboard',
+            'ngStorage'
         ]);
 })();

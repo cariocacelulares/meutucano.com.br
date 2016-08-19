@@ -31,14 +31,14 @@ class PedidoController extends Controller
         $m = self::MODEL;
 
         try {
-            $prioridade = \Request::get('priorizado');
-            $prioridade = (int)$prioridade ? 1 : null;
+            $prioridade = \Input::get('priorizado');
+            $prioridade = (int) $prioridade ? 1 : null;
 
-            $data = $m::find($pedido_id);
-            $data->priorizado = $prioridade;
-            $data->save();
+            $pedido = $m::find($pedido_id);
+            $pedido->priorizado = $prioridade;
+            $pedido->save();
 
-            return $this->showResponse($data);
+            return $this->showResponse($pedido);
         } catch(\Exception $ex) {
             $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);

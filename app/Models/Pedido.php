@@ -149,7 +149,7 @@ class Pedido extends \Eloquent
      */
     protected function getCreatedAtReadableAttribute() 
     {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y');
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y H:i');
     }
 
     /**
@@ -176,18 +176,13 @@ class Pedido extends \Eloquent
      */
     protected function getCanHoldAttribute() 
     {
-        $can = false;
-
         switch ($this->status) {
-            case 0: $can = true; break;
-            case 1: $can = true; break;
-            case 2: $can = false; break;
-            case 3: $can = false; break;
-            case 4: $can = false; break;
-            case 5: $can = false; break;
+            case 0: 
+            case 1: 
+                return true;
+            default:
+                return false;
         }
-
-        return $can;
     }
 
     /**
@@ -197,17 +192,12 @@ class Pedido extends \Eloquent
      */
     protected function getCanPrioritizeAttribute() 
     {
-        $can = false;
-
         switch ($this->status) {
-            case 0: $can = true; break;
-            case 1: $can = true; break;
-            case 2: $can = false; break;
-            case 3: $can = false; break;
-            case 4: $can = false; break;
-            case 5: $can = false; break;
+            case 0: 
+            case 1: 
+                return true;
+            default:
+                return false;
         }
-
-        return $can;
     }
 }

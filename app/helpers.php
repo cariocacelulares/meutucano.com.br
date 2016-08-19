@@ -1,19 +1,5 @@
 <?php
 
-if (!function_exists('rest')) {
-    /**
-     * Define REST route
-     *
-     * @param $path
-     * @param $controller
-     */
-    function rest($path, $controller)
-    {
-        Route::resource($path, $controller,
-            ['except' => ['create', 'edit']]);
-    }
-}
-
 if (!function_exists('dataToTimestamp')) {
     /**
      * Format date as timestamp

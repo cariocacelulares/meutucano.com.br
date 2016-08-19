@@ -212,7 +212,7 @@ class PedidoRastreioController extends Controller
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $correios);
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, POST);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, 'POST');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $string = curl_exec($ch);   
 

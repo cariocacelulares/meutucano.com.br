@@ -1,7 +1,9 @@
 <?php
-Route::get('/', function () {
-    return view('index');
-});
+
+/**
+ * Rota padrão para o Agnular
+ */
+Route::get('/', function () { return view('index'); });
 
 /**
  * API
@@ -39,31 +41,32 @@ Route::group(['prefix' => '/api'], function() {
          * Atendimento
          */
         Route::group(['middleware' => ['role:admin|atendimento']], function() {
+
             /**
              * Rastreios
              */
             Route::put('rastreios/refresh_all',         'Pedido\PedidoRastreioController@refreshAll');
             Route::put('rastreios/refresh_status/{id}', 'Pedido\PedidoRastreioController@refreshStatus');
             Route::put('rastreios/edit/{id}',           'Pedido\PedidoRastreioController@edit');
-            rest('rastreios', 'Pedido\PedidoRastreioController');
+            Route::resource('rastreios', 'Pedido\PedidoRastreioController', ['except' => ['create', 'edit']]);
 
             /**
              * PI's
              */
             Route::put('pis/edit/{id}', 'Pedido\PedidoRastreioPiController@edit');
-            rest('pis', 'Pedido\PedidoRastreioPiController');
+            Route::resource('pis', 'Pedido\PedidoRastreioPiController', ['except' => ['create', 'edit']]);
 
             /**
              * Devoluções
              */
             Route::put('devolucoes/edit/{id}', 'Pedido\PedidoRastreioDevolucaoController@edit');
-            rest('devolucoes', 'Pedido\PedidoRastreioDevolucaoController');
+            Route::resource('devolucoes', 'Pedido\PedidoRastreioDevolucaoController', ['except' => ['create', 'edit']]);
 
             /**
              * Logística reversa
              */
             Route::put('logisticas/edit/{id}', 'Pedido\PedidoRastreioLogisticaController@edit');
-            rest('logisticas', 'Pedido\PedidoRastreioLogisticaController');
+            Route::resource('logisticas', 'Pedido\PedidoRastreioLogisticaController', ['except' => ['create', 'edit']]);
         });
 
         /**
@@ -101,8 +104,8 @@ Route::group(['prefix' => '/api'], function() {
             /**
              * Usuários
              */
-            rest('usuarios', 'Interno\UsuarioController');
-            rest('senhas', 'Interno\UsuarioSenhaController');
+            Route::resource('usuarios', 'Interno\UsuarioController', ['except' => ['create', 'edit']]);
+            Route::resource('senhas', 'Interno\UsuarioSenhaController', ['except' => ['create', 'edit']]);
             Route::get('senhas/usuario/{id}', 'Interno\UsuarioSenhaController@userPassword');
 
             /**
@@ -116,17 +119,17 @@ Route::group(['prefix' => '/api'], function() {
          */
         Route::put('pedidos/status/{pedido_id}', 'Pedido\PedidoController@alterarStatus');
         Route::put('pedidos/prioridade/{pedido_id}', 'Pedido\PedidoController@prioridade');
-        rest('pedidos', 'Pedido\PedidoController');
+        Route::resource('pedidos', 'Pedido\PedidoController', ['except' => ['create', 'edit']]);
 
         /**
          * Notas
          */
-        rest('notas', 'Pedido\PedidoNotaController');
+        Route::resource('notas', 'Pedido\PedidoNotaController', ['except' => ['create', 'edit']]);
 
         /**
          * Comentarios
          */
         Route::get('comentarios/{pedido_id}', 'Pedido\PedidoComentarioController@commentsFromOrder');
-        rest('comentarios', 'Pedido\PedidoComentarioController');
+        Route::resource('comentarios', 'Pedido\PedidoComentarioController', ['except' => ['create', 'edit']]);
     });
 });
