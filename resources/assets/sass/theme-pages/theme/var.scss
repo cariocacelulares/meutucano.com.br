@@ -15,16 +15,23 @@
 
 //Base Grey Color
 $color-master: #626262;
+.color-master { color: $color-master; }
 
 // Lighter Grey colors
 $color-master-light:mix($color-master, #fff, 16%);
+.color-master-light { color: $color-master-light; }
 $color-master-lighter:mix($color-master, #fff, 9.5%);
+.color-master-lighter { color: $color-master-lighter; }
 $color-master-lightest:mix($color-master, #fff, 3%);
+.color-master-lightest { color: $color-master-lightest; }
 
 // Darker Grey colors
 $color-master-dark:mix($color-master, #000, 45%);
+.color-master-dark { color: $color-master-dark; }
 $color-master-darker:mix($color-master, #000, 27%);
+.color-master-darker { color: $color-master-darker; }
 $color-master-darkest:mix($color-master, #000, 18%);
+.color-master-darkest { color: $color-master-darkest; }
 
 $base-font-family: Arial, sans-serif;
 

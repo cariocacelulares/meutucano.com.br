@@ -1,30 +1,19 @@
-<div class="row m-b-20">
-    <div class="col-md-6">
-        <div class="widget-16-header">
-            <span class="icon-thumbnail bg-master-light pull-left text-master"><i class="fa fa-truck"></i></span>
-            <div class="pull-left">
-                <strong class="page-title no-margin font-montserrat all-caps fs-13">Rastreios ativos</strong><br>
-                <small class="small-hint">Mostra os rastreios que precisam de alguma ação.</small>
-            </div>
-            <div class="clearfix"></div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="pull-right">
-            <button ng-click="Rastreio.refreshAll()" class="btn btn-primary" style="margin-top: 3px;"><i class="fa fa-refresh"></i>&nbsp; Atualizar</button>
-        </div>
+<div id="page-header" class="row">
+    <page-title icon="fa-truck" title="Rastreios ativos" description="Mostra os rastreios que precisam de alguma ação."></page-title>
+    <div class="col-md-6 button-bar">
+        <button ng-click="Rastreio.refreshAll()" class="btn-primary"><i class="fa-refresh"></i>&nbsp; Atualizar</button>
     </div>
 </div>
 <hr>
-<table class="table m-b-0" cellpadding="0" cellspacing="0" ts-wrapper>
+<table class="table" cellpadding="0" cellspacing="0">
     <thead>
         <tr>
-            <th class="text-center" ts-criteria="id" width="120">Nota</th>
+            <th class="text-center" width="120">Nota</th>
             <th>Cliente</th>
-            <th class="text-center" ts-criteria="data_envio|parseDate" ts-default width="120">Envio</th>
-            <th class="text-center" ts-criteria="prazo|parseInt" width="120">Prazo</th>
+            <th class="text-center" width="120">Envio</th>
+            <th class="text-center" width="120">Prazo</th>
             <th class="text-center" width="150">Rastreio</th>
-            <th ts-criteria="status" width="150">Status</th>
+            <th width="150">Status</th>
             <th width="30"></th>
             <th width="130" style="min-width: 130px;"></th>
         </tr>
@@ -60,15 +49,11 @@
             <th colspan="2"></th>
         </tr>
     </thead>
-    <tbody ng-if="Rastreio.loading">
-        <tr>
-            <td colspan="50">
-                <div class="progress-circle-indeterminate m-t-20 m-b-20" style="display: block;"></div>
-            </td>
-        </tr>
+    <tbody ng-if="Rastreio.loading" class="loading">
+        <tr><td colspan="50"><loading></loading></td></tr>
     </tbody>
     <tbody ng-if="Rastreio.rastreios && !Rastreio.loading">
-        <tr ng-if="(rastreio.status == 2 || rastreio.status == 3 || rastreio.status == 6) || Rastreio.busca.rastreio || Rastreio.busca.pedido.cliente.nome || Rastreio.busca.pedido.nota.chave || Rastreio.busca.status || Rastreio.busca.data_envio_readable" ng-repeat="rastreio in Rastreio.rastreios | filter:Rastreio.busca:strict" ts-repeat>
+        <tr ng-if="(rastreio.status == 2 || rastreio.status == 3 || rastreio.status == 6) || Rastreio.busca.rastreio || Rastreio.busca.pedido.cliente.nome || Rastreio.busca.pedido.nota.chave || Rastreio.busca.status || Rastreio.busca.data_envio_readable" ng-repeat="rastreio in Rastreio.rastreios | filter:Rastreio.busca:strict">
             <td class="text-center">
                 <strong class="fs-11" ng-bind="rastreio.pedido.marketplace"></strong>
                 <br>
@@ -102,35 +87,35 @@
                 </div>
             </td>
             <td class="text-center">
-                <a title="Adicionar observação" class="text-gray" ng-click="App.observacao(rastreio)" ng-class="{'text-complete': rastreio.observacao}"><i class="fa fa-comment"></i></a>
+                <a title="Adicionar observação" class="text-gray" ng-click="App.observacao(rastreio)" ng-class="{'text-complete': rastreio.observacao}"><i class="fa-comment"></i></a>
             </td>
             <td>
                 <div class="dropdown">
-                    <button class="btn btn-info dropdown-toggle" type="button">
-                        <i class="fa fa-cog"></i>&nbsp; Ações
+                    <button class="btn-info dropdown-toggle" type="button">
+                        <i class="fa-cog"></i>&nbsp; Ações
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a title="Editar pedido" ng-click="App.editar(rastreio)"><i class="fa fa-edit"></i>&nbsp; Editar</a>
+                            <a title="Editar pedido" ng-click="App.editar(rastreio)"><i class="fa-edit"></i>&nbsp; Editar</a>
                         </li>
                         <li>
-                            <a title="Devolução" ng-click="App.devolucao(rastreio)"><i class="fa fa-undo"></i>&nbsp; Devolução</a>
+                            <a title="Devolução" ng-click="App.devolucao(rastreio)"><i class="fa-undo"></i>&nbsp; Devolução</a>
                         </li>
                         <li>
-                            <a title="Logística reversa" ng-click="App.logistica(rastreio)"><i class="fa fa-exchange"></i>&nbsp; Logística</a>
+                            <a title="Logística reversa" ng-click="App.logistica(rastreio)"><i class="fa-exchange"></i>&nbsp; Logística</a>
                         </li>
                         <li>
-                            <a title="Pedido de informação" ng-click="App.pi(rastreio)"><i class="fa fa-exclamation-triangle"></i>&nbsp; PI</a>
+                            <a title="Pedido de informação" ng-click="App.pi(rastreio)"><i class="fa-exclamation-triangle"></i>&nbsp; PI</a>
                         </li>
                         <li>
-                            <a ng-click="App.printXML(rastreio.pedido_id)"><i class="fa fa-file-code-o"></i>&nbsp; XML</a>
+                            <a ng-click="App.printXML(rastreio.pedido_id)"><i class="fa-file-code-o"></i>&nbsp; XML</a>
                         </li>
                         <li>
-                            <a ng-click="App.printDanfe(rastreio.pedido_id)"><i class="fa fa-file-pdf-o"></i>&nbsp; DANFE</a>
+                            <a ng-click="App.printDanfe(rastreio.pedido_id)"><i class="fa-file-pdf-o"></i>&nbsp; DANFE</a>
                         </li>
                         <li>
-                            <a ng-click="App.printEtiqueta(rastreio.id)"><i class="fa fa-tag"></i>&nbsp; Etiqueta</a>
+                            <a ng-click="App.printEtiqueta(rastreio.id)"><i class="fa-tag"></i>&nbsp; Etiqueta</a>
                         </li>
                     </ul>
                 </div>

@@ -1,4 +1,13 @@
 // Estrutura e espaçamento
+.m-t-0 { margin-top: 0 !important; }
+.m-l-0 { margin-left: 0 !important; }
+.m-b-0 { margin-bottom: 0 !important; }
+.m-r-0 { margin-right: 0 !important; }
+.p-t-0 { padding-top: 0 !important; }
+.p-l-0 { padding-left: 0 !important; }
+.p-b-0 { padding-bottom: 0 !important; }
+.p-r-0 { padding-right: 0 !important; }
+
 .clear {
     display: block;
     clear: both;
@@ -55,13 +64,4 @@
 
 .underline {
     text-decoration: underline;
-}
-
-// Mini componentes
-.loading {
-    display: block;
-    padding: 20px; 
-    border: 1px solid $color-master-lighter;
-    border-top: 0;
-    text-align: center;
 }

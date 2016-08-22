@@ -15,10 +15,10 @@
             color: $color-master;
             background-color: $color-master-light;
         }
-
+ 
         div {
             float: left;
-
+ 
             strong {
                 @extend .clear;
                 font-family: Montserrat, Helvetica, Arial, sans-serif;

@@ -30,6 +30,13 @@ body {
     box-sizing: border-box;
 }
 
+input,
+select {
+    &:focus {
+        outline: none;
+    }
+}
+
 // Utils
 @import 'utils';
 
@@ -42,6 +49,7 @@ body {
 @import 'components/page-header';
 @import 'components/form';
 @import 'components/buttons';
+@import 'components/modal';
 
 /* Fonts */
 [class*="font-alt"] {

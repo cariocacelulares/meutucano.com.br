@@ -37,8 +37,8 @@
     ul {
         position: absolute;
         top: 36px;
-        left: 5px;
-        min-width: calc(100% - 12px);
+        right: 5px;
+        min-width: 110px;
         width: auto;
         padding: 9px 0 5px 0;
         margin: 0;
@@ -48,7 +48,7 @@
         border: none;
         border-radius: 3px;
         font-size: 13px;
-        background-color: $color-master-lighter;
+        background-color: $color-master-lightest;
         visibility: hidden;
         opacity: 0;
         z-index: -1;

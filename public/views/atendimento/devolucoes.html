@@ -1,22 +1,13 @@
-<div class="row m-b-20">
-    <div class="col-md-12">
-        <div class="widget-16-header">
-            <span class="icon-thumbnail bg-master-light pull-left text-master"><i class="fa fa-undo"></i></span>
-            <div class="pull-left">
-                <strong class="page-title no-margin font-montserrat all-caps fs-13">Devoluções pendentes</strong><br>
-                <small class="small-hint">Mostra as devoluções que foram abertas porém ainda não receberam ação.</small>
-            </div>
-            <div class="clearfix"></div>
-        </div>
-    </div>
+<div id="page-header" class="row">
+    <page-title icon="fa-undo" title="Devoluções pendentes" description="Mostra as devoluções que foram abertas porém ainda não receberam ação."></page-title>
 </div>
 <hr>
-<table class="table m-b-0" cellpadding="0" cellspacing="0" ts-wrapper>
+<table class="table" cellpadding="0" cellspacing="0">
     <thead>
         <tr>
-            <th class="text-center" ts-criteria="id" width="120">Nota</th>
+            <th class="text-center" width="120">Nota</th>
             <th>Cliente</th>
-            <th class="text-center" ts-criteria="devolucao.created_at_readable|parseDate" ts-default width="120">Abertura</th>
+            <th class="text-center">Abertura</th>
             <th class="text-center" width="150">Rastreio</th>
             <th class="text-center" width="200">Motivo</th>
             <th width="130" style="min-width: 130px;"></th>
@@ -55,15 +46,11 @@
             <th></th>
         </tr>
     </thead>
-    <tbody ng-if="Devolucao.loading">
-        <tr>
-            <td colspan="50">
-                <div class="progress-circle-indeterminate m-t-20 m-b-20" style="display: block;"></div>
-            </td>
-        </tr>
+    <tbody ng-if="Devolucao.loading" class="loading">
+        <tr><td colspan="50"><loading></loading></td></tr>
     </tbody>
     <tbody ng-if="Devolucao.rastreios && !Devolucao.loading">
-        <tr ng-repeat="rastreio in Devolucao.rastreios | filter:Devolucao.busca:strict" ts-repeat>
+        <tr ng-repeat="rastreio in Devolucao.rastreios | filter:Devolucao.busca:strict">
             <td class="text-center">
                 <strong class="fs-11" ng-bind="rastreio.pedido.marketplace"></strong>
                 <br>
@@ -84,25 +71,25 @@
             <td ng-bind="rastreio.devolucao.motivo_description"></td>
             <td>
                 <div class="dropdown">
-                    <button class="btn btn-info dropdown-toggle" type="button">
-                        <i class="fa fa-cog"></i>&nbsp; Ações
+                    <button class="btn-info dropdown-toggle" type="button">
+                        <i class="fa-cog"></i>&nbsp; Ações
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a title="Editar pedido" ng-click="App.editar(rastreio)"><i class="fa fa-edit"></i>&nbsp; Editar</a>
+                            <a title="Editar pedido" ng-click="App.editar(rastreio)"><i class="fa-edit"></i>&nbsp; Editar</a>
                         </li>
                         <li>
-                            <a title="Devolução" ng-click="App.devolucao(rastreio)"><i class="fa fa-undo"></i>&nbsp; Devolução</a>
+                            <a title="Devolução" ng-click="App.devolucao(rastreio)"><i class="fa-undo"></i>&nbsp; Devolução</a>
                         </li>
                         <li>
-                            <a ng-click="App.printXML(rastreio.pedido_id)"><i class="fa fa-file-code-o"></i>&nbsp; XML</a>
+                            <a ng-click="App.printXML(rastreio.pedido_id)"><i class="fa-file-code-o"></i>&nbsp; XML</a>
                         </li>
                         <li>
-                            <a ng-click="App.printDanfe(rastreio.pedido_id)"><i class="fa fa-file-pdf-o"></i>&nbsp; DANFE</a>
+                            <a ng-click="App.printDanfe(rastreio.pedido_id)"><i class="fa-file-pdf-o"></i>&nbsp; DANFE</a>
                         </li>
                         <li>
-                            <a ng-click="App.printEtiqueta(rastreio.id)"><i class="fa fa-tag"></i>&nbsp; Etiqueta</a>
+                            <a ng-click="App.printEtiqueta(rastreio.id)"><i class="fa-tag"></i>&nbsp; Etiqueta</a>
                         </li>
                     </ul>
                 </div>

@@ -16,6 +16,9 @@
         </tr>
         <tr class="table-filter" static-include="views/pedido/list_filter.html"></tr>
     </thead>
+    <tbody ng-if="PedidoList.loading" class="loading">
+        <tr><td colspan="50"><loading></loading></td></tr>
+    </tbody>
     <tbody ng-if="PedidoList.tableData.data && !PedidoList.loading">
         <tr ng-repeat="pedido in PedidoList.tableData.data">
             <td class="text-center" ng-bind="pedido.codigo_marketplace || 'Sem código'"></td>
@@ -50,4 +53,3 @@
         </tr>
     </tbody>
 </table>
-<loading ng-if="PedidoList.loading"></loading>

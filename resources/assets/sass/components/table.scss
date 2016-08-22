@@ -30,15 +30,10 @@
         color: $color-master-lightest !important;
         background: $color-info;
     }
-
-    tbody {
-        &.loading {
-            td {
-                @extend .progress-circle-indeterminate;
-                margin: 20px 0;
-                display: block;
-            }
-        }
+    
+    .loading,
+    .loading * {
+        text-align: center !important;
     }
 
     tr {
