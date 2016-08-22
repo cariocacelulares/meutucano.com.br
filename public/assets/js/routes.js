@@ -112,6 +112,23 @@
                 })
 
                 /**
+                 * Clientes
+                 */
+                .state('app.clientes', {
+                    url: '/clientes',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.clientes.index', { 
+                    url: '/list',
+                    templateUrl: 'views/cliente/list.html',
+                    controller: 'ClienteListController as ClienteList',
+                    data: {
+                        roles: ['admin']
+                    }
+                })
+
+                /**
                  * Usuários
                  */
                 .state('app.interno', {

@@ -1,0 +1,39 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-cubes" title="Clientes" description="Todos os clientes da loja."></page-title>
+</div>
+<hr>
+<table-header data="ClienteList.tableHeader"></table-header>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th class="text-center" width="160">Documento</th>
+            <th class="text-center" width="120">Cadastro</th>
+            <th width="75"></th>
+        </tr>
+        <tr class="table-filter" static-include="views/cliente/list_filter.html"></tr>
+    </thead>
+    <tbody ng-if="ClienteList.loading" class="loading">
+        <tr><td colspan="50"><loading></loading></td></tr>
+    </tbody>
+    <tbody ng-if="ClienteList.tableData.data && !ClienteList.loading">
+        <tr ng-repeat="cliente in ClienteList.tableData.data">
+            <td>
+                <strong>{{ cliente.nome }}</strong>
+                <br/>
+                <small>
+                    {{ cliente.fone }}
+                    <span ng-if="cliente.email"> | {{ cliente.email }}</span>
+                    <span ng-if="cliente.last_endereco">- CEP: <strong>{{ cliente.last_endereco.cep_readable }}</strong> - {{ cliente.last_endereco.cidade }} / {{ cliente.last_endereco.uf }}</span>
+                </small>
+            </td>
+            <td class="text-center">{{ cliente.taxvat_readable }}</td>
+            <td class="text-center">{{ cliente.created_at_readable }}</td>
+            <td class="text-center">
+                <a class="btn-info" ui-sref="app.clientes.detalhe({id: cliente.id})">
+                    <i class="fa-eye"></i>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>

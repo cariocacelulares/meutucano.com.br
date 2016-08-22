@@ -1,0 +1,12 @@
+<th>
+    <input class="form-control big" ng-model="ClienteList.filter['clientes.nome']" placeholder="Nome do cliente" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <input class="form-control big" ng-model="ClienteList.filter['clientes.taxvat']" placeholder="Documento do cliente" ng-model-options="{debounce:500}" />
+</th>
+<th></th>
+<th class="item-button">
+    <a title="Limpar filtros" class="btn-danger" ng-click="ClienteList.filterList.clear()">
+        <i class="fa-eraser"></i>
+    </a>
+</th>

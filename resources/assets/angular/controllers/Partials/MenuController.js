@@ -54,6 +54,7 @@
             },
             {
                 title: 'Clientes',
+                sref: $state.href('app.clientes.index'),
                 icon: 'fa-users'
             },
             {

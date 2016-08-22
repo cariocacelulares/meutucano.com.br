@@ -131,5 +131,10 @@ Route::group(['prefix' => '/api'], function() {
          */
         Route::get('comentarios/{pedido_id}', 'Pedido\PedidoComentarioController@commentsFromOrder');
         Route::resource('comentarios', 'Pedido\PedidoComentarioController', ['except' => ['create', 'edit']]);
+
+        /**
+         * Clientes
+         */
+        Route::resource('clientes', 'Cliente\ClienteController', ['except' => ['create', 'edit', 'store', 'update']]);
     });
 });
