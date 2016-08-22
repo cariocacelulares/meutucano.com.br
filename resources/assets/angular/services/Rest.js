@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .service('Rest', function (Restangular) {
             return {
-                baseUrl: '',
+                baseUrl:   '',
 
                 /**
                  * Retorna uma lista do recurso

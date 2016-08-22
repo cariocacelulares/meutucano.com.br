@@ -11,36 +11,29 @@
             <th>Cliente</th>
             <th class="text-center" width="120">Valor</th>
             <th class="text-center" width="120">Data</th>
-            <th width="150">Status</th>
+            <th class="text-center" width="150">Status</th>
             <th width="75" style="min-width: 75px;"></th>
         </tr>
         <tr class="table-filter" static-include="views/pedido/list_filter.html"></tr>
     </thead>
     <tbody ng-if="PedidoList.tableData.data && !PedidoList.loading">
         <tr ng-repeat="pedido in PedidoList.tableData.data">
-            <td class="text-center" ng-bind="pedido.codigo_marketplace || 'Sem código'"></td>
-            <td class="text-center">
-                <strong ng-bind="pedido.marketplace_readable"></strong>
-            </td>
+            <td class="text-center">{{ pedido.codigo_marketplace || 'Sem código' }}</td>
+            <td class="text-center bold">{{ pedido.marketplace_readable }}</td>
             <td>
-                <strong ng-bind="pedido.cliente.nome | uppercase"></strong>
+                <strong>{{ pedido.cliente.nome | uppercase }}</strong>
                 <br>
                 <small>
-                    <span ng-bind="pedido.cliente.fone"></span> - CEP: <strong ng-bind="pedido.endereco.cep_readable"></strong> -
-                    <span ng-bind="pedido.endereco.cidade"></span> / <span ng-bind="pedido.endereco.uf"></span>
+                    {{ pedido.cliente.fone }} - CEP: <strong>{{ pedido.endereco.cep_readable }}</strong> - 
+                    {{ pedido.endereco.cidade }} / {{ pedido.endereco.uf }}
                 </small>
             </td>
-            <td class="text-center" ng-bind="pedido.total | currency"></td>
-            <td class="text-center" ng-bind="pedido.created_at_readable"></td>
-            <td class="status status-{{ pedido.status }}">
-                <div style="display: block;" ng-class="{
-                        'alert-danger': pedido.status == 5 || pedido.status == 4,
-                        'alert-warning': pedido.status == 2,
-                        'alert-success': pedido.status == 3,
-                        'alert-info': pedido.status == 1
-                        }" class="alert m-b-0">
-                    <strong ng-bind="pedido.status_description"></strong>
-                </div>
+            <td class="text-center">{{ pedido.total | currency }}</td>
+            <td class="text-center">{{ pedido.created_at_readable }}</td>
+            <td class="text-center bold">
+                <span class="label label-{{ PedidoList.parseStatusClass(pedido) }} m-b-0">
+                    {{ pedido.status_description }}
+                </span>
             </td>
             <td class="text-center">
                 <a class="btn-info" ui-sref="app.pedidos.detalhe({id: pedido.id})">

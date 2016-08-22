@@ -18,6 +18,7 @@
 
         div {
             float: left;
+            line-height: 20px;
 
             strong {
                 @extend .clear;
@@ -29,7 +30,6 @@
 
             small {
                 @extend .clear;
-                line-height: 18px;
                 font-size: 12px;
             }
         }

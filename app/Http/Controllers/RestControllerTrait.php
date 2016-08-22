@@ -17,7 +17,10 @@ trait RestControllerTrait
      */
     public function index()
     {
-        $list = $this->handleRequest();
+        $m = self::MODEL;
+        $m = new $m;
+
+        $list = $this->handleRequest($m);
 
         return $this->listResponse($list);
     }
@@ -25,11 +28,8 @@ trait RestControllerTrait
     /**
      * Filter
      */
-    protected function handleRequest()
+    protected function handleRequest($m)
     {
-        $m = self::MODEL;
-        $m = new $m;
-
         /**
          * Join
          */
