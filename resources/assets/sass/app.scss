@@ -7,15 +7,20 @@ $font-alt: Montserrat, Helvetica, Arial, sans-serif;
 
 /* Defaults */
 body {
+    font-family: Arial, sans-serif;
+
     &,
+    label {
+        color: $color-master;
+    }
+
     h1,
     h2,
     h3,
     h4,
     h5,
-    h6,
-    label {
-        color: $color-master;
+    h6 {
+        color: $color-master-dark;
     }
 }
 

@@ -10,7 +10,6 @@ body {
     height: 100%;
     margin: 0;
     padding: 0;
-    font-family: 'Open Sans', sans-serif;
     font-size: 14px;
     font-weight: normal;
     letter-spacing: 0.01em;
@@ -577,7 +576,7 @@ body {
         transition: transform 0.4s cubic-bezier($menu-bezier); 
 -webkit-backface-visibility: hidden;
     -webkit-perspective: 1000;
-    font-family: "Segoe UI","Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: Arial, sans-serif;
     -webkit-font-smoothing:antialiased;
     -webkit-text-size-adjust:100%;
     -ms-text-size-adjust:100%;
