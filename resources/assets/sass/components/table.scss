@@ -11,6 +11,19 @@
         }
     }
 
+    .table-filter {
+        .item-button {
+            padding-right: 0 !important; 
+            padding-left: 0 !important;
+            text-align: center;
+        }
+
+        select,
+        input {
+            width: 100%;
+        }
+    }
+
     thead th {
         padding: 14px 12px;
         text-align: left;

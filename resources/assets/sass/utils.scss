@@ -1,0 +1,54 @@
+// Estrutura e espaçamento
+.clear {
+    display: block;
+    clear: both;
+    zoom: 1
+}
+
+.clear-l {
+    clear: left; 
+} 
+
+.no-overflow * {
+    overflow: visible !important;
+}
+
+.no-padding {
+    padding: 0 !important;
+}
+
+.ellipsis {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}  
+
+.showIfLast td:after {
+    content: 'Nenhum resultado encontrado.' !important;
+}  
+
+.has-error span.has-error {
+    display: none;
+}
+
+// Cores e fontes
+.bg-white {
+    background: #FFF;
+}
+
+.bg-gray {
+    background: $color-info;
+}
+
+.text-gray {
+    color: #ccc;
+}
+
+.batida {
+    background: $color-info url('../../assets/img/meta.png') no-repeat right bottom !important;
+}
+
+.underline {
+    text-decoration: underline;
+}

@@ -71,7 +71,6 @@
 
     <script src="assets/js/src/services.js"></script>
     <script src="assets/js/src/directives.js"></script>
-    <script src="assets/js/src/components.js"></script>
     <script src="assets/js/src/controllers.js"></script>
     <script src="assets/js/src/components.js"></script>
     <script src="assets/js/src/models.js"></script>

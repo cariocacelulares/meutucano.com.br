@@ -16,7 +16,7 @@
 
 #page-sidebar {
     @extend .page-sidebar; 
-    transition: 50ms left linear 200ms;
+    transition: left linear 100ms;
     transform: translateX(0deg);
     overflow-y: scroll; 
 

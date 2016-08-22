@@ -1,4 +1,3 @@
-
 <th>
     <input class="form-control big" ng-model="PedidoList.filter['pedidos.codigo_marketplace']" placeholder="Nº do pedido" ng-model-options="{debounce:500}" />
 </th>
@@ -37,8 +36,8 @@
         <option value="5">Cancelado</option>
     </select>
 </th>
-<th class="text-center">
-    <a title="Limpar filtros" class="btn btn-danger" ng-click="PedidoList.filterList.clear()">
-        <i class="fa fa-eraser"></i>
+<th class="item-button">
+    <a title="Limpar filtros" class="btn-danger" ng-click="PedidoList.filterList.clear()">
+        <i class="fa-eraser"></i>
     </a>
 </th>

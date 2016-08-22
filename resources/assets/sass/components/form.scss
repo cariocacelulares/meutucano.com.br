@@ -1,3 +1,14 @@
+.form-control {
+    border: 1px solid $color-master-light;
+    color: $color-master;
+    background-color: $color-white;
+
+    &:focus {
+        border: 1px solid darken($color-master-light, 10%);
+        background-color: $color-white !important;
+    }
+}
+
 form {
     width: 100%;
 

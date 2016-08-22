@@ -5,15 +5,6 @@ $font-alt: Montserrat, Helvetica, Arial, sans-serif;
 @import 'font-awesome/font-awesome'; 
 @import 'theme-pages/pages';  
 
-// Third part fixes
-@import 'theme-fix';
-
-// Components
-@import 'components/table';
-@import 'components/dropdown';
-@import 'components/page-header';
-@import 'components/form';
-
 /* Defaults */
 body {
     &,
@@ -27,6 +18,25 @@ body {
         color: $color-master;
     }
 }
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+// Utils
+@import 'utils';
+
+// Third part fixes
+@import 'theme-fix';
+
+// Components
+@import 'components/table';
+@import 'components/dropdown';
+@import 'components/page-header';
+@import 'components/form';
+@import 'components/buttons';
 
 /* Fonts */
 [class*="font-alt"] {
@@ -45,9 +55,9 @@ body {
 /* Global */   
 [class*="fa-"] {
     @extend .fa;
-}
+} 
 
-[class*="btn-"] {
+[class*="btn-"]:not(.btn-group) {
     @extend .btn;
     display: inline-block;
     padding: 6px 17px;
@@ -71,57 +81,4 @@ body {
 
 [date-picker] {
     border: 1px solid #f5f5f5;
-}
-
-.clear {
-    display: block;
-    clear: both;
-    zoom: 1
-}
-
-.no-overflow * {
-    overflow: visible !important;
-}
-
-.bg-white {
-    background: #FFF;
-}
-
-.bg-gray {
-    background: $color-info;
-}
-
-.no-padding {
-    padding: 0 !important;
-}
-
-.batida {
-    background: $color-info url('../../assets/img/meta.png') no-repeat right bottom !important;
-}
-
-.text-gray {
-    color: #ccc;
-}
-
-.underline {
-    text-decoration: underline;
-}
-
-.ellipsis {
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}  
-
-.clear-l {
-    clear: left; 
-} 
-
-.showIfLast td:after {
-    content: 'Nenhum resultado encontrado.' !important;
-}  
-
-.has-error span.has-error {
-    display: none;
 }

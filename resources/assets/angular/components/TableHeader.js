@@ -14,8 +14,8 @@
 
             return {
                 init: function(name, vm, useFilter) {
-                    this.name      = name;
-                    this.vm        = vm;
+                    this.name = name;
+                    this.vm   = vm;
 
                     if (!$localStorage.pagination) $localStorage.pagination = {};
 
