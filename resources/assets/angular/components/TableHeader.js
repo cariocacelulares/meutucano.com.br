@@ -27,7 +27,7 @@
                     } 
                     
                     this.pagination = $localStorage.pagination[this.name];
-
+ 
                     return this;
                 },
 

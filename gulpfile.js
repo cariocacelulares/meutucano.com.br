@@ -12,11 +12,12 @@ var notify = require('gulp-notify');
 elixir.extend('customSass', function() {
     new elixir.Task('customSass', function() {
         return gulp.src(['resources/assets/sass/app.scss'])
+            .pipe(sourcemaps.init())
             .pipe(sass().on('error', sass.logError))
-            .pipe(sourcemaps.write())
             .pipe(rename('app.css'))
             .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
             .pipe(cleanCss())
+            .pipe(sourcemaps.write())
             .pipe(gulp.dest('public/assets/css'))
             .pipe(notify('Sass compiled!'));
     })

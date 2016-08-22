@@ -15,9 +15,6 @@
             <th style="min-width:130px"></th>
         </tr>
     </thead>
-    <tbody ng-if="UsuarioList.loading" class="loading">
-        <tr><td colspan="50"></td></tr>
-    </tbody>
     <tbody ng-if="UsuarioList.tableData.data && !UsuarioList.loading">
         <tr ng-repeat="usuario in UsuarioList.tableData.data">
             <td class="text-center" ng-bind="usuario.username"></td>
@@ -47,9 +44,10 @@
                         <li>
                             <a title="Senhas" ng-click="UsuarioList.senhas(usuario)" ui-sref="app.interno.senhas.usuario({id: usuario.id})"><i class="fa-list"></i>&nbsp; Senhas</a>
                         </li>
-                    </ul>
+                    </ul> 
                 </div>
             </td>
         </tr>
     </tbody>
 </table>
+<loading ng-if="Usuario.loading"></loading>

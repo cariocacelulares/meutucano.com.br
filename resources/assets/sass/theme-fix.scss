@@ -16,12 +16,13 @@
 
 #page-sidebar {
     @extend .page-sidebar; 
-    transition: left linear 100ms;
-    transform: translateX(0deg);
+    left: 0;
+    transition: transform linear 100ms;
+    transform: translateZ(0deg) translateX(-200px);
     overflow-y: scroll; 
 
     &:hover { 
-        left: 0;
+        transform: translateZ(0deg) translateX(0);
     }
 
     .sidebar-menu .menu-items > li {
@@ -30,6 +31,7 @@
         a {
             padding-right: 5px;
             width: 70%;
+            color: inherit;
         }
 
         > * {
@@ -145,7 +147,7 @@
     margin-bottom: 10px;
         
     > div {
-        margin-top: 10px;
+        margin-top: 20px;
     } 
 }
 
@@ -217,3 +219,13 @@
         display: block;
     }
 } 
+
+// Login page
+#form-login {
+    .form-control,
+    input {
+        &:focus {
+            border-color: #FFF !important;
+        }
+    }
+}

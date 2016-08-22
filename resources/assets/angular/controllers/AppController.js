@@ -1,6 +1,6 @@
 (function() {
     'use strict';
-
+ 
     angular
         .module('MeuTucano')
         .controller('AppController', AppController);

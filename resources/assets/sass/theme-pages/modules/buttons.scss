@@ -14,7 +14,7 @@
     &:focus{
     color: $text-color;
     background-color: $background-color;
-    border-color: $background-color;
+    border-color: $background-color !important;
     }
 
   &.active,
@@ -24,7 +24,7 @@
   &:active:hover,
   .open .dropdown-toggle & {
     background-color: mix($background-color, $color-black, $mix-percentage-dark);
-    border-color: mix($background-color, $color-black, $mix-percentage-dark);
+    border-color: mix($background-color, $color-black, $mix-percentage-dark) !important;
     color:$text-color;
   }
   &.hover,
@@ -32,12 +32,12 @@
   .open .dropdown-toggle &
   {
     background-color: mix($background-color, $color-white, $mix-percentage-light);
-    border-color: mix($background-color, $color-white, $mix-percentage-light);
+    border-color: mix($background-color, $color-white, $mix-percentage-light) !important;
     color: $text-color;
   }
     &.active:hover{
-    background: mix($background-color, #000, 86%) ;
-    border-color: mix($background-color, #000, 86%) ;
+    background: mix($background-color, #000, 86%);
+    border-color: mix($background-color, #000, 86%) !important;
     }
 
       &.disabled,
@@ -49,7 +49,7 @@
         &:active,
         &.active {
           background-color: $background-color;
-              border-color: $border-color;
+              border-color: $border-color !important;
         }
       }
 
@@ -135,17 +135,17 @@
 .btn-default, .btn-default:focus{
     color: #5e5e5e;
     background-color: $color-white;
-    border-color: $color-master-lighter;
+    border-color: $color-master-lighter !important;
 }
 .btn-default {
   &.active, &:active, &.active:focus, &:active:focus, &:active:hover{
     background-color: $color-master-lighter;
-    border-color: $color-master-light;
+    border-color: $color-master-light !important;
     color:$color-master-dark;
   }
   &.hover, &:hover{
     background-color: $color-master-lightest;
-    border-color: fade($color-master,27%);
+    border-color: fade($color-master,27%) !important;
     color: $color-master-darker;
   }
   &.active:hover{

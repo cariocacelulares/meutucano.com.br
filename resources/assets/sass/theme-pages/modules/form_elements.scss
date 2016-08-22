@@ -122,6 +122,7 @@ form legend {
     font-weight: normal;
     vertical-align: middle;
     min-height: 35px;
+    width: 100%;
     @include transition(all 0.12s ease);
     @include box-shadow(none);
     @include border-radius(2px);

@@ -26,7 +26,7 @@ $color-master-dark:mix($color-master, #000, 45%);
 $color-master-darker:mix($color-master, #000, 27%);
 $color-master-darkest:mix($color-master, #000, 18%);
 
-$base-font-family: wf_segoe-ui_light,wf_segoe-ui_normal,"Helvetica Neue", Helvetica, Arial, sans-serif;
+$base-font-family: Arial, sans-serif;
 
 // Menu Vars
 // --------------------------------------------------
@@ -122,7 +122,7 @@ $panel-border-color: rgba(230, 230, 230, 0.7);
 
 //Forms
 $form-group-height: 54px;
-$form-control-border-color: fade($color-black, 7%);
+$form-control-border-color: $color-master-lighter;
 
 // Components
 // --------------------------------------------------
