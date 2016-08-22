@@ -1,11 +1,9 @@
 <?php namespace App\Http\Controllers\Interno;
 
 use App\Http\Controllers\RestControllerTrait;
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -34,12 +32,12 @@ class UsuarioController extends Controller
             return $this->notFoundResponse();
 
         try {
-            $v = \Validator::make(\Request::all(), $this->validationRules);
+            $v = \Validator::make(Input::all(), $this->validationRules);
 
             if($v->fails())
                 throw new \Exception("ValidationException");
 
-            $data->fill(\Request::except(['password']));
+            $data->fill(Input::except(['password', 'novasRoles', 'roles']));
 
             if (Input::get('password'))
                 $data->password = bcrypt(Input::get('password'));
@@ -62,20 +60,19 @@ class UsuarioController extends Controller
     /**
      * Store new user
      *
-     * @param Request $request
      * @return Response
      */
-    public function store(Request $request)
+    public function store()
     {
         $m = self::MODEL;
         try {
-            $v = \Validator::make($request->all(), $this->validationRules);
+            $v = \Validator::make(Input::all(), $this->validationRules);
 
             if($v->fails())
                 throw new \Exception("ValidationException");
 
             $data = new $m;
-            $data->fill(\Request::except('password'));
+            $data->fill(Input::except(['password', 'novasRoles']));
             $data->save();
 
             if (Input::get('password'))

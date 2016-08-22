@@ -130,7 +130,7 @@
                 ]
             },
             {
-                title: 'Interno',
+                title: 'Interno', 
                 icon: 'fa-desktop',
                 sub: [
                     {
@@ -144,7 +144,7 @@
                     {
                         title: 'Usuários',
                         icon: 'fa-users',
-                        sref: $state.href('app.interno.usuarios')
+                        sref: $state.href('app.interno.usuarios.index')
                     }
                 ]
             },

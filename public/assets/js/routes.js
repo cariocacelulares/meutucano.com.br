@@ -121,8 +121,13 @@
 
                 .state('app.interno.usuarios', {
                     url: '/usuarios',
-                    templateUrl: 'views/interno/usuarios.html',
-                    controller: 'UsuarioController as Usuario',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.interno.usuarios.index', {
+                    url: '/list',
+                    templateUrl: 'views/usuario/list.html',
+                    controller: 'UsuarioListController as UsuarioList',
                     data: {
                         roles: ['admin']
                     }
