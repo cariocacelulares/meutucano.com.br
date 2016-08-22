@@ -14,9 +14,6 @@
             <th style="min-width:130px"></th>
         </tr>
     </thead>
-    <tbody ng-if="Usuario.loading" class="loading">
-        <tr><td colspan="50"></td></tr>
-    </tbody>
     <tbody ng-if="Usuario.usuarios && !Usuario.loading">
         <tr ng-repeat="usuario in Usuario.usuarios">
             <td class="text-center" ng-bind="usuario.username"></td>
@@ -52,3 +49,4 @@
         </tr>
     </tbody>
 </table>
+<loading ng-if="Usuario.loading"></loading>

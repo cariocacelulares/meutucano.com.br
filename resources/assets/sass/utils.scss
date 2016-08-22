@@ -52,3 +52,12 @@
 .underline {
     text-decoration: underline;
 }
+
+// Mini componentes
+.loading {
+    display: block;
+    padding: 20px; 
+    border: 1px solid $color-master-lighter;
+    border-top: 0;
+    text-align: center;
+}
