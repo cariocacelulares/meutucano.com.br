@@ -444,10 +444,11 @@ hr{
 // --------------------------------------------------
 
 .label {
-    padding: 3px 9px;
-    font-size: 11px;
+    padding: 6px 12px;
+    font-size: 12px;
     text-shadow: none;
     background-color: $color-master-light;
+    border-radius: 4px;
     font-weight: 600;
     color: $color-master;
 }

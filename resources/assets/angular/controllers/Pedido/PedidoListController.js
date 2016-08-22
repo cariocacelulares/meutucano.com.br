@@ -16,7 +16,7 @@
             'pedidos.codigo_marketplace': 'LIKE',
             'clientes.nome':              'LIKE'
         });
-
+ 
         /**
          * Cabeçalho da tabela
          * @type {TableHeader}
@@ -53,6 +53,26 @@
             });
         };
         vm.load();
+
+        /**
+         * Retorna a classe de status do pedido 
+         * 
+         * @param  {Pedido} pedido 
+         * @return {string}        
+         */
+        vm.parseStatusClass = function(pedido) {
+            switch (pedido.status) {
+                case 1:
+                    return 'info';
+                case 2:
+                    return 'warning';
+                case 3:
+                    return 'success';
+                case 4:
+                case 5:
+                    return 'danger';
+            }
+        };
     }
 
 })();

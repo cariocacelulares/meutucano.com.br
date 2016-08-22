@@ -6,10 +6,10 @@
 </div>
 <hr>
 <table-header data="UsuarioList.tableHeader"></table-header>
-<table class="table" cellpadding="0" cellspacing="0">
+<table class="table">
     <thead>
         <tr>
-            <th width="200" class="text-center">Usuário</th>
+            <th class="text-center" width="200">Usuário</th>
             <th>Nome</th>
             <th width="300">Permissões</th>
             <th style="min-width:130px"></th>
@@ -20,35 +20,29 @@
     </tbody>
     <tbody ng-if="UsuarioList.tableData.data && !UsuarioList.loading">
         <tr ng-repeat="usuario in UsuarioList.tableData.data">
-            <td class="text-center" ng-bind="usuario.username"></td>
+            <td class="text-center">{{ usuario.username }}</td>
             <td>
-                <strong ng-bind="usuario.name"></strong>
+                <strong>{{ usuario.name }}</strong>
                 <br>
-                <small class="hint-text" ng-bind="usuario.email"></small>
+                <small class="hint-text">{{ usuario.email }}</small>
             </td>
             <td>
-                <span ng-repeat="role in usuario.roles">
-                    <span ng-bind="role.display_name"></span>{{ $last ? '' : ', ' }}
+                <span class="label m-r-5" ng-repeat="role in usuario.roles">
+                    {{ role.display_name }}
                 </span>
             </td>
             <td>
-                <div class="dropdown">
-                    <button class="btn-info" type="button">
-                        <i class="fa-cog"></i>&nbsp; Ações
-                        <span></span>
-                    </button>
-                    <ul>
-                        <li>
-                            <a title="Editar usuário" ng-click="UsuarioList.openForm(usuario)"><i class="fa-edit"></i>&nbsp; Editar</a>
-                        </li>
-                        <li>
-                            <a title="Deletar usuário" ng-click="UsuarioList.destroy(usuario.id)"><i class="fa-trash"></i>&nbsp; Deletar</a>
-                        </li>
-                        <li>
-                            <a title="Senhas" ng-click="UsuarioList.senhas(usuario)" ui-sref="app.interno.senhas.usuario({id: usuario.id})"><i class="fa-list"></i>&nbsp; Senhas</a>
-                        </li>
-                    </ul> 
-                </div>
+                <dropdown>
+                    <li>
+                        <a title="Editar usuário" ng-click="UsuarioList.openForm(usuario)"><i class="fa-edit"></i>&nbsp; Editar</a>
+                    </li>
+                    <li>
+                        <a title="Deletar usuário" ng-click="UsuarioList.destroy(usuario.id)"><i class="fa-trash"></i>&nbsp; Deletar</a>
+                    </li>
+                    <li>
+                        <a title="Senhas" ui-sref="app.interno.usuarios.senhas({id: usuario.id})"><i class="fa-list"></i>&nbsp; Senhas</a>
+                    </li>
+                </dropdown>
             </td>
         </tr>
     </tbody>

@@ -3,10 +3,10 @@
         <span class="m-r-10">Página {{ $ctrl.data.vm.tableData.current_page || '0' }} de {{ $ctrl.data.vm.tableData.last_page || '0' }}</span>
 
         <div class="btn-group">
-            <button ng-click="$ctrl.data.prev()" class="btn" ng-disabled="$ctrl.data.vm.tableData.current_page === 1">
+            <button ng-click="$ctrl.data.prev()" class="btn btn-default" ng-disabled="$ctrl.data.vm.tableData.current_page === 1">
                 <i class="fa fa-angle-left"></i>
             </button>
-            <button ng-click="$ctrl.data.next()" class="btn" ng-disabled="$ctrl.data.vm.tableData.current_page === $ctrl.data.vm.tableData.last_page">
+            <button ng-click="$ctrl.data.next()" class="btn btn-default" ng-disabled="$ctrl.data.vm.tableData.current_page === $ctrl.data.vm.tableData.last_page">
                 <i class="fa fa-angle-right"></i>
             </button>
         </div>

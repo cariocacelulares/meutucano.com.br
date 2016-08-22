@@ -27,19 +27,10 @@ class UsuarioSenhaController extends Controller
     public function userPassword($id)
     {
         $m = self::MODEL;
-        return $this->listResponse($m::where('usuario_id', $id)->get());
-    }
 
-    /**
-     * Return current user passwords
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function currentUserPasswords()
-    {
-        $m = self::MODEL;
-        $senhas = $m::where('usuario_id', JWTAuth::parseToken()->authenticate()->id)->get();
+        $list = $m::where('usuario_id', $id);
+        $list = $this->handleRequest($list);
 
-        return $this->listResponse($senhas);
+        return $this->listResponse($list);
     }
 }

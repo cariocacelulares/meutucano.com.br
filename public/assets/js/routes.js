@@ -133,6 +133,12 @@
                     }
                 })
 
+                .state('app.interno.usuarios.senhas', {
+                    url: '/{id}/senhas',
+                    templateUrl: 'views/senha/list.html',
+                    controller: 'SenhaListController as SenhaList'
+                })
+
                 /**
                  * Marketing
                  */
@@ -156,9 +162,7 @@
                 })
 
                 .state('app.interno.senhas.usuario', {
-                    url: '/usuario/{id}',
-                    templateUrl: 'views/interno/senhas/usuario.html',
-                    controller: 'UsuarioSenhaController as UsuarioSenha'
+                    
                 })
 
                 .state('app.interno.senhas.minhas', {

@@ -1,16 +1,16 @@
 <h6 class="font-montserrat no-margin text-uppercase text-master bold">Gerenciando senha</h6>
-<form ng-submit="Form.save()" novalidate="novalidate">
+<form ng-submit="SenhaForm.save()" novalidate="novalidate">
     <div class="row m-t-20">
         <div class="col-md-6">
             <div class="form-group">
                 <label for="site">Site/Serviço</label>
-                <input class="form-control" id="site" ng-model="Form.senha.site" placeholder="Nome do site" required />
+                <input class="form-control" id="site" ng-model="SenhaForm.senha.site" placeholder="Nome do site" required />
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
                 <label for="url">URL</label>
-                <input class="form-control" id="url" ng-model="Form.senha.url" placeholder="URL para acesso" />
+                <input class="form-control" id="url" ng-model="SenhaForm.senha.url" placeholder="URL para acesso" />
             </div>
         </div>
     </div>
@@ -18,13 +18,13 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="usuario">Usuário</label>
-                <input class="form-control" id="usuario" ng-model="Form.senha.usuario" placeholder="Usuário de acesso" required />
+                <input class="form-control" id="usuario" ng-model="SenhaForm.senha.usuario" placeholder="Usuário de acesso" required />
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
                 <label for="senha">Senha</label>
-                <input class="form-control" id="senha" ng-model="Form.senha.senha" placeholder="Senha de acesso" required />
+                <input class="form-control" id="senha" ng-model="SenhaForm.senha.senha" placeholder="Senha de acesso" required />
             </div>
         </div>
     </div>

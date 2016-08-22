@@ -18,7 +18,8 @@
  
         div {
             float: left;
- 
+            line-height: 20px;
+            
             strong {
                 @extend .clear;
                 font-family: Montserrat, Helvetica, Arial, sans-serif;
@@ -29,7 +30,6 @@
 
             small {
                 @extend .clear;
-                line-height: 18px;
                 font-size: 12px;
             }
         }
