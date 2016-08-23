@@ -25,7 +25,7 @@ class Cliente extends \Eloquent
     /**
      * Endereços
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function enderecos()
     {

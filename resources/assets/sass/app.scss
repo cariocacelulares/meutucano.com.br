@@ -32,6 +32,8 @@ body {
 
 input,
 select {
+    background-color: #FFF;
+
     &:focus {
         outline: none;
     }

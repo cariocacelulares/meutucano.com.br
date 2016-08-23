@@ -31,6 +31,23 @@ class Linha extends \Eloquent
     ];
 
     /**
+     * @var array
+     */
+    protected $with = [
+        'atributos'
+    ];
+
+    /**
+     * Atributos
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function atributos()
+    {
+        return $this->hasMany(LinhaAtributo::class);
+    }
+
+    /**
      * Return readable created_at
      *
      * @return string

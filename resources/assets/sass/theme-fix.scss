@@ -231,3 +231,17 @@
         }
     }
 }
+
+// Atributes list
+.attrbutes-list {
+    > div {
+        margin-bottom: 15px;
+        padding-left: 0 !important;
+        padding-right: 7px !important;
+
+        &:nth-child(2n) {
+            padding-left: 7px !important;
+            padding-right: 0 !important;
+        }
+    }
+}
