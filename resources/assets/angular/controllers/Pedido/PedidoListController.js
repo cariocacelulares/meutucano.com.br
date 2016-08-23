@@ -23,30 +23,14 @@
          */
         vm.tableHeader = TableHeader.init('pedidos', vm);
 
-        vm.load = function() {
+        vm.load = function(teste) {
             vm.loading = true; 
  
             Pedido.getList({
                 fields:   ['pedidos.*'],
-                orderBy:  'pedidos.created_at',
-                order:    'DESC',
                 filter:   vm.filterList.parse(),
                 page:     vm.tableHeader.pagination.page,
-                per_page: vm.tableHeader.pagination.per_page, 
-                join: [
-                    {
-                        table:       'clientes',
-                        onTable:     'clientes.id',
-                        operator:    '=',
-                        targetTable: 'pedidos.cliente_id'
-                    },
-                    {
-                        table:       'pedido_notas',
-                        onTable:     'pedido_notas.pedido_id',
-                        operator:    '=',
-                        targetTable: 'pedidos.id'
-                    }
-                ]
+                per_page: vm.tableHeader.pagination.per_page
             }).then(function(response) {
                 vm.tableData = response;
                 vm.loading   = false; 

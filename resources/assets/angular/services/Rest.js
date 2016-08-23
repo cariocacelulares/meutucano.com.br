@@ -10,20 +10,32 @@
                 /**
                  * Retorna uma lista do recurso
                  * 
-                 * @param  {Object} params 
+                 * @param  {Object} params  
                  * @return {Array}        
                  */
                 getList: function(params) {
+                    params = this.parseParams(params);
+
+                    return Restangular.all(this.baseUrl + '/list').customGET("", params || {});
+                }, 
+
+                /**
+                 * Retorna os parâmetros manipulados
+                 * 
+                 * @param  {Object} params 
+                 * @return {Object}        
+                 */
+                parseParams: function(params) {
                     if (params) {
-                        angular.forEach(['join', 'filter', 'fields'], function(value) {
+                        angular.forEach(['join', 'filter', 'fields', 'with'], function(value) {
                             if (this.hasOwnProperty(value)) {
                                 this[value] = JSON.stringify(this[value]);
                             }
                         }, params);
                     }
 
-                    return Restangular.all(this.baseUrl).customGET("", params || {});
-                }, 
+                    return params;
+                },
 
                 /**
                  * Busca um registro de recurso

@@ -20,9 +20,7 @@ trait RestControllerTrait
         $m = self::MODEL;
         $m = new $m;
 
-        $list = $this->handleRequest($m);
-
-        return $this->listResponse($list);
+        return $this->listResponse($m::all());
     }
 
     /**
@@ -30,21 +28,6 @@ trait RestControllerTrait
      */
     protected function handleRequest($m)
     {
-        /**
-         * Join
-         */
-        if (Input::get('join')) {
-            foreach (json_decode(Input::get('join'), true) as $join) {
-                $m = $m->join(
-                    $join['table'],
-                    $join['onTable'],
-                    $join['operator'],
-                    $join['targetTable'],
-                    array_key_exists('type', $join) ? $join['type'] : 'inner'
-                );
-            }
-        }
-
         /**
          * Filter
          */
@@ -68,13 +51,6 @@ trait RestControllerTrait
                     );
                 }
             }
-        }
-
-        /**
-         * Order
-         */
-        if (Input::get('orderBy')) {
-            $m = $m->orderBy(Input::get('orderBy'), Input::get('order', 'ASC'));
         }
 
         /**

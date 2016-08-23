@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers\Interno;
+<?php namespace App\Http\Controllers\Senha;
 
 use App\Http\Controllers\RestControllerTrait;
 use App\Http\Requests;

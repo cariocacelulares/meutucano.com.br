@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers\Interno;
+<?php namespace App\Http\Controllers\Usuario;
 
 use App\Http\Controllers\RestControllerTrait;
 use App\Http\Controllers\Controller;
@@ -17,6 +17,21 @@ class UsuarioController extends Controller
     const MODEL = Usuario::class;
 
     protected $validationRules = [];
+
+    /**
+     * Lista pedidos para a tabela
+     * 
+     * @return \Symfony\Component\HttpFoundation\Response 
+     */
+    public function tableList()
+    {
+        $m = self::MODEL;
+        $m = new $m;
+
+        $list = $this->handleRequest($m);
+
+        return $this->listResponse($list);
+    }
 
     /**
      * Update model

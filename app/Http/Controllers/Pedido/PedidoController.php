@@ -27,7 +27,26 @@ class PedidoController extends Controller
 
     protected $validationRules = [];
 
-    public function prioridade($pedido_id) {
+    /**
+     * Lista pedidos para a tabela
+     * 
+     * @return \Symfony\Component\HttpFoundation\Response 
+     */
+    public function tableList() {
+        $m = self::MODEL;
+
+        $list = $m::with(['cliente', 'endereco'])
+            ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
+            ->join('pedido_notas', 'pedido_notas.pedido_id', '=', 'pedidos.id')
+            ->orderBy('pedidos.created_at', 'DESC');
+
+        $list = $this->handleRequest($list);
+
+        return $this->listResponse($list);
+    }
+
+    public function prioridade($pedido_id) 
+    {
         $m = self::MODEL;
 
         try {
