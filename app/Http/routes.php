@@ -136,5 +136,10 @@ Route::group(['prefix' => '/api'], function() {
          * Clientes
          */
         Route::resource('clientes', 'Cliente\ClienteController', ['except' => ['create', 'edit', 'store', 'update']]);
+
+        /**
+         * Linhas
+         */
+        Route::resource('linhas', 'Linha\LinhaController');
     });
 });
