@@ -29,7 +29,19 @@ class PedidoRastreioPi extends \Eloquent
     /**
      * @var array
      */
-    protected $fillable = ['*'];
+    protected $fillable = [
+        'rastreio_id',
+        'usuario_id',
+        'codigo_pi',
+        'motivo_status',
+        'status',
+        'data_pagamento',
+        'valor_pago',
+        'acao',
+        'protocolo',
+        'pago_cliente',
+        'observacoes'
+    ];
 
     /**
      * @var array
@@ -58,16 +70,6 @@ class PedidoRastreioPi extends \Eloquent
     public function rastreio()
     {
         return $this->belongsTo(PedidoRastreio::class);
-    }
-
-    /**
-     * Rastreio Ref
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function rastreioRef()
-    {
-        return $this->hasOne(PedidoRastreio::class, 'rastreio_ref_id');
     }
 
     /**

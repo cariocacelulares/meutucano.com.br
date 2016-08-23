@@ -100,15 +100,15 @@
                     }, 
                     {
                         title: 'PI\'s pendentes' ,
-                        icon: 'fa-warning',
-                        sref: $state.href('app.atendimento.pis')
+                        icon: 'fa-warning', 
+                        sref: $state.href('app.rastreios.pis.pendentes')
                     },
                     {
                         title: 'Devoluções pendentes',
                         icon: 'fa-undo',
                         sref: $state.href('app.atendimento.devolucoes')
                     }
-                ]
+                ] 
             },
             {
                 title: 'Relatórios',

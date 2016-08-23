@@ -17,4 +17,19 @@ class ClienteController extends Controller
     const MODEL = Cliente::class;
 
     protected $validationRules = [];
+
+    /**
+     * Lista pedidos para a tabela
+     * 
+     * @return \Symfony\Component\HttpFoundation\Response 
+     */
+    public function tableList() {
+        $m = self::MODEL;
+
+        $list = $m::orderBy('clientes.created_at', 'DESC');
+
+        $list = $this->handleRequest($list);
+
+        return $this->listResponse($list);
+    }
 }

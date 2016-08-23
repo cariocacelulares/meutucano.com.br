@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers\Pedido;
+<?php namespace App\Http\Controllers\Pi;
 
 use App\Http\Controllers\RestControllerTrait;
 use App\Http\Requests;
@@ -11,10 +11,10 @@ use Illuminate\Support\Facades\Input;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
- * Class PedidoRastreioPiController
- * @package App\Http\Controllers\Pedido
+ * Class PiController
+ * @package App\Http\Controllers\Pi
  */
-class PedidoRastreioPiController extends Controller
+class PiController extends Controller
 {
     use RestControllerTrait;
 
@@ -27,19 +27,21 @@ class PedidoRastreioPiController extends Controller
      * 
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function index()
+    public function pending()
     {
-        $pedidos = PedidoRastreio::with([
-            'rastreioRef',
-            'pi', 'pi.rastreioRef',
-            'pedido', 'pedido.cliente', 'pedido.nota', 'pedido.endereco'
-        ])
-            ->rightJoin('pedido_rastreio_pis as pi', 'pi.rastreio_id', '=', 'pedido_rastreios.id')
-            ->whereNull('pi.status')
-            ->orderBy('pi.created_at', 'DESC')
-            ->get(['pedido_rastreios.*']);
+        $m = self::MODEL;
 
-        return $this->listResponse($pedidos);
+        $lista = $m::with(['rastreio', 'rastreio.pedido', 'rastreio.pedido.cliente', 'rastreio.pedido.endereco'])
+            ->join('pedido_rastreios', 'pedido_rastreios.id', '=', 'pedido_rastreio_pis.rastreio_id')
+            ->join('pedidos', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
+            ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
+            ->join('cliente_enderecos', 'cliente_enderecos.id', '=', 'pedidos.cliente_endereco_id')
+            ->whereNull('pedido_rastreio_pis.status')
+            ->orderBy('pedido_rastreio_pis.created_at', 'DESC');
+
+        $lista = $this->handleRequest($lista);
+
+        return $this->listResponse($lista);
     }
 
     /**

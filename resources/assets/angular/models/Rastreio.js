@@ -21,6 +21,15 @@
                     params = this.parseParams(params);
                     
                     return Restangular.all('rastreios/important').customGET("", params || {});
+                },
+
+                /**
+                 * Atualiza o status de todos rastreios
+                 * 
+                 * @return {Object} 
+                 */
+                refreshAll: function() {
+                    return Restangular.all('rastreios/refresh_all').customPUT();
                 }
             });
 

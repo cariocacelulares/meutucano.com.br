@@ -42,10 +42,15 @@
                     controller: 'RastreioImportanteListController as RastreioImportanteList'
                 })
 
-                .state('app.atendimento.pis', {
+                .state('app.rastreios.pis', {
                     url: '/pis',
-                    templateUrl: 'views/atendimento/pis.html',
-                    controller: 'PiListController as Pi'
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.rastreios.pis.pendentes', {
+                    url: '/pendentes',
+                    templateUrl: 'views/pi/pendente/list.html', 
+                    controller: 'PiPendenteListController as PiPendenteList'
                 })
 
                 .state('app.atendimento.devolucoes', {

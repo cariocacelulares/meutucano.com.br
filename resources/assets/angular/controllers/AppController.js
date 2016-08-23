@@ -125,70 +125,6 @@
         };
 
         /**
-         * Abrir PI
-         * @param rastreio
-         */
-        vm.pi = function(rastreio) {
-            ngDialog.open({
-                template: 'views/atendimento/partials/pi.html',
-                className: 'ngdialog-theme-default ngdialog-big',
-                controller: 'PiController',
-                controllerAs: 'Pi',
-                data: {
-                    rastreio: rastreio
-                }
-            });
-        };
-
-        /**
-         * Devolução
-         * @param rastreio
-         */
-        vm.devolucao = function(rastreio) {
-            ngDialog.open({
-                template: 'views/atendimento/partials/devolucao.html',
-                className: 'ngdialog-theme-default ngdialog-big',
-                controller: 'DevolucaoController',
-                controllerAs: 'Devolucao',
-                data: {
-                    rastreio: rastreio
-                }
-            });
-        };
-
-        /**
-         * Logística reversa
-         * @param rastreio
-         */
-        vm.logistica = function(rastreio) {
-            ngDialog.open({
-                template: 'views/atendimento/partials/logistica.html',
-                className: 'ngdialog-theme-default ngdialog-big',
-                controller: 'LogisticaController',
-                controllerAs: 'Logistica',
-                data: {
-                    rastreio: rastreio
-                }
-            });
-        };
-
-        /**
-         * Editar rastreio
-         * @param rastreio
-         */
-        vm.editar = function(rastreio) {
-            ngDialog.open({
-                template: 'views/atendimento/partials/editar.html',
-                className: 'ngdialog-theme-default',
-                controller: 'EditarController',
-                controllerAs: 'Editar',
-                data: {
-                    rastreio: rastreio
-                }
-            });
-        };
-
-        /**
          * Cancela nota
          * @param pedido_id
          */
@@ -197,22 +133,6 @@
                 $rootScope.$broadcast('upload');
                 vm.loadMeta();
                 toaster.pop('success', 'Sucesso!', 'Pedido deletado com sucesso!');
-            });
-        };
-
-        /**
-         * Observação
-         * @param rastreio
-         */
-        vm.observacao = function(rastreio) {
-            ngDialog.open({
-                template: 'views/atendimento/partials/observacao.html',
-                className: 'ngdialog-theme-default',
-                controller: 'ObservacaoController',
-                controllerAs: 'Observacao',
-                data: {
-                    rastreio: rastreio
-                }
             });
         };
     }

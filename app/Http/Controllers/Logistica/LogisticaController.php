@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers\Pedido;
+<?php namespace App\Http\Controllers\Logistica;
 
 use App\Http\Controllers\RestControllerTrait;
 use App\Http\Requests;
@@ -11,10 +11,10 @@ use Illuminate\Support\Facades\Input;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
- * Class PedidoRastreioLogisticaController
- * @package App\Http\Controllers\Pedido
+ * Class LogisticaController
+ * @package App\Http\Controllers\Logistica
  */
-class PedidoRastreioLogisticaController extends Controller
+class LogisticaController extends Controller
 {
     use RestControllerTrait;
 

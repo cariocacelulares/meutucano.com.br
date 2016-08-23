@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers\Pedido;
+<?php namespace App\Http\Controllers\Devolucao;
 
 use App\Http\Controllers\RestControllerTrait;
 use App\Http\Requests;
@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Input;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
- * Class PedidoRastreioDevolucaoController
- * @package App\Http\Controllers\Pedido
+ * Class DevolucaoController
+ * @package App\Http\Controllers\Devolucao
  */
-class PedidoRastreioDevolucaoController extends Controller
+class DevolucaoController extends Controller
 {
     use RestControllerTrait;
 

@@ -30,7 +30,8 @@ class PedidoRastreio extends \Eloquent
         'status_description',
         'tipo_description',
         'data_envio_readable',
-        'prazo_date'
+        'prazo_date',
+        'rastreio_url'
     ];
 
     /**
@@ -137,5 +138,18 @@ class PedidoRastreio extends \Eloquent
     protected function getPrazoDateAttribute() 
     {
         return \SomaDiasUteis($this->getDataEnvioReadableAttribute(), $this->prazo);
+    }
+
+    /**
+     * Retorna a URL para rastreio
+     * 
+     * @return string 
+     */
+    protected function getRastreioUrlAttribute()
+    {
+        return sprintf(
+            'http://websro.correios.com.br/sro_bin/txect01$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS=%s', 
+            $this->rastreio
+        );
     }
 }

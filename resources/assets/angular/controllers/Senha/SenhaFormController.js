@@ -11,7 +11,9 @@
         vm.senha = angular.copy($scope.ngDialogData.senha);
 
         /**
-         * Save the observation
+         * Salva as informações da senha
+         * 
+         * @return {void} 
          */
         vm.save = function() {
             Senha.save(vm.senha, vm.senha.id || null).then(function() {

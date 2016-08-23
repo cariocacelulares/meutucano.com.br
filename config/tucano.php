@@ -150,10 +150,11 @@ return [
      * Skyhub
      */
     'skyhub' => [
+        'enabled' => env('SKYHUB_ENABLED', true),
         'api' => [
-            'email' => 'dev@cariocacelulares.com.br',
-            'token' => 'ciBmtUvQviXkcey7tkPb',
-            'url'   => 'http://in.skyhub.com.br',
+            'email'   => 'dev@cariocacelulares.com.br',
+            'token'   => env('SKYHUB_TOKEN', 'ciBmtUvQviXkcey7tkPb'),
+            'url'     => 'http://in.skyhub.com.br',
         ]
     ],
 

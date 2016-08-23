@@ -3,9 +3,9 @@
 
     angular
         .module('MeuTucano')
-        .controller('LogisticaController', LogisticaController);
+        .controller('LogisticaFormController', LogisticaFormController);
 
-    function LogisticaController(Restangular, $rootScope, $scope, toaster) {
+    function LogisticaFormController(Restangular, $rootScope, $scope, toaster) {
         var vm = this;
 
         vm.rastreio = angular.copy($scope.ngDialogData.rastreio);

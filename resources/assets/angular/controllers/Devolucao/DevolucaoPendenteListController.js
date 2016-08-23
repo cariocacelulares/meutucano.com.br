@@ -3,9 +3,9 @@
 
     angular
         .module('MeuTucano')
-        .controller('DevolucaoListController', DevolucaoListController);
+        .controller('DevolucaoPendenteListController', DevolucaoPendenteListController);
 
-    function DevolucaoListController($rootScope, Restangular, ngDialog, toaster) {
+    function DevolucaoPendenteListController($rootScope, Restangular, ngDialog, toaster) {
         var vm = this;
 
         vm.rastreios = [];

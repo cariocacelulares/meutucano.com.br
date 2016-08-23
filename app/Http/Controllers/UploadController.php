@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\SkyhubController;
 use App\Http\Controllers\Pedido\PedidoNotaController;
-use App\Http\Controllers\Pedido\PedidoRastreioController;
+use App\Http\Controllers\Rastreio\RastreioController;
 use App\Http\Requests;
 use App\Models\Cliente;
 use App\Models\ClienteEndereco;
@@ -288,7 +288,7 @@ class UploadController extends Controller
             /**
              * Calcula prazo
              */
-            $prazoEntrega = PedidoRastreioController::deadline($rastreio, $nfe->dest->enderDest->CEP);
+            $prazoEntrega = RastreioController::deadline($rastreio, $nfe->dest->enderDest->CEP);
 
             /**
              * Salva o rastreio

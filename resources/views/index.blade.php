@@ -74,6 +74,7 @@
     <script src="assets/js/src/controllers.js"></script>
     <script src="assets/js/src/components.js"></script>
     <script src="assets/js/src/models.js"></script>
+    <script src="assets/js/src/helpers.js"></script>
 
     <script src="assets/js/config.js"></script>
     <script src="assets/js/routes.js"></script>

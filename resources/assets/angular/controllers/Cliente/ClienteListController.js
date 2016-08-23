@@ -28,8 +28,6 @@
  
             Cliente.getList({
                 fields:   ['clientes.*'],
-                orderBy:  'clientes.created_at',
-                order:    'DESC',
                 filter:   vm.filterList.parse(),
                 page:     vm.tableHeader.pagination.page,
                 per_page: vm.tableHeader.pagination.per_page

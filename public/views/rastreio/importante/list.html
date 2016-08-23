@@ -9,14 +9,13 @@
 <table class="table" cellpadding="0" cellspacing="0">
     <thead>
         <tr>
-            <th class="text-center" width="120">Código</th>
+            <th class="text-center" width="140">Código</th>
             <th>Cliente</th>
             <th class="text-center" width="120">Envio</th>
             <th class="text-center" width="120">Prazo</th>
             <th class="text-center" width="150">Rastreio</th>
             <th width="150">Status</th>
-            <th width="30"></th>
-            <th width="150" style="min-width: 150px;"></th>
+            <th width="75" style="min-width: 75px;"></th>
         </tr>
         <tr class="table-filter" static-include="views/rastreio/importante/list_filter.html"></tr>
     </thead>
@@ -30,15 +29,11 @@
                 {{ rastreio.pedido.codigo_marketplace || 'Sem código' }}
             </td>
             <td>
-                <strong ng-bind="rastreio.pedido.cliente.nome"></strong>
+                <strong>{{ rastreio.pedido.cliente.nome | uppercase }}</strong>
                 <br>
                 <small>
-                    <span ng-bind="rastreio.pedido.cliente.fone"></span> - CEP: <strong ng-bind="rastreio.pedido.endereco.cep_readable"></strong> -
-                    <span ng-bind="rastreio.pedido.endereco.cidade"></span> / <span ng-bind="rastreio.pedido.endereco.uf"></span>
-                </small>
-                <br>
-                <small class="hint-text" ng-if="rastreio.rastreio_ref_id">
-                    Reenvio do rastreio: <span ng-bind="rastreio.rastreio_ref.rastreio"></span>
+                    {{ rastreio.pedido.cliente.fone }} - CEP: <strong>{{ rastreio.pedido.endereco.cep_readable }}</strong> - 
+                    {{ rastreio.pedido.endereco.cidade }} / {{ rastreio.pedido.endereco.uf }}
                 </small>
             </td>
             <td class="text-center">{{ rastreio.data_envio_readable }}</td>
@@ -47,40 +42,17 @@
                 <small class="hint-text">{{ rastreio.prazo }} dia(s)</small>
             </td>
             <td class="text-center">
-                <a ng-bind="rastreio.rastreio" title="Rastrear código" target="_blank" ng-href="http://websro.correios.com.br/sro_bin/txect01$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS={{ rastreio.rastreio }}"></a>
+                <a title="Rastrear código" target="_blank" ng-href="{{ pi.rastreio.rastreio_url }}">{{ rastreio.rastreio }}</a>
             </td>
             <td class="text-center">
                 <span class="label {{ (rastreio.status == 2) ? 'label-warning' : 'label-danger' }} m-b-0">
                     {{ rastreio.status_description }}
                 </span>
             </td>
-            <td class="text-center">
-                <a title="Adicionar observação" class="text-gray" ng-click="App.observacao(rastreio)" ng-class="{'text-complete': rastreio.observacao}"><i class="fa-comment"></i></a>
-            </td>
             <td>
-                <dropdown>
-                    <li>
-                        <a title="Editar pedido" ng-click="App.editar(rastreio)"><i class="fa-edit"></i>&nbsp; Editar</a>
-                    </li>
-                    <li>
-                        <a title="Devolução" ng-click="App.devolucao(rastreio)"><i class="fa-undo"></i>&nbsp; Devolução</a>
-                    </li>
-                    <li>
-                        <a title="Logística reversa" ng-click="App.logistica(rastreio)"><i class="fa-exchange"></i>&nbsp; Logística</a>
-                    </li>
-                    <li>
-                        <a title="Pedido de informação" ng-click="App.pi(rastreio)"><i class="fa-exclamation-triangle"></i>&nbsp; PI</a>
-                    </li>
-                    <li>
-                        <a ng-click="App.printXML(rastreioImportanteList.pedido_id)"><i class="fa-file-code-o"></i>&nbsp; XML</a>
-                    </li>
-                    <li>
-                        <a ng-click="App.printDanfe(rastreioImportanteList.pedido_id)"><i class="fa-file-pdf-o"></i>&nbsp; DANFE</a>
-                    </li>
-                    <li>
-                        <a ng-click="App.printEtiqueta(rastreioImportanteList.id)"><i class="fa-tag"></i>&nbsp; Etiqueta</a>
-                    </li>
-                </dropdown>
+                <a class="btn-info" ui-sref="app.pedidos.detalhe({id: rastreio.pedido.id})">
+                    <i class="fa-eye"></i>
+                </a>
             </td>
         </tr>
     </tbody>

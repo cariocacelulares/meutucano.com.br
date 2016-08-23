@@ -357,33 +357,35 @@ class SkyhubController extends Controller
         if ($pedido = Pedido::find($id)) {
 
             try {
-                foreach ($pedido->produtos as $produto) {
-                    $jsonItens[] = [
-                        "sku" => $produto->produto->sku,
-                        "qty" => $produto->quantidade
-                    ];
-                }
+                if (\Config::get('tucano.skyhub.enabled')) {
+                    foreach ($pedido->produtos as $produto) {
+                        $jsonItens[] = [
+                            "sku" => $produto->produto->sku,
+                            "qty" => $produto->quantidade
+                        ];
+                    }
 
-                $jsonData = [
-                    "shipment" => [
-                        "code"  => $pedido->rastreios->first()->rastreio,
-                        "items" => $jsonItens,
-                        "track" => [
-                            "code"    => $pedido->rastreios->first()->rastreio,
-                            "carrier" => "CORREIOS",
-                            "method"  => $pedido->rastreios->first()->servico
+                    $jsonData = [
+                        "shipment" => [
+                            "code"  => $pedido->rastreios->first()->rastreio,
+                            "items" => $jsonItens,
+                            "track" => [
+                                "code"    => $pedido->rastreios->first()->rastreio,
+                                "carrier" => "CORREIOS",
+                                "method"  => $pedido->rastreios->first()->servico
+                            ]
+                        ],
+                        "invoice" => [
+                            "key" => $pedido->nota->chave
                         ]
-                    ],
-                    "invoice" => [
-                        "key" => $pedido->nota->chave
-                    ]
-                ];
+                    ];
 
-                $this->request(
-                    sprintf('/orders/%s/shipments', $pedido->codigo_skyhub), 
-                    ['json' => $jsonData],
-                    'POST'
-                );
+                    $this->request(
+                        sprintf('/orders/%s/shipments', $pedido->codigo_skyhub), 
+                        ['json' => $jsonData],
+                        'POST'
+                    );
+                }
 
                 return true;
 
@@ -410,22 +412,24 @@ class SkyhubController extends Controller
     public function refreshStatus($pedido)
     {
         try {
-            switch ($pedido->status) {
-                case 3: {
-                    $this->request(
-                        sprintf('/orders/%s/delivery', $pedido->codigo_skyhub), 
-                        [],
-                        'POST'
-                    );
-                    break;
-                }
-                case 5: {
-                    $this->request(
-                        sprintf('/orders/%s/cancel', $pedido->codigo_skyhub), 
-                        [],
-                        'POST'
-                    );
-                    break;
+            if (\Config::get('tucano.skyhub.enabled')) {
+                switch ($pedido->status) {
+                    case 3: {
+                        $this->request(
+                            sprintf('/orders/%s/delivery', $pedido->codigo_skyhub), 
+                            [],
+                            'POST'
+                        );
+                        break;
+                    }
+                    case 5: {
+                        $this->request(
+                            sprintf('/orders/%s/cancel', $pedido->codigo_skyhub), 
+                            [],
+                            'POST'
+                        );
+                        break;
+                    }
                 }
             }
 

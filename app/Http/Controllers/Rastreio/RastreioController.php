@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers\Pedido;
+<?php namespace App\Http\Controllers\Rastreio;
 
 use App\Http\Controllers\RestControllerTrait;
 use App\Http\Requests;
@@ -23,10 +23,10 @@ use Sunra\PhpSimple\HtmlDomParser;
 use App\Http\Controllers\SkyhubController;
 
 /**
- * Class PedidoNotaController
+ * Class RastreioController
  * @package App\Http\Controllers\Pedido
  */
-class PedidoRastreioController extends Controller
+class RastreioController extends Controller
 {
     use RestControllerTrait;
 
@@ -103,11 +103,13 @@ class PedidoRastreioController extends Controller
 
             $rastreios = $model::whereNotIn('status', [2, 3, 4, 5, 7, 8])->get();
 
+            dd($rastreios);
+
             foreach ($rastreios as $rastreio) {
                 $this->refresh($rastreio);
             }
 
-            return $this->index();
+            return $this->showResponse([]);
         } catch (\Exception $ex) {
             $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
@@ -143,43 +145,48 @@ class PedidoRastreioController extends Controller
      */
     public function refresh($rastreio)
     {
-        $ultimoEvento = $this->lastStatus($rastreio->rastreio);
+        try {
+            $ultimoEvento = $this->lastStatus($rastreio->rastreio);
 
-        $prazoEntrega = date('d/m/Y', strtotime($rastreio->data_envio));
-        $prazoEntrega = \SomaDiasUteis($prazoEntrega, $rastreio->prazo);
-        $prazoEntrega = date('Ymd', \dataToTimestamp($prazoEntrega));
+            $prazoEntrega = date('d/m/Y', strtotime($rastreio->data_envio));
+            $prazoEntrega = \SomaDiasUteis($prazoEntrega, $rastreio->prazo);
+            $prazoEntrega = date('Ymd', \dataToTimestamp($prazoEntrega));
 
-        $status = 1;
-        if (!$ultimoEvento['acao']) {
-            $status = $rastreio->status;
-        } elseif (strpos($ultimoEvento['detalhes'], 'por favor, entre em contato conosco clicando') !== false) {
-            $status = 3;
-        } elseif(strpos($ultimoEvento['acao'], 'fluxo postal') !== false) {
-            $status = 3;
-        } elseif ((strpos($ultimoEvento['acao'], 'devolvido ao remetente') !== false) || strpos($ultimoEvento['acao'], 'devolução ao remetente') !== false) {
-            $status = 5;
-        } elseif (strpos($ultimoEvento['acao'], 'entrega efetuada') !== false) {
-            $rastreio->pedido->status = 3;
-            $rastreio->pedido->save();
+            $status = 1;
+            if (!$ultimoEvento['acao']) {
+                $status = $rastreio->status;
+            } elseif (strpos($ultimoEvento['detalhes'], 'por favor, entre em contato conosco clicando') !== false) {
+                $status = 3;
+            } elseif(strpos($ultimoEvento['acao'], 'fluxo postal') !== false) {
+                $status = 3;
+            } elseif ((strpos($ultimoEvento['acao'], 'devolvido ao remetente') !== false) || strpos($ultimoEvento['acao'], 'devolução ao remetente') !== false) {
+                $status = 5;
+            } elseif (strpos($ultimoEvento['acao'], 'entrega efetuada') !== false) {
+                $rastreio->pedido->status = 3;
+                $rastreio->pedido->save();
 
-            if ($rastreio->pedido->codigo_skyhub) {
-                with(new SkyhubController())->refreshStatus($rastreio->pedido);
+                if ($rastreio->pedido->codigo_skyhub) {
+                    with(new SkyhubController())->refreshStatus($rastreio->pedido);
+                }
+                $status = 4;
+            } elseif (strpos($ultimoEvento['acao'], 'aguardando retirada') !== false) {
+                $status = 6;
+            } elseif ($prazoEntrega < date('Ymd')) {
+                $status = 2;
             }
-            $status = 4;
-        } elseif (strpos($ultimoEvento['acao'], 'aguardando retirada') !== false) {
-            $status = 6;
-        } elseif ($prazoEntrega < date('Ymd')) {
-            $status = 2;
+
+            if ($rastreio->status == 0 && ($rastreio->status != $status)) {
+                $rastreio->data_envio = Carbon::createFromFormat('d/m/Y H:i', $this->firstStatus($rastreio->rastreio)['data'])->format('Y-m-d');
+            }
+
+            $rastreio->status = $status;
+            $rastreio->save();
+
+            return $rastreio;
+        } catch (\Exception $e) {
+            $data = ['exception' => $e->getMessage()];
+            return $this->clientErrorResponse($data);
         }
-
-        if ($rastreio->status == 0 && ($rastreio->status != $status)) {
-            $rastreio->data_envio = Carbon::createFromFormat('d/m/Y H:i', $this->firstStatus($rastreio->rastreio)['data'])->format('Y-m-d');
-        }
-
-        $rastreio->status = $status;
-        $rastreio->save();
-
-        return $rastreio;
     }
 
     /**

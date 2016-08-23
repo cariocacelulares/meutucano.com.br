@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('RastreioImportanteListController', RastreioImportanteListController);
 
-    function RastreioImportanteListController(Rastreio, Filter, TableHeader, ngDialog, toaster) {
+    function RastreioImportanteListController(Rastreio, Filter, TableHeader, toaster) {
         var vm = this;
 
         /**
@@ -43,14 +43,11 @@
          * Refresh all rastreios
          */
         vm.refreshAll = function() {
-            vm.rastreios = [];
             vm.loading = true;
 
-            Restangular.one('rastreios/refresh_all').customPUT().then(function(rastreios) {
-                vm.rastreios = rastreios;
-                vm.loading = false;
-
+            Rastreio.refreshAll().then(function() {
                 toaster.pop('success', 'Sucesso!', 'Rastreios atualizados com sucesso!');
+                vm.load();
             });
         };
     }

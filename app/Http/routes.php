@@ -30,7 +30,7 @@ Route::group(['prefix' => '/api'], function() {
         Route::post('notas/email/{id}',        'Pedido\PedidoNotaController@email');
         
         Route::get('rastreios/etiqueta/{id}', 'Pedido\PedidoRastreioController@etiqueta');
-        Route::get('minhas-senhas',           'Usuario\UsuarioSenhaController@currentUserPasswords');
+        Route::get('minhas-senhas',           'Senha\UsuarioSenhaController@currentUserPasswords');
 
         /**
          * Template ML
@@ -45,29 +45,30 @@ Route::group(['prefix' => '/api'], function() {
             /**
              * Rastreios
              */
-            Route::put('rastreios/refresh_all',         'Pedido\PedidoRastreioController@refreshAll');
-            Route::put('rastreios/refresh_status/{id}', 'Pedido\PedidoRastreioController@refreshStatus');
-            Route::put('rastreios/edit/{id}',           'Pedido\PedidoRastreioController@edit');
-            Route::get('rastreios/important',           'Pedido\PedidoRastreioController@important');
-            Route::resource('rastreios', 'Pedido\PedidoRastreioController', ['except' => ['create', 'edit']]);
+            Route::put('rastreios/refresh_all',         'Rastreio\RastreioController@refreshAll');
+            Route::put('rastreios/refresh_status/{id}', 'Rastreio\RastreioController@refreshStatus');
+            Route::put('rastreios/edit/{id}',           'Rastreio\RastreioController@edit');
+            Route::get('rastreios/important',           'Rastreio\RastreioController@important');
+            Route::resource('rastreios',                'Rastreio\RastreioController', ['except' => ['create', 'edit']]);
 
             /**
              * PI's
              */
-            Route::put('pis/edit/{id}', 'Pedido\PedidoRastreioPiController@edit');
-            Route::resource('pis', 'Pedido\PedidoRastreioPiController', ['except' => ['create', 'edit']]);
+            Route::put('pis/edit/{id}', 'Pi\PiController@edit');
+            Route::get('pis/pending',   'Pi\PiController@pending');
+            Route::resource('pis',      'Pi\PiController', ['except' => ['create', 'edit']]);
 
             /**
              * Devoluções
              */
-            Route::put('devolucoes/edit/{id}', 'Pedido\PedidoRastreioDevolucaoController@edit');
-            Route::resource('devolucoes', 'Pedido\PedidoRastreioDevolucaoController', ['except' => ['create', 'edit']]);
+            Route::put('devolucoes/edit/{id}', 'Devolucao\DevolucaoController@edit');
+            Route::resource('devolucoes',      'Devolucao\DevolucaoController', ['except' => ['create', 'edit']]);
 
             /**
              * Logística reversa
              */
-            Route::put('logisticas/edit/{id}', 'Pedido\PedidoRastreioLogisticaController@edit');
-            Route::resource('logisticas', 'Pedido\PedidoRastreioLogisticaController', ['except' => ['create', 'edit']]);
+            Route::put('logisticas/edit/{id}', 'Logistica\LogisticaController@edit');
+            Route::resource('logisticas',      'Logistica\LogisticaController', ['except' => ['create', 'edit']]);
         });
 
         /**
@@ -142,6 +143,7 @@ Route::group(['prefix' => '/api'], function() {
         /**
          * Clientes
          */
+        Route::get('clientes/list', 'Cliente\ClienteController@tableList');
         Route::resource('clientes', 'Cliente\ClienteController', ['except' => ['create', 'edit', 'store', 'update']]);
     });
 });
