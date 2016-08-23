@@ -29,7 +29,8 @@ class PedidoRastreio extends \Eloquent
     protected $appends = [
         'status_description',
         'tipo_description',
-        'data_envio_readable'
+        'data_envio_readable',
+        'prazo_date'
     ];
 
     /**
@@ -38,11 +39,6 @@ class PedidoRastreio extends \Eloquent
     protected $casts = [
         'status' => 'string',
     ];
-
-    /**
-     * @var array
-     */
-    protected $with = ['pi', 'logistica', 'devolucao'];
 
     /**
      * Pedido
@@ -128,7 +124,18 @@ class PedidoRastreio extends \Eloquent
      *
      * @return string
      */
-    protected function getDataEnvioReadableAttribute() {
+    protected function getDataEnvioReadableAttribute() 
+    {
         return Carbon::createFromFormat('Y-m-d', $this->data_envio)->format('d/m/Y');
+    }
+
+    /**
+     * Retorna o prazo em formato de data
+     * 
+     * @return string 
+     */
+    protected function getPrazoDateAttribute() 
+    {
+        return \SomaDiasUteis($this->getDataEnvioReadableAttribute(), $this->prazo);
     }
 }

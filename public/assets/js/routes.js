@@ -26,20 +26,20 @@
                 })
 
                 /**
-                 * Atendimento
+                 * Rastreio
                  */
-                .state('app.atendimento', {
-                    url: '/atendimento',
+                .state('app.rastreios', {
+                    url: '/rastreios',
                     templateUrl: 'views/layouts/default.html',
                     data: {
                         roles: ['admin', 'atendimento']
                     }
                 })
 
-                .state('app.atendimento.rastreio', {
-                    url: '/rastreio',
-                    templateUrl: 'views/atendimento/rastreio.html',
-                    controller: 'RastreioController as Rastreio'
+                .state('app.rastreios.importantes', {
+                    url: '/importantes',
+                    templateUrl: 'views/rastreio/importante/list.html',
+                    controller: 'RastreioImportanteListController as RastreioImportanteList'
                 })
 
                 .state('app.atendimento.pis', {
@@ -195,15 +195,9 @@
                     }
                 })
 
-                .state('app.produtos.linhas.edit', {
+                .state('app.produtos.linhas.form', {
                     url: '/{id}',
-                    templateUrl: 'views/linha/edit.html',
-                    controller: 'LinhaFormController as LinhaForm'
-                })
-
-                .state('app.produtos.linhas.create', {
-                    url: '/{id}',
-                    templateUrl: 'views/linha/create.html',
+                    templateUrl: 'views/linha/form.html',
                     controller: 'LinhaFormController as LinhaForm'
                 })
 

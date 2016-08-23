@@ -12,6 +12,22 @@
 form {
     width: 100%;
 
+    &.form-crud {
+        padding: 20px;
+        border-radius: 2px;
+        border: 1px solid $panel-border-color;
+        background-color: $color-white;
+    }
+
+    .card {
+        background-color: $color-master-lightest;   
+    }
+
+    .simulate-label {
+        padding-top: 14px;
+    }
+
+    select:focus,
     input:focus {
         background-color: $color-white !important;
     }
@@ -39,8 +55,10 @@ form {
                 border-color: $color-danger;
             }
 
+            select,
             input {    
-                font-family: Arial,sans-serif;
+                @extend .clear;
+                font-family: Arial, sans-serif;
                 height: 35px;
                 min-height: 35px;
                 line-height: normal;
@@ -61,6 +79,24 @@ form {
                     border: 1px solid darken($color-master-light, 10%);
                 }
             }
+
+            select.ng-empty {
+                color: $color-master-light;
+
+                &:focus,
+                &:hover {
+                color: $color-master;
+                }
+            }
+        }
+    }
+
+    .actions {
+        @extend .clear;
+        margin-top: 20px;
+
+        > * {
+            float: right;
         }
     }
 }

@@ -35,17 +35,6 @@ class Pedido extends \Eloquent
     ];
 
     /**
-     * @var array
-     */
-    protected $with = [
-        'cliente',
-        'endereco',
-        'nota',
-        'rastreios',
-        'produtos',
-    ];
-
-    /**
      * Set soft delete cascade
      */
     protected static function boot() {

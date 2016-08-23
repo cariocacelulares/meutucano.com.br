@@ -65,6 +65,7 @@
     <script src="bower_components/angular-clipboard/angular-clipboard.js"></script>
 
     <script src="bower_components/ngstorage/ngStorage.min.js"></script>
+    <script src="bower_components/ng-tags-input/ng-tags-input.min.js"></script>
 
     <!-- Application Scripts -->
     <script src="assets/js/app.js"></script>

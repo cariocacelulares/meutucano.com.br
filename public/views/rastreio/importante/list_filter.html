@@ -1,0 +1,34 @@
+<th>
+    <input class="form-control big" ng-model="RastreioImportanteList.filter['pedidos.codigo_marketplace']" placeholder="Nº do pedido" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <input class="form-control big" ng-model="RastreioImportanteList.filter['clientes.nome']" placeholder="Nome do cliente" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <div class="date-picker">
+        <input class="form-control" ng-model="RastreioImportanteList.filter['pedido_rastreios.created_at']" placeholder="Envio" />
+        <div class="picker-wrap">
+            <date-picker ng-model="RastreioImportanteList.filter['pedido_rastreios.created_at']"></date-picker>
+        </div>
+    </div>
+</th>
+<th>
+    <input class="form-control" ng-model="RastreioImportanteList.filter['pedido_rastreios.prazo']" placeholder="Prazo" ng-model-options="{debounce:500}"  />
+</th>
+<th>
+    <input class="form-control" ng-model="RastreioImportanteList.filter['pedido_rastreios.rastreio']" placeholder="Rastreio" ng-model-options="{debounce:500}"  />
+</th>
+<th>
+    <select ng-model="RastreioImportanteList.filter['pedido_rastreios.status']" class="form-control">
+        <option value="">Importantes</option>
+        <option value="2">Atrasado</option>
+        <option value="3">Extraviado</option>
+        <option value="6">Retirada</option>
+    </select>
+</th>
+<th></th>
+<th class="item-button">
+    <a title="Limpar filtros" class="btn-danger" ng-click="RastreioImportanteList.filterList.clear()">
+        <i class="fa-eraser"></i>
+    </a>
+</th>

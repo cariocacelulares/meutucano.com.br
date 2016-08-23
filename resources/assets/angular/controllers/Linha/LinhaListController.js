@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('LinhaListController', LinhaListController);
 
-    function LinhaListController(Linha, Filter, TableHeader) {
+    function LinhaListController(Linha, Filter, TableHeader, ngDialog) {
         var vm = this;  
 
         /**
@@ -27,8 +27,6 @@
  
             Linha.getList({
                 fields:   ['linhas.*'],
-                orderBy:  'linhas.created_at',
-                order:    'DESC',
                 filter:   vm.filterList.parse(),
                 page:     vm.tableHeader.pagination.page,
                 per_page: vm.tableHeader.pagination.per_page
@@ -38,23 +36,5 @@
             });
         };
         vm.load();
-
-        /**
-         * Abre o formulário da linha
-         * 
-         * @return {void} 
-         */
-        /*vm.openForm = function(linha) {
-            ngDialog.open({
-                template: 'views/linha/form.html',
-                controller: 'LinhaFormController',
-                controllerAs: 'LinhaForm',
-                data: {
-                    linha: linha || {}
-                }
-            }).closePromise.then(function(data) {
-                if (data.value === true) vm.load();
-            });
-        };*/
     }
 })();

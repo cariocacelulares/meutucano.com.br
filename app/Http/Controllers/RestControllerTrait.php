@@ -20,9 +20,7 @@ trait RestControllerTrait
         $m = self::MODEL;
         $m = new $m;
 
-        $list = $this->handleRequest($m);
-
-        return $this->listResponse($list);
+        return $this->listResponse($m::all());
     }
 
     /**
@@ -30,21 +28,6 @@ trait RestControllerTrait
      */
     protected function handleRequest($m)
     {
-        /**
-         * Join
-         */
-        if (Input::get('join')) {
-            foreach (json_decode(Input::get('join'), true) as $join) {
-                $m = $m->join(
-                    $join['table'],
-                    $join['onTable'],
-                    $join['operator'],
-                    $join['targetTable'],
-                    array_key_exists('type', $join) ? $join['type'] : 'inner'
-                );
-            }
-        }
-
         /**
          * Filter
          */
@@ -71,13 +54,6 @@ trait RestControllerTrait
         }
 
         /**
-         * Order
-         */
-        if (Input::get('orderBy')) {
-            $m = $m->orderBy(Input::get('orderBy'), Input::get('order', 'ASC'));
-        }
-
-        /**
          * Pagination
          */
         return $m->paginate(Input::get('per_page', 20), Input::get('fields') ? json_decode(Input::get('fields'), true) : ['*']);
@@ -101,16 +77,16 @@ trait RestControllerTrait
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function store(Request $request)
+    public function store()
     {
         $m = self::MODEL;
         try {
-            $v = \Validator::make($request->all(), $this->validationRules);
+            $v = \Validator::make(Input::all(), $this->validationRules);
 
             if($v->fails()) {
                 throw new \Exception("ValidationException");
             }
-            $data = $m::create(\Request::all());
+            $data = $m::create(Input::all());
             return $this->createdResponse($data);
         } catch(\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
@@ -127,24 +103,21 @@ trait RestControllerTrait
     {
         $m = self::MODEL;
 
-        if(!$data = $m::find($id))
-        {
+        if (!$data = $m::find($id)) {
             return $this->notFoundResponse();
         }
 
-        try
-        {
-            $v = \Validator::make(\Request::all(), $this->validationRules);
+        try {
+            $v = \Validator::make(Input::all(), $this->validationRules);
 
-            if($v->fails())
-            {
+            if ($v->fails()) {
                 throw new \Exception("ValidationException");
             }
-            $data->fill(\Request::all());
+
+            $data->fill(array_intersect_key(Input::all(), $data->getAttributes()));
             $data->save();
             return $this->showResponse($data);
-        }catch(\Exception $ex)
-        {
+        } catch(\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }

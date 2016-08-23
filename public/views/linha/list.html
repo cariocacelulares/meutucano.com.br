@@ -1,7 +1,7 @@
 <div id="page-header" class="row">
     <page-title icon="fa-tasks" title="Linhas" description="Todos as linhas de produto."></page-title>
     <div class="col-md-6 button-bar">
-        <button ng-click="LinhaList.openForm()" class="btn-success"><i class="fa-user-plus"></i>&nbsp; Nova</button>
+        <button ui-sref="app.produtos.linhas.form" class="btn-success"><i class="fa-user-plus"></i>&nbsp; Nova</button>
     </div>
 </div>
 <hr>
@@ -23,7 +23,7 @@
             <td><strong>{{ linha.titulo }}</strong></td>
             <td class="text-center">{{ linha.created_at_readable }}</td>
             <td class="text-center">
-                <a class="btn-info" ui-sref="app.produtos.linhas.edit({id: linha.id})">
+                <a class="btn-info" ui-sref="app.produtos.linhas.form({id: linha.id})">
                     <i class="fa-pencil"></i>
                 </a>
             </td>

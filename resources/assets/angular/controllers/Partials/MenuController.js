@@ -96,8 +96,8 @@
                     {
                         title: 'Rastreios importantes',
                         icon: 'fa-truck',
-                        sref: $state.href('app.atendimento.rastreio')
-                    },
+                        sref: $state.href('app.rastreios.importantes')
+                    }, 
                     {
                         title: 'PI\'s pendentes' ,
                         icon: 'fa-warning',

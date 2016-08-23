@@ -39,22 +39,19 @@ class PedidoRastreioController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function index()
+    public function important()
     {
         $model = self::MODEL;
+        $list = $model::with(['pedido', 'pedido.cliente', 'pedido.endereco'])
+            ->join('pedidos', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
+            ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
+            ->join('cliente_enderecos', 'cliente_enderecos.id', '=', 'pedidos.cliente_endereco_id')
+            ->whereIn('pedido_rastreios.status', [2, 3, 6])
+            ->orderBy('pedido_rastreios.created_at', 'DESC');
+            
+        $list = $this->handleRequest($list);
 
-        $pedidos = $model::with([
-            'rastreioRef',
-            'pi', 'pi.rastreioRef',
-            'devolucao', 'devolucao.rastreioRef',
-            'logistica', 'logistica.rastreioRef',
-            'pedido', 'pedido.cliente', 'pedido.nota', 'pedido.endereco'
-        ])
-            ->whereIn('status', [2, 3, 6])
-            ->orderBy('data_envio')
-            ->get();
-
-        return $this->listResponse($pedidos);
+        return $this->listResponse($list);
     }
 
     /**

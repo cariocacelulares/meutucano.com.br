@@ -21,7 +21,7 @@ class Linha extends \Eloquent
     /**
      * @var array
      */
-    protected $fillable = ['*'];
+    protected $guarded = ['id'];
 
     /**
      * @var array

@@ -1,0 +1,62 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-tasks" title="Editar linha" description="Aqui você pode editar a linha {{ LinhaForm.linha.titulo }} e seus atributos."></page-title>
+    <div class="col-md-6 button-bar">
+        <button ng-click="LinhaForm.save()" class="btn-success"><i class="fa-save"></i>&nbsp; Salvar</button>
+    </div>
+</div>
+<hr> 
+<form ng-submit="LinhaForm.save()" novalidate="novalidate" class="form-default form-crud">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row form-group m-b-0">
+                <div class="col-md-12">
+                    <label for="titulo">Título</label>
+                    <input type="text" ng-model="LinhaForm.linha.titulo" id="titulo" placeholder="Título da linha" required />
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default card card1 card2">
+                <div class="panel-heading">
+                    <div>Atributos da linha</div>
+                </div>
+                <div class="panel-body">
+                    <div class="row form-group">
+                        <div class="col-md-5">
+                            <label for="titulo-1">Título do atributo</label>
+                            <input type="text" ng-model="LinhaForm.linha.atributo.titulo" id="titulo-1" placeholder="Título do atributo" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="tipo-1">Tipo do atributo</label>
+                            <select id="tipo-1" ng-model="LinhaForm.linha.atributo.tipo" required>
+                                <option value="" disabled selected>Selecione</option>
+                                <option value="texto">Texto</option>
+                                <option value="selecao">Seleção</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 simulate-label childs-right">
+                            <a class="btn-success m-l-5">
+                                <i class="fa-plus"></i>
+                            </a>
+                            <a class="btn-danger">
+                                <i class="fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row form-group m-b-0">
+                        <div class="col-md-12">
+                            <label for="opcoes-1">Opções da seleção</label>
+                            <tags-input id="opcoes-1" placeholder="Adicionar" ng-model="LinhaForm.linha.atributo.opcoes"></tags-input>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <button type="submit" class="btn-success"><i class="fa-save"></i>&nbsp; Salvar</button>
+        </div>
+    </div>
+</form>

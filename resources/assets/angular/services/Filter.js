@@ -33,7 +33,7 @@
                             $localStorage.filter[this.name] = angular.extend($localStorage.filter[this.name] || {}, this.vm.filter);
 
                             if (this.vm.hasOwnProperty('tableHeader')) {
-                                this.vm.tableHeader.reset();
+                                this.vm.tableHeader.pagination.page = 1;
                             }
 
                             this.vm.load();

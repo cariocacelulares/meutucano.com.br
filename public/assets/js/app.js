@@ -20,6 +20,7 @@
             'mp.datePicker',
             'ui.utils.masks',
             'angular-clipboard',
-            'ngStorage'
+            'ngStorage',
+            'ngTagsInput'
         ]);
 })();

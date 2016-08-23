@@ -39,10 +39,6 @@
     tr {
         border-bottom: 1px solid $color-master-lighter;
 
-        &:last-child {
-            border: 0;
-        }
-
         &.table-filter th {
             background: $color-master-lightest;
         }

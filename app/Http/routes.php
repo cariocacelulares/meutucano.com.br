@@ -30,7 +30,7 @@ Route::group(['prefix' => '/api'], function() {
         Route::post('notas/email/{id}',        'Pedido\PedidoNotaController@email');
         
         Route::get('rastreios/etiqueta/{id}', 'Pedido\PedidoRastreioController@etiqueta');
-        Route::get('minhas-senhas',           'Interno\UsuarioSenhaController@currentUserPasswords');
+        Route::get('minhas-senhas',           'Senha\UsuarioSenhaController@currentUserPasswords');
 
         /**
          * Template ML
@@ -48,6 +48,7 @@ Route::group(['prefix' => '/api'], function() {
             Route::put('rastreios/refresh_all',         'Pedido\PedidoRastreioController@refreshAll');
             Route::put('rastreios/refresh_status/{id}', 'Pedido\PedidoRastreioController@refreshStatus');
             Route::put('rastreios/edit/{id}',           'Pedido\PedidoRastreioController@edit');
+            Route::get('rastreios/important',           'Pedido\PedidoRastreioController@important');
             Route::resource('rastreios', 'Pedido\PedidoRastreioController', ['except' => ['create', 'edit']]);
 
             /**
@@ -104,9 +105,14 @@ Route::group(['prefix' => '/api'], function() {
             /**
              * Usuários
              */
-            Route::resource('usuarios', 'Interno\UsuarioController', ['except' => ['create', 'edit']]);
-            Route::resource('senhas', 'Interno\UsuarioSenhaController', ['except' => ['create', 'edit']]);
-            Route::get('senhas/usuario/{id}', 'Interno\UsuarioSenhaController@userPassword');
+            Route::get('usuarios/list', 'Usuario\UsuarioController@tableList');
+            Route::resource('usuarios', 'Usuario\UsuarioController', ['except' => ['create', 'edit']]);
+
+            /**
+             * Senhas
+             */
+            Route::get('senhas/usuario/{id}', 'Senha\UsuarioSenhaController@userPassword');
+            Route::resource('senhas', 'Senha\UsuarioSenhaController', ['except' => ['create', 'edit']]);
 
             /**
              * Admin
@@ -119,6 +125,7 @@ Route::group(['prefix' => '/api'], function() {
          */
         Route::put('pedidos/status/{pedido_id}', 'Pedido\PedidoController@alterarStatus');
         Route::put('pedidos/prioridade/{pedido_id}', 'Pedido\PedidoController@prioridade');
+        Route::get('pedidos/list', 'Pedido\PedidoController@tableList');
         Route::resource('pedidos', 'Pedido\PedidoController', ['except' => ['create', 'edit']]);
 
         /**
@@ -140,6 +147,7 @@ Route::group(['prefix' => '/api'], function() {
         /**
          * Linhas
          */
+        Route::get('linhas/list', 'Linha\LinhaController@tableList');
         Route::resource('linhas', 'Linha\LinhaController');
     });
 });
