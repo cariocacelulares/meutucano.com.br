@@ -77,22 +77,21 @@ trait RestControllerTrait
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function store(Request $request)
+    public function store()
     {
         $m = self::MODEL;
         try {
-            $v = \Validator::make($request->all(), $this->validationRules);
+            $v = \Validator::make(Input::all(), $this->validationRules);
 
             if($v->fails()) {
                 throw new \Exception("ValidationException");
             }
-            $data = $m::create(\Request::all());
+            $data = $m::create(Input::all());
             return $this->createdResponse($data);
         } catch(\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
-
     }
 
     /**
@@ -103,24 +102,21 @@ trait RestControllerTrait
     {
         $m = self::MODEL;
 
-        if(!$data = $m::find($id))
-        {
+        if (!$data = $m::find($id)) {
             return $this->notFoundResponse();
         }
 
-        try
-        {
-            $v = \Validator::make(\Request::all(), $this->validationRules);
+        try {
+            $v = \Validator::make(Input::all(), $this->validationRules);
 
-            if($v->fails())
-            {
+            if ($v->fails()) {
                 throw new \Exception("ValidationException");
             }
-            $data->fill(\Request::all());
+
+            $data->fill(Input::all());
             $data->save();
             return $this->showResponse($data);
-        }catch(\Exception $ex)
-        {
+        } catch(\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }

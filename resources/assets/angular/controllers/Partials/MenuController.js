@@ -62,7 +62,7 @@
                 icon: 'fa-dropbox',
                 sub: [
                     { title: 'Produtos', icon: 'fa-list' },
-                    { title: 'Linhas', icon: 'fa-list-alt' },
+                    { title: 'Linhas', icon: 'fa-list-alt', sref: $state.href('app.produtos.linhas.index') },
                     { title: 'Marcas', icon: 'fa-list-alt' },
                     { title: 'Assistência', icon: 'fa-wrench' },
                 ]

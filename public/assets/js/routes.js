@@ -176,6 +176,37 @@
                 })
 
                 /**
+                 * Produtos
+                 */
+                .state('app.produtos', {
+                    url: '/produtos',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                /**
+                 * Linhas
+                 */
+                .state('app.produtos.linhas', {
+                    url: '/linhas',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.produtos.linhas.index', { 
+                    url: '/list',
+                    templateUrl: 'views/linha/list.html',
+                    controller: 'LinhaListController as LinhaList',
+                    data: {
+                        roles: ['admin']
+                    }
+                })
+
+                .state('app.produtos.linhas.form', {
+                    url: '/{id}',
+                    templateUrl: 'views/linha/form.html',
+                    controller: 'LinhaFormController as LinhaForm'
+                })
+
+                /**
                  * Interno
                  */
                 .state('app.interno.senhas', {

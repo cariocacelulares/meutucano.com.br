@@ -18,6 +18,10 @@
     clear: left;  
 } 
 
+.childs-right > * {
+    float: right;
+}
+
 .no-overflow * {
     overflow: visible !important;
 }

@@ -145,5 +145,11 @@ Route::group(['prefix' => '/api'], function() {
          */
         Route::get('clientes/list', 'Cliente\ClienteController@tableList');
         Route::resource('clientes', 'Cliente\ClienteController', ['except' => ['create', 'edit', 'store', 'update']]);
+
+        /**
+         * Linhas
+         */
+        Route::get('linhas/list', 'Linha\LinhaController@tableList');
+        Route::resource('linhas', 'Linha\LinhaController');
     });
 });

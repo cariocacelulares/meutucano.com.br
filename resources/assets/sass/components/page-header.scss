@@ -1,5 +1,14 @@
 #page-header {
-    margin-bottom: 20px;
+    margin: 0 0 20px 0;
+
+    .title-bar,
+    > div:first-child {
+        padding-left: 0;
+    }
+
+    > div:last-child {
+        padding-right: 0;
+    }
 
     .title-bar {
         > span {

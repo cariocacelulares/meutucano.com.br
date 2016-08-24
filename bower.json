@@ -37,6 +37,7 @@
     "restangular": "^1.5.2",
     "satellizer": "^0.14.0",
     "raphael": "^2.2.0",
-    "ngstorage": "^0.3.11"
+    "ngstorage": "^0.3.11",
+    "ng-tags-input": "^3.1.1"
   }
 }

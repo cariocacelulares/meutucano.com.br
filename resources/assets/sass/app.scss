@@ -32,6 +32,8 @@ body {
 
 input,
 select {
+    background-color: #FFF;
+
     &:focus {
         outline: none;
     }
@@ -50,6 +52,7 @@ select {
 @import 'components/form';
 @import 'components/buttons';
 @import 'components/modal';
+@import 'components/inputtags';
 
 /* Fonts */
 [class*="font-alt"] {
@@ -69,6 +72,10 @@ select {
 [class*="fa-"] {
     @extend .fa;
 } 
+
+label[for] {
+    cursor: pointer;
+}
 
 [class*="btn-"]:not(.btn-group) {
     @extend .btn;
