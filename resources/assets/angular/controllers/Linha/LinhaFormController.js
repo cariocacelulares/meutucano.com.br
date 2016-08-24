@@ -8,12 +8,10 @@
     function LinhaFormController($rootScope, $stateParams, Restangular, Linha, toaster) {
         var vm = this;
   
-        vm.loading         = false;
         vm.linha           = {
-            id: $stateParams.id || null
+            id: $stateParams.id || null,
+            atributos: {}
         };
-        vm.linha.atributos =  {};
-        vm.novoAtributo    =  {};
 
         vm.load = function() {
             vm.loading = true;

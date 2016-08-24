@@ -5,6 +5,7 @@ use App\Http\Controllers\RestControllerTrait;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Linha;
+use App\Models\LinhaAtributo;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 
@@ -33,5 +34,39 @@ class LinhaController extends Controller
         $list = $this->handleRequest($list);
 
         return $this->listResponse($list);
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function update($id)
+    {
+        $m = self::MODEL;
+
+        if (!$data = $m::find($id)) {
+            return $this->notFoundResponse();
+        }
+
+        try {
+            $v = \Validator::make(Input::all(), $this->validationRules);
+
+            if ($v->fails()) {
+                throw new \Exception("ValidationException");
+            }
+
+            $data->fill(Input::except(['atributos']));
+
+            if (Input::get('atributos')) {
+                $data->atributos()->delete();
+                $data->atributos()->insert(Input::get('atributos'));
+            }
+
+            $data->save();
+            return $this->showResponse($data);
+        } catch(\Exception $ex) {
+            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            return $this->clientErrorResponse($data);
+        }
     }
 }

@@ -9,7 +9,11 @@ class LinhaAtributo extends \Eloquent
     /**
      * @var array
      */
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'titulo',
+        'tipo',
+        'opcoes'
+    ];
 
     /**
      * @var bool

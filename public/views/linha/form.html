@@ -43,7 +43,7 @@
                             <tags-input ng-if="atributo.tipo == 1" ng-model="atributo.opcoes" id="opcoes-novo" placeholder="Adicionar"></tags-input>
                         </td>
                         <td>
-                            <a ng-click="LinhaForm.removeAttribute($index)" class="btn-danger" title="Adicionar atributo">
+                            <a ng-click="LinhaForm.removeAttribute($index)" class="btn" title="Adicionar atributo">
                                 <i class="fa-trash"></i>
                             </a>
                         </td>
@@ -62,7 +62,7 @@
                             <tags-input ng-if="LinhaForm.novoAtributo.tipo == 1" id="opcoes-novo" placeholder="Adicionar" ng-model="LinhaForm.novoAtributo.opcoes"></tags-input>
                         </td>
                         <td>
-                            <a ng-click="LinhaForm.addAttribute()" class="btn-info" title="Adicionar atributo">
+                            <a ng-click="LinhaForm.addAttribute()" class="btn" title="Adicionar atributo">
                                 <i class="fa-check"></i>
                             </a>
                         </td>

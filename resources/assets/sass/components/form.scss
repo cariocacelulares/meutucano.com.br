@@ -100,3 +100,75 @@ form {
         }
     }
 }
+
+form.default-style {
+    fieldset {
+        padding: 20px;
+        outline: none;
+        border: 1px solid $color-master-light;
+
+        legend {
+            font: $font-alt;
+            text-transform: uppercase;
+            font-weight: bold;
+            padding: 0 10px;
+        }
+
+        .form-group {     
+            *:not(.checkbox):not(.radio) { 
+                label {
+                    @extend .clear;
+                    font-family: $font-alt;
+                    font-size: 11px;
+                    text-transform: uppercase;
+                    font-weight: 600;
+                    color: $color-master;
+                    line-height: 1;
+                    margin-bottom: 4px;
+                }
+
+                &.has-success input {
+                    border-color: $color-success;
+                }
+
+                &.has-error input {
+                    border-color: $color-danger;
+                }
+
+                select,
+                input {    
+                    @extend .clear;
+                    font-family: Arial, sans-serif;
+                    height: 35px;
+                    min-height: 35px;
+                    line-height: normal;
+                    width: 100%;
+                    padding: 9px 12px;
+                    font-size: 14px;
+                    font-weight: 400;
+                    vertical-align: middle;
+                    outline: 0;
+                    box-shadow: none;
+                    border-radius: 2px;
+                    border: 1px solid $color-master-light;
+                    color: $color-master;
+                    background-color: $color-white;
+                    transition: all 200ms linear 0ms;
+
+                    &:focus {
+                        border: 1px solid darken($color-master-light, 10%);
+                    }
+                }
+
+                select.ng-empty {
+                    color: $color-master-light;
+
+                    &:focus,
+                    &:hover {
+                        color: $color-master;
+                    }
+                }
+            }
+        }
+    }
+}

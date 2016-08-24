@@ -92,7 +92,6 @@ trait RestControllerTrait
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
-
     }
 
     /**
@@ -114,7 +113,7 @@ trait RestControllerTrait
                 throw new \Exception("ValidationException");
             }
 
-            $data->fill(array_intersect_key(Input::all(), $data->getAttributes()));
+            $data->fill(Input::all());
             $data->save();
             return $this->showResponse($data);
         } catch(\Exception $ex) {
