@@ -44,7 +44,7 @@
         border:1px solid $panel-border-color;
     }
     &.panel-bordered{
-        border:1px solid fade($color-master-light, 70%);
+        border:1px solid rgba($color-master-light, .7);
     }
     &.panel-transparent{
         background: transparent;

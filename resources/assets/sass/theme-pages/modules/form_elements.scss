@@ -14,7 +14,7 @@
   .radio-inline,
   .checkbox-inline  {
     color: $text-color;
-  }
+}
   // Set the border and box shadow on specific inputs to match
   .form-control {
     border-color: $border-color;
@@ -23,18 +23,18 @@
       border-color: darken($border-color, 10%);
       //$shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 6px lighten($border-color, 20%);
       @include box-shadow(none);
-    }
   }
+}
   // Set validation states also for addons
   .input-group-addon {
     color: $text-color;
     border-color: $border-color;
     background-color: $background-color;
-  }
+}
   // Optional feedback icon
   .form-control-feedback {
     color: $text-color;
-  }
+}
 }
 
 // Placeholder text
@@ -122,13 +122,12 @@ form legend {
     font-weight: normal;
     vertical-align: middle;
     min-height: 35px;
-    width: 100%;
     @include transition(all 0.12s ease);
     @include box-shadow(none);
     @include border-radius(2px);
     @include transition(background 0.2s linear 0s);
     &:focus{
-        border-color: fade($color-black, 10%);
+        border-color: rgba($color-black, .1);
         background-color:$color-master-lighter;
         outline: 0 !important;
         @include box-shadow(none);
@@ -139,8 +138,8 @@ form legend {
     &[readonly], 
     fieldset[disabled] &{
         background: $color-master-light;
-        color: fade($color-master, 23%);
-        border-color: fade($color-master, 15%) !important;
+        color: rgba($color-master, .23);
+        border-color: rgba($color-master, .15) !important;
     }
 }
 
@@ -382,23 +381,23 @@ input[type=checkbox]:checked + label{
         .row {
           margin-left: 0;
           margin-right: 0;
+      }
+      .row [class*='col-']{
+
+        &:not(:first-child),
+        &:not(:last-child) {
+            padding-right: 7px;
+            padding-left: 7px;
         }
-        .row [class*='col-']{
 
-            &:not(:first-child),
-            &:not(:last-child) {
-                padding-right: 7px;
-                padding-left: 7px;
-            }
-
-            &:first-child{
-                padding-left: 0;
-            }
-            &:last-child{
-                padding-right: 0;
-            }
-        }  
-    }
+        &:first-child{
+            padding-left: 0;
+        }
+        &:last-child{
+            padding-right: 0;
+        }
+    }  
+}
 }
 
 .form-horizontal {
@@ -445,7 +444,7 @@ input[type=checkbox]:checked + label{
                 border-top-right-radius: 2px;
             }
         }
-       
+
         &:last-child{ 
             &.row > [class*='col-']{
                 &:first-child .form-group-default{
@@ -508,11 +507,11 @@ input[type=checkbox]:checked + label{
     }
     label .help{
         margin-left: 8px;
-     
+
     }
     .help {
         font-size: 12px;
-        color: fade($color-master, 55%);
+        color: rgba($color-master, .55);
     }
 }
 
@@ -541,8 +540,8 @@ input[type=checkbox]:checked + label{
             opacity: .4;
         }
         background: $color-master-light;
-        color: fade($color-master, 23%);
-        border-color: fade($color-master, 15%) !important;
+        color: rgba($color-master, .23);
+        border-color: rgba($color-master, .15) !important;
     }
     &.focused {
         border-color:rgba(0, 0, 0, 0.1) !important;
@@ -552,7 +551,7 @@ input[type=checkbox]:checked + label{
         }
     }
     &.has-error{
-        background-color: fade($color-danger,10%);
+        background-color: rgba($color-danger,.10);
     }
     &.has-success, &.has-error{
         .form-control-feedback{
@@ -573,157 +572,158 @@ input[type=checkbox]:checked + label{
             padding-left: 12px;
         }
         & > .form-control{
-           margin-top: -2px;
-           margin-bottom: 3px;
-           padding-left: 12px;
-        }
-        .input-group-addon{
-            height: calc($form-group-height - 4px);
-            min-width:calc($form-group-height - 4px);
-            border-radius: 0;
-            border:none;
-        }
-        &.focused {
-            .input-group-addon{
-                border-color: rgba(0, 0, 0, 0.1);
-            }
-        }
-    }
-    & .form-control{
+         margin-top: -2px;
+         margin-bottom: 3px;
+         padding-left: 12px;
+     }
+     .input-group-addon{
+        height: calc($form-group-height - 4px);
+        min-width:calc($form-group-height - 4px);
+        border-radius: 0;
         border:none;
-        height: 25px;
-        min-height: 25px;
-        padding: 0;
-        margin-top: -4px;
+    }
+    &.focused {
+        .input-group-addon{
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+    }
+}
+& .form-control{
+    border:none;
+    height: 25px;
+    min-height: 25px;
+    padding: 0;
+    margin-top: -4px;
+    background: none;
+    &.error{
+        color: $color-master-dark;
+    }
+    &:focus{
         background: none;
-        &.error{
-            color: $color-master-dark;
-        }
-        &:focus{
-            background: none;
-        }
     }
-    label {
-        margin: 0;
-        display: block;
-        @include transition(opacity .2s ease);
-        &.label-lg {
-            font-size: 13px;
-            left: 13px;
-            top: 9px;
-        }
-        &.label-sm {
-            font-size: 11px;
-            left: 11px;
-            top: 6px;
-        }
-        &.highlight{
-            opacity: 1;
-        }
-        &.fade{
-            opacity: .5;
-        }
+}
+label {
+    margin: 0;
+    display: block;
+    opacity: 1;
+    @include transition(opacity .2s ease);
+    &.label-lg {
+        font-size: 13px;
+        left: 13px;
+        top: 9px;
     }
-    & > .input-lg {
-        height: 29px;
-        min-height: 29px;
-        padding-left: 1px;
+    &.label-sm {
+        font-size: 11px;
+        left: 11px;
+        top: 6px;
     }
-    & > .input-sm {
-        min-height: 18px;
-        height: 18px;
+    &.highlight{
+        opacity: 1;
     }
+    &.fade{
+        opacity: .5;
+    }
+}
+& > .input-lg {
+    height: 29px;
+    min-height: 29px;
+    padding-left: 1px;
+}
+& > .input-sm {
+    min-height: 18px;
+    height: 18px;
+}
 
-    &.form-group-default-select2{
-        padding: 0;
-        & > label{
-            position: absolute;
-            z-index: 10;
-            padding: 7px 12px 0 12px;
-            &.label-lg{
-                left: 0;
-                top: 0;
+&.form-group-default-select2{
+    padding: 0;
+    & > label{
+        position: absolute;
+        z-index: 10;
+        padding: 7px 12px 0 12px;
+        &.label-lg{
+            left: 0;
+            top: 0;
+        }
+        &.label-sm{
+            left: 0;
+            top: 0;                
+        }
+    }
+    .select2-container{
+        .select2-choice{
+            padding-top: 20px;
+            height: 52px;
+            .select2-arrow b:before{
+                top: 20px;
             }
-            &.label-sm{
-                left: 0;
-                top: 0;                
+            .select2-chosen{
+                padding-left: 3px;
+                padding-top: 1px;
             }
         }
-        .select2-container{
-            .select2-choice{
-                padding-top: 20px;
-                height: 52px;
-                .select2-arrow b:before{
-                    top: 20px;
-                }
-                .select2-chosen{
-                    padding-left: 3px;
-                    padding-top: 1px;
-                }
-            }
-            .select2-choices{
-                padding-top: 20px;
-                height: 52px;  
-                border:0px;       
-            }
+        .select2-choices{
+            padding-top: 20px;
+            height: 52px;  
+            border:0px;       
+        }
 
-        }
-        & > .input-lg{
-            height: auto;
-            padding: 0;
-            .select2-choice{
-                padding-top: 20px;
-                height: 56px;
-            }
-        }
-        & > .input-sm{
-            height: auto;
-            padding: 0;
-            .select2-choice{
-                padding-top: 20px;
-                height: 46px;
-            }
-        }
     }
-    &.form-group-default-selectFx{
+    & > .input-lg{
+        height: auto;
         padding: 0;
-        & > label{
-            position: absolute;
-            z-index: 10;
-            padding: 7px 12px 0 12px;
-            &.label-lg{
-                left: 0;
-                top: 0;
-            }
-            &.label-sm{
-                left: 0;
-                top: 0;                
-            }
-        }
-        .cs-wrapper{
-            .cs-placeholder{
-                padding-top: 28px;
-                height: 52px;
-                padding-left: 12px;
-            }
-            .cs-select{
-                height: auto;
-                > span:after, 
-                .cs-selected span:after {
-                   top: 39px;
-                }
-                &.input-lg .cs-placeholder{
-                    height: 60px;
-                }
-                 &.input-sm .cs-placeholder{
-                    height: 50px;
-                }
-            }
-            .dropdown-placeholder{
-                vertical-align: top;
-            }
+        .select2-choice{
+            padding-top: 20px;
+            height: 56px;
         }
     }
+    & > .input-sm{
+        height: auto;
+        padding: 0;
+        .select2-choice{
+            padding-top: 20px;
+            height: 46px;
+        }
+    }
+}
+&.form-group-default-selectFx{
+    padding: 0;
+    & > label{
+        position: absolute;
+        z-index: 10;
+        padding: 7px 12px 0 12px;
+        &.label-lg{
+            left: 0;
+            top: 0;
+        }
+        &.label-sm{
+            left: 0;
+            top: 0;                
+        }
+    }
+    .cs-wrapper{
+        .cs-placeholder{
+            padding-top: 28px;
+            height: 52px;
+            padding-left: 12px;
+        }
+        .cs-select{
+            height: auto;
+            > span:after, 
+            .cs-selected span:after {
+             top: 39px;
+         }
+         &.input-lg .cs-placeholder{
+            height: 60px;
+        }
+        &.input-sm .cs-placeholder{
+            height: 50px;
+        }
+    }
+    .dropdown-placeholder{
+        vertical-align: top;
+    }
+}
+}
 }
 
 // Form validation
@@ -750,7 +750,7 @@ input[type=checkbox]:checked + label{
 .input-group-addon {
     background: $color-master-lighter;
     border: 1px solid $form-control-border-color;
-    color: fade($color-master, 47%);
+    color: rgba($color-master, .47);
     font-size: 14px;
     padding: 6px 9px;
     border-radius: 3px;
@@ -1224,7 +1224,7 @@ div.cs-skin-slide{
         max-height: 350px;
         transform: translate3d(1,1,1);
         overflow: hidden;
-          ul{
+        ul{
             width: 100%;
             display: table;
             li{
@@ -1245,7 +1245,7 @@ div.cs-skin-slide{
                     color: $color-master-dark;
                 }
             }
-          }
+        }
     }
 }
 .cs-backdrop{
@@ -1517,4 +1517,3 @@ div.cs-skin-slide{
         color: $color-primary;
     }
 }
-

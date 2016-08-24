@@ -1,0 +1,23 @@
+.date-picker {
+    position: relative;
+    z-index: 999;
+
+    .picker-wrap {
+        display: none;
+        position: absolute;
+        z-index: 999;
+        top: 35px;
+
+        &:hover {
+            display: block;
+        }
+    }
+
+    input:focus + .picker-wrap {
+        display: block;
+    }
+} 
+
+.date-picker-date-time td {
+    padding: 0;
+}

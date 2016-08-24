@@ -10,6 +10,7 @@ body {
     height: 100%;
     margin: 0;
     padding: 0;
+    font-family: 'Open Sans', sans-serif;
     font-size: 14px;
     font-weight: normal;
     letter-spacing: 0.01em;
@@ -97,7 +98,7 @@ body {
   padding: 0 20px 0 0;
   z-index: $zIndex-navbar;
   background-color: #fff;
-  border: 1px solid fade($color-master-light, 70%);
+  border: 1px solid rgba($color-master-light, .7);
   a{
     color: #3b4751;
     &.btn{
@@ -576,7 +577,7 @@ body {
         transition: transform 0.4s cubic-bezier($menu-bezier); 
 -webkit-backface-visibility: hidden;
     -webkit-perspective: 1000;
-    font-family: Arial, sans-serif;
+    font-family: "Segoe UI","Helvetica Neue", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing:antialiased;
     -webkit-text-size-adjust:100%;
     -ms-text-size-adjust:100%;
@@ -1493,7 +1494,7 @@ padding-right: 30px;
 
 .copyright{
     padding: 25px 0;
-    border-top: 1px solid fade($color-master,7%);
+    border-top: 1px solid rgba($color-master,.07);
 }
 .jumbotron p{
     font-size: 14px;

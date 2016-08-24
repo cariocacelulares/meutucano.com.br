@@ -4,15 +4,14 @@
         <button ng-click="UsuarioList.openForm()" class="btn-success"><i class="fa-user-plus"></i>&nbsp; Novo</button>
     </div>
 </div>
-<hr>
 <table-header data="UsuarioList.tableHeader"></table-header>
-<table class="table">
+<table class="table info-style">
     <thead>
         <tr>
             <th class="text-center" width="200">Usuário</th>
             <th>Nome</th>
             <th width="300">Permissões</th>
-            <th style="min-width:130px"></th>
+            <th width="130"></th>
         </tr>
     </thead>
     <tbody ng-if="UsuarioList.loading" class="loading">

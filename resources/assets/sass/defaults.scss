@@ -1,0 +1,91 @@
+body {
+    font-family: Arial, sans-serif;
+
+    &,
+    p {
+        font-size: 13px;
+    }
+
+    &,
+    label {
+        color: $color-master;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        color: $color-master-dark;
+    }
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+input,
+select {
+    background-color: #FFF;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+img {
+    vertical-align: middle;
+}
+
+small {
+    font-size: 89%;
+}
+
+hr {
+    border: none;
+    border-bottom: 1px solid $color-master-light;
+    margin: 20px 0;
+    padding: 0;
+
+    &.dotted {
+        border-style: dotted;
+    }
+
+    &.dashed {
+        border-style: dashed;
+    }
+}
+
+[class*="fa-"] {
+    @extend .fa;
+} 
+
+[class*="btn-"]:not(.btn-group) {
+    @extend .btn;
+    font-family: Montserrat, Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+[disabled] {
+    opacity: 0.5;
+}
+ 
+[ng-click] {
+    cursor: pointer;
+}
+
+[ui-view] {
+    height: 100%;
+}
+
+[date-picker] {
+    border: 1px solid #f5f5f5;
+}
+
+[for] {
+    cursor: pointer;
+}

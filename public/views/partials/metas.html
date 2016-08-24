@@ -7,7 +7,7 @@
                 <span><i ng-class="{'fa-caret-up': App.metas.ano.diferenca >= 0, 'fa-caret-down': App.metas.ano.diferenca < 0}"></i> <span ng-bind="App.metas.ano.diferenca + '%'"></span></span>
             </div>
             <div ng-if="!App.metas.ano">
-                <p>Não encontrado</p>
+                <small>Não encontrado</small>
             </div>
         </div>
         <div ng-if="App.loadingMetas">
@@ -22,7 +22,7 @@
                 <span><i ng-class="{'fa-caret-up': App.metas.mes.smartphones.diferenca >= 0, 'fa-caret-down': App.metas.mes.smartphones.diferenca < 0}"></i> <span ng-bind="App.metas.mes.smartphones.diferenca + '%'"></span></span>
             </div>
             <div ng-if="!App.metas.mes.smartphones">
-                <p>Não encontrado</p>
+                <small>Não encontrado</small>
             </div>
         </div>
         <div ng-if="App.loadingMetas">
@@ -37,7 +37,7 @@
                 <span><i ng-class="{'fa-caret-up': App.metas.mes.outros.diferenca >= 0, 'fa-caret-down': App.metas.mes.outros.diferenca < 0}"></i> <span ng-bind="App.metas.mes.outros.diferenca + '%'"></span></span>
             </div>
             <div ng-if="!App.metas.mes.outros">
-                <p>Não encontrado</p>
+                <small>Não encontrado</small>
             </div>
         </div>
         <div ng-if="App.loadingMetas">

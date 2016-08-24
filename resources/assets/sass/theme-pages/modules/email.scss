@@ -111,7 +111,7 @@
         .list-view-fake-header, .list-view-group-header{
             background: $color-master-lighter;
             height: 30px;
-            color: fade($color-master, 70%);
+            color: rgba($color-master, .7);
             font-family: 'Montserrat';
             text-transform: uppercase;
             font-size: 10.8px;
@@ -125,7 +125,7 @@
             height: 117px;
             list-style: none;
             position: relative;
-            border-bottom: 1px solid fade($color-master-light, 70%);
+            border-bottom: 1px solid rgba($color-master-light, .7);
             .inline {
                 width: 230px;
 

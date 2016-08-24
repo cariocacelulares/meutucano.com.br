@@ -1,7 +1,7 @@
 
 .progress {
     height: 12px;
-    background-color: fade($color-master, 20%);
+    background-color: rgba($color-master, .2);
     background-image: none;
     box-shadow: none;
     border-radius: 0;
@@ -198,7 +198,7 @@
         }
     }
     .shadow {
-            border: $border solid fade(#000, 10%);
+            border: $border solid rgba(#000, .1);
             border-radius: 50%;
             height: 100%;
             width: 100%;

@@ -3,17 +3,13 @@
 // --------------------------------------------------
 
 // Mixins tools
-@import "mixins"; 
+@import "mixins";
 
-//Change your theme here 
-//e.g: "themes/simple/theme"
-
- @import "theme/theme";
+// Change your theme here 
+ @import "var";
  
 // Includes of Modules
 @import "modules";
-
+ 
 // Responsive Util
 @import "responsive";
-
-

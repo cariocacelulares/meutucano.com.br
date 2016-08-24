@@ -14,8 +14,8 @@
                 padding-top: 14px;
                 padding-bottom: 14px;
                 vertical-align: middle;
-                border-bottom: 1px solid fade($color-master-light, 70%);
-                color:fade($color-master-dark, 35%);
+                border-bottom: 1px solid rgba($color-master-light, .70);
+                color:rgba($color-master-dark, .35);
                 &[class*='sorting_'] {
                     color:$color-master-dark;
                 }
@@ -27,10 +27,10 @@
                     padding-left: 0 !important;
                     padding-right: 30px !important;
                 }
-                .btn {
+                /* .btn {
                     margin-top: -20px;
                     margin-bottom: -20px;
-                }
+                } */
             }
         }
     }
@@ -38,21 +38,20 @@
         tr {
             td {
                 background: #fff;
-                border-bottom: 1px solid fade($color-master-light, 70%);
+                border-bottom: 1px solid rgba($color-master-light, .70);
                 border-top: 0px;
-                padding:20px;
+                padding:12px;
                 font-size: 13.5px;
-                .btn {
-                    background:fade($color-master-dark, 7%);
+                /* .btn {
+                    background:rgba($color-master-dark, .07);
                     display: inline-block;
                     margin: 5px;
                     border-radius: 4px;
-                    //padding: 5px;
-                    //color: #62605a;
+                    color: #62605a !important;
                     &:hover {
-                        background:fade($color-master-dark, 15%);
+                        background:rgba($color-master-dark, .15);
                     }
-                }
+                } */
                 &[class*='sorting_'] {
                     color:#000;
                 }
@@ -128,7 +127,7 @@
                     }
                     & + tr {
                         & > td {
-                            background: fade($body-background, 40%);
+                            background: rgba($body-background, .4);
                             padding: 0px 40px;
                             .table-inline{
                                 background: transparent;

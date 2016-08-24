@@ -1,4 +1,4 @@
-<h6 class="font-alt-bold-upper">Pedido de informação</h6>
+<h1>Pedido de informação</h1>
 <form ng-submit="PiForm.save()" class="form-default" novalidate="novalidate">
     <div class="row">
         <div class="col-md-6 form-group">
@@ -21,8 +21,8 @@
     </div>
     <hr>
     <div class="alert alert-warning m-b-20"><i class="fa fa-exclamation-triangle"></i>&nbsp; Incluir as informações abaixo apenas quando houver resposta dos correios.</div>
-    <div class="row form-group">
-        <div ng-class="{'col-md-12': PiForm.pi.motivo_status == '0', 'col-md-3': PiForm.pi.motivo_status !== '0'}">
+    <div class="row">
+        <div class="form-group" ng-class="{'col-md-12': PiForm.pi.motivo_status == '0', 'col-md-3': PiForm.pi.motivo_status !== '0'}">
             <label for="status">Status</label>
             <select ng-model="PiForm.pi.status" id="status" class="form-control">
                 <option value="" disabled selected hidden>Procedência</option>
@@ -59,22 +59,23 @@
             </select>
         </div>
     </div>
-    <div class="row form-group" ng-if="PiForm.pi.motivo_status == 3 && PiForm.pi.acao == 1">
-        <div class="col-md-12" ng-if="PiForm.pi.acao == 1">
+    <div class="row" ng-if="PiForm.pi.motivo_status == 3 && PiForm.pi.acao == 1">
+        <div class="col-md-12 form-group" ng-if="PiForm.pi.acao == 1">
             <label for="protocolo">Protocolo</label>
             <input class="form-control" id="protocolo" ng-model="PiForm.pi.protocolo" placeholder="Protocolo de cancelamento" required />
         </div>
     </div>
-    <div class="row form-group">
-        <div class="col-md-12">
+    <div class="row">
+        <div class="col-md-12 form-group">
             <label for="observacoes">Observações</label>
             <textarea class="form-control" id="observacoes" ng-model="PiForm.pi.observacoes" placeholder="Observacões gerais"></textarea>
         </div>
     </div>
 
-    <div class="pull-right m-t-10">
-        <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
-        <button busy="Salvando..." type="submit" class="btn btn-primary">Salvar</button>
+    <div class="row">
+        <div class="pull-right">
+            <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
+            <button busy="Salvando..." type="submit" class="btn btn-primary">Salvar</button>
+        </div>
     </div>
-    <div class="clearfix"></div>
 </form>

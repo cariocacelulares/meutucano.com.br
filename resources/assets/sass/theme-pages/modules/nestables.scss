@@ -4,7 +4,7 @@
 // --------------------------------------------------
 
 .dd-handle{
-	border-color: fade($color-master-light, 70%);
+	border-color: rgba($color-master-light, .7);
 	color:$color-master;
 	&:hover{
 		background-color: $color-master-lightest
@@ -27,7 +27,7 @@
 
 .dd3-content{
 	background:#fff;
-	border-color: fade($color-master-light, 70%);
+	border-color: rgba($color-master-light, .7);
 	color:$color-master;
 	&:hover{
 		background-color: $color-master-lightest
@@ -43,13 +43,13 @@
 
 .dd-placeholder{
 	background:$color-master-lighter;
-	border-color: fade($color-master, 35%);
+	border-color: rgba($color-master, .35);
 }
 
 .dd-empty{
 	background-image:none;
 	background:$color-master-lighter;
-	border-color: fade($color-master, 50%);
+	border-color: rgba($color-master, .50);
 }
 
 @media only screen and (min-width: 700px) { 

@@ -1,23 +1,11 @@
-<div class="row m-b-20">
-    <div class="col-md-6">
-        <div class="widget-16-header">
-            <span class="icon-thumbnail bg-master-light pull-left text-master"><i class="fa fa-key"></i></span>
-            <div class="pull-left">
-                <strong class="page-title no-margin font-montserrat all-caps fs-13">Senhas</strong><br>
-                <small class="small-hint">Senhas para acessos internos.</small>
-            </div>
-            <div class="clearfix"></div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="pull-right">
-            <button ng-click="SenhaList.openForm()" class="btn btn-primary" style="margin-top: 3px;"><i class="fa fa-user-plus"></i>&nbsp; Nova</button>
-        </div>
+<div id="page-header" class="row">
+    <page-title icon="fa-key" title="Senhas" description="Senhas para acessos internos."></page-title>
+    <div class="col-md-6 button-bar">
+        <button ng-click="SenhaList.openForm()" class="btn-primary"><i class="fa-user-plus"></i>&nbsp; Nova</button>
     </div>
 </div>
-<hr>
 <table-header data="SenhaList.tableHeader"></table-header>
-<table class="table">
+<table class="table info-style">
     <thead>
     <tr>
         <th width="200" class="text-center">Serviço</th>
@@ -42,10 +30,10 @@
             <td>
                 <dropdown>
                     <li>
-                        <a title="Editar senha" ng-click="SenhaList.openForm(senha)"><i class="fa fa-edit"></i>&nbsp; Editar</a>
+                        <a title="Editar senha" ng-click="SenhaList.openForm(senha)"><i class="fa-edit"></i>&nbsp; Editar</a>
                     </li>
                     <li>
-                        <a title="Deletar senha" ng-click="SenhaList.destroy(senha.id)"><i class="fa fa-trash"></i>&nbsp; Deletar</a>
+                        <a title="Deletar senha" ng-click="SenhaList.destroy(senha.id)"><i class="fa-trash"></i>&nbsp; Deletar</a>
                     </li>
                 </dropdown>
             </td>

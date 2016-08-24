@@ -7,15 +7,11 @@
 
         <title>Meu Tucano</title>
 
-        <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
         <link rel="stylesheet" href="assets/css/app.css" />
 
-        <link rel="stylesheet" href="assets/css/toaster.css" />
         <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.min.css" />
-        <link rel="stylesheet" href="bower_components/morris.js/morris.css" />
         <link rel="stylesheet" href="bower_components/ng-dialog/css/ngDialog.min.css" />
         <link rel="stylesheet" href="bower_components/ng-dialog/css/ngDialog-theme-default.min.css" />
-        <link rel="stylesheet" href="bower_components/angular-tablesort/tablesort.css">
         <link rel="stylesheet" href="bower_components/angular-date-picker/angular-date-picker.css" />
 
         <link rel="icon" type="image/x-icon" href="favicon.ico" />
@@ -41,8 +37,6 @@
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/raphael/raphael.min.js"></script>
-    <script src="bower_components/morris.js/morris.min.js"></script>
-    <script src="bower_components/angular-morris-chart/src/angular-morris-chart.min.js"></script>
 
     <script src="bower_components/lodash/dist/lodash.min.js"></script>
     <script src="bower_components/restangular/dist/restangular.min.js"></script>
@@ -54,8 +48,6 @@
     <script src="bower_components/moment/min/moment.min.js"></script>
     <script src="bower_components/moment/locale/pt-br.js"></script>
     <script src="bower_components/moment-timezone/builds/moment-timezone.min.js"></script>
-
-    <script src="bower_components/angular-tablesort/js/angular-tablesort.js"></script>
 
     <script src="bower_components/angular-date-picker/angular-date-picker.js"></script>
 

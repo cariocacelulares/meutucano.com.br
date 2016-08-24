@@ -1,4 +1,11 @@
-// Estrutura e espaçamento
+// Posicionamento, comportamento e espaçamento
+.affix { position: fixed; }
+.hidden, .hide { display: none !important; }
+.show { display: block !important; }
+.invisible { visibility: hidden; }
+.pull-right { float: right !important; }
+.pull-left { float: left !important; }
+.clearfix { @include clearfix; }
 .m-t-0 { margin-top: 0 !important; }
 .m-l-0 { margin-left: 0 !important; }
 .m-b-0 { margin-bottom: 0 !important; }
@@ -7,6 +14,10 @@
 .p-l-0 { padding-left: 0 !important; }
 .p-b-0 { padding-bottom: 0 !important; }
 .p-r-0 { padding-right: 0 !important; }
+.m-t-100 { margin-top: 100px !important; }
+.m-b-100 { margin-bottom: 100px !important; }
+.m-r-100 { margin-right: 100px !important; }
+.m-l-100 { margin-left: 100px !important; }
 
 .clear {
     display: block;
@@ -14,13 +25,15 @@
     zoom: 1;
 }
 
+.center-block {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .clear-l {
     clear: left;  
 } 
-
-.childs-right > * {
-    float: right;
-}
 
 .no-overflow * {
     overflow: visible !important;
@@ -37,35 +50,16 @@
     text-overflow: ellipsis;
 }  
 
-.showIfLast td:after {
-    content: 'Nenhum resultado encontrado.' !important;
-}  
+// Texto e fonte
+.font-alt { font-family: $font-alt; }
+.bg-white { background-color: $color-white; }
+.bg-gray { background: $color-info; }
+.text-gray { color: #ccc; }
+.batida { background: $color-info url('../../assets/img/meta.png') no-repeat right bottom !important; } 
+.underline { text-decoration: underline; }
 
-.has-error span.has-error {
-    display: none;
-}
-
-// Cores e fontes
-.small {
-    font-size: 89%;
-}
-
-.bg-white {
-    background: #FFF;
-}
-
-.bg-gray {
-    background: $color-info;
-}
-
-.text-gray {
-    color: #ccc;
-}
-
-.batida {
-    background: $color-info url('../../assets/img/meta.png') no-repeat right bottom !important;
-}
-
-.underline {
-    text-decoration: underline;
+.text-hide {
+    font: 0/0 a;
+    color: transparent;
+    text-shadow: none;
 }

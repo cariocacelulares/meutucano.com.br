@@ -91,7 +91,7 @@
     }
 
     .tick text{
-        fill: fade($color-master, 50%);
+        fill: rgba($color-master, .5);
     }
 
     .nvd3.nv-scatter .nv-groups .nv-point.hover, 
@@ -273,7 +273,7 @@
 // #company-revenue-chart{
 // 	background: #fff;
 //     position: relative;
-//     height: calc(~'100% - 69px');
+//     height: calc('100% - 69px');
     
 //     display: table;
 //     width: 100%;

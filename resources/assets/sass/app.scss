@@ -1,104 +1,44 @@
-// Variables
-$font-alt: Montserrat, Helvetica, Arial, sans-serif;
- 
-// Third part
-@import 'font-awesome/font-awesome'; 
-@import 'theme-pages/pages';  
- 
-/* Defaults */
-body {
-    font-family: Arial, sans-serif;
+/**
+ * Bibliotecas de terceiros (MODIFICADAS)
+ */
+@import 'bootstrap/bootstrap.scss'; 
+@import 'font-awesome/font-awesome.scss'; 
 
-    &,
-    label {
-        color: $color-master;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        color: $color-master-dark;
-    }
-}
-
-*,
-*:before,
-*:after {
-    box-sizing: border-box;
-}
-
-input,
-select {
-    background-color: #FFF;
-
-    &:focus {
-        outline: none;
-    }
-}
-
-// Utils
-@import 'utils';
-
-// Third part fixes
+/**
+ * Tema e correções do tema
+ */
+@import 'theme-pages/pages'; 
 @import 'theme-fix';
 
-// Components
+/**
+ * Padrões
+ */
+@import 'normalize/normalize';
+@import 'defaults';
+
+/**
+ * Variavies
+ */
+@import 'vars';
+
+/**
+ * Classes uteis
+ */
+@import 'utils';
+
+/**
+ * Blocos grandes/fixos
+ */
+@import 'general-layout';
+
+/**
+ * Components
+ */
+@import 'components/toaster';
+@import 'components/date-picker';
+@import 'components/ng-dialog';
+@import 'components/page-header';
+@import 'components/input-tags';
 @import 'components/table';
 @import 'components/dropdown';
-@import 'components/page-header';
 @import 'components/form';
-@import 'components/buttons';
-@import 'components/modal';
-@import 'components/inputtags';
-
-/* Fonts */
-[class*="font-alt"] {
-    font-family: $font-alt;
-    margin: 0;
-}
-
-[class*="font-alt"][class*="-upper"] {
-    text-transform: uppercase;
-}
-
-[class*="font-alt"][class*="-bold"] {
-    font-weight: bold;
-}
-
-/* Global */   
-[class*="fa-"] {
-    @extend .fa;
-} 
-
-label[for] {
-    cursor: pointer;
-}
-
-[class*="btn-"]:not(.btn-group) {
-    @extend .btn;
-    display: inline-block;
-    padding: 6px 17px;
-    font-family: Montserrat, Helvetica, Arial, sans-serif;
-    font-size: 11px;
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
-[disabled] {
-    opacity: 0.5;
-}
- 
-[ng-click] {
-    cursor: pointer;
-}
-
-[ui-view] {
-    height: 100%;
-}
-
-[date-picker] {
-    border: 1px solid #f5f5f5;
-}

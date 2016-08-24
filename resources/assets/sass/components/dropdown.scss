@@ -1,5 +1,4 @@
 .dropdown {
-    display: inline-block;
     position: relative;
 
     button {
@@ -28,7 +27,7 @@
     ul:focus,
     ul:hover,
     &:focus ul,
-    &:hover ul {
+    &:hover ul {   
         visibility: visible;
         opacity: 1;
         z-index: 10;
@@ -36,19 +35,22 @@
 
     ul {
         position: absolute;
-        top: 36px;
-        right: 5px;
-        min-width: 130px;
-        width: auto;
-        padding: 9px 0 5px 0;
-        margin: 0;
+        top: 100%;
+        right: 0;
+        float: left;
+        min-width: 160px;
+        padding: 5px 0;
+        margin: 2px 0 0; 
         list-style: none;
+        font-size: $font-size-base;
         text-align: left;
-        box-shadow: 0 0 1px 1px #DADADA;
-        border: none;
-        border-radius: 3px;
-        font-size: 13px;
         background-color: $color-master-lightest;
+        border: 1px solid $dropdown-fallback-border; 
+        border: 1px solid $dropdown-border;
+        border-radius: $border-radius-base;
+        @include box-shadow(0 6px 12px rgba(0,0,0,.175));
+        background-clip: padding-box;
+        transform: translateY(-4px);
         visibility: hidden;
         opacity: 0;
         z-index: -1;
@@ -56,22 +58,31 @@
         li {
             margin: 0;
             padding: 0;
+
+            a {
+                display: block;
+                padding: 3px 20px;
+                clear: both;
+                font-weight: normal;
+                line-height: $line-height-base;
+                color: $color-master;
+                white-space: nowrap;
+
+                &:hover,
+                &:focus {
+                    text-decoration: none;
+                    color: $color-master-dark;
+                    background-color: $color-master-light;
+                }
+
+                i {
+                    width: 15px;
+                }
+            }
         }
 
-        a {
-            display: block;
-            color: $color-master;
-            padding: 6px 16px;
-
-            &:focus,
-            &:hover {
-                color: $color-master-dark;
-                background-color: $color-master-light;
-            }
-
-            i {
-                width: 15px;
-            }
+        .divider {
+            @include nav-divider($dropdown-divider-bg);
         }
     }
 }
