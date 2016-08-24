@@ -14,11 +14,17 @@
         };
 
         vm.load = function() {
-            vm.loading = true;
+            vm.loading = true; 
  
             Linha.get(vm.linha.id).then(function(linha) {
                 vm.linha   = linha;
                 vm.loading = false;
+
+                for (var i in vm.linha.atributos) {
+                    if (typeof vm.linha.atributos[i].opcoes != 'undefined') {
+                        vm.linha.atributos[i].opcoes = vm.linha.atributos[i].opcoes.split(';');
+                    }
+                }
             });
         };
 

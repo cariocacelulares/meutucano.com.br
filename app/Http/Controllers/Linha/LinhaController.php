@@ -50,6 +50,16 @@ class LinhaController extends Controller
             // Insere o id da linha pois o insert() não adiciona automaticamente
             $attrs = [];
             foreach ($attributes as $attr) {
+                if (isset($attr['opcoes'])) {
+                    $opcoes = [];
+                    foreach ($attr['opcoes'] as $opcao) {
+                        $opcoes[] = $opcao['text'];
+                    }
+                    $attr['opcoes'] = implode(';', $opcoes);
+                } else {
+                    $attr['opcoes'] = null;
+                }
+
                 if (isset($attr['id'])) {
                     unset($attr['id']);
                 }
