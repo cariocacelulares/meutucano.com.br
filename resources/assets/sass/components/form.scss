@@ -95,15 +95,15 @@
 
         .fieldset-actions {
             position: absolute;
-            top: -1px;
+            top: -3px;
             right: 0;
             padding: 0 0 0 10px;
             background-color: $color-white;
 
             [class*='btn-'] {
                 float: left;
-                height: 22px;
-                line-height: 20px;
+                height: 25px;
+                line-height: 24px;
                 margin-right: 5px;
                 padding: 0 8px;
                 font-size: 10px;

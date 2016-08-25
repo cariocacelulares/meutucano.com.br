@@ -15,7 +15,7 @@
                 element.on('click', function() {
                     swal({
                         title: "Tem certeza?",
-                        text: "Este item será excluido!",
+                        text: "Esta ação não poderá ser desfeita!",
                         type: "warning",
                         showCancelButton: true,
                         cancelButtonText: "Não",
