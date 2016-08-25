@@ -26,11 +26,11 @@
             color: $color-master;
             background-color: $color-master-light;
         }
- 
+
         div {
             float: left;
             line-height: 20px;
-            
+
             strong {
                 @extend .clear;
                 font-family: Montserrat, Helvetica, Arial, sans-serif;
@@ -47,10 +47,14 @@
         }
     }
 
-    .button-bar { 
+    .button-bar {
         [class*='btn'] {
             float: right;
-            margin-top: 3px;
+            margin: 3px 0 0 10px;
+
+            &:last-child {
+                margin-left: 0;
+            }
         }
     }
 }

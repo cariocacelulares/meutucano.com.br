@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="bower_components/ng-dialog/css/ngDialog.min.css" />
         <link rel="stylesheet" href="bower_components/ng-dialog/css/ngDialog-theme-default.min.css" />
         <link rel="stylesheet" href="bower_components/angular-date-picker/angular-date-picker.css" />
+        <link rel="stylesheet" href="bower_components/sweetalert/dist/sweetalert.css" />
 
         <link rel="icon" type="image/x-icon" href="favicon.ico" />
     </head>
@@ -58,6 +59,7 @@
 
     <script src="bower_components/ngstorage/ngStorage.min.js"></script>
     <script src="bower_components/ng-tags-input/ng-tags-input.min.js"></script>
+    <script src="bower_components/sweetalert/dist/sweetalert.min.js"></script>
 
     <!-- Application Scripts -->
     <script src="assets/js/app.js"></script>

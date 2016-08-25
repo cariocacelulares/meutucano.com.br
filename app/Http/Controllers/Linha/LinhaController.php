@@ -23,8 +23,8 @@ class LinhaController extends Controller
 
     /**
      * Lista linhas para a tabela
-     * 
-     * @return \Symfony\Component\HttpFoundation\Response 
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function tableList() {
         $m = self::MODEL;
@@ -38,7 +38,7 @@ class LinhaController extends Controller
 
     /**
      * Insert attributes attached to line in a single sql insert
-     * 
+     *
      * @param  Object $m          Linha object
      * @param  array $attributes  post array
      * @return boolean            success
@@ -53,7 +53,9 @@ class LinhaController extends Controller
                 if (isset($attr['opcoes'])) {
                     $opcoes = [];
                     foreach ($attr['opcoes'] as $opcao) {
-                        $opcoes[] = $opcao['text'];
+                        if (isset($opcao['text'])) {
+                            $opcoes[] = $opcao['text'];
+                        }
                     }
                     $attr['opcoes'] = implode(';', $opcoes);
                 } else {

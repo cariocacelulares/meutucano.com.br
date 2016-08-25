@@ -10,10 +10,10 @@
             &:first-of-type {
                 margin-top: 0;
             }
-        } 
+        }
     }
 
-    .form-group {       
+    .form-group {
         &.has-success input {
             border-color: $color-success;
         }
@@ -32,10 +32,10 @@
         line-height: 35px;
         vertical-align: middle;
         padding: 9px 12px;
-        margin: 0;  
+        margin: 0;
         box-shadow: none;
         font-family: Arial, sans-serif;
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 400;
         outline: 0;
         color: $color-master;
@@ -72,10 +72,14 @@
     fieldset {
         position: relative;
         padding: 20px 0;
-        margin: 0;
+        margin: 10px 0 0 0;
         outline: none;
         border: none;
         border-top: 1px solid $color-master-light;
+
+        &:first-child {
+            margin-top: 0;
+        }
 
         &:last-child {
             padding-bottom: 0;
@@ -103,7 +107,7 @@
                 margin-right: 5px;
                 padding: 0 8px;
                 font-size: 10px;
-                
+
                 &:last-child {
                     margin-right: 0;
                 }
@@ -121,181 +125,11 @@
 
         > * {
             float: right;
+            margin-left: 10px;
+
+            &:last-child {
+                margin-left: 0;
+            }
         }
     }
 }
-
-/* .form-control {
-    border: 1px solid $color-master-light;
-    color: $color-master;
-    background-color: $color-white;
-
-    &:focus {
-        border: 1px solid darken($color-master-light, 10%);
-        background-color: $color-white !important;
-    }
-}
-
-form {
-    width: 100%;
-
-    &.form-crud {
-        padding: 20px;
-        border-radius: 2px;
-        border: 1px solid $panel-border-color;
-        background-color: $color-white;
-    }
-
-    .card {
-        background-color: $color-master-lightest;   
-    }
-
-    .simulate-label {
-        padding-top: 14px;
-    }
-
-    select:focus,
-    input:focus {
-        background-color: $color-white !important;
-    }
-
-    &.form-default .form-group {
-        margin-bottom: 15px;
-     
-        *:not(.checkbox):not(.radio) { 
-            label {
-                @extend .clear;
-                font-family: $font-alt;
-                font-size: 11px;
-                text-transform: uppercase;
-                font-weight: 600;
-                color: $color-master;
-                line-height: 1;
-                margin-bottom: 4px;
-            }
-
-            &.has-success input {
-                border-color: $color-success;
-            }
-
-            &.has-error input {
-                border-color: $color-danger;
-            }
-
-            select,
-            input {    
-                @extend .clear;
-                font-family: Arial, sans-serif;
-                height: 35px;
-                min-height: 35px;
-                line-height: normal;
-                width: 100%;
-                padding: 9px 12px;
-                font-size: 14px;
-                font-weight: 400;
-                vertical-align: middle;
-                outline: 0;
-                box-shadow: none;
-                border-radius: 2px;
-                border: 1px solid $color-master-light;
-                color: $color-master;
-                background-color: $color-white;
-                transition: all 200ms linear 0ms;
-
-                &:focus {
-                    border: 1px solid darken($color-master-light, 10%);
-                }
-            }
-
-            select.ng-empty {
-                color: $color-master-light;
-
-                &:focus,
-                &:hover {
-                color: $color-master;
-                }
-            }
-        }
-    }
-
-    .actions {
-        @extend .clear;
-        margin-top: 20px;
-
-        > * {
-            float: right;
-        }
-    }
-}
-
-form.default-style {
-    fieldset {
-        padding: 20px;
-        outline: none;
-        border: 1px solid $color-master-light;
-
-        legend {
-            font: $font-alt;
-            text-transform: uppercase;
-            font-weight: bold;
-            padding: 0 10px;
-        }
-
-        .form-group {     
-            *:not(.checkbox):not(.radio) { 
-                label {
-                    @extend .clear;
-                    font-family: $font-alt;
-                    font-size: 11px;
-                    text-transform: uppercase;
-                    font-weight: 600;
-                    color: $color-master;
-                    line-height: 1;
-                    margin-bottom: 4px;
-                }
-
-                &.has-success input {
-                    border-color: $color-success;
-                }
-
-                &.has-error input {
-                    border-color: $color-danger;
-                }
-
-                select,
-                input {    
-                    @extend .clear;
-                    font-family: Arial, sans-serif;
-                    height: 35px;
-                    min-height: 35px;
-                    line-height: normal;
-                    width: 100%;
-                    padding: 9px 12px;
-                    font-size: 14px;
-                    font-weight: 400;
-                    vertical-align: middle;
-                    outline: 0;
-                    box-shadow: none;
-                    border-radius: 2px;
-                    border: 1px solid $color-master-light;
-                    color: $color-master;
-                    background-color: $color-white;
-                    transition: all 200ms linear 0ms;
-
-                    &:focus {
-                        border: 1px solid darken($color-master-light, 10%);
-                    }
-                }
-
-                select.ng-empty {
-                    color: $color-master-light;
-
-                    &:focus,
-                    &:hover {
-                        color: $color-master;
-                    }
-                }
-            }
-        }
-    }
-} */

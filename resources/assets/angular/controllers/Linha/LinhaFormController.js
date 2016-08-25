@@ -5,17 +5,17 @@
         .module('MeuTucano')
         .controller('LinhaFormController', LinhaFormController);
 
-    function LinhaFormController($rootScope, $state, $stateParams, Restangular, Linha, toaster) {
+    function LinhaFormController($rootScope, $state, $stateParams, Restangular, Linha, toaster, ngDialog) {
         var vm = this;
-  
-        vm.linha           = {
+
+        vm.linha = {
             id: $stateParams.id || null,
             atributos: []
         };
 
         vm.load = function() {
-            vm.loading = true; 
- 
+            vm.loading = true;
+
             Linha.get(vm.linha.id).then(function(linha) {
                 vm.linha   = linha;
                 vm.loading = false;
@@ -34,31 +34,42 @@
 
         /**
          * Adiciona um atributo
-         * 
-         * @return {void} 
+         *
+         * @return {void}
          */
-        vm.addAttribute = function() { 
-            vm.linha.atributos.push(vm.novoAtributo);
-            vm.novoAtributo = {};
+        vm.addAttribute = function() {
+            vm.linha.atributos.unshift({});
         };
 
         /**
          * Remove um atributo
-         * 
-         * @return {void} 
+         *
+         * @return {void}
          */
-        vm.removeAttribute = function(index) { 
+        vm.removeAttribute = function(index) {
             vm.linha.atributos.splice(index, 1);
         };
 
         /**
          * Salva a linha
-         * 
-         * @return {void} 
+         *
+         * @return {void}
          */
         vm.save = function() {
             Linha.save(vm.linha, vm.linha.id || null).then(function() {
                 toaster.pop('success', 'Sucesso!', 'Linha salva com sucesso!');
+                $state.go('app.produtos.linhas.index');
+            });
+        };
+
+        /**
+         * Exclui a linha
+         *
+         * @return {void}
+         */
+        vm.destroy = function() {
+            Linha.delete(vm.linha.id).then(function() {
+                toaster.pop('success', 'Sucesso!', 'Linha excluida com sucesso!');
                 $state.go('app.produtos.linhas.index');
             });
         };
