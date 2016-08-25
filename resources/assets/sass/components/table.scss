@@ -5,9 +5,17 @@
     border: 1px solid $color-master-lighter;
     border-right: 0;
 
+    .table-empty {
+        td {
+            color: darken($color-master-light, 20%);
+            text-align: center;
+            padding: 10px 15px;
+        }
+    }
+
     .no-data:before {
-        content: '-';
-        color: $color-master-light;
+        content: 'Não existem opções para este tipo de campo';
+        color: darken($color-master-light, 20%);
         display: block;
         text-align: center;
     }

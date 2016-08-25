@@ -44,6 +44,9 @@
                             <th width="48"></th>
                         </tr>
                     </thead>
+                    <tbody class="table-empty" ng-if="!LinhaForm.linha.atributos.length">
+                        <tr><td colspan="50">Nada foi cadastrado. Clique em adicionar atributo para começar!</td></tr>
+                    </tbody>
                     <tbody>
                         <tr ng-repeat="atributo in LinhaForm.linha.atributos">
                             <td class="form-group">
