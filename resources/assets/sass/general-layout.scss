@@ -44,6 +44,11 @@
         display: block !important;
         overflow: hidden;
 
+        > li {
+            height: 30px;
+            line-height: 30px;
+        }
+
         &.ng-hide {
             display: none !important;
         }

@@ -1,12 +1,16 @@
 .form-default {
+    padding: 20px;
+    border: 1px solid $color-master-light;
+    background: $color-white;
+
     &:not(.no-space) {
         .row {
-            margin-top: 10px;
+            margin-top: 20px;
 
             &:first-of-type {
                 margin-top: 0;
             }
-        }
+        } 
     }
 
     .form-group {       
@@ -37,23 +41,87 @@
         color: $color-master;
         border: 1px solid $color-master-light;
         background-image: none;
-        background-color: $color-white;
+        background-color: $color-master-lightest;
 
         &:focus {
             color: darken($color-master, 20%);
             border-color: darken($color-master-light, 20%);
-            background-color: $color-white !important;
+            background-color: $color-master-lightest !important;
         }
     }
 
     select {
         padding-top: 0;
         padding-bottom: 0;
+
+        &.ng-empty {
+            color: $color-master-light;
+
+            &:focus,
+            &:hover {
+                color: $color-master;
+            }
+        }
     }
 
     textarea {
         max-width: 100%;
         min-height: 100px;
+    }
+
+    fieldset {
+        position: relative;
+        padding: 20px 0;
+        margin: 0;
+        outline: none;
+        border: none;
+        border-top: 1px solid $color-master-light;
+
+        &:last-child {
+            padding-bottom: 0;
+        }
+
+        legend {
+            font-family: $font-alt;
+            font-weight: bold;
+            font-size: 12px;
+            text-transform: uppercase;
+            padding: 0 10px 0 0;
+        }
+
+        .fieldset-actions {
+            position: absolute;
+            top: -1px;
+            right: 0;
+            padding: 0 0 0 10px;
+            background-color: $color-white;
+
+            [class*='btn-'] {
+                float: left;
+                height: 22px;
+                line-height: 20px;
+                margin-right: 5px;
+                padding: 0 8px;
+                font-size: 10px;
+                
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+        }
+
+        > .row:first-of-type {
+            margin-top: 0;
+        }
+    }
+
+    .actions {
+        @extend .clearfix;
+        margin-top: 20px;
+
+        > * {
+            float: right;
+        }
     }
 }
 

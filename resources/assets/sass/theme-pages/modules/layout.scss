@@ -522,7 +522,10 @@ body {
                         & > li {
                             background: none;
                             padding: 0px 20px 0 40px;
-                            margin-top: 1px;
+                            margin-top: 10px;
+                            &:first-child {
+                                margin-top: 0;
+                            }
                             &:hover{
                                 & > .icon-thumbnail{
                                     color: $color-menu-link-hover;
@@ -530,7 +533,7 @@ body {
                             }                                    
                             & > a {
                                 display: inline-block;
-                                padding: 5px 0px;
+                                padding: 0;
                                 font-size: 13px;
                             }
                             .icon-thumbnail {

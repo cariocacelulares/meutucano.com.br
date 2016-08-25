@@ -63,3 +63,36 @@
     color: transparent;
     text-shadow: none;
 }
+
+// Blocos
+.hr-title {
+    position: relative;
+    float: left;
+    width: 100%;
+    font-family: $font-alt;
+    font-weight: bold;
+    font-size: 12px;
+    text-transform: uppercase;
+    padding: 0 10px 0 0;
+    margin: 20px 0;
+    background-color: $color-white;
+    z-index: 1;
+
+    span {
+        position: relative;
+        padding: 0 10px 0 0;
+        background-color: $color-white;
+        z-index: 3;
+    }
+
+    &:before {
+        content: '';
+        border-top: 1px solid $color-master-light;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        z-index: 2;
+    }
+}

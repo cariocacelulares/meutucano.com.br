@@ -1,139 +1,84 @@
 <div id="page-header" class="row">
     <page-title icon="fa-tasks" title="Editar linha" description="Aqui você pode editar a linha {{ LinhaForm.linha.titulo }} e seus atributos."></page-title>
-    <div class="col-md-6 button-bar">
-        <button ng-click="LinhaForm.save()" class="btn-success"><i class="fa-save"></i>&nbsp; Salvar</button>
-    </div>
 </div>
-<hr> 
-<form ng-submit="LinhaForm.save()" novalidate="novalidate" class="form-default form-crud">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="row form-group m-b-0">
-                <div class="col-md-12">
-                    <label for="titulo">Título</label>
-                    <input type="text" ng-model="LinhaForm.linha.titulo" id="titulo" placeholder="Título da linha" required />
-                </div>
-            </div>
+<form ng-submit="LinhaForm.save()" novalidate="novalidate" class="form-default">
+    <fieldset>
+        <legend>Informações da linha</legend>
+        <div class="fieldset-actions">
+            <button ng-click="LinhaForm.save()" title="Salvar linha" class="btn-info" type="submit"><i class="fa-save"></i></button>
         </div>
-    </div>
-    <hr/>
-    <div class="row">
-        <div class="col-md-12">
-            <table class="table-alt">
-                <thead>
-                    <tr>
-                        <th width="300">Título</th>
-                        <th width="150">Tipo</th>
-                        <th>Opções</th>
-                        <th width="48"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="atributo in LinhaForm.linha.atributos">
-                        <td>
-                            <input type="text" ng-model="atributo.titulo" id="titulo-novo" placeholder="Título do atributo" required />
-                        </td>                            
-                        <td>
-                            <select id="tipo-novo" ng-model="atributo.tipo" required>
-                                <option value="0">Texto</option>
-                                <option value="1">Seleção</option>
-                            </select>
-                        </td>                            
-                        <td ng-class="{'no-data': atributo.tipo != 1}">
-                            <tags-input ng-if="atributo.tipo == 1" ng-model="atributo.opcoes" id="opcoes-novo" placeholder="Adicionar"></tags-input>
-                        </td>
-                        <td>
-                            <a ng-click="LinhaForm.removeAttribute($index)" class="btn" title="Adicionar atributo">
-                                <i class="fa-trash"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input type="text" ng-model="LinhaForm.novoAtributo.titulo" id="titulo-novo" placeholder="Título do atributo" required />
-                        </td>                            
-                        <td>
-                            <select id="tipo-novo" ng-model="LinhaForm.novoAtributo.tipo" required>
-                                <option value="0">Texto</option>
-                                <option value="1">Seleção</option>
-                            </select>
-                        </td>                            
-                        <td ng-class="{'no-data': LinhaForm.novoAtributo.tipo != 1}">
-                            <tags-input ng-if="LinhaForm.novoAtributo.tipo == 1" id="opcoes-novo" placeholder="Adicionar" ng-model="LinhaForm.novoAtributo.opcoes"></tags-input>
-                        </td>
-                        <td>
-                            <a ng-click="LinhaForm.addAttribute()" class="btn" title="Adicionar atributo">
-                                <i class="fa-check"></i>
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <!-- <div class="row attrbutes-list">
-        <div class="col-md-6" ng-repeat="atributo in LinhaForm.linha.atributos">
-            <div class="panel panel-default card">
-                <div class="panel-body">
-                    <div class="row form-group m-b-0">
-                        <div class="col-md-6">
-                            <label for="titulo-{{ atributo.id }}">Título do atributo</label>
-                            <input type="text" ng-model="atributo.titulo" id="titulo-{{ atributo.id }}" placeholder="Título do atributo" required />
-                        </div>
-                        <div class="col-md-4">
-                            <label for="tipo-{{ atributo.id }}">Tipo do atributo</label>
-                            <select ng-model="atributo.tipo" required>
-                                <option value="0">Texto</option>
-                                <option value="1">Seleção</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2 simulate-label childs-right">
-                            <a ng-click="LinhaForm.removeAttribute($index)" class="btn-danger">
-                                <i class="fa-trash"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="row form-group m-b-0 m-t-15" ng-if="atributo.tipo == 1">
-                        <div class="col-md-12">
-                            <label for="opcoes-{{ atributo.id }}">Opções da seleção</label>
-                            <tags-input id="opcoes-{{ atributo.id }}" placeholder="Adicionar" ng-model="atributo.opcoes"></tags-input>
-                        </div>
+        <div class="row m-t-0">
+            <div class="col-md-12">
+                <div class="row form-group m-b-0">
+                    <div class="col-md-12">
+                        <label for="titulo">Título</label>
+                        <input type="text" ng-model="LinhaForm.linha.titulo" id="titulo" placeholder="Título da linha" required />
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="panel panel-default card">
-                <div class="panel-body">
-                    <div class="row form-group m-b-0">
-                        <div class="col-md-6">
-                            <label for="titulo-novo">Título do atributo</label>
-                            <input type="text" ng-model="LinhaForm.novoAtributo.titulo" id="titulo-novo" placeholder="Título do atributo" required />
-                        </div>
-                        <div class="col-md-4">
-                            <label for="tipo-novo">Tipo do atributo</label>
-                            <select id="tipo-novo" ng-model="LinhaForm.novoAtributo.tipo" required>
-                                <option value="0">Texto</option>
-                                <option value="1">Seleção</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2 simulate-label childs-right">
-                            <a ng-click="LinhaForm.addAttribute()" class="btn-info m-l-5" title="Adicionar atributo">
-                                <i class="fa-check"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="row form-group m-b-0 m-t-15" ng-if="LinhaForm.novoAtributo.tipo == 1">
-                        <div class="col-md-12">
-                            <label for="opcoes-novo">Opções da seleção</label>
-                            <tags-input id="opcoes-novo" placeholder="Adicionar" ng-model="LinhaForm.novoAtributo.opcoes"></tags-input>
-                        </div>
-                    </div>
-                </div>
+    </fieldset>
+    <fieldset>
+        <legend>Atributos da Linha</legend>
+        <div class="fieldset-actions">
+            <button ng-click="LinhaForm.save()" title="Adicionar novo atributo" class="btn-primary" type="submit"><i class="fa-plus"></i></button>
+        </div>
+        <div class="row m-t-0">
+            <div class="col-md-12">
+                <table class="table-alt">
+                    <thead>
+                        <tr>
+                            <th width="300">Título</th>
+                            <th width="150">Tipo</th>
+                            <th>Opções</th>
+                            <th width="48"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="atributo in LinhaForm.linha.atributos">
+                            <td>
+                                <input type="text" ng-model="atributo.titulo" id="titulo-novo" placeholder="Título do atributo" required />
+                            </td>                            
+                            <td>
+                                <select id="tipo-novo" ng-model="atributo.tipo" required>
+                                    <option value="0">Texto</option>
+                                    <option value="1">Seleção</option>
+                                </select>
+                            </td>                            
+                            <td ng-class="{'no-data': atributo.tipo != 1}">
+                                <tags-input ng-if="atributo.tipo == 1" ng-model="atributo.opcoes" id="opcoes-novo" placeholder="Adicionar"></tags-input>
+                            </td>
+                            <td>
+                                <a ng-click="LinhaForm.removeAttribute($index)" class="btn" title="Adicionar atributo">
+                                    <i class="fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="text" ng-model="LinhaForm.novoAtributo.titulo" id="titulo-novo" placeholder="Título do atributo" required />
+                            </td>                            
+                            <td>
+                                <select id="tipo-novo" ng-model="LinhaForm.novoAtributo.tipo" required>
+                                    <option value="0">Texto</option>
+                                    <option value="1">Seleção</option>
+                                </select>
+                            </td>                            
+                            <td ng-class="{'no-data': LinhaForm.novoAtributo.tipo != 1}">
+                                <tags-input ng-if="LinhaForm.novoAtributo.tipo == 1" id="opcoes-novo" placeholder="Adicionar" ng-model="LinhaForm.novoAtributo.opcoes"></tags-input>
+                            </td>
+                            <td>
+                                <a ng-click="LinhaForm.addAttribute()" class="btn" title="Adicionar atributo">
+                                    <i class="fa-check"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-        </div> -->
-        <!-- <div class="actions">
-            <a class="btn-info"><i class="fa-plus"></i>&nbsp; Adicionar atributos</a>
-        </div> -->
-    </div>
+        </div>
+        <div class="actions">
+            <a class="btn-info"><i class="fa-save"></i>&nbsp; Salvar</a>
+        </div>
+    </fieldset>
 </form>

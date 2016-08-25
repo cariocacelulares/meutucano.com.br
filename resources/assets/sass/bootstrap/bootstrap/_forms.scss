@@ -19,14 +19,14 @@ fieldset {
 
 legend {
   display: block;
-  width: 100%;
+  // width: 100%;
   padding: 0;
-  margin-bottom: $line-height-computed;
-  font-size: ($font-size-base * 1.5);
+  // margin-bottom: $line-height-computed;
+  // font-size: ($font-size-base * 1.5);
   line-height: inherit;
   color: $legend-color;
   border: 0;
-  border-bottom: 1px solid $legend-border-color;
+  // border-bottom: 1px solid $legend-border-color;
 }
 
 label {
@@ -212,9 +212,9 @@ input[type="search"] {
 // Designed to help with the organization and spacing of vertical forms. For
 // horizontal forms, use the predefined grid classes.
 
-.form-group {
+/* .form-group {
   margin-bottom: $form-group-margin-bottom;
-}
+} */
 
 
 // Checkboxes and radios

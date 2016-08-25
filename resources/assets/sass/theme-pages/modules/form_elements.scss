@@ -103,9 +103,9 @@ input[type="checkbox"]:focus {
     @include box-shadow(none);
 }
 
-form legend {
+/* form legend {
     margin: 15px 0px 10px 0px;
-}
+} */
 
 .form-control {
     background-color: $color-white;
@@ -498,7 +498,7 @@ input[type=checkbox]:checked + label{
 }
 
 .form-group {
-    margin-bottom: 10px;
+    // margin-bottom: 10px;
     label:not(.error){
         font-family:'Montserrat';
         font-size: 11px;
