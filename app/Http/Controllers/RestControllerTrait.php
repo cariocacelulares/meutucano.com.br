@@ -113,7 +113,7 @@ trait RestControllerTrait
                 throw new \Exception("ValidationException");
             }
 
-            $data->fill(Input::all());
+            $data->fill($this->handleInputData(Input::all()));
             $data->save();
             return $this->showResponse($data);
         } catch(\Exception $ex) {
@@ -137,4 +137,24 @@ trait RestControllerTrait
         return $this->deletedResponse();
     }
 
+    private function handleInputData($inputs)
+    {
+        $overwrited = [];
+
+        foreach ($inputs as $key => $value) {
+            if ($value && is_string($value) && \DateTime::createFromFormat('d/m/Y', $value) !== false) {
+                $originalKey = str_replace('_readable', '', $key);
+
+                if (in_array($originalKey, array_merge($overwrited, ['created_at', 'updated_at', 'deleted_at'])))
+                    continue;
+
+                if (array_key_exists($originalKey, $inputs)) {
+                    $inputs[$originalKey] = Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d');
+                    $overwrited[] = $inputs[$originalKey];
+                }
+            }
+        }
+
+        return $inputs;
+    }
 }

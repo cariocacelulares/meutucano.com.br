@@ -12,8 +12,8 @@
 
         /**
          * Salva as informações da PI
-         * 
-         * @return {void} 
+         *
+         * @return {void}
          */
         vm.save = function() {
             Pi.save(vm.pi, vm.pi.rastreio_id || null).then(function() {
