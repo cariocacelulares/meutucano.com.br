@@ -63,7 +63,7 @@
                 sub: [
                     { title: 'Produtos', icon: 'fa-list' },
                     { title: 'Linhas', icon: 'fa-list-alt', sref: $state.href('app.produtos.linhas.index') },
-                    { title: 'Marcas', icon: 'fa-list-alt' },
+                    { title: 'Marcas', icon: 'fa-list-alt', sref: $state.href('app.produtos.marcas.index') },
                     { title: 'Assistência', icon: 'fa-wrench' },
                 ]
             },
@@ -97,10 +97,10 @@
                         title: 'Rastreios importantes',
                         icon: 'fa-truck',
                         sref: $state.href('app.rastreios.importantes')
-                    }, 
+                    },
                     {
                         title: 'PI\'s pendentes' ,
-                        icon: 'fa-warning', 
+                        icon: 'fa-warning',
                         sref: $state.href('app.rastreios.pis.pendentes')
                     },
                     {
@@ -108,7 +108,7 @@
                         icon: 'fa-undo',
                         sref: $state.href('app.atendimento.devolucoes')
                     }
-                ] 
+                ]
             },
             {
                 title: 'Relatórios',
@@ -117,7 +117,7 @@
                     {title: 'Caixa diário', icon: 'fa-money'},
                     {title: 'ICMS mensal', icon: 'fa-file-pdf-o', sref: $state.href('app.admin.icms')}
                 ]
-            }, 
+            },
             {
                 title: 'Configurações',
                 icon: 'fa-cog',
@@ -131,7 +131,7 @@
                 ]
             },
             {
-                title: 'Interno', 
+                title: 'Interno',
                 icon: 'fa-desktop',
                 sub: [
                     {

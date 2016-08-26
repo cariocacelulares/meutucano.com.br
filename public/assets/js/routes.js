@@ -49,7 +49,7 @@
 
                 .state('app.rastreios.pis.pendentes', {
                     url: '/pendentes',
-                    templateUrl: 'views/pi/pendente/list.html', 
+                    templateUrl: 'views/pi/pendente/list.html',
                     controller: 'PiPendenteListController as PiPendenteList'
                 })
 
@@ -83,8 +83,8 @@
                     url: '/admin',
                     templateUrl: 'views/layouts/default.html'
                 })
- 
-                .state('app.admin.icms', { 
+
+                .state('app.admin.icms', {
                     url: '/icms',
                     templateUrl: 'views/admin/icms.html',
                     controller: 'IcmsController as Icms',
@@ -124,7 +124,7 @@
                     templateUrl: 'views/layouts/default.html'
                 })
 
-                .state('app.clientes.index', { 
+                .state('app.clientes.index', {
                     url: '/list',
                     templateUrl: 'views/cliente/list.html',
                     controller: 'ClienteListController as ClienteList',
@@ -191,7 +191,7 @@
                     templateUrl: 'views/layouts/default.html'
                 })
 
-                .state('app.produtos.linhas.index', { 
+                .state('app.produtos.linhas.index', {
                     url: '/list',
                     templateUrl: 'views/linha/list.html',
                     controller: 'LinhaListController as LinhaList',
@@ -207,6 +207,29 @@
                 })
 
                 /**
+                 * Marcas
+                 */
+                .state('app.produtos.marcas', {
+                    url: '/marcas',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.produtos.marcas.index', {
+                    url: '/list',
+                    templateUrl: 'views/marca/list.html',
+                    controller: 'MarcaListController as MarcaList',
+                    data: {
+                        roles: ['admin']
+                    }
+                })
+
+                .state('app.produtos.marcas.form', {
+                    url: '/{id}',
+                    templateUrl: 'views/marca/form.html',
+                    controller: 'MarcaFormController as MarcaForm'
+                })
+
+                /**
                  * Interno
                  */
                 .state('app.interno.senhas', {
@@ -215,7 +238,7 @@
                 })
 
                 .state('app.interno.senhas.usuario', {
-                    
+
                 })
 
                 .state('app.interno.senhas.minhas', {

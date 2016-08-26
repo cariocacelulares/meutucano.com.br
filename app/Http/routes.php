@@ -9,7 +9,7 @@ Route::get('/', function () { return view('index'); });
  * API
  */
 Route::group(['prefix' => '/api'], function() {
-    
+
     /**
      * Auth
      */
@@ -28,7 +28,7 @@ Route::group(['prefix' => '/api'], function() {
         Route::get('notas/xml/{id}',          'Pedido\PedidoNotaController@xml');
         Route::get('notas/danfe/{id}',        'Pedido\PedidoNotaController@danfe');
         Route::post('notas/email/{id}',        'Pedido\PedidoNotaController@email');
-        
+
         Route::get('rastreios/etiqueta/{id}', 'Pedido\PedidoRastreioController@etiqueta');
         Route::get('minhas-senhas',           'Senha\UsuarioSenhaController@currentUserPasswords');
 
@@ -151,5 +151,11 @@ Route::group(['prefix' => '/api'], function() {
          */
         Route::get('linhas/list', 'Linha\LinhaController@tableList');
         Route::resource('linhas', 'Linha\LinhaController');
+
+        /**
+         * Marcas
+         */
+        Route::get('marcas/list', 'Marca\MarcaController@tableList');
+        Route::resource('marcas', 'Marca\MarcaController');
     });
 });

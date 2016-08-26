@@ -37,4 +37,10 @@
     label {
         color: $color-master-dark !important;
     }
+
+    .form-default {
+        padding: 0;
+        border: none;
+        background: transparent;
+    }
 }

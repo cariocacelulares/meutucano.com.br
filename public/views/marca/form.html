@@ -1,0 +1,46 @@
+<h1>Gerenciando marcas</h1>
+<form ng-submit="MarcaForm.save()" novalidate="novalidate" class="form-default">
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <label for="titulo">Título</label>
+            <input ng-model="MarcaForm.marca.titulo" id="titulo" placeholder="Nome da marca" required />
+        </div>
+    </div>
+    <div class="row">
+        <div class="pull-right">
+            <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
+            <a ng-if="MarcaForm.marca.id" confirm="MarcaForm.destroy()" class="btn-danger">Excluir</a>
+            <button busy="Salvando..." type="submit" class="btn btn-success">Salvar</button>
+        </div>
+    </div>
+</form>
+
+<!-- <div id="page-header" class="row">
+    <page-title icon="fa-tasks" title="Editar marca" description="Aqui você pode editar a marca {{ MarcaForm.marca.titulo }} e seus atributos."></page-title>
+    <div class="button-bar">
+        <a ng-click="MarcaForm.save()" title="Salvar marca" class="btn-success">
+            <i class="fa-save"></i>&nbsp; Salvar
+        </a>
+        <a confirm="MarcaForm.destroy()" title="Excluir marca" class="btn-danger">
+            <i class="fa-trash"></i>&nbsp; Excluir
+        </a>
+        <a onclick="history.back()" title="Voltar para a página anterior" class="btn-default">
+            <i class="fa-reply"></i>&nbsp; Voltar
+        </a>
+    </div>
+</div>
+<form ng-submit="MarcaForm.save()" novalidate="novalidate" class="form-default">
+    <fieldset>
+        <legend>Informações da marca</legend>
+        <div class="row m-t-0">
+            <div class="col-md-12">
+                <div class="row form-group m-b-0">
+                    <div class="col-md-12">
+                        <label for="titulo">Título</label>
+                        <input type="text" ng-model="MarcaForm.marca.titulo" id="titulo" placeholder="Título da marca" required />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</form> -->
