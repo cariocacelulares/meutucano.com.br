@@ -1,8 +1,7 @@
 <div id="page-header" class="row">
     <page-title icon="fa-group" title="Clientes" description="Todos os clientes da loja."></page-title>
 </div>
-<table-header data="ClienteList.tableHeader"></table-header>
-<table class="table info-style">
+<table table-list="ClienteList">
     <thead>
         <tr>
             <th class="text-center" width="160">Documento</th>
@@ -12,9 +11,6 @@
         </tr>
         <tr class="table-filter" static-include="views/cliente/list_filter.html"></tr>
     </thead>
-    <tbody ng-if="ClienteList.loading" class="loading">
-        <tr><td colspan="50"><loading></loading></td></tr>
-    </tbody>
     <tbody ng-if="ClienteList.tableData.data && !ClienteList.loading">
         <tr ng-repeat="cliente in ClienteList.tableData.data">
             <td class="text-center">{{ cliente.taxvat_readable }}</td>

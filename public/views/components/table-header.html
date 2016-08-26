@@ -1,6 +1,6 @@
 <div class="row m-b-20">
     <div class="col-md-12 small">
-        <span class="m-r-10">Página {{ $ctrl.data.vm.tableData.current_page || '0' }} de {{ $ctrl.data.vm.tableData.last_page || '0' }}</span>
+        <span class="m-r-10">Página {{ $ctrl.data.vm.tableData.current_page || '1' }} de {{ $ctrl.data.vm.tableData.last_page || '1' }}</span>
 
         <div class="btn-group">
             <button ng-click="$ctrl.data.prev()" class="btn btn-default" ng-disabled="$ctrl.data.vm.tableData.current_page === 1">

@@ -3,7 +3,7 @@
 
     angular
         .module('MeuTucano')
-        .component('tableHeader', { 
+        .component('tableHeader', {
             bindings: {
                 data: '='
             },
@@ -24,10 +24,10 @@
                             page:     1,
                             per_page: '20'
                         };
-                    } 
-                    
+                    }
+
                     this.pagination = $localStorage.pagination[this.name];
- 
+
                     return this;
                 },
 

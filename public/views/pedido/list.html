@@ -1,8 +1,7 @@
 <div id="page-header" class="row">
     <page-title icon="fa-cubes" title="Pedidos" description="Todos pedidos realizados nos marketplaces e e-commerce."></page-title>
 </div>
-<table-header data="PedidoList.tableHeader"></table-header>
-<table class="table info-style">
+<table table-list="PedidoList">
     <thead>
         <tr>
             <th class="text-center" width="160">Código</th>
@@ -15,10 +14,7 @@
         </tr>
         <tr class="table-filter" static-include="views/pedido/list_filter.html"></tr>
     </thead>
-    <tbody ng-if="PedidoList.loading" class="loading">
-        <tr><td colspan="50"><loading></loading></td></tr>
-    </tbody>
-    <tbody ng-if="PedidoList.tableData.data && !PedidoList.loading">
+    <tbody ng-if="PedidoList.tableData.data.length && !PedidoList.loading">
         <tr ng-repeat="pedido in PedidoList.tableData.data">
             <td class="text-center">{{ pedido.codigo_marketplace || 'Sem código' }}</td>
             <td class="text-center bold">{{ pedido.marketplace_readable }}</td>
@@ -26,7 +22,7 @@
                 <strong>{{ pedido.cliente.nome | uppercase }}</strong>
                 <br>
                 <small>
-                    {{ pedido.cliente.fone }} - CEP: <strong>{{ pedido.endereco.cep_readable }}</strong> - 
+                    {{ pedido.cliente.fone }} - CEP: <strong>{{ pedido.endereco.cep_readable }}</strong> -
                     {{ pedido.endereco.cidade }} / {{ pedido.endereco.uf }}
                 </small>
             </td>
