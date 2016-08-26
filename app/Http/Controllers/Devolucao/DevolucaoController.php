@@ -21,24 +21,20 @@ class DevolucaoController extends Controller
 
     protected $validationRules = [];
 
-    /**
-     * Retorna uma lista de devoluções pendentes de ação
-     * 
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function index()
+    public function pending()
     {
-        $pedidos = PedidoRastreio::with([
-            'rastreioRef',
-            'devolucao', 'devolucao.rastreioRef',
-            'pedido', 'pedido.cliente', 'pedido.nota', 'pedido.endereco'
-        ])
-            ->rightJoin('pedido_rastreio_devolucoes as devolucao', 'devolucao.rastreio_id', '=', 'pedido_rastreios.id')
-            ->whereNull('devolucao.acao')
-            ->orderBy('devolucao.created_at', 'DESC')
-            ->get(['pedido_rastreios.*']);
+        $m = self::MODEL;
 
-        return $this->listResponse($pedidos);
+        $lista = $m::with(['rastreio', 'rastreio.pedido', 'rastreio.pedido.cliente', 'rastreio.pedido.endereco'])
+            ->join('pedido_rastreios', 'pedido_rastreios.id', '=', 'pedido_rastreio_devolucoes.rastreio_id')
+            ->join('pedidos', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
+            ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
+            ->join('cliente_enderecos', 'cliente_enderecos.id', '=', 'pedidos.cliente_endereco_id')
+            ->orderBy('pedido_rastreio_devolucoes.created_at', 'DESC');
+
+        $lista = $this->handleRequest($lista);
+
+        return $this->listResponse($lista);
     }
 
     /**

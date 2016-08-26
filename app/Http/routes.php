@@ -27,9 +27,9 @@ Route::group(['prefix' => '/api'], function() {
         Route::get('search',  'SearchController@search');
         Route::get('notas/xml/{id}',          'Pedido\PedidoNotaController@xml');
         Route::get('notas/danfe/{id}',        'Pedido\PedidoNotaController@danfe');
-        Route::post('notas/email/{id}',        'Pedido\PedidoNotaController@email');
+        Route::post('notas/email/{id}',       'Pedido\PedidoNotaController@email');
 
-        Route::get('rastreios/etiqueta/{id}', 'Pedido\PedidoRastreioController@etiqueta');
+        Route::get('rastreios/etiqueta/{id}', 'Rastreio\RastreioController@etiqueta');
         Route::get('minhas-senhas',           'Senha\UsuarioSenhaController@currentUserPasswords');
 
         /**
@@ -62,6 +62,7 @@ Route::group(['prefix' => '/api'], function() {
              * Devoluções
              */
             Route::put('devolucoes/edit/{id}', 'Devolucao\DevolucaoController@edit');
+            Route::get('devolucoes/pending',   'Devolucao\DevolucaoController@pending');
             Route::resource('devolucoes',      'Devolucao\DevolucaoController', ['except' => ['create', 'edit']]);
 
             /**

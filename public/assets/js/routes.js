@@ -53,10 +53,10 @@
                     controller: 'PiPendenteListController as PiPendenteList'
                 })
 
-                .state('app.atendimento.devolucoes', {
+                .state('app.rastreios.devolucoes', {
                     url: '/devolucoes',
-                    templateUrl: 'views/atendimento/devolucoes.html',
-                    controller: 'DevolucaoListController as Devolucao'
+                    templateUrl: 'views/devolucao/pendente/list.html',
+                    controller: 'DevolucaoPendenteListController as DevolucaoList'
                 })
 
                 /**

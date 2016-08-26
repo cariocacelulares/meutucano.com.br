@@ -1,7 +1,7 @@
 <div id="page-header" class="row">
     <page-title icon="fa-undo" title="Devoluções pendentes" description="Mostra as devoluções que foram abertas porém ainda não receberam ação."></page-title>
 </div>
-<table class="table info-style">
+<table table-list="DevolucaoList">
     <thead>
         <tr>
             <th class="text-center" width="120">Nota</th>
@@ -9,89 +9,34 @@
             <th class="text-center">Abertura</th>
             <th class="text-center" width="150">Rastreio</th>
             <th class="text-center" width="200">Motivo</th>
-            <th width="130" style="min-width: 130px;"></th>
+            <th width="45"></th>
         </tr>
-        <tr class="table-filter">
-            <th>
-                <input class="form-control big" ng-model="Devolucao.busca.pedido_id" placeholder="Nº da nota" ng-model-options="{debounce:500}" />
-            </th>
-            <th>
-                <input class="form-control big" ng-model="Devolucao.busca.pedido.cliente.nome" placeholder="Nome do cliente" ng-model-options="{debounce:500}" />
-            </th>
-            <th>
-                <div class="date-picker">
-                    <input class="form-control small" ng-model="Devolucao.busca.devolucao.created_at_readable" ng-change="App.changeDate()" placeholder="Data"  />
-                    <div class="picker-wrap">
-                        <date-picker ng-model="Devolucao.busca.devolucao.created_at_readable"></date-picker>
-                    </div>
-                </div>
-            </th>
-            <th>
-                <input class="form-control small" ng-model="Devolucao.busca.rastreio" placeholder="Rastreio" ng-model-options="{debounce:500}"  />
-            </th>
-            <th>
-                <select ng-model="Devolucao.busca.devolucao.motivo" class="small form-control">
-                    <option value="">Todos</option>
-                    <option value="0">Endereço insuficiente</option>
-                    <option value="1">Não procurado (Retirada)</option>
-                    <option value="2">Endereço incorreto</option>
-                    <option value="3">Destinatário desconhecido</option>
-                    <option value="4">Recusado</option>
-                    <option value="5">Defeito</option>
-                    <option value="6">Mudança</option>
-                    <option value="7">Outro</option>
-                </select>
-            </th>
-            <th></th>
-        </tr>
+        <tr class="table-filter" static-include="views/devolucao/pendente/list_filter.html"></tr>
     </thead>
-    <tbody ng-if="Devolucao.loading" class="loading">
-        <tr><td colspan="50"><loading></loading></td></tr>
-    </tbody>
-    <tbody ng-if="Devolucao.rastreios && !Devolucao.loading">
-        <tr ng-repeat="rastreio in Devolucao.rastreios | filter:Devolucao.busca:strict">
+    <tbody ng-if="DevolucaoList.tableData.data.length && !DevolucaoList.loading">
+        <tr ng-repeat="devolucao in DevolucaoList.tableData.data">
             <td class="text-center">
-                <strong class="fs-11" ng-bind="rastreio.pedido.marketplace"></strong>
+                <strong class="fs-11" ng-bind="devolucao.rastreio.pedido.marketplace"></strong>
                 <br>
-                <small ng-bind="rastreio.pedido_id"></small>
+                <small ng-bind="devolucao.rastreio.pedido_id"></small>
             </td>
             <td>
-                <strong ng-bind="rastreio.pedido.cliente.nome"></strong>
+                <strong ng-bind="devolucao.rastreio.pedido.cliente.nome"></strong>
                 <br>
                 <small>
-                    <span ng-bind="rastreio.pedido.cliente.fone"></span> - CEP: <strong ng-bind="rastreio.pedido.endereco.cep_readable"></strong> -
-                    <span ng-bind="rastreio.pedido.endereco.cidade"></span> / <span ng-bind="rastreio.pedido.endereco.uf"></span>
+                    <span ng-bind="devolucao.rastreio.pedido.cliente.fone"></span> - CEP: <strong ng-bind="devolucao.rastreio.pedido.endereco.cep_readable"></strong> -
+                    <span ng-bind="devolucao.rastreio.pedido.endereco.cidade"></span> / <span ng-bind="devolucao.rastreio.pedido.endereco.uf"></span>
                 </small>
             </td>
-            <td class="text-center" ng-bind="rastreio.devolucao.created_at_readable"></td>
+            <td class="text-center" ng-bind="devolucao.created_at_readable"></td>
             <td class="text-center">
-                <a ng-bind="rastreio.rastreio" title="Rastrear código" target="_blank" ng-href="http://websro.correios.com.br/sro_bin/txect01$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS={{ rastreio.rastreio }}"></a>
+                <a ng-bind="devolucao.rastreio.rastreio" title="Rastrear código" target="_blank" ng-href="http://websro.correios.com.br/sro_bin/txect01$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS={{ devolucao.rastreio.rastreio }}"></a>
             </td>
-            <td ng-bind="rastreio.devolucao.motivo_description"></td>
-            <td>
-                <div class="dropdown">
-                    <button class="btn-info dropdown-toggle" type="button">
-                        <i class="fa-cog"></i>&nbsp; Ações
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a title="Editar pedido" ng-click="App.editar(rastreio)"><i class="fa-edit"></i>&nbsp; Editar</a>
-                        </li>
-                        <li>
-                            <a title="Devolução" ng-click="App.devolucao(rastreio)"><i class="fa-undo"></i>&nbsp; Devolução</a>
-                        </li>
-                        <li>
-                            <a ng-click="App.printXML(rastreio.pedido_id)"><i class="fa-file-code-o"></i>&nbsp; XML</a>
-                        </li>
-                        <li>
-                            <a ng-click="App.printDanfe(rastreio.pedido_id)"><i class="fa-file-pdf-o"></i>&nbsp; DANFE</a>
-                        </li>
-                        <li>
-                            <a ng-click="App.printEtiqueta(rastreio.id)"><i class="fa-tag"></i>&nbsp; Etiqueta</a>
-                        </li>
-                    </ul>
-                </div>
+            <td ng-bind="devolucao.motivo_description"></td>
+            <td class="text-center">
+                <button class="btn-info" ng-click="DevolucaoList.openForm(devolucao)">
+                    <i class="fa-pencil"></i>
+                </button>
             </td>
         </tr>
     </tbody>

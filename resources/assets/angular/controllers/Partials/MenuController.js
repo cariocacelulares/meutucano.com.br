@@ -106,7 +106,7 @@
                     {
                         title: 'Devoluções pendentes',
                         icon: 'fa-undo',
-                        sref: $state.href('app.atendimento.devolucoes')
+                        sref: $state.href('app.rastreios.devolucoes')
                     }
                 ]
             },
