@@ -30,6 +30,7 @@ class DevolucaoController extends Controller
             ->join('pedidos', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
             ->join('cliente_enderecos', 'cliente_enderecos.id', '=', 'pedidos.cliente_endereco_id')
+            ->whereNull('pedido_rastreio_devolucoes.acao')
             ->orderBy('pedido_rastreio_devolucoes.created_at', 'DESC');
 
         $lista = $this->handleRequest($lista);
