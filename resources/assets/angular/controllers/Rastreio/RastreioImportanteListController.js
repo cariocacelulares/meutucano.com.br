@@ -17,7 +17,7 @@
             'clientes.nome':              'LIKE',
             'pedido_rastreios.rastreio':  'LIKE'
         });
- 
+
         /**
          * Cabeçalho da tabela
          * @type {TableHeader}
@@ -26,7 +26,7 @@
 
         vm.load = function() {
             vm.loading = true;
-        
+
             Rastreio.important({
                 fields:   ['pedido_rastreios.*'],
                 filter:   vm.filterList.parse(),
@@ -38,18 +38,6 @@
             });
         };
         vm.load();
-
-        /**
-         * Refresh all rastreios
-         */
-        vm.refreshAll = function() {
-            vm.loading = true;
-
-            Rastreio.refreshAll().then(function() {
-                toaster.pop('success', 'Sucesso!', 'Rastreios atualizados com sucesso!');
-                vm.load();
-            });
-        };
     }
 
 })();

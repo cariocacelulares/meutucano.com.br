@@ -1,11 +1,7 @@
 <div id="page-header" class="row">
     <page-title icon="fa-truck" title="Rastreios importantes" description="Mostra os rastreios que precisam de alguma ação."></page-title>
-    <div class="col-md-6 button-bar">
-        <button ng-click="RastreioImportanteList.refreshAll()" class="btn-success"><i class="fa-refresh"></i>&nbsp; Atualizar status</button>
-    </div>
 </div>
-<table-header data="RastreioImportanteList.tableHeader"></table-header>
-<table class="table info-style">
+<table table-list="RastreioImportanteList">
     <thead>
         <tr>
             <th class="text-center" width="140">Código</th>
@@ -14,13 +10,10 @@
             <th class="text-center" width="120">Prazo</th>
             <th class="text-center" width="150">Rastreio</th>
             <th width="150">Status</th>
-            <th width="75" style="min-width: 75px;"></th>
+            <th width="45"></th>
         </tr>
         <tr class="table-filter" static-include="views/rastreio/importante/list_filter.html"></tr>
     </thead>
-    <tbody ng-if="RastreioImportanteList.loading" class="loading">
-        <tr><td colspan="50"><loading></loading></td></tr>
-    </tbody>
     <tbody ng-if="RastreioImportanteList.tableData && !RastreioImportanteList.loading">
         <tr ng-repeat="rastreio in RastreioImportanteList.tableData.data">
             <td class="text-center fs-11">
@@ -31,7 +24,7 @@
                 <strong>{{ rastreio.pedido.cliente.nome | uppercase }}</strong>
                 <br>
                 <small>
-                    {{ rastreio.pedido.cliente.fone }} - CEP: <strong>{{ rastreio.pedido.endereco.cep_readable }}</strong> - 
+                    {{ rastreio.pedido.cliente.fone }} - CEP: <strong>{{ rastreio.pedido.endereco.cep_readable }}</strong> -
                     {{ rastreio.pedido.endereco.cidade }} / {{ rastreio.pedido.endereco.uf }}
                 </small>
             </td>
