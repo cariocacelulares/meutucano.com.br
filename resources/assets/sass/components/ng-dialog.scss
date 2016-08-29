@@ -32,6 +32,11 @@
     h1 {
         font-size: 14px;
         margin: 0 0 25px 0;
+
+        small {
+            @extend .clear;
+            text-transform: none;
+        }
     }
 
     label {

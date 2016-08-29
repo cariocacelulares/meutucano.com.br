@@ -5,21 +5,19 @@
         .module('MeuTucano')
         .controller('DevolucaoFormController', DevolucaoFormController);
 
-    function DevolucaoFormController(Restangular, $rootScope, $scope, toaster) {
+    function DevolucaoFormController($rootScope, $scope, toaster) {
         var vm = this;
 
-        vm.rastreio = angular.copy($scope.ngDialogData.rastreio);
-        vm.devolucao = {};
-
-        vm.fullSend = false;
-
-        if (vm.rastreio.devolucao) {
-            vm.devolucao = vm.rastreio.devolucao;
-            vm.fullSend = true;
+        if (typeof $scope.ngDialogData.devolucao != 'undefined') {
+            vm.devolucao = angular.copy($scope.ngDialogData.devolucao);
         } else {
+            vm.devolucao = {};
+        }
+
+        if (!vm.devolucao) {
             vm.devolucao = {
-                motivo_status: vm.rastreio.status,
-                rastreio_ref: { valor: vm.rastreio.valor },
+                /*motivo_status: vm.devolucao.status,
+                rastreio_ref: { valor: vm.devolucao.valor },*/
                 pago_cliente: '0'
             };
         }
@@ -28,10 +26,9 @@
          * Save the observation
          */
         vm.save = function() {
-            Restangular.one('devolucoes/edit', vm.rastreio.id).customPUT(vm.devolucao).then(function() {
-                $rootScope.$broadcast('upload');
-                $scope.closeThisDialog();
+            Marca.save(vm.devolucao, vm.devolucao.id || null).then(function() {
                 toaster.pop('success', 'Sucesso!', 'Devolução criada com sucesso!');
+                $scope.closeThisDialog(true);
             });
         };
     }

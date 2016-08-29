@@ -44,26 +44,6 @@
         vm.load();
 
         /**
-         * Abre o formulário de Devolucao
-         *
-         * @param  {Object} devolucao
-         * @return {void}
-         */
-        vm.openForm = function(devolucao) {
-            ngDialog.open({
-                template: 'views/devolucao/form.html',
-                className: 'ngdialog-theme-default ngdialog-big',
-                controller: 'DevolucaoFormController',
-                controllerAs: 'DevolucaoForm',
-                data: {
-                    devolucao: devolucao
-                }
-            }).closePromise.then(function(data) {
-                if (data.value === true) vm.load();
-            });
-        };
-
-        /**
          * Abre o formulário de Devolução
          *
          * @param  {Object} devolução
@@ -72,11 +52,10 @@
         vm.openForm = function(devolucao) {
             ngDialog.open({
                 template: 'views/devolucao/form.html',
-                className: 'ngdialog-theme-default ngdialog-big',
                 controller: 'DevolucaoFormController',
                 controllerAs: 'DevolucaoForm',
                 data: {
-                    devolucao: devolucao
+                    devolucao: devolucao || {}
                 }
             }).closePromise.then(function(data) {
                 if (data.value === true) vm.load();
