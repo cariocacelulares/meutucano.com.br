@@ -1,5 +1,5 @@
 <div id="page-sidebar" data-pages="sidebar">
-    <div static-include="views/partials/menu.html"></div>
+    <menu-tucano></menu-tucano>
 </div>
 <div id="page-container">
     <header id="main-header">
@@ -12,11 +12,7 @@
             </a>
         </div>
         <div id="header-actions">
-            <div roles="admin|gestor|atendimento|faturamento" class="pull-left p-r-15 b-r b-grey m-r-15" id="header-upload" ng-controller="UploadController as Upload">
-                <button title="Fazer upload de notas" ngf-select ngf-change="Upload.upload($files)" ngf-multiple="true" class="btn-success btn-cons">
-                    <i class="fa-upload"></i>&nbsp; Upload
-                </button>
-            </div>
+            <upload></upload>
             <div id="user-info">
                 <span ng-bind="::App.user.name"></span><br>
                 <small ng-bind="::App.user.email"></small>
@@ -25,7 +21,7 @@
                 <i class="fa-sign-out"></i>
             </button>
         </div>
-        <div static-include="views/partials/metas.html"></div>
+        <metas></metas>
     </header>
     <div class="page-content-wrapper">
         <div class="content">

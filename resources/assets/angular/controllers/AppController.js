@@ -1,7 +1,7 @@
 (function() {
     'use strict';
- 
-    angular 
+
+    angular
         .module('MeuTucano')
         .controller('AppController', AppController);
 
@@ -10,37 +10,6 @@
 
         vm.searchOpen = false;
         vm.user = $rootScope.currentUser;
-        vm.metas = {};
-        vm.loadingMetas = false;
-
-        $rootScope.$on('upload', function() {
-            vm.loadMeta();
-        });
-
-        $rootScope.$on('loading', function() {
-            vm.loadingMetas = true;
-        });
-
-        $rootScope.$on('stop-loading', function() {
-            vm.loadingMetas = false;
-        });
-
-        vm.loadMeta = function() {
-            vm.loadingMetas = true;
-
-            Restangular.one('metas/atual').customGET().then(function(metas) {
-                vm.metas = metas;
-                vm.loadingMetas = false;
-            });
-        };
-        vm.loadMeta();
-
-        /**
-         * Timeout metas
-         */
-        $interval(function() {
-            vm.loadMeta();
-        }, 60000);
 
         /**
          * Open search overlay
@@ -131,7 +100,6 @@
         vm.cancelar = function(pedido_id) {
             Restangular.one('pedidos', pedido_id).remove().then(function() {
                 $rootScope.$broadcast('upload');
-                vm.loadMeta();
                 toaster.pop('success', 'Sucesso!', 'Pedido deletado com sucesso!');
             });
         };
