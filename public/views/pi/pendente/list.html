@@ -1,8 +1,7 @@
 <div id="page-header" class="row">
     <page-title icon="fa-warning" title="Pi's pendentes" description="Mostra as PI's que foram abertas porém ainda não receberam ação."></page-title>
 </div>
-<table-header data="PiPendenteList.tableHeader"></table-header>
-<table class="table info-style">
+<table table-list="PiPendenteList">
     <thead>
         <tr>
             <th class="text-center" width="140">Código</th>
@@ -15,9 +14,6 @@
         </tr>
         <tr class="table-filter" static-include="views/pi/pendente/list_filter.html"></tr>
     </thead>
-    <tbody ng-if="PiPendenteList.loading" class="loading">
-        <tr><td colspan="50"><loading></loading></td></tr>
-    </tbody>
     <tbody ng-if="PiPendenteList.tableData && !PiPendenteList.loading">
         <tr ng-repeat="pi in PiPendenteList.tableData.data">
             <td class="text-center fs-11">
@@ -28,7 +24,7 @@
                 <strong>{{ pi.rastreio.pedido.cliente.nome | uppercase }}</strong>
                 <br>
                 <small>
-                    {{ pi.rastreio.pedido.cliente.fone }} - CEP: <strong>{{ pi.rastreio.pedido.endereco.cep_readable }}</strong> - 
+                    {{ pi.rastreio.pedido.cliente.fone }} - CEP: <strong>{{ pi.rastreio.pedido.endereco.cep_readable }}</strong> -
                     {{ pi.rastreio.pedido.endereco.cidade }} / {{ pi.rastreio.pedido.endereco.uf }}
                 </small>
             </td>

@@ -30,7 +30,7 @@
                 <option value="1">Procedente</option>
             </select>
         </div>
-        <div class="col-md-3" ng-if="PiForm.pi.motivo_status != '0'">
+        <div class="col-md-3 form-group" ng-if="PiForm.pi.motivo_status != '0'">
             <label for="motivo">Data de pagamento</label>
             <div class="date-picker">
                 <div class="input-group">
@@ -42,14 +42,14 @@
                 </div>
             </div>
         </div>
-        <div ng-class="{'col-md-6': PiForm.pi.motivo_status == '2', 'col-md-3': PiForm.pi.motivo_status == '3'}" ng-if="PiForm.pi.motivo_status != '0'">
+        <div class="form-group" ng-class="{'col-md-6': PiForm.pi.motivo_status == '2', 'col-md-3': PiForm.pi.motivo_status == '3'}" ng-if="PiForm.pi.motivo_status != '0'">
             <label for="valor">Valor pago</label>
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
                 <input class="form-control" id="valor" ng-model="PiForm.pi.valor_pago" placeholder="Valor ressarcido" ui-number-mask />
             </div>
         </div>
-        <div class="col-md-3" ng-if="PiForm.pi.motivo_status == '3'">
+        <div class="col-md-3 form-group" ng-if="PiForm.pi.motivo_status == '3'">
             <label for="acao">Ação realizada</label>
             <select ng-model="PiForm.pi.acao" id="acao" class="form-control">
                 <option value="" disabled selected hidden>Ação realizada</option>

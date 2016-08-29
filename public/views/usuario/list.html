@@ -4,8 +4,7 @@
         <button ng-click="UsuarioList.openForm()" class="btn-success"><i class="fa-user-plus"></i>&nbsp; Novo</button>
     </div>
 </div>
-<table-header data="UsuarioList.tableHeader"></table-header>
-<table class="table info-style">
+<table table-list="UsuarioList">
     <thead>
         <tr>
             <th class="text-center" width="200">Usuário</th>
@@ -14,9 +13,6 @@
             <th width="130"></th>
         </tr>
     </thead>
-    <tbody ng-if="UsuarioList.loading" class="loading">
-        <tr><td colspan="50"><loading></loading></td></tr>
-    </tbody>
     <tbody ng-if="UsuarioList.tableData.data && !UsuarioList.loading">
         <tr ng-repeat="usuario in UsuarioList.tableData.data">
             <td class="text-center">{{ usuario.username }}</td>

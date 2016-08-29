@@ -4,20 +4,16 @@
         <button ng-click="SenhaList.openForm()" class="btn-primary"><i class="fa-user-plus"></i>&nbsp; Nova</button>
     </div>
 </div>
-<table-header data="SenhaList.tableHeader"></table-header>
-<table class="table info-style">
+<table table-list="SenhaList">
     <thead>
-    <tr>
-        <th width="200" class="text-center">Serviço</th>
-        <th>Link</th>
-        <th width="200">Usuário</th>
-        <th width="200">Senha</th>
-        <th width="150" style="min-width: 150px;"></th>
-    </tr>
+        <tr>
+            <th width="200" class="text-center">Serviço</th>
+            <th>Link</th>
+            <th width="200">Usuário</th>
+            <th width="200">Senha</th>
+            <th width="150" style="min-width: 150px;"></th>
+        </tr>
     </thead>
-    <tbody ng-if="SenhaList.loading" class="loading">
-        <tr><td colspan="50"><loading></loading></td></tr>
-    </tbody>
     <tbody ng-if="SenhaList.tableData && !SenhaList.loading">
         <tr ng-repeat="senha in SenhaList.tableData.data">
             <td class="text-center">{{ senha.site }}</td>

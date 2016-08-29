@@ -4,8 +4,7 @@
         <button ui-sref="app.produtos.linhas.form" class="btn-success"><i class="fa-user-plus"></i>&nbsp; Nova</button>
     </div>
 </div>
-<table-header data="LinhaList.tableHeader"></table-header>
-<table class="table info-style">
+<table table-list="LinhaList">
     <thead>
         <tr>
             <th>Título</th>
@@ -14,9 +13,6 @@
         </tr>
         <tr class="table-filter" static-include="views/linha/list_filter.html"></tr>
     </thead>
-    <tbody ng-if="LinhaList.loading" class="loading">
-        <tr><td colspan="50"><loading></loading></td></tr>
-    </tbody>
     <tbody ng-if="LinhaList.tableData.data && !LinhaList.loading">
         <tr ng-repeat="linha in LinhaList.tableData.data">
             <td><strong>{{ linha.titulo }}</strong></td>

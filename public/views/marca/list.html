@@ -4,8 +4,7 @@
         <button ng-click="MarcaList.openForm()" class="btn-success"><i class="fa-user-plus"></i>&nbsp; Nova</button>
     </div>
 </div>
-<table-header data="MarcaList.tableHeader"></table-header>
-<table class="table info-style">
+<table table-list="MarcaList">
     <thead>
         <tr>
             <th>Título</th>
@@ -14,9 +13,6 @@
         </tr>
         <tr class="table-filter" static-include="views/marca/list_filter.html"></tr>
     </thead>
-    <tbody ng-if="MarcaList.loading" class="loading">
-        <tr><td colspan="50"><loading></loading></td></tr>
-    </tbody>
     <tbody ng-if="MarcaList.tableData.data && !MarcaList.loading">
         <tr ng-repeat="marca in MarcaList.tableData.data">
             <td><strong>{{ marca.titulo }}</strong></td>

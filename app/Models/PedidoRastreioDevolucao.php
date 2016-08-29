@@ -34,7 +34,13 @@ class PedidoRastreioDevolucao extends \Eloquent
     /**
      * @var array
      */
-    protected $fillable = ['*'];
+    protected $fillable = [
+        'motivo',
+        'acao',
+        'protocolo',
+        'pago_cliente',
+        'observacoes'
+    ];
 
     /**
      * @var array
@@ -75,7 +81,7 @@ class PedidoRastreioDevolucao extends \Eloquent
 
     /**
      * Descrição do motivo
-     * 
+     *
      * @return string
      */
     protected function getMotivoDescriptionAttribute() {
