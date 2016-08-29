@@ -32,8 +32,8 @@
 }
 
 .clear-l {
-    clear: left;  
-} 
+    clear: left;
+}
 
 .no-overflow * {
     overflow: visible !important;
@@ -48,15 +48,16 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}  
+}
 
 // Texto e fonte
 .font-alt { font-family: $font-alt; }
 .bg-white { background-color: $color-white; }
 .bg-gray { background: $color-info; }
 .text-gray { color: #ccc; }
-.batida { background: $color-info url('../../assets/img/meta.png') no-repeat right bottom !important; } 
+.batida { background: $color-info url('../../assets/img/meta.png') no-repeat right bottom !important; }
 .underline { text-decoration: underline; }
+.text-bold { font-weight: 700; }
 
 .text-hide {
     font: 0/0 a;

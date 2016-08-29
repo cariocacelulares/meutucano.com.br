@@ -8,8 +8,13 @@
     function DevolucaoFormController($rootScope, $scope, toaster, Devolucao) {
         var vm = this;
 
-        if (typeof $scope.ngDialogData.devolucao != 'undefined') {
-            vm.devolucao = angular.copy($scope.ngDialogData.devolucao);
+        if (typeof $scope.ngDialogData.rastreio != 'undefined') {
+            vm.loading = true;
+
+            Devolucao.get($scope.ngDialogData.rastreio).then(function(devolucao) {
+                vm.devolucao = devolucao;
+                vm.loading   = false;
+            });
         } else {
             vm.devolucao = {};
         }
@@ -26,7 +31,7 @@
          * Save the observation
          */
         vm.save = function() {
-            Devolucao.save(vm.devolucao, vm.devolucao.rastreio.id || null).then(function() {
+            Devolucao.save(vm.devolucao, vm.devolucao.rastreio_id || null).then(function() {
                 toaster.pop('success', 'Sucesso!', 'Devolução criada com sucesso!');
                 $scope.closeThisDialog(true);
             });

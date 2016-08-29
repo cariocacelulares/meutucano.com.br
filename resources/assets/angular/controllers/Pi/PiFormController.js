@@ -8,7 +8,16 @@
     function PiFormController(Pi, $scope, toaster, $window, $httpParamSerializer) {
         var vm = this;
 
-        vm.pi = angular.copy($scope.ngDialogData.pi);
+        if (typeof $scope.ngDialogData.rastreio != 'undefined') {
+            vm.loading = true;
+
+            Pi.get($scope.ngDialogData.rastreio).then(function(devolucao) {
+                vm.pi      = devolucao;
+                vm.loading = false;
+            });
+        } else {
+            vm.pi = {};
+        }
 
         /**
          * Salva as informações da PI

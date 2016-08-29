@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('DevolucaoPendenteListController', DevolucaoPendenteListController);
 
-    function DevolucaoPendenteListController(Filter, TableHeader, Devolucao, ngDialog, toaster) {
+    function DevolucaoPendenteListController(Filter, TableHeader, Devolucao, RastreioHelper, toaster) {
         var vm = this;
 
         /**
@@ -26,6 +26,11 @@
         vm.tableHeader = TableHeader.init('devolucoes', vm);
 
         /**
+         * @type {Object}
+         */
+        vm.rastreioHelper = RastreioHelper.init(vm);
+
+        /**
          * Load rastreios
          */
         vm.load = function() {
@@ -42,24 +47,5 @@
             });
         };
         vm.load();
-
-        /**
-         * Abre o formulário de Devolução
-         *
-         * @param  {Object} devolução
-         * @return {void}
-         */
-        vm.openForm = function(devolucao) {
-            ngDialog.open({
-                template: 'views/devolucao/form.html',
-                controller: 'DevolucaoFormController',
-                controllerAs: 'DevolucaoForm',
-                data: {
-                    devolucao: devolucao || {}
-                }
-            }).closePromise.then(function(data) {
-                if (data.value === true) vm.load();
-            });
-        };
     }
 })();

@@ -1,13 +1,13 @@
 /**
  * Bibliotecas de terceiros (MODIFICADAS)
  */
-@import 'bootstrap/bootstrap.scss'; 
-@import 'font-awesome/font-awesome.scss'; 
+@import 'bootstrap/bootstrap.scss';
+@import 'font-awesome/font-awesome.scss';
 
 /**
  * Tema e correções do tema
  */
-@import 'theme-pages/pages'; 
+@import 'theme-pages/pages';
 @import 'theme-fix';
 
 /**
@@ -42,3 +42,4 @@
 @import 'components/table';
 @import 'components/dropdown';
 @import 'components/form';
+@import 'components/panels';

@@ -41,7 +41,7 @@
             background-color: $background-color;
             border-color: $border-color;
         }
-    } 
+    }
 
     .badge {
         color: $background-color;
@@ -66,7 +66,7 @@
     // font-family: Arial, sans-serif;
     // font-size: 14px;
     // font-weight: normal;
-    // @include border-radius(3px); 
+    // @include border-radius(3px);
     // box-shadow: none;
     // padding-left: $padding-base-horizontal;
     // padding-right: $padding-base-horizontal;
@@ -130,7 +130,7 @@
 .btn-default, .btn-default:focus{
     color: #5e5e5e;
     background-color: $color-white;
-    border-color: $color-master-lighter;
+    border-color: $color-master-light;
 }
 .btn-default {
   &.active, &:active, &.active:focus, &:active:focus, &:active:hover{
@@ -148,7 +148,7 @@
     }
 }
 
-// Link button 
+// Link button
 .btn-link {
     color: #5e5e5e;
     background-color: transparent;
@@ -242,7 +242,7 @@
         }
         & > .btn-primary + .dropdown-menu:after{
             background-color: $color-primary;
-        } 
+        }
         & > .btn-success + .dropdown-menu:after{
             background-color: $color-success;
         }
@@ -562,8 +562,8 @@
 
 .pager .disabled{
     > button,
-    > button:hover, 
-    > button:focus, 
+    > button:hover,
+    > button:focus,
     > span{
         cursor: not-allowed;
         opacity: .5;
