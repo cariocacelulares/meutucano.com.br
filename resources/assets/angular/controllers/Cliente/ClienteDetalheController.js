@@ -16,7 +16,7 @@
             vm.cliente = {};
             vm.loading = true;
 
-            Cliente.get(vm.cliente_id).then(function(cliente) {
+            Cliente.detail(vm.cliente_id).then(function(cliente) {
                 vm.cliente = cliente;
                 vm.loading = false;
             });
