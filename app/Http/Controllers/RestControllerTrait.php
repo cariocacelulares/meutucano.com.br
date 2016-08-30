@@ -90,6 +90,8 @@ trait RestControllerTrait
             return $this->createdResponse($data);
         } catch(\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+
+            \Log::error(logMessage($ex));
             return $this->clientErrorResponse($data);
         }
     }

@@ -19,7 +19,9 @@ class LinhaController extends Controller
 
     const MODEL = Linha::class;
 
-    protected $validationRules = [];
+    protected $validationRules = [
+        'titulo' => 'required|min:10|max:255',
+    ];
 
     /**
      * Lista linhas para a tabela
@@ -125,6 +127,8 @@ class LinhaController extends Controller
             return $this->createdResponse($data);
         } catch(\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+
+            \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
             return $this->clientErrorResponse($data);
         }
     }

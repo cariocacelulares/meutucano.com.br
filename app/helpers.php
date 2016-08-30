@@ -1,5 +1,29 @@
 <?php
 
+if (!function_exists('logMessage')) {
+    /**
+     * Retorna a mensagem de log formatada
+     *
+     * @param $data
+     * @return int
+     */
+    function logMessage($exception, $message = 'Erro'){
+        return sprintf("%s
+            Arquivo: %s
+            Linha: %s
+            Mensagem: %s
+            ------------------------
+            %s
+        ",
+            $message,
+            $exception->getFile(),
+            $exception->getLine(),
+            $exception->getMessage(),
+            $exception->getTraceAsString()
+        );
+    }
+}
+
 if (!function_exists('dataToTimestamp')) {
     /**
      * Format date as timestamp
