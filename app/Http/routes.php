@@ -144,6 +144,7 @@ Route::group(['prefix' => '/api'], function() {
         /**
          * Clientes
          */
+        Route::get('clientes/detail/{cliente_id}', 'Cliente\ClienteController@detail');
         Route::get('clientes/list', 'Cliente\ClienteController@tableList');
         Route::resource('clientes', 'Cliente\ClienteController', ['except' => ['create', 'edit', 'store', 'update']]);
 
