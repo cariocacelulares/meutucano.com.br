@@ -8,9 +8,9 @@
     function PedidoDetalheController($rootScope, $state, $stateParams, Restangular, Pedido, toaster, RastreioHelper, NotaHelper) {
         var vm = this;
 
-        vm.pedido_id = $stateParams.id;
-        vm.pedido    = {};
-        vm.loading   = false;
+        vm.pedido_id  = $stateParams.id;
+        vm.pedido     = {};
+        vm.loading    = false;
         vm.notaHelper = NotaHelper;
 
         /**
@@ -62,6 +62,26 @@
                 vm.loading = false;
                 toaster.pop('success', 'Sucesso!', 'Pedido priorizado com sucesso!');
             });
+        };
+
+        /**
+         * Retorna a classe de status do pedido
+         *
+         * @param  {Pedido} pedido
+         * @return {string}
+         */
+        vm.parseStatusClass = function() {
+            switch (vm.pedido.status) {
+                case 1:
+                    return 'info';
+                case 2:
+                    return 'warning';
+                case 3:
+                    return 'success';
+                case 4:
+                case 5:
+                    return 'danger';
+            }
         };
     }
 })();

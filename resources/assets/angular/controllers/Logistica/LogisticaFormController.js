@@ -9,12 +9,7 @@
         var vm = this;
 
         if (typeof $scope.ngDialogData.rastreio != 'undefined') {
-            vm.loading = true;
-
-            Logistica.get($scope.ngDialogData.rastreio).then(function(logistica) {
-                vm.logistica = logistica;
-                vm.loading   = false;
-            });
+            vm.logistica = $scope.ngDialogData.rastreio;
         } else {
             vm.logistica = {};
         }

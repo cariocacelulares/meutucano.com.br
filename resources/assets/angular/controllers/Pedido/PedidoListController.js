@@ -16,7 +16,7 @@
             'pedidos.codigo_marketplace': 'LIKE',
             'clientes.nome':              'LIKE'
         });
- 
+
         /**
          * Cabeçalho da tabela
          * @type {TableHeader}
@@ -24,8 +24,8 @@
         vm.tableHeader = TableHeader.init('pedidos', vm);
 
         vm.load = function(teste) {
-            vm.loading = true; 
- 
+            vm.loading = true;
+
             Pedido.getList({
                 fields:   ['pedidos.*'],
                 filter:   vm.filterList.parse(),
@@ -33,16 +33,16 @@
                 per_page: vm.tableHeader.pagination.per_page
             }).then(function(response) {
                 vm.tableData = response;
-                vm.loading   = false; 
+                vm.loading   = false;
             });
         };
         vm.load();
 
         /**
-         * Retorna a classe de status do pedido 
-         * 
-         * @param  {Pedido} pedido 
-         * @return {string}        
+         * Retorna a classe de status do pedido
+         *
+         * @param  {Pedido} pedido
+         * @return {string}
          */
         vm.parseStatusClass = function(pedido) {
             switch (pedido.status) {

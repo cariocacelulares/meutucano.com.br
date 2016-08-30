@@ -66,6 +66,11 @@
 }
 
 // Blocos
+.no-results {
+    color: lighten($color-master, 20%);
+    text-align: center;
+}
+
 .hr-title {
     position: relative;
     float: left;

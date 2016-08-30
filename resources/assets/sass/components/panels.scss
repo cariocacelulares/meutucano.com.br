@@ -6,6 +6,18 @@
     border-radius: 2px;
     border-color: $color-master-light;
 
+    .panel-default {
+        border-radius: 0;
+
+        &:first-child {
+            border-radius: 2px 2px 0 0;
+        }
+
+        &:last-child {
+            border-radius: 0 0 2px 2px;
+        }
+    }
+
     .panel-heading {
         background-color: #EFEFEF;
     }
@@ -17,7 +29,7 @@
 
 .panel-heading {
     position: relative;
-    padding: 10px 15px !important;
+    padding: 15px !important;
     margin-bottom: 0 !important;
 
     .panel-title {
@@ -32,24 +44,28 @@
 
     .panel-controls {
         position: absolute;
-        top: 10px;
+        top: 13px;
         right: 15px;
 
         > * {
             float: right;
         }
 
-        a {
-            color: inherit;
-            margin-left: 10px;
+        [class*='btn-'] {
+            float: left;
+            height: 25px;
+            line-height: 25px;
+            margin-right: 5px;
+            padding: 0 8px;
+            font-size: 10px;
 
             &:last-child {
-                margin-left: 0;
+                margin-right: 0;
             }
 
-            &:focus,
-            &:hover {
-                color: lighten($color-master, 10%);
+            i {
+                position: relative;
+                top: -1px;
             }
         }
     }
@@ -74,7 +90,7 @@
             left: 50%;
             height: 1px;
             width: 100%;
-            background-color: $color-master-light;
+            background-color: $color-master-lighter;
             transform: translateY(-8px);
         }
 
