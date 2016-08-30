@@ -141,18 +141,18 @@ trait RestControllerTrait
 
     private function handleInputData($inputs)
     {
-        $overwrited = [];
+        $skip = ['created_at', 'updated_at', 'deleted_at'];
 
         foreach ($inputs as $key => $value) {
             if ($value && is_string($value) && \DateTime::createFromFormat('d/m/Y', $value) !== false) {
                 $originalKey = str_replace('_readable', '', $key);
 
-                if (in_array($originalKey, array_merge($overwrited, ['created_at', 'updated_at', 'deleted_at'])))
+                if (in_array($originalKey, $skip))
                     continue;
 
                 if (array_key_exists($originalKey, $inputs)) {
                     $inputs[$originalKey] = Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d');
-                    $overwrited[] = $inputs[$originalKey];
+                    $skip[] = $originalKey;
                 }
             }
         }

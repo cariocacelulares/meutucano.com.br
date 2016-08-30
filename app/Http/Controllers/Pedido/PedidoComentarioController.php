@@ -33,7 +33,7 @@ class PedidoComentarioController extends Controller
     public function commentsFromOrder($pedido_id)
     {
         $m = self::MODEL;
-        return $this->listResponse($m::take(20)->orderBy('created_at', 'desc')->get());
+        return $this->listResponse($m::where('pedido_id', $pedido_id)->take(20)->orderBy('created_at', 'desc')->get());
     }
 
     /**

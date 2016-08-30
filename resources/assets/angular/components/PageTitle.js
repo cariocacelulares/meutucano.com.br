@@ -1,8 +1,8 @@
 (function() {
     'use strict';
 
-    angular 
-        .module('MeuTucano') 
+    angular
+        .module('MeuTucano')
         .component('pageTitle', {
             bindings: {
                 icon: '@',

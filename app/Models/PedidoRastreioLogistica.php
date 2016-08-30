@@ -29,7 +29,16 @@ class PedidoRastreioLogistica extends \Eloquent
     /**
      * @var array
      */
-    protected $fillable = ['*'];
+    protected $fillable = [
+        'rastreio_id',
+        'usuario_id',
+        'autorizacao',
+        'motivo',
+        'acao',
+        'protocolo',
+        'data_postagem',
+        'observacoes',
+    ];
 
     /**
      * @var array

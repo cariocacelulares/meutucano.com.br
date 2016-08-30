@@ -56,13 +56,6 @@
          * @return {void}
          */
         vm.save = function() {
-            // Remove atributos sem titulo
-            for (var key in vm.linha.atributos) {
-                if (typeof vm.linha.atributos[key].titulo == 'undefined' || !vm.linha.atributos[key].titulo) {
-                    vm.removeAttribute(key);
-                }
-            }
-
             Linha.save(vm.linha, vm.linha.id || null).then(function() {
                 toaster.pop('success', 'Sucesso!', 'Linha salva com sucesso!');
                 $state.go('app.produtos.linhas.index');

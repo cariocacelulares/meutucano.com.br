@@ -5,34 +5,35 @@
         .module('MeuTucano')
         .controller('LogisticaFormController', LogisticaFormController);
 
-    function LogisticaFormController(Restangular, $rootScope, $scope, toaster) {
+    function LogisticaFormController(Restangular, $rootScope, $scope, toaster, Logistica) {
         var vm = this;
 
-        vm.rastreio = angular.copy($scope.ngDialogData.rastreio);
-        vm.logistica = {};
-        vm.fullSend = false;
-        vm.preSend  = false;
+        if (typeof $scope.ngDialogData.rastreio != 'undefined') {
+            vm.loading = true;
 
-        if (vm.rastreio.logistica) {
-            vm.logistica = vm.rastreio.logistica;
-
-            if (vm.logistica.acao) { // Foi cadastrado o código de rastreio
-                vm.fullSend = true;
-            } else { // Apenas foi cadastrada a PI
-                vm.preSend                = true;
-                vm.logistica.rastreio_ref = { valor: vm.rastreio.valor };
-                console.log(vm.logistica);
-            }
+            Logistica.get($scope.ngDialogData.rastreio).then(function(logistica) {
+                vm.logistica = logistica;
+                vm.loading   = false;
+            });
+        } else {
+            vm.logistica = {};
         }
+
+        /*
+        if (!vm.logistica.acao) { // Apenas foi cadastrada a PI
+            vm.preSend                = true;
+            vm.logistica.rastreio_ref = { valor: vm.rastreio.valor };
+            console.log(vm.logistica);
+        }
+        */
 
         /**
          * Save the observation
          */
         vm.save = function() {
-            Restangular.one('logisticas/edit', vm.rastreio.id).customPUT(vm.logistica).then(function() {
-                $rootScope.$broadcast('upload');
-                $scope.closeThisDialog();
-                toaster.pop('success', 'Sucesso!', 'Logística reversa criada com sucesso!');
+            Logistica.save(vm.logistica, vm.logistica.rastreio_id || null).then(function() {
+                $scope.closeThisDialog(true);
+                toaster.pop('success', 'Sucesso!', 'Logistica reversa salva com sucesso!');
             });
         };
     }

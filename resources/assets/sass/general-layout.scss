@@ -15,18 +15,18 @@
 }
 
 #page-sidebar {
-    @extend .page-sidebar; 
+    @extend .page-sidebar;
     left: 0;
     transition: transform linear 100ms;
     transform: translateZ(0deg) translateX(-200px);
-    overflow-y: scroll; 
+    overflow-y: scroll;
 
-    &:hover { 
+    &:hover {
         transform: translateZ(0deg) translateX(0);
     }
 
     .sidebar-menu .menu-items > li {
-        color: #788195; 
+        color: #788195;
 
         a {
             padding-right: 5px;
@@ -85,7 +85,10 @@
         margin-top: 10px;
 
         #header-upload {
-            margin-top: 2px;
+            float: left;
+            margin: 2px 15px 0 0;
+            padding-right: 15px;
+            border-right: 1px solid $color-master-light;
 
             button {
                 margin-right: 0;
@@ -153,10 +156,10 @@
 // Content
 .page-content-wrapper .content {
     margin-bottom: 10px;
-        
+
     > div {
         margin-top: 20px;
-    } 
+    }
 }
 
 // Login page

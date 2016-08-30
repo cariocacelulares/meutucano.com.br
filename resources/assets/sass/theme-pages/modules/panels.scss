@@ -1,22 +1,23 @@
-// 
+//
 // Panels
 // --------------------------------------------------
 
 .panel{
     @include box-shadow(none);
-    @include border-radius(1px);    
+    @include border-radius(1px);
     //-webkit-transform: scale3d(1,1,1); // to show hidden selectFx dropdowns http://stackoverflow.com/questions/11002195/chrome-does-not-redraw-div-after-it-is-hidden
     @include transition(all .2s ease);
     .panel-heading{
-        background: transparent;
+        // background: transparent;
         border-radius:0px;
-        border-bottom:0px;
+        // border-bottom:0px;
         padding: 20px 15px 7px 22px;
         position: relative;
         z-index: 1;
         &.separator:after {
                     content:"";
                     height:1px;
+                    width: calc(100% - 32px);
                     background:$color-master-light;
                     left:16px;
                     right:16px;
@@ -148,12 +149,12 @@
         padding: 24px;
         height: 100%;
         width: 100%;
-        &.no-padding{ 
-            .row{ 
-                margin-left: 0; 
-                margin-right: 0; 
-            } 
-        } 
+        &.no-padding{
+            .row{
+                margin-left: 0;
+                margin-right: 0;
+            }
+        }
         &.no-bottom-padding{
             padding-bottom: 0;
         }
@@ -167,7 +168,7 @@
 }
 
 .sortable .grid .grid-title {
-    cursor: move;    
+    cursor: move;
 }
 .ui-sortable {
     min-height: 0px !important;

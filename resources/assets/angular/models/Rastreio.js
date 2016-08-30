@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('MeuTucano') 
+        .module('MeuTucano')
         .service('Rastreio', RastreioModel);
 
         function RastreioModel(Rest, Restangular) {
@@ -10,23 +10,22 @@
             rest.baseUrl  = 'rastreios';
 
             angular.extend(rest, {
-
                 /**
-                 * Retorna os rastreios importantes 
-                 * 
-                 * @param  {Object} params 
-                 * @return {Object}        
+                 * Retorna os rastreios importantes
+                 *
+                 * @param  {Object} params
+                 * @return {Object}
                  */
                 important: function(params) {
                     params = this.parseParams(params);
-                    
+
                     return Restangular.all('rastreios/important').customGET("", params || {});
                 },
 
                 /**
                  * Atualiza o status de todos rastreios
-                 * 
-                 * @return {Object} 
+                 *
+                 * @return {Object}
                  */
                 refreshAll: function() {
                     return Restangular.all('rastreios/refresh_all').customPUT();

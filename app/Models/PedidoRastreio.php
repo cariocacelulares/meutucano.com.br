@@ -10,7 +10,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
  */
 class PedidoRastreio extends \Eloquent
 {
-    use SoftDeletes, 
+    use SoftDeletes,
         RevisionableTrait;
 
     /**
@@ -21,7 +21,16 @@ class PedidoRastreio extends \Eloquent
     /**
      * @var array
      */
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'pedido_id',
+        'data_envio',
+        'rastreio',
+        'servico',
+        'valor',
+        'prazo',
+        'observacao',
+        'status',
+    ];
 
     /**
      * @var array
@@ -125,30 +134,30 @@ class PedidoRastreio extends \Eloquent
      *
      * @return string
      */
-    protected function getDataEnvioReadableAttribute() 
+    protected function getDataEnvioReadableAttribute()
     {
         return Carbon::createFromFormat('Y-m-d', $this->data_envio)->format('d/m/Y');
     }
 
     /**
      * Retorna o prazo em formato de data
-     * 
-     * @return string 
+     *
+     * @return string
      */
-    protected function getPrazoDateAttribute() 
+    protected function getPrazoDateAttribute()
     {
         return \SomaDiasUteis($this->getDataEnvioReadableAttribute(), $this->prazo);
     }
 
     /**
      * Retorna a URL para rastreio
-     * 
-     * @return string 
+     *
+     * @return string
      */
     protected function getRastreioUrlAttribute()
     {
         return sprintf(
-            'http://websro.correios.com.br/sro_bin/txect01$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS=%s', 
+            'http://websro.correios.com.br/sro_bin/txect01$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS=%s',
             $this->rastreio
         );
     }

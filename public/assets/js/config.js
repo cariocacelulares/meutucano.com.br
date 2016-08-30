@@ -9,7 +9,7 @@
                 domains: {
                     development: ['localhost'],
                     production:  ['192.168.2.170']
-                }, 
+                },
                 vars: {
                     development: {
                         apiUrl: 'http://localhost/dev/tucanov3/public/api'
@@ -135,6 +135,5 @@
                 return true;
             });
         })
-
     ;
 })();

@@ -29,8 +29,8 @@ class PedidoController extends Controller
 
     /**
      * Lista pedidos para a tabela
-     * 
-     * @return \Symfony\Component\HttpFoundation\Response 
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function tableList() {
         $m = self::MODEL;
@@ -45,12 +45,12 @@ class PedidoController extends Controller
         return $this->listResponse($list);
     }
 
-    public function prioridade($pedido_id) 
+    public function prioridade($pedido_id)
     {
         $m = self::MODEL;
 
         try {
-            $prioridade = \Input::get('priorizado');
+            $prioridade = Input::get('priorizado');
             $prioridade = (int) $prioridade ? 1 : null;
 
             $pedido = $m::find($pedido_id);
@@ -81,11 +81,34 @@ class PedidoController extends Controller
             if ($status == 5) {
                 $data->delete();
             }
-            
+
             return $this->showResponse($data);
         } catch(\Exception $ex) {
             $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function show($id)
+    {
+        $m = self::MODEL;
+
+        $data = $m::with([
+            'cliente',
+            'nota',
+            'rastreios',
+            'produtos',
+            'comentarios',
+        ])->find($id);
+
+        if ($data) {
+            return $this->showResponse($data);
+        }
+
+        return $this->notFoundResponse();
     }
 }

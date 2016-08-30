@@ -1,4 +1,4 @@
-<div class="sidebar-menu" ng-controller="MenuController as Menu">
+<div class="sidebar-menu">
     <ul class="menu-items">
         <li roles="{{ menu.roles.join('|') }}" ng-repeat="menu in Menu.items" ui-sref-active="active">
             <a ng-href="{{ menu.sref }}" ng-click="Menu.openSub(menu)">
