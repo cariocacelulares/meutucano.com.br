@@ -1,0 +1,82 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-user" title="{{ ClienteDetalhe.cliente.nome }}" description="Informações do Cliente"></page-title>
+    <!-- <div class="col-md-6 button-bar">
+            <button class="btn-primary" ng-click="PedidoDetalhe.changePriority()" ng-if="PedidoDetalhe.pedido.can_prioritize"><i class="fa fa-arrow-{{ PedidoDetalhe.pedido.priorizado ? 'down' : 'up' }}"></i>&nbsp; {{ PedidoDetalhe.pedido.priorizado ? 'Remover prioridade' : 'Priorizar' }}</button>
+            <button class="btn-info" ng-click="PedidoDetalhe.changeStatus(4)" ng-if="PedidoDetalhe.pedido.can_hold"><i class="fa fa-hand-stop-o"></i>&nbsp; Segurar</button>
+            <button class="btn-danger" confirm="PedidoDetalhe.changeStatus(5)" ng-if="PedidoDetalhe.pedido.status != 5"><i class="fa fa-close"></i>&nbsp; Cancelar</button>
+    </div> -->
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <!-- Informações Pessoais -->
+        <div class="panel panel-default">
+            <div class="panel-heading separator">
+                <div class="panel-title">Informações Pessoais</div>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="row">
+                        <p class="pull-left">Nome</p>
+                        <p class="pull-right bold">{{ ClienteDetalhe.cliente.nome }}</p>
+                    </div>
+                    <div class="row" ng-if="ClienteDetalhe.cliente.fone">
+                        <p class="pull-left">Telefone</p>
+                        <p class="pull-right bold">{{ ClienteDetalhe.cliente.fone }}</p>
+                    </div>
+                    <div class="row" ng-if="ClienteDetalhe.cliente.email">
+                        <p class="pull-left">E-mail</p>
+                        <p class="pull-right bold">{{ ClienteDetalhe.cliente.email }}</p>
+                    </div>
+                    <div class="row" ng-if="ClienteDetalhe.cliente.taxvat_readable">
+                        <p class="pull-left">CPF / CNPJ</p>
+                        <p class="pull-right bold">{{ ClienteDetalhe.cliente.taxvat_readable }}</p>
+                    </div>
+                    <div class="row" ng-if="ClienteDetalhe.cliente.inscricao">
+                        <p class="pull-left">Inscrição</p>
+                        <p class="pull-right bold">{{ ClienteDetalhe.cliente.inscricao }}</p>
+                    </div>
+                    <div class="row">
+                        <p class="pull-left">Cadastro</p>
+                        <p class="pull-right bold">{{ ClienteDetalhe.cliente.created_at_readable }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fim Informações Pessoais -->
+    </div>
+    <div class="col-md-6">
+        <!-- Endereços -->
+        <div class="panel panel-default">
+            <div class="panel-heading separator">
+                <div class="panel-title">Endereço</div>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12" ng-repeat="endereco in ClienteDetalhe.cliente.enderecos">
+                    <div class="row">
+                        <p class="pull-left">Endereço</p>
+                        <p class="pull-right bold" ng-bind="endereco.rua + ' - ' + endereco.numero"></p>
+                    </div>
+                    <div class="row">
+                        <p class="pull-left">Bairro</p>
+                        <p class="pull-right bold" ng-bind="endereco.bairro + ((endereco.complemento) ? ',' + endereco.complemento : '')"></p>
+                    </div>
+                    <div class="row">
+                        <p class="pull-left">Cidade / UF</p>
+                        <p class="pull-right bold" ng-bind="endereco.cidade + ' / ' + endereco.uf"></p>
+                    </div>
+                    <div class="row">
+                        <p class="pull-left">CEP</p>
+                        <p class="pull-right bold" ng-bind="endereco.cep_readable"></p>
+                    </div>
+                    <hr ng-if="!$last" />
+                </div>
+            </div>
+        </div>
+        <!-- Fim Endereços -->
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <!-- Lista pedidos? -->
+    </div>
+</div>
