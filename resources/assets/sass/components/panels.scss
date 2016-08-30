@@ -1,4 +1,4 @@
-[class*='panel-']:not(.panel-heading):not(.panel-body):not(.panel-bordered):not(.panel-transparent):not(.panel-featured):not(.panel-title):not(.panel-maximized) {
+[class*='panel-']:not(.panel-heading):not(.panel-body):not(.panel-bordered):not(.panel-transparent):not(.panel-featured):not(.panel-title):not(.panel-maximized):not(.panel-controls) {
     @extend .panel;
 }
 
@@ -121,6 +121,7 @@
 
     .panel-body {
         color: $color-master;
+        background-color: $color-white;
 
         .row:not(:first-child):before {
             background-color: $color-master-lighter;
@@ -138,6 +139,7 @@
 
     .panel-body {
         color: $color-master;
+        background-color: $color-white;
 
         .row:not(:first-child):before {
             background-color: $color-primary-lighter;
@@ -155,6 +157,7 @@
 
     .panel-body {
         color: $color-master;
+        background-color: $color-white;
 
         .row:not(:first-child):before {
             background-color: $color-success-lighter;
@@ -172,6 +175,7 @@
 
     .panel-body {
         color: $color-master;
+        background-color: $color-white;
 
         .row:not(:first-child):before {
             background-color: $color-info-lighter;
@@ -189,6 +193,7 @@
 
     .panel-body {
         color: $color-master;
+        background-color: $color-white;
 
         .row:not(:first-child):before {
             background-color: $color-warning-light;
@@ -206,6 +211,7 @@
 
     .panel-body {
         color: $color-master;
+        background-color: $color-white;
 
         .row:not(:first-child):before {
             background-color: $color-danger-lighter;
