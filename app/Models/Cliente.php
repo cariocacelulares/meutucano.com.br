@@ -23,6 +23,16 @@ class Cliente extends \Eloquent
     ];
 
     /**
+     * Pedido
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function pedidos()
+    {
+        return $this->hasMany(Pedido::class);
+    }
+
+    /**
      * Endereços
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -37,7 +47,7 @@ class Cliente extends \Eloquent
      *
      * @return string
      */
-    protected function getCreatedAtReadableAttribute() 
+    protected function getCreatedAtReadableAttribute()
     {
         return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y H:i');
     }
@@ -47,7 +57,7 @@ class Cliente extends \Eloquent
      *
      * @return string
      */
-    protected function getTaxvatReadableAttribute() 
+    protected function getTaxvatReadableAttribute()
     {
         $taxvat = $this->taxvat;
         $taxvat = preg_replace('/\D/', '', $taxvat);

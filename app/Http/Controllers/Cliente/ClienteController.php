@@ -20,8 +20,8 @@ class ClienteController extends Controller
 
     /**
      * Lista pedidos para a tabela
-     * 
-     * @return \Symfony\Component\HttpFoundation\Response 
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function tableList() {
         $m = self::MODEL;
@@ -31,5 +31,21 @@ class ClienteController extends Controller
         $list = $this->handleRequest($list);
 
         return $this->listResponse($list);
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function detail($id)
+    {
+        $m = self::MODEL;
+        $data = $m::with('pedidos')->find($id);
+
+        if ($data) {
+            return $this->showResponse($data);
+        }
+
+        return $this->notFoundResponse();
     }
 }

@@ -7,6 +7,9 @@
     @include border-radius(1px);
     //-webkit-transform: scale3d(1,1,1); // to show hidden selectFx dropdowns http://stackoverflow.com/questions/11002195/chrome-does-not-redraw-div-after-it-is-hidden
     @include transition(all .2s ease);
+    border-width: 1px;
+    border-style: solid;
+
     .panel-heading{
         // background: transparent;
         border-radius:0px;
@@ -14,6 +17,7 @@
         padding: 20px 15px 7px 22px;
         position: relative;
         z-index: 1;
+
         &.separator:after {
                     content:"";
                     height:1px;
@@ -40,9 +44,6 @@
             text-overflow: ellipsis;
             -webkit-text-stroke:0px;
         }
-    }
-    &.panel-default{
-        border:1px solid $panel-border-color;
     }
     &.panel-bordered{
         border:1px solid rgba($color-master-light, .7);
