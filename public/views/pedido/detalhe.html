@@ -1,5 +1,5 @@
 <div id="page-header" class="row">
-    <page-title icon="fa-first-order" title="Pedido {{ PedidoDetalhe.pedido.codigo_marketplace }} - {{ PedidoDetalhe.pedido.status_description }}" description="{{ PedidoDetalhe.pedido.marketplace_readable || 'Site' }} - {{ PedidoDetalhe.pedido.total | currency }}"></page-title>
+    <page-title icon="fa-first-order" title="Pedido {{ PedidoDetalhe.pedido.codigo_marketplace }}" description="{{ PedidoDetalhe.pedido.marketplace_readable || 'Site' }} - {{ PedidoDetalhe.pedido.total | currency }}"></page-title>
     <div class="col-md-6 button-bar">
             <button class="btn-primary" ng-click="PedidoDetalhe.changePriority()" ng-if="PedidoDetalhe.pedido.can_prioritize"><i class="fa fa-arrow-{{ PedidoDetalhe.pedido.priorizado ? 'down' : 'up' }}"></i>&nbsp; {{ PedidoDetalhe.pedido.priorizado ? 'Remover prioridade' : 'Priorizar' }}</button>
             <button class="btn-info" ng-click="PedidoDetalhe.changeStatus(4)" ng-if="PedidoDetalhe.pedido.can_hold"><i class="fa fa-hand-stop-o"></i>&nbsp; Segurar</button>
@@ -17,33 +17,71 @@
                 <div class="col-md-12">
                     <div class="row">
                         <p class="pull-left">Cliente</p>
-                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.nome"></p>
+                        <p class="pull-right bold">{{ PedidoDetalhe.pedido.cliente.nome }}</p>
                     </div>
                     <div class="row" ng-if="PedidoDetalhe.pedido.codigo_marketplace">
                         <p class="pull-left">Código</p>
-                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.codigo_marketplace"></p>
+                        <p class="pull-right bold">{{ PedidoDetalhe.pedido.codigo_marketplace }}</p>
                     </div>
                     <div class="row">
                         <p class="pull-left">Marketplace</p>
-                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.marketplace_readable"></p>
+                        <p class="pull-right bold">{{ PedidoDetalhe.pedido.marketplace_readable }}</p>
                     </div>
                     <div class="row">
                         <p class="pull-left">Status</p>
-                        <p class="pull-right label label-{{ PedidoDetalhe.parseStatusClass() }}" ng-bind="PedidoDetalhe.pedido.status_description"></p>
+                        <p class="pull-right label label-{{ PedidoDetalhe.parseStatusClass() }}">{{ PedidoDetalhe.pedido.status_description }}</p>
                     </div>
                     <div class="row">
                         <p class="pull-left">Total</p>
-                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.total | currency"></p>
+                        <p class="pull-right bold">{{ PedidoDetalhe.pedido.total | currency }}</p>
                     </div>
                     <div class="row">
                         <p class="pull-left">Data</p>
-                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.created_at_readable"></p>
+                        <p class="pull-right bold">{{ PedidoDetalhe.pedido.created_at_readable }}</p>
                     </div>
                 </div>
             </div>
         </div>
         <!-- Fim Informações do Pedido -->
-        <hr/>
+    </div>
+    <div class="col-md-6">
+        <!-- Informações do Cliente -->
+        <div class="panel panel-default">
+            <div class="panel-heading separator">
+                <div class="panel-title">Informações do Cliente</div>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="row">
+                        <p class="pull-left">Telefone</p>
+                        <p class="pull-right bold">{{ PedidoDetalhe.pedido.cliente.fone || 'Não informado' }}</p>
+                    </div>
+                    <div class="row">
+                        <p class="pull-left">E-mail</p>
+                        <p class="pull-right bold">{{ PedidoDetalhe.pedido.cliente.email || 'Não informado' }}</p>
+                    </div>
+                    <div class="row">
+                        <p class="pull-left">CPF/CNPJ</p>
+                        <p class="pull-right bold">{{ PedidoDetalhe.pedido.cliente.taxvat_readable }}</p>
+                    </div>
+                    <div class="row">
+                        <p>
+                            {{ PedidoDetalhe.pedido.cliente.last_endereco.rua }} #{{ PedidoDetalhe.pedido.cliente.last_endereco.numero }} -
+                            {{ PedidoDetalhe.pedido.cliente.last_endereco.bairro }} <br>
+                            {{ PedidoDetalhe.pedido.cliente.last_endereco.cidade }}/{{ PedidoDetalhe.pedido.cliente.last_endereco.uf }} <br>
+                            {{ PedidoDetalhe.pedido.cliente.last_endereco.cep_readable }} <br>
+                            <em>{{ PedidoDetalhe.pedido.cliente.last_endereco.complemento || 'Sem complemento' }}</em>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fim Cliente -->
+    </div>
+</div>
+<hr/>
+<div class="row">
+    <div class="col-md-6">
         <!-- Informações de Rastreio -->
         <div class="panel panel-default">
             <div class="panel-heading separator">
@@ -101,54 +139,16 @@
         </div>
         <!-- Fim Informações de Rastreio -->
     </div>
-
-    <div class="col-md-6">
-        <!-- Informações do Cliente -->
-        <div class="panel panel-default">
-            <div class="panel-heading separator">
-                <div class="panel-title">Informações do Cliente</div>
-            </div>
-            <div class="panel-body">
-                <div class="col-md-12">
-                    <div class="row" ng-if="PedidoDetalhe.pedido.cliente.fone">
-                        <p class="pull-left">Telefone</p>
-                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.fone"></p>
-                    </div>
-                    <div class="row" ng-if="PedidoDetalhe.pedido.cliente.email">
-                        <p class="pull-left">E-mail</p>
-                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.email"></p>
-                    </div>
-                    <div class="row" ng-if="PedidoDetalhe.pedido.cliente.taxvat">
-                        <p class="pull-left">CPF/CNPJ</p>
-                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.taxvat"></p>
-                    </div>
-                    <div class="row">
-                        <p class="pull-left">Endereço</p>
-                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.last_endereco.rua + ' - ' + PedidoDetalhe.pedido.cliente.last_endereco.numero"></p>
-                    </div>
-                    <div class="row">
-                        <p class="pull-left">Bairro</p>
-                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.last_endereco.bairro + ((PedidoDetalhe.pedido.cliente.last_endereco.complemento) ? ',' + PedidoDetalhe.pedido.cliente.last_endereco.complemento : '')"></p>
-                    </div>
-                    <div class="row">
-                        <p class="pull-left">Cidade / UF</p>
-                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.last_endereco.cidade + ' / ' + PedidoDetalhe.pedido.cliente.last_endereco.uf"></p>
-                    </div>
-                    <div class="row">
-                        <p class="pull-left">CEP</p>
-                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.last_endereco.cep_readable"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Fim Cliente -->
-        <hr/>
+    <div class="col-md-3">
         <!-- Informações da Nota -->
         <div class="panel panel-default">
             <div class="panel-heading">
-                <div class="panel-title">Informações da Nota</div>
+                <div class="panel-title">NF-e</div>
                 <div class="panel-controls">
-                    <button ng-click="PedidoDetalhe.notaHelper.printDanfe(PedidoDetalhe.pedido.id)" class="btn-complete">
+                    <button ng-click="PedidoDetalhe.notaHelper.printXML(PedidoDetalhe.pedido.id)" class="btn-info">
+                        <i class="fa-file-code-o"></i>&nbsp; XML
+                    </button>
+                    <button ng-click="PedidoDetalhe.notaHelper.printDanfe(PedidoDetalhe.pedido.id)" class="btn-info">
                         <i class="fa-print"></i>&nbsp; Imprimir
                     </button>
                 </div>
@@ -159,16 +159,14 @@
                 </div>
                 <div class="col-md-12" ng-if="PedidoDetalhe.pedido.nota">
                     <div class="row">
-                        <p class="pull-left">Chave</p>
-                        <a ng-click="PedidoDetalhe.notaHelper.printXML(PedidoDetalhe.pedido.id)" class="pull-right bold" ng-bind="PedidoDetalhe.pedido.nota.chave"></a>
-                    </div>
-                    <div class="row">
                         <p class="pull-left">Data</p>
                         <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.nota.data_readable"></p>
                     </div>
                     <div class="row">
                         <p class="pull-left">Número / Série</p>
-                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.nota.numero + ' - ' + PedidoDetalhe.pedido.nota.serie"></p>
+                        <p class="pull-right bold">
+                            {{ PedidoDetalhe.pedido.nota.numero }} - {{ PedidoDetalhe.pedido.nota.serie }}
+                        </p>
                     </div>
                 </div>
             </div>
