@@ -9,12 +9,7 @@
         var vm = this;
 
         if (typeof $scope.ngDialogData.rastreio != 'undefined') {
-            vm.loading = true;
-
-            Devolucao.get($scope.ngDialogData.rastreio).then(function(devolucao) {
-                vm.devolucao = devolucao;
-                vm.loading   = false;
-            });
+            vm.devolucao = $scope.ngDialogData.rastreio;
         } else {
             vm.devolucao = {};
         }

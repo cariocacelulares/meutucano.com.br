@@ -3,7 +3,7 @@
 
     angular
         .module('MeuTucano')
-        .service('RastreioHelper', function(Rastreio, ngDialog) {
+        .service('RastreioHelper', function(ngDialog, Rastreio, Devolucao, Pi) {
             var vm;
 
             return {
@@ -23,21 +23,23 @@
                  * @param rastreio
                  */
                 devolucao: function(rastreio_id, updateVm) {
-                    ngDialog.open({
-                        template: 'views/devolucao/form.html',
-                        controller: 'DevolucaoFormController',
-                        controllerAs: 'DevolucaoForm',
-                        data: {
-                            rastreio: rastreio_id || null
-                        }
-                    }).closePromise.then(function(data) {
-                        if (updateVm &&
-                            typeof this.vm != 'undefined' &&
-                            typeof this.vm.load != 'undefined' &&
-                            data.value === true) {
-                            this.vm.load();
-                        }
-                    }.bind(this));
+                    Devolucao.get(rastreio_id).then(function(devolucao) {
+                        ngDialog.open({
+                            template: 'views/devolucao/form.html',
+                            controller: 'DevolucaoFormController',
+                            controllerAs: 'DevolucaoForm',
+                            data: {
+                                rastreio: devolucao
+                            }
+                        }).closePromise.then(function(data) {
+                            if (updateVm &&
+                                typeof this.vm != 'undefined' &&
+                                typeof this.vm.load != 'undefined' &&
+                                data.value === true) {
+                                this.vm.load();
+                            }
+                        }.bind(this));
+                    });
                 },
 
 
@@ -47,22 +49,24 @@
                  * @param rastreio
                  */
                 pi: function(rastreio_id, updateVm) {
-                    ngDialog.open({
-                        template: 'views/pi/form.html',
-                        className: 'ngdialog-theme-default ngdialog-big',
-                        controller: 'PiFormController',
-                        controllerAs: 'PiForm',
-                        data: {
-                            rastreio: rastreio_id || null
-                        }
-                    }).closePromise.then(function(data) {
-                        if (updateVm &&
-                            typeof this.vm != 'undefined' &&
-                            typeof this.vm.load != 'undefined' &&
-                            data.value === true) {
-                            this.vm.load();
-                        }
-                    }.bind(this));
+                    Pi.get(rastreio_id).then(function(devolucao) {
+                        ngDialog.open({
+                            template: 'views/pi/form.html',
+                            className: 'ngdialog-theme-default ngdialog-big',
+                            controller: 'PiFormController',
+                            controllerAs: 'PiForm',
+                            data: {
+                                rastreio: devolucao
+                            }
+                        }).closePromise.then(function(data) {
+                            if (updateVm &&
+                                typeof this.vm != 'undefined' &&
+                                typeof this.vm.load != 'undefined' &&
+                                data.value === true) {
+                                this.vm.load();
+                            }
+                        }.bind(this));
+                    });
                 },
 
                 /**
@@ -70,22 +74,24 @@
                  * @param rastreio
                  */
                 logistica: function(rastreio_id, updateVm) {
-                    ngDialog.open({
-                        template: 'views/logistica/form.html',
-                        className: 'ngdialog-theme-default ngdialog-big',
-                        controller: 'LogisticaFormController',
-                        controllerAs: 'Logistica',
-                        data: {
-                            rastreio: rastreio_id || null
-                        }
-                    }).closePromise.then(function(data) {
-                        if (updateVm &&
-                            typeof this.vm != 'undefined' &&
-                            typeof this.vm.load != 'undefined' &&
-                            data.value === true) {
-                            this.vm.load();
-                        }
-                    }.bind(this));
+                    Logistica.get(rastreio_id).then(function(logistica) {
+                        ngDialog.open({
+                            template: 'views/logistica/form.html',
+                            className: 'ngdialog-theme-default ngdialog-big',
+                            controller: 'LogisticaFormController',
+                            controllerAs: 'Logistica',
+                            data: {
+                                rastreio: logistica
+                            }
+                        }).closePromise.then(function(data) {
+                            if (updateVm &&
+                                typeof this.vm != 'undefined' &&
+                                typeof this.vm.load != 'undefined' &&
+                                data.value === true) {
+                                this.vm.load();
+                            }
+                        }.bind(this));
+                    });
                 },
 
                 /**
@@ -93,21 +99,23 @@
                  * @param rastreio
                  */
                 editar: function(rastreio_id, updateVm) {
-                    ngDialog.open({
-                        template: 'views/rastreio/partials/editar.html',
-                        controller: 'EditarController',
-                        controllerAs: 'Editar',
-                        data: {
-                            rastreio: rastreio_id || null
-                        }
-                    }).closePromise.then(function(data) {
-                        if (updateVm &&
-                            typeof this.vm != 'undefined' &&
-                            typeof this.vm.load != 'undefined' &&
-                            data.value === true) {
-                            this.vm.load();
-                        }
-                    }.bind(this));
+                    Rastreio.get(rastreio_id).then(function(rastreio) {
+                        ngDialog.open({
+                            template: 'views/rastreio/partials/editar.html',
+                            controller: 'EditarController',
+                            controllerAs: 'Editar',
+                            data: {
+                                rastreio: rastreio
+                            }
+                        }).closePromise.then(function(data) {
+                            if (updateVm &&
+                                typeof this.vm != 'undefined' &&
+                                typeof this.vm.load != 'undefined' &&
+                                data.value === true) {
+                                this.vm.load();
+                            }
+                        }.bind(this));
+                    });
                 }
             };
         });

@@ -43,6 +43,12 @@
         color: $color-master-dark !important;
     }
 
+    input,
+    select,
+    textarea {
+        background-color: $color-white !important;
+    }
+
     .form-default {
         padding: 0;
         border: none;

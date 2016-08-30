@@ -9,6 +9,10 @@
   display: table;
   border-collapse: separate; // prevent input groups from inheriting border styles from table cells when placed within a table
 
+  > *:not(.picker-wrap) {
+    display: table-cell !important;
+  }
+
   // Undo padding and float of grid classes
   &[class*="col-"] {
     float: none;

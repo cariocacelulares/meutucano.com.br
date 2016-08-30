@@ -6,240 +6,256 @@
             <button class="btn-danger" confirm="PedidoDetalhe.changeStatus(5)" ng-if="PedidoDetalhe.pedido.status != 5"><i class="fa fa-close"></i>&nbsp; Cancelar</button>
     </div>
 </div>
-<div class="col-md-6 p-l-5">
-    <!-- Informações do Pedido -->
-    <div class="panel panel-default">
-        <div class="panel-heading separator">
-            <div class="panel-title">Informações do Pedido</div>
-        </div>
-        <div class="panel-body">
-            <div class="col-md-12">
-                <div class="row">
-                    <p class="pull-left">Cliente</p>
-                    <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.nome"></p>
-                </div>
-                <div class="row" ng-if="PedidoDetalhe.pedido.codigo_marketplace">
-                    <p class="pull-left">Código</p>
-                    <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.codigo_marketplace"></p>
-                </div>
-                <div class="row">
-                    <p class="pull-left">Marketplace</p>
-                    <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.marketplace_readable"></p>
-                </div>
-                <div class="row">
-                    <p class="pull-left">Status</p>
-                    <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.status_description"></p>
-                </div>
-                <div class="row">
-                    <p class="pull-left">Total</p>
-                    <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.total | currency"></p>
-                </div>
-                <div class="row">
-                    <p class="pull-left">Data</p>
-                    <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.created_at_readable"></p>
-                </div>
+<div class="row">
+    <div class="col-md-6">
+        <!-- Informações do Pedido -->
+        <div class="panel panel-default">
+            <div class="panel-heading separator">
+                <div class="panel-title">Informações do Pedido</div>
             </div>
-        </div>
-    </div>
-    <!-- Fim Informações do Pedido -->
-    <hr/>
-    <!-- Informações de Rastreio -->
-    <div class="panel panel-default">
-        <div class="panel-heading separator">
-            <div class="panel-title">Informações de Rastreio</div>
-        </div>
-        <div class="panel-body">
-            <div class="col-md-12" ng-repeat="rastreio in PedidoDetalhe.pedido.rastreios">
-                <div class="row">
-                    <p class="pull-left">Código</p>
-                    <a class="pull-right bold" ng-href="http://websro.correios.com.br/sro_bin/txect01$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS={{ rastreio.rastreio }}" ng-bind="rastreio.rastreio"></a>
-                </div>
-                <div class="row">
-                    <p class="pull-left">Status</p>
-                    <p class="pull-right bold" ng-bind="rastreio.status_description"></p>
-                </div>
-                <div class="row" ng-if="rastreio.valor">
-                    <p class="pull-left">Prazo</p>
-                    <p class="pull-right bold" ng-bind="rastreio.prazo"></p>
-                </div>
-                <div class="row">
-                    <p class="pull-left">Data</p>
-                    <p class="pull-right bold" ng-bind="rastreio.data_envio_readable"></p>
-                </div>
-                <div class="row" ng-if="rastreio.servico">
-                    <p class="pull-left">Serviço</p>
-                    <p class="pull-right bold" ng-bind="rastreio.servico"></p>
-                </div>
-                <div class="row" ng-if="rastreio.valor">
-                    <p class="pull-left">Valor</p>
-                    <p class="pull-right bold" ng-bind="rastreio.valor"></p>
-                </div>
-                <div class="row actions">
-                    <button ng-click="PedidoDetalhe.rastreioHelper.editar(rastreio.id, true)" class="btn-info btn-xs">
-                        <i class="fa fa-edit"></i>&nbsp; Editar
-                    </button>
-                    <button ng-click="PedidoDetalhe.rastreioHelper.logistica(rastreio.id)" class="btn-default btn-xs">
-                        <i class="fa fa-exchange"></i>&nbsp; Logística
-                    </button>
-                    <button ng-click="PedidoDetalhe.rastreioHelper.devolucao(rastreio.id)" class="btn-default btn-xs">
-                        <i class="fa fa-undo"></i>&nbsp; Devolução
-                    </button>
-                    <button ng-click="PedidoDetalhe.rastreioHelper.pi(rastreio.id)" class="btn-default btn-xs">
-                        <i class="fa fa-warning"></i>&nbsp; PI
-                    </button>
-                    <button ng-click="PedidoDetalhe.notaHelper.printEtiqueta(rastreio.id)" class="btn-default btn-xs">
-                        <i class="fa fa-tag"></i>&nbsp; Etiqueta
-                    </button>
-                </div>
-                <hr ng-hide="$last" />
-            </div>
-        </div>
-    </div>
-    <!-- Fim Informações de Rastreio -->
-</div>
-
-<div class="col-md-6 p-r-5">
-    <!-- Informações do Cliente -->
-    <div class="panel panel-default">
-        <div class="panel-heading separator">
-            <div class="panel-title">Informações do Cliente</div>
-        </div>
-        <div class="panel-body">
-            <div class="col-md-12">
-                <div class="row" ng-if="PedidoDetalhe.pedido.cliente.fone">
-                    <p class="pull-left">Telefone</p>
-                    <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.fone"></p>
-                </div>
-                <div class="row" ng-if="PedidoDetalhe.pedido.cliente.email">
-                    <p class="pull-left">E-mail</p>
-                    <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.email"></p>
-                </div>
-                <div class="row" ng-if="PedidoDetalhe.pedido.cliente.taxvat">
-                    <p class="pull-left">CPF/CNPJ</p>
-                    <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.taxvat"></p>
-                </div>
-                <div class="row">
-                    <p class="pull-left">Endereço</p>
-                    <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.last_endereco.rua + ' - ' + PedidoDetalhe.pedido.cliente.last_endereco.numero"></p>
-                </div>
-                <div class="row">
-                    <p class="pull-left">Bairro</p>
-                    <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.last_endereco.bairro + ((PedidoDetalhe.pedido.cliente.last_endereco.complemento) ? ',' + PedidoDetalhe.pedido.cliente.last_endereco.complemento : '')"></p>
-                </div>
-                <div class="row">
-                    <p class="pull-left">Cidade / UF</p>
-                    <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.last_endereco.cidade + ' / ' + PedidoDetalhe.pedido.cliente.last_endereco.uf"></p>
-                </div>
-                <div class="row">
-                    <p class="pull-left">CEP</p>
-                    <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.last_endereco.cep_readable"></p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Fim Cliente -->
-    <hr/>
-    <!-- Informações da Nota -->
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="panel-title">Informações da Nota</div>
-        </div>
-        <div class="panel-body">
-            <div class="col-md-12">
-                <div class="row">
-                    <p class="pull-left">Chave</p>
-                    <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.nota.chave"></p>
-                </div>
-                <div class="row">
-                    <p class="pull-left">Data</p>
-                    <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.nota.data_readable"></p>
-                </div>
-                <div class="row">
-                    <p class="pull-left">Número / Série</p>
-                    <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.nota.numero + ' - ' + PedidoDetalhe.pedido.nota.serie"></p>
-                </div>
-                <div class="row actions">
-                    <button ng-click="PedidoDetalhe.notaHelper.printXML(PedidoDetalhe.pedido.id)" class="btn-default btn-xs">
-                        <i class="fa fa-file-code-o"></i>&nbsp; XML
-                    </button>
-                    <button ng-click="PedidoDetalhe.notaHelper.printDanfe(PedidoDetalhe.pedido.id)" class="btn-default btn-xs">
-                        <i class="fa fa-file-pdf-o"></i>&nbsp; DANFE
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Fim Informações da Nota -->
-</div>
-
-<div class="col-md-12 p-l-5">
-    <hr/>
-    <!-- Informações dos Produtos -->
-    <table class="table-products">
-        <thead>
-            <th width="100">SKU</th>
-            <th class="text-left">Nome</th>
-            <th width="60">Qtd</th>
-            <th width="160">Valor</th>
-        </thead>
-        <tbody>
-            <tr ng-repeat="produto in PedidoDetalhe.pedido.produtos">
-                <td class="text-center">{{ produto.produto_sku }}</td>
-                <td class="text-left">
-                    <b>{{ produto.produto.titulo }}</b>
-                    <small class="clear hint-text">{{ produto.produto.imei }}</small>
-                </td>
-                <td class="text-center">{{ produto.quantidade }}</td>
-                <td class="text-center">{{ produto.valor | currency }}</td>
-            </tr>
-            <tr class="total">
-                <td></td>
-                <td></td>
-                <td>Total</td>
-                <td>{{ PedidoDetalhe.pedido.total | currency }}</td>
-            </tr>
-        </tbody>
-    </table>
-    <!-- Fim Informações dos Produtos -->
-    <hr/>
-</div>
-
-<div class="col-md-12 p-l-5">
-    <!-- Comentários do Pedido -->
-    <div class="panel panel-default" ng-controller="PedidoComentarioController as PedidoComentario">
-        <div class="panel-heading">
-            <div class="panel-title">Comentários do Pedido</div>
-        </div>
-        <div class="panel-body">
-            <form class="col-md-12 p-l-5 p-r-5" novalidate="novalidate" ng-submit="PedidoComentario.save(PedidoDetalhe.pedido.id)" name="PedidoComentario.formComentario">
-                <div class="form-group">
-                    <label for="comentario">Adicionar comentário</label>
-                    <textarea class="form-control" id="comentario" ng-model="PedidoComentario.comentario" placeholder="Deixe seu comentário" required></textarea>
-                    <button type="submit" busy="Salvando..." class="btn-primary m-t-10 pull-right">Salvar</button>
-                </div>
-            </form>
-            <hr/>
-            <div class="col-md-12 m-t-15 m-b-10 p-r-5 p-l-5">
-                <div class="panel panel-default" ng-repeat="comentario in PedidoComentario.comentarios">
-                    <div class="panel-heading">
-                        <div class="panel-title">
-                            <span>{{ comentario.usuario.name }}</span>
-                            <small> - {{ comentario.created_at_readable }}</small>
-                        </div>
-                        <div class="panel-controls">
-                            <a confirm="PedidoComentario.destroy(comentario.id)">
-                                <i class="fa fa-trash"></i>
-                            </a>
-                        </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="row">
+                        <p class="pull-left">Cliente</p>
+                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.nome"></p>
                     </div>
-                    <div class="panel-body">
-                        <div class="col-md-12">
-                            {{ comentario.comentario }}
-                        </div>
+                    <div class="row" ng-if="PedidoDetalhe.pedido.codigo_marketplace">
+                        <p class="pull-left">Código</p>
+                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.codigo_marketplace"></p>
+                    </div>
+                    <div class="row">
+                        <p class="pull-left">Marketplace</p>
+                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.marketplace_readable"></p>
+                    </div>
+                    <div class="row">
+                        <p class="pull-left">Status</p>
+                        <p class="pull-right label label-{{ PedidoDetalhe.parseStatusClass() }}" ng-bind="PedidoDetalhe.pedido.status_description"></p>
+                    </div>
+                    <div class="row">
+                        <p class="pull-left">Total</p>
+                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.total | currency"></p>
+                    </div>
+                    <div class="row">
+                        <p class="pull-left">Data</p>
+                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.created_at_readable"></p>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Fim Informações do Pedido -->
+        <hr/>
+        <!-- Informações de Rastreio -->
+        <div class="panel panel-default">
+            <div class="panel-heading separator">
+                <div class="panel-title">Informações de Rastreio</div>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12 no-results" ng-if="!PedidoDetalhe.pedido.rastreios">
+                    Nenhum rastreio foi registrado até agora.
+                </div>
+                <div class="col-md-12" ng-if="PedidoDetalhe.pedido.rastreios" ng-repeat="rastreio in PedidoDetalhe.pedido.rastreios">
+                    <div class="row">
+                        <p class="pull-left">Código</p>
+                        <a class="pull-right bold" ng-href="{{ rastreio.rastreio_url }}" ng-bind="rastreio.rastreio"></a>
+                    </div>
+                    <div class="row">
+                        <p class="pull-left">Status</p>
+                        <p class="pull-right label {{ (rastreio.status == 2) ? 'label-warning' : 'label-danger' }}" ng-bind="rastreio.status_description"></p>
+                    </div>
+                    <div class="row" ng-if="rastreio.valor">
+                        <p class="pull-left">Prazo</p>
+                        <p class="pull-right bold" ng-bind="rastreio.prazo"></p>
+                    </div>
+                    <div class="row">
+                        <p class="pull-left">Data</p>
+                        <p class="pull-right bold" ng-bind="rastreio.data_envio_readable"></p>
+                    </div>
+                    <div class="row" ng-if="rastreio.servico">
+                        <p class="pull-left">Serviço</p>
+                        <p class="pull-right bold" ng-bind="rastreio.servico"></p>
+                    </div>
+                    <div class="row" ng-if="rastreio.valor">
+                        <p class="pull-left">Valor</p>
+                        <p class="pull-right bold" ng-bind="rastreio.valor"></p>
+                    </div>
+                    <div class="row actions">
+                        <button ng-click="PedidoDetalhe.rastreioHelper.editar(rastreio.id, true)" class="btn-info btn-xs">
+                            <i class="fa fa-edit"></i>&nbsp; Editar
+                        </button>
+                        <button ng-click="PedidoDetalhe.rastreioHelper.logistica(rastreio.id)" class="btn-default btn-xs">
+                            <i class="fa fa-exchange"></i>&nbsp; Logística
+                        </button>
+                        <button ng-click="PedidoDetalhe.rastreioHelper.devolucao(rastreio.id)" class="btn-default btn-xs">
+                            <i class="fa fa-undo"></i>&nbsp; Devolução
+                        </button>
+                        <button ng-click="PedidoDetalhe.rastreioHelper.pi(rastreio.id)" class="btn-default btn-xs">
+                            <i class="fa fa-warning"></i>&nbsp; PI
+                        </button>
+                        <button ng-click="PedidoDetalhe.notaHelper.printEtiqueta(rastreio.id)" class="btn-default btn-xs">
+                            <i class="fa fa-tag"></i>&nbsp; Etiqueta
+                        </button>
+                    </div>
+                    <hr ng-hide="$last" />
+                </div>
+            </div>
+        </div>
+        <!-- Fim Informações de Rastreio -->
     </div>
-    <!-- Fim Comentários do Pedido -->
+
+    <div class="col-md-6">
+        <!-- Informações do Cliente -->
+        <div class="panel panel-default">
+            <div class="panel-heading separator">
+                <div class="panel-title">Informações do Cliente</div>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="row" ng-if="PedidoDetalhe.pedido.cliente.fone">
+                        <p class="pull-left">Telefone</p>
+                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.fone"></p>
+                    </div>
+                    <div class="row" ng-if="PedidoDetalhe.pedido.cliente.email">
+                        <p class="pull-left">E-mail</p>
+                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.email"></p>
+                    </div>
+                    <div class="row" ng-if="PedidoDetalhe.pedido.cliente.taxvat">
+                        <p class="pull-left">CPF/CNPJ</p>
+                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.taxvat"></p>
+                    </div>
+                    <div class="row">
+                        <p class="pull-left">Endereço</p>
+                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.last_endereco.rua + ' - ' + PedidoDetalhe.pedido.cliente.last_endereco.numero"></p>
+                    </div>
+                    <div class="row">
+                        <p class="pull-left">Bairro</p>
+                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.last_endereco.bairro + ((PedidoDetalhe.pedido.cliente.last_endereco.complemento) ? ',' + PedidoDetalhe.pedido.cliente.last_endereco.complemento : '')"></p>
+                    </div>
+                    <div class="row">
+                        <p class="pull-left">Cidade / UF</p>
+                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.last_endereco.cidade + ' / ' + PedidoDetalhe.pedido.cliente.last_endereco.uf"></p>
+                    </div>
+                    <div class="row">
+                        <p class="pull-left">CEP</p>
+                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.last_endereco.cep_readable"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fim Cliente -->
+        <hr/>
+        <!-- Informações da Nota -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">Informações da Nota</div>
+                <div class="panel-controls">
+                    <button ng-click="PedidoDetalhe.notaHelper.printDanfe(PedidoDetalhe.pedido.id)" class="btn-complete">
+                        <i class="fa-print"></i>&nbsp; Imprimir
+                    </button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12 no-results" ng-if="!PedidoDetalhe.pedido.nota">
+                    A nota ainda não foi registrada.
+                </div>
+                <div class="col-md-12" ng-if="PedidoDetalhe.pedido.nota">
+                    <div class="row">
+                        <p class="pull-left">Chave</p>
+                        <a ng-click="PedidoDetalhe.notaHelper.printXML(PedidoDetalhe.pedido.id)" class="pull-right bold" ng-bind="PedidoDetalhe.pedido.nota.chave"></a>
+                    </div>
+                    <div class="row">
+                        <p class="pull-left">Data</p>
+                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.nota.data_readable"></p>
+                    </div>
+                    <div class="row">
+                        <p class="pull-left">Número / Série</p>
+                        <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.nota.numero + ' - ' + PedidoDetalhe.pedido.nota.serie"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fim Informações da Nota -->
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <hr/>
+        <!-- Informações dos Produtos -->
+        <table class="table-products">
+            <thead>
+                <th width="100">SKU</th>
+                <th class="text-left">Nome</th>
+                <th width="60">Qtd</th>
+                <th width="160">Valor</th>
+            </thead>
+            <tbody ng-if="!PedidoDetalhe.pedido.produtos">
+                <tr>
+                    <td  colspan="50" class="no-results">Nenhum produto foi registrado para este pedido.</td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr ng-if="PedidoDetalhe.pedido.produtos" ng-repeat="produto in PedidoDetalhe.pedido.produtos">
+                    <td class="text-center">{{ produto.produto_sku }}</td>
+                    <td class="text-left">
+                        <b>{{ produto.produto.titulo }}</b>
+                        <small class="clear hint-text">{{ produto.produto.imei }}</small>
+                    </td>
+                    <td class="text-center">{{ produto.quantidade }}</td>
+                    <td class="text-center">{{ produto.valor | currency }}</td>
+                </tr>
+                <tr ng-if="PedidoDetalhe.pedido.total" class="total">
+                    <td></td>
+                    <td></td>
+                    <td>Total</td>
+                    <td>{{ PedidoDetalhe.pedido.total | currency }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- Fim Informações dos Produtos -->
+        <hr/>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- Comentários do Pedido -->
+        <div class="panel panel-default" ng-controller="PedidoComentarioController as PedidoComentario">
+            <div class="panel-heading">
+                <div class="panel-title">Comentários do Pedido</div>
+            </div>
+            <div class="panel-body">
+                <form class="col-md-12 p-l-5 p-r-5" novalidate="novalidate" name="PedidoComentario.formComentario">
+                    <div class="form-group">
+                        <label for="comentario">Adicionar comentário</label>
+                        <div class="input-group">
+                            <textarea ng-model="PedidoComentario.comentario" class="form-control form-control" id="comentario"  rows="3" placeholder="Deixe seu comentário" required></textarea>
+                            <a ng-click="PedidoComentario.save(PedidoDetalhe.pedido.id)" busy="Salvando..." class="input-group-addon btn-primary">Salvar</a>
+                        </div>
+                    </div>
+                </form>
+                <hr/>
+                <div class="col-md-12 m-t-15 m-b-10 p-r-5 p-l-5">
+                    <div class="panel panel-default" ng-repeat="comentario in PedidoComentario.comentarios">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <span>{{ comentario.usuario.name }}</span>
+                                <small> - {{ comentario.created_at_readable }}</small>
+                            </div>
+                            <div class="panel-controls">
+                                <a confirm="PedidoComentario.destroy(comentario.id)" class="btn-danger">
+                                    <i class="fa fa-trash"></i>&nbsp; Excluir
+                                </a>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-md-12">
+                                {{ comentario.comentario }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fim Comentários do Pedido -->
+    </div>
 </div>

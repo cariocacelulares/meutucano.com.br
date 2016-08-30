@@ -9,12 +9,7 @@
         var vm = this;
 
         if (typeof $scope.ngDialogData.rastreio != 'undefined') {
-            vm.loading = true;
-
-            Pi.get($scope.ngDialogData.rastreio).then(function(pi) {
-                vm.pi      = pi;
-                vm.loading = false;
-            });
+            vm.pi = $scope.ngDialogData.rastreio;
         } else {
             vm.pi = {};
         }

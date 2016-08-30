@@ -9,12 +9,7 @@
         var vm = this;
 
         if (typeof $scope.ngDialogData.rastreio != 'undefined') {
-            vm.loading = true;
-
-            Rastreio.get($scope.ngDialogData.rastreio).then(function(rastreio) {
-                vm.rastreio = rastreio;
-                vm.loading  = false;
-            });
+            vm.rastreio = $scope.ngDialogData.rastreio;
         } else {
             vm.rastreio = {};
         }
