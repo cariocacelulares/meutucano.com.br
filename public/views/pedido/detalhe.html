@@ -50,7 +50,7 @@
                 <div class="panel-title">Informações de Rastreio</div>
             </div>
             <div class="panel-body">
-                <div class="col-md-12 no-results" ng-if="!PedidoDetalhe.pedido.rastreios">
+                <div class="col-md-12 no-results" ng-if="!PedidoDetalhe.pedido.rastreios.length">
                     Nenhum rastreio foi registrado até agora.
                 </div>
                 <div class="col-md-12" ng-if="PedidoDetalhe.pedido.rastreios" ng-repeat="rastreio in PedidoDetalhe.pedido.rastreios">
