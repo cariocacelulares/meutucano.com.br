@@ -133,6 +133,12 @@
                     }
                 })
 
+                .state('app.clientes.detalhe', {
+                    url: '/{id}',
+                    templateUrl: 'views/cliente/detalhe.html',
+                    controller: 'ClienteDetalheController as ClienteDetalhe'
+                })
+
                 /**
                  * Usuários
                  */
