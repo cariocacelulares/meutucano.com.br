@@ -1,11 +1,24 @@
+[class*='panel-']:not(.panel-heading):not(.panel-body):not(.panel-bordered):not(.panel-transparent):not(.panel-featured):not(.panel-title):not(.panel-maximized) {
+    @extend .panel;
+}
+
 [class*='panel-']:not(.panel-title):not(.panel-controls) {
     @extend .clearfix;
 }
 
+.panel-primary,
+.panel-success,
+.panel-info,
+.panel-warning,
+.panel-danger,
 .panel-default {
     border-radius: 2px;
-    border-color: $color-master-light;
 
+    .panel-primary,
+    .panel-success,
+    .panel-info,
+    .panel-warning,
+    .panel-danger,
     .panel-default {
         border-radius: 0;
 
@@ -16,14 +29,6 @@
         &:last-child {
             border-radius: 0 0 2px 2px;
         }
-    }
-
-    .panel-heading {
-        background-color: #EFEFEF;
-    }
-
-    .panel-body {
-        background-color: #FFF;
     }
 }
 
@@ -90,7 +95,6 @@
             left: 50%;
             height: 1px;
             width: 100%;
-            background-color: $color-master-lighter;
             transform: translateY(-8px);
         }
 
@@ -100,6 +104,111 @@
             &:before {
                 content: normal;
             }
+        }
+    }
+}
+
+/**
+ * Panel color variants
+ */
+.panel-default {
+    border-color: $color-master-light;
+
+    .panel-heading {
+        color: $color-master;
+        background-color: #EFEFEF;
+    }
+
+    .panel-body {
+        color: $color-master;
+
+        .row:not(:first-child):before {
+            background-color: $color-master-lighter;
+        }
+    }
+}
+
+.panel-primary {
+    border-color: $color-primary-lighter;
+
+    .panel-heading {
+        color: $color-white;
+        background-color: $color-primary;
+    }
+
+    .panel-body {
+        color: $color-master;
+
+        .row:not(:first-child):before {
+            background-color: $color-primary-lighter;
+        }
+    }
+}
+
+.panel-success {
+    border-color: $color-success-lighter;
+
+    .panel-heading {
+        color: $color-white;
+        background-color: $color-success;
+    }
+
+    .panel-body {
+        color: $color-master;
+
+        .row:not(:first-child):before {
+            background-color: $color-success-lighter;
+        }
+    }
+}
+
+.panel-info {
+    border-color: $color-info-lighter;
+
+    .panel-heading {
+        color: $color-white;
+        background-color: $color-info;
+    }
+
+    .panel-body {
+        color: $color-master;
+
+        .row:not(:first-child):before {
+            background-color: $color-info-lighter;
+        }
+    }
+}
+
+.panel-warning {
+    border-color: $color-warning-light;
+
+    .panel-heading {
+        color: $color-white;
+        background-color: $color-warning;
+    }
+
+    .panel-body {
+        color: $color-master;
+
+        .row:not(:first-child):before {
+            background-color: $color-warning-light;
+        }
+    }
+}
+
+.panel-danger {
+    border-color: $color-danger-lighter;
+
+    .panel-heading {
+        color: $color-white;
+        background-color: $color-danger;
+    }
+
+    .panel-body {
+        color: $color-master;
+
+        .row:not(:first-child):before {
+            background-color: $color-danger-lighter;
         }
     }
 }
