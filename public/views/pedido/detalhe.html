@@ -18,7 +18,7 @@
                     <p class="pull-left">Cliente</p>
                     <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.cliente.nome"></p>
                 </div>
-                <div class="row">
+                <div class="row" ng-if="PedidoDetalhe.pedido.codigo_marketplace">
                     <p class="pull-left">Código</p>
                     <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.codigo_marketplace"></p>
                 </div>
@@ -75,10 +75,10 @@
                     <p class="pull-right bold" ng-bind="rastreio.valor"></p>
                 </div>
                 <div class="row actions">
-                    <button ng-click="App.editar(rastreio)" class="btn-info btn-xs">
+                    <button ng-click="PedidoDetalhe.rastreioHelper.editar(rastreio.id, true)" class="btn-info btn-xs">
                         <i class="fa fa-edit"></i>&nbsp; Editar
                     </button>
-                    <button ng-click="App.logistica(rastreio)" class="btn-default btn-xs">
+                    <button ng-click="PedidoDetalhe.rastreioHelper.logistica(rastreio.id)" class="btn-default btn-xs">
                         <i class="fa fa-exchange"></i>&nbsp; Logística
                     </button>
                     <button ng-click="PedidoDetalhe.rastreioHelper.devolucao(rastreio.id)" class="btn-default btn-xs">
@@ -86,6 +86,9 @@
                     </button>
                     <button ng-click="PedidoDetalhe.rastreioHelper.pi(rastreio.id)" class="btn-default btn-xs">
                         <i class="fa fa-warning"></i>&nbsp; PI
+                    </button>
+                    <button ng-click="PedidoDetalhe.notaHelper.printEtiqueta(rastreio.id)" class="btn-default btn-xs">
+                        <i class="fa fa-tag"></i>&nbsp; Etiqueta
                     </button>
                 </div>
                 <hr ng-hide="$last" />
@@ -156,14 +159,11 @@
                     <p class="pull-right bold" ng-bind="PedidoDetalhe.pedido.nota.numero + ' - ' + PedidoDetalhe.pedido.nota.serie"></p>
                 </div>
                 <div class="row actions">
-                    <button ng-click="App.printXML(rastreio.pedido_id)" class="btn-default btn-xs">
+                    <button ng-click="PedidoDetalhe.notaHelper.printXML(PedidoDetalhe.pedido.id)" class="btn-default btn-xs">
                         <i class="fa fa-file-code-o"></i>&nbsp; XML
                     </button>
-                    <button ng-click="App.printDanfe(rastreio.pedido_id)" class="btn-default btn-xs">
+                    <button ng-click="PedidoDetalhe.notaHelper.printDanfe(PedidoDetalhe.pedido.id)" class="btn-default btn-xs">
                         <i class="fa fa-file-pdf-o"></i>&nbsp; DANFE
-                    </button>
-                    <button ng-click="App.printEtiqueta(rastreio.id)" class="btn-default btn-xs">
-                        <i class="fa fa-tag"></i>&nbsp; Etiqueta
                     </button>
                 </div>
             </div>
@@ -204,7 +204,7 @@
     <hr/>
 </div>
 
-<div class="col-md-6 p-l-5">
+<div class="col-md-12 p-l-5">
     <!-- Comentários do Pedido -->
     <div class="panel panel-default" ng-controller="PedidoComentarioController as PedidoComentario">
         <div class="panel-heading">
@@ -215,29 +215,29 @@
                 <div class="form-group">
                     <label for="comentario">Adicionar comentário</label>
                     <textarea class="form-control" id="comentario" ng-model="PedidoComentario.comentario" placeholder="Deixe seu comentário" required></textarea>
-                    <button type="submit" busy="Salvando..." class="btn-primary">Salvar</button>
+                    <button type="submit" busy="Salvando..." class="btn-primary m-t-10 pull-right">Salvar</button>
                 </div>
             </form>
             <hr/>
-            <div class="col-md-12" ng-repeat="comentario in PedidoComentario.comentarios">
-                <div class="row">
-                    <p class="pull-left">Autor</p>
-                    <p class="pull-right bold" ng-bind="comentario.usuario.name"></p>
+            <div class="col-md-12 m-t-15 m-b-10 p-r-5 p-l-5">
+                <div class="panel panel-default" ng-repeat="comentario in PedidoComentario.comentarios">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <span>{{ comentario.usuario.name }}</span>
+                            <small> - {{ comentario.created_at_readable }}</small>
+                        </div>
+                        <div class="panel-controls">
+                            <a confirm="PedidoComentario.destroy(comentario.id)">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            {{ comentario.comentario }}
+                        </div>
+                    </div>
                 </div>
-                <div class="row">
-                    <p class="pull-left">Data</p>
-                    <p class="pull-right bold" ng-bind="comentario.created_at_readable"></p>
-                </div>
-                <div class="row">
-                    <p class="pull-left">Comentário</p>
-                    <p class="pull-right bold" ng-bind="comentario.comentario"></p>
-                </div>
-                <div class="row">
-                    <button type="button" class="btn-danger" ng-click="PedidoComentario.destroy(comentario.id)">
-                        <i class="fa fa-trash"></i>
-                    </button>
-                </div>
-                <hr ng-hide="$last" />
             </div>
         </div>
     </div>

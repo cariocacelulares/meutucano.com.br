@@ -22,7 +22,7 @@
                  * Devolução
                  * @param rastreio
                  */
-                devolucao: function(rastreio_id) {
+                devolucao: function(rastreio_id, updateVm) {
                     ngDialog.open({
                         template: 'views/devolucao/form.html',
                         controller: 'DevolucaoFormController',
@@ -31,7 +31,8 @@
                             rastreio: rastreio_id || null
                         }
                     }).closePromise.then(function(data) {
-                        if (typeof this.vm != 'undefined' &&
+                        if (updateVm &&
+                            typeof this.vm != 'undefined' &&
                             typeof this.vm.load != 'undefined' &&
                             data.value === true) {
                             this.vm.load();
@@ -45,7 +46,7 @@
                  * PI
                  * @param rastreio
                  */
-                pi: function(rastreio_id) {
+                pi: function(rastreio_id, updateVm) {
                     ngDialog.open({
                         template: 'views/pi/form.html',
                         className: 'ngdialog-theme-default ngdialog-big',
@@ -55,7 +56,8 @@
                             rastreio: rastreio_id || null
                         }
                     }).closePromise.then(function(data) {
-                        if (typeof this.vm != 'undefined' &&
+                        if (updateVm &&
+                            typeof this.vm != 'undefined' &&
                             typeof this.vm.load != 'undefined' &&
                             data.value === true) {
                             this.vm.load();
@@ -67,31 +69,45 @@
                  * Logística reversa
                  * @param rastreio
                  */
-                logistica: function(rastreio) {
+                logistica: function(rastreio_id, updateVm) {
                     ngDialog.open({
-                        template: 'views/atendimento/partials/logistica.html',
+                        template: 'views/logistica/form.html',
                         className: 'ngdialog-theme-default ngdialog-big',
-                        controller: 'LogisticaController',
+                        controller: 'LogisticaFormController',
                         controllerAs: 'Logistica',
                         data: {
-                            rastreio: rastreio
+                            rastreio: rastreio_id || null
                         }
-                    });
+                    }).closePromise.then(function(data) {
+                        if (updateVm &&
+                            typeof this.vm != 'undefined' &&
+                            typeof this.vm.load != 'undefined' &&
+                            data.value === true) {
+                            this.vm.load();
+                        }
+                    }.bind(this));
                 },
 
                 /**
                  * Editar rastreio
                  * @param rastreio
                  */
-                editar: function(rastreio) {
+                editar: function(rastreio_id, updateVm) {
                     ngDialog.open({
-                        template: 'views/atendimento/partials/editar.html',
+                        template: 'views/rastreio/partials/editar.html',
                         controller: 'EditarController',
                         controllerAs: 'Editar',
                         data: {
-                            rastreio: rastreio
+                            rastreio: rastreio_id || null
                         }
-                    });
+                    }).closePromise.then(function(data) {
+                        if (updateVm &&
+                            typeof this.vm != 'undefined' &&
+                            typeof this.vm.load != 'undefined' &&
+                            data.value === true) {
+                            this.vm.load();
+                        }
+                    }.bind(this));
                 }
             };
         });

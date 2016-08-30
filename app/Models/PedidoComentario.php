@@ -11,7 +11,11 @@ class PedidoComentario extends \Eloquent
     /**
      * @var array
      */
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'pedido_id',
+        'usuario_id',
+        'comentario',
+    ];
 
     /**
      * @var array
@@ -52,7 +56,7 @@ class PedidoComentario extends \Eloquent
      *
      * @return string
      */
-    protected function getCreatedAtReadableAttribute() 
+    protected function getCreatedAtReadableAttribute()
     {
         return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y H:i');
     }

@@ -5,30 +5,28 @@
         .module('MeuTucano')
         .controller('EditarController', EditarController);
 
-    function EditarController(Restangular, $rootScope, $scope, toaster) {
+    function EditarController(Restangular, $rootScope, $scope, toaster, Rastreio) {
         var vm = this;
 
-        vm.rastreio = angular.copy($scope.ngDialogData.rastreio);
-        vm.cep      = angular.copy($scope.ngDialogData.rastreio.pedido.endereco.cep);
+        if (typeof $scope.ngDialogData.rastreio != 'undefined') {
+            vm.loading = true;
+
+            Rastreio.get($scope.ngDialogData.rastreio).then(function(rastreio) {
+                vm.rastreio = rastreio;
+                vm.loading  = false;
+            });
+        } else {
+            vm.rastreio = {};
+        }
 
         /**
          * Save the observation
          */
         vm.save = function() {
-            var infoEdit = {
-                rastreio: vm.rastreio.rastreio,
-                data_envio: vm.rastreio.data_envio_readable,
-                prazo: vm.rastreio.prazo,
-                cep: vm.cep,
-                status: vm.rastreio.status
-            };
-
-            Restangular.one('rastreios/edit', vm.rastreio.id).customPUT(infoEdit).then(function() {
-                $rootScope.$broadcast('upload');
-                $scope.closeThisDialog();
+            Rastreio.save(vm.rastreio, vm.rastreio.id || null).then(function() {
+                $scope.closeThisDialog(true);
                 toaster.pop('success', 'Sucesso!', 'Pedido editado com sucesso!');
             });
         };
     }
-
 })();

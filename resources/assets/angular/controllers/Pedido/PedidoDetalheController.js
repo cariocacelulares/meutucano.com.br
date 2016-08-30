@@ -5,12 +5,13 @@
         .module('MeuTucano')
         .controller('PedidoDetalheController', PedidoDetalheController);
 
-    function PedidoDetalheController($rootScope, $state, $stateParams, Restangular, Pedido, toaster, RastreioHelper) {
+    function PedidoDetalheController($rootScope, $state, $stateParams, Restangular, Pedido, toaster, RastreioHelper, NotaHelper) {
         var vm = this;
 
         vm.pedido_id = $stateParams.id;
         vm.pedido    = {};
         vm.loading   = false;
+        vm.notaHelper = NotaHelper;
 
         /**
          * @type {Object}

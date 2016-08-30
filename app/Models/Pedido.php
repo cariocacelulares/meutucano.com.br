@@ -123,8 +123,8 @@ class Pedido extends \Eloquent
 
     /**
      * Retorna o status de um pedido legível
-     * 
-     * @return string 
+     *
+     * @return string
      */
     protected function getStatusDescriptionAttribute()
     {
@@ -136,17 +136,17 @@ class Pedido extends \Eloquent
      *
      * @return string
      */
-    protected function getCreatedAtReadableAttribute() 
+    protected function getCreatedAtReadableAttribute()
     {
         return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y H:i');
     }
 
     /**
      * Return readable marketplace description
-     * 
-     * @return string 
+     *
+     * @return string
      */
-    protected function getMarketplaceReadableAttribute() 
+    protected function getMarketplaceReadableAttribute()
     {
         switch ($this->marketplace) {
             case 'WALMART':
@@ -163,11 +163,11 @@ class Pedido extends \Eloquent
      *
      * @return string
      */
-    protected function getCanHoldAttribute() 
+    protected function getCanHoldAttribute()
     {
         switch ($this->status) {
-            case 0: 
-            case 1: 
+            case 0:
+            case 1:
                 return true;
             default:
                 return false;
@@ -179,11 +179,11 @@ class Pedido extends \Eloquent
      *
      * @return string
      */
-    protected function getCanPrioritizeAttribute() 
+    protected function getCanPrioritizeAttribute()
     {
         switch ($this->status) {
-            case 0: 
-            case 1: 
+            case 0:
+            case 1:
                 return true;
             default:
                 return false;

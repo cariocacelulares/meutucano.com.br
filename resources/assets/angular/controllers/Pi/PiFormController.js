@@ -11,8 +11,8 @@
         if (typeof $scope.ngDialogData.rastreio != 'undefined') {
             vm.loading = true;
 
-            Pi.get($scope.ngDialogData.rastreio).then(function(devolucao) {
-                vm.pi      = devolucao;
+            Pi.get($scope.ngDialogData.rastreio).then(function(pi) {
+                vm.pi      = pi;
                 vm.loading = false;
             });
         } else {

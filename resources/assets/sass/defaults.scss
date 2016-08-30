@@ -27,6 +27,10 @@ body {
     box-sizing: border-box;
 }
 
+a {
+    cursor: pointer;
+}
+
 input,
 select {
     background-color: #FFF;
@@ -34,6 +38,11 @@ select {
     &:focus {
         outline: none;
     }
+}
+
+textarea {
+    max-width: 100%;
+    resize: vertical;
 }
 
 img {
@@ -61,7 +70,7 @@ hr {
 
 [class*="fa-"] {
     @extend .fa;
-} 
+}
 
 [class*="btn-"]:not(.btn-group) {
     @extend .btn;
@@ -73,7 +82,7 @@ hr {
 [disabled] {
     opacity: 0.5;
 }
- 
+
 [ng-click] {
     cursor: pointer;
 }

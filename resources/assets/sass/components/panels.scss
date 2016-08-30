@@ -24,6 +24,10 @@
         font-family: $font-alt;
         text-transform: uppercase;
         font-weight: 700;
+
+        small {
+            opacity: .7;
+        }
     }
 
     .panel-controls {
@@ -41,6 +45,11 @@
 
             &:last-child {
                 margin-left: 0;
+            }
+
+            &:focus,
+            &:hover {
+                color: lighten($color-master, 10%);
             }
         }
     }

@@ -48,7 +48,7 @@ class RastreioController extends Controller
             ->join('cliente_enderecos', 'cliente_enderecos.id', '=', 'pedidos.cliente_endereco_id')
             ->whereIn('pedido_rastreios.status', [2, 3, 6])
             ->orderBy('pedido_rastreios.created_at', 'DESC');
-            
+
         $list = $this->handleRequest($list);
 
         return $this->listResponse($list);
@@ -218,7 +218,7 @@ class RastreioController extends Controller
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, 'POST');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $string = curl_exec($ch);   
+        $string = curl_exec($ch);
 
         $correios = simplexml_load_string($string);
         $prazoEntrega = $correios->cServico->PrazoEntrega;
@@ -245,7 +245,7 @@ class RastreioController extends Controller
 
             $historico = [];
             $detalhes[$key]['codigo'] = $item;
-            
+
             try {
                 $content = HtmlDomParser::file_get_html($correios);
                 if (sizeof($content->find('table tr')) > 1) {
@@ -264,7 +264,7 @@ class RastreioController extends Controller
                     }
                 }
             } catch (\Exception $e) {
-                
+
             }
 
             $detalhes[$key]['historico'] = $historico;
