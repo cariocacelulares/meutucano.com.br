@@ -35,6 +35,13 @@ class Pedido extends \Eloquent
     ];
 
     /**
+     * @var [type]
+     */
+    protected $casts = [
+        'status' => 'string'
+    ];
+
+    /**
      * Set soft delete cascade
      */
     protected static function boot() {

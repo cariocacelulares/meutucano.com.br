@@ -29,13 +29,6 @@
                 };
 
                 vm.loadMeta();
-
-                /**
-                 * Timeout metas
-                 */
-                $interval(function() {
-                    vm.loadMeta();
-                }, 60000);
             },
             controllerAs: 'Metas'
         });
