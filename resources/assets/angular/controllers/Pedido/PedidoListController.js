@@ -47,9 +47,8 @@
         vm.parseStatusClass = function(pedido) {
             switch (pedido.status) {
                 case 1:
-                    return 'info';
                 case 2:
-                    return 'warning';
+                    return 'info';
                 case 3:
                     return 'success';
                 case 4:

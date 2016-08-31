@@ -1,4 +1,4 @@
-[class*='panel-']:not(.panel-heading):not(.panel-body):not(.panel-bordered):not(.panel-transparent):not(.panel-featured):not(.panel-title):not(.panel-maximized) {
+[class*='panel-']:not(.panel-heading):not(.panel-body):not(.panel-bordered):not(.panel-transparent):not(.panel-featured):not(.panel-title):not(.panel-maximized):not(.panel-controls) {
     @extend .panel;
 }
 
@@ -71,6 +71,11 @@
                 top: -1px;
             }
         }
+
+        .dropdown ul {
+            top: 23px;
+            right: 4px;
+        }
     }
 }
 
@@ -94,6 +99,7 @@
             height: 1px;
             width: 100%;
             transform: translateY(-8px);
+            background-color: #f5f5f5;
         }
 
         &.actions {
@@ -119,10 +125,7 @@
 
     .panel-body {
         color: $color-master;
-
-        .row:not(:first-child):before {
-            background-color: $color-master-lighter;
-        }
+        background-color: $color-white;
     }
 }
 
@@ -136,10 +139,7 @@
 
     .panel-body {
         color: $color-master;
-
-        .row:not(:first-child):before {
-            background-color: $color-primary-lighter;
-        }
+        background-color: $color-white;
     }
 }
 
@@ -153,10 +153,7 @@
 
     .panel-body {
         color: $color-master;
-
-        .row:not(:first-child):before {
-            background-color: $color-success-lighter;
-        }
+        background-color: $color-white;
     }
 }
 
@@ -170,10 +167,7 @@
 
     .panel-body {
         color: $color-master;
-
-        .row:not(:first-child):before {
-            background-color: $color-info-lighter;
-        }
+        background-color: $color-white;
     }
 }
 
@@ -187,10 +181,7 @@
 
     .panel-body {
         color: $color-master;
-
-        .row:not(:first-child):before {
-            background-color: $color-warning-light;
-        }
+        background-color: $color-white;
     }
 }
 
@@ -204,9 +195,6 @@
 
     .panel-body {
         color: $color-master;
-
-        .row:not(:first-child):before {
-            background-color: $color-danger-lighter;
-        }
+        background-color: $color-white;
     }
 }
