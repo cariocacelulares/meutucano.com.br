@@ -11,7 +11,14 @@ class Cliente extends \Eloquent
     /**
      * @var array
      */
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'taxvat',
+        'tipo',
+        'nome',
+        'fone',
+        'email',
+        'inscricao',
+    ];
 
     /**
      * @var array

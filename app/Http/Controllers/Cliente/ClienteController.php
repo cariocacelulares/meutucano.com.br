@@ -5,6 +5,8 @@ use App\Http\Controllers\RestControllerTrait;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Cliente;
+use App\Models\ClienteEndereco;
+use Illuminate\Support\Facades\Input;
 
 /**
  * Class ClienteController
@@ -47,5 +49,45 @@ class ClienteController extends Controller
         }
 
         return $this->notFoundResponse();
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function update($id)
+    {
+        $m = self::MODEL;
+
+        if (!$data = $m::find($id)) {
+            return $this->notFoundResponse();
+        }
+
+        try {
+            $v = \Validator::make(Input::all(), $this->validationRules);
+
+            if ($v->fails()) {
+                throw new \Exception("ValidationException");
+            }
+
+            $data->fill($this->handleInputData(Input::except('enderecos')));
+            $data->save();
+
+            $enderecos = Input::get('enderecos');
+            if ($enderecos) {
+                foreach ($enderecos as $endereco) {
+                    $obj = ClienteEndereco::find($endereco['id']);
+                    if ($obj) {
+                        $obj->fill($endereco);
+                        $obj->save();
+                    }
+                }
+            }
+
+            return $this->showResponse($data);
+        } catch (\Exception $ex) {
+            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            return $this->clientErrorResponse($data);
+        }
     }
 }
