@@ -9,7 +9,6 @@
         var vm = this;
 
         vm.comentarios = [];
-        vm.comentario = null;
         vm.pedido_id = $stateParams.id;
         vm.loading = false;
 
@@ -30,18 +29,19 @@
         /**
          * Save comentario
          */
-        vm.save = function(pedido) {
+        vm.save = function() {
             vm.loading = true;
 
             Comentario.save({
-                    'pedido_id': pedido,
-                    'comentario': vm.comentario
-                }).then(function() {
-                    vm.loading = false;
-                    vm.comentario = null;
-                    vm.formComentario.$setPristine();
-                    vm.load();
-                    toaster.pop('success', 'Sucesso!', 'Comentário cadastrado com sucesso!');
+                'pedido_id':  vm.pedido_id,
+                'comentario': vm.comentario
+            }).then(function() {
+                vm.loading = false;
+                vm.comentario = null;
+                vm.formComentario.$setPristine();
+
+                vm.load();
+                toaster.pop('success', 'Sucesso!', 'Comentário cadastrado com sucesso!');
             });
         };
 
@@ -53,9 +53,8 @@
 
             Comentario.delete(comentario).then(function() {
                 vm.loading = false;
-                vm.comentario = null;
                 vm.load();
-                toaster.pop('info', 'Sucesso!', 'Comentário excluído com sucesso!');
+                toaster.pop('success', 'Sucesso!', 'Comentário excluído com sucesso!');
             });
         };
     }
