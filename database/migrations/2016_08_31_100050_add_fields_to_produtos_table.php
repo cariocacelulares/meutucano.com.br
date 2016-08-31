@@ -18,8 +18,8 @@ class AddFieldsToProdutosTable extends Migration
             $table->char('unidade', 5)->nullable()->after('referencia');
             $table->boolean('controle_serial')->default(false)->after('unidade');
             $table->boolean('ativo')->default(true)->after('controle_serial');
-            $table->integer('linha_id')->unsigned()->after('sku');
-            $table->integer('marca_id')->unsigned()->after('sku');
+            $table->integer('linha_id')->unsigned()->nullable()->after('sku');
+            $table->integer('marca_id')->unsigned()->nullable()->after('sku');
         });
     }
 

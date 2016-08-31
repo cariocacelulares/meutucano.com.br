@@ -14,8 +14,8 @@ class AddForeignKeysToProdutosTable extends Migration
     {
         Schema::table('produtos', function(Blueprint $table)
         {
-            $table->foreign('linha_id', 'ProdutoLinha')->references('id')->on('linhas')->onUpdate('CASCADE')->onDelete('RESTRICT');
-            $table->foreign('marca_id', 'ProdutoMarca')->references('id')->on('marcas')->onUpdate('CASCADE')->onDelete('RESTRICT');
+            $table->foreign('linha_id', 'ProdutoLinhaProduto')->references('id')->on('linhas')->onUpdate('CASCADE')->onDelete('RESTRICT');
+            $table->foreign('marca_id', 'ProdutoMarcaProduto')->references('id')->on('marcas')->onUpdate('CASCADE')->onDelete('RESTRICT');
         });
     }
 
@@ -28,8 +28,8 @@ class AddForeignKeysToProdutosTable extends Migration
     {
         Schema::table('produtos', function(Blueprint $table)
         {
-            $table->dropForeign('ProdutoLinha');
-            $table->dropForeign('ProdutoMarca');
+            $table->dropForeign('ProdutoLinhaProduto');
+            $table->dropForeign('ProdutoMarcaProduto');
         });
     }
 }
