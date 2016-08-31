@@ -58,8 +58,6 @@
 
         [class*='btn-'] {
             float: left;
-            height: 25px;
-            line-height: 25px;
             margin-right: 5px;
             padding: 0 8px;
             font-size: 10px;
@@ -72,6 +70,11 @@
                 position: relative;
                 top: -1px;
             }
+        }
+
+        .dropdown ul {
+            top: 23px;
+            right: 4px;
         }
     }
 }
@@ -96,6 +99,7 @@
             height: 1px;
             width: 100%;
             transform: translateY(-8px);
+            background-color: #f5f5f5;
         }
 
         &.actions {
@@ -122,10 +126,6 @@
     .panel-body {
         color: $color-master;
         background-color: $color-white;
-
-        .row:not(:first-child):before {
-            background-color: $color-master-lighter;
-        }
     }
 }
 
@@ -140,10 +140,6 @@
     .panel-body {
         color: $color-master;
         background-color: $color-white;
-
-        .row:not(:first-child):before {
-            background-color: $color-primary-lighter;
-        }
     }
 }
 
@@ -158,10 +154,6 @@
     .panel-body {
         color: $color-master;
         background-color: $color-white;
-
-        .row:not(:first-child):before {
-            background-color: $color-success-lighter;
-        }
     }
 }
 
@@ -176,10 +168,6 @@
     .panel-body {
         color: $color-master;
         background-color: $color-white;
-
-        .row:not(:first-child):before {
-            background-color: $color-info-lighter;
-        }
     }
 }
 
@@ -194,10 +182,6 @@
     .panel-body {
         color: $color-master;
         background-color: $color-white;
-
-        .row:not(:first-child):before {
-            background-color: $color-warning-light;
-        }
     }
 }
 
@@ -212,9 +196,5 @@
     .panel-body {
         color: $color-master;
         background-color: $color-white;
-
-        .row:not(:first-child):before {
-            background-color: $color-danger-lighter;
-        }
     }
 }

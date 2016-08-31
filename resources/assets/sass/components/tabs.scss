@@ -1,0 +1,22 @@
+.tab-content {
+    min-height: 500px;
+}
+
+.nav-tabs {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+        background: #FFF;
+        padding: 10px 15px;
+        min-width: 150px;
+        background: $color-info-lighter;
+
+        a {
+            font-family: Arial;
+            font-weight: normal;
+            text-transform: none;
+        }
+    }
+}

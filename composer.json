@@ -17,7 +17,8 @@
         "sunra/php-simple-html-dom-parser": "^1.5",
         "guzzlehttp/guzzle": "~6.0",
         "swiftmailer/swiftmailer": "^5.4",
-        "venturecraft/revisionable": "1.*"
+        "venturecraft/revisionable": "1.*",
+        "arcanedev/log-viewer": "4.0.x-dev"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

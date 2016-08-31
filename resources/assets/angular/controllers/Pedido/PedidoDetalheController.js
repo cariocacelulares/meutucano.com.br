@@ -67,19 +67,39 @@
         /**
          * Retorna a classe de status do pedido
          *
-         * @param  {Pedido} pedido
          * @return {string}
          */
         vm.parseStatusClass = function() {
             switch (vm.pedido.status) {
                 case 1:
-                    return 'info';
                 case 2:
-                    return 'warning';
+                    return 'info';
                 case 3:
                     return 'success';
                 case 4:
                 case 5:
+                    return 'danger';
+            }
+        };
+
+        /**
+         * Retorna a classe de status do rastreio
+         *
+         * @return {string}
+         */
+        vm.parseRastreioStatusClass = function(rastreio) {
+            switch (rastreio.status) {
+                case 1:
+                case 7:
+                case 8:
+                    return 'info';
+                case 2:
+                    return 'warning';
+                case 4:
+                    return 'success';
+                case 3:
+                case 5:
+                case 6:
                     return 'danger';
             }
         };

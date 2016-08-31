@@ -44,13 +44,6 @@ class PedidoRastreio extends \Eloquent
     ];
 
     /**
-     * @var array
-     */
-    protected $casts = [
-        'status' => 'string',
-    ];
-
-    /**
      * Pedido
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
