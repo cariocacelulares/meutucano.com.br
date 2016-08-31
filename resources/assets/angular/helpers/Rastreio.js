@@ -39,7 +39,7 @@
                                 this.vm.load();
                             }
                         }.bind(this));
-                    });
+                    }.bind(this));
                 },
 
 
@@ -66,7 +66,7 @@
                                 this.vm.load();
                             }
                         }.bind(this));
-                    });
+                    }.bind(this));
                 },
 
                 /**
@@ -91,7 +91,7 @@
                                 this.vm.load();
                             }
                         }.bind(this));
-                    });
+                    }.bind(this));
                 },
 
                 /**
@@ -115,7 +115,7 @@
                                 this.vm.load();
                             }
                         }.bind(this));
-                    });
+                    }.bind(this));
                 }
             };
         });

@@ -13,7 +13,16 @@ class ClienteEndereco extends \Eloquent
     /**
      * @var array
      */
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'cliente_id',
+        'cep',
+        'rua',
+        'numero',
+        'complemento',
+        'bairro',
+        'cidade',
+        'uf',
+    ];
 
     /**
      * @var array
