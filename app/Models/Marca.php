@@ -31,6 +31,16 @@ class Marca extends \Eloquent
     ];
 
     /**
+     * Produtos
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function produtos()
+    {
+        return $this->hasMany(Produto::class);
+    }
+
+    /**
      * Return readable created_at
      *
      * @return string

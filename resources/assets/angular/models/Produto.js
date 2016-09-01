@@ -3,11 +3,11 @@
 
     angular
         .module('MeuTucano')
-        .service('Marca', MarcaModel);
+        .service('Produto', ProdutoModel);
 
-        function MarcaModel(Rest) {
+        function ProdutoModel(Rest) {
             var rest = angular.copy(Rest);
-            rest.baseUrl = 'marcas';
+            rest.baseUrl = 'produtos';
 
             return rest;
         }

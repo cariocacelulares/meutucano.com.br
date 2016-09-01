@@ -189,6 +189,21 @@
                     templateUrl: 'views/layouts/default.html'
                 })
 
+                .state('app.produtos.index', {
+                    url: '/list',
+                    templateUrl: 'views/produto/list.html',
+                    controller: 'ProdutoListController as ProdutoList',
+                    data: {
+                        roles: ['admin']
+                    }
+                })
+
+                .state('app.produtos.form', {
+                    url: '/{sku}',
+                    templateUrl: 'views/produto/form.html',
+                    controller: 'ProdutoFormController as ProdutoForm'
+                })
+
                 /**
                  * Linhas
                  */

@@ -1,0 +1,136 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-mobile" title="Gerenciamento do produto" description="Aqui é possível visualizar e alterar todas as informações do produto"></page-title>
+    <div class="col-md-6 button-bar">
+            <a ng-click="ProdutoForm.save()" title="Salvar produto" class="btn-success"><i class="fa-save"></i>&nbsp; Salvar</a>
+            <button class="btn-danger" confirm="ProdutoForm.remove()"><i class="fa-trash"></i>&nbsp; Excluir</button>
+            <a onclick="history.back()" title="Voltar para a página anterior" class="btn-default"><i class="fa-reply"></i>&nbsp; Voltar</a>
+    </div>
+</div>
+
+<form ng-submit="ProdutoForm.save()" novalidate="novalidate" class="form-default">
+    <tabs>
+        <tab name="infosProduto" title="Informações do produto">
+            <div class="row form-group">
+                <div class="col-md-12">
+                    <label for="titulo">Título</label>
+                    <input type="text" ng-model="ProdutoForm.produto.titulo" id="titulo" placeholder="Título do produto" required />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 form-group">
+                    <label for="sku">SKU</label>
+                    <input type="text" ng-model="ProdutoForm.produto.sku" id="sku" placeholder="SKU do produto" required />
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="referencia">Referência</label>
+                    <input type="text" ng-model="ProdutoForm.produto.referencia" id="referencia" placeholder="Referência do produto" required />
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="ncm">NCM</label>
+                    <input type="text" ng-model="ProdutoForm.produto.ncm" id="ncm" placeholder="NCM do produto" required />
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="cean">CEAN</label>
+                    <input type="text" ng-model="ProdutoForm.produto.cean" id="cean" placeholder="CEAN do produto" required />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 form-group">
+                    <label for="linha">Linha</label>
+                    <select name="linha" id="linha"
+                        ng-model="ProdutoForm.produto.linha"
+                        ng-options="linha.titulo for linha in ProdutoForm.linhas.data track by linha.id"
+                        ng-change="ProdutoForm.linhaChange()">
+                    </select>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="marca">Marca</label>
+                    <select name="marca" id="marca"
+                        ng-model="ProdutoForm.produto.marca"
+                        ng-options="marca.titulo for marca in ProdutoForm.marcas.data track by marca.id"
+                        ng-change="ProdutoForm.marcaChange()">
+                    </select>
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="unidade">Tipo da unidade</label>
+                    <select ng-model="ProdutoForm.produto.unidade" name="unidade" id="unidade">
+                        <option value="un">UN - Unidade</option>
+                        <option value="m">M - Metro</option>
+                        <option value="kg">KG - Quilograma</option>
+                        <option value="t">T - Tonelada</option>
+                        <option value="l">L - Litro</option>
+                        <option value="jg">JG - Jogo</option>
+                        <option value="pc">PÇ - Peça</option>
+                        <option value="pt">PT - Pacote</option>
+                        <option value="pa">PA - Par</option>
+                        <option value="cj">CJ - Conjunto</option>
+                    </select>
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="ativo">Status</label>
+                    <select ng-model="ProdutoForm.produto.ativo" name="ativo" id="ativo">
+                        <option value="1">Habilitado</option>
+                        <option value="0">Desabilitado</option>
+                    </select>
+                </div>
+                <div class="col-md-2 form-group">
+                    <div class="checkbox check-success m-t-35">
+                      <input ng-model="ProdutoForm.produto.controle_serial" type="checkbox" value="1" id="controle_serial">
+                      <label for="controle_serial">Controle Serial</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="pull-right">
+                    <a ng-click="ProdutoForm.tabsHelper.set('dadosVenda')" class="btn-primary">
+                        Avançar &nbsp;<i class="fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </tab>
+        <tab name="dadosVenda" title="Dados de venda">
+            <div class="row">
+                <div class="pull-right">
+                    <a ng-click="ProdutoForm.tabsHelper.set('infosProduto')" class="btn-primary">
+                        <i class="fa-arrow-left"></i>&nbsp; Voltar
+                    </a>
+                    <a ng-click="ProdutoForm.tabsHelper.set('impostos')" class="btn-primary">
+                        Avançar &nbsp;<i class="fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </tab>
+        <tab name="atributos" title="Atributos">
+            <div class="row">
+                <ul>
+                    <li ng-repeat="atributo in ProdutoForm.atributos">
+                        <label for="attr{{ atributo.id }}">{{ atributo.titulo }}</label>
+                        <input ng-if="atributo.tipo == 0" type="text" id="attr{{ atributo.id }}" name="attr{{ atributo.id }}">
+                        <select ng-if="atributo.tipo == 1" name="attr{{ atributo.id }}" id="attr{{ atributo.id }}">
+                            <option ng-repeat="atributo.opcoes" value="">{{ atributo }}</option>
+                        </select>
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="pull-right">
+                    <a ng-click="ProdutoForm.tabsHelper.set('dadosVenda')" class="btn-primary">
+                        <i class="fa-arrow-left"></i>&nbsp; Voltar
+                    </a>
+                    <a ng-click="ProdutoForm.tabsHelper.set('impostos')" class="btn-primary">
+                        Avançar &nbsp;<i class="fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </tab>
+        <tab name="impostos" title="Impostos">
+            <div class="row">
+                <div class="pull-right">
+                    <a ng-click="ProdutoForm.tabsHelper.set('atributos')" class="btn-primary">
+                        <i class="fa-arrow-left"></i>&nbsp; Voltar
+                    </a>
+                </div>
+            </div>
+        </tab>
+    </tabs>
+</form>

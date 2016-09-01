@@ -37,4 +37,14 @@ class LinhaAtributo extends \Eloquent
     {
         return $this->belongsTo(Linha::class);
     }
+
+    public function getOpcoesAttribute($opcoes)
+    {
+        $opcoes = explode(';', $opcoes);
+
+        if (count($opcoes) === 1 && $opcoes[0] === '')
+            $opcoes = null;
+
+        return $opcoes;
+    }
 }

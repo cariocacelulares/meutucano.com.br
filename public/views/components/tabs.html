@@ -1,17 +1,8 @@
-<ul class="nav nav-tabs nav-tabs-simple nav-tabs-left">
-    <li>
-        <a>Pedido</a>
-    </li>
-    <li>
-        <a>Notas fiscais</a>
-    </li>
-    <li>
-        <a>Envios</a>
-    </li>
-    <li>
-        <a>Comentários</a>
-    </li>
-</ul>
-<div class="tab-content bg-white">
-
+<div class="tabs-wrapper">
+    <ul class="tabs">
+        <li ng-repeat="tab in Tabs.get()" ng-click="Tabs.set(tab)" ng-class="{ 'active': Tabs.is(tab) }" class="tab">
+            <a>{{ tab.title }}</a>
+        </li>
+    </ul>
+    <div class="tabs-container" ng-transclude></div>
 </div>

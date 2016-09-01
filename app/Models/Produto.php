@@ -28,5 +28,50 @@ class Produto extends \Eloquent
     /**
      * @var array
      */
-    protected $fillable = ['*'];
+    protected $fillable = [
+        'marca_id',
+        'linha_id',
+        'titulo',
+        'ncm',
+        'ean',
+        'referencia',
+        'unidade',
+        'controle_serial',
+        'ativo',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'ativo' => 'string',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $with = [
+        'linha',
+        'marca',
+    ];
+
+    /**
+     * Linha
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
+     */
+    public function linha()
+    {
+        return $this->belongsTo('App\Models\Linha');
+    }
+
+    /**
+     * Marca
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
+     */
+    public function marca()
+    {
+        return $this->belongsTo('App\Models\Marca');
+    }
 }

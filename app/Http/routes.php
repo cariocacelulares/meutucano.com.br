@@ -156,9 +156,20 @@ Route::group(['prefix' => '/api'], function() {
         Route::resource('linhas', 'Linha\LinhaController');
 
         /**
+         * Atributos
+         */
+        Route::get('atributos/linha/{linha_id}', 'Linha\LinhaAtributoController@fromLinha');
+
+        /**
          * Marcas
          */
         Route::get('marcas/list', 'Marca\MarcaController@tableList');
         Route::resource('marcas', 'Marca\MarcaController');
+
+        /**
+         * Produtos
+         */
+        Route::get('produtos/list', 'Produto\ProdutoController@tableList');
+        Route::resource('produtos', 'Produto\ProdutoController');
     });
 });

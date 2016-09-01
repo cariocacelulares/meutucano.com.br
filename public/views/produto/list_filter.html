@@ -1,0 +1,14 @@
+<th>
+    <input class="form-control big" ng-model="ProdutoList.filter['produtos.sku']" placeholder="SKU" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <input class="form-control big" ng-model="ProdutoList.filter['produtos.referencia']" placeholder="Ref" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <input class="form-control big" ng-model="ProdutoList.filter['produtos.titulo']" placeholder="Título do produto" ng-model-options="{debounce:500}" />
+</th>
+<th class="item-button">
+    <a title="Limpar filtros" class="btn-danger" ng-click="ProdutoList.filterList.clear()">
+        <i class="fa-eraser"></i>
+    </a>
+</th>
