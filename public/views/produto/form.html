@@ -102,16 +102,26 @@
         </tab>
         <tab name="atributos" title="Atributos">
             <div class="row">
-                <ul>
-                    <li ng-repeat="atributo in ProdutoForm.atributos">
-                        <label for="attr{{ atributo.id }}">{{ atributo.titulo }}</label>
-                        <input ng-if="atributo.tipo == 0" type="text" id="attr{{ atributo.id }}" name="attr{{ atributo.id }}">
-                        <select ng-if="atributo.tipo == 1" name="attr{{ atributo.id }}" id="attr{{ atributo.id }}"
-                            ng-model="atributo.opcoes"
-                            ng-options="opcao.valor for opcao in atributo.opcoes track by opcao.id">
-                        </select>
-                    </li>
-                </ul>
+                <table class="table-alt bordered">
+                    <thead>
+                        <tr>
+                            <th>Atributo</th>
+                            <th>Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="atributo in ProdutoForm.produto.atributos">
+                            <td><label for="attr{{ atributo.id }}">{{ atributo.titulo }}</label></td>
+                            <td class="form-group">
+                                <input ng-model="atributo.pivot.valor" ng-if="atributo.tipo == 0" type="text" id="attr{{ atributo.id }}" name="attr{{ atributo.id }}">
+                                <select ng-if="atributo.tipo == 1" name="attr{{ atributo.id }}" id="attr{{ atributo.id }}"
+                                    ng-model="atributo.pivot.opcao_id"
+                                    ng-options="opcao.valor for opcao in atributo.opcoes track by opcao.id">
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="row">
                 <div class="pull-right">
@@ -130,6 +140,9 @@
                     <a ng-click="ProdutoForm.tabsHelper.set('atributos')" class="btn-primary">
                         <i class="fa-arrow-left"></i>&nbsp; Voltar
                     </a>
+                    <button type="submit" title="Salvar produto" class="btn-success">
+                        <i class="fa-save"></i>&nbsp; Salvar
+                    </button>
                 </div>
             </div>
         </tab>

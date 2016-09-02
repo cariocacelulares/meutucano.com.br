@@ -74,6 +74,9 @@
         vm.loadMarcas();
         vm.loadLinhas();
 
+        /*
+         * Recarrega as linhas ao alterar
+         */
         vm.linhaChange = function() {
             vm.produto.linha_id = vm.produto.linha.id;
             vm.loadAtributos();
@@ -85,7 +88,8 @@
          * @return {void}
          */
         vm.save = function() {
-            Produto.save(vm.produto, vm.produto.id || null).then(function() {
+            console.log(vm.produto.atributos);
+            Produto.save(vm.produto, vm.produto.sku || null).then(function() {
                 toaster.pop('success', 'Sucesso!', 'Produto salvo com sucesso!');
             });
         };
@@ -96,7 +100,7 @@
          * @return {void}
          */
         vm.destroy = function() {
-            Produto.delete(vm.produto.id).then(function() {
+            Produto.delete(vm.produto.sku).then(function() {
                 toaster.pop('success', 'Sucesso!', 'Produto excluido com sucesso!');
             });
         };

@@ -5,6 +5,24 @@
     border: 1px solid $color-master-lighter;
     border-right: 0;
 
+    &.bordered {
+        border-right: 1px solid $color-master-lighter;
+
+        tbody td {
+            &:first-child {
+                padding: 0 15px;
+            }
+
+            label {
+                margin: 0;
+            }
+
+            &:last-child {
+                border-left: 1px solid $color-master-lighter;
+            }
+        }
+    }
+
     .table-empty {
         td {
             color: darken($color-master-light, 20%);
