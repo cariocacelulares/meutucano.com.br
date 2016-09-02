@@ -159,7 +159,7 @@ class Pedido extends \Eloquent
             case 'WALMART':
                 return 'Walmart';
             case 'MERCADOLIVRE':
-                return 'ML ' . ucfirst(strtolower($this->marketplace_adicional));
+                return 'Mercado Livre';
             default:
                 return $this->marketplace;
         }

@@ -28,5 +28,23 @@
         };
 
         vm.load();
+
+        /**
+         * Retorna a classe de status do pedido
+         *
+         * @return {string}
+         */
+        vm.parseStatusClass = function(pedido) {
+            switch (pedido.status) {
+                case '1':
+                case '2':
+                    return 'info';
+                case '3':
+                    return 'success';
+                case '4':
+                case '5':
+                    return 'danger';
+            }
+        };
     }
 })();

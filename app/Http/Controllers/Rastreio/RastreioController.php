@@ -60,33 +60,35 @@ class RastreioController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function edit($id)
+    public function update($id)
     {
+        $m = self::MODEL;
+
+        if (!$data = $m::find($id)) {
+            return $this->notFoundResponse();
+        }
+
         try {
-            $model = self::MODEL;
+            $v = \Validator::make(Input::all(), $this->validationRules);
 
-            $rastreio = $model::findOrFail($id);
+            if ($v->fails()) {
+                throw new \Exception("ValidationException");
+            }
 
-            $endereco = $rastreio->pedido->endereco;
-            $endereco->cep = Input::get('cep');
-            $endereco->save();
-
-            $rastreio->rastreio   = Input::get('rastreio');
-            $rastreio->data_envio = Carbon::createFromFormat('d/m/Y', Input::get('data_envio'))->format('Y-m-d');
-            $rastreio->prazo      = Input::get('prazo');
-            $rastreio->status     = Input::get('status');
-
-            $rastreio->save();
+            $data->fill($this->handleInputData(Input::all()));
+            $data->save();
 
             /**
              * Atualiza o rastreio
              */
             if (Input::get('status') == 0)
-                $this->refresh($rastreio);
+                $this->refresh($data);
 
-            return $this->showResponse(['endereco' => $endereco, 'rastreio' => $rastreio]);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
+            return $this->showResponse($data);
+        } catch(\Exception $ex) {
+            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
+
+            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }
@@ -156,20 +158,26 @@ class RastreioController extends Controller
             if (!$ultimoEvento['acao']) {
                 $status = $rastreio->status;
             } elseif (strpos($ultimoEvento['detalhes'], 'por favor, entre em contato conosco clicando') !== false) {
+                $this->screenshot($rastreio);
                 $status = 3;
             } elseif(strpos($ultimoEvento['acao'], 'fluxo postal') !== false) {
+                $this->screenshot($rastreio);
                 $status = 3;
             } elseif ((strpos($ultimoEvento['acao'], 'devolvido ao remetente') !== false) || strpos($ultimoEvento['acao'], 'devolução ao remetente') !== false) {
+                $this->screenshot($rastreio);
                 $status = 5;
             } elseif (strpos($ultimoEvento['acao'], 'entrega efetuada') !== false) {
                 $rastreio->pedido->status = 3;
                 $rastreio->pedido->save();
 
-                if ($rastreio->pedido->codigo_skyhub) {
-                    with(new SkyhubController())->refreshStatus($rastreio->pedido);
-                }
+                $this->screenshot($rastreio);
+
+                // if ($rastreio->pedido->codigo_skyhub) {
+                //     with(new SkyhubController())->refreshStatus($rastreio->pedido);
+                // }
                 $status = 4;
             } elseif (strpos($ultimoEvento['acao'], 'aguardando retirada') !== false) {
+                $this->screenshot($rastreio);
                 $status = 6;
             } elseif ($prazoEntrega < date('Ymd')) {
                 $status = 2;
@@ -179,13 +187,36 @@ class RastreioController extends Controller
                 $rastreio->data_envio = Carbon::createFromFormat('d/m/Y H:i', $this->firstStatus($rastreio->rastreio)['data'])->format('Y-m-d');
             }
 
-            $rastreio->status = $status;
+            $rastreio->status           = $status;
             $rastreio->save();
 
             return $rastreio;
         } catch (\Exception $e) {
             $data = ['exception' => $e->getMessage()];
             return $this->clientErrorResponse($data);
+        }
+    }
+
+    /**
+     * Tira uma foto da tela do rastreio nos correios
+     * @param  Object  $rastreio
+     * @return boolean
+     */
+    public function screenshot($rastreio)
+    {
+        try {
+            $browsershot = new \Spatie\Browsershot\Browsershot();
+            $browsershot
+                ->setURL($rastreio->rastreio_url)
+                ->setWidth(1024)
+                ->setHeight(1024)
+                ->setTimeout(5000)
+                ->save(storage_path('app/public/rastreio/'. $rastreio->rastreio .'.jpg'));
+
+            $rastreio->imagem_historico = $rastreio->rastreio . '.jpg';
+            $rastreio->save();
+        } catch (\Exception $e) {
+            \Log::error(logMessage($e, 'Não foi possível salvar a imagem do rastreio'));
         }
     }
 

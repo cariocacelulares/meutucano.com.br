@@ -13,6 +13,8 @@ trait RestControllerTrait
     use RestResponseTrait;
 
     /**
+     * Retorna uma lista de todos recursos
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function index()
@@ -24,7 +26,10 @@ trait RestControllerTrait
     }
 
     /**
-     * Filter
+     * Manipula a requisição para listagem
+     *
+     * @param  EloquentBuilder $m
+     * @return array
      */
     protected function handleRequest($m)
     {
@@ -60,6 +65,8 @@ trait RestControllerTrait
     }
 
     /**
+     * Retorna um único recurso
+     *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -74,6 +81,8 @@ trait RestControllerTrait
     }
 
     /**
+     * Cria novo recurso
+     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -91,12 +100,14 @@ trait RestControllerTrait
         } catch(\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
 
-            \Log::error(logMessage($ex));
+            \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
             return $this->clientErrorResponse($data);
         }
     }
 
     /**
+     * Atualiza um recurso
+     *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -119,26 +130,36 @@ trait RestControllerTrait
             $data->save();
             return $this->showResponse($data);
         } catch(\Exception $ex) {
+            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
+
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }
 
     /**
+     * Deleta um recurso
+     *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function destroy($id)
     {
         $m = self::MODEL;
-        if(!$data = $m::find($id))
-        {
+        if (!$data = $m::find($id)) {
             return $this->notFoundResponse();
         }
         $data->delete();
+
         return $this->deletedResponse();
     }
 
+    /**
+     * Manipula os dados recebidos da request
+     *
+     * @param  array $inputs
+     * @return array
+     */
     private function handleInputData($inputs)
     {
         $skip = ['created_at', 'updated_at', 'deleted_at'];

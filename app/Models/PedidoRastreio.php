@@ -30,6 +30,7 @@ class PedidoRastreio extends \Eloquent
         'prazo',
         'observacao',
         'status',
+        'imagem_historico'
     ];
 
     /**

@@ -55,6 +55,7 @@ return [
 
         Zizaco\Entrust\EntrustServiceProvider::class,
         Arcanedev\LogViewer\LogViewerServiceProvider::class,
+        Spatie\Browsershot\BrowsershotServiceProvider::class
     ],
 
 

@@ -30,6 +30,8 @@ class AuthenticateController extends Controller
                 return response()->json(['error' => 'invalid_credentials', 'msg' => 'Usuário ou senha inválido(s).'], 401);
             }
         } catch (JWTException $e) {
+            \Log::alert(logMessage($e, 'Erro ao criar token'));
+
             return response()->json(['error' => 'could_not_create_token', 'msg' => 'Erro ao criar token, avise o administrador.'], 500);
         }
 
@@ -60,7 +62,7 @@ class AuthenticateController extends Controller
 
     /**
      * Atualiza o token do JWT
-     * 
+     *
      * @return mixed
      * @throws AccessDeniedHttpException
      * @throws BadRequestHttpException

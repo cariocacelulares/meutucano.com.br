@@ -19,9 +19,7 @@ class LinhaController extends Controller
 
     const MODEL = Linha::class;
 
-    protected $validationRules = [
-        'titulo' => 'required|min:10|max:255',
-    ];
+    protected $validationRules = [];
 
     /**
      * Lista linhas para a tabela
@@ -105,6 +103,8 @@ class LinhaController extends Controller
 
             return $this->showResponse($data);
         } catch (\Exception $ex) {
+            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
+
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
@@ -129,9 +129,9 @@ class LinhaController extends Controller
 
             return $this->createdResponse($data);
         } catch(\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
-
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
+
+            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }

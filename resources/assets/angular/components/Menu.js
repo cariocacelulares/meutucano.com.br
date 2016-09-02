@@ -50,12 +50,14 @@
                     {
                         title: 'Pedidos',
                         sref: $state.href('app.pedidos.index'),
-                        icon: 'fa-cubes'
+                        icon: 'fa-cubes',
+                        roles: ['admin', 'gestor', 'atendimento']
                     },
                     {
                         title: 'Clientes',
                         sref: $state.href('app.clientes.index'),
-                        icon: 'fa-users'
+                        icon: 'fa-users',
+                        roles: ['admin', 'gestor']
                     },
                     {
                         title: 'Produtos',
@@ -64,30 +66,31 @@
                             { title: 'Produtos', icon: 'fa-list' },
                             { title: 'Linhas', icon: 'fa-list-alt', sref: $state.href('app.produtos.linhas.index') },
                             { title: 'Marcas', icon: 'fa-list-alt', sref: $state.href('app.produtos.marcas.index') },
-                            { title: 'Assistência', icon: 'fa-wrench' },
-                        ]
+                            // { title: 'Assistência', icon: 'fa-wrench' },
+                        ],
+                        roles: ['admin', 'gestor']
                     },
-                    {
-                        title: 'Movimentações',
-                        icon: 'fa-exchange',
-                        sub: [
-                            { title: 'Entrada', icon: 'fa-mail-reply' },
-                            { title: 'Saída', icon: 'fa-mail-forward' },
-                            { title: 'Defeito', icon: 'fa-chain-broken' },
-                            { title: 'Transportadoras', icon: 'fa-truck' },
-                            { title: 'Fornecedores', icon: 'fa-building' },
-                            { title: 'Formas de pagamento', icon: 'fa-money' },
-                            { title: 'Operação fiscal', icon: 'fa-percent' }
-                        ]
-                    },
-                    {
-                        title: 'Financeiro',
-                        icon: 'fa-money',
-                        sub: [
-                            { title: 'Contas a pagar/receber', icon: 'fa-credit-card' },
-                            { title: 'Plano de contas', icon: 'fa-list' },
-                        ]
-                    },
+                    // {
+                    //     title: 'Movimentações',
+                    //     icon: 'fa-exchange',
+                    //     sub: [
+                    //         { title: 'Entrada', icon: 'fa-mail-reply' },
+                    //         { title: 'Saída', icon: 'fa-mail-forward' },
+                    //         { title: 'Defeito', icon: 'fa-chain-broken' },
+                    //         { title: 'Transportadoras', icon: 'fa-truck' },
+                    //         { title: 'Fornecedores', icon: 'fa-building' },
+                    //         { title: 'Formas de pagamento', icon: 'fa-money' },
+                    //         { title: 'Operação fiscal', icon: 'fa-percent' }
+                    //     ]
+                    // },
+                    // {
+                    //     title: 'Financeiro',
+                    //     icon: 'fa-money',
+                    //     sub: [
+                    //         { title: 'Contas a pagar/receber', icon: 'fa-credit-card' },
+                    //         { title: 'Plano de contas', icon: 'fa-list' },
+                    //     ]
+                    // },
                     {
                         title: 'Rastreios',
                         icon: 'fa-truck',
@@ -116,36 +119,39 @@
                         sub: [
                             {title: 'Caixa diário', icon: 'fa-money'},
                             {title: 'ICMS mensal', icon: 'fa-file-pdf-o', sref: $state.href('app.admin.icms')}
-                        ]
+                        ],
+                        roles: ['admin', 'gestor']
                     },
-                    {
-                        title: 'Configurações',
-                        icon: 'fa-cog',
-                        roles: ['admin'],
-                    },
+                    // {
+                    //     title: 'Configurações',
+                    //     icon: 'fa-cog',
+                    //     roles: ['admin'],
+                    // },
                     {
                         title: 'Marketing',
                         icon: 'fa-bullhorn',
                         sub: [
                             {title: 'Template ML', icon: 'fa-clipboard', sref: $state.href('app.marketing.templateml')}
-                        ]
+                        ],
+                        roles: ['admin', 'marketing']
                     },
                     {
                         title: 'Interno',
                         icon: 'fa-desktop',
                         sub: [
-                            {
-                                title: 'Dados da empresa',
-                                icon: 'fa-info'
-                            },
-                            {
-                                title: 'Impostos da nota',
-                                icon: 'fa-percent'
-                            },
+                            // {
+                            //     title: 'Dados da empresa',
+                            //     icon: 'fa-info'
+                            // },
+                            // {
+                            //     title: 'Impostos da nota',
+                            //     icon: 'fa-percent'
+                            // },
                             {
                                 title: 'Usuários',
                                 icon: 'fa-users',
-                                sref: $state.href('app.interno.usuarios.index')
+                                sref: $state.href('app.interno.usuarios.index'),
+                                roles: ['admin']
                             }
                         ]
                     },
