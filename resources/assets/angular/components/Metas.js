@@ -33,9 +33,9 @@
                 /**
                  * Timeout metas
                  */
-                $interval(function() {
+                /*$interval(function() {
                     vm.loadMeta();
-                }, 60000);
+                }, 60000);z*/
             },
             controllerAs: 'Metas'
         });

@@ -1,10 +1,10 @@
-<?php namespace App\Models;
+<?php namespace App\Models\Produto;
 
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
  * Class Produto
- * @package App\Models
+ * @package App\Models\Produto
  */
 class Produto extends \Eloquent
 {
@@ -62,7 +62,7 @@ class Produto extends \Eloquent
      */
     public function linha()
     {
-        return $this->belongsTo('App\Models\Linha');
+        return $this->belongsTo(Linha::class);
     }
 
     /**
@@ -72,6 +72,6 @@ class Produto extends \Eloquent
      */
     public function marca()
     {
-        return $this->belongsTo('App\Models\Marca');
+        return $this->belongsTo(Marca::class);
     }
 }

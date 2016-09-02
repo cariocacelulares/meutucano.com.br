@@ -44,7 +44,7 @@
          */
         vm.openForm = function(marca) {
             ngDialog.open({
-                template: 'views/marca/form.html',
+                template: 'views/produto/marca/form.html',
                 controller: 'MarcaFormController',
                 controllerAs: 'MarcaForm',
                 data: {

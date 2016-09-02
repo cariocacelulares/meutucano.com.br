@@ -1,6 +1,6 @@
 <?php namespace App\Http\Controllers;
 
-use App\Models\Produto;
+use App\Models\Produto\Produto;
 use Artisaninweb\SoapWrapper\Facades\SoapWrapper;
 
 /**
@@ -29,14 +29,14 @@ class MagentoController extends Controller
     {
         $this->api     = new \SoapClient(\Config::get('tucano.magento.api.host'));
         $this->session = $this->api->login(
-            \Config::get('tucano.magento.api.user'), 
+            \Config::get('tucano.magento.api.user'),
             \Config::get('tucano.magento.api.key')
         );
     }
 
     /**
      * Update inventory from an item
-     * 
+     *
      * @return boolean
      */
     public function updateInventory($skuUpdates = null, $increase = true)

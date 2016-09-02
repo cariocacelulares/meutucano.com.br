@@ -11,7 +11,7 @@ use App\Models\PedidoImposto;
 use App\Models\PedidoNota;
 use App\Models\PedidoProduto;
 use App\Models\PedidoRastreio;
-use App\Models\Produto;
+use App\Models\Produto\Produto;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;

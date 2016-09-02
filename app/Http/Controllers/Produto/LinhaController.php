@@ -1,17 +1,15 @@
-<?php namespace App\Http\Controllers\Linha;
+<?php namespace App\Http\Controllers\Produto;
 
-use Carbon\Carbon;
 use App\Http\Controllers\RestControllerTrait;
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Models\Linha;
-use App\Models\LinhaAtributo;
+use App\Models\Produto\Linha;
+use App\Models\Produto\Atributo;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 
 /**
  * Class LinhaController
- * @package App\Http\Controllers\Linha
+ * @package App\Http\Controllers\Produto
  */
 class LinhaController extends Controller
 {
@@ -47,37 +45,66 @@ class LinhaController extends Controller
      */
     function attachAttributes($m, $attributes) {
         if ($attributes) {
+            // Separa os atributos com opcoes dos sem
+            // para fazer o minimo de queries
+
+            $attrSimples = [];
+            $attrOpcoes  = [];
+            foreach ($attributes as $attr) {
+                if (isset($attr['tipo']))
+                    unset($attr['tipo']);
+
+                if (isset($attr['opcoes'])) {
+                    if (isset($attr['id'])) {
+                        // Exclui as opções
+                        Atributo::find($attr['id'])->opcoes()->delete();
+                        unset($attr['id']);
+                    }
+                    $attrOpcoes[] = $attr;
+                } else {
+                    if (isset($attr['id']))
+                        unset($attr['id']);
+                    $attrSimples[] = $attr;
+                }
+            }
+
+            // Exclui os atributos
             $m->atributos()->delete();
 
-            // Insere o id da linha pois o insert() não adiciona automaticamente
             $attrs = [];
-            foreach ($attributes as $attr) {
+            foreach ($attrSimples as $attr) {
                 if (!isset($attr['titulo']) || !trim($attr['titulo']))
                     continue;
 
-                if (isset($attr['opcoes'])) {
-                    $opcoes = [];
-                    foreach ($attr['opcoes'] as $opcao) {
-                        if (isset($opcao['text'])) {
-                            $opcoes[] = $opcao['text'];
-                        }
-                    }
-                    $attr['opcoes'] = implode(';', $opcoes);
-                } else {
-                    $attr['opcoes'] = null;
-                }
-
-                if (isset($attr['id'])) {
-                    unset($attr['id']);
-                }
-
+                // Insere o id da linha pois o insert() não adiciona automaticamente
                 $attrs[] = array_merge($attr, ['linha_id' => $m->id]);
             }
 
-            return $m->atributos()->insert($attrs);
+            $m->atributos()->insert($attrs);
+
+            $attrs = [];
+            foreach ($attrOpcoes as $attr) {
+                if (!isset($attr['titulo']) || !trim($attr['titulo']))
+                    continue;
+
+                $attr['linha_id'] = $m->id;
+
+                $newAttr = new Atributo($attr);
+                $newAttr->save();
+
+                $opcoes = [];
+                foreach ($attr['opcoes'] as $key => $opcao) {
+                    if (isset($opcao['text'])) {
+                        $opcoes[$key]['valor'] = $opcao['text'];
+                        $opcoes[$key]['atributo_id'] = $newAttr->id;
+                    }
+                }
+
+                $newAttr->opcoes()->insert($opcoes);
+            }
         }
 
-        return null;
+        return $m::with('atributos');
     }
 
     /**

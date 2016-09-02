@@ -17,7 +17,19 @@
             vm.loading = true;
 
             Linha.get(vm.linha.id).then(function(linha) {
-                vm.linha   = linha;
+                vm.linha = linha;
+
+                var aux = [];
+                for (var i in vm.linha.atributos) {
+                    if (vm.linha.atributos[i].opcoes.length) {
+                        for (var j in vm.linha.atributos[i].opcoes) {
+                            aux.push(vm.linha.atributos[i].opcoes[j].valor);
+                        }
+                        vm.linha.atributos[i].opcoes = aux;
+                    }
+                }
+                aux = null;
+
                 vm.loading = false;
             });
         };

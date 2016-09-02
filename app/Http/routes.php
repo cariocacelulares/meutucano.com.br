@@ -150,26 +150,26 @@ Route::group(['prefix' => '/api'], function() {
         Route::resource('clientes', 'Cliente\ClienteController', ['except' => ['create', 'edit', 'store']]);
 
         /**
-         * Linhas
-         */
-        Route::get('linhas/list', 'Linha\LinhaController@tableList');
-        Route::resource('linhas', 'Linha\LinhaController');
-
-        /**
-         * Atributos
-         */
-        Route::get('atributos/linha/{linha_id}', 'Linha\LinhaAtributoController@fromLinha');
-
-        /**
-         * Marcas
-         */
-        Route::get('marcas/list', 'Marca\MarcaController@tableList');
-        Route::resource('marcas', 'Marca\MarcaController');
-
-        /**
          * Produtos
          */
         Route::get('produtos/list', 'Produto\ProdutoController@tableList');
         Route::resource('produtos', 'Produto\ProdutoController');
+
+        /**
+         * Marcas
+         */
+        Route::get('marcas/list', 'Produto\MarcaController@tableList');
+        Route::resource('marcas', 'Produto\MarcaController');
+
+        /**
+         * Linhas
+         */
+        Route::get('linhas/list', 'Produto\LinhaController@tableList');
+        Route::resource('linhas', 'Produto\LinhaController');
+
+        /**
+         * Atributos
+         */
+        Route::get('atributos/linha/{linha_id}', 'Produto\AtributoController@fromLinha');
     });
 });

@@ -7,7 +7,7 @@ use App\Models\MetaAno;
 use App\Models\Pedido;
 use App\Models\PedidoNota;
 use App\Models\PedidoProduto;
-use App\Models\Produto;
+use App\Models\Produto\Produto;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;

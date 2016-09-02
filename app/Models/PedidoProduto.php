@@ -1,5 +1,7 @@
 <?php namespace App\Models;
 
+use App\Models\Produto\Produto;
+
 /**
  * Class PedidoProduto
  * @package App\Models
@@ -51,7 +53,7 @@ class PedidoProduto extends \Eloquent
      *
      * @return string
      */
-    protected function getTotalAttribute() 
+    protected function getTotalAttribute()
     {
         return $this->valor * $this->quantidade;
     }

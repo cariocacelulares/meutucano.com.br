@@ -1,17 +1,15 @@
-<?php namespace App\Models;
+<?php namespace App\Models\Produto;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
- * Class Linha
- * @package App\Models
+ * Class Marca
+ * @package App\Models\Produto
  */
-class Linha extends \Eloquent
+class Marca extends \Eloquent
 {
-    use SoftDeletes,
-        RevisionableTrait;
+    use RevisionableTrait;
 
     /**
      * @var boolean
@@ -31,23 +29,6 @@ class Linha extends \Eloquent
     protected $appends = [
         'created_at_readable',
     ];
-
-    /**
-     * @var array
-     */
-    protected $with = [
-        'atributos'
-    ];
-
-    /**
-     * Atributos
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function atributos()
-    {
-        return $this->hasMany(LinhaAtributo::class);
-    }
 
     /**
      * Produtos

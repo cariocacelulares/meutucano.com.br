@@ -4,7 +4,7 @@ use App\Models\Cliente;
 use App\Models\ClienteEndereco;
 use App\Models\Pedido;
 use App\Models\PedidoProduto;
-use App\Models\Produto;
+use App\Models\Produto\Produto;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
@@ -59,16 +59,16 @@ class SkyhubController extends Controller
         $pedidoCode = strtolower(str_replace(' ', '', $pedidoCode));
 
         if (
-            (strpos($pedidoCode, 'americanas') !== false) || 
-            (strpos($pedidoCode, 'submarino') !== false) || 
-            (strpos($pedidoCode, 'shoptime') !== false) || 
+            (strpos($pedidoCode, 'americanas') !== false) ||
+            (strpos($pedidoCode, 'submarino') !== false) ||
+            (strpos($pedidoCode, 'shoptime') !== false) ||
             (strpos($pedidoCode, 'barato') !== false)
         ) {
             return 'B2W';
         } elseif (
-            (strpos($pedidoCode, 'extra') !== false) || 
-            (strpos($pedidoCode, 'pontofrio') !== false) || 
-            (strpos($pedidoCode, 'bahia') !== false) || 
+            (strpos($pedidoCode, 'extra') !== false) ||
+            (strpos($pedidoCode, 'pontofrio') !== false) ||
+            (strpos($pedidoCode, 'bahia') !== false) ||
             (strpos($pedidoCode, 'discount') !== false)
         ) {
             return 'CNOVA';
@@ -87,10 +87,10 @@ class SkyhubController extends Controller
 
     /**
      * Retorna o status do tucano baseado no status do marketplace
-     * 
-     * @param  string  $status 
-     * @param  boolean $reverse Caso true, retorna o status no marketplace 
-     * @return int|string       
+     *
+     * @param  string  $status
+     * @param  boolean $reverse Caso true, retorna o status no marketplace
+     * @return int|string
      */
     public function parseMarketplaceStatus($status, $reverse = false)
     {
@@ -141,14 +141,14 @@ class SkyhubController extends Controller
 
     /**
      * Importa um pedido da Skyhub para o Tucano
-     *     
+     *
      * @param  SkyhubPedido $s_pedido
-     * @return string|boolean 
+     * @return string|boolean
      */
     public function importPedido($s_pedido) {
         try {
-            $clienteFone = (sizeof($s_pedido['customer']['phones']) > 1) 
-                ? $s_pedido['customer']['phones'][1] 
+            $clienteFone = (sizeof($s_pedido['customer']['phones']) > 1)
+                ? $s_pedido['customer']['phones'][1]
                 : $s_pedido['customer']['phones'][0];
 
             $cliente = Cliente::firstOrNew(['taxvat' => $s_pedido['customer']['vat_number']]);
@@ -158,7 +158,7 @@ class SkyhubController extends Controller
             $cliente->save();
 
             $clienteEndereco = ClienteEndereco::firstOrNew([
-                'cliente_id' => $cliente->id, 
+                'cliente_id' => $cliente->id,
                 'cep'        => $s_pedido['shipping_address']['postcode']
             ]);
             $clienteEndereco->rua         = $s_pedido['shipping_address']['street'];
@@ -170,18 +170,18 @@ class SkyhubController extends Controller
             $clienteEndereco->save();
 
             $marketplace = $this->parseMarketplaceName($s_pedido['code']);
-            $operacao    = ($s_pedido['shipping_address']['region'] == \Config::get('tucano.uf')) 
+            $operacao    = ($s_pedido['shipping_address']['region'] == \Config::get('tucano.uf'))
                 ? \Config::get('tucano.venda_interna')
                 : \Config::get('tucano.venda_externa');
 
             $codMarketplace = $this->parseMarketplaceId(
-                $marketplace, 
+                $marketplace,
                 substr($s_pedido['code'], strpos($s_pedido['code'], '-') + 1)
             );
 
             $pedido = Pedido::firstOrCreate([
-                'cliente_id'          => $cliente->id, 
-                'cliente_endereco_id' => $clienteEndereco->id, 
+                'cliente_id'          => $cliente->id,
+                'cliente_endereco_id' => $clienteEndereco->id,
                 'codigo_marketplace'  => $codMarketplace
             ]);
             $pedido->cliente_id          = $cliente->id;
@@ -213,7 +213,7 @@ class SkyhubController extends Controller
             }
 
             $this->request(
-                sprintf('/orders/%s/exported', $s_pedido['code']), 
+                sprintf('/orders/%s/exported', $s_pedido['code']),
                 ['json' => [
                     "exported" => true
                 ]],
@@ -236,7 +236,7 @@ class SkyhubController extends Controller
 
     /**
      * Atualiza todos status dos pedidos da Skyhub
-     * 
+     *
      * @return void
      */
     public function updateAllStatuses()
@@ -266,17 +266,17 @@ class SkyhubController extends Controller
 
     /**
      * Update stock data from Magento
-     *     
+     *
      * @param  SkyhubPedido $s_pedido
-     * @return boolean 
+     * @return boolean
      */
     protected function updateStockData($s_pedido)
     {
         try {
             $dataPedido = Carbon::createFromFormat('Y-m-d', substr($s_pedido['placed_at'], 0, 10))->format('Ymd');
-            
+
             //TODO: Remover essa linha de código
-            if ($dataPedido <= 20160818) 
+            if ($dataPedido <= 20160818)
                 return false;
             //-----
 
@@ -310,8 +310,8 @@ class SkyhubController extends Controller
 
     /**
      * Importa todos pedidos não sincronizados
-     * 
-     * @return void 
+     *
+     * @return void
      */
     public function getPedidos()
     {
@@ -320,14 +320,14 @@ class SkyhubController extends Controller
         if ($pedidos) {
             foreach ($pedidos['orders'] as $s_pedido) {
                 $this->importPedido($s_pedido);
-            }  
+            }
         }
     }
 
     /**
      * Importa último pedido da fila de integração
-     * 
-     * @return void 
+     *
+     * @return void
      */
     public function queue()
     {
@@ -338,7 +338,7 @@ class SkyhubController extends Controller
                 $this->updateStockData($s_pedido);
 
                 $this->request(
-                    sprintf('/queues/orders/%s', $s_pedido['code']), 
+                    sprintf('/queues/orders/%s', $s_pedido['code']),
                     [],
                     'DELETE'
                 );
@@ -348,11 +348,11 @@ class SkyhubController extends Controller
 
     /**
      * Envia informações de faturamento e envio para skyhub
-     * 
+     *
      * @param  $id      Order id
-     * @return boolean 
+     * @return boolean
      */
-    public function orderInvoice($id) 
+    public function orderInvoice($id)
     {
         if ($pedido = Pedido::find($id)) {
 
@@ -381,7 +381,7 @@ class SkyhubController extends Controller
                     ];
 
                     $this->request(
-                        sprintf('/orders/%s/shipments', $pedido->codigo_skyhub), 
+                        sprintf('/orders/%s/shipments', $pedido->codigo_skyhub),
                         ['json' => $jsonData],
                         'POST'
                     );
@@ -405,9 +405,9 @@ class SkyhubController extends Controller
 
     /**
      * Marca um pedido como entregue na Skyhub
-     * 
-     * @param  Pedido $pedido 
-     * @return boolean         
+     *
+     * @param  Pedido $pedido
+     * @return boolean
      */
     public function refreshStatus($pedido)
     {
@@ -416,7 +416,7 @@ class SkyhubController extends Controller
                 switch ($pedido->status) {
                     case 3: {
                         $this->request(
-                            sprintf('/orders/%s/delivery', $pedido->codigo_skyhub), 
+                            sprintf('/orders/%s/delivery', $pedido->codigo_skyhub),
                             [],
                             'POST'
                         );
@@ -424,7 +424,7 @@ class SkyhubController extends Controller
                     }
                     case 5: {
                         $this->request(
-                            sprintf('/orders/%s/cancel', $pedido->codigo_skyhub), 
+                            sprintf('/orders/%s/cancel', $pedido->codigo_skyhub),
                             [],
                             'POST'
                         );
@@ -449,8 +449,8 @@ class SkyhubController extends Controller
 
     /**
      * Cancela pedidos com mais de 3 dias úteis de pagamento pendente
-     * 
-     * @return void 
+     *
+     * @return void
      */
     public function cancelOldOrders()
     {

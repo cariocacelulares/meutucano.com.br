@@ -1,10 +1,8 @@
 <?php namespace App\Http\Controllers\Produto;
 
-use Carbon\Carbon;
 use App\Http\Controllers\RestControllerTrait;
 use App\Http\Controllers\Controller;
-use App\Models\Produto;
-use Illuminate\Support\Facades\Input;
+use App\Models\Produto\Produto;
 
 /**
  * Class ProdutoController

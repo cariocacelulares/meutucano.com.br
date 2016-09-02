@@ -10,7 +10,7 @@ use App\Models\PedidoRastreio;
 use App\Models\PedidoRastreioPi;
 use App\Models\PedidoProduto;
 use App\Models\PedidoImposto;
-use App\Models\Produto;
+use App\Models\Produto\Produto;
 use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;
 

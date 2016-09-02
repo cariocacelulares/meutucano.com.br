@@ -1,12 +1,12 @@
-<?php namespace App\Http\Controllers\Marca;
+<?php namespace App\Http\Controllers\Produto;
 
 use App\Http\Controllers\RestControllerTrait;
 use App\Http\Controllers\Controller;
-use App\Models\Marca;
+use App\Models\Produto\Marca;
 
 /**
  * Class MarcaController
- * @package App\Http\Controllers\Marca
+ * @package App\Http\Controllers\Produto
  */
 class MarcaController extends Controller
 {

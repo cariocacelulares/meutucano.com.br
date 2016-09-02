@@ -214,7 +214,7 @@
 
                 .state('app.produtos.linhas.index', {
                     url: '/list',
-                    templateUrl: 'views/linha/list.html',
+                    templateUrl: 'views/produto/linha/list.html',
                     controller: 'LinhaListController as LinhaList',
                     data: {
                         roles: ['admin']
@@ -223,7 +223,7 @@
 
                 .state('app.produtos.linhas.form', {
                     url: '/{id}',
-                    templateUrl: 'views/linha/form.html',
+                    templateUrl: 'views/produto/linha/form.html',
                     controller: 'LinhaFormController as LinhaForm'
                 })
 
@@ -237,7 +237,7 @@
 
                 .state('app.produtos.marcas.index', {
                     url: '/list',
-                    templateUrl: 'views/marca/list.html',
+                    templateUrl: 'views/produto/marca/list.html',
                     controller: 'MarcaListController as MarcaList',
                     data: {
                         roles: ['admin']
@@ -246,7 +246,7 @@
 
                 .state('app.produtos.marcas.form', {
                     url: '/{id}',
-                    templateUrl: 'views/marca/form.html',
+                    templateUrl: 'views/produto/marca/form.html',
                     controller: 'MarcaFormController as MarcaForm'
                 })
 

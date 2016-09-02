@@ -1,18 +1,18 @@
-<?php namespace App\Http\Controllers\Linha;
+<?php namespace App\Http\Controllers\Produto;
 
 use App\Http\Controllers\RestControllerTrait;
 use App\Http\Controllers\Controller;
-use App\Models\LinhaAtributo;
+use App\Models\Produto\Atributo;
 
 /**
- * Class LinhaAtributoController
- * @package App\Http\Controllers\Linha
+ * Class AtributoController
+ * @package App\Http\Controllers\Produto
  */
-class LinhaAtributoController extends Controller
+class AtributoController extends Controller
 {
     use RestControllerTrait;
 
-    const MODEL = LinhaAtributo::class;
+    const MODEL = Atributo::class;
 
     protected $validationRules = [];
 

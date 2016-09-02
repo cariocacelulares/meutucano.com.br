@@ -1,13 +1,13 @@
-<?php namespace App\Models;
+<?php namespace App\Models\Produto;
 
 use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
- * Class Marca
- * @package App\Models
+ * Class Linha
+ * @package App\Models\Produto
  */
-class Marca extends \Eloquent
+class Linha extends \Eloquent
 {
     use RevisionableTrait;
 
@@ -29,6 +29,23 @@ class Marca extends \Eloquent
     protected $appends = [
         'created_at_readable',
     ];
+
+    /**
+     * @var array
+     */
+    protected $with = [
+        'atributos'
+    ];
+
+    /**
+     * Atributos
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function atributos()
+    {
+        return $this->hasMany(Atributo::class);
+    }
 
     /**
      * Produtos
