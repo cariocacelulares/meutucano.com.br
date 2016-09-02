@@ -53,6 +53,7 @@ class Produto extends \Eloquent
     protected $with = [
         'linha',
         'marca',
+        'atributos',
     ];
 
     /**
@@ -73,5 +74,16 @@ class Produto extends \Eloquent
     public function marca()
     {
         return $this->belongsTo(Marca::class);
+    }
+
+    /**
+     * Atributos
+     * @return Object
+     */
+    public function atributos()
+    {
+        return $this
+            ->belongsToMany(Atributo::class, 'produto_atributo', 'produto_id', 'atributo_id')
+            ->withPivot('opcao_id', 'valor');
     }
 }

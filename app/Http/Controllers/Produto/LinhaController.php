@@ -4,6 +4,7 @@ use App\Http\Controllers\RestControllerTrait;
 use App\Http\Controllers\Controller;
 use App\Models\Produto\Linha;
 use App\Models\Produto\Atributo;
+use App\Models\Produto\Opcao;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 
@@ -17,9 +18,7 @@ class LinhaController extends Controller
 
     const MODEL = Linha::class;
 
-    protected $validationRules = [
-        'titulo' => 'required|min:10|max:255',
-    ];
+    protected $validationRules = [];
 
     /**
      * Lista linhas para a tabela
@@ -37,74 +36,135 @@ class LinhaController extends Controller
     }
 
     /**
-     * Insert attributes attached to line in a single sql insert
+     * Remove attributes attached to line and his options
+     *
+     * @param  int $linha_id     id da linha
+     * @param  array $attributes post array
+     * @return void
+     */
+    function removeAttributes($linha_id, $toRemove) {
+        try {
+            if ($toRemove) {
+                if ($toRemove['opcoes']) {
+                    foreach ($toRemove['opcoes'] as $opcao_id) {
+                        $opcao = Opcao::find($opcao_id);
+
+                        if ($opcao)
+                            $opcao->delete();
+                    }
+                }
+
+                if ($toRemove['atributos']) {
+                    if ($toRemove['atributos']) {
+                        foreach ($toRemove['atributos'] as $attr_id) {
+                            $attr = Atributo::find($attr_id);
+
+                            if ($attr) {
+                                $attr->opcoes()->delete();
+                                $attr->delete();
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (\Exception $ex) {
+            $data = ['exception' => $ex->getMessage()];
+            return $this->clientErrorResponse($data);
+        }
+
+        return true;
+    }
+
+    /**
+     * Insert attributes attached to line and his options
      *
      * @param  Object $m          Linha object
      * @param  array $attributes  post array
-     * @return boolean            success
+     * @return void
      */
     function attachAttributes($m, $attributes) {
-        if ($attributes) {
-            // Separa os atributos com opcoes dos sem
-            // para fazer o minimo de queries
+        try {
+            if ($attributes) {
+                // Percorre todos os atributos e organiza em arrays diferentes
+                $toAdd  = ['simples' => [], 'opcoes' => []];
+                $toEdit = [];
+                foreach ($attributes as $attr) {
+                    if (!isset($attr['titulo']) || !trim($attr['titulo']))
+                        continue;
 
-            $attrSimples = [];
-            $attrOpcoes  = [];
-            foreach ($attributes as $attr) {
-                if (isset($attr['tipo']))
+                    $attr['linha_id'] = $m->id;
+                    $tipo = ($attr['tipo'] == 1) ? 'opcoes' : 'simples';
                     unset($attr['tipo']);
 
-                if (isset($attr['opcoes'])) {
+                    // já existe
                     if (isset($attr['id'])) {
-                        // Exclui as opções
-                        Atributo::find($attr['id'])->opcoes()->delete();
-                        unset($attr['id']);
-                    }
-                    $attrOpcoes[] = $attr;
-                } else {
-                    if (isset($attr['id']))
-                        unset($attr['id']);
-                    $attrSimples[] = $attr;
-                }
-            }
-
-            // Exclui os atributos
-            $m->atributos()->delete();
-
-            $attrs = [];
-            foreach ($attrSimples as $attr) {
-                if (!isset($attr['titulo']) || !trim($attr['titulo']))
-                    continue;
-
-                // Insere o id da linha pois o insert() não adiciona automaticamente
-                $attrs[] = array_merge($attr, ['linha_id' => $m->id]);
-            }
-
-            $m->atributos()->insert($attrs);
-
-            $attrs = [];
-            foreach ($attrOpcoes as $attr) {
-                if (!isset($attr['titulo']) || !trim($attr['titulo']))
-                    continue;
-
-                $attr['linha_id'] = $m->id;
-
-                $newAttr = new Atributo($attr);
-                $newAttr->save();
-
-                $opcoes = [];
-                foreach ($attr['opcoes'] as $key => $opcao) {
-                    if (isset($opcao['text'])) {
-                        $opcoes[$key]['valor'] = $opcao['text'];
-                        $opcoes[$key]['atributo_id'] = $newAttr->id;
+                        $toEdit[] = $attr;
+                    } else {
+                        $toAdd[$tipo][] = $attr;
                     }
                 }
 
-                $newAttr->opcoes()->insert($opcoes);
+                // Insere os atributos novos sem opcoes
+                $m->atributos()->insert($toAdd['simples']);
+
+                // Percorre os atributos novos COM opcoes
+                foreach ($toAdd['opcoes'] as $attr) {
+                    $newAttr = new Atributo($attr);
+                    $newAttr->save();
+
+                    $opcoes = [];
+                    foreach ($attr['opcoes'] as $opcao) {
+                        if ($opcao['valor']) {
+                            $opcao['atributo_id'] = $newAttr->id;
+                            $opcoes[] = $opcao;
+                        }
+                    }
+
+                    // Salva todas as opcoes em um unico insert
+                    if ($opcoes) {
+                        $newAttr->opcoes()->insert($opcoes);
+                    }
+                }
+
+                // Percorre os atributos antigos
+                foreach ($toEdit as $attr) {
+                    $editAttr = Atributo::find($attr['id']);
+
+                    if ($editAttr) {
+                        if (!$attr['opcoes'])
+                            $attr['opcoes'] = null;
+
+                        $editAttr->fill($attr);
+                        $editAttr->save();
+
+                        if ($attr['opcoes']) {
+                            $opcoes = [];
+                            foreach ($attr['opcoes'] as $opcao) {
+                                $opcao['atributo_id'] = $editAttr->id;
+
+                                if (isset($opcao['id'])) {
+                                    $editOpcao = Opcao::find($opcao['id']);
+                                    if ($editOpcao) {
+                                        $editOpcao->fill($opcao);
+                                        $editOpcao->save();
+                                    }
+                                } else {
+                                    $opcoes[] = $opcao;
+                                }
+                            }
+
+                            // Salva todas as opcoes em um unico insert
+                            $editAttr->opcoes()->insert($opcoes);
+                        }
+                    }
+                }
             }
+        } catch (\Exception $ex) {
+            $data = ['exception' => $ex->getMessage()];
+            return $this->clientErrorResponse($data);
         }
 
-        return $m::with('atributos');
+        return true;
     }
 
     /**
@@ -128,6 +188,7 @@ class LinhaController extends Controller
 
             $data->fill(Input::except(['atributos']));
             $data->save();
+            $this->removeAttributes($data->id, Input::get('removidos'));
             $this->attachAttributes($data, Input::get('atributos'));
 
             return $this->showResponse($data);
@@ -152,6 +213,7 @@ class LinhaController extends Controller
             }
 
             $data = $m::create(Input::all());
+            $this->removeAttributes($data->id, Input::get('removidos'));
             $this->attachAttributes($data, Input::get('atributos'));
 
             return $this->createdResponse($data);

@@ -59,6 +59,21 @@ class Atributo extends \Eloquent
         return $this->belongsTo(Linha::class);
     }
 
+    /**
+     * Produtos
+     * @return Object
+     */
+    public function produtos()
+    {
+        return $this
+            ->belongsToMany(Produto::class, 'produto_atributo', 'atributo_id', 'produto_id')
+            ->withPivot('opcao_id', 'valor');
+    }
+
+    /**
+     * Tipo
+     * @return String Se existem opcoes, definindo o tipo
+     */
     public function getTipoAttribute()
     {
         return ($this->opcoes->isEmpty()) ? '0' : '1';

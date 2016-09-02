@@ -106,8 +106,9 @@
                     <li ng-repeat="atributo in ProdutoForm.atributos">
                         <label for="attr{{ atributo.id }}">{{ atributo.titulo }}</label>
                         <input ng-if="atributo.tipo == 0" type="text" id="attr{{ atributo.id }}" name="attr{{ atributo.id }}">
-                        <select ng-if="atributo.tipo == 1" name="attr{{ atributo.id }}" id="attr{{ atributo.id }}">
-                            <option ng-repeat="atributo.opcoes" value="">{{ atributo }}</option>
+                        <select ng-if="atributo.tipo == 1" name="attr{{ atributo.id }}" id="attr{{ atributo.id }}"
+                            ng-model="atributo.opcoes"
+                            ng-options="opcao.valor for opcao in atributo.opcoes track by opcao.id">
                         </select>
                     </li>
                 </ul>

@@ -10,7 +10,11 @@
 
         vm.linha = {
             id: $stateParams.id || null,
-            atributos: []
+            atributos: [],
+            removidos: {
+                atributos: [],
+                opcoes: []
+            }
         };
 
         vm.load = function() {
@@ -18,19 +22,12 @@
 
             Linha.get(vm.linha.id).then(function(linha) {
                 vm.linha = linha;
-
-                var aux = [];
-                for (var i in vm.linha.atributos) {
-                    if (vm.linha.atributos[i].opcoes.length) {
-                        for (var j in vm.linha.atributos[i].opcoes) {
-                            aux.push(vm.linha.atributos[i].opcoes[j].valor);
-                        }
-                        vm.linha.atributos[i].opcoes = aux;
-                    }
-                }
-                aux = null;
-
                 vm.loading = false;
+
+                vm.linha.removidos = {
+                    atributos: [],
+                    opcoes: []
+                };
             });
         };
 
@@ -53,7 +50,33 @@
          * @return {void}
          */
         vm.removeAttribute = function(index) {
+            vm.linha.removidos.atributos.push(
+                vm.linha.atributos[index].id
+            );
+
             vm.linha.atributos.splice(index, 1);
+        };
+
+        /**
+         * Quando uma tag é removida
+         *
+         * @return {void}
+         */
+        vm.removeTag = function(tag) {
+            vm.linha.removidos.opcoes.push(tag.id);
+        };
+
+        /**
+         * Quando di que a tag é invalda
+         * Checa e entao adiciona
+         *
+         * @return {void}
+         */
+        vm.checkTag = function(tag, index) {
+            if (tag) {
+                tag.id = null;
+                vm.linha.atributos[index].opcoes.push(tag);
+            }
         };
 
         /**

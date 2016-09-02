@@ -59,7 +59,15 @@
                                 </select>
                             </td>
                             <td ng-class="{'no-data': atributo.tipo != 1}" class="form-group">
-                                <tags-input ng-if="atributo.tipo == 1" ng-model="atributo.opcoes" id="opcoes-novo" placeholder="Adicionar"></tags-input>
+                                <tags-input
+                                    ng-if="atributo.tipo == 1"
+                                    ng-model="atributo.opcoes"
+                                    display-property="valor"
+                                    on-tag-removed="LinhaForm.removeTag($tag)"
+                                    min-length="1"
+                                    id="opcoes-novo"
+                                    placeholder="Adicionar">
+                                </tags-input>
                             </td>
                             <td class="text-center form-group">
                                 <a ng-click="LinhaForm.removeAttribute($index)" class="btn-danger btn-sm" title="Remover atributo">
