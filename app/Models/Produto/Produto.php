@@ -1,12 +1,13 @@
 <?php namespace App\Models\Produto;
 
 use Venturecraft\Revisionable\RevisionableTrait;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Produto
  * @package App\Models\Produto
  */
-class Produto extends \Eloquent
+class Produto extends Model
 {
     use RevisionableTrait;
 
@@ -85,5 +86,14 @@ class Produto extends \Eloquent
         return $this
             ->belongsToMany(Atributo::class, 'produto_atributo', 'produto_id', 'atributo_id')
             ->withPivot('opcao_id', 'valor');
+    }
+
+    public function newPivot(Model $parent, array $attributes, $table, $exists)
+    {
+        if ($parent instanceof Atributo) {
+            return new ProdutoAtributoPivot($parent, $attributes, $table, $exists);
+        }
+
+        return parent::newPivot($parent, $attributes, $table, $exists);
     }
 }

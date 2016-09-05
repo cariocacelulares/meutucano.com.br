@@ -91,10 +91,10 @@ class ProdutoController extends Controller
                 $atributos = [];
                 foreach ($attrs as $attr) {
                     $atributos[] = [
-                        'produto_id' => $attr['pivot']['produto_id'],
-                        'atributo_id' => $attr['pivot']['atributo_id'],
-                        'opcao_id' => $attr['pivot']['opcao_id']['id'],
-                        'valor' => $attr['pivot']['valor']
+                        'produto_id' => (isset($attr['pivot']['produto_id']) && $attr['pivot']['produto_id']) ? $attr['pivot']['produto_id'] : $data->sku,
+                        'atributo_id' => (isset($attr['pivot']['atributo_id']) && $attr['pivot']['atributo_id']) ? $attr['pivot']['atributo_id'] : $attr['id'],
+                        'opcao_id' => (isset($attr['pivot']['opcao_id']) && $attr['pivot']['opcao_id']) ? $attr['pivot']['opcao_id'] : null,
+                        'valor' => (isset($attr['pivot']['valor']) && $attr['pivot']['valor']) ? $attr['pivot']['valor'] : null
                     ];
                 }
                 $data->atributos()->attach($atributos);

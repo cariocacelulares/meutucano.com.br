@@ -1,12 +1,13 @@
 <?php namespace App\Models\Produto;
 
 use Venturecraft\Revisionable\RevisionableTrait;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Atributo
  * @package App\Models\Produto
  */
-class Atributo extends \Eloquent
+class Atributo extends Model
 {
     use RevisionableTrait;
 
@@ -63,11 +64,24 @@ class Atributo extends \Eloquent
      * Produtos
      * @return Object
      */
-    public function produtos()
+    /*public function produtos()
     {
         return $this
             ->belongsToMany(Produto::class, 'produto_atributo', 'atributo_id', 'produto_id')
             ->withPivot('opcao_id', 'valor');
+    }*/
+    public function produtos()
+    {
+        return $this->belongsToMany(Produto::class, 'produto_atributo', 'atributo_id', 'produto_id');
+    }
+
+    public function newPivot(Model $parent, array $attributes, $table, $exists)
+    {
+        if ($parent instanceof Produto) {
+            return new ProdutoAtributoPivot($parent, $attributes, $table, $exists);
+        }
+
+        return parent::newPivot($parent, $attributes, $table, $exists);
     }
 
     /**

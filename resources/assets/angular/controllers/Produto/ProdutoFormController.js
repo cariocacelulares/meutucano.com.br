@@ -7,6 +7,10 @@
 
     function ProdutoFormController($stateParams, Produto, toaster, TabsHelper, Linha, Marca, Atributo) {
         var vm = this;
+        var original = {
+            linha_id: null,
+            attrs: null
+        };
 
         vm.produto = {
             sku: $stateParams.sku || null,
@@ -17,7 +21,6 @@
         vm.tabsHelper = TabsHelper;
         vm.linhas = {};
         vm.marcas = {};
-        vm.atributos = {};
 
         vm.load = function() {
             vm.loading = true;
@@ -32,17 +35,12 @@
                     vm.produto.ativo = '1';
 
                 if (vm.produto.linha_id)
-                    vm.loadAtributos();
+                    original.linha_id = vm.produto.linha_id;
 
-                vm.loading = false;
-            });
-        };
+                if (vm.produto.linha_id && vm.produto.atributos) {
+                    original.attrs = vm.produto.atributos;
+                }
 
-        vm.loadMarcas = function() {
-            vm.loading = true;
-
-            Marca.getList().then(function(marcas) {
-                vm.marcas = marcas;
                 vm.loading = false;
             });
         };
@@ -56,13 +54,26 @@
             });
         };
 
+        vm.loadMarcas = function() {
+            vm.loading = true;
+
+            Marca.getList().then(function(marcas) {
+                vm.marcas = marcas;
+                vm.loading = false;
+            });
+        };
+
         vm.loadAtributos = function() {
             vm.loading = true;
 
-            Atributo.fromLinha(vm.produto.linha_id).then(function(atributos) {
-                vm.atributos = atributos;
-                vm.loading = false;
-            });
+            if (vm.produto.linha_id == original.linha_id && original.attrs !== null) {
+                vm.produto.atributos = original.attrs;
+            } else {
+                Atributo.fromLinha(vm.produto.linha_id).then(function(atributos) {
+                    vm.produto.atributos = atributos;
+                    vm.loading = false;
+                });
+            }
         };
 
         if (vm.produto.sku)
@@ -71,8 +82,8 @@
         if (vm.produto.linha_id)
             vm.loadAtributos();
 
-        vm.loadMarcas();
         vm.loadLinhas();
+        vm.loadMarcas();
 
         /*
          * Recarrega as linhas ao alterar
@@ -88,7 +99,6 @@
          * @return {void}
          */
         vm.save = function() {
-            console.log(vm.produto.atributos);
             Produto.save(vm.produto, vm.produto.sku || null).then(function() {
                 toaster.pop('success', 'Sucesso!', 'Produto salvo com sucesso!');
             });

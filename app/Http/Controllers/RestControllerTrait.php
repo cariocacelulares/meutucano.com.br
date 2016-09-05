@@ -66,7 +66,7 @@ trait RestControllerTrait
     public function show($id)
     {
         $m = self::MODEL;
-        if($data = $m::find($id)) {
+        if ($data = $m::find($id)) {
             return $this->showResponse($data);
         }
 

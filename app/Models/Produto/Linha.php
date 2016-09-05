@@ -31,13 +31,6 @@ class Linha extends \Eloquent
     ];
 
     /**
-     * @var array
-     */
-    protected $with = [
-        'atributos'
-    ];
-
-    /**
      * Atributos
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

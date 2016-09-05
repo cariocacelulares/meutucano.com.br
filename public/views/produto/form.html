@@ -115,8 +115,8 @@
                             <td class="form-group">
                                 <input ng-model="atributo.pivot.valor" ng-if="atributo.tipo == 0" type="text" id="attr{{ atributo.id }}" name="attr{{ atributo.id }}">
                                 <select ng-if="atributo.tipo == 1" name="attr{{ atributo.id }}" id="attr{{ atributo.id }}"
-                                    ng-model="atributo.pivot.opcao_id"
-                                    ng-options="opcao.valor for opcao in atributo.opcoes track by opcao.id">
+                                    ng-model="atributo.pivot.opcao_id">
+                                    <option ng-repeat="opcao in atributo.opcoes" value="{{ opcao.id }}">{{ opcao.valor }}</option>
                                 </select>
                             </td>
                         </tr>

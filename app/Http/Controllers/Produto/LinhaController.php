@@ -36,6 +36,22 @@ class LinhaController extends Controller
     }
 
     /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function show($id)
+    {
+        $m = self::MODEL;
+        $data = $m::with('atributos')->find($id);
+
+        if ($data) {
+            return $this->showResponse($data);
+        }
+
+        return $this->notFoundResponse();
+    }
+
+    /**
      * Remove attributes attached to line and his options
      *
      * @param  int $linha_id     id da linha
