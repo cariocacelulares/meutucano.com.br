@@ -37,14 +37,43 @@ class ProdutoController extends Controller
     }
 
     /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function gerenateSku($oldSku)
+    {
+        $m = self::MODEL;
+
+        if (!$data = $m::find($oldSku)) {
+            return $this->notFoundResponse();
+        }
+
+        try {
+            $last = Produto::orderBy('sku', 'DESC')->take(1)->first();
+
+            if ($last && $last->sku) {
+                $last = (int)$last->sku;
+                $last++;
+            } else {
+                throw new \Exception('Não foi possível encontrar o último SKU válido!', 1);
+            }
+
+            $data->sku = $last;
+            $data->save();
+
+            return $this->showResponse($data);
+        } catch(\Exception $ex) {
+            $data = ['exception' => $ex->getMessage()];
+            return $this->clientErrorResponse($data);
+        }
+    }
+
+    /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function store()
     {
-        echo 'save';
-        throw new \Exception("Error Processing Request", 1);
-
         $m = self::MODEL;
         try {
             $v = \Validator::make(Input::all(), $this->validationRules);

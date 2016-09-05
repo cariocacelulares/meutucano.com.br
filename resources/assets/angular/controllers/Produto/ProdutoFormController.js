@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('ProdutoFormController', ProdutoFormController);
 
-    function ProdutoFormController($stateParams, Produto, toaster, TabsHelper, Linha, Marca, Atributo) {
+    function ProdutoFormController($state, $stateParams, Produto, toaster, TabsHelper, Linha, Marca, Atributo) {
         var vm = this;
         var original = {
             linha_id: null,
@@ -93,6 +93,18 @@
             vm.loadAtributos();
         };
 
+        /*
+         * Retona um novo SKU para o produto
+         */
+        vm.generateSku = function() {
+            Produto.generateSku(vm.produto).then(function(product) {
+                vm.produto.sku = product.sku;
+                $state.go('app.produtos.form', {sku: product.sku}, {notify: false});
+
+                toaster.pop('success', 'Sucesso!', 'Um novo SKU foi gerado para este produto!');
+            });
+        };
+
         /**
          * Salva o produto
          *
@@ -101,6 +113,7 @@
         vm.save = function() {
             Produto.save(vm.produto, vm.produto.sku || null).then(function() {
                 toaster.pop('success', 'Sucesso!', 'Produto salvo com sucesso!');
+                $state.go('app.produtos.index');
             });
         };
 
@@ -112,6 +125,7 @@
         vm.destroy = function() {
             Produto.delete(vm.produto.sku).then(function() {
                 toaster.pop('success', 'Sucesso!', 'Produto excluido com sucesso!');
+                $state.go('app.produtos.index');
             });
         };
     }
