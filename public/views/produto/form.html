@@ -7,7 +7,7 @@
     </div>
 </div>
 
-<form ng-submit="ProdutoForm.save()" novalidate="novalidate" class="form-default">
+<form ng-submit="ProdutoForm.save()" novalidate="novalidate" class="form-default" id="formProduto">
     <tabs>
         <tab name="infosProduto" title="Informações do produto">
             <div class="row form-group">
@@ -22,7 +22,7 @@
                     <div class="input-group">
                         <input type="text" ng-model="ProdutoForm.produto.sku" id="sku" placeholder="SKU do produto" readonly required />
                         <span class="input-group-btn">
-                            <a confirm="ProdutoForm.generateSku()" class="btn btn-complete" title="Gerar novo SKU">
+                            <a ng-click="ProdutoForm.generateSku()" class="btn btn-complete" title="Gerar novo SKU">
                                 <i class="fa-key"></i>
                             </a>
                         </span>
@@ -37,8 +37,8 @@
                     <input type="text" ng-model="ProdutoForm.produto.ncm" id="ncm" placeholder="NCM do produto" required />
                 </div>
                 <div class="col-md-3 form-group">
-                    <label for="cean">CEAN</label>
-                    <input type="text" ng-model="ProdutoForm.produto.cean" id="cean" placeholder="CEAN do produto" required />
+                    <label for="ean">EAN</label>
+                    <input type="text" ng-model="ProdutoForm.produto.ean" id="ean" placeholder="EAN do produto" required />
                 </div>
             </div>
             <div class="row">
@@ -94,19 +94,19 @@
                     </a>
                 </div>
             </div>
-        </tab>
+        </tab> <!-- /infosProduto -->
         <tab name="dadosVenda" title="Dados de venda">
             <div class="row">
                 <div class="pull-right">
                     <a ng-click="ProdutoForm.tabsHelper.set('infosProduto')" class="btn-primary">
                         <i class="fa-arrow-left"></i>&nbsp; Voltar
                     </a>
-                    <a ng-click="ProdutoForm.tabsHelper.set('impostos')" class="btn-primary">
+                    <a ng-click="ProdutoForm.tabsHelper.set('atributos')" class="btn-primary">
                         Avançar &nbsp;<i class="fa-arrow-right"></i>
                     </a>
                 </div>
             </div>
-        </tab>
+        </tab> <!-- /dadosVenda -->
         <tab name="atributos" title="Atributos">
             <div class="row">
                 <table class="table-alt bordered">
@@ -140,7 +140,7 @@
                     </a>
                 </div>
             </div>
-        </tab>
+        </tab> <!-- /atributos -->
         <tab name="impostos" title="Impostos">
             <div class="row">
                 <div class="pull-right">
@@ -152,6 +152,6 @@
                     </button>
                 </div>
             </div>
-        </tab>
+        </tab> <!-- /impostos -->
     </tabs>
 </form>

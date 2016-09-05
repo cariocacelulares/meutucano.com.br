@@ -5,6 +5,7 @@
         float: left;
         padding: 0;
         margin: 0;
+        border-right: 1px solid $color-master-light;
         list-style: none;
         background-color: $color-white;
 
@@ -30,7 +31,8 @@
                 position: relative;
                 display: block;
                 min-width: 70px;
-                padding: 15px 20px;
+                line-height: 1;
+                padding: 12px 20px;
                 margin: 0;
                 text-transform: uppercase;
                 font-family: $font-alt;
@@ -59,7 +61,6 @@
         position: relative;
         min-height: 100px;
         padding: 20px;
-        border-left: 1px solid $color-master-light;
         background-color: $color-white;
         overflow: hidden;
 

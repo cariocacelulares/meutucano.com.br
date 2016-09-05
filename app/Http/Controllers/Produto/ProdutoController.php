@@ -4,6 +4,7 @@ use App\Http\Controllers\RestControllerTrait;
 use App\Http\Controllers\Controller;
 use App\Models\Produto\Produto;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ProdutoController
@@ -40,25 +41,32 @@ class ProdutoController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function gerenateSku($oldSku)
+    public function gerenateSku($oldSku = null)
     {
         $m = self::MODEL;
 
-        if (!$data = $m::find($oldSku)) {
-            return $this->notFoundResponse();
-        }
-
         try {
-            $last = Produto::orderBy('sku', 'DESC')->take(1)->first();
-
-            if ($last && $last->sku) {
-                $last = (int)$last->sku;
-                $last++;
+            if (!$oldSku) {
+                $data = new Produto();
             } else {
-                throw new \Exception('Não foi possível encontrar o último SKU válido!', 1);
+                $data = $m::find($oldSku);
+                if (!$data) {
+                    return $this->notFoundResponse();
+                }
+
+                $last = Produto::orderBy('sku', 'DESC')->take(1)->first();
+
+                if ($last && $last->sku) {
+                    $last = (int)$last->sku;
+                    $last++;
+                } else {
+                    throw new \Exception('Não foi possível encontrar o último SKU válido!', 1);
+                }
+                $data->sku = $last;
+
+                DB::unprepared('ALTER TABLE ' . $data->getTable() . ' AUTO_INCREMENT = ' . ($last + 1) . ';');
             }
 
-            $data->sku = $last;
             $data->save();
 
             return $this->showResponse($data);

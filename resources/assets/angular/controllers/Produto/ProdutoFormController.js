@@ -41,6 +41,9 @@
                     original.attrs = vm.produto.atributos;
                 }
 
+                if (vm.produto.linha_id)
+                    vm.loadAtributos();
+
                 vm.loading = false;
             });
         };
@@ -66,27 +69,35 @@
         vm.loadAtributos = function() {
             vm.loading = true;
 
-            if (vm.produto.linha_id == original.linha_id && original.attrs !== null) {
-                vm.produto.atributos = original.attrs;
-            } else {
-                Atributo.fromLinha(vm.produto.linha_id).then(function(atributos) {
-                    vm.produto.atributos = atributos;
-                    vm.loading = false;
-                });
-            }
+            Atributo.fromLinha(vm.produto.linha_id).then(function(atributos) {
+                vm.loading = false;
+
+                if (vm.produto.linha_id == original.linha_id && original.attrs) {
+                    var mergedAttrs = original.attrs;
+
+                    for (var i in atributos) {
+                        for (var j in original.attrs) {
+                            if (original.attrs[j] && atributos[i]) {
+                                if (original.attrs[j].id === atributos[i].id) {
+                                    atributos[i] = original.attrs[j];
+                                }
+                            }
+                        }
+                    }
+                }
+
+                vm.produto.atributos = atributos;
+            });
         };
 
         if (vm.produto.sku)
             vm.load();
 
-        if (vm.produto.linha_id)
-            vm.loadAtributos();
-
         vm.loadLinhas();
         vm.loadMarcas();
 
         /*
-         * Recarrega as linhas ao alterar
+         * Recarrega os atributos e seta o ncm padrão ao alterar
          */
         vm.linhaChange = function() {
             vm.produto.linha_id = vm.produto.linha.id;
@@ -98,11 +109,12 @@
                     SweetAlert.swal({
                         type: 'info',
                         title: '',
-                        text: 'O código NCM padrão desta linha é: ' + linha.ncm_padrao,
+                        html: true,
+                        text: 'O código NCM padrão desta linha é: <b>' + linha.ncm_padrao + '</b><br/>Deseja utilizá-lo?',
                         showCancelButton: true,
-                        cancelButtonText: 'Continuar',
-                        confirmButtonColor: '#8A7DBE',
-                        confirmButtonText: 'Utilizar NCM padrão'
+                        cancelButtonText: 'Não',
+                        confirmButtonColor: '#40D9CA',
+                        confirmButtonText: 'Sim'
                     }, function(isConfirm) {
                         if (isConfirm) {
                             vm.produto.ncm = linha.ncm_padrao;
@@ -115,15 +127,51 @@
         };
 
         /*
+         * Recarrega os atributos e seta o ncm padrão ao alterar
+         */
+        vm.marcaChange = function() {
+            vm.produto.marca_id = vm.produto.marca.id;
+        };
+
+        /*
          * Retona um novo SKU para o produto
          */
         vm.generateSku = function() {
-            Produto.generateSku(vm.produto).then(function(product) {
-                vm.produto.sku = product.sku;
-                $state.go('app.produtos.form', {sku: product.sku}, {notify: false});
+            function generate() {
+                Produto.generateSku(vm.produto).then(function(product) {
+                    vm.produto.sku = product.sku;
+                    $state.go('app.produtos.form', {sku: product.sku}, {notify: false});
 
-                toaster.pop('success', 'Sucesso!', 'Um novo SKU foi gerado para este produto!');
-            });
+                    toaster.pop('success', 'Sucesso!', 'Um novo SKU foi gerado para este produto!');
+
+                    for (var i in vm.produto.atributos) {
+                        if (vm.produto.atributos[i] && typeof vm.produto.atributos[i] == 'object' && vm.produto.atributos[i].id) {
+                            if (!vm.produto.atributos[i].pivot)
+                                vm.produto.atributos[i].pivot = {};
+
+                            vm.produto.atributos[i].pivot.produto_id = product.sku;
+                        }
+                    }
+                });
+            }
+
+            if (!vm.produto.sku) {
+                generate();
+            } else {
+                SweetAlert.swal({
+                    title: "Tem certeza?",
+                    text: "Esta ação não poderá ser desfeita!",
+                    type: "warning",
+                    showCancelButton: true,
+                    cancelButtonText: "Não",
+                    confirmButtonColor: "#F55752",
+                    confirmButtonText: "Sim!"
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        generate();
+                    }
+                });
+            }
         };
 
         /**

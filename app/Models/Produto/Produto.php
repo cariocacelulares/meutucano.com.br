@@ -22,11 +22,6 @@ class Produto extends Model
     protected $primaryKey = 'sku';
 
     /**
-     * @var bool
-     */
-    public $incrementing = false;
-
-    /**
      * @var array
      */
     protected $fillable = [
@@ -46,6 +41,7 @@ class Produto extends Model
      */
     protected $casts = [
         'ativo' => 'string',
+        'controle_serial' => 'boolean',
     ];
 
     /**

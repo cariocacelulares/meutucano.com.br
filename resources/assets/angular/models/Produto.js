@@ -19,7 +19,7 @@
                 generateSku: function(params) {
                     params = this.parseParams(params);
 
-                    return Restangular.one(rest.baseUrl + '/generatesku').customGET(params.sku || {});
+                    return Restangular.one(rest.baseUrl + '/generatesku').customGET(params.sku || null);
                 }
             });
 

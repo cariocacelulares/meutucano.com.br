@@ -152,7 +152,7 @@ Route::group(['prefix' => '/api'], function() {
         /**
          * Produtos
          */
-        Route::get('produtos/generatesku/{old_sku}', 'Produto\ProdutoController@gerenateSku');
+        Route::get('produtos/generatesku/{old_sku?}', 'Produto\ProdutoController@gerenateSku');
         Route::get('produtos/list', 'Produto\ProdutoController@tableList');
         Route::resource('produtos', 'Produto\ProdutoController');
 
