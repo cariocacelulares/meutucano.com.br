@@ -9,6 +9,12 @@
             vm.tab = null;
 
             return {
+                clear: function() {
+                    vm.tabs = [];
+                    vm.tab = null;
+
+                    return true;
+                },
                 get: function() {
                     return vm.tabs;
                 },
@@ -26,7 +32,17 @@
                     return vm.tab.name === tab.name || vm.tab.name === tab;
                 },
                 register: function(tab) {
-                    vm.tabs.push(tab);
+                    var match = false;
+                    var tabs = this.get();
+                    for (var i in tabs) {
+                        if (tabs[i].name === tab || tabs[i].name === tab.name) {
+                            match = true;
+                            break;
+                        }
+                    }
+
+                    if (!match)
+                        vm.tabs.push(tab);
 
                     if (!vm.tab)
                         vm.tab = tab;
@@ -42,6 +58,8 @@
                 restrict: 'E',
                 templateUrl: 'views/components/tabs.html',
                 controller: function() {
+                    TabsHelper.clear();
+
                     this.get = function() {
                         return TabsHelper.get();
                     };
