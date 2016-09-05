@@ -18,9 +18,13 @@
         <div class="row m-t-0">
             <div class="col-md-12">
                 <div class="row form-group m-b-0">
-                    <div class="col-md-12">
+                    <div class="col-md-9">
                         <label for="titulo">Título</label>
                         <input type="text" ng-model="LinhaForm.linha.titulo" id="titulo" placeholder="Título da linha" required />
+                    </div>
+                    <div class="col-md-3">
+                        <label for="ncm_padrao">NCM Padrão</label>
+                        <input type="text" ng-model="LinhaForm.linha.ncm_padrao" id="ncm_padrao" placeholder="Código NCM padrão" required />
                     </div>
                 </div>
             </div>

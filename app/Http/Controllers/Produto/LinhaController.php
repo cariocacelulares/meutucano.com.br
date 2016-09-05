@@ -202,7 +202,7 @@ class LinhaController extends Controller
                 throw new \Exception("ValidationException");
             }
 
-            $data->fill(Input::except(['atributos']));
+            $data->fill(Input::except(['atributos', 'removidos']));
             $data->save();
             $this->removeAttributes($data->id, Input::get('removidos'));
             $this->attachAttributes($data, Input::get('atributos'));
@@ -228,7 +228,7 @@ class LinhaController extends Controller
                 throw new \Exception("ValidationException");
             }
 
-            $data = $m::create(Input::all());
+            $data = $m::create(Input::except(['atributos', 'removidos']));
             $this->removeAttributes($data->id, Input::get('removidos'));
             $this->attachAttributes($data, Input::get('atributos'));
 

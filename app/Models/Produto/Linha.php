@@ -20,7 +20,8 @@ class Linha extends \Eloquent
      * @var array
      */
     protected $fillable = [
-        'titulo'
+        'titulo',
+        'ncm_padrao',
     ];
 
     /**

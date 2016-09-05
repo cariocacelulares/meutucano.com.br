@@ -90,6 +90,24 @@
          */
         vm.linhaChange = function() {
             vm.produto.linha_id = vm.produto.linha.id;
+
+            if (vm.produto.linha.ncm_padrao) {
+                swal({
+                    type: 'info',
+                    title: '',
+                    text: 'O código NCM padrão desta linha é: ' + vm.produto.linha.ncm_padrao,
+                    timer: 2000,
+                    showCancelButton: true,
+                    cancelButtonText: 'Continuar',
+                    confirmButtonColor: '#8A7DBE',
+                    confirmButtonText: 'Utilizar NCM padrão'
+                }, function(confirmed) {
+                    if (confirmed) {
+                        vm.produto.ncm = vm.produto.linha.ncm_padrao;
+                    }
+                });
+            }
+
             vm.loadAtributos();
         };
 
