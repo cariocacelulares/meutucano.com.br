@@ -59,6 +59,7 @@
 
     <script src="bower_components/ngstorage/ngStorage.min.js"></script>
     <script src="bower_components/ng-tags-input/ng-tags-input.min.js"></script>
+    <script src="bower_components/ngSweetAlert/SweetAlert.min.js"></script>
     <script src="bower_components/sweetalert/dist/sweetalert.min.js"></script>
 
     <!-- Application Scripts -->

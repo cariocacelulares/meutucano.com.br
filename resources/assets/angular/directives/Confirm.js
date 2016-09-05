@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .directive('confirm', confirm);
 
-    function confirm($rootScope) {
+    function confirm($rootScope, SweetAlert) {
         return {
             restrict: 'A',
             scope: {
@@ -13,7 +13,7 @@
             },
             link: function(scope, element, attrs, controllers) {
                 element.on('click', function() {
-                    swal({
+                    SweetAlert.swal({
                         title: "Tem certeza?",
                         text: "Esta ação não poderá ser desfeita!",
                         type: "warning",
@@ -21,8 +21,10 @@
                         cancelButtonText: "Não",
                         confirmButtonColor: "#F55752",
                         confirmButtonText: "Sim!"
-                    }, function() {
-                        scope.confirm();
+                    }, function(isConfirm) {
+                        if (isConfirm) {
+                            scope.confirm();
+                        }
                     });
                 });
             }

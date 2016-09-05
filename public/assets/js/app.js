@@ -19,6 +19,7 @@
             'ui.utils.masks',
             'angular-clipboard',
             'ngStorage',
-            'ngTagsInput'
+            'ngTagsInput',
+            'oitozero.ngSweetAlert'
         ]);
 })();
