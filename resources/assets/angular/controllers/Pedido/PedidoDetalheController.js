@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('PedidoDetalheController', PedidoDetalheController);
 
-    function PedidoDetalheController($rootScope, $state, $stateParams, Restangular, Pedido, toaster, RastreioHelper, NotaHelper) {
+    function PedidoDetalheController($rootScope, $state, $stateParams, Restangular, Pedido, toaster, RastreioHelper, NotaHelper, ClienteEnderecoHelper) {
         var vm = this;
 
         vm.pedido_id  = $stateParams.id;
@@ -17,6 +17,11 @@
          * @type {Object}
          */
         vm.rastreioHelper = RastreioHelper.init(vm);
+
+        /**
+         * @type {Object}
+         */
+        vm.clienteEnderecoHelper = ClienteEnderecoHelper.init(vm);
 
         vm.load = function() {
             vm.pedido  = {};
@@ -71,13 +76,13 @@
          */
         vm.parseStatusClass = function() {
             switch (vm.pedido.status) {
-                case 1:
-                case 2:
+                case '1':
+                case '2':
                     return 'info';
-                case 3:
+                case '3':
                     return 'success';
-                case 4:
-                case 5:
+                case '4':
+                case '5':
                     return 'danger';
             }
         };
@@ -89,17 +94,17 @@
          */
         vm.parseRastreioStatusClass = function(rastreio) {
             switch (rastreio.status) {
-                case 1:
-                case 7:
-                case 8:
+                case '1':
+                case '7':
+                case '8':
                     return 'info';
-                case 2:
+                case '2':
                     return 'warning';
-                case 4:
+                case '4':
                     return 'success';
-                case 3:
-                case 5:
-                case 6:
+                case '3':
+                case '5':
+                case '6':
                     return 'danger';
             }
         };

@@ -7,7 +7,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-6">
         <!-- Informações do Pedido -->
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -43,10 +43,8 @@
             </div>
         </div>
         <!-- Fim Informações do Pedido -->
-    </div>
-    <div class="col-md-4">
         <!-- Informações do Cliente -->
-        <div class="panel panel-primary">
+        <div class="panel m-t-20 panel-primary">
             <div class="panel-heading">
                 <div class="panel-title"><i class="fa fa-user"></i>&nbsp; Informações do Cliente</div>
             </div>
@@ -66,7 +64,7 @@
                     </div>
                     <div class="row">
                         <p style="line-height: 25px;">
-                            <a ng-click="" class="pull-right"><i class="fa fa-edit"></i> Editar</a>
+                            <a ng-click="PedidoDetalhe.clienteEnderecoHelper.editar(PedidoDetalhe.pedido.cliente.id, true)" class="pull-right"><i class="fa fa-edit"></i> Editar</a>
                             {{ PedidoDetalhe.pedido.cliente.last_endereco.rua }} #{{ PedidoDetalhe.pedido.cliente.last_endereco.numero }} -
                             {{ PedidoDetalhe.pedido.cliente.last_endereco.bairro }} <br>
                             {{ PedidoDetalhe.pedido.cliente.last_endereco.cidade }}/{{ PedidoDetalhe.pedido.cliente.last_endereco.uf }} <br>
@@ -79,102 +77,108 @@
         </div>
         <!-- Fim Cliente -->
     </div>
-    <div class="col-md-3">
-        <!-- Informações da Nota -->
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="panel-title"><i class="fa fa-barcode"></i>&nbsp; Nota fiscal</div>
-                <div class="panel-controls" ng-if="PedidoDetalhe.pedido.nota">
-                    <dropdown>
-                        <li>
-                            <a ng-click="PedidoDetalhe.notaHelper.printXML(PedidoDetalhe.pedido.id)">
-                                <i class="fa-file-code-o"></i>&nbsp; XML
-                            </a>
-                        </li>
-                        <li>
-                            <a ng-click="PedidoDetalhe.notaHelper.printDanfe(PedidoDetalhe.pedido.id)">
-                                <i class="fa-print"></i>&nbsp; DANFE
-                            </a>
-                        </li>
-                    </dropdown>
-                </div>
-            </div>
-            <div class="panel-body">
-                <div class="col-md-12 no-results" ng-if="!PedidoDetalhe.pedido.nota">
-                    A nota ainda não foi registrada.
-                </div>
-                <div class="col-md-12" ng-if="PedidoDetalhe.pedido.nota">
-                    <div class="row">
-                        <p class="pull-left">Emissão</p>
-                        <p class="pull-right bold">{{ PedidoDetalhe.pedido.nota.data_readable }}</p>
-                    </div>
-                    <div class="row">
-                        <p class="pull-left">Número / Série</p>
-                        <p class="pull-right bold">
-                            {{ PedidoDetalhe.pedido.nota.numero }}/{{ PedidoDetalhe.pedido.nota.serie }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Fim Informações da Nota -->
-        <hr>
-        <!-- Informações de Rastreio -->
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="panel-title"><i class="fa fa-truck"></i>&nbsp; Frete</div>
-            </div>
-            <div class="panel-body">
-                <div class="col-md-12 no-results" ng-if="!PedidoDetalhe.pedido.rastreios.length">
-                    Nenhum rastreio foi registrado até agora.
-                </div>
-                <div class="col-md-12" ng-if="PedidoDetalhe.pedido.rastreios" ng-repeat="rastreio in PedidoDetalhe.pedido.rastreios">
-                    <div class="row">
-                        <p class="pull-left">
-                            <a target="_blank" ng-href="{{ rastreio.rastreio_url }}">{{ rastreio.rastreio }}</a><br>
-                            <span class="label label-{{ PedidoDetalhe.parseRastreioStatusClass(rastreio) }}">{{ rastreio.status_description }}</span>
-                        </p>
-                        <div class="pull-right">
-                            <dropdown class="dropdown-xs">
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Informações da Nota -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title"><i class="fa fa-barcode"></i>&nbsp; Nota fiscal</div>
+                        <div class="panel-controls" ng-if="PedidoDetalhe.pedido.nota">
+                            <dropdown>
                                 <li>
-                                    <a ng-click="PedidoDetalhe.rastreioHelper.editar(rastreio.id, true)">
-                                        <i class="fa fa-edit"></i>&nbsp; Editar
+                                    <a ng-click="PedidoDetalhe.notaHelper.printXML(PedidoDetalhe.pedido.id)">
+                                        <i class="fa-file-code-o"></i>&nbsp; XML
                                     </a>
                                 </li>
                                 <li>
-                                    <a ng-click="PedidoDetalhe.notaHelper.printEtiqueta(rastreio.id)">
-                                        <i class="fa fa-tag"></i>&nbsp; Etiqueta
-                                    </a>
-                                </li>
-                                <li>
-                                    <a ng-click="PedidoDetalhe.rastreioHelper.logistica(rastreio.id)">
-                                        <i class="fa fa-exchange"></i>&nbsp; Logística
-                                    </a>
-                                </li>
-                                <li>
-                                    <a ng-click="PedidoDetalhe.rastreioHelper.devolucao(rastreio.id)">
-                                        <i class="fa fa-undo"></i>&nbsp; Devolução
-                                    </a>
-                                </li>
-                                <li>
-                                    <a ng-click="PedidoDetalhe.rastreioHelper.pi(rastreio.id)">
-                                        <i class="fa fa-warning"></i>&nbsp; PI
+                                    <a ng-click="PedidoDetalhe.notaHelper.printDanfe(PedidoDetalhe.pedido.id)">
+                                        <i class="fa-print"></i>&nbsp; DANFE
                                     </a>
                                 </li>
                             </dropdown>
                         </div>
                     </div>
-                    <hr ng-hide="$last" />
+                    <div class="panel-body">
+                        <div class="col-md-12 no-results" ng-if="!PedidoDetalhe.pedido.nota">
+                            A nota ainda não foi registrada.
+                        </div>
+                        <div class="col-md-12" ng-if="PedidoDetalhe.pedido.nota">
+                            <div class="row">
+                                <p class="pull-left">Emissão</p>
+                                <p class="pull-right bold">{{ PedidoDetalhe.pedido.nota.data_readable }}</p>
+                            </div>
+                            <div class="row">
+                                <p class="pull-left">Número / Série</p>
+                                <p class="pull-right bold">
+                                    {{ PedidoDetalhe.pedido.nota.numero }}/{{ PedidoDetalhe.pedido.nota.serie }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <!-- Fim Informações da Nota -->
+            </div>
+            <div class="col-md-6">
+                <!-- Informações de Rastreio -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title"><i class="fa fa-truck"></i>&nbsp; Frete</div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12 no-results" ng-if="!PedidoDetalhe.pedido.rastreios.length">
+                            Nenhum rastreio foi registrado até agora.
+                        </div>
+                        <div class="col-md-12" ng-if="PedidoDetalhe.pedido.rastreios" ng-repeat="rastreio in PedidoDetalhe.pedido.rastreios">
+                            <div class="row">
+                                <p class="pull-left">
+                                    <a target="_blank" ng-href="{{ rastreio.rastreio_url }}">{{ rastreio.rastreio }}</a><br>
+                                    <span class="label label-{{ PedidoDetalhe.parseRastreioStatusClass(rastreio) }}">{{ rastreio.status_description }}</span>
+                                </p>
+                                <div class="pull-right">
+                                    <dropdown class="dropdown-xs">
+                                        <li>
+                                            <a ng-click="PedidoDetalhe.rastreioHelper.editar(rastreio.id, true)">
+                                                <i class="fa fa-edit"></i>&nbsp; Editar
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a ng-click="PedidoDetalhe.notaHelper.printEtiqueta(rastreio.id)">
+                                                <i class="fa fa-tag"></i>&nbsp; Etiqueta
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a ng-click="PedidoDetalhe.rastreioHelper.logistica(rastreio.id)">
+                                                <i class="fa fa-exchange"></i>&nbsp; Logística
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a ng-click="PedidoDetalhe.rastreioHelper.devolucao(rastreio.id)">
+                                                <i class="fa fa-undo"></i>&nbsp; Devolução
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a ng-click="PedidoDetalhe.rastreioHelper.pi(rastreio.id)">
+                                                <i class="fa fa-warning"></i>&nbsp; PI
+                                            </a>
+                                        </li>
+                                    </dropdown>
+                                </div>
+                            </div>
+                            <hr ng-hide="$last" />
+                        </div>
+                    </div>
+                </div>
+                <!-- Fim Informações de Rastreio -->
             </div>
         </div>
-        <!-- Fim Informações de Rastreio -->
+        <div class="row m-t-20">
+            <div class="col-md-12" static-include="views/pedido/comentarios.html"></div>
+        </div>
     </div>
 </div>
-<hr/>
-<div class="row">
-    <div class="col-md-5" static-include="views/pedido/comentarios.html"></div>
-    <div class="col-md-7">
+<div class="row m-t-20">
+    <div class="col-md-12">
         <!-- Informações dos Produtos -->
         <table class="table-products">
             <thead>

@@ -1,29 +1,25 @@
 <!-- Comentários do Pedido -->
-<div class="panel panel-info" ng-controller="PedidoComentarioController as PedidoComentario">
+<div class="panel panel-default" ng-controller="PedidoComentarioController as PedidoComentario">
     <div class="panel-heading">
         <div class="panel-title"><i class="fa fa-comments"></i>&nbsp; Comentários do Pedido</div>
     </div>
     <div class="panel-body">
-        <form novalidate="novalidate" name="PedidoComentario.formComentario">
+        <form ng-submit="PedidoComentario.save()" novalidate="novalidate" name="PedidoComentario.formComentario">
             <div class="form-group">
-                <label for="comentario">Adicionar comentário</label>
-                <div class="input-group">
-                    <textarea ng-model="PedidoComentario.comentario" class="form-control form-control" id="comentario"  rows="3" placeholder="Deixe seu comentário" required></textarea>
-                    <a ng-click="PedidoComentario.save()" busy="Salvando..." class="input-group-addon btn-primary">Salvar</a>
-                </div>
+                <textarea ng-model="PedidoComentario.comentario" class="form-control form-control" placeholder="Deixe seu comentário" required></textarea>
+                <button busy="Salvando..." class="pull-right m-t-10 btn-primary">Salvar</button>
+                <div class="clear"></div>
             </div>
         </form>
 
-        <hr/>
         <div class="m-b-10" ng-repeat="comentario in PedidoComentario.comentarios">
+            <hr>
             <a confirm="PedidoComentario.destroy(comentario.id)" class="btn-danger btn-xs pull-right">
                 <i class="fa fa-trash"></i>&nbsp; Excluir
             </a>
             <strong>{{ comentario.usuario.name }}</strong>
             <small class="hint-text">({{ comentario.created_at_diff_readable }})</small>
             <p class="m-t-5">{{ comentario.comentario }}</p>
-
-            <hr ng-hide="$last" />
         </div>
     </div>
 </div>
