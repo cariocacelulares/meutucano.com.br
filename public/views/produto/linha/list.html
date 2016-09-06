@@ -16,7 +16,7 @@
     <tbody ng-if="LinhaList.tableData.data && !LinhaList.loading">
         <tr ng-repeat="linha in LinhaList.tableData.data">
             <td><strong>{{ linha.titulo }}</strong></td>
-            <td class="text-center">{{ linha.created_at_readable }}</td>
+            <td class="text-center">{{ linha.created_at }}</td>
             <td class="text-center">
                 <a class="btn-info" ui-sref="app.produtos.linhas.form({id: linha.id})">
                     <i class="fa-pencil"></i>

@@ -1,8 +1,8 @@
 <?php namespace App\Http\Controllers\Usuario;
 
-use App\Http\Controllers\RestControllerTrait;
+use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
-use App\Models\Usuario;
+use App\Models\Usuario\Usuario;
 use Illuminate\Support\Facades\Input;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,8 +20,8 @@ class UsuarioController extends Controller
 
     /**
      * Lista pedidos para a tabela
-     * 
-     * @return \Symfony\Component\HttpFoundation\Response 
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function tableList()
     {
@@ -83,7 +83,7 @@ class UsuarioController extends Controller
         try {
             $v = \Validator::make(Input::all(), $this->validationRules);
 
-            if($v->fails())
+            if ($v->fails())
                 throw new \Exception("ValidationException");
 
             $data = new $m;
@@ -103,8 +103,7 @@ class UsuarioController extends Controller
             $data->save();
 
             return $this->createdResponse($data);
-        }catch(\Exception $ex)
-        {
+        } catch(\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }

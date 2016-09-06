@@ -1,6 +1,6 @@
 <?php namespace App\Http\Controllers\Codigo;
 
-use App\Http\Controllers\RestResponseTrait;
+use App\Http\Controllers\Rest\RestResponseTrait;
 use App\Http\Controllers\Controller;
 use App\Models\FaturamentoCodigo;
 use Illuminate\Support\Facades\Input;

@@ -14,7 +14,7 @@
          * Save the observation
          */
         vm.save = function() {
-            Devolucao.save(vm.devolucao, vm.devolucao.id || null).then(function() {
+            Devolucao.save(vm.devolucao, vm.devolucao.rastreio_id || null).then(function() {
                 toaster.pop('success', 'Sucesso!', 'Devolução criada com sucesso!');
                 $scope.closeThisDialog(true);
             });

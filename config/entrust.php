@@ -2,7 +2,7 @@
 
 return [
 
-    'role' => \App\Models\Role::class,
+    'role' => \App\Models\Usuario\Role::class,
     'roles_table' => 'roles',
     'role_user_table' => 'role_user',
 

@@ -1,6 +1,6 @@
 <?php namespace App\Http\Controllers\Produto;
 
-use App\Http\Controllers\RestControllerTrait;
+use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
 use App\Models\Produto\Produto;
 use Illuminate\Support\Facades\Input;

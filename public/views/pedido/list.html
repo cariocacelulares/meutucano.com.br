@@ -27,7 +27,7 @@
                 </small>
             </td>
             <td class="text-center">{{ pedido.total | currency }}</td>
-            <td class="text-center">{{ pedido.created_at_readable }}</td>
+            <td class="text-center">{{ pedido.created_at }}</td>
             <td class="text-center bold">
                 <span class="label label-{{ PedidoList.parseStatusClass(pedido) }} m-b-0">
                     {{ pedido.status_description }}

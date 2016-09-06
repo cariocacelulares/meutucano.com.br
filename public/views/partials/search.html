@@ -23,7 +23,7 @@
                                     <div class="col-md-9">
                                         <span class="small hint-text b-r b-grey p-r-10 m-r-5" ng-bind="pedido.marketplace"></span>
                                         <span class="small hint-text b-r b-grey p-r-10 m-r-5" ng-bind-html="pedido.nota.numero | highlight:Search.search"></span>
-                                        <span class="small hint-text" ng-bind="pedido.created_at_readable"></span><br>
+                                        <span class="small hint-text" ng-bind="pedido.created_at"></span><br>
                                         <span class="small m-t-10 hint-text inline-block"><span ng-bind-html="(pedido.codigo_marketplace || 'Sem código') | highlight:Search.search"></span></span>
                                         <span class="fs-12 bold ellipsis" ng-bind-html="pedido.cliente.nome | highlight:Search.search"></span>
                                     </div>
@@ -70,7 +70,7 @@
                                             </div>
                                             <div class="small hint-text p-r-10 m-r-5 m-t-10" ng-if="rastreio.pi">
                                                 <span ng-bind="rastreio.pi.status_description"></span><br>
-                                                PI <strong ng-bind="rastreio.pi.codigo_pi"></strong> aberta em <strong ng-bind="rastreio.pi.created_at_readable"></strong>
+                                                PI <strong ng-bind="rastreio.pi.codigo_pi"></strong> aberta em <strong ng-bind="rastreio.pi.created_at"></strong>
                                             </div>
                                         </div>
                                         <div class="col-md-3">

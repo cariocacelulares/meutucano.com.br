@@ -25,7 +25,7 @@
                 devolucao: function(id, updateVm) {
                     Devolucao.get(id).then(function(devolucao) {
                         ngDialog.open({
-                            template: 'views/devolucao/form.html',
+                            template: 'views/rastreio/devolucao/form.html',
                             controller: 'DevolucaoFormController',
                             controllerAs: 'DevolucaoForm',
                             data: {
@@ -49,7 +49,7 @@
                 pi: function(id, updateVm) {
                     Pi.get(id).then(function(pi) {
                         ngDialog.open({
-                            template: 'views/pi/form.html',
+                            template: 'views/rastreio/pi/form.html',
                             className: 'ngdialog-theme-default ngdialog-big',
                             controller: 'PiFormController',
                             controllerAs: 'PiForm',
@@ -74,7 +74,7 @@
                 logistica: function(id, updateVm) {
                     Logistica.get(id).then(function(logistica) {
                         ngDialog.open({
-                            template: 'views/logistica/form.html',
+                            template: 'views/rastreio/logistica/form.html',
                             className: 'ngdialog-theme-default ngdialog-big',
                             controller: 'LogisticaFormController',
                             controllerAs: 'Logistica',
@@ -123,7 +123,7 @@
                  */
                 printEtiqueta: function(rastreio_id) {
                     var auth = {
-                        token: localStorage.getItem("satellizer_token")
+                        token: localStorage.getItem('satellizer_token')
                     };
 
                     $window.open(envService.read('apiUrl') + '/rastreios/etiqueta/' + rastreio_id + '?' + $httpParamSerializer(auth), 'etiqueta');
@@ -136,7 +136,7 @@
                  */
                 printHistorico: function(rastreio_id) {
                     var auth = {
-                        token: localStorage.getItem("satellizer_token")
+                        token: localStorage.getItem('satellizer_token')
                     };
 
                     $window.open(envService.read('apiUrl') + '/rastreios/historico/' + rastreio_id + '?' + $httpParamSerializer(auth), 'historico');

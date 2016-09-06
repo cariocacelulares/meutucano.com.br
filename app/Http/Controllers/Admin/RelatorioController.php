@@ -1,9 +1,9 @@
 <?php namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\RestControllerTrait;
+use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Requests;
-use App\Models\PedidoNota;
+use App\Models\Pedido\Nota;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use NFePHP\Extras\Danfe;
@@ -24,7 +24,7 @@ class RelatorioController extends Controller
      */
     public function icms()
     {
-        $notas = PedidoNota::with(['pedido', 'pedido.imposto', 'pedido.endereco'])
+        $notas = Nota::with(['pedido', 'pedido.imposto', 'pedido.endereco'])
             ->where(DB::raw('MONTH(pedido_notas.data)'), '=', '2')
             ->where(DB::raw('YEAR(pedido_notas.data)'), '=', date('Y'))
             ->get();

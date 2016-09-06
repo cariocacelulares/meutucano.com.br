@@ -6,7 +6,7 @@
         <!-- Informações Pessoais -->
         <div class="panel-primary">
             <div class="panel-heading">
-                <div class="panel-title"><i class="fa fa-user"></i>&nbsp; Informações Pessoais</div>
+                <div class="panel-title"><i class="fa-user"></i>&nbsp; Informações Pessoais</div>
             </div>
             <div class="panel-body">
                 <div class="col-md-12">
@@ -32,7 +32,7 @@
                     </div>
                     <div class="row">
                         <p class="pull-left">Cadastro</p>
-                        <p class="pull-right bold">{{ ClienteDetalhe.cliente.created_at_readable }}</p>
+                        <p class="pull-right bold">{{ ClienteDetalhe.cliente.created_at }}</p>
                     </div>
                 </div>
             </div>
@@ -43,30 +43,29 @@
         <!-- Endereços -->
         <div class="panel-primary">
             <div class="panel-heading">
-                <div class="panel-title"><i class="fa fa-map"></i>&nbsp; Endereço</div>
-                <div class="panel-controls">
-                    <button ng-click="ClienteDetalhe.clienteEnderecoHelper.editar(ClienteDetalhe.cliente.id, true)" class="btn-default">
-                        <i class="fa-pencil"></i>&nbsp; Editar
-                    </button>
+                <div class="panel-title"><i class="fa-map"></i>&nbsp; Endereço</div>
+                <div ng-if="ClienteDetalhe.cliente.enderecos.length === 1" class="panel-controls">
+                    <a ng-click="PedidoDetalhe.clienteEnderecoHelper.editar(ClienteDetalhe.cliente.enderecos[0].id, true)" class="btn-default">
+                        <i class="fa-edit"></i>&nbsp; Editar
+                    </a>
                 </div>
             </div>
             <div class="panel-body">
                 <div class="col-md-12" ng-repeat="endereco in ClienteDetalhe.cliente.enderecos">
                     <div class="row">
-                        <p class="pull-left">Endereço</p>
-                        <p class="pull-right bold" ng-bind="endereco.rua + ' - ' + endereco.numero"></p>
+                        <p class="pull-left bold" ng-bind="endereco.rua + ' - ' + endereco.numero"></p>
+                        <a ng-hide="ClienteDetalhe.cliente.enderecos.length === 1" ng-click="ClienteDetalhe.clienteEnderecoHelper.editar(endereco.id, true)" class="pull-right">
+                            <i class="fa-pencil"></i>&nbsp; Editar
+                        </a>
                     </div>
                     <div class="row">
-                        <p class="pull-left">Bairro</p>
-                        <p class="pull-right bold" ng-bind="endereco.bairro + ((endereco.complemento) ? ',' + endereco.complemento : '')"></p>
+                        <p class="bold" ng-bind="endereco.bairro + ((endereco.complemento) ? ',' + endereco.complemento : '')"></p>
                     </div>
                     <div class="row">
-                        <p class="pull-left">Cidade / UF</p>
-                        <p class="pull-right bold" ng-bind="endereco.cidade + ' / ' + endereco.uf"></p>
+                        <p class="bold" ng-bind="endereco.cidade + ' / ' + endereco.uf"></p>
                     </div>
                     <div class="row">
-                        <p class="pull-left">CEP</p>
-                        <p class="pull-right bold" ng-bind="endereco.cep_readable"></p>
+                        <p class="bold" ng-bind="endereco.cep_readable"></p>
                     </div>
                     <hr ng-if="!$last" />
                 </div>
@@ -100,7 +99,7 @@
                     <td>{{ pedido.codigo_marketplace || 'Sem código' }}</td>
                     <td>{{ pedido.marketplace_readable || 'Site' }}</td>
                     <td><span class="label label-{{ ClienteDetalhe.parseStatusClass(pedido) }}">{{ pedido.status_description }}</span></td>
-                    <td>{{ pedido.created_at_readable }}</td>
+                    <td>{{ pedido.created_at }}</td>
                     <td>{{ pedido.total | currency }}</td>
                     <td>
                         <a class="btn-info" ui-sref="app.pedidos.detalhe({id: pedido.id})">

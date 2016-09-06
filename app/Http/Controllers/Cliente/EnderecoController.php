@@ -1,11 +1,9 @@
 <?php namespace App\Http\Controllers\Cliente;
 
-use Carbon\Carbon;
-use App\Http\Controllers\RestControllerTrait;
-use App\Http\Requests;
+use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
-use App\Models\ClienteEndereco;
-use Illuminate\Support\Facades\Input;
+use App\Models\Cliente\Endereco;
+use App\Models\Cliente\Cliente;
 
 /**
  * Class EnderecoController
@@ -15,7 +13,7 @@ class EnderecoController extends Controller
 {
     use RestControllerTrait;
 
-    const MODEL = ClienteEndereco::class;
+    const MODEL = Endereco::class;
 
     protected $validationRules = [];
 }

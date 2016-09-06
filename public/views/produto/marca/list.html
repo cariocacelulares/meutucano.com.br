@@ -16,7 +16,7 @@
     <tbody ng-if="MarcaList.tableData.data && !MarcaList.loading">
         <tr ng-repeat="marca in MarcaList.tableData.data">
             <td><strong>{{ marca.titulo }}</strong></td>
-            <td class="text-center">{{ marca.created_at_readable }}</td>
+            <td class="text-center">{{ marca.created_at }}</td>
             <td class="text-center">
                 <a class="btn-info" ng-click="MarcaList.openForm(marca)">
                     <i class="fa-pencil"></i>

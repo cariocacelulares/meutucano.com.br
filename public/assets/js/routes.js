@@ -49,13 +49,13 @@
 
                 .state('app.rastreios.pis.pendentes', {
                     url: '/pendentes',
-                    templateUrl: 'views/pi/pendente/list.html',
+                    templateUrl: 'views/rastreio/pi/pendente/list.html',
                     controller: 'PiPendenteListController as PiPendenteList'
                 })
 
                 .state('app.rastreios.devolucoes', {
                     url: '/devolucoes',
-                    templateUrl: 'views/devolucao/pendente/list.html',
+                    templateUrl: 'views/rastreio/devolucao/pendente/list.html',
                     controller: 'DevolucaoPendenteListController as DevolucaoList'
                 })
 
@@ -161,7 +161,7 @@
 
                 .state('app.interno.usuarios.senhas', {
                     url: '/{id}/senhas',
-                    templateUrl: 'views/senha/list.html',
+                    templateUrl: 'views/usuario/senha/list.html',
                     controller: 'SenhaListController as SenhaList'
                 })
 

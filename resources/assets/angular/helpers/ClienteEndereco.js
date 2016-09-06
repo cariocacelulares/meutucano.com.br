@@ -3,7 +3,7 @@
 
     angular
         .module('MeuTucano')
-        .service('ClienteEnderecoHelper', function(ngDialog, ClienteEndereco) {
+        .service('ClienteEnderecoHelper', function(ngDialog, Endereco) {
             var vm;
 
             return {
@@ -23,7 +23,7 @@
                  * @param endereco_id
                  */
                 editar: function(id, updateVm) {
-                    ClienteEndereco.get(id).then(function(endereco) {
+                    Endereco.get(id).then(function(endereco) {
                         ngDialog.open({
                             template: 'views/cliente/endereco/form.html',
                             controller: 'EnderecoFormController',

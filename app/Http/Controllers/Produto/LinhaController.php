@@ -1,10 +1,10 @@
 <?php namespace App\Http\Controllers\Produto;
 
-use App\Http\Controllers\RestControllerTrait;
+use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
 use App\Models\Produto\Linha;
-use App\Models\Produto\Atributo;
-use App\Models\Produto\Opcao;
+use App\Models\Produto\Linha\Atributo;
+use App\Models\Produto\Linha\Atributo\Opcao;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 

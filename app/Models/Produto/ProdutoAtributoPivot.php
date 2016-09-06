@@ -33,11 +33,6 @@ class ProdutoAtributoPivot extends Pivot
     ];
 
     /**
-     * @var array
-     */
-    // protected $with = [];
-
-    /**
      * Atributo
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

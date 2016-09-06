@@ -1,11 +1,9 @@
 <?php namespace App\Http\Controllers\Cliente;
 
-use Carbon\Carbon;
-use App\Http\Controllers\RestControllerTrait;
-use App\Http\Requests;
+use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
-use App\Models\Cliente;
-use App\Models\ClienteEndereco;
+use App\Models\Cliente\Cliente;
+use App\Models\Cliente\Endereco;
 use Illuminate\Support\Facades\Input;
 
 /**
@@ -42,7 +40,7 @@ class ClienteController extends Controller
     public function detail($id)
     {
         $m = self::MODEL;
-        $data = $m::with('pedidos')->find($id);
+        $data = $m::with(['pedidos', 'enderecos'])->find($id);
 
         if ($data) {
             return $this->showResponse($data);
@@ -76,7 +74,7 @@ class ClienteController extends Controller
             $enderecos = Input::get('enderecos');
             if ($enderecos) {
                 foreach ($enderecos as $endereco) {
-                    $obj = ClienteEndereco::find($endereco['id']);
+                    $obj = Endereco::find($endereco['id']);
                     if ($obj) {
                         $obj->fill($endereco);
                         $obj->save();

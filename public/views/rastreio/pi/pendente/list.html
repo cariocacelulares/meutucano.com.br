@@ -1,0 +1,48 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-warning" title="Pi's pendentes" description="Mostra as PI's que foram abertas porém ainda não receberam ação."></page-title>
+</div>
+<table table-list="PiPendenteList">
+    <thead>
+        <tr>
+            <th class="text-center" width="140">Código</th>
+            <th>Cliente</th>
+            <th class="text-center" width="150">Abertura</th>
+            <th class="text-center" width="150">Rastreio</th>
+            <th class="text-center" width="120">PI</th>
+            <th class="text-center" width="150">Motivo</th>
+            <th width="75" style="min-width: 75px;"></th>
+        </tr>
+        <tr class="table-filter" static-include="views/rastreio/pi/pendente/list_filter.html"></tr>
+    </thead>
+    <tbody ng-if="PiPendenteList.tableData && !PiPendenteList.loading">
+        <tr ng-repeat="pi in PiPendenteList.tableData.data">
+            <td class="text-center fs-11">
+                <strong>{{ pi.rastreio.pedido.marketplace }}</strong><br>
+                {{ pi.rastreio.pedido.codigo_marketplace || 'Sem código' }}
+            </td>
+            <td>
+                <strong>{{ pi.rastreio.pedido.cliente.nome | uppercase }}</strong>
+                <br>
+                <small>
+                    {{ pi.rastreio.pedido.cliente.fone }} - CEP: <strong>{{ pi.rastreio.pedido.endereco.cep_readable }}</strong> -
+                    {{ pi.rastreio.pedido.endereco.cidade }} / {{ pi.rastreio.pedido.endereco.uf }}
+                </small>
+            </td>
+            <td class="text-center">{{ pi.created_at }}</td>
+            <td class="text-center">
+                <a title="Rastrear código" target="_blank" ng-href="{{ pi.rastreio.rastreio_url }}">{{ pi.rastreio.rastreio }}</a>
+            </td>
+            <td class="text-center">{{ pi.codigo_pi }}</td>
+            <td class="text-center">
+                <span class="label {{ (pi.motivo_status == 2) ? 'label-warning' : 'label-danger' }} m-b-0">
+                    {{ pi.status_description }}
+                </span>
+            </td>
+            <td class="text-center">
+                <button class="btn-info" ng-click="PiPendenteList.rastreioHelper.pi(pi.rastreio_id, true)">
+                    <i class="fa-pencil"></i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>

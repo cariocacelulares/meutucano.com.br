@@ -35,7 +35,7 @@
 <table class="table m-b-0" cellpadding="0" cellspacing="0" ts-wrapper>
     <thead>
         <tr>
-            <th class="text-center" width="150" ts-criteria="created_at_readable|parseDateTime" ts-default="descending">Importação</th>
+            <th class="text-center" width="150" ts-criteria="created_at|parseDateTime" ts-default="descending">Importação</th>
             <th class="text-center" ts-criteria="numero">Número</th>
             <th ts-criteria="nota">Chave</th>
             <th ts-criteria="cliente">Cliente</th>
@@ -52,7 +52,7 @@
     </tbody>
     <tbody ng-if="Faturamento.notas && !Faturamento.loading">
         <tr ng-repeat="nota in Faturamento.notas" ts-repeat>
-            <td class="text-center" ng-bind="nota.created_at_readable"></td>
+            <td class="text-center" ng-bind="nota.created_at"></td>
             <td class="text-center">
                 <strong class="fs-11" ng-bind="nota.pedido.marketplace"></strong>
                 <br>

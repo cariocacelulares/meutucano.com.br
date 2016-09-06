@@ -1,14 +1,11 @@
 <?php namespace App\Http\Controllers\Meta;
 
-use App\Http\Controllers\RestResponseTrait;
+use App\Http\Controllers\Rest\RestResponseTrait;
 use App\Http\Controllers\Controller;
-use App\Models\MetaMes;
-use App\Models\MetaAno;
-use App\Models\Pedido;
-use App\Models\PedidoNota;
-use App\Models\PedidoProduto;
-use App\Models\Produto\Produto;
-use Illuminate\Support\Facades\Config;
+use App\Models\Meta\MetaMes;
+use App\Models\Meta\MetaAno;
+use App\Models\Pedido\Pedido;
+use App\Models\Pedido\PedidoProduto;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 

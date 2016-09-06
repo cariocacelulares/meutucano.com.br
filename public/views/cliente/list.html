@@ -23,7 +23,7 @@
                     <span ng-if="cliente.last_endereco">- CEP: <strong>{{ cliente.last_endereco.cep_readable }}</strong> - {{ cliente.last_endereco.cidade }} / {{ cliente.last_endereco.uf }}</span>
                 </small>
             </td>
-            <td class="text-center">{{ cliente.created_at_readable }}</td>
+            <td class="text-center">{{ cliente.created_at }}</td>
             <td class="text-center">
                 <a class="btn-info" ui-sref="app.clientes.detalhe({id: cliente.id})">
                     <i class="fa-eye"></i>

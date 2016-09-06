@@ -14,9 +14,9 @@ Route::group(['prefix' => '/api'], function() {
     /**
      * Auth
      */
-    Route::post('authenticate', 'AuthenticateController@authenticate');
-    Route::get('authenticate/user', 'AuthenticateController@getAuthenticatedUser');
-    Route::get('token', 'AuthenticateController@refreshToken');
+    Route::post('authenticate', 'Auth\AuthenticateController@authenticate');
+    Route::get('authenticate/user', 'Auth\AuthenticateController@getAuthenticatedUser');
+    Route::get('token', 'Auth\AuthenticateController@refreshToken');
 
     Route::group(['middleware' => 'jwt.auth'], function() {
         Route::controller('metas', 'Meta\MetaController');
@@ -25,14 +25,14 @@ Route::group(['prefix' => '/api'], function() {
             'middleware' => ['role:admin|gestor|atendimento|faturamento'],
             'uses' => 'UploadController@upload'
         ]);
-        Route::get('search',  'SearchController@search');
-        Route::get('notas/xml/{id}',          'Pedido\PedidoNotaController@xml');
-        Route::get('notas/danfe/{id}',        'Pedido\PedidoNotaController@danfe');
-        Route::post('notas/email/{id}',       'Pedido\PedidoNotaController@email');
+        Route::get('search',  'Partials\SearchController@search');
+        Route::get('notas/xml/{id}',          'Pedido\NotaController@xml');
+        Route::get('notas/danfe/{id}',        'Pedido\NotaController@danfe');
+        Route::post('notas/email/{id}',       'Pedido\NotaController@email');
 
-        Route::get('rastreios/etiqueta/{id}',  'Rastreio\RastreioController@etiqueta');
+        Route::get('rastreios/etiqueta/{id}',  'Pedido\RastreioController@etiqueta');
 
-        Route::get('minhas-senhas',            'Senha\UsuarioSenhaController@currentUserPasswords');
+        Route::get('minhas-senhas',            'Usuario\SenhaController@currentUserPasswords');
 
         /**
          * Template ML
@@ -47,32 +47,32 @@ Route::group(['prefix' => '/api'], function() {
             /**
              * Rastreios
              */
-            Route::put('rastreios/refresh_all',         'Rastreio\RastreioController@refreshAll');
-            Route::put('rastreios/refresh_status/{id}', 'Rastreio\RastreioController@refreshStatus');
-            Route::put('rastreios/edit/{id}',           'Rastreio\RastreioController@edit');
-            Route::get('rastreios/important',           'Rastreio\RastreioController@important');
-            Route::get('rastreios/historico/{id}',      'Rastreio\RastreioController@imagemHistorico');
-            Route::resource('rastreios',                'Rastreio\RastreioController', ['except' => ['create', 'edit']]);
+            Route::put('rastreios/refresh_all',         'Pedido\RastreioController@refreshAll');
+            Route::put('rastreios/refresh_status/{id}', 'Pedido\RastreioController@refreshStatus');
+            Route::put('rastreios/edit/{id}',           'Pedido\RastreioController@edit');
+            Route::get('rastreios/important',           'Pedido\RastreioController@important');
+            Route::get('rastreios/historico/{id}',      'Pedido\RastreioController@imagemHistorico');
+            Route::resource('rastreios',                'Pedido\RastreioController', ['except' => ['create', 'edit']]);
 
             /**
              * PI's
              */
-            Route::put('pis/edit/{id}', 'Pi\PiController@edit');
-            Route::get('pis/pending',   'Pi\PiController@pending');
-            Route::resource('pis',      'Pi\PiController', ['except' => ['create', 'edit']]);
+            Route::put('pis/edit/{id}', 'Pedido\Rastreio\PiController@edit');
+            Route::get('pis/pending',   'Pedido\Rastreio\PiController@pending');
+            Route::resource('pis',      'Pedido\Rastreio\PiController', ['except' => ['create', 'edit']]);
 
             /**
              * Devoluções
              */
-            Route::put('devolucoes/edit/{id}', 'Devolucao\DevolucaoController@edit');
-            Route::get('devolucoes/pending',   'Devolucao\DevolucaoController@pending');
-            Route::resource('devolucoes',      'Devolucao\DevolucaoController', ['except' => ['create', 'edit']]);
+            Route::put('devolucoes/edit/{id}', 'Pedido\Rastreio\DevolucaoController@edit');
+            Route::get('devolucoes/pending',   'Pedido\Rastreio\DevolucaoController@pending');
+            Route::resource('devolucoes',      'Pedido\Rastreio\DevolucaoController', ['except' => ['create', 'edit']]);
 
             /**
              * Logística reversa
              */
-            Route::put('logisticas/edit/{id}', 'Logistica\LogisticaController@edit');
-            Route::resource('logisticas',      'Logistica\LogisticaController', ['except' => ['create', 'edit']]);
+            Route::put('logisticas/edit/{id}', 'Pedido\Rastreio\LogisticaController@edit');
+            Route::resource('logisticas',      'Pedido\Rastreio\LogisticaController', ['except' => ['create', 'edit']]);
         });
 
         /**
@@ -83,8 +83,8 @@ Route::group(['prefix' => '/api'], function() {
             /**
              * Listagem de notas por usuário
              */
-            Route::get('notas/faturamento', 'Pedido\PedidoNotaController@notasFaturamento');
-            Route::get('notas/faturar/{pedido_id}', 'Pedido\PedidoNotaController@faturar');
+            Route::get('notas/faturamento', 'Pedido\NotaController@notasFaturamento');
+            Route::get('notas/faturar/{pedido_id}', 'Pedido\NotaController@faturar');
 
             /**
              * Código de rastreio
@@ -94,7 +94,7 @@ Route::group(['prefix' => '/api'], function() {
             /**
              * Listagem de notas por usuário
              */
-            Route::get('notas/faturamento', 'Pedido\PedidoNotaController@notasFaturamento');
+            Route::get('notas/faturamento', 'Pedido\NotaController@notasFaturamento');
 
             /**
              * Código de rastreio
@@ -116,8 +116,8 @@ Route::group(['prefix' => '/api'], function() {
             /**
              * Senhas
              */
-            Route::get('senhas/usuario/{id}', 'Senha\UsuarioSenhaController@userPassword');
-            Route::resource('senhas', 'Senha\UsuarioSenhaController', ['except' => ['create', 'edit']]);
+            Route::get('senhas/usuario/{id}', 'Usuario\SenhaController@userPassword');
+            Route::resource('senhas', 'Usuario\SenhaController', ['except' => ['create', 'edit']]);
 
             /**
              * Admin
@@ -136,13 +136,13 @@ Route::group(['prefix' => '/api'], function() {
         /**
          * Notas
          */
-        Route::resource('notas', 'Pedido\PedidoNotaController', ['except' => ['create', 'edit']]);
+        Route::resource('notas', 'Pedido\NotaController', ['except' => ['create', 'edit']]);
 
         /**
          * Comentarios
          */
-        Route::get('comentarios/{pedido_id}', 'Pedido\PedidoComentarioController@commentsFromOrder');
-        Route::resource('comentarios', 'Pedido\PedidoComentarioController', ['except' => ['create', 'edit']]);
+        Route::get('comentarios/{pedido_id}', 'Pedido\ComentarioController@commentsFromOrder');
+        Route::resource('comentarios', 'Pedido\ComentarioController', ['except' => ['create', 'edit']]);
 
         /**
          * Clientes
@@ -178,6 +178,6 @@ Route::group(['prefix' => '/api'], function() {
         /**
          * Atributos
          */
-        Route::get('atributos/linha/{linha_id}', 'Produto\AtributoController@fromLinha');
+        Route::get('atributos/linha/{linha_id}', 'Produto\Linha\AtributoController@fromLinha');
     });
 });

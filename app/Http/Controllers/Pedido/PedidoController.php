@@ -1,17 +1,8 @@
 <?php namespace App\Http\Controllers\Pedido;
 
-use Carbon\Carbon;
-use App\Http\Controllers\RestControllerTrait;
-use App\Http\Requests;
+use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
-use App\Models\Cliente;
-use App\Models\ClienteEndereco;
-use App\Models\Pedido;
-use App\Models\PedidoImposto;
-use App\Models\PedidoNota;
-use App\Models\PedidoProduto;
-use App\Models\PedidoRastreio;
-use App\Models\Produto\Produto;
+use App\Models\Pedido\Pedido;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 
@@ -71,7 +62,7 @@ class PedidoController extends Controller
             $status = \Request::get('status');
 
             if (!$status && $status !== 0) {
-                throw new Exception('"status" parameter not found!', 1);
+                throw new \Exception('"status" parameter not found!', 1);
             }
 
             $data = $m::find($pedido_id);

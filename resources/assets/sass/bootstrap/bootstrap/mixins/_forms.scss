@@ -28,7 +28,7 @@
     }
   }
   // Set validation states also for addons
-  .input-group-addon:not([class*='btn-']) {
+  .input-group-addon:not([class*='btn-']):not([class*='fa-']) {
     color: $text-color;
     border-color: $border-color;
     background-color: $background-color;

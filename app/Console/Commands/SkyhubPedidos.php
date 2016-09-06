@@ -1,6 +1,6 @@
 <?php namespace App\Console\Commands;
 
-use App\Http\Controllers\SkyhubController;
+use App\Http\Controllers\Integracao\SkyhubController;
 use Illuminate\Console\Command;
 
 class SkyhubPedidos extends Command

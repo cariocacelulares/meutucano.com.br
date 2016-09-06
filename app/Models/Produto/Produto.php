@@ -1,7 +1,9 @@
 <?php namespace App\Models\Produto;
 
+use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Produto\Linha\Atributo;
 
 /**
  * Class Produto
@@ -91,5 +93,25 @@ class Produto extends Model
         }
 
         return parent::newPivot($parent, $attributes, $table, $exists);
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreatedAtAttribute($created_at) {
+        if (!$created_at)
+            return null;
+
+        return Carbon::createFromFormat('Y-m-d H:i:s', $created_at)->format('d/m/Y H:i');
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpdatedAtAttribute($updated_at) {
+        if (!$updated_at)
+            return null;
+
+        return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
     }
 }
