@@ -20,6 +20,63 @@ class MagentoController extends Controller
      */
     protected $session;
 
+    public function feed()
+    {
+        echo 'id|title|description|google_product_category|product type|link|image link|condition|availability|price|sale price|gtin|brand';
+        echo '<br>';
+        //
+        $products = $this->api->catalogCategoryAssignedProducts($this->session, 5);
+        $stocks   = $this->api->catalogInventoryStockItemList($this->session, array_pluck($products, 'product_id'));
+        $options  = $this->api->catalogProductAttributeOptions($this->session, 179);
+
+        foreach ($products as $product) {
+            $info = $this->api->catalogProductInfo($this->session, $product->product_id, null, [
+                'additional_attributes' => [
+                    'ean',
+                    'fabricante'
+                ]
+            ]);
+
+            $imagem = $this->api->catalogProductAttributeMediaList($this->session, $info->product_id);
+
+            echo $info->sku;
+            echo '|';
+            echo $info->name;
+            echo '|';
+            echo $info->description;
+            echo '|';
+            echo '267';
+            echo '|';
+            echo 'Telefonia > Smartphones';
+            echo '|';
+            echo 'http://www.cariocacelulares.com.br/' . $info->url_path;
+            echo '|';
+            echo $imagem[0]->url;
+            echo '|';
+            echo 'new';
+            echo '|';
+
+            $key = array_search($info->product_id, array_column($stocks, 'product_id'));
+            $stock = $stocks[$key]->is_in_stock;
+
+            echo ((int) $stock > 0) ? 'in stock' : 'out of stock';
+            echo '|';
+            echo round($info->price, 2) . ' BRL';
+            echo '|';
+            echo (property_exists($info, 'special_price')) ? (round($info->special_price, 2)  . ' BRL') : '';
+            echo '|';
+
+            echo $ean = $info->additional_attributes[1]->value;
+            echo '|';
+            $marcaId = $info->additional_attributes[0]->value;
+
+            $key = array_search((string) $marcaId, array_column($options, 'value'));
+            echo $marca = $options[$key]->label;
+
+            echo '<br>';
+        }
+    }
+
     /**
      * Create Soapwrapper
      *
@@ -29,14 +86,14 @@ class MagentoController extends Controller
     {
         $this->api     = new \SoapClient(\Config::get('tucano.magento.api.host'));
         $this->session = $this->api->login(
-            \Config::get('tucano.magento.api.user'), 
+            \Config::get('tucano.magento.api.user'),
             \Config::get('tucano.magento.api.key')
         );
     }
 
     /**
      * Update inventory from an item
-     * 
+     *
      * @return boolean
      */
     public function updateInventory($skuUpdates = null, $increase = true)
