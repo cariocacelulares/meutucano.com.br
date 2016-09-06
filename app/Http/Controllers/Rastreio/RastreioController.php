@@ -75,7 +75,7 @@ class RastreioController extends Controller
                 throw new \Exception("ValidationException");
             }
 
-            $data->fill($this->handleInputData(Input::all()));
+            $data->fill(Input::all());
             $data->save();
 
             /**
@@ -202,7 +202,7 @@ class RastreioController extends Controller
      * @param  Object  $rastreio
      * @return boolean
      */
-    public function screenshot($rastreio)
+    protected function screenshot($rastreio)
     {
         try {
             $browsershot = new \Spatie\Browsershot\Browsershot();
@@ -324,6 +324,27 @@ class RastreioController extends Controller
     public function firstStatus($codigoRastreio)
     {
         return end($this->historico($codigoRastreio)['historico']);
+    }
+
+    /**
+     * Mostra a imagem de histórico do rastreio
+     *
+     * @param  int $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function imagemHistorico($id)
+    {
+        $model = self::MODEL;
+
+        if ($rastreio = $model::find($id)) {
+            $file_path = storage_path('app/public/rastreio/' . $rastreio->rastreio . '.jpg');
+
+            if (file_exists($file_path)) {
+                return response()->make(file_get_contents($file_path), '200')->header('Content-Type', 'image/jpeg');
+            }
+        }
+
+        return $this->notFoundResponse();
     }
 
     /**

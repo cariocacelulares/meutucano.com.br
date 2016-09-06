@@ -1,7 +1,7 @@
 <div class="dropdown">
-    <button class="btn-info" type="button">
+    <button class="btn-info {{ $ctrl.size ? ('btn-' + $ctrl.size) : ''}}" type="button">
         <i class="fa-cog"></i>&nbsp; {{ $ctrl.title || 'Ações' }}
         <span></span>
     </button>
-    <ul ng-transclude></ul> 
+    <ul ng-transclude></ul>
 </div>

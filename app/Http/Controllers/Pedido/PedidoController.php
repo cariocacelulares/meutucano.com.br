@@ -97,16 +97,27 @@ class PedidoController extends Controller
     {
         $m = self::MODEL;
 
-        $data = $m::with([
-            'cliente',
-            'nota',
-            'rastreios',
-            'produtos',
-            'comentarios',
-        ])->find($id);
+        try {
+            $data = $m::with([
+                'cliente',
+                'endereco',
+                'nota',
+                'rastreios',
+                'produtos',
+                'comentarios',
+                'rastreios.devolucao',
+                'rastreios.pi',
+                'rastreios.logistica'
+            ])->find($id);
 
-        if ($data) {
-            return $this->showResponse($data);
+            if ($data) {
+                return $this->showResponse($data);
+            }
+        } catch (\Exception $e) {
+            if ($e->getPrevious())
+                throw $e->getPrevious();
+            else
+                throw $e;
         }
 
         return $this->notFoundResponse();

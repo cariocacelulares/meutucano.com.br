@@ -3,7 +3,7 @@
 
     angular
         .module('MeuTucano')
-        .service('RastreioHelper', function(ngDialog, Rastreio, Devolucao, Pi) {
+        .service('RastreioHelper', function(ngDialog, Rastreio, Devolucao, Pi, Logistica, envService, $window, $httpParamSerializer) {
             var vm;
 
             return {
@@ -22,14 +22,14 @@
                  * Devolução
                  * @param rastreio
                  */
-                devolucao: function(rastreio_id, updateVm) {
-                    Devolucao.get(rastreio_id).then(function(devolucao) {
+                devolucao: function(id, updateVm) {
+                    Devolucao.get(id).then(function(devolucao) {
                         ngDialog.open({
                             template: 'views/devolucao/form.html',
                             controller: 'DevolucaoFormController',
                             controllerAs: 'DevolucaoForm',
                             data: {
-                                rastreio: devolucao
+                                devolucao: devolucao || { rastreio_id: id }
                             }
                         }).closePromise.then(function(data) {
                             if (updateVm &&
@@ -42,21 +42,19 @@
                     }.bind(this));
                 },
 
-
-
                 /**
                  * PI
                  * @param rastreio
                  */
-                pi: function(rastreio_id, updateVm) {
-                    Pi.get(rastreio_id).then(function(devolucao) {
+                pi: function(id, updateVm) {
+                    Pi.get(id).then(function(pi) {
                         ngDialog.open({
                             template: 'views/pi/form.html',
                             className: 'ngdialog-theme-default ngdialog-big',
                             controller: 'PiFormController',
                             controllerAs: 'PiForm',
                             data: {
-                                rastreio: devolucao
+                                pi: pi || { rastreio_id: id }
                             }
                         }).closePromise.then(function(data) {
                             if (updateVm &&
@@ -73,15 +71,15 @@
                  * Logística reversa
                  * @param rastreio
                  */
-                logistica: function(rastreio_id, updateVm) {
-                    Logistica.get(rastreio_id).then(function(logistica) {
+                logistica: function(id, updateVm) {
+                    Logistica.get(id).then(function(logistica) {
                         ngDialog.open({
                             template: 'views/logistica/form.html',
                             className: 'ngdialog-theme-default ngdialog-big',
                             controller: 'LogisticaFormController',
                             controllerAs: 'Logistica',
                             data: {
-                                rastreio: logistica
+                                logistica: logistica || { rastreio_id: id }
                             }
                         }).closePromise.then(function(data) {
                             if (updateVm &&
@@ -116,6 +114,32 @@
                             }
                         }.bind(this));
                     }.bind(this));
+                },
+
+                /**
+                 * Imprime etiqueta
+                 *
+                 * @param rastreio_id
+                 */
+                printEtiqueta: function(rastreio_id) {
+                    var auth = {
+                        token: localStorage.getItem("satellizer_token")
+                    };
+
+                    $window.open(envService.read('apiUrl') + '/rastreios/etiqueta/' + rastreio_id + '?' + $httpParamSerializer(auth), 'etiqueta');
+                },
+
+                /**
+                 * Imprime histórico
+                 *
+                 * @param rastreio_id
+                 */
+                printHistorico: function(rastreio_id) {
+                    var auth = {
+                        token: localStorage.getItem("satellizer_token")
+                    };
+
+                    $window.open(envService.read('apiUrl') + '/rastreios/historico/' + rastreio_id + '?' + $httpParamSerializer(auth), 'historico');
                 }
             };
         });

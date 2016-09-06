@@ -21,6 +21,27 @@ class DevolucaoController extends Controller
 
     protected $validationRules = [];
 
+    /**
+     * Retorna uma devolução com base no rastreio
+     *
+     * @param  int $id
+     * @return array
+     */
+    public function show($id)
+    {
+        $m = PedidoRastreio::class;
+        if($data = $m::find($id)) {
+            return $this->showResponse($data->devolucao);
+        }
+
+        return $this->notFoundResponse();
+    }
+
+    /**
+     * Retorna as devoluções sem ação
+     *
+     * @return array
+     */
     public function pending()
     {
         $m = self::MODEL;
@@ -39,30 +60,30 @@ class DevolucaoController extends Controller
     }
 
     /**
-     * Altera informações sobre a devolução
+     * Cria novo recurso
      *
-     * @param $id
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function edit($id)
+    public function store()
     {
+        $m = self::MODEL;
         try {
-            $model = self::MODEL;
+            $v = \Validator::make(Input::all(), $this->validationRules);
 
-            $devolucao = $model::findOrNew($id);
-            $rastreio_ref = PedidoRastreio::find($id);
+            if($v->fails()) {
+                throw new \Exception("ValidationException");
+            }
+            $data = $m::create(Input::all());
 
-            $devolucao->rastreio_id = $id;
-            $devolucao->usuario_id  = JWTAuth::parseToken()->authenticate()->id;
-            $devolucao->fill(Input::only(['motivo', 'acao', 'protocolo', 'pago_cliente', 'observacoes']));
-            $devolucao->save();
+            $data->rastreio->status = 5;
+            $data->rastreio->save();
 
-            $rastreio_ref->status = 5;
-            $rastreio_ref->save();
+            return $this->createdResponse($data);
+        } catch(\Exception $ex) {
+            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
 
-            return $this->showResponse([$devolucao]);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage() . $ex->getLine()];
+            \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
             return $this->clientErrorResponse($data);
         }
     }

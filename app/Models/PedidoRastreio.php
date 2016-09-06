@@ -106,7 +106,7 @@ class PedidoRastreio extends \Eloquent
      *
      * @return string
      */
-    protected function getStatusDescriptionAttribute()
+    public function getStatusDescriptionAttribute()
     {
         return ($this->status > 0) ? \Config::get('tucano.status')[$this->status] : 'Pendente';
     }
@@ -116,7 +116,7 @@ class PedidoRastreio extends \Eloquent
      *
      * @return string
      */
-    protected function getTipoDescriptionAttribute()
+    public function getTipoDescriptionAttribute()
     {
         switch ($this->tipo) {
             case 1:
@@ -135,7 +135,7 @@ class PedidoRastreio extends \Eloquent
      *
      * @return string
      */
-    protected function getDataEnvioReadableAttribute()
+    public function getDataEnvioReadableAttribute()
     {
         return Carbon::createFromFormat('Y-m-d', $this->data_envio)->format('d/m/Y');
     }
@@ -145,7 +145,7 @@ class PedidoRastreio extends \Eloquent
      *
      * @return string
      */
-    protected function getPrazoDateAttribute()
+    public function getPrazoDateAttribute()
     {
         return \SomaDiasUteis($this->getDataEnvioReadableAttribute(), $this->prazo);
     }
@@ -155,7 +155,7 @@ class PedidoRastreio extends \Eloquent
      *
      * @return string
      */
-    protected function getRastreioUrlAttribute()
+    public function getRastreioUrlAttribute()
     {
         return sprintf(
             'http://websro.correios.com.br/sro_bin/txect01$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS=%s',

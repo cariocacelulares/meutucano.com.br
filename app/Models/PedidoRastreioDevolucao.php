@@ -22,19 +22,11 @@ class PedidoRastreioDevolucao extends \Eloquent
     protected $revisionCreationsEnabled = true;
 
     /**
-     * @var string
-     */
-    protected $primaryKey = 'rastreio_id';
-
-    /**
-     * @var bool
-     */
-    public $incrementing = false;
-
-    /**
      * @var array
      */
     protected $fillable = [
+        'rastreio_id',
+        'usuario_id',
         'motivo',
         'acao',
         'protocolo',
@@ -46,8 +38,7 @@ class PedidoRastreioDevolucao extends \Eloquent
      * @var array
      */
     protected $appends = [
-        'motivo_description',
-        'created_at_readable'
+        'motivo_description'
     ];
 
     /**
@@ -89,11 +80,16 @@ class PedidoRastreioDevolucao extends \Eloquent
     }
 
     /**
-     * Return readable created_at
-     *
      * @return string
      */
-    protected function getCreatedAtReadableAttribute() {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y');
+    public function getCreatedAtAttribute($created_at) {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $created_at)->format('d/m/Y H:i');
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpdatedAtAttribute($updated_at) {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
     }
 }

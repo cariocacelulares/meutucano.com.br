@@ -5,19 +5,19 @@
         .module('MeuTucano')
         .controller('EnderecoFormController', EnderecoFormController);
 
-    function EnderecoFormController(Cliente, $scope, toaster) {
+    function EnderecoFormController(ClienteEndereco, $scope, toaster) {
         var vm = this;
 
-        vm.cliente = angular.copy($scope.ngDialogData.cliente);
+        vm.endereco = angular.copy($scope.ngDialogData.endereco);
 
         /**
-         * Salva as informações da cliente
+         * Salva as informações da endereco
          *
          * @return {void}
          */
         vm.save = function() {
-            Cliente.save(vm.cliente, vm.cliente.id || null).then(function() {
-                toaster.pop('success', 'Sucesso!', 'Endereço(s) salvo com sucesso!');
+            ClienteEndereco.save(vm.endereco, vm.endereco.id || null).then(function() {
+                toaster.pop('success', 'Sucesso!', 'Endereço salvo com sucesso!');
                 $scope.closeThisDialog(true);
             });
         };

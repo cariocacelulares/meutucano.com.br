@@ -25,8 +25,7 @@ class Cliente extends \Eloquent
      */
     protected $appends = [
         'created_at_readable',
-        'taxvat_readable',
-        'last_endereco',
+        'taxvat_readable'
     ];
 
     /**
@@ -95,14 +94,5 @@ class Cliente extends \Eloquent
         }
 
         return implode('', $format);
-    }
-
-    /**
-     * Return last endereco
-     *
-     * @return string
-     */
-    protected function getLastEnderecoAttribute() {
-        return $this->enderecos->last();
     }
 }

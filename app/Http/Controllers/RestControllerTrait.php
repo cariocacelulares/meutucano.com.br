@@ -126,7 +126,7 @@ trait RestControllerTrait
                 throw new \Exception("ValidationException");
             }
 
-            $data->fill($this->handleInputData(Input::all()));
+            $data->fill(Input::all());
             $data->save();
             return $this->showResponse($data);
         } catch(\Exception $ex) {
@@ -152,32 +152,5 @@ trait RestControllerTrait
         $data->delete();
 
         return $this->deletedResponse();
-    }
-
-    /**
-     * Manipula os dados recebidos da request
-     *
-     * @param  array $inputs
-     * @return array
-     */
-    private function handleInputData($inputs)
-    {
-        $skip = ['created_at', 'updated_at', 'deleted_at'];
-
-        foreach ($inputs as $key => $value) {
-            if ($value && is_string($value) && \DateTime::createFromFormat('d/m/Y', $value) !== false) {
-                $originalKey = str_replace('_readable', '', $key);
-
-                if (in_array($originalKey, $skip))
-                    continue;
-
-                if (array_key_exists($originalKey, $inputs)) {
-                    $inputs[$originalKey] = Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d');
-                    $skip[] = $originalKey;
-                }
-            }
-        }
-
-        return $inputs;
     }
 }

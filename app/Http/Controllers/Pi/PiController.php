@@ -23,8 +23,24 @@ class PiController extends Controller
     protected $validationRules = [];
 
     /**
+     * Retorna uma pi com base no rastreio
+     *
+     * @param  int $id
+     * @return array
+     */
+    public function show($id)
+    {
+        $m = PedidoRastreio::class;
+        if($data = $m::find($id)) {
+            return $this->showResponse($data->pi);
+        }
+
+        return $this->notFoundResponse();
+    }
+
+    /**
      * Retorna uma lista de PI's pendentes de ação
-     * 
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function pending()
@@ -45,40 +61,35 @@ class PiController extends Controller
     }
 
     /**
-     * Altera informações da PI
+     * Cria novo recurso
      *
-     * @param $id
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function edit($id)
+    public function store()
     {
+        $m = self::MODEL;
         try {
-            $model = self::MODEL;
+            $v = \Validator::make(Input::all(), $this->validationRules);
 
-            $pi = $model::findOrNew($id);
-            $rastreio_ref = PedidoRastreio::find($id);
-
-            $pi->rastreio_id = $id;
-            $pi->usuario_id  = JWTAuth::parseToken()->authenticate()->id;
-
-            $pi->fill(Input::only(['codigo_pi', 'motivo_status', 'status', 'valor_pago', 'acao', 'protocolo', 'pago_cliente', 'observacoes']));
-
-            if (Input::get('data_pagamento_readable'))
-                $pi->data_pagamento = Carbon::createFromFormat('d/m/Y', Input::get('data_pagamento_readable'))->format('Y-m-d');
-
-            $pi->save();
+            if($v->fails()) {
+                throw new \Exception("ValidationException");
+            }
+            $data = $m::create(Input::all());
 
             if (Input::has('valor_pago')) {
-                $rastreio_ref->status = 8;
-                $rastreio_ref->save();
+                $data->rastreio->status = 8;
+                $data->rastreio->save();
             } else {
-                $rastreio_ref->status = 7;
-                $rastreio_ref->save();
+                $data->rastreio->status = 7;
+                $data->rastreio->save();
             }
 
-            return $this->showResponse([$pi]);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage() . $ex->getLine()];
+            return $this->createdResponse($data);
+        } catch(\Exception $ex) {
+            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+
+            \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
             return $this->clientErrorResponse($data);
         }
     }

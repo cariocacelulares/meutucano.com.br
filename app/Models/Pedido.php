@@ -21,11 +21,6 @@ class Pedido extends \Eloquent
     /**
      * @var array
      */
-    protected $fillable = ['*'];
-
-    /**
-     * @var array
-     */
     protected $appends = [
         'created_at_readable',
         'marketplace_readable',
