@@ -23,36 +23,48 @@ class LogisticaController extends Controller
     protected $validationRules = [];
 
     /**
-     * Altera informações da logística
+     * Retorna uma pi com base no rastreio
      *
-     * @param $id
+     * @param  int $id
+     * @return array
+     */
+    public function show($id)
+    {
+        $m = PedidoRastreio::class;
+        if($data = $m::find($id)) {
+            return $this->showResponse($data->logistica);
+        }
+
+        return $this->notFoundResponse();
+    }
+
+    /**
+     * Cria novo recurso
+     *
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function edit($id)
+    public function store()
     {
+        $m = self::MODEL;
         try {
-            $model = self::MODEL;
+            $v = \Validator::make(Input::all(), $this->validationRules);
 
-            $logistica = $model::findOrNew($id);
-            $rastreio_ref = PedidoRastreio::find($id);
-
-            $logistica->rastreio_id = $id;
-            $logistica->usuario_id  = JWTAuth::parseToken()->authenticate()->id;
-            $logistica->fill(Input::only(['autorizacao', 'motivo', 'acao', 'protocolo', 'observacoes']));
-
-            if (Input::get('data_postagem_readable'))
-                $logistica->data_postagem = Carbon::createFromFormat('d/m/Y', Input::get('data_postagem_readable'))->format('Y-m-d');
-
-            $logistica->save();
+            if($v->fails()) {
+                throw new \Exception("ValidationException");
+            }
+            $data = $m::create(Input::all());
 
             if (Input::has('acao')) {
-                $rastreio_ref->status = 5;
-                $rastreio_ref->save();
+                $data->rastreio->status = 5;
+                $data->rastreio->save();
             }
 
-            return $this->showResponse([$logistica]);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage() . $ex->getLine()];
+            return $this->createdResponse($data);
+        } catch(\Exception $ex) {
+            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+
+            \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
             return $this->clientErrorResponse($data);
         }
     }

@@ -17,16 +17,6 @@ class PedidoRastreioLogistica extends \Eloquent
     protected $revisionCreationsEnabled = true;
 
     /**
-     * @var string
-     */
-    protected $primaryKey = 'rastreio_id';
-
-    /**
-     * @var bool
-     */
-    public $incrementing = false;
-
-    /**
      * @var array
      */
     protected $fillable = [
@@ -38,14 +28,6 @@ class PedidoRastreioLogistica extends \Eloquent
         'protocolo',
         'data_postagem',
         'observacoes',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $appends = [
-        'data_postagem_readable',
-        'created_at_readable',
     ];
 
     /**
@@ -78,20 +60,30 @@ class PedidoRastreioLogistica extends \Eloquent
     }
 
     /**
-     * Return readable Data Postagem
-     *
      * @return string
      */
-    protected function getDataPostagemReadableAttribute() {
-        return ($this->data_postagem) ? Carbon::createFromFormat('Y-m-d', $this->data_postagem)->format('d/m/Y') : null;
+    public function getDataPostagemAttribute($data_postagem) {
+        return ($data_postagem) ? Carbon::createFromFormat('Y-m-d', $data_postagem)->format('d/m/Y') : null;
     }
 
     /**
-     * Return readable created_at
-     *
      * @return string
      */
-    protected function getCreatedAtReadableAttribute() {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y');
+    public function setDataPostagemAttribute($data_postagem) {
+        $this->attributes['data_postagem'] = Carbon::createFromFormat('d/m/Y', $data_postagem)->format('Y-m-d');
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreatedAtAttribute($created_at) {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $created_at)->format('d/m/Y H:i');
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpdatedAtAttribute($updated_at) {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
     }
 }

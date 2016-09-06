@@ -3,7 +3,7 @@
 
     angular
         .module('MeuTucano')
-        .service('ClienteEnderecoHelper', function(ngDialog, Cliente) {
+        .service('ClienteEnderecoHelper', function(ngDialog, ClienteEndereco) {
             var vm;
 
             return {
@@ -22,14 +22,14 @@
                  * Editar endereço
                  * @param endereco_id
                  */
-                editar: function(cliente_id, updateVm) {
-                    Cliente.get(cliente_id).then(function(cliente) {
+                editar: function(id, updateVm) {
+                    ClienteEndereco.get(id).then(function(endereco) {
                         ngDialog.open({
                             template: 'views/cliente/endereco/form.html',
                             controller: 'EnderecoFormController',
                             controllerAs: 'EnderecoForm',
                             data: {
-                                cliente: cliente
+                                endereco: endereco
                             }
                         }).closePromise.then(function(data) {
                             if (updateVm &&

@@ -17,16 +17,6 @@ class PedidoRastreioPi extends \Eloquent
     protected $revisionCreationsEnabled = true;
 
     /**
-     * @var string
-     */
-    protected $primaryKey = 'rastreio_id';
-
-    /**
-     * @var bool
-     */
-    public $incrementing = false;
-
-    /**
      * @var array
      */
     protected $fillable = [
@@ -48,8 +38,6 @@ class PedidoRastreioPi extends \Eloquent
      */
     protected $appends = [
         'status_description',
-        'data_pagamento_readable',
-        'created_at_readable',
     ];
 
     /**
@@ -77,27 +65,36 @@ class PedidoRastreioPi extends \Eloquent
      *
      * @return string
      */
-    protected function getStatusDescriptionAttribute()
+    public function getStatusDescriptionAttribute()
     {
         return ($this->motivo_status) ? \Config::get('tucano.status')[$this->motivo_status] : null;
     }
 
-
     /**
-     * Return readable data de pagemento
-     *
      * @return string
      */
-    protected function getDataPagamentoReadableAttribute() {
-        return ($this->data_pagamento) ? Carbon::createFromFormat('Y-m-d', $this->data_pagamento)->format('d/m/Y') : null;
+    public function getDataPagamentoAttribute($data_pagamento) {
+        return ($data_pagamento) ? Carbon::createFromFormat('Y-m-d', $data_pagamento)->format('d/m/Y') : null;
     }
 
     /**
-     * Return readable created_at
-     *
      * @return string
      */
-    protected function getCreatedAtReadableAttribute() {
-        return ($this->created_at) ? Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y') : null;
+    public function setDataPagamentoAttribute($data_pagamento) {
+        $this->attributes['data_pagamento'] = Carbon::createFromFormat('d/m/Y', $data_pagamento)->format('Y-m-d');
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreatedAtAttribute($created_at) {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $created_at)->format('d/m/Y H:i');
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpdatedAtAttribute($updated_at) {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
     }
 }

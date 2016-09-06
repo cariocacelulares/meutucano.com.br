@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "34942bfbe9f7b50417aa0f64df16dc88",
-    "content-hash": "cd3257018d0077cf2e4af1e9c0340a21",
+    "hash": "05c38b57ca35ad6b1319e748177ebfd7",
+    "content-hash": "608b5357e8dcfe6a66a4b6a2ab370e42",
     "packages": [
         {
             "name": "arcanedev/log-viewer",
@@ -646,6 +646,68 @@
                 "uri"
             ],
             "time": "2016-06-24 23:00:38"
+        },
+        {
+            "name": "intervention/image",
+            "version": "2.3.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Intervention/image.git",
+                "reference": "22088b04728a039bd1fc32f7e79a89a118b78698"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Intervention/image/zipball/22088b04728a039bd1fc32f7e79a89a118b78698",
+                "reference": "22088b04728a039bd1fc32f7e79a89a118b78698",
+                "shasum": ""
+            },
+            "require": {
+                "ext-fileinfo": "*",
+                "guzzlehttp/psr7": "~1.1",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9.2",
+                "phpunit/phpunit": "3.*"
+            },
+            "suggest": {
+                "ext-gd": "to use GD library based image processing.",
+                "ext-imagick": "to use Imagick based image processing.",
+                "intervention/imagecache": "Caching extension for the Intervention Image library"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Intervention\\Image\\": "src/Intervention/Image"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oliver Vogel",
+                    "email": "oliver@olivervogel.net",
+                    "homepage": "http://olivervogel.net/"
+                }
+            ],
+            "description": "Image handling and manipulation library with support for Laravel integration",
+            "homepage": "http://image.intervention.io/",
+            "keywords": [
+                "gd",
+                "image",
+                "imagick",
+                "laravel",
+                "thumbnail",
+                "watermark"
+            ],
+            "time": "2016-04-26 14:08:40"
         },
         {
             "name": "itbz/fpdf",
@@ -1810,6 +1872,60 @@
                 "text"
             ],
             "time": "2016-06-09 04:56:16"
+        },
+        {
+            "name": "spatie/browsershot",
+            "version": "1.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/browsershot.git",
+                "reference": "0ee73878b45fe20c39bb48ddca69ee1068255e8a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/browsershot/zipball/0ee73878b45fe20c39bb48ddca69ee1068255e8a",
+                "reference": "0ee73878b45fe20c39bb48ddca69ee1068255e8a",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "4.*|5.*",
+                "intervention/image": "2.*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpspec/phpspec": "~2.1"
+            },
+            "bin": [
+                "bin/phantomjs"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Spatie\\Browsershot": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be"
+                }
+            ],
+            "description": "Convert a webpage to an image",
+            "homepage": "https://github.com/spatie/browsershot",
+            "keywords": [
+                "browser",
+                "convert",
+                "image",
+                "laravel",
+                "phantomjs",
+                "screenshot",
+                "webpage"
+            ],
+            "time": "2016-08-18 13:02:37"
         },
         {
             "name": "stavarengo/php-sigep",

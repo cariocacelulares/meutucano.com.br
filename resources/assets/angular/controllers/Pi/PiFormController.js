@@ -8,11 +8,7 @@
     function PiFormController(Pi, $scope, toaster, $window, $httpParamSerializer) {
         var vm = this;
 
-        if (typeof $scope.ngDialogData.rastreio != 'undefined') {
-            vm.pi = $scope.ngDialogData.rastreio;
-        } else {
-            vm.pi = {};
-        }
+        vm.pi = $scope.ngDialogData.pi;
 
         /**
          * Salva as informações da PI
@@ -20,7 +16,7 @@
          * @return {void}
          */
         vm.save = function() {
-            Pi.save(vm.pi, vm.pi.rastreio_id || null).then(function() {
+            Pi.save(vm.pi, vm.pi.id || null).then(function() {
                 $scope.closeThisDialog(true);
                 toaster.pop('success', 'Sucesso!', 'Pedido de informação salvo com sucesso!');
             });

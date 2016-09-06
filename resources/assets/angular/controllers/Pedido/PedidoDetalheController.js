@@ -24,7 +24,6 @@
         vm.clienteEnderecoHelper = ClienteEnderecoHelper.init(vm);
 
         vm.load = function() {
-            vm.pedido  = {};
             vm.loading = true;
 
             Pedido.get(vm.pedido_id).then(function(pedido) {

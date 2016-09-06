@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class DropForeignKeyFromRastreioRef extends Migration
+class AddScreenshotFieldToPedidoRastreiosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class DropForeignKeyFromRastreioRef extends Migration
     public function up()
     {
         Schema::table('pedido_rastreios', function (Blueprint $table) {
-            
+            $table->string('imagem_historico', 20)->nullable()->after('status');
         });
     }
 
@@ -25,7 +25,7 @@ class DropForeignKeyFromRastreioRef extends Migration
     public function down()
     {
         Schema::table('pedido_rastreios', function (Blueprint $table) {
-            
+            $table->dropColumn('imagem_historico');
         });
     }
 }

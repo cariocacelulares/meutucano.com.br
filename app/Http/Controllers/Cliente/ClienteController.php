@@ -70,7 +70,7 @@ class ClienteController extends Controller
                 throw new \Exception("ValidationException");
             }
 
-            $data->fill($this->handleInputData(Input::except('enderecos')));
+            $data->fill(Input::except('enderecos'));
             $data->save();
 
             $enderecos = Input::get('enderecos');

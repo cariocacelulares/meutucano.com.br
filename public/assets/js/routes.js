@@ -81,16 +81,16 @@
                  */
                 .state('app.admin', {
                     url: '/admin',
-                    templateUrl: 'views/layouts/default.html'
+                    templateUrl: 'views/layouts/default.html',
+                    data: {
+                        roles: ['admin']
+                    }
                 })
 
                 .state('app.admin.icms', {
                     url: '/icms',
                     templateUrl: 'views/admin/icms.html',
-                    controller: 'IcmsController as Icms',
-                    data: {
-                        roles: ['admin']
-                    }
+                    controller: 'IcmsController as Icms'
                 })
 
                 /**
@@ -98,16 +98,16 @@
                  */
                 .state('app.pedidos', {
                     url: '/pedidos',
-                    templateUrl: 'views/layouts/default.html'
+                    templateUrl: 'views/layouts/default.html',
+                    data: {
+                        roles: ['admin', 'gestor', 'atendimento']
+                    }
                 })
 
                 .state('app.pedidos.index', {
                     url: '/list',
                     templateUrl: 'views/pedido/list.html',
-                    controller: 'PedidoListController as PedidoList',
-                    data: {
-                        roles: ['admin']
-                    }
+                    controller: 'PedidoListController as PedidoList'
                 })
 
                 .state('app.pedidos.detalhe', {
@@ -121,16 +121,14 @@
                  */
                 .state('app.clientes', {
                     url: '/clientes',
-                    templateUrl: 'views/layouts/default.html'
+                    templateUrl: 'views/layouts/default.html',
+                    roles: ['admin', 'gestor']
                 })
 
                 .state('app.clientes.index', {
                     url: '/list',
                     templateUrl: 'views/cliente/list.html',
-                    controller: 'ClienteListController as ClienteList',
-                    data: {
-                        roles: ['admin']
-                    }
+                    controller: 'ClienteListController as ClienteList'
                 })
 
                 .state('app.clientes.detalhe', {
@@ -186,7 +184,10 @@
                  */
                 .state('app.produtos', {
                     url: '/produtos',
-                    templateUrl: 'views/layouts/default.html'
+                    templateUrl: 'views/layouts/default.html',
+                    data: {
+                        roles: ['admin', 'gestor']
+                    }
                 })
 
                 .state('app.produtos.index', {
@@ -256,10 +257,6 @@
                 .state('app.interno.senhas', {
                     url: '/senhas',
                     templateUrl: 'views/layouts/default.html'
-                })
-
-                .state('app.interno.senhas.usuario', {
-
                 })
 
                 .state('app.interno.senhas.minhas', {

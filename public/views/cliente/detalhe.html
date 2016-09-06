@@ -4,9 +4,9 @@
 <div class="row">
     <div class="col-md-6">
         <!-- Informações Pessoais -->
-        <div class="panel-default">
-            <div class="panel-heading separator">
-                <div class="panel-title">Informações Pessoais</div>
+        <div class="panel-primary">
+            <div class="panel-heading">
+                <div class="panel-title"><i class="fa fa-user"></i>&nbsp; Informações Pessoais</div>
             </div>
             <div class="panel-body">
                 <div class="col-md-12">
@@ -41,9 +41,9 @@
     </div>
     <div class="col-md-6">
         <!-- Endereços -->
-        <div class="panel-default">
-            <div class="panel-heading separator">
-                <div class="panel-title">Endereço</div>
+        <div class="panel-primary">
+            <div class="panel-heading">
+                <div class="panel-title"><i class="fa fa-map"></i>&nbsp; Endereço</div>
                 <div class="panel-controls">
                     <button ng-click="ClienteDetalhe.clienteEnderecoHelper.editar(ClienteDetalhe.cliente.id, true)" class="btn-default">
                         <i class="fa-pencil"></i>&nbsp; Editar
@@ -97,9 +97,9 @@
             </tbody>
             <tbody>
                 <tr ng-if="ClienteDetalhe.cliente.pedidos.length" ng-repeat="pedido in ClienteDetalhe.cliente.pedidos">
-                    <td>{{ pedido.id }}</td>
+                    <td>{{ pedido.codigo_marketplace || 'Sem código' }}</td>
                     <td>{{ pedido.marketplace_readable || 'Site' }}</td>
-                    <td><span class="label label-{{ ClienteDetalhe.parseStatusClass() }}">{{ pedido.status_description }}</span></td>
+                    <td><span class="label label-{{ ClienteDetalhe.parseStatusClass(pedido) }}">{{ pedido.status_description }}</span></td>
                     <td>{{ pedido.created_at_readable }}</td>
                     <td>{{ pedido.total | currency }}</td>
                     <td>

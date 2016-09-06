@@ -1,6 +1,6 @@
 <div id="page-header" class="row">
     <page-title icon="fa-first-order" title="Pedido {{ PedidoDetalhe.pedido.codigo_marketplace }}" description="Pedido realizado em {{ PedidoDetalhe.pedido.marketplace_readable || 'Site' }}"></page-title>
-    <div class="col-md-6 button-bar">
+    <div roles="admin|gestor|atendimento" class="col-md-6 button-bar">
             <button class="btn-primary" ng-click="PedidoDetalhe.changePriority()" ng-if="PedidoDetalhe.pedido.can_prioritize"><i class="fa fa-arrow-{{ PedidoDetalhe.pedido.priorizado ? 'down' : 'up' }}"></i>&nbsp; {{ PedidoDetalhe.pedido.priorizado ? 'Remover prioridade' : 'Priorizar' }}</button>
             <button class="btn-info" ng-click="PedidoDetalhe.changeStatus(4)" ng-if="PedidoDetalhe.pedido.can_hold"><i class="fa fa-hand-stop-o"></i>&nbsp; Segurar</button>
             <button class="btn-danger" confirm="PedidoDetalhe.changeStatus(5)" ng-if="PedidoDetalhe.pedido.status != 5"><i class="fa fa-close"></i>&nbsp; Cancelar</button>
@@ -64,12 +64,12 @@
                     </div>
                     <div class="row">
                         <p style="line-height: 25px;">
-                            <a ng-click="PedidoDetalhe.clienteEnderecoHelper.editar(PedidoDetalhe.pedido.cliente.id, true)" class="pull-right"><i class="fa fa-edit"></i> Editar</a>
-                            {{ PedidoDetalhe.pedido.cliente.last_endereco.rua }} #{{ PedidoDetalhe.pedido.cliente.last_endereco.numero }} -
-                            {{ PedidoDetalhe.pedido.cliente.last_endereco.bairro }} <br>
-                            {{ PedidoDetalhe.pedido.cliente.last_endereco.cidade }}/{{ PedidoDetalhe.pedido.cliente.last_endereco.uf }} <br>
-                            {{ PedidoDetalhe.pedido.cliente.last_endereco.cep_readable }} <br>
-                            {{ PedidoDetalhe.pedido.cliente.last_endereco.complemento || 'Sem complemento' }}
+                            <a ng-click="PedidoDetalhe.clienteEnderecoHelper.editar(PedidoDetalhe.pedido.endereco.id, true)" class="pull-right"><i class="fa fa-edit"></i> Editar</a>
+                            {{ PedidoDetalhe.pedido.endereco.rua }} #{{ PedidoDetalhe.pedido.endereco.numero }} -
+                            {{ PedidoDetalhe.pedido.endereco.bairro }} <br>
+                            {{ PedidoDetalhe.pedido.endereco.cidade }}/{{ PedidoDetalhe.pedido.endereco.uf }} <br>
+                            {{ PedidoDetalhe.pedido.endereco.cep_readable }} <br>
+                            {{ PedidoDetalhe.pedido.endereco.complemento || 'Sem complemento' }}
                         </p>
                     </div>
                 </div>
@@ -132,37 +132,52 @@
                         <div class="col-md-12" ng-if="PedidoDetalhe.pedido.rastreios" ng-repeat="rastreio in PedidoDetalhe.pedido.rastreios">
                             <div class="row">
                                 <p class="pull-left">
-                                    <a target="_blank" ng-href="{{ rastreio.rastreio_url }}">{{ rastreio.rastreio }}</a><br>
-                                    <span class="label label-{{ PedidoDetalhe.parseRastreioStatusClass(rastreio) }}">{{ rastreio.status_description }}</span>
+                                    <a target="_blank" ng-href="{{ rastreio.rastreio_url }}">{{ rastreio.rastreio }}</a>
+                                    &nbsp;
+                                    <a ng-if="rastreio.imagem_historico" target="_blank" ng-click="PedidoDetalhe.rastreioHelper.printHistorico(rastreio.id)"><i class="fa fa-picture-o"></i></a>
                                 </p>
                                 <div class="pull-right">
-                                    <dropdown class="dropdown-xs">
+                                    <dropdown size="xs">
                                         <li>
                                             <a ng-click="PedidoDetalhe.rastreioHelper.editar(rastreio.id, true)">
                                                 <i class="fa fa-edit"></i>&nbsp; Editar
                                             </a>
                                         </li>
                                         <li>
-                                            <a ng-click="PedidoDetalhe.notaHelper.printEtiqueta(rastreio.id)">
+                                            <a ng-click="PedidoDetalhe.rastreioHelper.printEtiqueta(rastreio.id)">
                                                 <i class="fa fa-tag"></i>&nbsp; Etiqueta
                                             </a>
                                         </li>
                                         <li>
-                                            <a ng-click="PedidoDetalhe.rastreioHelper.logistica(rastreio.id)">
+                                            <a ng-click="PedidoDetalhe.rastreioHelper.logistica(rastreio.id, true)">
                                                 <i class="fa fa-exchange"></i>&nbsp; Logística
                                             </a>
                                         </li>
                                         <li>
-                                            <a ng-click="PedidoDetalhe.rastreioHelper.devolucao(rastreio.id)">
+                                            <a ng-click="PedidoDetalhe.rastreioHelper.devolucao(rastreio.id, true)">
                                                 <i class="fa fa-undo"></i>&nbsp; Devolução
                                             </a>
                                         </li>
                                         <li>
-                                            <a ng-click="PedidoDetalhe.rastreioHelper.pi(rastreio.id)">
+                                            <a ng-click="PedidoDetalhe.rastreioHelper.pi(rastreio.id, true)">
                                                 <i class="fa fa-warning"></i>&nbsp; PI
                                             </a>
                                         </li>
                                     </dropdown>
+                                </div>
+                                <p class="clear">
+                                    <span class="label label-{{ PedidoDetalhe.parseRastreioStatusClass(rastreio) }}">{{ rastreio.status_description }}</span>
+                                    <br>
+                                    <small class="hint-text">Enviado {{ rastreio.data_envio_readable }}. Prazo de {{ rastreio.prazo }} dia(s)</small>
+                                </p>
+                                <div ng-if="rastreio.devolucao" class="alert alert-info m-t-10">
+                                    <small><i class="fa fa-undo"></i>&nbsp; Devolução em {{ rastreio.devolucao.created_at }}</small>
+                                </div>
+                                <div ng-if="rastreio.logistica" class="alert alert-info m-t-10">
+                                    <small><i class="fa fa-exchange"></i>&nbsp; Logística em {{ rastreio.logistica.created_at }}</small>
+                                </div>
+                                <div ng-if="rastreio.pi" class="alert alert-info m-t-10">
+                                    <small><i class="fa fa-warning"></i>&nbsp; PI em {{ rastreio.pi.created_at }}</small>
                                 </div>
                             </div>
                             <hr ng-hide="$last" />

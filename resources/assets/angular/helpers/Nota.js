@@ -30,19 +30,6 @@
                 },
 
                 /**
-                 * Generate DANFE
-                 *
-                 * @param rastreio_id
-                 */
-                printEtiqueta: function(rastreio_id) {
-                    var auth = {
-                        token: localStorage.getItem("satellizer_token")
-                    };
-
-                    $window.open(envService.read('apiUrl') + '/rastreios/etiqueta/' + rastreio_id + '?' + $httpParamSerializer(auth), 'etiqueta');
-                },
-
-                /**
                  * Enviar nota por e-mail
                  * @param rastreio
                  */
@@ -56,17 +43,6 @@
                             pedido_id: pedido_id,
                             email: email
                         }
-                    });
-                },
-
-                /**
-                 * Cancela nota
-                 * @param pedido_id
-                 */
-                cancelar: function(pedido_id) {
-                    Restangular.one('pedidos', pedido_id).remove().then(function() {
-                        $rootScope.$broadcast('upload');
-                        toaster.pop('success', 'Sucesso!', 'Pedido deletado com sucesso!');
                     });
                 }
             };

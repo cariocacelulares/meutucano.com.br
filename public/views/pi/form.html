@@ -1,4 +1,5 @@
 <h1>Pedido de informação</h1>
+<div class="alert alert-info m-b-10"><i class="fa fa-info"></i>&nbsp; O rastreio assumirá o status de "Tratado" ou "Solucionado" caso receber pagamento da PI.</div>
 <form ng-submit="PiForm.save()" class="form-default" novalidate="novalidate">
     <div class="row">
         <div class="col-md-6 form-group">
@@ -35,9 +36,9 @@
             <div class="date-picker">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                    <input class="form-control" id="data" ng-model="PiForm.pi.data_pagamento_readable" placeholder="Data de pgto." ui-date-mask />
+                    <input class="form-control" id="data" ng-model="PiForm.pi.data_pagamento" placeholder="Data de pgto." ui-date-mask />
                     <div class="picker-wrap">
-                        <date-picker ng-model="PiForm.pi.data_pagamento_readable"></date-picker>
+                        <date-picker ng-model="PiForm.pi.data_pagamento"></date-picker>
                     </div>
                 </div>
             </div>

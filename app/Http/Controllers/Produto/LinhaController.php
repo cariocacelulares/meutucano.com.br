@@ -210,6 +210,8 @@ class LinhaController extends Controller
             return $this->showResponse($data);
         } catch (\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+
+            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
             return $this->clientErrorResponse($data);
         }
     }

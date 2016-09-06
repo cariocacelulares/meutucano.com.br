@@ -21,11 +21,6 @@ class Pedido extends \Eloquent
     /**
      * @var array
      */
-    protected $fillable = ['*'];
-
-    /**
-     * @var array
-     */
     protected $appends = [
         'created_at_readable',
         'marketplace_readable',
@@ -159,7 +154,7 @@ class Pedido extends \Eloquent
             case 'WALMART':
                 return 'Walmart';
             case 'MERCADOLIVRE':
-                return 'ML ' . ucfirst(strtolower($this->marketplace_adicional));
+                return 'Mercado Livre';
             default:
                 return $this->marketplace;
         }

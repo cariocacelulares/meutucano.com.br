@@ -13,6 +13,8 @@ trait RestControllerTrait
     use RestResponseTrait;
 
     /**
+     * Retorna uma lista de todos recursos
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function index()
@@ -24,7 +26,10 @@ trait RestControllerTrait
     }
 
     /**
-     * Filter
+     * Manipula a requisição para listagem
+     *
+     * @param  EloquentBuilder $m
+     * @return array
      */
     protected function handleRequest($m)
     {
@@ -60,6 +65,8 @@ trait RestControllerTrait
     }
 
     /**
+     * Retorna um único recurso
+     *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -74,6 +81,8 @@ trait RestControllerTrait
     }
 
     /**
+     * Cria novo recurso
+     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -91,12 +100,14 @@ trait RestControllerTrait
         } catch(\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
 
-            \Log::error(logMessage($ex));
+            \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
             return $this->clientErrorResponse($data);
         }
     }
 
     /**
+     * Atualiza um recurso
+     *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -115,48 +126,31 @@ trait RestControllerTrait
                 throw new \Exception("ValidationException");
             }
 
-            $data->fill($this->handleInputData(Input::all()));
+            $data->fill(Input::all());
             $data->save();
             return $this->showResponse($data);
         } catch(\Exception $ex) {
+            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
+
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }
 
     /**
+     * Deleta um recurso
+     *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function destroy($id)
     {
         $m = self::MODEL;
-        if(!$data = $m::find($id))
-        {
+        if (!$data = $m::find($id)) {
             return $this->notFoundResponse();
         }
         $data->delete();
+
         return $this->deletedResponse();
-    }
-
-    private function handleInputData($inputs)
-    {
-        $skip = ['created_at', 'updated_at', 'deleted_at'];
-
-        foreach ($inputs as $key => $value) {
-            if ($value && is_string($value) && \DateTime::createFromFormat('d/m/Y', $value) !== false) {
-                $originalKey = str_replace('_readable', '', $key);
-
-                if (in_array($originalKey, $skip))
-                    continue;
-
-                if (array_key_exists($originalKey, $inputs)) {
-                    $inputs[$originalKey] = Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d');
-                    $skip[] = $originalKey;
-                }
-            }
-        }
-
-        return $inputs;
     }
 }

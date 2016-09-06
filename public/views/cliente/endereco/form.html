@@ -1,41 +1,38 @@
 <h1>Gerenciando endereço</h1>
 <form ng-submit="EnderecoForm.save()" novalidate="novalidate" class="form-default">
-    <div ng-repeat="endereco in EnderecoForm.cliente.enderecos">
-        <div class="row">
-            <div class="col-md-10 form-group">
-                <label for="rua">Rua</label>
-                <input ng-model="endereco.rua" class="form-control" id="rua" placeholder="Rua" required />
-            </div>
-            <div class="col-md-2 form-group">
-                <label for="num">Nº</label>
-                <input ng-model="endereco.numero" class="form-control" id="num" placeholder="Número" required />
-            </div>
+    <div class="row">
+        <div class="col-md-10 form-group">
+            <label for="rua">Rua</label>
+            <input ng-model="EnderecoForm.endereco.rua" class="form-control" id="rua" placeholder="Rua" required />
         </div>
-        <div class="row">
-            <div class="col-md-6 form-group">
-                <label for="bairro">Bairro</label>
-                <input ng-model="endereco.bairro" class="form-control" id="bairro" placeholder="Bairro" required />
-            </div>
-            <div class="col-md-6 form-group">
-                <label for="complemento">Complemento</label>
-                <input ng-model="endereco.complemento" class="form-control" id="complemento" placeholder="Complemento" required />
-            </div>
+        <div class="col-md-2 form-group">
+            <label for="num">Nº</label>
+            <input ng-model="EnderecoForm.endereco.numero" class="form-control" id="num" placeholder="Número" required />
         </div>
-        <div class="row">
-            <div class="col-md-5 form-group">
-                <label for="cep">CEP</label>
-                <input ng-model="endereco.cep" class="form-control" id="cep" placeholder="CEP" required />
-            </div>
-            <div class="col-md-5 form-group">
-                <label for="cidade">Cidade</label>
-                <input ng-model="endereco.cidade" class="form-control" id="cidade" placeholder="Cidade" required />
-            </div>
-            <div class="col-md-2 form-group">
-                <label for="uf">UF</label>
-                <input ng-model="endereco.uf" class="form-control" id="uf" placeholder="UF" required />
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 form-group">
+            <label for="bairro">Bairro</label>
+            <input ng-model="EnderecoForm.endereco.bairro" class="form-control" id="bairro" placeholder="Bairro" required />
         </div>
-        <hr ng-if="!$last"/>
+        <div class="col-md-6 form-group">
+            <label for="complemento">Complemento</label>
+            <input ng-model="EnderecoForm.endereco.complemento" class="form-control" id="complemento" placeholder="Complemento" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-5 form-group">
+            <label for="cep">CEP</label>
+            <input ng-model="EnderecoForm.endereco.cep" class="form-control" id="cep" placeholder="CEP" required />
+        </div>
+        <div class="col-md-5 form-group">
+            <label for="cidade">Cidade</label>
+            <input ng-model="EnderecoForm.endereco.cidade" class="form-control" id="cidade" placeholder="Cidade" required />
+        </div>
+        <div class="col-md-2 form-group">
+            <label for="uf">UF</label>
+            <input ng-model="EnderecoForm.endereco.uf" class="form-control" id="uf" placeholder="UF" required />
+        </div>
     </div>
     <div class="row">
         <div class="pull-right">
