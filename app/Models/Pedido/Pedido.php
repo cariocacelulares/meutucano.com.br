@@ -23,6 +23,23 @@ class Pedido extends \Eloquent
     /**
      * @var array
      */
+    protected $fillable = [
+        'cliente_id',
+        'cliente_endereco_id',
+        'codigo_skyhub',
+        'frete_skyhub',
+        'codigo_marketplace',
+        'marketplace',
+        'operacao',
+        'total',
+        'estimated_delivery',
+        'status',
+        'priorizado',
+    ];
+
+    /**
+     * @var array
+     */
     protected $appends = [
         'marketplace_readable',
         'status_description',

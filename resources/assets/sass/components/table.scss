@@ -184,6 +184,10 @@
     tbody {
         border: 1px solid $color-master-lighter;
         border-top: none;
+
+        td:last-child {
+            border-right: 1px solid $color-master-lighter;
+        }
     }
 
     thead th {

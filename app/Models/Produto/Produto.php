@@ -34,6 +34,7 @@ class Produto extends Model
         'ean',
         'referencia',
         'unidade',
+        'estoque',
         'controle_serial',
         'ativo',
     ];
