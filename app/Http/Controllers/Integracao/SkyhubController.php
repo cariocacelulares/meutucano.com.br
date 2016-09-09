@@ -1,13 +1,16 @@
 <?php namespace App\Http\Controllers\Integracao;
 
-use App\Models\Cliente;
-use App\Models\ClienteEndereco;
-use App\Models\Pedido;
-use App\Models\PedidoProduto;
+use App\Http\Controllers\Controller;
+use App\Models\Cliente\Cliente;
+use App\Models\Cliente\Endereco;
+use App\Models\Pedido\Pedido;
+use App\Models\Pedido\PedidoProduto;
 use App\Models\Produto\Produto;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class SkyhubController
@@ -15,7 +18,6 @@ use Illuminate\Support\Facades\Mail;
  */
 class SkyhubController extends Controller
 {
-
     /**
      * Formata o ID do pedido no marketplace
      *
@@ -119,7 +121,8 @@ class SkyhubController extends Controller
             return false;
 
         try {
-            $client = new \GuzzleHttp\Client([
+            Log::info('Requisição skyhub para: ' . $url, $params);
+            $client = new Client([
                 'base_uri' => \Config::get('tucano.skyhub.api.url'),
                 'headers' => [
                     "Accept"       => "application/json",
@@ -133,8 +136,10 @@ class SkyhubController extends Controller
 
             return json_decode($r->getBody(), true);
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
+            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url));
             return $e->getMessage();
         } catch (\Exception $e) {
+            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url));
             return $e->getMessage();
         }
     }
@@ -156,8 +161,9 @@ class SkyhubController extends Controller
             $cliente->nome = $s_pedido['customer']['name'];
             $cliente->fone = '(' . substr($clienteFone, 0, 2) . ')' . substr($clienteFone, 2, 5) . '-' . substr($clienteFone, 7);
             $cliente->save();
+            Log::info("Cliente {$cliente->id} importado para o pedido " . $s_pedido['code']);
 
-            $clienteEndereco = ClienteEndereco::firstOrNew([
+            $clienteEndereco = Endereco::firstOrNew([
                 'cliente_id' => $cliente->id,
                 'cep'        => $s_pedido['shipping_address']['postcode']
             ]);
@@ -168,6 +174,7 @@ class SkyhubController extends Controller
             $clienteEndereco->cidade      = $s_pedido['shipping_address']['city'];
             $clienteEndereco->uf          = $s_pedido['shipping_address']['region'];
             $clienteEndereco->save();
+            Log::info("Endereço {$clienteEndereco->id} importado para o pedido " . $s_pedido['code']);
 
             $marketplace = $this->parseMarketplaceName($s_pedido['code']);
             $operacao    = ($s_pedido['shipping_address']['region'] == \Config::get('tucano.uf'))
@@ -179,11 +186,16 @@ class SkyhubController extends Controller
                 substr($s_pedido['code'], strpos($s_pedido['code'], '-') + 1)
             );
 
+            // Abre um transaction no banco de dados
+            DB::beginTransaction();
+            Log::debug('Transaction - begin');
+
             $pedido = Pedido::firstOrCreate([
                 'cliente_id'          => $cliente->id,
                 'cliente_endereco_id' => $clienteEndereco->id,
                 'codigo_marketplace'  => $codMarketplace
             ]);
+
             $pedido->cliente_id          = $cliente->id;
             $pedido->cliente_endereco_id = $clienteEndereco->id;
             $pedido->codigo_skyhub       = $s_pedido['code'];
@@ -196,12 +208,14 @@ class SkyhubController extends Controller
             $pedido->status              = $this->parseMarketplaceStatus($s_pedido['status']['type']);
             $pedido->created_at          = substr($s_pedido['placed_at'], 0, 10) . ' ' . substr($s_pedido['placed_at'], 11, 8);
 
-            $pedido->save();
-
             foreach ($s_pedido['items'] as $s_produto) {
                 $produto = Produto::firstOrCreate(['sku' => $s_produto['product_id']]);
-                $produto->titulo = $s_produto['name'];
-                $produto->save();
+
+                // Importa as informações do produto se não exisitir
+                if ($produto->wasRecentlyCreated) {
+                    $produto->titulo = $s_produto['name'];
+                    $produto->save();
+                }
 
                 $pedidoProduto = PedidoProduto::firstOrCreate([
                     'pedido_id'   => $pedido->id,
@@ -210,7 +224,17 @@ class SkyhubController extends Controller
                     'quantidade'  => $s_produto['qty']
                 ]);
                 $pedidoProduto->save();
+                Log::info('Produto ' . $s_produto['product_id'] . ' importado no pedido ' . $s_pedido['code']);
             }
+
+            $this->updateStockData($s_pedido, $pedido);
+
+            $pedido->save();
+            Log::info('Pedido importado ' . $s_pedido['code']);
+
+            // Fecha a transação e comita as alterações
+            DB::commit();
+            Log::debug('Transaction - commit');
 
             $this->request(
                 sprintf('/orders/%s/exported', $s_pedido['code']),
@@ -220,9 +244,15 @@ class SkyhubController extends Controller
                 'PUT'
             );
 
+            Log::info('Pedido importado', $s_pedido);
             return sprintf('Pedido %s importado', $s_pedido['code']);
         } catch (\Exception $e) {
-            $error = 'Pedido ' . $s_pedido['code'] . ' não importado: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $s_pedido;
+            // Fecha a trasação e cancela as alterações
+            DB::rollBack();
+            Log::debug('Transaction - rollback');
+
+            Log::critical(logMessage($e, 'Pedido ' . $s_pedido['code'] . ' não importado'), $s_pedido);
+            $error = 'Pedido ' . $s_pedido['code'] . ' não importado: ' . $e->getMessage() . ' - ' . $e->getLine();
 
             Mail::send('emails.error', [
                 'error' => $error
@@ -230,6 +260,7 @@ class SkyhubController extends Controller
                 $m->from('dev@cariocacelulares.com.br', 'Meu Tucano');
                 $m->to('dev.cariocacelulares@gmail.com', 'DEV')->subject('Erro no sistema!');
             });
+
             return false;
         }
     }
@@ -243,8 +274,8 @@ class SkyhubController extends Controller
     {
         $pedidos = Pedido::whereNotNull('codigo_skyhub')->get();
         foreach ($pedidos as $pedido) {
+            $oldStatus          = $pedido->status;
             $s_pedido           = $this->request('/orders/' . $pedido['codigo_skyhub']);
-
             $pedido->status     = $this->parseMarketplaceStatus($s_pedido['status']['type']);
             $pedido->created_at = substr($s_pedido['placed_at'], 0, 10) . ' ' . substr($s_pedido['placed_at'], 11, 8);
 
@@ -255,6 +286,7 @@ class SkyhubController extends Controller
             }
 
             $pedido->save();
+            Log::info("Status do pedido {$pedido->id} atualizado de {$oldStatus} para {$pedido->status}.");
 
             if ($pedido->rastreio) {
                 if ($pedido->rastreio->status == 4) {
@@ -268,35 +300,55 @@ class SkyhubController extends Controller
      * Update stock data from Magento
      *
      * @param  SkyhubPedido $s_pedido
+     * @param  Pedido $pedido
      * @return boolean
      */
-    protected function updateStockData($s_pedido)
+    protected function updateStockData($s_pedido, $pedido)
     {
         try {
-            $dataPedido = Carbon::createFromFormat('Y-m-d', substr($s_pedido['placed_at'], 0, 10))->format('Ymd');
-
+            /*$dataPedido = Carbon::createFromFormat('Y-m-d', substr($s_pedido['placed_at'], 0, 10))->format('Ymd');
             //TODO: Remover essa linha de código
-            if ($dataPedido <= 20160818)
+            if ($dataPedido <= 20160907)
                 return false;
             //-----
+            */
 
-            $newStatus = $this->parseMarketplaceStatus($s_pedido['status']['type']);
-
-            foreach ($s_pedido['items'] as $s_produto) {
-                $stockChange[$s_produto['product_id']] = $s_produto['qty'];
+            $oldStatus = null;
+            $wasRecentlyCreated = $pedido->wasRecentlyCreated;
+            if (!$wasRecentlyCreated) {
+                $oldStatus = $pedido->getOriginal('status');
+                $oldStatus = ($oldStatus || $oldStatus === 0) ? $oldStatus : null;
             }
 
-            if ($pedido = Pedido::where('codigo_skyhub', '=', $s_pedido['code'])->first()) {
-                if (($newStatus != $pedido->status) && $newStatus == 5) {
-                    with(new MagentoController())->updateInventory($stockChange);
+            foreach ($s_pedido['items'] as $s_produto) {
+                $produto =  Produto::find($s_produto['product_id']);
+
+                if (!$produto)
+                    continue;
+
+                $oldEstoque = $produto->estoque;
+
+                if (!$wasRecentlyCreated) {
+                    if (($pedido->status != $oldStatus) && $pedido->status == 5) {
+                        $produto->estoque = $oldEstoque + $s_produto['qty'];
+                    }
+                } elseif ($pedido->status != 5) {
+                    $produto->estoque = $oldEstoque - $s_produto['qty'];
                 }
-            } elseif ($newStatus != 5) {
-                with(new MagentoController())->updateInventory($stockChange, false);
+
+                $produto->save();
+
+                if ($oldEstoque != $produto->estoque) {
+                    Log::info("Estoque do produto {$s_produto['product_id']} alterado de {$oldEstoque} para {$produto->estoque}.");
+                } else {
+                    Log::info("Estoque do produto {$s_produto['product_id']} não sofreu alterações: {$produto->estoque}.");
+                }
             }
 
             return true;
         } catch (\Exception $e) {
-            $error = 'Não foi possível alterar estoque no Magento: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $s_pedido;
+            Log::critical(logMessage($e, 'Não foi possível alterar estoque de um ou mais produtos do pedido ' . $s_pedido['code'] . ' no tucano'), $s_pedido['items']);
+            $error = 'Não foi possível alterar estoque no tucano: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $s_pedido;
 
             Mail::send('emails.error', [
                 'error' => $error
@@ -335,13 +387,13 @@ class SkyhubController extends Controller
 
         if ($s_pedido) {
             if ($this->importPedido($s_pedido)) {
-                $this->updateStockData($s_pedido);
-
                 $this->request(
                     sprintf('/queues/orders/%s', $s_pedido['code']),
                     [],
                     'DELETE'
                 );
+
+                Log::info('Pedido ' . $s_pedido['code'] . ' removido da fila de espera.');
             }
         }
     }
@@ -385,11 +437,14 @@ class SkyhubController extends Controller
                         ['json' => $jsonData],
                         'POST'
                     );
+
+                    Log::info("Dados de envio e nota fiscal atualizados do pedido {$pedido->id} / {$pedido->codigo_skyhub}", $jsonData);
                 }
 
                 return true;
 
             } catch (\Exception $e) {
+                Log::critical(logMessage($e, 'Pedido não faturado'), ['id' => $pedido->id, 'codigo_skyhub' => $pedido->codigo_skyhub]);
                 $error = 'Pedido não faturado: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $pedido;
 
                 Mail::send('emails.error', [
@@ -420,6 +475,7 @@ class SkyhubController extends Controller
                             [],
                             'POST'
                         );
+                        Log::info("Pedido {$pedido->id} / {$pedido->skyhub} alterado para enviado.");
                         break;
                     }
                     case 5: {
@@ -428,6 +484,7 @@ class SkyhubController extends Controller
                             [],
                             'POST'
                         );
+                        Log::info("Pedido {$pedido->id} / {$pedido->skyhub} cancelado.");
                         break;
                     }
                 }
@@ -435,6 +492,7 @@ class SkyhubController extends Controller
 
             return true;
         } catch (\Exception $e) {
+            Log::critical(logMessage($e, 'Não foi possível alterar o status do pedido na Skyhub'), ['id' => $pedido->id, 'codigo_skyhub' => $pedido->codigo_skyhub]);
             $error = 'Não foi possível alterar o status do pedido na Skyhub: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $pedido;
 
             Mail::send('emails.error', [
@@ -473,7 +531,7 @@ class SkyhubController extends Controller
 
             return sprintf('%s pedido(s) cancelado(s) na Skyhub', $cancelados);
         } catch (\Exception $e) {
-            \Log::error('Não foi possível cancelar o pedido na Skyhub' . $e->getMessage() . ' - ' . $e->getLine());
+            Log::error(logMessage($e, 'Não foi possível cancelar o pedido na Skyhub'));
             return false;
         }
     }

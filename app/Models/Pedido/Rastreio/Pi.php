@@ -32,7 +32,6 @@ class Pi extends \Eloquent
         'data_pagamento',
         'valor_pago',
         'acao',
-        'protocolo',
         'pago_cliente',
         'observacoes'
     ];
@@ -42,6 +41,7 @@ class Pi extends \Eloquent
      */
     protected $appends = [
         'status_description',
+        'protocolo'
     ];
 
     /**
@@ -106,5 +106,20 @@ class Pi extends \Eloquent
             return null;
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
+    }
+
+    /**
+     * Return protocolo from rastreio
+     *
+     * @return string
+     */
+    public function getProtocoloAttribute()
+    {
+        if ((int)$this->acao === 1) {
+            $rastreio = Rastreio::find($this->rastreio_id);
+            return ($rastreio) ? $rastreio->protocolo : null;
+        } else {
+            return null;
+        }
     }
 }

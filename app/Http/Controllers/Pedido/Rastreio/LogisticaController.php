@@ -54,6 +54,15 @@ class LogisticaController extends Controller
             if (Input::has('acao')) {
                 $data->rastreio->status = 5;
                 $data->rastreio->save();
+
+                if ((int)$data->acao === 1) {
+                    if ($protocolo = Input::get('protocolo')) {
+                        if ($rastreio = Rastreio::find($data->rastreio_id)) {
+                            $rastreio->protocolo = $protocolo;
+                            $rastreio->save();
+                        }
+                    }
+                }
             }
 
             return $this->createdResponse($data);
@@ -61,6 +70,48 @@ class LogisticaController extends Controller
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
+            return $this->clientErrorResponse($data);
+        }
+    }
+
+    /**
+     * Atualiza um recurso
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function update($id)
+    {
+        $m = self::MODEL;
+
+        if (!$data = $m::find($id)) {
+            return $this->notFoundResponse();
+        }
+
+        try {
+            $v = \Validator::make(Input::except(['protocolo']), $this->validationRules);
+
+            if ($v->fails()) {
+                throw new \Exception("ValidationException");
+            }
+
+            $data->fill(Input::except(['protocolo']));
+            $data->save();
+
+            if ((int)$data->acao === 1) {
+                if ($protocolo = Input::get('protocolo')) {
+                    if ($rastreio = Rastreio::find($data->rastreio_id)) {
+                        $rastreio->protocolo = $protocolo;
+                        $rastreio->save();
+                    }
+                }
+            }
+
+            return $this->showResponse($data);
+        } catch(\Exception $ex) {
+            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
+
+            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }

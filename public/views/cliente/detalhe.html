@@ -44,28 +44,17 @@
         <div class="panel-primary">
             <div class="panel-heading">
                 <div class="panel-title"><i class="fa-map"></i>&nbsp; Endereço</div>
-                <div ng-if="ClienteDetalhe.cliente.enderecos.length === 1" class="panel-controls">
-                    <a ng-click="PedidoDetalhe.clienteEnderecoHelper.editar(ClienteDetalhe.cliente.enderecos[0].id, true)" class="btn-default">
-                        <i class="fa-edit"></i>&nbsp; Editar
-                    </a>
-                </div>
             </div>
             <div class="panel-body">
                 <div class="col-md-12" ng-repeat="endereco in ClienteDetalhe.cliente.enderecos">
-                    <div class="row">
-                        <p class="pull-left bold" ng-bind="endereco.rua + ' - ' + endereco.numero"></p>
-                        <a ng-hide="ClienteDetalhe.cliente.enderecos.length === 1" ng-click="ClienteDetalhe.clienteEnderecoHelper.editar(endereco.id, true)" class="pull-right">
+                    <div class="row lh-25 text-upper">
+                        <a ng-click="ClienteDetalhe.clienteEnderecoHelper.editar(endereco.id, true)" class="pull-right transform-none">
                             <i class="fa-pencil"></i>&nbsp; Editar
                         </a>
-                    </div>
-                    <div class="row">
-                        <p class="bold" ng-bind="endereco.bairro + ((endereco.complemento) ? ',' + endereco.complemento : '')"></p>
-                    </div>
-                    <div class="row">
-                        <p class="bold" ng-bind="endereco.cidade + ' / ' + endereco.uf"></p>
-                    </div>
-                    <div class="row">
-                        <p class="bold" ng-bind="endereco.cep_readable"></p>
+                        {{ endereco.rua + ' - ' + endereco.numero }} <br/>
+                        {{ endereco.bairro + ((endereco.complemento) ? ',' + endereco.complemento : '') }} <br/>
+                        {{ endereco.cidade + ' / ' + endereco.uf }} <br/>
+                        {{ endereco.cep_readable }} <br/>
                     </div>
                     <hr ng-if="!$last" />
                 </div>

@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-3 form-group">
+                <div class="col-md-2 form-group">
                     <label for="linha">Linha</label>
                     <select name="linha" id="linha"
                         ng-model="ProdutoForm.produto.linha"
@@ -50,7 +50,7 @@
                         ng-change="ProdutoForm.linhaChange()">
                     </select>
                 </div>
-                <div class="col-md-3 form-group">
+                <div class="col-md-2 form-group">
                     <label for="marca">Marca</label>
                     <select name="marca" id="marca"
                         ng-model="ProdutoForm.produto.marca"
@@ -80,7 +80,11 @@
                         <option value="0">Desabilitado</option>
                     </select>
                 </div>
-                <div class="col-md-2 form-group">
+                <div class="col-md-1 form-group">
+                    <label for="estoque">Estoque</label>
+                    <input type="number" ng-model="ProdutoForm.produto.estoque" id="estoque" placeholder="Qtd" ng-minlength="0" min="0" required />
+                </div>
+                <div class="col-md-3 form-group">
                     <div class="checkbox check-success m-t-35">
                       <input ng-model="ProdutoForm.produto.controle_serial" type="checkbox" value="1" id="controle_serial">
                       <label for="controle_serial">Controle Serial</label>

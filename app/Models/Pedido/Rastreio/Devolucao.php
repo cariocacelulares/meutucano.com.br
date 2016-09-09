@@ -31,7 +31,6 @@ class Devolucao extends \Eloquent
         'usuario_id',
         'motivo',
         'acao',
-        'protocolo',
         'pago_cliente',
         'observacoes'
     ];
@@ -40,7 +39,8 @@ class Devolucao extends \Eloquent
      * @var array
      */
     protected $appends = [
-        'motivo_description'
+        'motivo_description',
+        'protocolo'
     ];
 
     /**
@@ -99,5 +99,20 @@ class Devolucao extends \Eloquent
             return null;
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
+    }
+
+    /**
+     * Return protocolo from rastreio
+     *
+     * @return string
+     */
+    public function getProtocoloAttribute()
+    {
+        if ((int)$this->acao === 1) {
+            $rastreio = Rastreio::find($this->rastreio_id);
+            return ($rastreio) ? $rastreio->protocolo : null;
+        } else {
+            return null;
+        }
     }
 }

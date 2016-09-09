@@ -209,7 +209,7 @@
             </tbody>
             <tbody>
                 <tr ng-if="PedidoDetalhe.pedido.produtos" ng-repeat="produto in PedidoDetalhe.pedido.produtos">
-                    <td class="text-center">{{ produto.produto_sku }}</td>
+                    <td class="text-center"><a ui-sref="app.produtos.form({sku: produto.produto_sku})" title="Visualizar produto {{ produto.produto.titulo }}">{{ produto.produto_sku }}</a></td>
                     <td class="text-left">
                         <b>{{ produto.produto.titulo }}</b><br>
                         <small class="hint-text">{{ produto.imei }}</small>

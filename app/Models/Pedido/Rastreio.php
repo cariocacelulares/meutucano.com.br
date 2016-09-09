@@ -35,6 +35,7 @@ class Rastreio extends \Eloquent
         'prazo',
         'observacao',
         'status',
+        'protocolo',
         'imagem_historico'
     ];
 

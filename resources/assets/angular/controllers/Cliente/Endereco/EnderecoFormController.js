@@ -21,18 +21,5 @@
                 $scope.closeThisDialog(true);
             });
         };
-
-        /**
-         * Exclui o endereco
-         *
-         * @return {void}
-         */
-        vm.destroy = function() {
-            Endereco.delete(vm.endereco.id).then(function() {
-                toaster.pop('success', 'Sucesso!', 'ENdereço excluído com sucesso!');
-                $scope.closeThisDialog(true);
-            });
-        };
     }
-
 })();

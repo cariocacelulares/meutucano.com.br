@@ -3,7 +3,7 @@
 /**
  * Rota padrão para o Agnular
  */
-Route::get('/', function () { return view('index'); });
+Route::get('/', function() { return view('index'); });
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Route::get('testApi', 'MagentoController@queue');
 
@@ -11,6 +11,7 @@ Route::get('testApi', 'MagentoController@queue');
  * API
  */
 Route::group(['prefix' => '/api'], function() {
+    // Route::get('teste', 'Integracao\SkyhubController@teste');
 
     /**
      * Auth
