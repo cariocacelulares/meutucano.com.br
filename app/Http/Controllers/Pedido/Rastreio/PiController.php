@@ -66,19 +66,28 @@ class PiController extends Controller
     {
         $m = self::MODEL;
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
+            $v = \Validator::make(Input::except(['protocolo']), $this->validationRules);
 
             if($v->fails()) {
                 throw new \Exception("ValidationException");
             }
-            $data = $m::create(Input::all());
+            $data = $m::create(Input::except(['protocolo']));
 
             if (Input::has('valor_pago')) {
                 $data->rastreio->status = 8;
-                $data->rastreio->save();
             } else {
                 $data->rastreio->status = 7;
-                $data->rastreio->save();
+            }
+
+            $data->rastreio->save();
+
+            if ((int)$data->acao === 1) {
+                if ($protocolo = Input::get('protocolo')) {
+                    if ($rastreio = Rastreio::find($data->rastreio_id)) {
+                        $rastreio->protocolo = $protocolo;
+                        $rastreio->save();
+                    }
+                }
             }
 
             return $this->createdResponse($data);
@@ -86,6 +95,48 @@ class PiController extends Controller
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
+            return $this->clientErrorResponse($data);
+        }
+    }
+
+    /**
+     * Atualiza um recurso
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function update($id)
+    {
+        $m = self::MODEL;
+
+        if (!$data = $m::find($id)) {
+            return $this->notFoundResponse();
+        }
+
+        try {
+            $v = \Validator::make(Input::except(['protocolo']), $this->validationRules);
+
+            if ($v->fails()) {
+                throw new \Exception("ValidationException");
+            }
+
+            $data->fill(Input::except(['protocolo']));
+            $data->save();
+
+            if ((int)$data->acao === 1) {
+                if ($protocolo = Input::get('protocolo')) {
+                    if ($rastreio = Rastreio::find($data->rastreio_id)) {
+                        $rastreio->protocolo = $protocolo;
+                        $rastreio->save();
+                    }
+                }
+            }
+
+            return $this->showResponse($data);
+        } catch(\Exception $ex) {
+            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
+
+            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }

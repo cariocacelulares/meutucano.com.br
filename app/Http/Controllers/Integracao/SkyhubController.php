@@ -136,10 +136,10 @@ class SkyhubController extends Controller
 
             return json_decode($r->getBody(), true);
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
-            Log::warning('Não foi possível fazer a requisição para: ' . $url .': ' . $e->getMessage());
+            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url));
             return $e->getMessage();
         } catch (\Exception $e) {
-            Log::warning('Não foi possível fazer a requisição para: ' . $url .': ' . $e->getMessage());
+            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url));
             return $e->getMessage();
         }
     }
@@ -251,7 +251,7 @@ class SkyhubController extends Controller
             DB::rollBack();
             Log::debug('Transaction - rollback');
 
-            Log::critical('Pedido ' . $s_pedido['code'] . ' não importado: ' . $e->getMessage() . ' - ' . $e->getLine(), $s_pedido);
+            Log::critical(logMessage($e, 'Pedido ' . $s_pedido['code'] . ' não importado'), $s_pedido);
             $error = 'Pedido ' . $s_pedido['code'] . ' não importado: ' . $e->getMessage() . ' - ' . $e->getLine();
 
             Mail::send('emails.error', [
@@ -347,7 +347,7 @@ class SkyhubController extends Controller
 
             return true;
         } catch (\Exception $e) {
-            Log::critical('Não foi possível alterar estoque de um ou mais produtos do pedido ' . $s_pedido['code'] . ' no tucano: ' . $e->getMessage(), $s_pedido['items']);
+            Log::critical(logMessage($e, 'Não foi possível alterar estoque de um ou mais produtos do pedido ' . $s_pedido['code'] . ' no tucano'), $s_pedido['items']);
             $error = 'Não foi possível alterar estoque no tucano: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $s_pedido;
 
             Mail::send('emails.error', [
@@ -444,7 +444,7 @@ class SkyhubController extends Controller
                 return true;
 
             } catch (\Exception $e) {
-                Log::critical('Pedido não faturado: ' . $e->getMessage(), ['id' => $pedido->id, 'codigo_skyhub' => $pedido->codigo_skyhub]);
+                Log::critical(logMessage($e, 'Pedido não faturado'), ['id' => $pedido->id, 'codigo_skyhub' => $pedido->codigo_skyhub]);
                 $error = 'Pedido não faturado: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $pedido;
 
                 Mail::send('emails.error', [
@@ -492,7 +492,7 @@ class SkyhubController extends Controller
 
             return true;
         } catch (\Exception $e) {
-            Log::critical('Não foi possível alterar o status do pedido na Skyhub: ' . $e->getMessage(), ['id' => $pedido->id, 'codigo_skyhub' => $pedido->codigo_skyhub]);
+            Log::critical(logMessage($e, 'Não foi possível alterar o status do pedido na Skyhub'), ['id' => $pedido->id, 'codigo_skyhub' => $pedido->codigo_skyhub]);
             $error = 'Não foi possível alterar o status do pedido na Skyhub: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $pedido;
 
             Mail::send('emails.error', [
@@ -531,7 +531,7 @@ class SkyhubController extends Controller
 
             return sprintf('%s pedido(s) cancelado(s) na Skyhub', $cancelados);
         } catch (\Exception $e) {
-            Log::error('Não foi possível cancelar o pedido na Skyhub' . $e->getMessage());
+            Log::error(logMessage($e, 'Não foi possível cancelar o pedido na Skyhub'));
             return false;
         }
     }

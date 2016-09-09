@@ -28,7 +28,6 @@ class Logistica extends \Eloquent
         'autorizacao',
         'motivo',
         'acao',
-        'protocolo',
         'data_postagem',
         'observacoes',
     ];
@@ -39,6 +38,13 @@ class Logistica extends \Eloquent
     protected $casts = [
         'motivo' => 'string',
         'acao'   => 'string',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $appends = [
+        'protocolo'
     ];
 
     /**
@@ -94,5 +100,20 @@ class Logistica extends \Eloquent
             return null;
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
+    }
+
+    /**
+     * Return protocolo from rastreio
+     *
+     * @return string
+     */
+    public function getProtocoloAttribute()
+    {
+        if ((int)$this->acao === 1) {
+            $rastreio = Rastreio::find($this->rastreio_id);
+            return ($rastreio) ? $rastreio->protocolo : null;
+        } else {
+            return null;
+        }
     }
 }

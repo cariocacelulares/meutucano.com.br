@@ -9,7 +9,6 @@ Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 /**
  * API
  */
-    Route::get('teste', 'Integracao\SkyhubController@teste');
 Route::group(['prefix' => '/api'], function() {
     // Route::get('teste', 'Integracao\SkyhubController@teste');
 
