@@ -17,6 +17,8 @@
                     this.name = name;
                     this.vm   = vm;
 
+                    console.log(this.vm);
+
                     if (!$localStorage.pagination) $localStorage.pagination = {};
 
                     if (!$localStorage.pagination.hasOwnProperty(this.name)) {
