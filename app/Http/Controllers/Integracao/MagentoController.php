@@ -7,9 +7,9 @@ use App\Models\Pedido\Pedido;
 use App\Models\Pedido\PedidoProduto;
 use App\Models\Produto\Produto;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
-use Artisaninweb\SoapWrapper\Facades\SoapWrapper;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class MagentoController
@@ -40,6 +40,7 @@ class MagentoController extends Controller
             \Config::get('tucano.magento.api.user'),
             \Config::get('tucano.magento.api.key')
         );
+        Log::info('Requisição soap no magento realizada');
     }
 
     /**
@@ -75,6 +76,7 @@ class MagentoController extends Controller
             return false;
 
         try {
+            Log::info('Requisição tucanomg para: ' . $url, $params);
             $client = new \GuzzleHttp\Client([
                 'base_uri' => \Config::get('tucano.services.tucanomg.host'),
                 'headers' => [
@@ -88,8 +90,10 @@ class MagentoController extends Controller
 
             return json_decode($r->getBody(), true);
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
+            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url));
             return $e->getMessage();
         } catch (\Exception $e) {
+            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url));
             return $e->getMessage();
         }
     }
@@ -110,6 +114,7 @@ class MagentoController extends Controller
             $cliente->fone  = ($mg_order['shipping_address']['fax']) ?: $mg_order['shipping_address']['telephone'];
             $cliente->email = $mg_order['customer_email'];
             $cliente->save();
+            Log::info("Cliente {$cliente->id} importado para o pedido " . $mg_order['increment_id']);
 
             $clienteEndereco = Endereco::firstOrNew([
                 'cliente_id' => $cliente->id,
@@ -119,23 +124,40 @@ class MagentoController extends Controller
             $endereco = explode("\n", $mg_order['shipping_address']['street']);
             $uf       = array_search($mg_order['shipping_address']['region'], \Config::get('tucano.estados_uf'));
 
-            $clienteEndereco->rua         = $endereco[0];
-            $clienteEndereco->numero      = $endereco[1];
-            $clienteEndereco->bairro      = $endereco[2];
-            $clienteEndereco->complemento = $endereco[3];
+            $clienteEndereco->rua         = (isset($endereco[0])) ? $endereco[0] : null;
+            $clienteEndereco->numero      = (isset($endereco[1])) ? $endereco[1] : null;
+            $clienteEndereco->bairro      = (isset($endereco[2])) ? $endereco[2] : null;
+            $clienteEndereco->complemento = (isset($endereco[3])) ? $endereco[3] : null;
             $clienteEndereco->cidade      = $mg_order['shipping_address']['city'];
             $clienteEndereco->uf          = $uf;
             $clienteEndereco->save();
+            Log::info("Endereço {$clienteEndereco->id} importado para o pedido " . $mg_order['increment_id']);
+
+            foreach ($mg_order['items'] as $s_produto) {
+                $produto = Produto::firstOrCreate(['sku' => $s_produto['sku']]);
+
+                // Importa as informações do produto se não exisitir
+                if ($produto->wasRecentlyCreated) {
+                    $produto->titulo = $s_produto['name'];
+                    $produto->save();
+                    Log::info('Produto ' . $produto->sku . ' importado no pedido ' . $mg_order['increment_id']);
+                }
+            }
 
             $operacao    = ($uf == \Config::get('tucano.uf'))
                 ? \Config::get('tucano.venda_interna')
                 : \Config::get('tucano.venda_externa');
+
+            // Abre um transaction no banco de dados
+            DB::beginTransaction();
+            Log::debug('Transaction - begin');
 
             $pedido = Pedido::firstOrCreate([
                 'cliente_id'          => $cliente->id,
                 'cliente_endereco_id' => $clienteEndereco->id,
                 'codigo_marketplace'  => $mg_order['increment_id']
             ]);
+
             $pedido->cliente_id          = $cliente->id;
             $pedido->cliente_endereco_id = $clienteEndereco->id;
             $pedido->frete_valor         = $mg_order['shipping_amount'];
@@ -148,40 +170,42 @@ class MagentoController extends Controller
             $pedido->status              = $this->parseMagentoStatus($mg_order['state']);
             $pedido->created_at          = $mg_order['created_at'];
 
+            foreach ($mg_order['items'] as $s_produto) {
+                $pedidoProduto = PedidoProduto::firstOrCreate([
+                    'pedido_id'   => $pedido->id,
+                    'produto_sku' => $s_produto['sku'],
+                    'valor'       => $s_produto['row_total'],
+                    'quantidade'  => $s_produto['qty_ordered']
+                ]);
+                $pedidoProduto->save();
+                Log::info('PedidoProduto ' . $s_produto['sku'] . ' importado no pedido ' . $mg_order['increment_id']);
+            }
+
+            $this->updateStockData($mg_order, $pedido);
+
             $pedido->save();
+            Log::info('Pedido importado ' . $mg_order['increment_id']);
 
-            // foreach ($s_pedido['items'] as $s_produto) {
-            //     $produto = Produto::firstOrCreate(['sku' => $s_produto['product_id']]);
-            //     $produto->titulo = $s_produto['name'];
-            //     $produto->save();
+            // Fecha a transação e comita as alterações
+            DB::commit();
+            Log::debug('Transaction - commit');
 
-            //     $pedidoProduto = PedidoProduto::firstOrCreate([
-            //         'pedido_id'   => $pedido->id,
-            //         'produto_sku' => $produto->sku,
-            //         'valor'       => $s_produto['special_price'],
-            //         'quantidade'  => $s_produto['qty']
-            //     ]);
-            //     $pedidoProduto->save();
-            // }
-
-            // $this->request(
-            //     sprintf('/orders/%s/exported', $s_pedido['code']),
-            //     ['json' => [
-            //         "exported" => true
-            //     ]],
-            //     'PUT'
-            // );
-
-            // return sprintf('Pedido %s importado', $s_pedido['code']);
+            return sprintf('Pedido %s importado', $mg_order['increment_id']);
         } catch (\Exception $e) {
-            throw $e;
+            // Fecha a trasação e cancela as alterações
+            DB::rollBack();
+            Log::debug('Transaction - rollback');
 
-            // Mail::send('emails.error', [
-            //     'error' => $error
-            // ], function ($m) {
-            //     $m->from('dev@cariocacelulares.com.br', 'Meu Tucano');
-            //     $m->to('dev.cariocacelulares@gmail.com', 'DEV')->subject('Erro no sistema!');
-            // });
+            Log::critical(logMessage($e, 'Pedido ' . $mg_order['increment_id'] . ' não importado'), $mg_order);
+            $error = 'Pedido ' . $mg_order['increment_id'] . ' não importado: ' . $e->getMessage() . ' - ' . $e->getLine();
+
+            Mail::send('emails.error', [
+                'error' => $error
+            ], function ($m) {
+                $m->from('dev@cariocacelulares.com.br', 'Meu Tucano');
+                $m->to('dev.cariocacelulares@gmail.com', 'DEV')->subject('Erro no sistema!');
+            });
+
             return false;
         }
     }
@@ -204,10 +228,67 @@ class MagentoController extends Controller
 
             if ($mg_order) {
                 if ($this->importPedido($mg_order)) {
-            //         // $this->updateStockData($s_pedido);
-            //         // $order = $this->request(sprintf('orders/%s', $order['order_id']), [], 'DELETE');
+                    $order = $this->request(sprintf('orders/%s', $order['order_id']), [], 'DELETE');
+                    Log::info('Pedido ' . $mg_order['increment_id'] . ' removido da fila de espera.');
                 }
             }
+        }
+    }
+
+    /**
+     * Update stock data from Magento
+     *
+     * @param  MagentoOrder $mg_order
+     * @param  Pedido $pedido
+     * @return boolean
+     */
+    protected function updateStockData($mg_order, $pedido)
+    {
+        try {
+            $oldStatus = null;
+            $wasRecentlyCreated = $pedido->wasRecentlyCreated;
+            if (!$wasRecentlyCreated) {
+                $oldStatus = $pedido->getOriginal('status');
+                $oldStatus = ($oldStatus || $oldStatus === 0) ? $oldStatus : null;
+            }
+
+            foreach ($mg_order['items'] as $s_produto) {
+                $produto = Produto::find($s_produto['sku']);
+
+                if (!$produto)
+                    continue;
+
+                $oldEstoque = $produto->estoque;
+
+                if (!$wasRecentlyCreated) {
+                    if (($pedido->status != $oldStatus) && $pedido->status == 5) {
+                        $produto->estoque = $oldEstoque + (int)(($s_produto['qty_canceled']) ? $s_produto['qty_ordered'] : $s_produto['qty_ordered']);
+                    }
+                } elseif ($pedido->status != 5) {
+                    $produto->estoque = $oldEstoque - (int)$s_produto['qty_ordered'];
+                }
+
+                $produto->save();
+
+                if ($oldEstoque != $produto->estoque) {
+                    Log::info("Estoque do produto {$s_produto['sku']} alterado de {$oldEstoque} para {$produto->estoque}.");
+                } else {
+                    Log::info("Estoque do produto {$s_produto['sku']} não sofreu alterações: {$produto->estoque}.");
+                }
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            Log::critical(logMessage($e, 'Não foi possível alterar estoque de um ou mais produtos do pedido ' . $mg_order['increment_id'] . ' no tucano'), $mg_order['items']);
+            $error = 'Não foi possível alterar estoque no tucano: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $mg_order;
+
+            Mail::send('emails.error', [
+                'error' => $error
+            ], function ($m) {
+                $m->from('dev@cariocacelulares.com.br', 'Meu Tucano');
+                $m->to('dev.cariocacelulares@gmail.com', 'DEV')->subject('Erro no sistema!');
+            });
+            return false;
         }
     }
 }

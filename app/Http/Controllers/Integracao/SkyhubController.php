@@ -7,8 +7,8 @@ use App\Models\Pedido\Pedido;
 use App\Models\Pedido\PedidoProduto;
 use App\Models\Produto\Produto;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Mail;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
@@ -176,6 +176,17 @@ class SkyhubController extends Controller
             $clienteEndereco->save();
             Log::info("Endereço {$clienteEndereco->id} importado para o pedido " . $s_pedido['code']);
 
+            foreach ($s_pedido['items'] as $s_produto) {
+                $produto = Produto::firstOrCreate(['sku' => $s_produto['product_id']]);
+
+                // Importa as informações do produto se não exisitir
+                if ($produto->wasRecentlyCreated) {
+                    $produto->titulo = $s_produto['name'];
+                    $produto->save();
+                    Log::info('Produto ' . $s_produto['product_id'] . ' importado no pedido ' . $s_pedido['code']);
+                }
+            }
+
             $marketplace = $this->parseMarketplaceName($s_pedido['code']);
             $operacao    = ($s_pedido['shipping_address']['region'] == \Config::get('tucano.uf'))
                 ? \Config::get('tucano.venda_interna')
@@ -209,22 +220,14 @@ class SkyhubController extends Controller
             $pedido->created_at          = substr($s_pedido['placed_at'], 0, 10) . ' ' . substr($s_pedido['placed_at'], 11, 8);
 
             foreach ($s_pedido['items'] as $s_produto) {
-                $produto = Produto::firstOrCreate(['sku' => $s_produto['product_id']]);
-
-                // Importa as informações do produto se não exisitir
-                if ($produto->wasRecentlyCreated) {
-                    $produto->titulo = $s_produto['name'];
-                    $produto->save();
-                }
-
                 $pedidoProduto = PedidoProduto::firstOrCreate([
                     'pedido_id'   => $pedido->id,
-                    'produto_sku' => $produto->sku,
+                    'produto_sku' => $s_produto['product_id'],
                     'valor'       => $s_produto['special_price'],
                     'quantidade'  => $s_produto['qty']
                 ]);
                 $pedidoProduto->save();
-                Log::info('Produto ' . $s_produto['product_id'] . ' importado no pedido ' . $s_pedido['code']);
+                Log::info('PedidoProduto ' . $s_produto['product_id'] . ' importado no pedido ' . $s_pedido['code']);
             }
 
             $this->updateStockData($s_pedido, $pedido);
@@ -298,7 +301,7 @@ class SkyhubController extends Controller
     }
 
     /**
-     * Update stock data from Magento
+     * Update stock data from Skyhub
      *
      * @param  SkyhubPedido $s_pedido
      * @param  Pedido $pedido
@@ -307,13 +310,6 @@ class SkyhubController extends Controller
     protected function updateStockData($s_pedido, $pedido)
     {
         try {
-            /*$dataPedido = Carbon::createFromFormat('Y-m-d', substr($s_pedido['placed_at'], 0, 10))->format('Ymd');
-            //TODO: Remover essa linha de código
-            if ($dataPedido <= 20160907)
-                return false;
-            //-----
-            */
-
             $oldStatus = null;
             $wasRecentlyCreated = $pedido->wasRecentlyCreated;
             if (!$wasRecentlyCreated) {

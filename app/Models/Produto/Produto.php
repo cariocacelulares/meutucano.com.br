@@ -27,6 +27,7 @@ class Produto extends Model
      * @var array
      */
     protected $fillable = [
+        'sku',
         'marca_id',
         'linha_id',
         'titulo',

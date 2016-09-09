@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "05c38b57ca35ad6b1319e748177ebfd7",
-    "content-hash": "608b5357e8dcfe6a66a4b6a2ab370e42",
+    "hash": "2c9cfa2c0e840862fa8557d9402f65d5",
+    "content-hash": "b9fccce14f1f45416829874784ead71e",
     "packages": [
         {
             "name": "arcanedev/log-viewer",
@@ -5556,7 +5556,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">= 5.5.9"
+        "php": ">= 5.5.9",
+        "ext-soap": "*"
     },
     "platform-dev": []
 }
