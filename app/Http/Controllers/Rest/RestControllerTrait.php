@@ -100,7 +100,7 @@ trait RestControllerTrait
         } catch(\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
 
-            \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
+            \Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
             return $this->clientErrorResponse($data);
         }
     }
@@ -130,7 +130,7 @@ trait RestControllerTrait
             $data->save();
             return $this->showResponse($data);
         } catch(\Exception $ex) {
-            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
+            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);

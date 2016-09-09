@@ -28,7 +28,7 @@ class PedidoController extends Controller
 
         $list = $m::with(['cliente', 'endereco'])
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
-            ->join('pedido_notas', 'pedido_notas.pedido_id', '=', 'pedidos.id')
+            ->leftJoin('pedido_notas', 'pedido_notas.pedido_id', '=', 'pedidos.id')
             ->orderBy('pedidos.created_at', 'DESC');
 
         $list = $this->handleRequest($list);

@@ -7,7 +7,7 @@
                 <button ng-click="tableList.tableHeader.prev()" class="btn btn-default" ng-disabled="tableList.tableData.current_page === 1">
                     <i class="fa fa-angle-left"></i>
                 </button>
-                <button ng-click="tableList.tableHeader.next()" class="btn btn-default" ng-disabled="tableList.tableData.current_page === tableList.tableData.last_page">
+                <button ng-click="tableList.tableHeader.next()" class="btn btn-default" ng-disabled="tableList.tableData.current_page >= tableList.tableData.last_page">
                     <i class="fa fa-angle-right"></i>
                 </button>
             </div>

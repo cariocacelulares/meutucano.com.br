@@ -53,6 +53,10 @@
         background-image: none;
         background-color: $color-master-lightest;
 
+        &[type="number"] {
+            padding-right: 0;
+        }
+
         &:focus {
             color: darken($color-master, 20%);
             border-color: darken($color-master-light, 20%);
