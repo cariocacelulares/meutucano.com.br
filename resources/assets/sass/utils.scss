@@ -58,6 +58,10 @@
 .batida { background: $color-info url('../../assets/img/meta.png') no-repeat right bottom !important; }
 .underline { text-decoration: underline; }
 .text-bold { font-weight: 700; }
+.text-upper { text-transform: uppercase; }
+.text-lower { text-transform: lowercase; }
+.transform-none { text-transform: none; }
+.lh-25 { line-height: 25px; }
 
 .text-hide {
     font: 0/0 a;
