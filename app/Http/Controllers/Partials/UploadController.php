@@ -330,12 +330,15 @@ class UploadController extends Controller
              */
             foreach ($produtos as $item) {
                 $produto = Produto::findOrNew((int) $item->prod->cProd);
-                $produto->sku    = (int) $item->prod->cProd;
-                $produto->titulo = $item->prod->xProd;
-                $produto->ncm    = $item->prod->NCM;
-                $produto->ean    = $item->prod->cEAN;
 
-                $produto->save();
+                // Cria as informações do produto se ele nao existir
+                if ($produto->wasRecentlyCreated) {
+                    $produto->sku    = (int) $item->prod->cProd;
+                    $produto->titulo = $item->prod->xProd;
+                    $produto->ncm    = $item->prod->NCM;
+                    $produto->ean    = $item->prod->cEAN;
+                    $produto->save();
+                }
 
                 $pedidoProduto = PedidoProduto::firstOrNew(['pedido_id' => $idPedido, 'produto_sku' => $produto->sku]);
 

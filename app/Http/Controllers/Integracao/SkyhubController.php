@@ -18,17 +18,6 @@ use Illuminate\Support\Facades\DB;
  */
 class SkyhubController extends Controller
 {
-    public function teste()
-    {
-        $s_pedido = $this->request('/orders/Lojas Americanas-263037965402');
-
-        if ($s_pedido) {
-            if ($this->importPedido($s_pedido)) {
-                Log::info('Pedido ' . $s_pedido['code'] . ' removido da fila de espera.');
-            }
-        }
-    }
-
     /**
      * Formata o ID do pedido no marketplace
      *
@@ -221,8 +210,12 @@ class SkyhubController extends Controller
 
             foreach ($s_pedido['items'] as $s_produto) {
                 $produto = Produto::firstOrCreate(['sku' => $s_produto['product_id']]);
-                $produto->titulo = $s_produto['name'];
-                $produto->save();
+
+                // Importa as informações do produto se não exisitir
+                if ($produto->wasRecentlyCreated) {
+                    $produto->titulo = $s_produto['name'];
+                    $produto->save();
+                }
 
                 $pedidoProduto = PedidoProduto::firstOrCreate([
                     'pedido_id'   => $pedido->id,
@@ -344,6 +337,7 @@ class SkyhubController extends Controller
                 }
 
                 $produto->save();
+
                 if ($oldEstoque != $produto->estoque) {
                     Log::info("Estoque do produto {$s_produto['product_id']} alterado de {$oldEstoque} para {$produto->estoque}.");
                 } else {
@@ -393,8 +387,6 @@ class SkyhubController extends Controller
 
         if ($s_pedido) {
             if ($this->importPedido($s_pedido)) {
-                $this->updateStockData($s_pedido);
-
                 $this->request(
                     sprintf('/queues/orders/%s', $s_pedido['code']),
                     [],
