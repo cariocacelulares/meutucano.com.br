@@ -1,9 +1,10 @@
 <?php namespace App\Http\Controllers\Integracao;
 
-use App\Models\Cliente;
-use App\Models\ClienteEndereco;
-use App\Models\Pedido;
-use App\Models\PedidoProduto;
+use App\Http\Controllers\Controller;
+use App\Models\Cliente\Cliente;
+use App\Models\Cliente\Endereco;
+use App\Models\Pedido\Pedido;
+use App\Models\Pedido\PedidoProduto;
 use App\Models\Produto\Produto;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
@@ -12,7 +13,7 @@ use Artisaninweb\SoapWrapper\Facades\SoapWrapper;
 
 /**
  * Class MagentoController
- * @package App\Http\Controllers\Integracao
+ * @package App\Http\Controllers
  */
 class MagentoController extends Controller
 {
@@ -34,7 +35,7 @@ class MagentoController extends Controller
      */
     public function __construct()
     {
-        $this->api     = new \SoapClient(\Config::get('tucano.magento.api.host'));
+        $this->api     = new \SoapClient(\Config::get('tucano.magento.api.host'), ['cache_wsdl' => WSDL_CACHE_NONE]);
         $this->session = $this->api->login(
             \Config::get('tucano.magento.api.user'),
             \Config::get('tucano.magento.api.key')
@@ -110,7 +111,7 @@ class MagentoController extends Controller
             $cliente->email = $mg_order['customer_email'];
             $cliente->save();
 
-            $clienteEndereco = ClienteEndereco::firstOrNew([
+            $clienteEndereco = Endereco::firstOrNew([
                 'cliente_id' => $cliente->id,
                 'cep'        => $mg_order['shipping_address']['postcode']
             ]);
@@ -137,12 +138,13 @@ class MagentoController extends Controller
             ]);
             $pedido->cliente_id          = $cliente->id;
             $pedido->cliente_endereco_id = $clienteEndereco->id;
-            $pedido->frete_skyhub        = $mg_order['shipping_amount'];
+            $pedido->frete_valor         = $mg_order['shipping_amount'];
+            $pedido->frete_metodo        = (strpos($mg_order['shipping_description'], 'PAC') !== false) ? 'PAC' : 'SEDEX';
+            $pedido->pagamento_metodo    = (strpos($mg_order['payment']['method'], 'ticket') !== false) ? 'boleto' : 'credito';
             $pedido->codigo_marketplace  = $mg_order['increment_id'];
             $pedido->marketplace         = 'Site';
             $pedido->operacao            = $operacao;
             $pedido->total               = $mg_order['subtotal'];
-            // $pedido->estimated_delivery  = substr($s_pedido['estimated_delivery'], 0, 10);
             $pedido->status              = $this->parseMagentoStatus($mg_order['state']);
             $pedido->created_at          = $mg_order['created_at'];
 

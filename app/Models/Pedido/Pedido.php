@@ -26,8 +26,11 @@ class Pedido extends \Eloquent
     protected $fillable = [
         'cliente_id',
         'cliente_endereco_id',
-        'codigo_skyhub',
-        'frete_skyhub',
+        'codigo_api',
+        'frete_valor',
+        'frete_metodo',
+        'pagamento_metodo',
+        'pagamento_parcelas',
         'codigo_marketplace',
         'marketplace',
         'operacao',

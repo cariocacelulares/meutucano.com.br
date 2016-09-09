@@ -186,8 +186,8 @@ class SkyhubController extends Controller
             ]);
             $pedido->cliente_id          = $cliente->id;
             $pedido->cliente_endereco_id = $clienteEndereco->id;
-            $pedido->codigo_skyhub       = $s_pedido['code'];
-            $pedido->frete_skyhub        = $s_pedido['shipping_cost'];
+            $pedido->codigo_api          = $s_pedido['code'];
+            $pedido->frete_valor         = $s_pedido['shipping_cost'];
             $pedido->codigo_marketplace  = $codMarketplace;
             $pedido->marketplace         = $marketplace;
             $pedido->operacao            = $operacao;
@@ -241,9 +241,9 @@ class SkyhubController extends Controller
      */
     public function updateAllStatuses()
     {
-        $pedidos = Pedido::whereNotNull('codigo_skyhub')->get();
+        $pedidos = Pedido::whereNotNull('codigo_api')->get();
         foreach ($pedidos as $pedido) {
-            $s_pedido           = $this->request('/orders/' . $pedido['codigo_skyhub']);
+            $s_pedido           = $this->request('/orders/' . $pedido['codigo_api']);
 
             $pedido->status     = $this->parseMarketplaceStatus($s_pedido['status']['type']);
             $pedido->created_at = substr($s_pedido['placed_at'], 0, 10) . ' ' . substr($s_pedido['placed_at'], 11, 8);
@@ -286,7 +286,7 @@ class SkyhubController extends Controller
                 $stockChange[$s_produto['product_id']] = $s_produto['qty'];
             }
 
-            if ($pedido = Pedido::where('codigo_skyhub', '=', $s_pedido['code'])->first()) {
+            if ($pedido = Pedido::where('codigo_api', '=', $s_pedido['code'])->first()) {
                 if (($newStatus != $pedido->status) && $newStatus == 5) {
                     with(new MagentoController())->updateInventory($stockChange);
                 }
@@ -381,7 +381,7 @@ class SkyhubController extends Controller
                     ];
 
                     $this->request(
-                        sprintf('/orders/%s/shipments', $pedido->codigo_skyhub),
+                        sprintf('/orders/%s/shipments', $pedido->codigo_api),
                         ['json' => $jsonData],
                         'POST'
                     );
@@ -416,7 +416,7 @@ class SkyhubController extends Controller
                 switch ($pedido->status) {
                     case 3: {
                         $this->request(
-                            sprintf('/orders/%s/delivery', $pedido->codigo_skyhub),
+                            sprintf('/orders/%s/delivery', $pedido->codigo_api),
                             [],
                             'POST'
                         );
@@ -424,7 +424,7 @@ class SkyhubController extends Controller
                     }
                     case 5: {
                         $this->request(
-                            sprintf('/orders/%s/cancel', $pedido->codigo_skyhub),
+                            sprintf('/orders/%s/cancel', $pedido->codigo_api),
                             [],
                             'POST'
                         );
