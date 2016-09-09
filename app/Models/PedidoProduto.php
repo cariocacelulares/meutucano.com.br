@@ -11,7 +11,13 @@ class PedidoProduto extends \Eloquent
     /**
      * @var array
      */
-    protected $fillable = ['*'];
+    protected $fillable = [
+        'pedido_id',
+        'produto_sku',
+        'valor',
+        'quantidade',
+        'imei'
+    ];
 
     /**
      * @var bool

@@ -49,7 +49,7 @@ return [
 
     'venda_interna' => 5102,
     'venda_externa' => 6108,
-    
+
     /**
      * Feriados
      */
@@ -163,9 +163,19 @@ return [
      */
     'magento' => [
         'api' => [
-            'host' => 'http://www.cariocacelulares.com.br/api/v2_soap/?wsdl',
-            'user' => 'carioca',
-            'key'  => '#@carioca2016'
+            'host' => env('MAGENTO_API_HOST', 'http://www.cariocacelulares.com.br/api/v2_soap/?wsdl'),
+            'user' => env('MAGENTO_API_USER', 'carioca'),
+            'key'  => env('MAGENTO_API_KEY', '#@carioca2016')
+        ]
+    ],
+
+    /**
+     * Micro-serviços
+     */
+    'services' => [
+        'tucanomg' => [
+            'host'  => 'http://servicos.cariocacelulares.com.br/tucanomg/public/',
+            'token' => '#@carioca2016servicetoken'
         ]
     ]
 ];
