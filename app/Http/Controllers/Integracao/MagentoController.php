@@ -56,7 +56,8 @@ class MagentoController extends Controller
             'pending_payment' => 0,
             'processing'      => 1,
             'complete'        => 2,
-            'canceled'        => 5
+            'canceled'        => 5,
+            'closed'          => 5
         ];
 
         return (!$reverse) ? $statusConvert[$status] : array_search($status, $statusConvert);
@@ -111,7 +112,7 @@ class MagentoController extends Controller
             $cliente        = Cliente::firstOrNew(['taxvat' => $taxvat]);
             $cliente->tipo  = (strlen($taxvat) > 11) ? 1 : 0;
             $cliente->nome  = $mg_order['customer']['firstname'] . ' ' . $mg_order['customer']['lastname'];
-            $cliente->fone  = ($mg_order['shipping_address']['fax']) ?: $mg_order['shipping_address']['telephone'];
+            $cliente->fone  = (isset($mg_order['shipping_address']['fax'])) ? $mg_order['shipping_address']['fax'] : $mg_order['shipping_address']['telephone'];
             $cliente->email = $mg_order['customer_email'];
             $cliente->save();
             Log::info("Cliente {$cliente->id} importado para o pedido " . $mg_order['increment_id']);
@@ -169,6 +170,14 @@ class MagentoController extends Controller
             $pedido->total               = $mg_order['subtotal'];
             $pedido->status              = $this->parseMagentoStatus($mg_order['state']);
             $pedido->created_at          = $mg_order['created_at'];
+
+            if (!$pedido->wasRecentlyCreated) {
+                if (($pedido->status !=  $pedido->getOriginal('status')) && $pedido->status == 5) {
+                    if (in_array($pedido->getOriginal('status'), [1, 2])) {
+                        $pedido->reembolso = true;
+                    }
+                }
+            }
 
             foreach ($mg_order['items'] as $s_produto) {
                 $pedidoProduto = PedidoProduto::firstOrCreate([

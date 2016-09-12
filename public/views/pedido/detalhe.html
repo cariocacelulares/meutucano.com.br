@@ -29,7 +29,10 @@
                     </div>
                     <div class="row">
                         <p class="pull-left">Status</p>
-                        <p class="pull-right label label-{{ PedidoDetalhe.parseStatusClass() }}">{{ PedidoDetalhe.pedido.status_description }}</p>
+                        <p class="pull-right label label-{{ PedidoDetalhe.parseStatusClass() }}">
+                            {{ PedidoDetalhe.pedido.status_description }}
+                            <small ng-if="PedidoDetalhe.pedido.reembolso">(Reembolsado)</small>
+                        </p>
                     </div>
                     <div class="row">
                         <p class="pull-left">Total</p>
