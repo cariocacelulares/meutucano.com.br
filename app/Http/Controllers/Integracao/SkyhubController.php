@@ -18,6 +18,17 @@ use Illuminate\Support\Facades\DB;
  */
 class SkyhubController extends Controller
 {
+    public function teste($order)
+    {
+        $s_pedido = $this->request("/orders/{$order}");
+
+        if ($s_pedido) {
+            if ($this->importPedido($s_pedido)) {
+                Log::info('Pedido ' . $s_pedido['code'] . ' removido da fila de espera.');
+            }
+        }
+    }
+
     /**
      * Formata o ID do pedido no marketplace
      *
@@ -442,17 +453,6 @@ class SkyhubController extends Controller
                     'DELETE'
                 );
 
-                Log::info('Pedido ' . $s_pedido['code'] . ' removido da fila de espera.');
-            }
-        }
-    }
-
-    public function teste($order)
-    {
-        $s_pedido = $this->request("/orders/{$order}");
-
-        if ($s_pedido) {
-            if ($this->importPedido($s_pedido)) {
                 Log::info('Pedido ' . $s_pedido['code'] . ' removido da fila de espera.');
             }
         }

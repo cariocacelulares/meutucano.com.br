@@ -75,9 +75,7 @@ class MagentoController extends Controller
             return null;
         }
 
-
         $shipping = mb_strtolower($shipping);
-        var_dump($shipping, strpos($shipping, 'sedex'), strpos($shipping, 'sedex') !== false);
 
         if (strpos($shipping, 'pac') !== false) {
             return 'pac';
