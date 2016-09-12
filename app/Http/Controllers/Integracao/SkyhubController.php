@@ -108,6 +108,56 @@ class SkyhubController extends Controller
     }
 
     /**
+     * Retorna o metodo de pagamento após identificar
+     *
+     * @param  string  $payments
+     * @return string
+     */
+    public function parsePaymentMethod($payments)
+    {
+        if (is_array($payments) && !empty($payments) && isset($payments[0]['method'])) {
+            $method = $payments[0]['method'];
+        } else {
+            return null;
+        }
+
+        $method = mb_strtolower($method);
+
+        if (strpos($method, 'debit') !== false) {
+            return 'debito';
+        } elseif (strpos($method, 'credit') !== false) {
+            return 'credito';
+        } elseif (strpos($method, 'boleto') !== false) {
+            return 'boleto';
+        } else {
+            return 'outro';
+        }
+    }
+
+    /**
+     * Retorna o metodo de frete após identificar
+     *
+     * @param  string  $shipping
+     * @return string
+     */
+    public function parseShippingMethod($shipping)
+    {
+        if (!$shipping) {
+            return null;
+        }
+
+        $shipping = mb_strtolower($shipping);
+
+        if (strpos($shipping, 'pac') !== false) {
+            return 'PAC';
+        } elseif (strpos($shipping, 'sedex') !== false) {
+            return 'SEDEX';
+        } else {
+            return 'outro';
+        }
+    }
+
+    /**
      * Cria um request na API do Skyhub
      *
      * @param  string $url
@@ -211,6 +261,8 @@ class SkyhubController extends Controller
             $pedido->cliente_endereco_id = $clienteEndereco->id;
             $pedido->codigo_api          = $s_pedido['code'];
             $pedido->frete_valor         = $s_pedido['shipping_cost'];
+            $pedido->frete_metodo        = $this->parseShippingMethod($s_pedido['shipping_method']);
+            $pedido->pagamento_metodo    = $this->parsePaymentMethod($s_pedido['payments']);
             $pedido->codigo_marketplace  = $codMarketplace;
             $pedido->marketplace         = $marketplace;
             $pedido->operacao            = $operacao;
@@ -390,6 +442,17 @@ class SkyhubController extends Controller
                     'DELETE'
                 );
 
+                Log::info('Pedido ' . $s_pedido['code'] . ' removido da fila de espera.');
+            }
+        }
+    }
+
+    public function teste($order)
+    {
+        $s_pedido = $this->request("/orders/{$order}");
+
+        if ($s_pedido) {
+            if ($this->importPedido($s_pedido)) {
                 Log::info('Pedido ' . $s_pedido['code'] . ' removido da fila de espera.');
             }
         }

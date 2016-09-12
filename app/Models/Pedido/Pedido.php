@@ -48,6 +48,8 @@ class Pedido extends \Eloquent
         'status_description',
         'can_prioritize',
         'can_hold',
+        'pagamento_metodo_readable',
+        'frete_metodo_readable'
     ];
 
     /**
@@ -155,16 +157,6 @@ class Pedido extends \Eloquent
     }
 
     /**
-     * Return readable created_at
-     *
-     * @return string
-     */
-    protected function getCreatedAtReadableAttribute()
-    {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y H:i');
-    }
-
-    /**
      * Return readable marketplace description
      *
      * @return string
@@ -179,6 +171,57 @@ class Pedido extends \Eloquent
             default:
                 return $this->marketplace;
         }
+    }
+
+    /**
+     * Return readable payment method description
+     *
+     * @return string
+     */
+    protected function getPagamentoMetodoReadableAttribute()
+    {
+        $metodo = strtolower($this->pagamento_metodo);
+
+        switch ($metodo) {
+            case 'credito':
+                $metodo = 'cartão de crédito';
+                break;
+            case 'debito':
+                $metodo = 'cartão de débito';
+                break;
+            case 'boleto':
+                $metodo = 'boleto';
+                break;
+            default:
+                $metodo = 'outro meio';
+                break;
+        }
+
+        return 'Pagamento via ' . $metodo;
+    }
+
+    /**
+     * Return readable shipment method description
+     *
+     * @return string
+     */
+    protected function getFreteMetodoReadableAttribute()
+    {
+        $metodo = strtolower($this->frete_metodo);
+
+        switch ($metodo) {
+            case 'pac':
+                $metodo = 'PAC';
+                break;
+            case 'sedex':
+                $metodo = 'SEDEX';
+                break;
+            default:
+                $metodo = 'outro meio';
+                break;
+        }
+
+        return 'Envio via ' . $metodo;
     }
 
     /**

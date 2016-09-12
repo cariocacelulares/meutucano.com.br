@@ -64,6 +64,31 @@ class MagentoController extends Controller
     }
 
     /**
+     * Retorna o metodo de frete após identificar
+     *
+     * @param  string  $shipping
+     * @return string
+     */
+    public function parseShippingMethod($shipping)
+    {
+        if (!$shipping) {
+            return null;
+        }
+
+
+        $shipping = mb_strtolower($shipping);
+        var_dump($shipping, strpos($shipping, 'sedex'), strpos($shipping, 'sedex') !== false);
+
+        if (strpos($shipping, 'pac') !== false) {
+            return 'pac';
+        } elseif (strpos($shipping, 'sedex') !== false) {
+            return 'sedex';
+        } else {
+            return 'outro';
+        }
+    }
+
+    /**
      * Cria um request na API do Tucanomg
      *
      * @param  string $url
@@ -162,7 +187,7 @@ class MagentoController extends Controller
             $pedido->cliente_id          = $cliente->id;
             $pedido->cliente_endereco_id = $clienteEndereco->id;
             $pedido->frete_valor         = $mg_order['shipping_amount'];
-            $pedido->frete_metodo        = (strpos($mg_order['shipping_description'], 'PAC') !== false) ? 'PAC' : 'SEDEX';
+            $pedido->frete_metodo        = $this->parseShippingMethod($mg_order['shipping_description']);
             $pedido->pagamento_metodo    = (strpos($mg_order['payment']['method'], 'ticket') !== false) ? 'boleto' : 'credito';
             $pedido->codigo_marketplace  = $mg_order['increment_id'];
             $pedido->marketplace         = 'Site';

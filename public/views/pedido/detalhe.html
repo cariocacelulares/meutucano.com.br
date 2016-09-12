@@ -46,6 +46,22 @@
             </div>
         </div>
         <!-- Fim Informações do Pedido -->
+        <div class="row m-t-20 bold">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-body text-center">
+                        {{ PedidoDetalhe.pedido.frete_metodo_readable }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-body text-center">
+                        {{ PedidoDetalhe.pedido.pagamento_metodo_readable }}
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Informações do Cliente -->
         <div class="panel m-t-20 panel-primary">
             <div class="panel-heading">
