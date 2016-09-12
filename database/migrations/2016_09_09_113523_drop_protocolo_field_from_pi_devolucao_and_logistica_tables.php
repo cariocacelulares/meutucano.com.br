@@ -33,15 +33,15 @@ class DropProtocoloFieldFromPiDevolucaoAndLogisticaTables extends Migration
     public function down()
     {
         Schema::table('pedido_rastreio_logisticas', function(Blueprint $table) {
-            $table->integer('protocolo')->nullable();
+            $table->integer('protocolo')->nullable()->after('acao');
         });
 
         Schema::table('pedido_rastreio_devolucoes', function(Blueprint $table) {
-            $table->integer('protocolo')->nullable();
+            $table->integer('protocolo')->nullable()->after('acao');
         });
 
         Schema::table('pedido_rastreio_pis', function(Blueprint $table) {
-            $table->integer('protocolo')->nullable();
+            $table->integer('protocolo')->nullable()->after('acao');
         });
     }
 }

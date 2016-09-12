@@ -66,8 +66,8 @@
                         <p class="pull-right bold">{{ PedidoDetalhe.pedido.cliente.taxvat_readable }}</p>
                     </div>
                     <div class="row">
-                        <p style="line-height: 25px;">
-                            <a ng-click="PedidoDetalhe.clienteEnderecoHelper.editar(PedidoDetalhe.pedido.endereco.id, true)" class="pull-right"><i class="fa fa-edit"></i> Editar</a>
+                        <p class="lh-25 text-upper">
+                            <a ng-click="PedidoDetalhe.clienteEnderecoHelper.editar(PedidoDetalhe.pedido.endereco.id, true)" class="pull-right transform-none"><i class="fa fa-edit"></i> Editar</a>
                             {{ PedidoDetalhe.pedido.endereco.rua }} #{{ PedidoDetalhe.pedido.endereco.numero }} -
                             {{ PedidoDetalhe.pedido.endereco.bairro }} <br>
                             {{ PedidoDetalhe.pedido.endereco.cidade }}/{{ PedidoDetalhe.pedido.endereco.uf }} <br>
