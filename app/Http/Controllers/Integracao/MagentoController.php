@@ -192,7 +192,7 @@ class MagentoController extends Controller
             $pedido->operacao            = $operacao;
             $pedido->total               = $mg_order['subtotal'];
             $pedido->status              = $this->parseMagentoStatus($mg_order['state']);
-            $pedido->created_at          = $mg_order['created_at'];
+            $pedido->created_at          = Carbon::createFromFormat('Y-m-d H:i:s', $mg_order['created_at'])->subHours(3);
 
             if (!$pedido->wasRecentlyCreated) {
                 if (($pedido->status !=  $pedido->getOriginal('status')) && $pedido->status == 5) {
