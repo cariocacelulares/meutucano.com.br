@@ -14,7 +14,9 @@
          */
         vm.filterList = Filter.init('pedidos', vm, {
             'pedidos.codigo_marketplace': 'LIKE',
-            'clientes.nome':              'LIKE'
+            'clientes.nome':              'LIKE',
+            'pedidos.total':              'BETWEEN',
+            'pedidos.created_at':         'BETWEEN'
         });
 
         /**

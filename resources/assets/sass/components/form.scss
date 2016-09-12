@@ -5,6 +5,28 @@
     border: none;
 }
 
+.between-group {
+    > *:first-child,
+    > *:last-child {
+        width: calc(50% - 9px) !important;
+    }
+
+    > *:first-child {
+        float: left;
+    }
+
+    > *:last-child {
+        float: right;
+    }
+
+    > span {
+        float: left;
+        width: 18px;
+        line-height: 35px;
+        text-align: center;
+    }
+}
+
 .form-default {
     padding: 20px;
     border: 1px solid $color-master-light;
@@ -59,10 +81,6 @@
         border: 1px solid $color-master-light;
         background-image: none;
         background-color: $color-master-lightest;
-
-        &[type="number"] {
-            padding-right: 0;
-        }
 
         &:focus {
             color: darken($color-master, 20%);

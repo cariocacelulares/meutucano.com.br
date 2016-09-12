@@ -14,14 +14,23 @@
 <th>
     <input class="form-control big" ng-model="PedidoList.filter['clientes.nome']" placeholder="Nome do cliente" ng-model-options="{debounce:500}" />
 </th>
-<th>
-    <input class="form-control" ng-model="PedidoList.filter['pedidos.total']" placeholder="Valor" ng-model-options="{debounce:500}"  />
+<th class="between-group">
+    <input class="form-control big" ng-model="PedidoList.filter['pedidos.total'].from" placeholder="De" ng-model-options="{debounce:500}" type="number" />
+    <span>/</span>
+    <input class="form-control big" ng-model="PedidoList.filter['pedidos.total'].to" placeholder="Até" ng-model-options="{debounce:500}" type="number" />
 </th>
-<th>
+<th class="between-group">
     <div class="date-picker">
-        <input class="form-control" ng-model="PedidoList.filter['pedidos.created_at']" placeholder="Data"  />
+        <input class="form-control" ng-model="PedidoList.filter['pedidos.created_at'].from" placeholder="De" ng-model-options="{debounce:500}" />
         <div class="picker-wrap">
-            <date-picker ng-model="PedidoList.filter['pedidos.created_at']"></date-picker>
+            <date-picker ng-model="PedidoList.filter['pedidos.created_at'].from" ng-model-options="{debounce:500}"></date-picker>
+        </div>
+    </div>
+    <span>/</span>
+    <div class="date-picker">
+        <input class="form-control" ng-model="PedidoList.filter['pedidos.created_at'].to" placeholder="Até" ng-model-options="{debounce:500}" />
+        <div class="picker-wrap">
+            <date-picker ng-model="PedidoList.filter['pedidos.created_at'].to" ng-model-options="{debounce:500}"></date-picker>
         </div>
     </div>
 </th>

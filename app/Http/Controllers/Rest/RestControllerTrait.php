@@ -42,7 +42,35 @@ trait RestControllerTrait
                     $filtro['value'] = '%' . $filtro['value'] . '%';
                 }
 
-                if (\DateTime::createFromFormat('d/m/Y', $filtro['value']) !== false) {
+                if ($filtro['operator'] == 'BETWEEN' && !is_array($filtro['value'])) {
+                    $filtro['operator'] = '=';
+                }
+
+                if ($filtro['operator'] == 'BETWEEN') {
+                    if ((!isset($filtro['value']['to']) || is_null($filtro['value']['to']) || empty($filtro['value']['to'])) && isset($filtro['value']['from'])) {
+                        $filtro['operator'] = '>=';
+                        $filtro['value'] = $filtro['value']['from'];
+                    } elseif ((!isset($filtro['value']['from']) || is_null($filtro['value']['from']) || empty($filtro['value']['from'])) && isset($filtro['value']['to'])) {
+                        $filtro['operator'] = '<=';
+                        $filtro['value'] = $filtro['value']['to'];
+                    }
+                }
+
+                if ($filtro['operator'] == 'BETWEEN') {
+                    foreach ($filtro['value'] as $key => $value) {
+                        if (is_string($value) && \DateTime::createFromFormat('d/m/Y', $value) !== false) {
+                            $filtro['value'][$key] = Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d');
+                        }
+                    }
+
+                    $m = $m->whereBetween(
+                        $filtro['column'],
+                        [
+                            $filtro['value']['from'],
+                            $filtro['value']['to']
+                        ]
+                    );
+                } elseif (is_string($filtro['value']) && \DateTime::createFromFormat('d/m/Y', $filtro['value']) !== false) {
                     $m = $m->whereDate(
                         $filtro['column'],
                         $filtro['operator'],
