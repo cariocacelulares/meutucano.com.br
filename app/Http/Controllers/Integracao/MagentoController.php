@@ -100,7 +100,7 @@ class MagentoController extends Controller
             return false;
 
         try {
-            Log::info('Requisição tucanomg para: ' . $url, $params);
+            Log::info('Requisição tucanomg para: ' . $url . ', method: ' . $method, $params);
             $client = new \GuzzleHttp\Client([
                 'base_uri' => \Config::get('tucano.services.tucanomg.host'),
                 'headers' => [
@@ -114,11 +114,11 @@ class MagentoController extends Controller
 
             return json_decode($r->getBody(), true);
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
-            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url));
-            return $e->getMessage();
+            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', com o method: ' . $method));
+            return false;
         } catch (\Exception $e) {
-            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url));
-            return $e->getMessage();
+            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', com o method: ' . $method));
+            return false;
         }
     }
 
@@ -244,7 +244,7 @@ class MagentoController extends Controller
 
     /**
      * Proccess order queue
-     * @return [type] [description]
+     * @return void
      */
     public function queue()
     {
@@ -303,7 +303,7 @@ class MagentoController extends Controller
                 $produto->save();
 
                 if ($oldEstoque != $produto->estoque) {
-                    Log::info("Estoque do produto {$s_produto['sku']} alterado de {$oldEstoque} para {$produto->estoque}.");
+                    Log::notice("Estoque do produto {$s_produto['sku']} alterado de {$oldEstoque} para {$produto->estoque}.");
                 } else {
                     Log::info("Estoque do produto {$s_produto['sku']} não sofreu alterações: {$produto->estoque}.");
                 }
@@ -321,6 +321,58 @@ class MagentoController extends Controller
                 $m->to('dev.cariocacelulares@gmail.com', 'DEV')->subject('Erro no sistema!');
             });
             return false;
+        }
+    }
+
+    /**
+     * Send product sku to queue when its stock is changed
+     * @param  int $produto_sku
+     * @return void
+     */
+    public function sendProductToQueue($produto_sku)
+    {
+        try {
+            $request = $this->request('products/' . $produto_sku, [], 'POST');
+
+            if ($request)
+                Log::notice("Produto {$produto_sku} enviado para a fila.");
+        } catch (Exception $e) {
+            Log::warning(logMessage($e, "Não foi possível enviar o produto {$produto_sku} para a fila."));
+            return $e->getMessage();
+        }
+    }
+
+    public function updateStock()
+    {
+        try {
+            $product = $this->request('products');
+
+            if ($product && $product['product_sku'])
+                $product = Produto::find($product['product_sku']);
+
+            if ($product) {
+                $stock = $this->api->catalogInventoryStockItemUpdate(
+                    $this->session,
+                    $product->sku,
+                    [
+                        'qty' => $product->estoque,
+                        'is_in_stock' => (($product->estoque > 0) ? 1 : 0)
+                    ]
+                );
+
+                if ($stock) {
+                    Log::notice('Estoque do produto ' . $product->sku . ' alterado para ' . $product->estoque . ' / em estoque: ' . (($product->estoque > 0) ? 'sim' : 'não'));
+
+                    $remove = $this->request('products/' . $product->sku, [], 'DELETE');
+                    if ($remove)
+                        Log::notice("Produto {$product->sku} removido da fila de espera");
+                } else {
+                    Log::warning("Estoque do produto {$product->sku} não foi atualizado", (is_array($stock) ? $stock : [$stock]));
+                }
+            }
+        } catch (Exception $e) {
+            Log::warning(logMessage($e, "Atualizar o estoque do produto {$produto_sku} no magento."));
+            return $e->getMessage();
         }
     }
 }

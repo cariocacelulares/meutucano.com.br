@@ -182,7 +182,7 @@ class SkyhubController extends Controller
             return false;
 
         try {
-            Log::info('Requisição skyhub para: ' . $url, $params);
+            Log::info('Requisição skyhub para: ' . $url . ', method: ' . $method, $params);
             $client = new Client([
                 'base_uri' => \Config::get('tucano.skyhub.api.url'),
                 'headers' => [
@@ -197,10 +197,10 @@ class SkyhubController extends Controller
 
             return json_decode($r->getBody(), true);
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
-            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url));
+            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', method: ' . $method));
             return $e->getMessage();
         } catch (\Exception $e) {
-            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url));
+            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', method: ' . $method));
             return $e->getMessage();
         }
     }
@@ -353,7 +353,7 @@ class SkyhubController extends Controller
             }
 
             $pedido->save();
-            Log::info("Status do pedido {$pedido->id} atualizado de {$oldStatus} para {$pedido->status}.");
+            Log::notice("Status do pedido {$pedido->id} atualizado de {$oldStatus} para {$pedido->status}.");
 
             if ($pedido->rastreio) {
                 if ($pedido->rastreio->status == 4) {
@@ -399,7 +399,7 @@ class SkyhubController extends Controller
                 $produto->save();
 
                 if ($oldEstoque != $produto->estoque) {
-                    Log::info("Estoque do produto {$s_produto['product_id']} alterado de {$oldEstoque} para {$produto->estoque}.");
+                    Log::notice("Estoque do produto {$s_produto['product_id']} alterado de {$oldEstoque} para {$produto->estoque}.");
                 } else {
                     Log::info("Estoque do produto {$s_produto['product_id']} não sofreu alterações: {$produto->estoque}.");
                 }
@@ -408,7 +408,7 @@ class SkyhubController extends Controller
             return true;
         } catch (\Exception $e) {
             Log::critical(logMessage($e, 'Não foi possível alterar estoque de um ou mais produtos do pedido ' . $s_pedido['code'] . ' no tucano'), $s_pedido['items']);
-            $error = 'Não foi possível alterar estoque no tucano: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $s_pedido;
+            $error = 'Não foi possível alterar estoque no tucano: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $s_pedido['code'];
 
             Mail::send('emails.error', [
                 'error' => $error
@@ -453,7 +453,7 @@ class SkyhubController extends Controller
                     'DELETE'
                 );
 
-                Log::info('Pedido ' . $s_pedido['code'] . ' removido da fila de espera.');
+                Log::notice('Pedido ' . $s_pedido['code'] . ' removido da fila de espera.');
             }
         }
     }
@@ -498,7 +498,7 @@ class SkyhubController extends Controller
                         'POST'
                     );
 
-                    Log::info("Dados de envio e nota fiscal atualizados do pedido {$pedido->id} / {$pedido->codigo_skyhub}", $jsonData);
+                    Log::notice("Dados de envio e nota fiscal atualizados do pedido {$pedido->id} / {$pedido->codigo_skyhub}", $jsonData);
                 }
 
                 return true;

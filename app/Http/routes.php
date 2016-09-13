@@ -5,8 +5,9 @@
  */
 Route::get('/', function() { return view('index'); });
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
-Route::get('testApi', 'Integracao\MagentoController@queue');
-Route::get('testeSky/{order}', 'Integracao\SkyhubController@teste');
+Route::get('updateMagento', 'Integracao\MagentoController@updateStock');
+Route::get('lerMagento', 'Integracao\MagentoController@queue');
+Route::get('lerSky/{order}', 'Integracao\SkyhubController@teste');
 
 /**
  * API

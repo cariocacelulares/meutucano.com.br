@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Produto\Linha\Atributo;
+use App\Events\ProductStockChange;
 
 /**
  * Class Produto
@@ -115,5 +116,16 @@ class Produto extends Model
             return null;
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
+    }
+
+    /**
+     * @return void
+     */
+    public function setEstoqueAttribute($estoque) {
+        if ($this->attributes['estoque'] != $estoque) {
+            \Event::fire(new ProductStockChange($this->attributes['sku']));
+        }
+
+        $this->attributes['estoque'] = $estoque;
     }
 }
