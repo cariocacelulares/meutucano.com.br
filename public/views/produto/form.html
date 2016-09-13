@@ -93,24 +93,12 @@
             </div>
             <div class="row">
                 <div class="pull-right">
-                    <a ng-click="ProdutoForm.tabsHelper.set('dadosVenda')" class="btn-primary">
-                        Avançar &nbsp;<i class="fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-        </tab> <!-- /infosProduto -->
-        <tab name="dadosVenda" title="Dados de venda">
-            <div class="row">
-                <div class="pull-right">
-                    <a ng-click="ProdutoForm.tabsHelper.set('infosProduto')" class="btn-primary">
-                        <i class="fa-arrow-left"></i>&nbsp; Voltar
-                    </a>
                     <a ng-click="ProdutoForm.tabsHelper.set('atributos')" class="btn-primary">
                         Avançar &nbsp;<i class="fa-arrow-right"></i>
                     </a>
                 </div>
             </div>
-        </tab> <!-- /dadosVenda -->
+        </tab> <!-- /infosProduto -->
         <tab name="atributos" title="Atributos">
             <div class="row">
                 <table class="table-alt bordered">
@@ -136,19 +124,7 @@
             </div>
             <div class="row">
                 <div class="pull-right">
-                    <a ng-click="ProdutoForm.tabsHelper.set('dadosVenda')" class="btn-primary">
-                        <i class="fa-arrow-left"></i>&nbsp; Voltar
-                    </a>
-                    <a ng-click="ProdutoForm.tabsHelper.set('impostos')" class="btn-primary">
-                        Avançar &nbsp;<i class="fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-        </tab> <!-- /atributos -->
-        <tab name="impostos" title="Impostos">
-            <div class="row">
-                <div class="pull-right">
-                    <a ng-click="ProdutoForm.tabsHelper.set('atributos')" class="btn-primary">
+                    <a ng-click="ProdutoForm.tabsHelper.set('infosProduto')" class="btn-primary">
                         <i class="fa-arrow-left"></i>&nbsp; Voltar
                     </a>
                     <button type="submit" title="Salvar produto" class="btn-success">
@@ -156,6 +132,6 @@
                     </button>
                 </div>
             </div>
-        </tab> <!-- /impostos -->
+        </tab> <!-- /atributos -->
     </tabs>
 </form>

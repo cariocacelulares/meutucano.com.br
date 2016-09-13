@@ -35,12 +35,17 @@ class MagentoController extends Controller
      */
     public function __construct()
     {
-        $this->api     = new \SoapClient(\Config::get('tucano.magento.api.host'), ['cache_wsdl' => WSDL_CACHE_NONE]);
-        $this->session = $this->api->login(
-            \Config::get('tucano.magento.api.user'),
-            \Config::get('tucano.magento.api.key')
-        );
-        Log::info('Requisição soap no magento realizada');
+        try {
+            $this->api     = new \SoapClient(\Config::get('tucano.magento.api.host'), ['cache_wsdl' => WSDL_CACHE_NONE]);
+            $this->session = $this->api->login(
+                \Config::get('tucano.magento.api.user'),
+                \Config::get('tucano.magento.api.key')
+            );
+            Log::info('Requisição soap no magento realizada');
+        } catch (\Exception $e) {
+            Log::warning(logMessage($e, 'Falha ao tentar realizar uma requisição soap no magento'));
+            return false;
+        }
     }
 
     /**
