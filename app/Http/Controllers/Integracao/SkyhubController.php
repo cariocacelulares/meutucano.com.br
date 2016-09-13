@@ -217,10 +217,11 @@ class SkyhubController extends Controller
                 ? $s_pedido['customer']['phones'][1]
                 : $s_pedido['customer']['phones'][0];
 
-            $cliente = Cliente::firstOrNew(['taxvat' => $s_pedido['customer']['vat_number']]);
-            $cliente->tipo = (strlen($s_pedido['customer']['vat_number']) > 11) ? 1 : 0;
-            $cliente->nome = $s_pedido['customer']['name'];
-            $cliente->fone = '(' . substr($clienteFone, 0, 2) . ')' . substr($clienteFone, 2, 5) . '-' . substr($clienteFone, 7);
+            $cliente        = Cliente::firstOrNew(['taxvat' => $s_pedido['customer']['vat_number']]);
+            $cliente->tipo  = (strlen($s_pedido['customer']['vat_number']) > 11) ? 1 : 0;
+            $cliente->nome  = $s_pedido['customer']['name'];
+            $cliente->fone  = '(' . substr($clienteFone, 0, 2) . ')' . substr($clienteFone, 2, 5) . '-' . substr($clienteFone, 7);
+            $cliente->email = $s_pedido['customer']['email'];
             $cliente->save();
             Log::info("Cliente {$cliente->id} importado para o pedido " . $s_pedido['code']);
 
@@ -281,6 +282,14 @@ class SkyhubController extends Controller
             $pedido->estimated_delivery  = substr($s_pedido['estimated_delivery'], 0, 10);
             $pedido->status              = $this->parseMarketplaceStatus($s_pedido['status']['type']);
             $pedido->created_at          = substr($s_pedido['placed_at'], 0, 10) . ' ' . substr($s_pedido['placed_at'], 11, 8);
+
+            if (!$pedido->wasRecentlyCreated) {
+                if (($pedido->status !=  $pedido->getOriginal('status')) && $pedido->status == 5) {
+                    if (in_array($pedido->getOriginal('status'), [1, 2])) {
+                        $pedido->reembolso = true;
+                    }
+                }
+            }
 
             foreach ($s_pedido['items'] as $s_produto) {
                 $pedidoProduto = PedidoProduto::firstOrCreate([

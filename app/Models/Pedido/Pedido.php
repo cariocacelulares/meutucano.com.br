@@ -153,7 +153,11 @@ class Pedido extends \Eloquent
      */
     protected function getStatusDescriptionAttribute()
     {
-        return ($this->status) ? \Config::get('tucano.pedido_status')[$this->status] : 'Desconhecido';
+        if (!isset(\Config::get('tucano.pedido_status')[$this->status])) {
+            return 'Desconhecido';
+        } else {
+            return \Config::get('tucano.pedido_status')[$this->status];
+        }
     }
 
     /**
