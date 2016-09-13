@@ -8,6 +8,7 @@ Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Route::get('updateMagento', 'Integracao\MagentoController@updateStock');
 Route::get('lerMagento', 'Integracao\MagentoController@queue');
 Route::get('lerSky/{order}', 'Integracao\SkyhubController@teste');
+Route::get('sky/cancelOldOrders', 'Integracao\SkyhubController@cancelOldOrders');
 
 /**
  * API

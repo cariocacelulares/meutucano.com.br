@@ -124,10 +124,8 @@ if (!function_exists('diasUteisPeriodo')) {
 function updateProtocolAndStatus($obj, $protocol) {
     if ((int)$obj->acao === 1 && $protocol) {
         if ($rastreio = App\Models\Pedido\Rastreio::find($obj->rastreio_id)) {
-            $rastreio->protocolo = $protocol;
-            $rastreio->save();
-
             if ($pedido = App\Models\Pedido\Pedido::find($rastreio->pedido_id)) {
+                $pedido->protocolo = $protocol;
                 $pedido->status = 5;
                 $pedido->save();
             }

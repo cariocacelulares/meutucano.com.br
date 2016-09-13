@@ -37,6 +37,7 @@ class Pedido extends \Eloquent
         'total',
         'estimated_delivery',
         'status',
+        'protocolo',
         'priorizado'
     ];
 

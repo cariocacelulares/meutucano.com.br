@@ -36,6 +36,11 @@ class PedidoController extends Controller
         return $this->listResponse($list);
     }
 
+    /**
+     * Adiciona ou remove prioridade de um pedido
+     * @param  int $pedido_id
+     * @return Pedido
+     */
     public function prioridade($pedido_id)
     {
         $m = self::MODEL;
@@ -55,6 +60,12 @@ class PedidoController extends Controller
         }
     }
 
+    /**
+     * Altera status do pedido e adiciona o protocolo
+     * @param  Pedido $pedido_id
+     * @param  int $protocolo
+     * @return Pedido
+     */
     public function alterarStatus($pedido_id) {
         $m = self::MODEL;
 
@@ -66,12 +77,14 @@ class PedidoController extends Controller
             }
 
             $data = $m::find($pedido_id);
+
+            $protocolo = \Request::get('protocolo');
+            if ($protocolo) {
+                $data->protocolo = $protocolo;
+            }
+
             $data->status = $status;
             $data->save();
-
-            if ($status == 5) {
-                $data->delete();
-            }
 
             return $this->showResponse($data);
         } catch(\Exception $ex) {

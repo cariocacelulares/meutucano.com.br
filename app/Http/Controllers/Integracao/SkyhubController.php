@@ -364,7 +364,7 @@ class SkyhubController extends Controller
             $pedido->save();
             Log::notice("Status do pedido {$pedido->id} atualizado de {$oldStatus} para {$pedido->status}.");
 
-            if ($pedido->rastreio) {
+            if ($pedido->rastreio && $pedido->codigo_api) {
                 if ($pedido->rastreio->status == 4) {
                     $this->refreshStatus($pedido);
                 }
@@ -582,17 +582,25 @@ class SkyhubController extends Controller
     public function cancelOldOrders()
     {
         try {
-            $pedidos = Pedido::where('status', '=', 0)->get();
+            $pedidos = Pedido::where('status', '=', 0)->whereNotNull('codigo_api')->get();
 
             $cancelados = 0;
             foreach ($pedidos as $pedido) {
-                $dataPedido = Carbon::createFromFormat('Y-m-d H:i:s', $pedido->created_at)->format('d/m/Y');
+                $dataPedido = Carbon::createFromFormat('d/m/Y H:i', $pedido->created_at)->format('d/m/Y');
 
                 if (diasUteisPeriodo($dataPedido, date('d/m/Y'), true) > 4) {
                     $pedido->status = 5;
                     $pedido->save();
 
-                    with(new SkyhubController())->refreshStatus($pedido);
+                    foreach ($pedido->produtos as $pedidoProduto) {
+                        $produto = $pedidoProduto->produto;
+                        $oldEstoque = $produto->estoque;
+                        $produto->estoque = $oldEstoque - $pedidoProduto->quantidade;
+                        $produto->save();
+                        Log::notice("O estoque do produto {$produto->sku} foi alterado de {$oldEstoque} para {$produto->estoque}");
+                    }
+
+                    $this->refreshStatus($pedido);
 
                     $cancelados++;
                 }
