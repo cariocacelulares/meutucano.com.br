@@ -81,14 +81,7 @@ class PiController extends Controller
 
             $data->rastreio->save();
 
-            if ((int)$data->acao === 1) {
-                if ($protocolo = Input::get('protocolo')) {
-                    if ($rastreio = Rastreio::find($data->rastreio_id)) {
-                        $rastreio->protocolo = $protocolo;
-                        $rastreio->save();
-                    }
-                }
-            }
+            updateProtocolAndStatus($data, Input::get('protocolo'));
 
             return $this->createdResponse($data);
         } catch(\Exception $ex) {
@@ -123,14 +116,7 @@ class PiController extends Controller
             $data->fill(Input::except(['protocolo']));
             $data->save();
 
-            if ((int)$data->acao === 1) {
-                if ($protocolo = Input::get('protocolo')) {
-                    if ($rastreio = Rastreio::find($data->rastreio_id)) {
-                        $rastreio->protocolo = $protocolo;
-                        $rastreio->save();
-                    }
-                }
-            }
+            updateProtocolAndStatus($data, Input::get('protocolo'));
 
             return $this->showResponse($data);
         } catch(\Exception $ex) {
