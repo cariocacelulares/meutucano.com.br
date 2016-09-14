@@ -62,7 +62,6 @@ class MagentoController extends Controller
             'pending_payment' => 0,
             'processing'      => 1,
             'complete'        => 2,
-            'holded'          => 4,
             'canceled'        => 5,
             'closed'          => 5
         ];
@@ -406,7 +405,7 @@ class MagentoController extends Controller
                         $oldEstoque = $produto->estoque;
                         $produto->estoque = $oldEstoque - $pedidoProduto->quantidade;
                         $produto->save();
-                        Log::notice("O estoque do produto {$produto->sku} foi alterado de {$oldEstoque} para {$produto->estoque}");
+                        Log::notice("Estoque do produto {$produto->sku} foi alterado de {$oldEstoque} para {$produto->estoque}");
                     }
 
                     if ($cancel = $this->api->salesOrderCancel($this->session, $pedido->codigo_api)) {

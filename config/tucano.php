@@ -105,7 +105,6 @@ return [
         1 => 'Pago',
         2 => 'Enviado',
         3 => 'Entregue',
-        4 => 'Segurado',
         5 => 'Cancelado'
     ],
 

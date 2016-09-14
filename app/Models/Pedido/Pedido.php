@@ -38,6 +38,8 @@ class Pedido extends \Eloquent
         'estimated_delivery',
         'status',
         'protocolo',
+        'segurado',
+        'reembolso',
         'priorizado'
     ];
 
@@ -236,13 +238,11 @@ class Pedido extends \Eloquent
      */
     protected function getCanHoldAttribute()
     {
-        switch ($this->status) {
-            case 0:
-            case 1:
-                return true;
-            default:
-                return false;
+        if (in_array($this->status, [0,1])) {
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -252,13 +252,11 @@ class Pedido extends \Eloquent
      */
     protected function getCanPrioritizeAttribute()
     {
-        switch ($this->status) {
-            case 0:
-            case 1:
-                return true;
-            default:
-                return false;
+        if (in_array($this->status, [0,1])) {
+            return true;
         }
+
+        return false;
     }
 
     /**

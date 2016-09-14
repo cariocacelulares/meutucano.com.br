@@ -47,10 +47,34 @@ class PedidoController extends Controller
 
         try {
             $prioridade = Input::get('priorizado');
-            $prioridade = (int) $prioridade ? 1 : null;
+            $prioridade = (int)$prioridade ? 1 : null;
 
             $pedido = $m::find($pedido_id);
             $pedido->priorizado = $prioridade;
+            $pedido->save();
+
+            return $this->showResponse($pedido);
+        } catch(\Exception $ex) {
+            $data = ['exception' => $ex->getMessage()];
+            return $this->clientErrorResponse($data);
+        }
+    }
+
+    /**
+     * Segura ou libera um pedido
+     * @param  int $pedido_id
+     * @return Pedido
+     */
+    public function segurar($pedido_id)
+    {
+        $m = self::MODEL;
+
+        try {
+            $segurar = Input::get('segurar');
+            $segurar = (int)$segurar ? 1 : 0;
+
+            $pedido = $m::find($pedido_id);
+            $pedido->segurado = $segurar;
             $pedido->save();
 
             return $this->showResponse($pedido);
