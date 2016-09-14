@@ -28,7 +28,7 @@ class AddForeignKeysToProdutoAtributoTable extends Migration
     {
         Schema::table('produto_atributo', function(Blueprint $table)
         {
-            $table->dropForeign('PedidoProdutoPedido');
+            $table->dropForeign('ProdutoAtributoProduto');
             $table->dropForeign('ProdutoAtributoAtributo');
         });
     }

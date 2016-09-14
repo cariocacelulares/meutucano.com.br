@@ -24,6 +24,8 @@ class AlterCodigoAnymarketFieldOnPedidosTable extends Migration
      */
     public function down()
     {
-        $table->renameColumn('codigo_skyhub', 'codigo_anymarket');
+        Schema::table('pedidos', function (Blueprint $table) {
+            $table->renameColumn('codigo_skyhub', 'codigo_anymarket');
+        });
     }
 }
