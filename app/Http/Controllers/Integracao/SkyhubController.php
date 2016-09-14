@@ -582,9 +582,8 @@ class SkyhubController extends Controller
     public function cancelOldOrders()
     {
         try {
-            $pedidos = Pedido::where('status', '=', 0)->whereNotNull('codigo_api')->get();
+            $pedidos = Pedido::where('status', '=', 0)->whereNotNull('codigo_api')->where('marketplace', '!=', 'Site')->get();
 
-            $cancelados = 0;
             foreach ($pedidos as $pedido) {
                 $dataPedido = Carbon::createFromFormat('d/m/Y H:i', $pedido->created_at)->format('d/m/Y');
 
@@ -601,12 +600,10 @@ class SkyhubController extends Controller
                     }
 
                     $this->refreshStatus($pedido);
-
-                    $cancelados++;
                 }
             }
 
-            return sprintf('%s pedido(s) cancelado(s) na Skyhub', $cancelados);
+            return true;
         } catch (\Exception $e) {
             Log::error(logMessage($e, 'Não foi possível cancelar o pedido na Skyhub'));
             return false;

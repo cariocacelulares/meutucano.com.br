@@ -58,14 +58,16 @@ class MagentoController extends Controller
     {
         $statusConvert = [
             'new'             => 0,
+            'pending'         => 0,
             'pending_payment' => 0,
             'processing'      => 1,
             'complete'        => 2,
+            'holded'          => 4,
             'canceled'        => 5,
             'closed'          => 5
         ];
 
-        return (!$reverse) ? $statusConvert[$status] : array_search($status, $statusConvert);
+        return (!$reverse) ? (isset($statusConvert[$status]) ? $statusConvert[$status] : 0) : array_search($status, $statusConvert);
     }
 
     /**
@@ -193,10 +195,11 @@ class MagentoController extends Controller
             $pedido->frete_metodo        = $this->parseShippingMethod($mg_order['shipping_description']);
             $pedido->pagamento_metodo    = (strpos($mg_order['payment']['method'], 'ticket') !== false) ? 'boleto' : 'credito';
             $pedido->codigo_marketplace  = $mg_order['increment_id'];
+            $pedido->codigo_api          = $mg_order['increment_id'];
             $pedido->marketplace         = 'Site';
             $pedido->operacao            = $operacao;
             $pedido->total               = $mg_order['subtotal'];
-            $pedido->status              = $this->parseMagentoStatus($mg_order['state']);
+            $pedido->status              = $this->parseMagentoStatus((isset($mg_order['state'])) ? $mg_order['state'] : ((isset($mg_order['status'])) ? $mg_order['status'] : null ));
             $pedido->created_at          = Carbon::createFromFormat('Y-m-d H:i:s', $mg_order['created_at'])->subHours(3);
 
             if (!$pedido->wasRecentlyCreated) {
@@ -378,6 +381,46 @@ class MagentoController extends Controller
         } catch (Exception $e) {
             Log::warning(logMessage($e, "Atualizar o estoque do produto {$produto_sku} no magento."));
             return $e->getMessage();
+        }
+    }
+
+    /**
+     * Cancela pedidos com mais de 7 dias úteis de pagamento pendente
+     *
+     * @return void
+     */
+    public function cancelOldOrders()
+    {
+        try {
+            $pedidos = Pedido::where('status', '=', 0)->whereNotNull('codigo_api')->where('marketplace', '=', 'Site')->get();
+
+            foreach ($pedidos as $pedido) {
+                $dataPedido = Carbon::createFromFormat('d/m/Y H:i', $pedido->created_at)->format('d/m/Y');
+
+                if (diasUteisPeriodo($dataPedido, date('d/m/Y'), true) > 7) {
+                    $pedido->status = 5;
+                    $pedido->save();
+
+                    foreach ($pedido->produtos as $pedidoProduto) {
+                        $produto = $pedidoProduto->produto;
+                        $oldEstoque = $produto->estoque;
+                        $produto->estoque = $oldEstoque - $pedidoProduto->quantidade;
+                        $produto->save();
+                        Log::notice("O estoque do produto {$produto->sku} foi alterado de {$oldEstoque} para {$produto->estoque}");
+                    }
+
+                    if ($cancel = $this->api->salesOrderCancel($this->session, $pedido->codigo_api)) {
+                        Log::info("Pedido {$pedido->id} cancelado.");
+                    } else {
+                        Log::warning("Não foi possível cancelar o pedido antigo {$pedido->id}");
+                    }
+                }
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            Log::error(logMessage($e, 'Não foi possível cancelar o pedido no Magento'));
+            return false;
         }
     }
 }
