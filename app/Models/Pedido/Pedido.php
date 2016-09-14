@@ -51,6 +51,7 @@ class Pedido extends \Eloquent
         'status_description',
         'can_prioritize',
         'can_hold',
+        'can_cancel',
         'pagamento_metodo_readable',
         'frete_metodo_readable'
     ];
@@ -251,6 +252,20 @@ class Pedido extends \Eloquent
      * @return string
      */
     protected function getCanPrioritizeAttribute()
+    {
+        if (in_array($this->status, [0,1])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Return can_cancel
+     *
+     * @return string
+     */
+    protected function getCanCancelAttribute()
     {
         if (in_array($this->status, [0,1])) {
             return true;

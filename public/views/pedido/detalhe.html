@@ -3,7 +3,7 @@
     <div roles="admin|gestor|atendimento" class="col-md-6 button-bar">
             <button class="btn-primary" ng-click="PedidoDetalhe.togglePriority()" ng-if="PedidoDetalhe.pedido.can_prioritize"><i class="fa fa-arrow-{{ PedidoDetalhe.pedido.priorizado ? 'down' : 'up' }}"></i>&nbsp; {{ PedidoDetalhe.pedido.priorizado ? 'Remover prioridade' : 'Priorizar' }}</button>
             <button class="btn-info" ng-click="PedidoDetalhe.toggleHold()" ng-if="PedidoDetalhe.pedido.can_hold || PedidoDetalhe.pedido.segurado"><i class="fa fa-hand-{{ PedidoDetalhe.pedido.segurado ? 'paper' : 'rock' }}-o"></i>&nbsp; {{ PedidoDetalhe.pedido.segurado ? 'Liberar' : 'Segurar' }}</button>
-            <button class="btn-danger" ng-click="PedidoDetalhe.cancel()" ng-if="PedidoDetalhe.pedido.status != 5"><i class="fa fa-close"></i>&nbsp; Cancelar</button>
+            <button class="btn-danger" ng-click="PedidoDetalhe.cancel()" ng-if="PedidoDetalhe.pedido.can_cancel"><i class="fa fa-close"></i>&nbsp; Cancelar</button>
     </div>
 </div>
 <div class="row">
