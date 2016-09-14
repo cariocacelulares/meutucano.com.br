@@ -86,6 +86,7 @@ class PedidoController extends Controller
 
     /**
      * Altera status do pedido e adiciona o protocolo
+     *
      * @param  Pedido $pedido_id
      * @param  int $protocolo
      * @return Pedido
@@ -105,6 +106,16 @@ class PedidoController extends Controller
             $protocolo = \Request::get('protocolo');
             if ($protocolo) {
                 $data->protocolo = $protocolo;
+            }
+
+            if ((int)$status === 5 && (int)$data->status !== 5) {
+                foreach ($data->produtos as $pedidoProduto) {
+                    $produto = $pedidoProduto->produto;
+                    $oldEstoque = $produto->estoque;
+                    $produto->estoque = $oldEstoque - $pedidoProduto->quantidade;
+                    $produto->save();
+                    \Log::notice("Estoque do produto {$produto->sku} foi alterado de {$oldEstoque} para {$produto->estoque}");
+                }
             }
 
             $data->status = $status;
