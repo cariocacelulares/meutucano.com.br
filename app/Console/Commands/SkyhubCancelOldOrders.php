@@ -1,7 +1,7 @@
 <?php namespace App\Console\Commands;
 
-use App\Http\Controllers\Integracao\SkyhubController;
 use Illuminate\Console\Command;
+use App\Http\Controllers\Integracao\SkyhubController;
 
 class SkyhubCancelOldOrders extends Command
 {
@@ -17,7 +17,7 @@ class SkyhubCancelOldOrders extends Command
      *
      * @var string
      */
-    protected $description = 'Cancela os pedidos com mais de 3 dias úteis sem pagamento';
+    protected $description = 'Cancela pedidos pendentes a mais de 4 dias úteis';
 
     /**
      * Execute the console command.

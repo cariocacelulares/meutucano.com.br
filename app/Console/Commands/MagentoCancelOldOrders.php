@@ -1,23 +1,23 @@
 <?php namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Http\Controllers\Rastreio\RastreioController;
+use App\Http\Controllers\Integracao\MagentoController;
 
-class RefreshRastreios extends Command
+class MagentoCancelOldOrders extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'refresh:rastreios';
+    protected $signature = 'magento:cancel';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Atualiza todos rastreios';
+    protected $description = 'Cancela pedidos pendentes a mais de 7 dias úteis';
 
     /**
      * Execute the console command.
@@ -26,7 +26,7 @@ class RefreshRastreios extends Command
      */
     public function handle()
     {
-        with(new RastreioController())->refreshAll();
-        $this->comment('Rastreios atualizados com sucesso!');
+        $return = with(new MagentoController())->cancelOldOrders();
+        $this->comment($return);
     }
 }

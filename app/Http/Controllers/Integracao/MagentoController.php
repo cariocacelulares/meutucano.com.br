@@ -33,18 +33,20 @@ class MagentoController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($useSoap = true)
     {
-        try {
-            $this->api     = new \SoapClient(\Config::get('tucano.magento.api.host'), ['cache_wsdl' => WSDL_CACHE_NONE]);
-            $this->session = $this->api->login(
-                \Config::get('tucano.magento.api.user'),
-                \Config::get('tucano.magento.api.key')
-            );
-            Log::info('Requisição soap no magento realizada');
-        } catch (\Exception $e) {
-            Log::warning(logMessage($e, 'Falha ao tentar realizar uma requisição soap no magento'));
-            return false;
+        if ($useSoap) {
+            try {
+                $this->api     = new \SoapClient(\Config::get('tucano.magento.api.host'), ['cache_wsdl' => WSDL_CACHE_NONE]);
+                $this->session = $this->api->login(
+                    \Config::get('tucano.magento.api.user'),
+                    \Config::get('tucano.magento.api.key')
+                );
+                Log::info('Requisição soap no magento realizada');
+            } catch (\Exception $e) {
+                Log::warning(logMessage($e, 'Falha ao tentar realizar uma requisição soap no magento'));
+                return false;
+            }
         }
     }
 
@@ -275,6 +277,25 @@ class MagentoController extends Controller
     }
 
     /**
+     * Importa um pedido especifico sem remover da fila
+     *
+     * @param  string $order codigo do pedido
+     * @return void
+     */
+    public function syncOrder($order)
+    {
+        $mg_order = $this->api->salesOrderInfo($this->session, $order);
+        $mg_order = json_decode(json_encode($mg_order), true);
+
+        $mg_customer = $this->api->customerCustomerInfo($this->session, $mg_order['customer_id']);
+        $mg_customer = json_decode(json_encode($mg_customer), true);
+
+        $mg_order['customer'] = $mg_customer;
+
+        $this->importPedido($mg_order);
+    }
+
+    /**
      * Update stock data from Magento
      *
      * @param  MagentoOrder $mg_order
@@ -415,11 +436,8 @@ class MagentoController extends Controller
                     }
                 }
             }
-
-            return true;
         } catch (\Exception $e) {
             Log::error(logMessage($e, 'Não foi possível cancelar o pedido no Magento'));
-            return false;
         }
     }
 }

@@ -18,17 +18,6 @@ use Illuminate\Support\Facades\DB;
  */
 class SkyhubController extends Controller
 {
-    public function teste($order)
-    {
-        $s_pedido = $this->request("/orders/{$order}");
-
-        if ($s_pedido) {
-            if ($this->importPedido($s_pedido)) {
-                Log::info('Pedido ' . $s_pedido['code'] . ' removido da fila de espera.');
-            }
-        }
-    }
-
     /**
      * Formata o ID do pedido no marketplace
      *
@@ -468,6 +457,21 @@ class SkyhubController extends Controller
     }
 
     /**
+     * Importa um pedido especifico sem remover da fila
+     *
+     * @param  string $order codigo do pedido
+     * @return void
+     */
+    public function syncOrder($order)
+    {
+        $s_pedido = $this->request("/orders/{$order}");
+
+        if ($s_pedido) {
+            $this->importPedido($s_pedido);
+        }
+    }
+
+    /**
      * Envia informações de faturamento e envio para skyhub
      *
      * @param  $id      Order id
@@ -602,11 +606,8 @@ class SkyhubController extends Controller
                     $this->refreshStatus($pedido);
                 }
             }
-
-            return true;
         } catch (\Exception $e) {
             Log::error(logMessage($e, 'Não foi possível cancelar o pedido na Skyhub'));
-            return false;
         }
     }
 }

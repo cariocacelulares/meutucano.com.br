@@ -27,6 +27,6 @@ class SendProductToQueue
     public function handle(ProductStockChange $event)
     {
         \Log::debug('Listener SendProductToQueue ativado produto: ' . $event->produto_sku);
-        with(new MagentoController())->sendProductToQueue($event->produto_sku);
+        with(new MagentoController(false))->sendProductToQueue($event->produto_sku);
     }
 }
