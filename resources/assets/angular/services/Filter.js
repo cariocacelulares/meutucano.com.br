@@ -26,8 +26,16 @@
                             $timeout(function() { initializing = false; });
                         } else {
                             angular.forEach(this.vm.filter, function(value, key) {
-                                if (value.length === 0) 
+
+                                if (!value || value === null || value.length === 0) {
                                     delete this.vm.filter[key];
+                                } else if (typeof value == 'object') {
+                                    if ((value.from === null && value.to === null) ||
+                                        (typeof value.to === 'undefined' && value.from === null) ||
+                                        (typeof value.from === 'undefined' && value.to === null)) {
+                                        delete this.vm.filter[key];
+                                    }
+                                }
                             }, this);
 
                             $localStorage.filter[this.name] = angular.extend($localStorage.filter[this.name] || {}, this.vm.filter);

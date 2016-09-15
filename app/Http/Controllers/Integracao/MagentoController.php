@@ -33,14 +33,21 @@ class MagentoController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($useSoap = true)
     {
-        $this->api     = new \SoapClient(\Config::get('tucano.magento.api.host'), ['cache_wsdl' => WSDL_CACHE_NONE]);
-        $this->session = $this->api->login(
-            \Config::get('tucano.magento.api.user'),
-            \Config::get('tucano.magento.api.key')
-        );
-        Log::info('Requisição soap no magento realizada');
+        if ($useSoap) {
+            try {
+                $this->api     = new \SoapClient(\Config::get('tucano.magento.api.host'), ['cache_wsdl' => WSDL_CACHE_NONE]);
+                $this->session = $this->api->login(
+                    \Config::get('tucano.magento.api.user'),
+                    \Config::get('tucano.magento.api.key')
+                );
+                Log::info('Requisição soap no magento realizada');
+            } catch (\Exception $e) {
+                Log::warning(logMessage($e, 'Falha ao tentar realizar uma requisição soap no magento'));
+                return false;
+            }
+        }
     }
 
     /**
@@ -53,6 +60,7 @@ class MagentoController extends Controller
     {
         $statusConvert = [
             'new'             => 0,
+            'pending'         => 0,
             'pending_payment' => 0,
             'processing'      => 1,
             'complete'        => 2,
@@ -60,7 +68,30 @@ class MagentoController extends Controller
             'closed'          => 5
         ];
 
-        return (!$reverse) ? $statusConvert[$status] : array_search($status, $statusConvert);
+        return (!$reverse) ? (isset($statusConvert[$status]) ? $statusConvert[$status] : 0) : array_search($status, $statusConvert);
+    }
+
+    /**
+     * Retorna o metodo de frete após identificar
+     *
+     * @param  string  $shipping
+     * @return string
+     */
+    public function parseShippingMethod($shipping)
+    {
+        if (!$shipping) {
+            return null;
+        }
+
+        $shipping = mb_strtolower($shipping);
+
+        if (strpos($shipping, 'pac') !== false) {
+            return 'pac';
+        } elseif (strpos($shipping, 'sedex') !== false) {
+            return 'sedex';
+        } else {
+            return 'outro';
+        }
     }
 
     /**
@@ -77,7 +108,7 @@ class MagentoController extends Controller
             return false;
 
         try {
-            Log::info('Requisição tucanomg para: ' . $url, $params);
+            Log::info('Requisição tucanomg para: ' . $url . ', method: ' . $method, $params);
             $client = new \GuzzleHttp\Client([
                 'base_uri' => \Config::get('tucano.services.tucanomg.host'),
                 'headers' => [
@@ -91,11 +122,11 @@ class MagentoController extends Controller
 
             return json_decode($r->getBody(), true);
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
-            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url));
-            return $e->getMessage();
+            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', com o method: ' . $method));
+            return false;
         } catch (\Exception $e) {
-            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url));
-            return $e->getMessage();
+            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', com o method: ' . $method));
+            return false;
         }
     }
 
@@ -162,14 +193,15 @@ class MagentoController extends Controller
             $pedido->cliente_id          = $cliente->id;
             $pedido->cliente_endereco_id = $clienteEndereco->id;
             $pedido->frete_valor         = $mg_order['shipping_amount'];
-            $pedido->frete_metodo        = (strpos($mg_order['shipping_description'], 'PAC') !== false) ? 'PAC' : 'SEDEX';
+            $pedido->frete_metodo        = $this->parseShippingMethod($mg_order['shipping_description']);
             $pedido->pagamento_metodo    = (strpos($mg_order['payment']['method'], 'ticket') !== false) ? 'boleto' : 'credito';
             $pedido->codigo_marketplace  = $mg_order['increment_id'];
+            $pedido->codigo_api          = $mg_order['increment_id'];
             $pedido->marketplace         = 'Site';
             $pedido->operacao            = $operacao;
             $pedido->total               = $mg_order['subtotal'];
-            $pedido->status              = $this->parseMagentoStatus($mg_order['state']);
-            $pedido->created_at          = $mg_order['created_at'];
+            $pedido->status              = $this->parseMagentoStatus((isset($mg_order['state'])) ? $mg_order['state'] : ((isset($mg_order['status'])) ? $mg_order['status'] : null ));
+            $pedido->created_at          = Carbon::createFromFormat('Y-m-d H:i:s', $mg_order['created_at'])->subHours(3);
 
             if (!$pedido->wasRecentlyCreated) {
                 if (($pedido->status !=  $pedido->getOriginal('status')) && $pedido->status == 5) {
@@ -221,7 +253,7 @@ class MagentoController extends Controller
 
     /**
      * Proccess order queue
-     * @return [type] [description]
+     * @return void
      */
     public function queue()
     {
@@ -242,6 +274,25 @@ class MagentoController extends Controller
                 }
             }
         }
+    }
+
+    /**
+     * Importa um pedido especifico sem remover da fila
+     *
+     * @param  string $order codigo do pedido
+     * @return void
+     */
+    public function syncOrder($order)
+    {
+        $mg_order = $this->api->salesOrderInfo($this->session, $order);
+        $mg_order = json_decode(json_encode($mg_order), true);
+
+        $mg_customer = $this->api->customerCustomerInfo($this->session, $mg_order['customer_id']);
+        $mg_customer = json_decode(json_encode($mg_customer), true);
+
+        $mg_order['customer'] = $mg_customer;
+
+        $this->importPedido($mg_order);
     }
 
     /**
@@ -280,7 +331,7 @@ class MagentoController extends Controller
                 $produto->save();
 
                 if ($oldEstoque != $produto->estoque) {
-                    Log::info("Estoque do produto {$s_produto['sku']} alterado de {$oldEstoque} para {$produto->estoque}.");
+                    Log::notice("Estoque do produto {$s_produto['sku']} alterado de {$oldEstoque} para {$produto->estoque}.");
                 } else {
                     Log::info("Estoque do produto {$s_produto['sku']} não sofreu alterações: {$produto->estoque}.");
                 }
@@ -298,6 +349,95 @@ class MagentoController extends Controller
                 $m->to('dev.cariocacelulares@gmail.com', 'DEV')->subject('Erro no sistema!');
             });
             return false;
+        }
+    }
+
+    /**
+     * Send product sku to queue when its stock is changed
+     * @param  int $produto_sku
+     * @return void
+     */
+    public function sendProductToQueue($produto_sku)
+    {
+        try {
+            $request = $this->request('products/' . $produto_sku, [], 'POST');
+
+            if ($request)
+                Log::notice("Produto {$produto_sku} enviado para a fila.");
+        } catch (Exception $e) {
+            Log::warning(logMessage($e, "Não foi possível enviar o produto {$produto_sku} para a fila."));
+            return $e->getMessage();
+        }
+    }
+
+    public function updateStock()
+    {
+        try {
+            $product = $this->request('products');
+
+            if ($product && $product['product_sku'])
+                $product = Produto::find($product['product_sku']);
+
+            if ($product) {
+                $stock = $this->api->catalogInventoryStockItemUpdate(
+                    $this->session,
+                    $product->sku,
+                    [
+                        'qty' => $product->estoque,
+                        'is_in_stock' => (($product->estoque > 0) ? 1 : 0)
+                    ]
+                );
+
+                if ($stock) {
+                    Log::notice('Estoque do produto ' . $product->sku . ' alterado para ' . $product->estoque . ' / em estoque: ' . (($product->estoque > 0) ? 'sim' : 'não'));
+
+                    $remove = $this->request('products/' . $product->sku, [], 'DELETE');
+                    if ($remove)
+                        Log::notice("Produto {$product->sku} removido da fila de espera");
+                } else {
+                    Log::warning("Estoque do produto {$product->sku} não foi atualizado", (is_array($stock) ? $stock : [$stock]));
+                }
+            }
+        } catch (Exception $e) {
+            Log::warning(logMessage($e, "Atualizar o estoque do produto {$produto_sku} no magento."));
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     * Cancela pedidos com mais de 7 dias úteis de pagamento pendente
+     *
+     * @return void
+     */
+    public function cancelOldOrders()
+    {
+        try {
+            $pedidos = Pedido::where('status', '=', 0)->whereNotNull('codigo_api')->where('marketplace', '=', 'Site')->get();
+
+            foreach ($pedidos as $pedido) {
+                $dataPedido = Carbon::createFromFormat('d/m/Y H:i', $pedido->created_at)->format('d/m/Y');
+
+                if (diasUteisPeriodo($dataPedido, date('d/m/Y'), true) > 7) {
+                    $pedido->status = 5;
+                    $pedido->save();
+
+                    foreach ($pedido->produtos as $pedidoProduto) {
+                        $produto = $pedidoProduto->produto;
+                        $oldEstoque = $produto->estoque;
+                        $produto->estoque = $oldEstoque - $pedidoProduto->quantidade;
+                        $produto->save();
+                        Log::notice("Estoque do produto {$produto->sku} foi alterado de {$oldEstoque} para {$produto->estoque}");
+                    }
+
+                    if ($cancel = $this->api->salesOrderCancel($this->session, $pedido->codigo_api)) {
+                        Log::info("Pedido {$pedido->id} cancelado.");
+                    } else {
+                        Log::warning("Não foi possível cancelar o pedido antigo {$pedido->id}");
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            Log::error(logMessage($e, 'Não foi possível cancelar o pedido no Magento'));
         }
     }
 }

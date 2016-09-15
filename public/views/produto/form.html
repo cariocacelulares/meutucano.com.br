@@ -30,15 +30,15 @@
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="referencia">Referência</label>
-                    <input type="text" ng-model="ProdutoForm.produto.referencia" id="referencia" placeholder="Referência do produto" required />
+                    <input type="text" ng-model="ProdutoForm.produto.referencia" id="referencia" placeholder="Referência do produto" />
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="ncm">NCM</label>
-                    <input type="text" ng-model="ProdutoForm.produto.ncm" id="ncm" placeholder="NCM do produto" required />
+                    <input type="text" ng-model="ProdutoForm.produto.ncm" id="ncm" placeholder="NCM do produto" />
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="ean">EAN</label>
-                    <input type="text" ng-model="ProdutoForm.produto.ean" id="ean" placeholder="EAN do produto" required />
+                    <input type="text" ng-model="ProdutoForm.produto.ean" id="ean" placeholder="EAN do produto" />
                 </div>
             </div>
             <div class="row">
@@ -82,7 +82,7 @@
                 </div>
                 <div class="col-md-1 form-group">
                     <label for="estoque">Estoque</label>
-                    <input type="number" ng-model="ProdutoForm.produto.estoque" id="estoque" placeholder="Qtd" ng-minlength="0" min="0" required />
+                    <input type="number" ng-model="ProdutoForm.produto.estoque" id="estoque" placeholder="Qtd" required />
                 </div>
                 <div class="col-md-3 form-group">
                     <div class="checkbox check-success m-t-35">
@@ -93,24 +93,12 @@
             </div>
             <div class="row">
                 <div class="pull-right">
-                    <a ng-click="ProdutoForm.tabsHelper.set('dadosVenda')" class="btn-primary">
-                        Avançar &nbsp;<i class="fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-        </tab> <!-- /infosProduto -->
-        <tab name="dadosVenda" title="Dados de venda">
-            <div class="row">
-                <div class="pull-right">
-                    <a ng-click="ProdutoForm.tabsHelper.set('infosProduto')" class="btn-primary">
-                        <i class="fa-arrow-left"></i>&nbsp; Voltar
-                    </a>
                     <a ng-click="ProdutoForm.tabsHelper.set('atributos')" class="btn-primary">
                         Avançar &nbsp;<i class="fa-arrow-right"></i>
                     </a>
                 </div>
             </div>
-        </tab> <!-- /dadosVenda -->
+        </tab> <!-- /infosProduto -->
         <tab name="atributos" title="Atributos">
             <div class="row">
                 <table class="table-alt bordered">
@@ -136,19 +124,7 @@
             </div>
             <div class="row">
                 <div class="pull-right">
-                    <a ng-click="ProdutoForm.tabsHelper.set('dadosVenda')" class="btn-primary">
-                        <i class="fa-arrow-left"></i>&nbsp; Voltar
-                    </a>
-                    <a ng-click="ProdutoForm.tabsHelper.set('impostos')" class="btn-primary">
-                        Avançar &nbsp;<i class="fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-        </tab> <!-- /atributos -->
-        <tab name="impostos" title="Impostos">
-            <div class="row">
-                <div class="pull-right">
-                    <a ng-click="ProdutoForm.tabsHelper.set('atributos')" class="btn-primary">
+                    <a ng-click="ProdutoForm.tabsHelper.set('infosProduto')" class="btn-primary">
                         <i class="fa-arrow-left"></i>&nbsp; Voltar
                     </a>
                     <button type="submit" title="Salvar produto" class="btn-success">
@@ -156,6 +132,6 @@
                     </button>
                 </div>
             </div>
-        </tab> <!-- /impostos -->
+        </tab> <!-- /atributos -->
     </tabs>
 </form>

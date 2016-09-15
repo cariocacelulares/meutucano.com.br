@@ -4,13 +4,13 @@
 <table table-list="PedidoList">
     <thead>
         <tr>
-            <th class="text-center" width="160">Código</th>
-            <th class="text-center" width="150">Marketplace</th>
+            <th class="text-center" width="140">Código</th>
+            <th class="text-center" width="130">Marketplace</th>
             <th>Cliente</th>
-            <th class="text-center" width="120">Valor</th>
-            <th class="text-center" width="120">Data</th>
-            <th class="text-center" width="150">Status</th>
-            <th width="75" style="min-width: 75px;"></th>
+            <th class="text-center" width="180">Valor</th>
+            <th class="text-center" width="230">Data</th>
+            <th class="text-center" width="120">Status</th>
+            <th width="75"></th>
         </tr>
         <tr class="table-filter" static-include="views/pedido/list_filter.html"></tr>
     </thead>
@@ -31,6 +31,9 @@
             <td class="text-center bold">
                 <span class="label label-{{ PedidoList.parseStatusClass(pedido) }} m-b-0">
                     {{ pedido.status_description }}
+                    <small ng-if="pedido.reembolso">(Reembolsado)</small>
+                    <small ng-if="pedido.segurado">(Segurado)</small>
+                    <small ng-if="pedido.protocolo">({{ PedidoDetalhe.pedido.protocolo }})</small>
                 </span>
             </td>
             <td class="text-center">

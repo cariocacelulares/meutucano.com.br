@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterCodigoAnymarketFieldOnPedidosTable extends Migration
+class AddSeguradoFieldToPedidosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class AlterCodigoAnymarketFieldOnPedidosTable extends Migration
     public function up()
     {
         Schema::table('pedidos', function (Blueprint $table) {
-            $table->renameColumn('codigo_anymarket', 'codigo_skyhub');
+            $table->boolean('segurado')->default(false)->after('protocolo');
         });
     }
 
@@ -25,7 +25,7 @@ class AlterCodigoAnymarketFieldOnPedidosTable extends Migration
     public function down()
     {
         Schema::table('pedidos', function (Blueprint $table) {
-            $table->renameColumn('codigo_skyhub', 'codigo_anymarket');
+            $table->dropColumn(['segurado']);
         });
     }
 }

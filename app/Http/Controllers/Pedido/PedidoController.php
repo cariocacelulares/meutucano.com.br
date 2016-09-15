@@ -36,13 +36,18 @@ class PedidoController extends Controller
         return $this->listResponse($list);
     }
 
+    /**
+     * Adiciona ou remove prioridade de um pedido
+     * @param  int $pedido_id
+     * @return Pedido
+     */
     public function prioridade($pedido_id)
     {
         $m = self::MODEL;
 
         try {
             $prioridade = Input::get('priorizado');
-            $prioridade = (int) $prioridade ? 1 : null;
+            $prioridade = (int)$prioridade ? 1 : null;
 
             $pedido = $m::find($pedido_id);
             $pedido->priorizado = $prioridade;
@@ -55,6 +60,37 @@ class PedidoController extends Controller
         }
     }
 
+    /**
+     * Segura ou libera um pedido
+     * @param  int $pedido_id
+     * @return Pedido
+     */
+    public function segurar($pedido_id)
+    {
+        $m = self::MODEL;
+
+        try {
+            $segurar = Input::get('segurar');
+            $segurar = (int)$segurar ? 1 : 0;
+
+            $pedido = $m::find($pedido_id);
+            $pedido->segurado = $segurar;
+            $pedido->save();
+
+            return $this->showResponse($pedido);
+        } catch(\Exception $ex) {
+            $data = ['exception' => $ex->getMessage()];
+            return $this->clientErrorResponse($data);
+        }
+    }
+
+    /**
+     * Altera status do pedido e adiciona o protocolo
+     *
+     * @param  Pedido $pedido_id
+     * @param  int $protocolo
+     * @return Pedido
+     */
     public function alterarStatus($pedido_id) {
         $m = self::MODEL;
 
@@ -66,12 +102,24 @@ class PedidoController extends Controller
             }
 
             $data = $m::find($pedido_id);
+
+            $protocolo = \Request::get('protocolo');
+            if ($protocolo) {
+                $data->protocolo = $protocolo;
+            }
+
+            if ((int)$status === 5 && (int)$data->status !== 5) {
+                foreach ($data->produtos as $pedidoProduto) {
+                    $produto = $pedidoProduto->produto;
+                    $oldEstoque = $produto->estoque;
+                    $produto->estoque = $oldEstoque - $pedidoProduto->quantidade;
+                    $produto->save();
+                    \Log::notice("Estoque do produto {$produto->sku} foi alterado de {$oldEstoque} para {$produto->estoque}");
+                }
+            }
+
             $data->status = $status;
             $data->save();
-
-            if ($status == 5) {
-                $data->delete();
-            }
 
             return $this->showResponse($data);
         } catch(\Exception $ex) {

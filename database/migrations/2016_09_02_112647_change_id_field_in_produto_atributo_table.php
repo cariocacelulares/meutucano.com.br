@@ -27,7 +27,7 @@ class ChangeIdFieldInProdutoAtributoTable extends Migration
     {
         Schema::table('produto_atributo', function(Blueprint $table)
         {
-            $table->integer('id')->unsigned()->primary()->change();
+            $table->integer('id')->unsigned()->change();
         });
     }
 }

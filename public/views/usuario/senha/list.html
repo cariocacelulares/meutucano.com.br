@@ -22,7 +22,16 @@
                 <small class="hint-text">{{ senha.url }}</small>
             </td>
             <td>{{ senha.usuario }}</td>
-            <td>{{ senha.senha }}</td>
+            <td>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button ng-click="SenhaList.toglePassword($index)" class="btn-default">
+                            <i class="fa-eye"></i>
+                        </button>
+                    </span>
+                    <input type="{{ senha.inputType || 'password' }}" value="{{ senha.senha }}" class="input-masked p-l-10" readonly style="height:47px">
+                </div>
+            </td>
             <td>
                 <dropdown>
                     <li>

@@ -5,14 +5,11 @@
  */
 Route::get('/', function() { return view('index'); });
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
-Route::get('testApi', 'Integracao\MagentoController@queue');
 
 /**
  * API
  */
 Route::group(['prefix' => '/api'], function() {
-    // Route::get('teste', 'Integracao\SkyhubController@teste');
-
     /**
      * Auth
      */
@@ -132,6 +129,7 @@ Route::group(['prefix' => '/api'], function() {
          */
         Route::put('pedidos/status/{pedido_id}', 'Pedido\PedidoController@alterarStatus');
         Route::put('pedidos/prioridade/{pedido_id}', 'Pedido\PedidoController@prioridade');
+        Route::put('pedidos/segurar/{pedido_id}', 'Pedido\PedidoController@segurar');
         Route::get('pedidos/list', 'Pedido\PedidoController@tableList');
         Route::resource('pedidos', 'Pedido\PedidoController', ['except' => ['create', 'edit']]);
 

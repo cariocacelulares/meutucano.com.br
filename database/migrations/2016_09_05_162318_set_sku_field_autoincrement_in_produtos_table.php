@@ -45,9 +45,29 @@ class SetSkuFieldAutoincrementInProdutosTable extends Migration
      */
     public function down()
     {
+        Schema::table('pedido_produtos', function(Blueprint $table)
+        {
+            $table->dropForeign('PedidoProdutoProduto');
+        });
+
+        Schema::table('produto_atributo', function(Blueprint $table)
+        {
+            $table->dropForeign('ProdutoAtributoProduto');
+        });
+
         Schema::table('produtos', function(Blueprint $table)
         {
-            $table->integer('sku')->unsigned()->primary();
+            $table->integer('sku')->unsigned()->change();
+        });
+
+        Schema::table('pedido_produtos', function(Blueprint $table)
+        {
+            $table->foreign('produto_sku', 'PedidoProdutoProduto')->references('sku')->on('produtos')->onUpdate('CASCADE')->onDelete('RESTRICT');
+        });
+
+        Schema::table('produto_atributo', function(Blueprint $table)
+        {
+            $table->foreign('produto_id', 'ProdutoAtributoProduto')->references('sku')->on('produtos')->onUpdate('CASCADE')->onDelete('CASCADE');
         });
     }
 }

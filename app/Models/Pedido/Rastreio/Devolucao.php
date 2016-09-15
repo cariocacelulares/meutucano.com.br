@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Pedido\Rastreio;
+use App\Models\Pedido\Pedido;
 
 /**
  * Class Devolucao
@@ -102,15 +103,15 @@ class Devolucao extends \Eloquent
     }
 
     /**
-     * Return protocolo from rastreio
+     * Return protocolo from pedido
      *
      * @return string
      */
     public function getProtocoloAttribute()
     {
         if ((int)$this->acao === 1) {
-            $rastreio = Rastreio::find($this->rastreio_id);
-            return ($rastreio) ? $rastreio->protocolo : null;
+            $pedido = Pedido::find($this->pedido_id);
+            return ($pedido) ? $pedido->protocolo : null;
         } else {
             return null;
         }

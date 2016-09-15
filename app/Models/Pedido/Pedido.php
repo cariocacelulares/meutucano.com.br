@@ -37,6 +37,9 @@ class Pedido extends \Eloquent
         'total',
         'estimated_delivery',
         'status',
+        'protocolo',
+        'segurado',
+        'reembolso',
         'priorizado'
     ];
 
@@ -48,6 +51,8 @@ class Pedido extends \Eloquent
         'status_description',
         'can_prioritize',
         'can_hold',
+        'pagamento_metodo_readable',
+        'frete_metodo_readable'
     ];
 
     /**
@@ -151,17 +156,11 @@ class Pedido extends \Eloquent
      */
     protected function getStatusDescriptionAttribute()
     {
-        return ($this->status) ? \Config::get('tucano.pedido_status')[$this->status] : 'Desconhecido';
-    }
-
-    /**
-     * Return readable created_at
-     *
-     * @return string
-     */
-    protected function getCreatedAtReadableAttribute()
-    {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y H:i');
+        if (!isset(\Config::get('tucano.pedido_status')[$this->status])) {
+            return 'Desconhecido';
+        } else {
+            return \Config::get('tucano.pedido_status')[$this->status];
+        }
     }
 
     /**
@@ -182,19 +181,68 @@ class Pedido extends \Eloquent
     }
 
     /**
+     * Return readable payment method description
+     *
+     * @return string
+     */
+    protected function getPagamentoMetodoReadableAttribute()
+    {
+        $metodo = strtolower($this->pagamento_metodo);
+
+        switch ($metodo) {
+            case 'credito':
+                $metodo = 'cartão de crédito';
+                break;
+            case 'debito':
+                $metodo = 'cartão de débito';
+                break;
+            case 'boleto':
+                $metodo = 'boleto';
+                break;
+            default:
+                $metodo = 'outro meio';
+                break;
+        }
+
+        return 'Pagamento via ' . $metodo;
+    }
+
+    /**
+     * Return readable shipment method description
+     *
+     * @return string
+     */
+    protected function getFreteMetodoReadableAttribute()
+    {
+        $metodo = strtolower($this->frete_metodo);
+
+        switch ($metodo) {
+            case 'pac':
+                $metodo = 'PAC';
+                break;
+            case 'sedex':
+                $metodo = 'SEDEX';
+                break;
+            default:
+                $metodo = 'outro meio';
+                break;
+        }
+
+        return 'Envio via ' . $metodo;
+    }
+
+    /**
      * Return can_hold
      *
      * @return string
      */
     protected function getCanHoldAttribute()
     {
-        switch ($this->status) {
-            case 0:
-            case 1:
-                return true;
-            default:
-                return false;
+        if (in_array($this->status, [0,1])) {
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -204,13 +252,11 @@ class Pedido extends \Eloquent
      */
     protected function getCanPrioritizeAttribute()
     {
-        switch ($this->status) {
-            case 0:
-            case 1:
-                return true;
-            default:
-                return false;
+        if (in_array($this->status, [0,1])) {
+            return true;
         }
+
+        return false;
     }
 
     /**

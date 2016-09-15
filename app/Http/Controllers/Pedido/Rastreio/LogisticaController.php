@@ -44,25 +44,18 @@ class LogisticaController extends Controller
     {
         $m = self::MODEL;
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
+            $v = \Validator::make(Input::except(['protocolo']), $this->validationRules);
 
             if($v->fails()) {
                 throw new \Exception("ValidationException");
             }
-            $data = $m::create(Input::all());
+            $data = $m::create(Input::except(['protocolo']));
 
             if (Input::has('acao')) {
                 $data->rastreio->status = 5;
                 $data->rastreio->save();
 
-                if ((int)$data->acao === 1) {
-                    if ($protocolo = Input::get('protocolo')) {
-                        if ($rastreio = Rastreio::find($data->rastreio_id)) {
-                            $rastreio->protocolo = $protocolo;
-                            $rastreio->save();
-                        }
-                    }
-                }
+                updateProtocolAndStatus($data, Input::get('protocolo'));
             }
 
             return $this->createdResponse($data);
@@ -98,14 +91,7 @@ class LogisticaController extends Controller
             $data->fill(Input::except(['protocolo']));
             $data->save();
 
-            if ((int)$data->acao === 1) {
-                if ($protocolo = Input::get('protocolo')) {
-                    if ($rastreio = Rastreio::find($data->rastreio_id)) {
-                        $rastreio->protocolo = $protocolo;
-                        $rastreio->save();
-                    }
-                }
-            }
+            updateProtocolAndStatus($data, Input::get('protocolo'));
 
             return $this->showResponse($data);
         } catch(\Exception $ex) {

@@ -13,7 +13,8 @@
          * @type {Filter}
          */
         vm.filterList = Filter.init('produtos', vm, {
-            'produtos.titulo': 'LIKE'
+            'produtos.titulo': 'LIKE',
+            'produtos.estoque': 'BETWEEN'
         });
 
         /**
