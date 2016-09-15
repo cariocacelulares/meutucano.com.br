@@ -15,7 +15,13 @@ class Usuario extends Authenticatable
     /**
      * @var array
      */
-    protected $fillable = ['id'];
+    protected $fillable = [
+        'id',
+        'name',
+        'email',
+        'username',
+        'password'
+    ];
 
     /**
      * @var array
@@ -31,6 +37,15 @@ class Usuario extends Authenticatable
     protected $with = [
         'roles'
     ];
+
+    /**
+     * Atualiza o password com hash
+     *
+     * @param string $pass
+     */
+    public function setPasswordAttribute($pass){
+        $this->attributes['password'] = bcrypt($pass);
+    }
 
     /**
      * @return string

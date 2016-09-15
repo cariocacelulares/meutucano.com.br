@@ -1,6 +1,6 @@
 <?php namespace Tests;
 
-use App\Models\Usuario;
+use App\Models\Usuario\Usuario;
 
 class AuthTest extends TestCase
 {
@@ -17,10 +17,7 @@ class AuthTest extends TestCase
             'password' => 'test'
         ];
 
-        $userData = $loginData;
-        $userData['password'] = bcrypt($userData['password']);
-
-        Usuario::create($userData);
+        Usuario::create($loginData);
 
         $this->json('POST', '/api/authenticate', $loginData)->seeJsonStructure([
             'token'
@@ -36,19 +33,6 @@ class AuthTest extends TestCase
     {
         $this->json('GET', '/api/pedidos', [])->seeJson([
             'error' => 'token_not_provided'
-        ]);
-    }
-
-    /**
-     * Test if auth users can access API
-     *
-     * @return void
-     */
-    public function test__it_should_allow_requests_when_token_provided()
-    {
-        $this->json('GET', '/api/pedidos?token=' . $this->userToken, [])->seeJson([
-            'code'   => 200,
-            'status' => 'success'
         ]);
     }
 }

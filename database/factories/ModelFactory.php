@@ -3,7 +3,7 @@
 /**
  * Usuario
  */
-$factory->define(\App\Models\Usuario::class, function (Faker\Generator $faker) {
+$factory->define(\App\Models\Usuario\Usuario::class, function (Faker\Generator $faker) {
     return [
         'name'           => $faker->name,
         'email'          => $faker->safeEmail,
@@ -15,7 +15,7 @@ $factory->define(\App\Models\Usuario::class, function (Faker\Generator $faker) {
 /**
  * Cliente
  */
-$factory->define(\App\Models\Cliente::class, function (Faker\Generator $faker) {
+$factory->define(\App\Models\Cliente\Cliente::class, function (Faker\Generator $faker) {
     return [
         'taxvat' => $faker->randomNumber(5) . $faker->randomNumber(6),
         'tipo'   => 0,
@@ -28,7 +28,7 @@ $factory->define(\App\Models\Cliente::class, function (Faker\Generator $faker) {
 /**
  * Endereço
  */
-$factory->define(\App\Models\ClienteEndereco::class, function (Faker\Generator $faker) {
+$factory->define(\App\Models\Cliente\Endereco::class, function (Faker\Generator $faker) {
     return [
         'cliente_id'   => 999,
         'cep'          => $faker->randomNumber(8),
@@ -44,7 +44,7 @@ $factory->define(\App\Models\ClienteEndereco::class, function (Faker\Generator $
 /**
  * Produto
  */
-$factory->define(\App\Models\Produto::class, function (Faker\Generator $faker) {
+$factory->define(\App\Models\Produto\Produto::class, function (Faker\Generator $faker) {
     return [
         'sku'    => $faker->unique()->numberBetween(0, 1000),
         'titulo' => 'Smartphone ' . $faker->randomNumber(2),
@@ -55,7 +55,7 @@ $factory->define(\App\Models\Produto::class, function (Faker\Generator $faker) {
 /**
  * Pedido
  */
-$factory->define(\App\Models\Pedido::class, function (Faker\Generator $faker) {
+$factory->define(\App\Models\Pedido\Pedido::class, function (Faker\Generator $faker) {
     return [
         'cliente_id'          => 999,
         'cliente_endereco_id' => 999,
@@ -68,7 +68,7 @@ $factory->define(\App\Models\Pedido::class, function (Faker\Generator $faker) {
 /**
  * Rastreio
  */
-$factory->define(\App\Models\PedidoRastreio::class, function (Faker\Generator $faker) {
+$factory->define(\App\Models\Pedido\Rastreio::class, function (Faker\Generator $faker) {
     return [
         'pedido_id'  => 999,
         'data_envio' => $faker->dateTimeThisMonth->format('Y-m-d'),
@@ -83,7 +83,7 @@ $factory->define(\App\Models\PedidoRastreio::class, function (Faker\Generator $f
 /**
  * Nota
  */
-$factory->define(\App\Models\PedidoNota::class, function (Faker\Generator $faker) {
+$factory->define(\App\Models\Pedido\Nota::class, function (Faker\Generator $faker) {
     return [
         'pedido_id'  => 999,
         'usuario_id' => 1,
@@ -96,7 +96,7 @@ $factory->define(\App\Models\PedidoNota::class, function (Faker\Generator $faker
 /**
  * Imposto
  */
-$factory->define(\App\Models\PedidoImposto::class, function (Faker\Generator $faker) {
+$factory->define(\App\Models\Pedido\Imposto::class, function (Faker\Generator $faker) {
     return [
         'pedido_id'         => 999,
         'icms'              => $faker->randomFloat(2, 0, 50),
@@ -111,7 +111,7 @@ $factory->define(\App\Models\PedidoImposto::class, function (Faker\Generator $fa
 /**
  * PedidoProduto
  */
-$factory->define(\App\Models\PedidoProduto::class, function (Faker\Generator $faker) {
+$factory->define(\App\Models\Pedido\PedidoProduto::class, function (Faker\Generator $faker) {
     return [
         'pedido_id'   => 999,
         'produto_sku' => 999,
@@ -123,7 +123,7 @@ $factory->define(\App\Models\PedidoProduto::class, function (Faker\Generator $fa
 /**
  * PedidoProduto
  */
-$factory->define(\App\Models\UsuarioSenha::class, function (Faker\Generator $faker) {
+$factory->define(\App\Models\Usuario\Senha::class, function (Faker\Generator $faker) {
     return [
         'usuario_id'  => 1,
         'site'        => str_random(),
