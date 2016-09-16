@@ -1,7 +1,7 @@
 <?php
 
 return [
-
+    'report_email' => env('REPORT_EMAIL', 'dev@cariocacelulares.com.br'),
     /**
      * CEP Padrão de envio
      */

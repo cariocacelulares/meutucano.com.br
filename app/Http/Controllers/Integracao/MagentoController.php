@@ -41,7 +41,8 @@ class MagentoController extends Controller implements Integracao
                 [
                     'trace' => true,
                     'exceptions' => true,
-                    'connection_timeout' => 1
+                    'connection_timeout' => 1,
+                    'cache_wsdl' => WSDL_CACHE_NONE
                 ]
             );
             $this->session = $this->api->login(
@@ -228,6 +229,7 @@ class MagentoController extends Controller implements Integracao
             $pedido->total               = $order['subtotal'];
             $pedido->status              = $this->parseStatus((isset($order['state'])) ? $order['state'] : ((isset($order['status'])) ? $order['status'] : null ));
             $pedido->created_at          = Carbon::createFromFormat('Y-m-d H:i:s', $order['created_at'])->subHours(3);
+            $pedido->estimated_delivery  = $this->calcEstimatedDelivery($order['shipping_description'], $pedido->created_at);
             if ($pedido->save()) {
                 Log::info('Pedido importado ' . $order['increment_id']);
             } else {
@@ -393,5 +395,23 @@ class MagentoController extends Controller implements Integracao
             Log::critical(logMessage($e, "Erro ao atualizar o estoque do produto {$produto_sku} no magento."));
             reportError("Erro ao atualizar o estoque do produto {$produto_sku} no magento." . $e->getMessage() . ' - ' . $e->getLine());
         }
+    }
+
+    /**
+     * Calcula a estimativa de entrega do pedido
+     *
+     * @param  string $shippingDescription string do magento com a previsão em dias
+     * @param  string $orderDate           data que o pedido foi realizado no formato d/m/Y H:i
+     * @return string                      data estimada no formato Y-m-d
+     */
+    public function calcEstimatedDelivery($shippingDescription, $orderDate)
+    {
+        if (!$shippingDescription)
+            return null;
+
+        $estimate = (int)preg_replace('/\D/', '', $shippingDescription);
+        $estimate = SomaDiasUteis(Carbon::createFromFormat('d/m/Y H:i', $orderDate)->format('d/m/Y'), $estimate);
+
+        return Carbon::createFromFormat('d/m/Y', $estimate)->format('Y-m-d');
     }
 }

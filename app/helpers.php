@@ -150,7 +150,7 @@ function reportError($error) {
     \Mail::send('emails.error', [
         'error' => $error
     ], function ($m) {
-        $m->from('dev2@cariocacelulares.com.br', 'Meu Tucano');
-        $m->to('dev2.cariocacelulares@gmail.com', 'DEV')->subject('Erro no sistema!');
+        $m->from(\Config('tucano.report_email'), 'Meu Tucano');
+        $m->to(\Config('tucano.report_email'), 'DEV')->subject('Erro no sistema!');
     });
 }
