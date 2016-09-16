@@ -70,6 +70,12 @@
                     }
                 })
 
+                .state('app.faturamento.index', {
+                    url: '/list',
+                    templateUrl: 'views/faturamento/list.html',
+                    controller: 'FaturamentoListController as FaturamentoList'
+                })
+
                 .state('app.faturamento.notas', {
                     url: '/notas',
                     templateUrl: 'views/faturamento/notas.html',

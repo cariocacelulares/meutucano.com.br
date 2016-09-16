@@ -337,4 +337,14 @@ class Pedido extends \Eloquent
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
     }
+
+    /**
+     * @return string
+     */
+    public function getEstimatedDeliveryAttribute($estimated_delivery) {
+        if (!$estimated_delivery)
+            return null;
+
+        return Carbon::createFromFormat('Y-m-d', $estimated_delivery)->format('d/m/Y');
+    }
 }

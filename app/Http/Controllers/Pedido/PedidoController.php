@@ -38,6 +38,27 @@ class PedidoController extends Controller
     }
 
     /**
+     * Lista pedidos prontos para serem faturados
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function faturamento() {
+        $m = self::MODEL;
+
+        $list = $m::with(['cliente', 'endereco', 'nota'])
+            ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
+            ->leftJoin('pedido_notas', 'pedido_notas.pedido_id', '=', 'pedidos.id')
+            ->where('status', '=', 1)
+            ->orderBy('priorizado', 'DESC')
+            ->orderBy('estimated_delivery', 'ASC')
+            ->orderBy('created_at', 'ASC');
+
+        $list = $this->handleRequest($list);
+
+        return $this->listResponse($list);
+    }
+
+    /**
      * Adiciona ou remove prioridade de um pedido
      * @param  int $pedido_id
      * @return Pedido

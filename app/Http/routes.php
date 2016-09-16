@@ -131,6 +131,7 @@ Route::group(['prefix' => '/api'], function() {
         Route::put('pedidos/prioridade/{pedido_id}', 'Pedido\PedidoController@prioridade');
         Route::put('pedidos/segurar/{pedido_id}', 'Pedido\PedidoController@segurar');
         Route::get('pedidos/list', 'Pedido\PedidoController@tableList');
+        Route::get('pedidos/faturamento', 'Pedido\PedidoController@faturamento');
         Route::resource('pedidos', 'Pedido\PedidoController', ['except' => ['create', 'edit']]);
 
         /**

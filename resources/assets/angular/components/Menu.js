@@ -54,6 +54,12 @@
                         roles: ['admin', 'gestor', 'atendimento']
                     },
                     {
+                        title: 'Faturamento',
+                        sref: $state.href('app.faturamento.index'),
+                        icon: 'fa-usd',
+                        roles: ['admin', 'faturamento']
+                    },
+                    {
                         title: 'Clientes',
                         sref: $state.href('app.clientes.index'),
                         icon: 'fa-users',

@@ -1,0 +1,41 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-usd" title="Faturamento" description="Todos pedidos prontos para serem faturados."></page-title>
+</div>
+<table table-list="FaturamentoList">
+    <thead>
+        <tr>
+            <th class="text-center" width="135">Código</th>
+            <th class="text-center" width="120">Nota</th>
+            <th class="text-center" width="110">Marketplace</th>
+            <th class="text-center" width="130">Rastreio</th>
+            <th>Cliente</th>
+            <th class="text-center" width="135">Entrega</th>
+            <th class="text-center" width="200">Data</th>
+            <th width="75"></th>
+        </tr>
+        <tr class="table-filter" static-include="views/faturamento/list_filter.html"></tr>
+    </thead>
+    <tbody ng-if="FaturamentoList.tableData.data.length && !FaturamentoList.loading">
+        <tr ng-repeat="pedido in FaturamentoList.tableData.data">
+            <td class="text-center">{{ pedido.codigo_marketplace || 'Sem código' }}</td>
+            <td class="text-center">{{ pedido.nota || 'Sem nota' }}</td>
+            <td class="text-center bold">{{ pedido.marketplace_readable }}</td>
+            <td class="text-center bold">{{ pedido.rastreio }}</td>
+            <td>
+                <strong>{{ pedido.cliente.nome | uppercase }}</strong>
+                <br>
+                <small>
+                    {{ pedido.cliente.fone }} - CEP: <strong>{{ pedido.endereco.cep_readable }}</strong> -
+                    {{ pedido.endereco.cidade }} / {{ pedido.endereco.uf }}
+                </small>
+            </td>
+            <td class="text-center">{{ pedido.estimated_delivery }}</td>
+            <td class="text-center">{{ pedido.created_at }}</td>
+            <td class="text-center">
+                <a class="btn-info" ui-sref="app.pedidos.detalhe({id: pedido.id})">
+                    <i class="fa-eye"></i>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
