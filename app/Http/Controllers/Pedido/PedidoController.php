@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Pedido\Pedido;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
+use Carbon\Carbon;
 
 /**
  * Class PedidoController
@@ -108,16 +109,6 @@ class PedidoController extends Controller
                 $data->protocolo = $protocolo;
             }
 
-            if ((int)$status === 5 && (int)$data->status !== 5) {
-                foreach ($data->produtos as $pedidoProduto) {
-                    $produto = $pedidoProduto->produto;
-                    $oldEstoque = $produto->estoque;
-                    $produto->estoque = $oldEstoque - $pedidoProduto->quantidade;
-                    $produto->save();
-                    \Log::notice("Estoque do produto {$produto->sku} foi alterado de {$oldEstoque} para {$produto->estoque}");
-                }
-            }
-
             $data->status = $status;
             $data->save();
 
@@ -160,5 +151,33 @@ class PedidoController extends Controller
         }
 
         return $this->notFoundResponse();
+    }
+
+    /**
+     * Cancela pedidos com mais de x dias úteis de pagamento pendente
+     *
+     * @return void
+     */
+    public static function cancelOldOrders()
+    {
+        $pedidos = Pedido::where('status', '=', 0)->whereNotNull('codigo_api')->get();
+
+        foreach ($pedidos as $pedido) {
+            try {
+                $dataPedido = Carbon::createFromFormat('d/m/Y H:i', $pedido->created_at)->format('d/m/Y');
+                $diasUteis = diasUteisPeriodo($dataPedido, date('d/m/Y'), true);
+
+                if (
+                    (strtolower($pedido->marketplace) == 'site' && $diasUteis > \Config::get('tucano.magento.oldOrder'))
+                    ||
+                    (strtolower($pedido->marketplace) != 'site' && $diasUteis > \Config::get('tucano.skyhub.oldOrder'))
+                    ) {
+                    $pedido->status = 5;
+                    $pedido->save();
+                }
+            } catch (\Exception $e) {
+                \Log::error(logMessage($e, 'Não foi possível cancelar o pedido na Integração'));
+            }
+        }
     }
 }

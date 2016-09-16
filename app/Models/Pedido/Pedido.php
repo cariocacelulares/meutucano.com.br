@@ -5,6 +5,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Cliente\Cliente;
 use App\Models\Cliente\Endereco;
+use App\Events\OrderCancel;
+use App\Http\Controllers\Integracao\SkyhubController;
 
 /**
  * Class Pedido
@@ -64,16 +66,52 @@ class Pedido extends \Eloquent
     ];
 
     /**
-     * Set soft delete cascade
+     * Actions
      */
     protected static function boot() {
         parent::boot();
 
+        // Salvar pedido (novo ou existente)
+        static::saving(function($pedido) {
+            $oldStatus = ($pedido->getOriginal('status') === null) ? null : (int)$pedido->getOriginal('status');
+            $newStatus = ($pedido->status === null) ? null : (int)$pedido->status;
+
+            // Se realmente ocorreu uma mudança de status e o pedido não veio do site
+            if ($newStatus !== $oldStatus && strtolower($pedido->marketplace) != 'site') {
+                // Se o novo status for entregue, notifica a Skyhub
+                if ($newStatus === 3) {
+                    with(new SkyhubController())->orderDelivered($pedido);
+                }
+            }
+        });
+
+        // Atualizar pedido (existente)
+        static::updating(function($pedido) {
+            $oldStatus = ($pedido->getOriginal('status') === null) ? null : (int)$pedido->getOriginal('status');
+            $newStatus = ($pedido->status === null) ? null : (int)$pedido->status;
+
+            // Se realmente ocorreu uma mudança de status
+            if ($newStatus !== $oldStatus) {
+                // Se o status for cancelado
+                if ($newStatus === 5) {
+                    // Dispara o evento de cancelamento do pedido
+                    \Event::fire(new OrderCancel($pedido));
+
+                    // Se o status era enviado, pago ou entregue
+                    if (in_array($oldStatus, [1, 2, 3])) {
+                        $pedido->reembolso = true;
+                    }
+                }
+            }
+        });
+
+        // Set soft delete cascade
         static::deleting(function($pedido) {
             $pedido->nota()->delete();
             $pedido->rastreios()->delete();
         });
 
+        // Set soft delete cascade
         static::restoring(function($pedido) {
             $pedido->nota()->withTrashed()->restore();
             $pedido->rastreios()->withTrashed()->restore();
@@ -190,6 +228,9 @@ class Pedido extends \Eloquent
     {
         $metodo = strtolower($this->pagamento_metodo);
 
+        if (!$metodo)
+            return null;
+
         switch ($metodo) {
             case 'credito':
                 $metodo = 'cartão de crédito';
@@ -216,6 +257,9 @@ class Pedido extends \Eloquent
     protected function getFreteMetodoReadableAttribute()
     {
         $metodo = strtolower($this->frete_metodo);
+
+        if (!$metodo)
+            return null;
 
         switch ($metodo) {
             case 'pac':

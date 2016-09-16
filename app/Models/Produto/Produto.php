@@ -64,9 +64,9 @@ class Produto extends Model
     protected static function boot() {
         parent::boot();
 
-        static::updating(function($pedido) {
-            if ($pedido->getOriginal('estoque') != $pedido->estoque) {
-                \Event::fire(new ProductStockChange($pedido->sku));
+        static::updating(function($produto) {
+            if ($produto->getOriginal('estoque') != $produto->estoque) {
+                \Event::fire(new ProductStockChange($produto->sku));
             }
         });
     }

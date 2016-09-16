@@ -154,7 +154,8 @@ return [
             'email'   => 'dev@cariocacelulares.com.br',
             'token'   => env('SKYHUB_TOKEN', 'ciBmtUvQviXkcey7tkPb'),
             'url'     => 'http://in.skyhub.com.br',
-        ]
+        ],
+        'oldOrder' => 4
     ],
 
     /**
@@ -165,7 +166,8 @@ return [
             'host' => env('MAGENTO_API_HOST', 'http://www.cariocacelulares.com.br/api/v2_soap/?wsdl'),
             'user' => env('MAGENTO_API_USER', 'carioca'),
             'key'  => env('MAGENTO_API_KEY', '#@carioca2016')
-        ]
+        ],
+        'oldOrder' => 7
     ],
 
     /**

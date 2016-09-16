@@ -2,21 +2,22 @@
 
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use App\Models\Pedido\Pedido;
 
-class ProductStockChange extends \Event
+class OrderCancel extends \Event
 {
     use SerializesModels;
 
-    public $produto_sku;
+    public $order;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($produto_sku)
+    public function __construct(Pedido $order)
     {
-        \Log::debug('Evento ProductStockChange disparado', [$produto_sku]);
-        $this->produto_sku = $produto_sku;
+        \Log::debug('Evento OrderCancel disparado');
+        $this->order = $order;
     }
 }

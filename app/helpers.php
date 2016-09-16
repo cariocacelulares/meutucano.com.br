@@ -121,6 +121,13 @@ if (!function_exists('diasUteisPeriodo')) {
     }
 }
 
+/**
+ * Atualiza o protocolo e o status
+ *
+ * @param  Object $obj      Pi, Devolucao ou Logistica
+ * @param  int $protocol    numero de procolo
+ * @return void
+ */
 function updateProtocolAndStatus($obj, $protocol) {
     if ((int)$obj->acao === 1 && $protocol) {
         if ($rastreio = App\Models\Pedido\Rastreio::find($obj->rastreio_id)) {
@@ -131,4 +138,19 @@ function updateProtocolAndStatus($obj, $protocol) {
             }
         }
     }
+}
+
+/**
+ * Envia um e-mail informando o erro para o desenvolvedor
+ *
+ * @param  string $error a mensagem completa de erro
+ * @return void
+ */
+function reportError($error) {
+    \Mail::send('emails.error', [
+        'error' => $error
+    ], function ($m) {
+        $m->from('dev2@cariocacelulares.com.br', 'Meu Tucano');
+        $m->to('dev2.cariocacelulares@gmail.com', 'DEV')->subject('Erro no sistema!');
+    });
 }
