@@ -354,6 +354,20 @@ class MagentoController extends Controller implements Integracao
                 $rastreio->rastreio
             );
 
+            $qty = [];
+            foreach ($order->produtos as $produto) {
+                $qty[] = [
+                    'order_item_id' => $produto->produto->sku,
+                    'qty' => $produto->quantidade
+                ];
+            }
+
+            $request = $this->api->salesOrderInvoiceCreate(
+                $this->session,
+                $order->codigo_api, // increments do magento
+                $qty
+            );
+
             Log::notice("Dados de envio e nota fiscal atualizados do pedido {$order->id} / {$order->codigo_api} no Magento", [$shipmentId]);
         } catch (\Exception $e) {
             Log::critical(logMessage($e, 'Pedido não faturado no Magento'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);

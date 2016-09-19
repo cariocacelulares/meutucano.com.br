@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('FaturamentoListController', FaturamentoListController);
 
-    function FaturamentoListController(Pedido, Filter, TableHeader, RastreioHelper, NotaHelper, PedidoHelper, ComentarioHelper) {
+    function FaturamentoListController(toaster, Filter, Pedido, TableHeader, RastreioHelper, NotaHelper, PedidoHelper, ComentarioHelper) {
         var vm = this;
 
         /**
@@ -43,7 +43,7 @@
          */
         vm.tableHeader = TableHeader.init('pedidos', vm);
 
-        vm.load = function(teste) {
+        vm.load = function() {
             vm.loading = true;
 
             Pedido.faturamento({
@@ -59,23 +59,11 @@
         vm.load();
 
         /**
-         * Retorna a classe de status do pedido
-         *
-         * @param  {Pedido} pedido
-         * @return {string}
+         * Avisa que a chave foi copiada
+         * @return {void}
          */
-        vm.parseStatusClass = function(pedido) {
-            switch (pedido.status) {
-                case '1':
-                case '2':
-                    return 'info';
-                case '3':
-                    return 'success';
-                case '4':
-                case '5':
-                    return 'danger';
-            }
+        vm.chaveCopiada = function() {
+            toaster.pop('info', '', 'A chave da nota foi copiada para sua área de transferência!');
         };
     }
-
 })();

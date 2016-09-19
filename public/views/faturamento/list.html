@@ -25,7 +25,7 @@
             </td>
             <td class="text-center w-150" ng-class="{ 'ellipsis-group': pedido.nota.chave }">
                 <span class="d-rtl">{{ pedido.nota.chave }}</span>
-                <button ng-if="pedido.nota.chave" clipboard supported="supported" text="pedido.nota.chave" class="btn-sm" title="Copiar chave da nota">
+                <button ng-if="pedido.nota.chave" clipboard supported="supported" text="pedido.nota.chave" on-copied="FaturamentoList.chaveCopiada()" class="btn-sm" title="Copiar chave da nota">
                     <i class="fa-files-o"></i>
                 </button>
             </td>

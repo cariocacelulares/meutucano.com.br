@@ -25,7 +25,7 @@
          */
         vm.tableHeader = TableHeader.init('pedidos', vm);
 
-        vm.load = function(teste) {
+        vm.load = function() {
             vm.loading = true;
 
             Pedido.getList({
