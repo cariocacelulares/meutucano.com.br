@@ -98,7 +98,7 @@ class Produto extends Model
     public function atributos()
     {
         return $this
-            ->belongsToMany(Atributo::class, 'produto_atributo', 'produto_id', 'atributo_id')
+            ->belongsToMany(Atributo::class, 'produto_atributo', 'produto_sku', 'atributo_id')
             ->withPivot('opcao_id', 'valor');
     }
 
