@@ -56,7 +56,7 @@
                     {
                         title: 'Faturamento',
                         sref: $state.href('app.faturamento.index'),
-                        icon: 'fa-usd',
+                        icon: 'fa-barcode',
                         roles: ['admin', 'faturamento']
                     },
                     {

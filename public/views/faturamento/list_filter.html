@@ -28,21 +28,15 @@
         </div>
     </div>
 </th>
-<th class="between-group">
+<th>
     <div class="date-picker">
-        <input class="form-control" ng-model="FaturamentoList.filter['pedidos.created_at'].from" placeholder="De" ng-model-options="{debounce:500}" />
+        <input class="form-control" ng-model="FaturamentoList.filter['pedidos.created_at']" placeholder="Data criação" ng-model-options="{debounce:500}" />
         <div class="picker-wrap">
-            <date-picker ng-model="FaturamentoList.filter['pedidos.created_at'].from" ng-model-options="{debounce:500}"></date-picker>
-        </div>
-    </div>
-    <span>/</span>
-    <div class="date-picker">
-        <input class="form-control" ng-model="FaturamentoList.filter['pedidos.created_at'].to" placeholder="Até" ng-model-options="{debounce:500}" />
-        <div class="picker-wrap">
-            <date-picker ng-model="FaturamentoList.filter['pedidos.created_at'].to" ng-model-options="{debounce:500}"></date-picker>
+            <date-picker ng-model="FaturamentoList.filter['pedidos.created_at']" ng-model-options="{debounce:500}"></date-picker>
         </div>
     </div>
 </th>
+<th></th>
 <th class="item-button">
     <a title="Limpar filtros" class="btn-danger btn-reset-filter" ng-click="FaturamentoList.filterList.clear()">
         <i class="fa-eraser"></i>

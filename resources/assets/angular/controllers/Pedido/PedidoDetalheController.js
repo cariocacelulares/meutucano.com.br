@@ -5,12 +5,16 @@
         .module('MeuTucano')
         .controller('PedidoDetalheController', PedidoDetalheController);
 
-    function PedidoDetalheController($rootScope, $state, $stateParams, ngDialog, SweetAlert, toaster, Restangular, Pedido, RastreioHelper, NotaHelper, ClienteEnderecoHelper) {
+    function PedidoDetalheController($rootScope, $state, $stateParams, ngDialog, SweetAlert, toaster, Pedido, RastreioHelper, NotaHelper, ClienteEnderecoHelper, PedidoHelper) {
         var vm = this;
 
         vm.pedido_id  = $stateParams.id;
         vm.pedido     = {};
         vm.loading    = false;
+
+        /**
+         * @type {Object}
+         */
         vm.notaHelper = NotaHelper;
 
         /**
@@ -22,6 +26,11 @@
          * @type {Object}
          */
         vm.clienteEnderecoHelper = ClienteEnderecoHelper.init(vm);
+
+        /**
+         * @type {Object}
+         */
+        vm.pedidoHelper = PedidoHelper.init(vm);
 
         vm.load = function() {
             vm.loading = true;
@@ -38,59 +47,11 @@
          * @return {void}
          */
         vm.toggleHold = function() {
-            Restangular.one('pedidos/segurar', vm.pedido.id).customPUT({
-                'segurar': !(vm.pedido.segurado)
-            }).then(function(pedido) {
+            Pedido.segurar(vm.pedido.id, !(vm.pedido.segurado)).then(function(pedido) {
                 vm.load();
                 vm.loading = false;
                 toaster.pop('success', 'Sucesso!', 'Pedido ' + (vm.pedido.segurado ? 'segurado' : 'liberado') + ' com sucesso!');
             });
-        };
-
-        /**
-         * Abre o form de cancelamento para receber o protocolo
-         * @return {void}
-         */
-        vm.cancel = function() {
-            if (vm.pedido.marketplace.toLowerCase() == 'site' || vm.pedido.marketplace.toLowerCase() == 'mercadolivre') {
-                SweetAlert.swal({
-                    title: "Tem certeza?",
-                    text: "Esta ação não poderá ser desfeita!",
-                    type: "warning",
-                    showCancelButton: true,
-                    cancelButtonText: "Não",
-                    confirmButtonColor: "#F55752",
-                    confirmButtonText: "Sim!"
-                }, function(isConfirm) {
-                    if (isConfirm) {
-                        Restangular.one('pedidos/status', vm.pedido.id).customPUT({
-                            'status': 5
-                        }).then(function(pedido) {
-                            toaster.pop('success', 'Sucesso!', 'Pedido cancelado com sucesso!');
-                            vm.loading = false;
-                            $state.go('app.pedidos.index');
-                        });
-                    }
-                });
-            } else {
-                ngDialog.open({
-                    template: 'views/pedido/form_cancelamento.html',
-                    data: { PedidoDetalhe: vm }
-                }).closePromise.then(function(data) {
-                    if (!isNaN(data.value) && data.value !== null) {
-                        vm.loading = true;
-
-                        Restangular.one('pedidos/status', vm.pedido.id).customPUT({
-                            'status': 5,
-                            'protocolo': data.value
-                        }).then(function(pedido) {
-                            toaster.pop('success', 'Sucesso!', 'Pedido cancelado com sucesso!');
-                            vm.loading = false;
-                            $state.go('app.pedidos.index');
-                        });
-                    }
-                });
-            }
         };
 
         /**
@@ -99,9 +60,7 @@
         vm.togglePriority = function() {
             vm.loading = true;
 
-            Restangular.one('pedidos/prioridade', vm.pedido.id).customPUT({
-                'priorizado': !(vm.pedido.priorizado)
-            }).then(function(pedido) {
+            Pedido.prioridade(vm.pedido.id, !(vm.pedido.priorizado)).then(function(pedido) {
                 vm.load();
                 vm.loading = false;
                 toaster.pop('success', 'Sucesso!', 'Prioridade do pedido alterada com sucesso!');

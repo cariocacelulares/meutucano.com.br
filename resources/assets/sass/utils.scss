@@ -1,3 +1,10 @@
+@mixin ellipsis($width) {
+    max-width: $width;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 // Posicionamento, comportamento e espaçamento
 .affix { position: fixed; }
 .hidden, .hide { display: none !important; }
@@ -18,6 +25,12 @@
 .m-b-100 { margin-bottom: 100px !important; }
 .m-r-100 { margin-right: 100px !important; }
 .m-l-100 { margin-left: 100px !important; }
+
+.ellipsis-100 { @include ellipsis(100px); }
+.ellipsis-120 { @include ellipsis(120px); }
+.ellipsis-150 { @include ellipsis(150px); }
+.ellipsis-170 { @include ellipsis(170px); }
+.ellipsis-200 { @include ellipsis(200px); }
 
 .clear {
     display: block;
@@ -62,6 +75,8 @@
 .text-lower { text-transform: lowercase; }
 .transform-none { text-transform: none; }
 .lh-25 { line-height: 25px; }
+.d-rtl { direction: rtl }
+.d-ltr { direction: ltr }
 
 .text-hide {
     font: 0/0 a;
@@ -113,4 +128,31 @@
     text-overflow:ellipsis;
     width:100%;
     display:block;
+}
+
+.ellipsis-group {
+    span {
+        float: left;
+        width: calc(100% - 47px - 24px);
+        height: 30px;
+        line-height: 30px;
+        padding: 0 6px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border: 1px solid rgba($color-master-light, .70);
+        border-radius: 3px 0 0 3px;
+    }
+
+    [class*="btn-"]:not(.btn-group) {
+        float: right;
+        width: 34px;
+        border-radius: 0 3px 3px 0 !important;
+    }
+
+    &.w-150 {
+        span {
+            width: calc(150px - 34px - 24px);
+        }
+    }
 }

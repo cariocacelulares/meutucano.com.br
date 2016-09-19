@@ -6,6 +6,8 @@ use App\Models\Pedido\Pedido;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;
+use App\Http\Controllers\Integracao\SkyhubController;
+use App\Http\Controllers\Integracao\MagentoController;
 
 /**
  * Class PedidoController
@@ -45,7 +47,7 @@ class PedidoController extends Controller
     public function faturamento() {
         $m = self::MODEL;
 
-        $list = $m::with(['cliente', 'endereco', 'nota'])
+        $list = $m::with(['cliente', 'endereco', 'nota', 'rastreios'])
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
             ->leftJoin('pedido_notas', 'pedido_notas.pedido_id', '=', 'pedidos.id')
             ->where('status', '=', 1)
@@ -198,6 +200,23 @@ class PedidoController extends Controller
                 }
             } catch (\Exception $e) {
                 \Log::error(logMessage($e, 'Não foi possível cancelar o pedido na Integração'));
+            }
+        }
+    }
+
+    /**
+     * Envia informações de entrega e nota para o Magento / Skyhub
+     *
+     * @param  int $pedido_id
+     * @return void
+     */
+    public function faturar($pedido_id)
+    {
+        if ($pedido = Pedido::find($pedido_id)) {
+            if (strtolower($pedido->marketplace) == 'site') {
+                (new MagentoController())->orderInvoice($pedido);
+            } else {
+                (new SkyhubController())->orderInvoice($pedido);
             }
         }
     }

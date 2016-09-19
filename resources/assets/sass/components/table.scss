@@ -188,6 +188,14 @@
         td:last-child {
             border-right: 1px solid $color-master-lighter;
         }
+
+        tr.priorizado td {
+            background-color: #F1F1F1;
+        }
+
+        tr.segurado {
+            cursor: not-allowed;
+        }
     }
 
     thead th {

@@ -20,7 +20,50 @@
                     params = this.parseParams(params);
 
                     return Restangular.all('pedidos/faturamento').customGET("", params || {});
-                }
+                },
+
+                /**
+                 * Altera o status do pedido
+                 *
+                 * @param  {int} pedido_id
+                 * @param  {Object} params
+                 * @return {Object}
+                 */
+                status: function(pedido_id, params) {
+                    params = this.parseParams(params);
+
+                    return Restangular.one('pedidos/status', pedido_id).customPUT(params || {});
+                },
+
+                /**
+                 * Segura ou libera um pedido
+                 * @param  {int} pedido_id
+                 * @param  {boolean} segurar
+                 * @return {Object}
+                 */
+                segurar: function(pedido_id, segurar) {
+                    return Restangular.one('pedidos/segurar', pedido_id).customPUT({ 'segurar': segurar });
+                },
+
+                /**
+                 * Altera prioridade do pedido
+                 * @param  {int} pedido_id
+                 * @param  {boolean} priorizado
+                 * @return {Object}
+                 */
+                prioridade: function(pedido_id, priorizado) {
+                    return Restangular.one('pedidos/prioridade', pedido_id).customPUT({ 'priorizado': priorizado });
+                },
+
+                /**
+                 * Fatura um pedido
+                 *
+                 * @param  {int} pedido_id
+                 * @return {Object}
+                 */
+                faturar: function(pedido_id) {
+                    return Restangular.one('pedidos/faturar', pedido_id).get();
+                },
             });
 
             return rest;

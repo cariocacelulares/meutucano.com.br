@@ -374,11 +374,12 @@ class SkyhubController extends Controller implements Integracao
                 throw new \Exception('Não foi possível cancelar o pedido: sem codigo_api válido', 1);
             }
 
-            $this->request(
+            # TODO: remover o comentário
+            /*$this->request(
                 sprintf('/orders/%s/cancel', $order->codigo_api),
                 [],
                 'POST'
-            );
+            );*/
             Log::notice("Pedido {$order->id} / {$order->skyhub} cancelado na Skyhub.");
         } catch (Exception $e) {
             Log::warning(logMessage($e, "Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub"));
@@ -388,48 +389,46 @@ class SkyhubController extends Controller implements Integracao
     /**
      * Envia informações de faturamento e envio para skyhub
      *
-     * @param  $id      Order id
+     * @param  $order      Pedido order
      * @return boolean
      */
-    public function orderInvoice($id)
+    public function orderInvoice($order)
     {
-        if ($pedido = Pedido::find($id)) {
-            try {
-                if (\Config::get('tucano.skyhub.enabled')) {
-                    foreach ($pedido->produtos as $produto) {
-                        $jsonItens[] = [
-                            "sku" => $produto->produto->sku,
-                            "qty" => $produto->quantidade
-                        ];
-                    }
-
-                    $jsonData = [
-                        "shipment" => [
-                            "code"  => $pedido->rastreios->first()->rastreio,
-                            "items" => $jsonItens,
-                            "track" => [
-                                "code"    => $pedido->rastreios->first()->rastreio,
-                                "carrier" => "CORREIOS",
-                                "method"  => $pedido->rastreios->first()->servico
-                            ]
-                        ],
-                        "invoice" => [
-                            "key" => $pedido->nota->chave
-                        ]
+        try {
+            if (\Config::get('tucano.skyhub.enabled')) {
+                foreach ($order->produtos as $produto) {
+                    $jsonItens[] = [
+                        "sku" => $produto->produto->sku,
+                        "qty" => $produto->quantidade
                     ];
-
-                    $this->request(
-                        sprintf('/orders/%s/shipments', $pedido->codigo_api),
-                        ['json' => $jsonData],
-                        'POST'
-                    );
-
-                    Log::notice("Dados de envio e nota fiscal atualizados do pedido {$pedido->id} / {$pedido->codigo_api}", $jsonData);
                 }
-            } catch (\Exception $e) {
-                Log::critical(logMessage($e, 'Pedido não faturado'), ['id' => $pedido->id, 'codigo_api' => $pedido->codigo_api]);
-                reportError('Pedido não faturado: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $pedido->id);
+
+                $jsonData = [
+                    "shipment" => [
+                        "code"  => $order->rastreios->first()->rastreio,
+                        "items" => $jsonItens,
+                        "track" => [
+                            "code"    => $order->rastreios->first()->rastreio,
+                            "carrier" => "CORREIOS",
+                            "method"  => $order->rastreios->first()->servico
+                        ]
+                    ],
+                    "invoice" => [
+                        "key" => $order->nota->chave
+                    ]
+                ];
+
+                $this->request(
+                    sprintf('/orders/%s/shipments', $order->codigo_api),
+                    ['json' => $jsonData],
+                    'POST'
+                );
+
+                Log::notice("Dados de envio e nota fiscal atualizados do pedido {$order->id} / {$order->codigo_api} na Skyhub", $jsonData);
             }
+        } catch (\Exception $e) {
+            Log::critical(logMessage($e, 'Pedido não faturado na Skyhub'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);
+            reportError('Pedido não faturado na Skyhub: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $order->id);
         }
     }
 

@@ -320,7 +320,8 @@ class MagentoController extends Controller implements Integracao
                 throw new \Exception('Não foi possível cancelar o pedido: sem codigo_api válido', 1);
             }
 
-            if ($cancel = $this->api->salesOrderCancel($this->session, $order->codigo_api)) {
+            # TODO: remover o comentário
+            if (true/*$cancel = $this->api->salesOrderCancel($this->session, $order->codigo_api)*/) {
                 Log::notice("Pedido {$order->id} cancelado no magento.");
             } else {
                 Log::warning("Não foi possível cancelar o pedido {$order->id} no Magento");
@@ -334,12 +335,30 @@ class MagentoController extends Controller implements Integracao
     /**
      * Envia informações de faturamento e envio para o Magento
      *
-     * @param  $id      Order id
+     * @param  $order      Pedido
      * @return boolean
      */
-    public function orderInvoice($id)
+    public function orderInvoice($order)
     {
-        //
+        try {
+            $shipmentId = $request = $this->api->salesOrderShipmentCreate($this->session, $order->codigo_api);
+
+            $rastreio = $order->rastreios->first();
+            $carrier = 'Correios - ' . $rastreio->servico;
+
+            $request = $this->api->salesOrderShipmentAddTrack(
+                $this->session,
+                $shipmentId, // increments do magento
+                'pedroteixeira_correios', // carrier code
+                $carrier,
+                $rastreio->rastreio
+            );
+
+            Log::notice("Dados de envio e nota fiscal atualizados do pedido {$order->id} / {$order->codigo_api} no Magento", [$shipmentId]);
+        } catch (\Exception $e) {
+            Log::critical(logMessage($e, 'Pedido não faturado no Magento'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);
+            reportError('Pedido não faturado no Magento ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $order->id);
+        }
     }
 
     /**

@@ -5,8 +5,28 @@
         .module('MeuTucano')
         .controller('FaturamentoListController', FaturamentoListController);
 
-    function FaturamentoListController(Pedido, Filter, TableHeader) {
+    function FaturamentoListController(Pedido, Filter, TableHeader, RastreioHelper, NotaHelper, PedidoHelper, ComentarioHelper) {
         var vm = this;
+
+        /**
+         * @type {Object}
+         */
+        vm.notaHelper = NotaHelper;
+
+        /**
+         * @type {Object}
+         */
+        vm.rastreioHelper = RastreioHelper.init(vm);
+
+        /**
+         * @type {Object}
+         */
+        vm.pedidoHelper = PedidoHelper.init(vm);
+
+        /**
+         * @type {Object}
+         */
+        vm.comentarioHelper = ComentarioHelper;
 
         /**
          * Filtros
@@ -14,9 +34,7 @@
          */
         vm.filterList = Filter.init('pedidos', vm, {
             'pedidos.codigo_marketplace': 'LIKE',
-            'clientes.nome':              'LIKE',
-            'pedidos.total':              'BETWEEN',
-            'pedidos.created_at':         'BETWEEN'
+            'clientes.nome':                       'LIKE'
         });
 
         /**
