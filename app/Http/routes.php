@@ -24,14 +24,15 @@ Route::group(['prefix' => '/api'], function() {
             'middleware' => ['role:admin|gestor|atendimento|faturamento'],
             'uses' => 'UploadController@upload'
         ]);
-        Route::get('search',  'Partials\SearchController@search');
         Route::get('notas/xml/{id}',          'Pedido\NotaController@xml');
         Route::get('notas/danfe/{id}',        'Pedido\NotaController@danfe');
         Route::post('notas/email/{id}',       'Pedido\NotaController@email');
 
         Route::get('rastreios/etiqueta/{id}',  'Pedido\RastreioController@etiqueta');
 
-        Route::get('minhas-senhas',            'Usuario\SenhaController@currentUserPasswords');
+        Route::get('minhas-senhas', 'Usuario\SenhaController@currentUserPasswords');
+
+        Route::get('search',  'Partials\SearchController@search');
 
         /**
          * Template ML

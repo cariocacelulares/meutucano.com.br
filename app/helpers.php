@@ -154,3 +154,13 @@ function reportError($error) {
         $m->to(\Config('tucano.report_email'), 'DEV')->subject('Erro no sistema!');
     });
 }
+
+/**
+ * Retorna apenas os digitos de uma string
+ *
+ * @param  string $string
+ * @return string
+ */
+function numbers($string) {
+    return preg_replace('/\D/', '', $string);
+}

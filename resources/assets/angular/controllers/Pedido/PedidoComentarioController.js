@@ -9,7 +9,7 @@
         var vm = this;
 
         vm.comentarios = [];
-        vm.pedido_id = $stateParams.id || $scope.ngDialogData.pedido_id;
+        vm.pedido_id = (typeof $scope.ngDialogData !== 'undefined' ? $scope.ngDialogData.pedido_id : null) || $stateParams.id;
         vm.loading = false;
 
         /**
