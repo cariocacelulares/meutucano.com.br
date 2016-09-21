@@ -6,6 +6,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Pedido\Rastreio\Pi;
 use App\Models\Pedido\Rastreio\Devolucao;
 use App\Models\Pedido\Rastreio\Logistica;
+use App\Http\Controllers\Pedido\RastreioController;
 
 /**
  * Class Rastreio
@@ -55,6 +56,23 @@ class Rastreio extends \Eloquent
     protected $casts = [
         'status' => 'string'
     ];
+
+    /**
+     * Actions
+     */
+    protected static function boot() {
+        parent::boot();
+
+        // Salvar rastreio (novo ou existente)
+        static::saving(function($rastreio) {
+            $oldStatus = ($rastreio->getOriginal('status') === null) ? null : (int)$rastreio->getOriginal('status');
+            $newStatus = ($rastreio->status === null) ? null : (int)$rastreio->status;
+
+            if ($newStatus !== $oldStatus && in_array($newStatus, [2, 3, 4, 5, 6])) {
+                with(new RastreioController())->screenshot($rastreio);
+            }
+        });
+    }
 
     /**
      * Pedido
