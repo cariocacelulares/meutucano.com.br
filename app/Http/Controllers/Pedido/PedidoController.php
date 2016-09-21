@@ -47,7 +47,12 @@ class PedidoController extends Controller
     public function faturamento() {
         $m = self::MODEL;
 
-        $list = $m::with(['cliente', 'endereco', 'nota', 'rastreios'])
+        $list = $m::with([
+                'cliente',
+                'endereco',
+                'nota',
+                'rastreios'
+            ])
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
             ->leftJoin('pedido_notas', 'pedido_notas.pedido_id', '=', 'pedidos.id')
             ->where('status', '=', 1)
@@ -213,6 +218,8 @@ class PedidoController extends Controller
     public function faturar($pedido_id)
     {
         if ($pedido = Pedido::find($pedido_id)) {
+            $pedido->status = 2;
+
             if (strtolower($pedido->marketplace) == 'site') {
                 (new MagentoController())->orderInvoice($pedido);
             } else {

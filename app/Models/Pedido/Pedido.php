@@ -55,7 +55,8 @@ class Pedido extends \Eloquent
         'can_hold',
         'can_cancel',
         'pagamento_metodo_readable',
-        'frete_metodo_readable'
+        'frete_metodo_readable',
+        'comentarios_total'
     ];
 
     /**
@@ -346,5 +347,12 @@ class Pedido extends \Eloquent
             return null;
 
         return Carbon::createFromFormat('Y-m-d', $estimated_delivery)->format('d/m/Y');
+    }
+
+    /**
+     * @return string
+     */
+    public function getComentariosTotalAttribute() {
+        return $this->comentarios->count();
     }
 }

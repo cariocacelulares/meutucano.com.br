@@ -5,7 +5,6 @@
     <thead>
         <tr>
             <th class="text-center" width="135">Código</th>
-            <th class="text-center" width="150">Nota</th>
             <th class="text-center" width="110">Marketplace</th>
             <th class="text-center" width="130">Rastreio</th>
             <th>Cliente</th>
@@ -19,15 +18,13 @@
     <tbody ng-if="FaturamentoList.tableData.data.length && !FaturamentoList.loading">
         <tr ng-repeat="pedido in FaturamentoList.tableData.data" ng-class="{ 'priorizado': pedido.priorizado, 'segurado': pedido.segurado }">
             <td class="text-center">
-                {{ pedido.codigo_marketplace || 'Sem código' }}
-                <span ng-if="pedido.priorizado" class="label label-primary">Priorizado</span>
-                <span ng-if="pedido.segurado" class="label label-white">Segurado</span>
-            </td>
-            <td class="text-center w-150" ng-class="{ 'ellipsis-group': pedido.nota.chave }">
-                <span class="d-rtl">{{ pedido.nota.chave }}</span>
-                <button ng-if="pedido.nota.chave" clipboard supported="supported" text="pedido.nota.chave" on-copied="FaturamentoList.chaveCopiada()" class="btn-sm" title="Copiar chave da nota">
-                    <i class="fa-files-o"></i>
-                </button>
+                <i ng-if="pedido.segurado" tooltips tooltip-template="Pedido segurado" class="fa-lock"></i>
+                <span ng-if="!pedido.priorizado">
+                    {{ pedido.codigo_marketplace || 'Sem código' }}
+                </span>
+                <span ng-if="pedido.priorizado" tooltips tooltip-template="Pedido priorizado">
+                    {{ pedido.codigo_marketplace || 'Sem código' }}
+                </span>
             </td>
             <td class="text-center">{{ pedido.marketplace_readable }}</td>
             <td class="text-center"><a ng-href="{{ pedido.rastreios[0].rastreio_url }}" target="_blank">{{ pedido.rastreios[0].rastreio || '-' }}</a></td>
@@ -42,14 +39,14 @@
             <td class="text-center">{{ pedido.estimated_delivery }}</td>
             <td class="text-center">{{ pedido.created_at }}</td>
             <td class="text-center">
-                <a ng-click="FaturamentoList.comentarioHelper.openModal(pedido.id)" class="text-gray"><i class="fa-comments"></i></a>
+                <a ng-click="FaturamentoList.comentarioHelper.openModal(pedido.id)" ng-class="{ 'text-gray': !pedido.comentarios_total }"><i class="fa-comments"></i></a>
             </td>
             <td class="text-center">
                 <dropdown>
                         <li>
                             <a ui-sref="app.pedidos.detalhe({id: pedido.id})"><i class="fa fa-eye"></i>&nbsp; Visualizar</a>
                         </li>
-                        <li>
+                        <li ng-if="pedido.nota">
                             <a ng-click="FaturamentoList.pedidoHelper.faturar(pedido.id, true)"><i class="fa fa-barcode"></i>&nbsp; Faturar</a>
                         </li>
                         <li>

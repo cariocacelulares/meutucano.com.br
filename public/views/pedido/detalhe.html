@@ -2,7 +2,7 @@
     <page-title icon="fa-first-order" title="Pedido {{ PedidoDetalhe.pedido.codigo_marketplace }}" description="Pedido realizado em {{ PedidoDetalhe.pedido.marketplace_readable || 'Site' }}"></page-title>
     <div roles="admin|gestor|atendimento" class="col-md-6 button-bar">
             <button class="btn-primary" ng-click="PedidoDetalhe.togglePriority()" ng-if="PedidoDetalhe.pedido.can_prioritize"><i class="fa-arrow-{{ PedidoDetalhe.pedido.priorizado ? 'down' : 'up' }}"></i>&nbsp; {{ PedidoDetalhe.pedido.priorizado ? 'Remover prioridade' : 'Priorizar' }}</button>
-            <button class="btn-info" ng-click="PedidoDetalhe.toggleHold()" ng-if="PedidoDetalhe.pedido.can_hold || PedidoDetalhe.pedido.segurado"><i class="fa-hand-{{ PedidoDetalhe.pedido.segurado ? 'paper' : 'rock' }}-o"></i>&nbsp; {{ PedidoDetalhe.pedido.segurado ? 'Liberar' : 'Segurar' }}</button>
+            <button class="btn-info" ng-click="PedidoDetalhe.toggleHold()" ng-if="PedidoDetalhe.pedido.can_hold || PedidoDetalhe.pedido.segurado"><i class="fa-{{ PedidoDetalhe.pedido.segurado ? 'unlock' : 'lock' }}"></i>&nbsp; {{ PedidoDetalhe.pedido.segurado ? 'Liberar' : 'Segurar' }}</button>
             <button class="btn-danger" ng-click="PedidoDetalhe.pedidoHelper.cancel(PedidoDetalhe.pedido, 'app.pedidos.index')" ng-if="PedidoDetalhe.pedido.can_cancel"><i class="fa-close"></i>&nbsp; Cancelar</button>
     </div>
 </div>
