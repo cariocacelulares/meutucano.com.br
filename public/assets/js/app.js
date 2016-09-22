@@ -20,6 +20,7 @@
             'angular-clipboard',
             'ngStorage',
             'ngTagsInput',
-            'oitozero.ngSweetAlert'
+            'oitozero.ngSweetAlert',
+            '720kb.tooltips'
         ]);
 })();

@@ -988,10 +988,6 @@ body {
         text-shadow: none;
 }
 
-
-
-
-
 .overlay{
   position:fixed;
   left:0;
@@ -1002,6 +998,11 @@ body {
   z-index:1010;
   padding:30px 30px 0;
   overflow:auto;
+
+  .overlay-content > .container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+  }
 
   .inline-block{
     display:inline-block;

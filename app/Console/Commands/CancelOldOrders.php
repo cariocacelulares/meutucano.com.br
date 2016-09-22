@@ -1,23 +1,23 @@
 <?php namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Http\Controllers\Integracao\MagentoController;
+use App\Http\Controllers\Pedido\PedidoController;
 
-class MagentoCancelOldOrders extends Command
+class CancelOldOrders extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'magento:cancel';
+    protected $signature = 'pedidos:cancelold';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Cancela pedidos pendentes a mais de 7 dias úteis';
+    protected $description = 'Cancela pedidos pendentes a mais de x dias úteis';
 
     /**
      * Execute the console command.
@@ -26,7 +26,7 @@ class MagentoCancelOldOrders extends Command
      */
     public function handle()
     {
-        $return = with(new MagentoController())->cancelOldOrders();
+        $return = with(new PedidoController())->cancelOldOrders();
         $this->comment($return);
     }
 }

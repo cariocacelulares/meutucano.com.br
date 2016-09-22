@@ -1,0 +1,68 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-barcode" title="Faturamento" description="Todos pedidos prontos para serem faturados."></page-title>
+</div>
+<table table-list="FaturamentoList">
+    <thead>
+        <tr>
+            <th class="text-center" width="135">Código</th>
+            <th class="text-center" width="110">Marketplace</th>
+            <th class="text-center" width="130">Rastreio</th>
+            <th>Cliente</th>
+            <th class="text-center" width="100">Entrega</th>
+            <th class="text-center" width="100">Data</th>
+            <th width="20"></th>
+            <th width="75"></th>
+        </tr>
+        <tr class="table-filter" static-include="views/faturamento/list_filter.html"></tr>
+    </thead>
+    <tbody ng-if="FaturamentoList.tableData.data.length && !FaturamentoList.loading">
+        <tr ng-repeat="pedido in FaturamentoList.tableData.data" ng-class="{ 'priorizado': pedido.priorizado, 'segurado': pedido.segurado }">
+            <td class="text-center">
+                <i ng-if="pedido.segurado" tooltips tooltip-template="Pedido segurado" class="fa-lock"></i>
+                <span ng-if="!pedido.priorizado">
+                    {{ pedido.codigo_marketplace || 'Sem código' }}
+                </span>
+                <span ng-if="pedido.priorizado" tooltips tooltip-template="Pedido priorizado">
+                    {{ pedido.codigo_marketplace || 'Sem código' }}
+                </span>
+            </td>
+            <td class="text-center">{{ pedido.marketplace_readable }}</td>
+            <td class="text-center"><a ng-href="{{ pedido.rastreios[0].rastreio_url }}" target="_blank">{{ pedido.rastreios[0].rastreio || '-' }}</a></td>
+            <td>
+                <strong>{{ pedido.cliente.nome | uppercase }}</strong>
+                <br>
+                <small>
+                    {{ pedido.cliente.fone }} - CEP: <strong>{{ pedido.endereco.cep_readable }}</strong> -
+                    {{ pedido.endereco.cidade }} / {{ pedido.endereco.uf }}
+                </small>
+            </td>
+            <td class="text-center">{{ pedido.estimated_delivery }}</td>
+            <td class="text-center">{{ pedido.created_at }}</td>
+            <td class="text-center">
+                <a ng-click="FaturamentoList.comentarioHelper.openModal(pedido.id)" ng-class="{ 'text-gray': !pedido.comentarios_total }"><i class="fa-comments"></i></a>
+            </td>
+            <td class="text-center">
+                <dropdown>
+                        <li>
+                            <a ui-sref="app.pedidos.detalhe({id: pedido.id})"><i class="fa fa-eye"></i>&nbsp; Visualizar</a>
+                        </li>
+                        <li ng-if="pedido.nota">
+                            <a ng-click="FaturamentoList.pedidoHelper.faturar(pedido.id, true)"><i class="fa fa-barcode"></i>&nbsp; Faturar</a>
+                        </li>
+                        <li>
+                            <a ng-click="FaturamentoList.pedidoHelper.cancel(pedido, false, true)"><i class="fa fa-trash-o"></i>&nbsp; Cancelar</a>
+                        </li>
+                        <li ng-if="pedido.nota">
+                            <a ng-click="FaturamentoList.notaHelper.printXML(pedido.id)"><i class="fa fa-file-code-o"></i>&nbsp; XML</a>
+                        </li>
+                        <li ng-if="pedido.nota">
+                            <a ng-click="FaturamentoList.notaHelper.printDanfe(pedido.id)"><i class="fa fa-file-pdf-o"></i>&nbsp; DANFE</a>
+                        </li>
+                        <li ng-if="pedido.rastreios[0]">
+                            <a ng-click="FaturamentoList.rastreioHelper.printEtiqueta(pedido.rastreios[0].id)"><i class="fa fa-tag"></i>&nbsp; Etiqueta</a>
+                        </li>
+                </dropdown>
+            </td>
+        </tr>
+    </tbody>
+</table>

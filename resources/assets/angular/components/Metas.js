@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .component('metas', {
             templateUrl: 'views/components/metas.html',
-            controller: function($rootScope, Restangular, $interval) {
+            controller: function($rootScope, Restangular) {
                 var vm = this;
 
                 vm.data = {};
@@ -29,13 +29,6 @@
                 };
 
                 vm.loadMeta();
-
-                /**
-                 * Timeout metas
-                 */
-                /*$interval(function() {
-                    vm.loadMeta();
-                }, 60000);z*/
             },
             controllerAs: 'Metas'
         });

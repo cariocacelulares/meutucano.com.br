@@ -1,9 +1,10 @@
 <div id="page-header" class="row">
     <page-title icon="fa-first-order" title="Pedido {{ PedidoDetalhe.pedido.codigo_marketplace }}" description="Pedido realizado em {{ PedidoDetalhe.pedido.marketplace_readable || 'Site' }}"></page-title>
     <div roles="admin|gestor|atendimento" class="col-md-6 button-bar">
-            <button class="btn-primary" ng-click="PedidoDetalhe.togglePriority()" ng-if="PedidoDetalhe.pedido.can_prioritize"><i class="fa fa-arrow-{{ PedidoDetalhe.pedido.priorizado ? 'down' : 'up' }}"></i>&nbsp; {{ PedidoDetalhe.pedido.priorizado ? 'Remover prioridade' : 'Priorizar' }}</button>
-            <button class="btn-info" ng-click="PedidoDetalhe.toggleHold()" ng-if="PedidoDetalhe.pedido.can_hold || PedidoDetalhe.pedido.segurado"><i class="fa fa-hand-{{ PedidoDetalhe.pedido.segurado ? 'paper' : 'rock' }}-o"></i>&nbsp; {{ PedidoDetalhe.pedido.segurado ? 'Liberar' : 'Segurar' }}</button>
-            <button class="btn-danger" ng-click="PedidoDetalhe.cancel()" ng-if="PedidoDetalhe.pedido.status != 5"><i class="fa fa-close"></i>&nbsp; Cancelar</button>
+            <button class="btn-primary" ng-click="PedidoDetalhe.togglePriority()" ng-if="PedidoDetalhe.pedido.can_prioritize"><i class="fa-arrow-{{ PedidoDetalhe.pedido.priorizado ? 'down' : 'up' }}"></i>&nbsp; {{ PedidoDetalhe.pedido.priorizado ? 'Remover prioridade' : 'Priorizar' }}</button>
+            <button class="btn-info" ng-click="PedidoDetalhe.toggleHold()" ng-if="PedidoDetalhe.pedido.can_hold || PedidoDetalhe.pedido.segurado"><i class="fa-{{ PedidoDetalhe.pedido.segurado ? 'unlock' : 'lock' }}"></i>&nbsp; {{ PedidoDetalhe.pedido.segurado ? 'Liberar' : 'Segurar' }}</button>
+            <button class="btn-danger" ng-click="PedidoDetalhe.pedidoHelper.cancel(PedidoDetalhe.pedido, 'app.pedidos.index')" ng-if="PedidoDetalhe.pedido.can_cancel"><i class="fa-close"></i>&nbsp; Cancelar</button>
+            <a onclick="history.back()" title="Voltar para a página anterior" class="btn-default"><i class="fa-reply"></i>&nbsp; Voltar</a>
     </div>
 </div>
 <div class="row">
@@ -11,13 +12,13 @@
         <!-- Informações do Pedido -->
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <div class="panel-title"><i class="fa fa-cube"></i>&nbsp; Informações do Pedido</div>
+                <div class="panel-title"><i class="fa-cube"></i>&nbsp; Informações do Pedido</div>
             </div>
             <div class="panel-body">
                 <div class="col-md-12">
                     <div class="row">
                         <p class="pull-left">Cliente</p>
-                        <p class="pull-right bold">{{ PedidoDetalhe.pedido.cliente.nome }}</p>
+                        <a ui-sref="app.clientes.detalhe({ id: PedidoDetalhe.pedido.cliente.id })" class="pull-right bold">{{ PedidoDetalhe.pedido.cliente.nome }}</a>
                     </div>
                     <div class="row" ng-if="PedidoDetalhe.pedido.codigo_marketplace">
                         <p class="pull-left">Código</p>
@@ -52,6 +53,7 @@
             <div class="col-md-6">
                 <div class="panel panel-default">
                     <div class="panel-body text-center">
+                        <i class="fa-truck"></i>&nbsp;
                         {{ PedidoDetalhe.pedido.frete_metodo_readable }}
                     </div>
                 </div>
@@ -59,6 +61,7 @@
             <div class="col-md-6">
                 <div class="panel panel-default">
                     <div class="panel-body text-center">
+                        <i class="fa-money"></i>&nbsp;
                         {{ PedidoDetalhe.pedido.pagamento_metodo_readable }}
                     </div>
                 </div>
@@ -67,7 +70,7 @@
         <!-- Informações do Cliente -->
         <div class="panel m-t-20 panel-primary">
             <div class="panel-heading">
-                <div class="panel-title"><i class="fa fa-user"></i>&nbsp; Informações do Cliente</div>
+                <div class="panel-title"><i class="fa-user"></i>&nbsp; Informações do Cliente</div>
             </div>
             <div class="panel-body">
                 <div class="col-md-12">
@@ -104,7 +107,7 @@
                 <!-- Informações da Nota -->
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <div class="panel-title"><i class="fa fa-barcode"></i>&nbsp; Nota fiscal</div>
+                        <div class="panel-title"><i class="fa-barcode"></i>&nbsp; Nota fiscal</div>
                         <div class="panel-controls" ng-if="PedidoDetalhe.pedido.nota">
                             <dropdown>
                                 <li>
@@ -144,7 +147,7 @@
                 <!-- Informações de Rastreio -->
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <div class="panel-title"><i class="fa fa-truck"></i>&nbsp; Frete</div>
+                        <div class="panel-title"><i class="fa-truck"></i>&nbsp; Frete</div>
                     </div>
                     <div class="panel-body">
                         <div class="col-md-12 no-results" ng-if="!PedidoDetalhe.pedido.rastreios.length">
@@ -155,33 +158,33 @@
                                 <p class="pull-left">
                                     <a target="_blank" ng-href="{{ rastreio.rastreio_url }}">{{ rastreio.rastreio }}</a>
                                     &nbsp;
-                                    <a ng-if="rastreio.imagem_historico" target="_blank" ng-click="PedidoDetalhe.rastreioHelper.printHistorico(rastreio.id)"><i class="fa fa-picture-o"></i></a>
+                                    <a ng-if="rastreio.imagem_historico" target="_blank" ng-click="PedidoDetalhe.rastreioHelper.printHistorico(rastreio.id)"><i class="fa-picture-o"></i></a>
                                 </p>
                                 <div class="pull-right">
                                     <dropdown size="xs">
                                         <li>
                                             <a ng-click="PedidoDetalhe.rastreioHelper.editar(rastreio.id, true)">
-                                                <i class="fa fa-edit"></i>&nbsp; Editar
+                                                <i class="fa-edit"></i>&nbsp; Editar
                                             </a>
                                         </li>
                                         <li>
                                             <a ng-click="PedidoDetalhe.rastreioHelper.printEtiqueta(rastreio.id)">
-                                                <i class="fa fa-tag"></i>&nbsp; Etiqueta
+                                                <i class="fa-tag"></i>&nbsp; Etiqueta
                                             </a>
                                         </li>
                                         <li>
                                             <a ng-click="PedidoDetalhe.rastreioHelper.logistica(rastreio.id, true)">
-                                                <i class="fa fa-exchange"></i>&nbsp; Logística
+                                                <i class="fa-exchange"></i>&nbsp; Logística
                                             </a>
                                         </li>
                                         <li>
                                             <a ng-click="PedidoDetalhe.rastreioHelper.devolucao(rastreio.id, true)">
-                                                <i class="fa fa-undo"></i>&nbsp; Devolução
+                                                <i class="fa-undo"></i>&nbsp; Devolução
                                             </a>
                                         </li>
                                         <li>
                                             <a ng-click="PedidoDetalhe.rastreioHelper.pi(rastreio.id, true)">
-                                                <i class="fa fa-warning"></i>&nbsp; PI
+                                                <i class="fa-warning"></i>&nbsp; PI
                                             </a>
                                         </li>
                                     </dropdown>
@@ -192,13 +195,13 @@
                                     <small class="hint-text">Enviado {{ rastreio.data_envio_readable }}. Prazo de {{ rastreio.prazo }} dia(s)</small>
                                 </p>
                                 <div ng-if="rastreio.devolucao" class="alert alert-info m-t-10">
-                                    <small><i class="fa fa-undo"></i>&nbsp; Devolução em {{ rastreio.devolucao.created_at }}</small>
+                                    <small><i class="fa-undo"></i>&nbsp; Devolução em {{ rastreio.devolucao.created_at }}</small>
                                 </div>
                                 <div ng-if="rastreio.logistica" class="alert alert-info m-t-10">
-                                    <small><i class="fa fa-exchange"></i>&nbsp; Logística em {{ rastreio.logistica.created_at }}</small>
+                                    <small><i class="fa-exchange"></i>&nbsp; Logística em {{ rastreio.logistica.created_at }}</small>
                                 </div>
                                 <div ng-if="rastreio.pi" class="alert alert-info m-t-10">
-                                    <small><i class="fa fa-warning"></i>&nbsp; PI em {{ rastreio.pi.created_at }}</small>
+                                    <small><i class="fa-warning"></i>&nbsp; PI em {{ rastreio.pi.created_at }}</small>
                                 </div>
                             </div>
                             <hr ng-hide="$last" />
@@ -209,7 +212,7 @@
             </div>
         </div>
         <div class="row m-t-20">
-            <div class="col-md-12" static-include="views/pedido/comentarios.html"></div>
+            <div class="col-md-12" static-include="views/pedido/comentarios-box.html"></div>
         </div>
     </div>
 </div>

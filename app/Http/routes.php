@@ -24,14 +24,15 @@ Route::group(['prefix' => '/api'], function() {
             'middleware' => ['role:admin|gestor|atendimento|faturamento'],
             'uses' => 'UploadController@upload'
         ]);
-        Route::get('search',  'Partials\SearchController@search');
         Route::get('notas/xml/{id}',          'Pedido\NotaController@xml');
         Route::get('notas/danfe/{id}',        'Pedido\NotaController@danfe');
         Route::post('notas/email/{id}',       'Pedido\NotaController@email');
 
         Route::get('rastreios/etiqueta/{id}',  'Pedido\RastreioController@etiqueta');
 
-        Route::get('minhas-senhas',            'Usuario\SenhaController@currentUserPasswords');
+        Route::get('minhas-senhas', 'Usuario\SenhaController@currentUserPasswords');
+
+        Route::get('search',  'Partials\SearchController@search');
 
         /**
          * Template ML
@@ -131,6 +132,8 @@ Route::group(['prefix' => '/api'], function() {
         Route::put('pedidos/prioridade/{pedido_id}', 'Pedido\PedidoController@prioridade');
         Route::put('pedidos/segurar/{pedido_id}', 'Pedido\PedidoController@segurar');
         Route::get('pedidos/list', 'Pedido\PedidoController@tableList');
+        Route::get('pedidos/faturamento', 'Pedido\PedidoController@faturamento');
+        Route::get('pedidos/faturar/{pedido_id}', 'Pedido\PedidoController@faturar');
         Route::resource('pedidos', 'Pedido\PedidoController', ['except' => ['create', 'edit']]);
 
         /**

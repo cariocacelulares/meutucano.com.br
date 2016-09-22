@@ -3,10 +3,30 @@
 
     angular
         .module('MeuTucano')
-        .controller('PedidoListController', PedidoListController);
+        .controller('FaturamentoListController', FaturamentoListController);
 
-    function PedidoListController(Pedido, Filter, TableHeader) {
+    function FaturamentoListController(toaster, Filter, Pedido, TableHeader, RastreioHelper, NotaHelper, PedidoHelper, ComentarioHelper) {
         var vm = this;
+
+        /**
+         * @type {Object}
+         */
+        vm.notaHelper = NotaHelper;
+
+        /**
+         * @type {Object}
+         */
+        vm.rastreioHelper = RastreioHelper.init(vm);
+
+        /**
+         * @type {Object}
+         */
+        vm.pedidoHelper = PedidoHelper.init(vm);
+
+        /**
+         * @type {Object}
+         */
+        vm.comentarioHelper = ComentarioHelper;
 
         /**
          * Filtros
@@ -14,9 +34,7 @@
          */
         vm.filterList = Filter.init('pedidos', vm, {
             'pedidos.codigo_marketplace': 'LIKE',
-            'clientes.nome':              'LIKE',
-            'pedidos.total':              'BETWEEN',
-            'pedidos.created_at':         'BETWEEN'
+            'clientes.nome':                       'LIKE'
         });
 
         /**
@@ -28,7 +46,7 @@
         vm.load = function() {
             vm.loading = true;
 
-            Pedido.getList({
+            Pedido.faturamento({
                 fields:   ['pedidos.*'],
                 filter:   vm.filterList.parse(),
                 page:     vm.tableHeader.pagination.page,
@@ -41,23 +59,11 @@
         vm.load();
 
         /**
-         * Retorna a classe de status do pedido
-         *
-         * @param  {Pedido} pedido
-         * @return {string}
+         * Avisa que a chave foi copiada
+         * @return {void}
          */
-        vm.parseStatusClass = function(pedido) {
-            switch (pedido.status) {
-                case '1':
-                case '2':
-                    return 'info';
-                case '3':
-                    return 'success';
-                case '4':
-                case '5':
-                    return 'danger';
-            }
+        vm.chaveCopiada = function() {
+            toaster.pop('info', '', 'A chave da nota foi copiada para sua área de transferência!');
         };
     }
-
 })();

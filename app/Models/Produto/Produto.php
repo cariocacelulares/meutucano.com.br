@@ -59,6 +59,19 @@ class Produto extends Model
     ];
 
     /**
+     * Fire update event
+     */
+    protected static function boot() {
+        parent::boot();
+
+        static::updating(function($produto) {
+            if ($produto->getOriginal('estoque') != $produto->estoque) {
+                \Event::fire(new ProductStockChange($produto->sku));
+            }
+        });
+    }
+
+    /**
      * Linha
      *
      * @return \Illuminate\Database\Eloquent\Relations\belongsTo
@@ -85,7 +98,7 @@ class Produto extends Model
     public function atributos()
     {
         return $this
-            ->belongsToMany(Atributo::class, 'produto_atributo', 'produto_id', 'atributo_id')
+            ->belongsToMany(Atributo::class, 'produto_atributo', 'produto_sku', 'atributo_id')
             ->withPivot('opcao_id', 'valor');
     }
 
@@ -116,16 +129,5 @@ class Produto extends Model
             return null;
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
-    }
-
-    /**
-     * @return void
-     */
-    public function setEstoqueAttribute($estoque) {
-        if ($this->attributes['estoque'] != $estoque) {
-            \Event::fire(new ProductStockChange($this->attributes['sku']));
-        }
-
-        $this->attributes['estoque'] = $estoque;
     }
 }

@@ -11,6 +11,7 @@
 .panel-info,
 .panel-warning,
 .panel-danger,
+.panel-complete,
 .panel-default {
     border-radius: 2px;
 
@@ -19,6 +20,7 @@
     .panel-info,
     .panel-warning,
     .panel-danger,
+    .panel-complete,
     .panel-default {
         border-radius: 0;
 
@@ -41,6 +43,20 @@
         font-family: $font-alt;
         text-transform: uppercase;
         font-weight: 700;
+
+        &.ellipsis {
+            &.button-1 {
+                width: calc(100% - 35px);
+            }
+
+            &.button-2 {
+                width: calc(100% - 65px);
+            }
+
+            &.button-3 {
+                width: calc(100% - 95px);
+            }
+        }
 
         small {
             opacity: .7;
@@ -83,14 +99,30 @@
     padding-top: 15px !important;
     padding-bottom: 12px !important;
 
+    &.alternate {
+        .row {
+            > :first-child {
+                float: left !important;
+            }
+
+            > :last-child {
+                float: right;
+            }
+        }
+    }
+
     p {
         margin-bottom: 0;
     }
 
-    .row:not(:first-child) {
+    .row:not(:first-of-type) {
         position: relative;
         margin-top: 8px;
         padding-top: 8px;
+
+        &.darker:before  {
+            background-color: #e6e6e6;
+        }
 
         &:before {
             content: '';
@@ -191,6 +223,20 @@
     .panel-heading {
         color: $color-white;
         background-color: $color-danger;
+    }
+
+    .panel-body {
+        color: $color-master;
+        background-color: $color-white;
+    }
+}
+
+.panel-complete {
+    border-color: $color-complete-lighter;
+
+    .panel-heading {
+        color: $color-white;
+        background-color: $color-complete;
     }
 
     .panel-body {

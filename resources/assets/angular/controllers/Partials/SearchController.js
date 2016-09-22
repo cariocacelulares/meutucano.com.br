@@ -13,47 +13,44 @@
             };
         });
 
-    function SearchController(Restangular, $rootScope) {
+    function SearchController($rootScope, $state, Restangular, PedidoHelper, ComentarioHelper) {
         var vm = this;
 
-        vm.search = '';
-        vm.resultadoBusca = {};
-        vm.buscaLoading = false;
-
-        $rootScope.$on('upload', function() {
-            vm.load();
-        });
-
-        $rootScope.$on('loading', function() {
-            vm.buscaLoading = true;
-        });
-
-        $rootScope.$on('stop-loading', function() {
-            vm.buscaLoading = false;
-        });
-
         /**
-         * Close search overlay
+         * @type {Object}
          */
-        vm.close = function() {
-            $rootScope.$broadcast("closeSearch");
+        vm.comentarioHelper = ComentarioHelper;
+
+        vm.term = null;
+        vm.loading = false;
+        vm.data = {
+            pedidos: null,
+            produtos: null,
+            clientes: null,
+            rastreios: null
         };
 
-        /**
-         * Load search results
-         */
-        vm.load = function() {
-            if (vm.search.length <= 3) {
-                vm.resultadoBusca = {};
-            } else {
-                vm.buscaLoading = true;
+        vm.goTo = function(to, params) {
+            vm.close();
+            $state.go(to, params);
+        };
 
-                Restangular.all("search").customGET("", {search: vm.search}).then(function(busca) {
-                    vm.buscaLoading = false;
-                    vm.resultadoBusca = busca;
+        vm.pedidoHelper = PedidoHelper;
+
+        vm.load = function() {
+            if (typeof vm.term !== 'undefined' && vm.term && vm.term.length > 2) {
+                vm.data = {};
+                vm.loading = true;
+
+                Restangular.one('search').get({ term: vm.term }).then(function(data) {
+                    vm.data = data;
+                    vm.loading = false;
                 });
             }
         };
-    }
 
+        vm.close = function() {
+            $rootScope.$broadcast('closeSearch');
+        };
+    }
 })();

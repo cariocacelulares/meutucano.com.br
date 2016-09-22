@@ -15,7 +15,7 @@
                  */
                 vm.openSub = function(menu) {
                     angular.forEach(vm.items, function(item) {
-                        if (item != menu)
+                        if (item !== menu)
                             item.subOpen = false;
                     });
 
@@ -30,7 +30,7 @@
                  */
                 vm.openInf = function(menu, sub) {
                     angular.forEach(menu.sub, function(item) {
-                        if (item != sub)
+                        if (item !== sub)
                             item.subOpen = false;
                     });
 
@@ -52,6 +52,12 @@
                         sref: $state.href('app.pedidos.index'),
                         icon: 'fa-cubes',
                         roles: ['admin', 'gestor', 'atendimento']
+                    },
+                    {
+                        title: 'Faturamento',
+                        sref: $state.href('app.faturamento.index'),
+                        icon: 'fa-barcode',
+                        roles: ['admin', 'faturamento']
                     },
                     {
                         title: 'Clientes',

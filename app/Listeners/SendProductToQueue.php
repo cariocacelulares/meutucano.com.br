@@ -1,6 +1,4 @@
-<?php
-
-namespace App\Listeners;
+<?php namespace App\Listeners;
 
 use App\Events\ProductStockChange;
 use Illuminate\Queue\InteractsWithQueue;
@@ -9,15 +7,6 @@ use App\Http\Controllers\Integracao\MagentoController;
 
 class SendProductToQueue
 {
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-    }
-
     /**
      * Handle the event.
      *

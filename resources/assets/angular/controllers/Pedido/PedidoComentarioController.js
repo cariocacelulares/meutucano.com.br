@@ -5,11 +5,11 @@
         .module('MeuTucano')
         .controller('PedidoComentarioController', PedidoComentarioController);
 
-    function PedidoComentarioController($rootScope, $stateParams, Restangular, toaster, ngDialog, Comentario) {
+    function PedidoComentarioController($rootScope, $stateParams, $scope, Restangular, toaster, ngDialog, Comentario) {
         var vm = this;
 
         vm.comentarios = [];
-        vm.pedido_id = $stateParams.id;
+        vm.pedido_id = (typeof $scope.ngDialogData !== 'undefined' ? $scope.ngDialogData.pedido_id : null) || $stateParams.id;
         vm.loading = false;
 
         /**

@@ -5,6 +5,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Pedido\Pedido;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
+use Carbon\Carbon;
+use App\Http\Controllers\Integracao\SkyhubController;
+use App\Http\Controllers\Integracao\MagentoController;
 
 /**
  * Class PedidoController
@@ -30,6 +33,32 @@ class PedidoController extends Controller
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
             ->leftJoin('pedido_notas', 'pedido_notas.pedido_id', '=', 'pedidos.id')
             ->orderBy('pedidos.created_at', 'DESC');
+
+        $list = $this->handleRequest($list);
+
+        return $this->listResponse($list);
+    }
+
+    /**
+     * Lista pedidos prontos para serem faturados
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function faturamento() {
+        $m = self::MODEL;
+
+        $list = $m::with([
+                'cliente',
+                'endereco',
+                'nota',
+                'rastreios'
+            ])
+            ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
+            ->leftJoin('pedido_notas', 'pedido_notas.pedido_id', '=', 'pedidos.id')
+            ->where('status', '=', 1)
+            ->orderBy('priorizado', 'DESC')
+            ->orderBy('estimated_delivery', 'ASC')
+            ->orderBy('created_at', 'ASC');
 
         $list = $this->handleRequest($list);
 
@@ -108,16 +137,6 @@ class PedidoController extends Controller
                 $data->protocolo = $protocolo;
             }
 
-            if ((int)$status === 5 && (int)$data->status !== 5) {
-                foreach ($data->produtos as $pedidoProduto) {
-                    $produto = $pedidoProduto->produto;
-                    $oldEstoque = $produto->estoque;
-                    $produto->estoque = $oldEstoque - $pedidoProduto->quantidade;
-                    $produto->save();
-                    \Log::notice("Estoque do produto {$produto->sku} foi alterado de {$oldEstoque} para {$produto->estoque}");
-                }
-            }
-
             $data->status = $status;
             $data->save();
 
@@ -160,5 +179,52 @@ class PedidoController extends Controller
         }
 
         return $this->notFoundResponse();
+    }
+
+    /**
+     * Cancela pedidos com mais de x dias úteis de pagamento pendente
+     *
+     * @return void
+     */
+    public static function cancelOldOrders()
+    {
+        $pedidos = Pedido::where('status', '=', 0)->whereNotNull('codigo_api')->get();
+
+        foreach ($pedidos as $pedido) {
+            try {
+                $dataPedido = Carbon::createFromFormat('d/m/Y H:i', $pedido->created_at)->format('d/m/Y');
+                $diasUteis = diasUteisPeriodo($dataPedido, date('d/m/Y'), true);
+
+                if (
+                    (strtolower($pedido->marketplace) == 'site' && $diasUteis > \Config::get('tucano.magento.oldOrder'))
+                    ||
+                    (strtolower($pedido->marketplace) != 'site' && $diasUteis > \Config::get('tucano.skyhub.oldOrder'))
+                    ) {
+                    $pedido->status = 5;
+                    $pedido->save();
+                }
+            } catch (\Exception $e) {
+                \Log::error(logMessage($e, 'Não foi possível cancelar o pedido na Integração'));
+            }
+        }
+    }
+
+    /**
+     * Envia informações de entrega e nota para o Magento / Skyhub
+     *
+     * @param  int $pedido_id
+     * @return void
+     */
+    public function faturar($pedido_id)
+    {
+        if ($pedido = Pedido::find($pedido_id)) {
+            $pedido->status = 2;
+
+            if (strtolower($pedido->marketplace) == 'site') {
+                (new MagentoController())->orderInvoice($pedido);
+            } else {
+                (new SkyhubController())->orderInvoice($pedido);
+            }
+        }
     }
 }

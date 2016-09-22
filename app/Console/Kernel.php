@@ -15,10 +15,9 @@ class Kernel extends ConsoleKernel
         Commands\RefreshMagentoStock::class,
         Commands\SkyhubPedido::class,
         Commands\SkyhubPedidos::class,
-        Commands\SkyhubCancelOldOrders::class,
         Commands\MagentoPedido::class,
         Commands\MagentoPedidos::class,
-        Commands\MagentoCancelOldOrders::class,
+        Commands\CancelOldOrders::class,
     ];
 
     /**

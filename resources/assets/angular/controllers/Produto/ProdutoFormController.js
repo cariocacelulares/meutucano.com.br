@@ -149,7 +149,7 @@
                             if (!vm.produto.atributos[i].pivot)
                                 vm.produto.atributos[i].pivot = {};
 
-                            vm.produto.atributos[i].pivot.produto_id = product.sku;
+                            vm.produto.atributos[i].pivot.produto_sku = product.sku;
                         }
                     }
                 });

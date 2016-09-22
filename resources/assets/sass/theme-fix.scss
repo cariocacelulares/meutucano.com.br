@@ -37,3 +37,10 @@
 .has-error span.has-error {
     display: none;
 }
+
+.alert,
+.label {
+    small {
+        line-height: inherit !important;
+    }
+}
