@@ -4,6 +4,7 @@
             <button class="btn-primary" ng-click="PedidoDetalhe.togglePriority()" ng-if="PedidoDetalhe.pedido.can_prioritize"><i class="fa-arrow-{{ PedidoDetalhe.pedido.priorizado ? 'down' : 'up' }}"></i>&nbsp; {{ PedidoDetalhe.pedido.priorizado ? 'Remover prioridade' : 'Priorizar' }}</button>
             <button class="btn-info" ng-click="PedidoDetalhe.toggleHold()" ng-if="PedidoDetalhe.pedido.can_hold || PedidoDetalhe.pedido.segurado"><i class="fa-{{ PedidoDetalhe.pedido.segurado ? 'unlock' : 'lock' }}"></i>&nbsp; {{ PedidoDetalhe.pedido.segurado ? 'Liberar' : 'Segurar' }}</button>
             <button class="btn-danger" ng-click="PedidoDetalhe.pedidoHelper.cancel(PedidoDetalhe.pedido, 'app.pedidos.index')" ng-if="PedidoDetalhe.pedido.can_cancel"><i class="fa-close"></i>&nbsp; Cancelar</button>
+            <a onclick="history.back()" title="Voltar para a página anterior" class="btn-default"><i class="fa-reply"></i>&nbsp; Voltar</a>
     </div>
 </div>
 <div class="row">
@@ -17,7 +18,7 @@
                 <div class="col-md-12">
                     <div class="row">
                         <p class="pull-left">Cliente</p>
-                        <p class="pull-right bold">{{ PedidoDetalhe.pedido.cliente.nome }}</p>
+                        <a ui-sref="app.clientes.detalhe({ id: PedidoDetalhe.pedido.cliente.id })" class="pull-right bold">{{ PedidoDetalhe.pedido.cliente.nome }}</a>
                     </div>
                     <div class="row" ng-if="PedidoDetalhe.pedido.codigo_marketplace">
                         <p class="pull-left">Código</p>
@@ -52,6 +53,7 @@
             <div class="col-md-6">
                 <div class="panel panel-default">
                     <div class="panel-body text-center">
+                        <i class="fa-truck"></i>&nbsp;
                         {{ PedidoDetalhe.pedido.frete_metodo_readable }}
                     </div>
                 </div>
@@ -59,6 +61,7 @@
             <div class="col-md-6">
                 <div class="panel panel-default">
                     <div class="panel-body text-center">
+                        <i class="fa-money"></i>&nbsp;
                         {{ PedidoDetalhe.pedido.pagamento_metodo_readable }}
                     </div>
                 </div>
