@@ -4,18 +4,19 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestResponseTrait;
 use App\Http\Controllers\Integracao\SkyhubController;
 use App\Http\Controllers\Pedido\NotaController;
-use App\Http\Controllers\Rastreio\RastreioController;
+use App\Http\Controllers\Pedido\RastreioController;
 use App\Models\Cliente\Cliente;
 use App\Models\Cliente\Endereco;
 use App\Models\Pedido\Pedido;
 use App\Models\Pedido\Imposto;
 use App\Models\Pedido\Nota;
 use App\Models\Pedido\Rastreio;
-use App\Models\PedidoProduto;
+use App\Models\Pedido\PedidoProduto;
 use App\Models\Produto\Produto;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Mail;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
  * Class UploadController
@@ -280,12 +281,12 @@ class UploadController extends Controller
                  * Salva o rastreio
                  */
                 $pedidoRastreio = Rastreio::firstOrNew(['pedido_id' => $idPedido, 'rastreio' => $rastreio]);
-                $pedidoRastreio->pedido_id  = $idPedido;
-                $pedidoRastreio->rastreio   = $rastreio;
+                $pedidoRastreio->pedido_id   = $idPedido;
+                $pedidoRastreio->rastreio      = $rastreio;
                 $pedidoRastreio->data_envio = $dataEnvio;
-                $pedidoRastreio->servico    = $metodoEnvio;
-                $pedidoRastreio->valor      = $freteTotal;
-                $pedidoRastreio->prazo      = $prazoEntrega;
+                $pedidoRastreio->servico       = $metodoEnvio;
+                $pedidoRastreio->valor          = $freteTotal;
+                $pedidoRastreio->prazo         = $prazoEntrega;
 
                 $pedidoRastreio->save();
             }
@@ -294,12 +295,12 @@ class UploadController extends Controller
              * Impostos
              */
             $imposto = Imposto::findOrNew($idPedido);
-            $imposto->pedido_id         = $idPedido;
-            $imposto->icms              = $nfe->total->ICMSTot->vICMS;
-            $imposto->pis               = $nfe->total->ICMSTot->vPIS;
-            $imposto->cofins            = $nfe->total->ICMSTot->vCOFINS;
+            $imposto->pedido_id            = $idPedido;
+            $imposto->icms                   = $nfe->total->ICMSTot->vICMS;
+            $imposto->pis                      = $nfe->total->ICMSTot->vPIS;
+            $imposto->cofins                  = $nfe->total->ICMSTot->vCOFINS;
             $imposto->icms_destinatario = $nfe->total->ICMSTot->vICMSUFDest;
-            $imposto->icms_remetente    = $nfe->total->ICMSTot->vICMSUFRemet;
+            $imposto->icms_remetente   = $nfe->total->ICMSTot->vICMSUFRemet;
 
             $imposto->save();
 

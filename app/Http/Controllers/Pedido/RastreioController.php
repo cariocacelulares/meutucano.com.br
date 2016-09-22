@@ -106,11 +106,9 @@ class RastreioController extends Controller
             foreach ($rastreios as $rastreio) {
                 $this->refresh($rastreio);
             }
-
-            return $this->showResponse([]);
         } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+            Log::warning(logMessage($e, 'Erro ao atualizar os rastreios'));
+            reportError('Erro ao atualizar os rastreios ' . $e->getMessage() . ' - ' . $e->getLine());
         }
     }
 
@@ -154,23 +152,17 @@ class RastreioController extends Controller
             if (!$ultimoEvento['acao']) {
                 $status = $rastreio->status;
             } elseif (strpos($ultimoEvento['detalhes'], 'por favor, entre em contato conosco clicando') !== false) {
-                // $this->screenshot($rastreio);
                 $status = 3;
             } elseif(strpos($ultimoEvento['acao'], 'fluxo postal') !== false) {
-                // $this->screenshot($rastreio);
                 $status = 3;
             } elseif ((strpos($ultimoEvento['acao'], 'devolvido ao remetente') !== false) || strpos($ultimoEvento['acao'], 'devolução ao remetente') !== false) {
-                // $this->screenshot($rastreio);
                 $status = 5;
             } elseif (strpos($ultimoEvento['acao'], 'entrega efetuada') !== false) {
                 $rastreio->pedido->status = 3;
                 $rastreio->pedido->save();
 
-                // $this->screenshot($rastreio);
-
                 $status = 4;
             } elseif (strpos($ultimoEvento['acao'], 'aguardando retirada') !== false) {
-                // $this->screenshot($rastreio);
                 $status = 6;
             } elseif ($prazoEntrega < date('Ymd')) {
                 $status = 2;
@@ -180,7 +172,7 @@ class RastreioController extends Controller
                 $rastreio->data_envio = Carbon::createFromFormat('d/m/Y H:i', $this->firstStatus($rastreio->rastreio)['data'])->format('Y-m-d');
             }
 
-            $rastreio->status           = $status;
+            $rastreio->status = $status;
             $rastreio->save();
 
             return $rastreio;
@@ -207,6 +199,7 @@ class RastreioController extends Controller
                 ->save(storage_path('app/public/rastreio/'. $rastreio->rastreio .'.jpg'));
 
             $rastreio->imagem_historico = $rastreio->rastreio . '.jpg';
+            \Log::info('Screenshot salva com sucesso: ' . $rastreio->imagem_historico);
         } catch (\Exception $e) {
             \Log::error(logMessage($e, 'Não foi possível salvar a imagem do rastreio'));
         }
