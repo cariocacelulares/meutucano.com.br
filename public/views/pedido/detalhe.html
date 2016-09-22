@@ -169,22 +169,22 @@
                                                 <i class="fa-edit"></i>&nbsp; Editar
                                             </a>
                                         </li>
-                                        <li>
+                                        <li ng-if="PedidoDetalhe.pedido.nota">
                                             <a ng-click="PedidoDetalhe.rastreioHelper.printEtiqueta(rastreio.id)">
                                                 <i class="fa-tag"></i>&nbsp; Etiqueta
                                             </a>
                                         </li>
-                                        <li>
+                                        <li ng-if="PedidoDetalhe.pedido.nota">
                                             <a ng-click="PedidoDetalhe.rastreioHelper.logistica(rastreio.id, true)">
                                                 <i class="fa-exchange"></i>&nbsp; Logística
                                             </a>
                                         </li>
-                                        <li>
+                                        <li ng-if="PedidoDetalhe.pedido.nota">
                                             <a ng-click="PedidoDetalhe.rastreioHelper.devolucao(rastreio.id, true)">
                                                 <i class="fa-undo"></i>&nbsp; Devolução
                                             </a>
                                         </li>
-                                        <li>
+                                        <li ng-if="PedidoDetalhe.pedido.nota">
                                             <a ng-click="PedidoDetalhe.rastreioHelper.pi(rastreio.id, true)">
                                                 <i class="fa-warning"></i>&nbsp; PI
                                             </a>

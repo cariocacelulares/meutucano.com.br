@@ -32,7 +32,7 @@
          * Filtros
          * @type {Filter}
          */
-        vm.filterList = Filter.init('pedidos', vm, {
+        vm.filterList = Filter.init('faturamento', vm, {
             'pedidos.codigo_marketplace': 'LIKE',
             'clientes.nome':                       'LIKE'
         });
@@ -41,7 +41,7 @@
          * Cabeçalho da tabela
          * @type {TableHeader}
          */
-        vm.tableHeader = TableHeader.init('pedidos', vm);
+        vm.tableHeader = TableHeader.init('faturamento', vm);
 
         vm.load = function() {
             vm.loading = true;
