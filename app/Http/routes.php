@@ -22,7 +22,7 @@ Route::group(['prefix' => '/api'], function() {
 
         Route::post('upload', [
             'middleware' => ['role:admin|gestor|atendimento|faturamento'],
-            'uses' => 'UploadController@upload'
+            'uses' => 'Partials\UploadController@upload'
         ]);
         Route::get('notas/xml/{id}',          'Pedido\NotaController@xml');
         Route::get('notas/danfe/{id}',        'Pedido\NotaController@danfe');

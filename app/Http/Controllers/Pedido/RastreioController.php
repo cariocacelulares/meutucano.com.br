@@ -103,8 +103,6 @@ class RastreioController extends Controller
 
             $rastreios = $model::whereNotIn('status', [2, 3, 4, 5, 7, 8])->get();
 
-            dd($rastreios);
-
             foreach ($rastreios as $rastreio) {
                 $this->refresh($rastreio);
             }

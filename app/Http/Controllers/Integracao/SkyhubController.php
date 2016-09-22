@@ -171,6 +171,10 @@ class SkyhubController extends Controller implements Integracao
 
         try {
             Log::debug('Requisição skyhub para: ' . $url . ', method: ' . $method, $params);
+
+            # TODO: remover o return
+            return true;
+
             $client = new Client([
                 'base_uri' => \Config::get('tucano.skyhub.api.url'),
                 'headers' => [
@@ -374,12 +378,11 @@ class SkyhubController extends Controller implements Integracao
                 throw new \Exception('Não foi possível cancelar o pedido: sem codigo_api válido', 1);
             }
 
-            # TODO: remover o comentário
-            /*$this->request(
+            $this->request(
                 sprintf('/orders/%s/cancel', $order->codigo_api),
                 [],
                 'POST'
-            );*/
+            );
             Log::notice("Pedido {$order->id} / {$order->skyhub} cancelado na Skyhub.");
         } catch (Exception $e) {
             Log::warning(logMessage($e, "Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub"));
@@ -441,7 +444,7 @@ class SkyhubController extends Controller implements Integracao
     public function orderDelivered($pedido)
     {
         try {
-            if (\Config::get('tucano.skyhub.enabled') && (int)$pedido->status === 3) {
+            if (\Config::get('tucano.skyhub.enabled') && (int)$pedido->status === 3 && $pedido->codigo_api) {
                 $this->request(
                     sprintf('/orders/%s/delivery', $pedido->codigo_api),
                     [],

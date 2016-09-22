@@ -1,5 +1,7 @@
 <?php namespace App\Http\Controllers\Partials;
 
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Rest\RestResponseTrait;
 use App\Http\Controllers\Integracao\SkyhubController;
 use App\Http\Controllers\Pedido\NotaController;
 use App\Http\Controllers\Rastreio\RastreioController;

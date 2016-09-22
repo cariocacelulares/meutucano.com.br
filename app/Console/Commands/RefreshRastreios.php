@@ -1,7 +1,7 @@
 <?php namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Http\Controllers\Rastreio\RastreioController;
+use App\Http\Controllers\Pedido\RastreioController;
 
 class RefreshRastreios extends Command
 {
@@ -26,7 +26,7 @@ class RefreshRastreios extends Command
      */
     public function handle()
     {
-        with(new RastreioController())->refreshAll();
-        $this->comment('Rastreios atualizados com sucesso!');
+        $return = with(new RastreioController())->refreshAll();
+        $this->comment($return);
     }
 }
