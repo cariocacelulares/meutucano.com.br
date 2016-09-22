@@ -16,7 +16,7 @@
          * @return {void}
          */
         vm.save = function() {
-            Pi.save(vm.pi, vm.pi.rastreio_id || null).then(function() {
+            Pi.save(vm.pi, vm.pi.id || null).then(function() {
                 $scope.closeThisDialog(true);
                 toaster.pop('success', 'Sucesso!', 'Pedido de informação salvo com sucesso!');
             });

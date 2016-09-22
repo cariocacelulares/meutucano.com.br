@@ -73,8 +73,16 @@ class DevolucaoController extends Controller
             }
             $data = $m::create(Input::except(['protocolo']));
 
-            $data->rastreio->status = 5;
-            $data->rastreio->save();
+            if (!$data->rastreio && Input::get('rastreio_id')) {
+                if ($rastreio = Rastreio::find(Input::get('rastreio_id'))) {
+                    $data->rastreio()->associate($rastreio);
+                }
+            }
+
+            if ($data->rastreio) {
+                $data->rastreio->status = 5;
+                $data->rastreio->save();
+            }
 
             updateProtocolAndStatus($data, Input::get('protocolo'));
 

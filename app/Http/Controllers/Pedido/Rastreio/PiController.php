@@ -73,13 +73,21 @@ class PiController extends Controller
             }
             $data = $m::create(Input::except(['protocolo']));
 
-            if (Input::has('valor_pago')) {
-                $data->rastreio->status = 8;
-            } else {
-                $data->rastreio->status = 7;
+            if (!$data->rastreio && Input::get('rastreio_id')) {
+                if ($rastreio = Rastreio::find(Input::get('rastreio_id'))) {
+                    $data->rastreio()->associate($rastreio);
+                }
             }
 
-            $data->rastreio->save();
+            if ($data->rastreio) {
+                if (Input::has('valor_pago')) {
+                    $data->rastreio->status = 8;
+                } else {
+                    $data->rastreio->status = 7;
+                }
+
+                $data->rastreio->save();
+            }
 
             updateProtocolAndStatus($data, Input::get('protocolo'));
 
