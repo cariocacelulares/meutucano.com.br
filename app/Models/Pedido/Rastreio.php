@@ -34,7 +34,6 @@ class Rastreio extends \Eloquent
         'servico',
         'valor',
         'prazo',
-        'observacao',
         'status',
         'imagem_historico'
     ];
