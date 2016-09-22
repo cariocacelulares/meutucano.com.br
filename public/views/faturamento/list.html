@@ -39,7 +39,7 @@
             <td class="text-center">{{ pedido.estimated_delivery }}</td>
             <td class="text-center">{{ pedido.created_at }}</td>
             <td class="text-center">
-                <a ng-click="FaturamentoList.comentarioHelper.openModal(pedido.id)" ng-class="{ 'text-gray': !pedido.comentarios_total }"><i class="fa-comments"></i></a>
+                <a ng-click="FaturamentoList.comentarioHelper.openModal(pedido.id)" ng-class="{ 'text-gray': !pedido.comentarios.length }"><i class="fa-comments"></i></a>
             </td>
             <td class="text-center">
                 <dropdown>
