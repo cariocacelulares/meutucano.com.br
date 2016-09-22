@@ -53,16 +53,18 @@
             <div class="col-md-6">
                 <div class="panel panel-default">
                     <div class="panel-body text-center">
-                        <i class="fa-truck"></i>&nbsp;
+                        <i ng-if="PedidoDetalhe.pedido.frete_metodo_readable" class="fa-truck"></i>&nbsp;
                         {{ PedidoDetalhe.pedido.frete_metodo_readable }}
+                        <small ng-if="!PedidoDetalhe.pedido.frete_metodo_readable" class="hint-text">Nenhum método de envio</small>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="panel panel-default">
                     <div class="panel-body text-center">
-                        <i class="fa-money"></i>&nbsp;
+                        <i ng-if="PedidoDetalhe.pedido.pagamento_metodo_readable" class="fa-money"></i>&nbsp;
                         {{ PedidoDetalhe.pedido.pagamento_metodo_readable }}
+                        <small ng-if="!PedidoDetalhe.pedido.pagamento_metodo_readable" class="hint-text">Nenhum método de pagamento</small>
                     </div>
                 </div>
             </div>

@@ -53,7 +53,7 @@
                                     <i ng-if="rastreio.devolucao" class="fa-undo" tooltips tooltip-template="Devolução em {{ rastreio.devolucao.created_at }}">&nbsp;</i>
                                     <i ng-if="rastreio.logistica" class="fa-exchange" tooltips tooltip-template="Logística em {{ rastreio.logistica.created_at }}">&nbsp;</i>
                                     <i ng-if="rastreio.pi" class="fa-warning" tooltips tooltip-template="PI em {{ rastreio.pi.created_at }}">&nbsp;</i>
-                                    <a ng-href="rastreio.rastreoi_url" target="_blank" ng-bind-html="rastreio.rastreio | highlight: Search.term"></a>
+                                    <a ng-href="{{ rastreio.rastreio_url }}" target="_blank" ng-bind-html="rastreio.rastreio | highlight: Search.term"></a>
 
                                     <span class="label label-{{ Search.pedidoHelper.parseRastreioStatusClass(rastreio.status) }}">{{ rastreio.status_description }}</span>
                                 </div>

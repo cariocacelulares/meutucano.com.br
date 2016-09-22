@@ -39,18 +39,15 @@
             <td class="text-center">{{ pedido.estimated_delivery }}</td>
             <td class="text-center">{{ pedido.created_at }}</td>
             <td class="text-center">
-                <a ng-click="FaturamentoList.comentarioHelper.openModal(pedido.id)" ng-class="{ 'text-gray': !pedido.comentarios.length }"><i class="fa-comments"></i></a>
+                <a ng-click="FaturamentoList.comentarioHelper.openModal(pedido.id, true)" ng-class="{ 'text-gray': !pedido.comentarios.length }"><i class="fa-comments"></i></a>
             </td>
             <td class="text-center">
                 <dropdown>
                         <li>
                             <a ui-sref="app.pedidos.detalhe({id: pedido.id})"><i class="fa fa-eye"></i>&nbsp; Visualizar</a>
                         </li>
-                        <li ng-if="pedido.nota">
+                        <li ng-if="pedido.nota && !pedido.segurado">
                             <a ng-click="FaturamentoList.pedidoHelper.faturar(pedido.id, true)"><i class="fa fa-barcode"></i>&nbsp; Faturar</a>
-                        </li>
-                        <li>
-                            <a ng-click="FaturamentoList.pedidoHelper.cancel(pedido, false, true)"><i class="fa fa-trash-o"></i>&nbsp; Cancelar</a>
                         </li>
                         <li ng-if="pedido.nota">
                             <a ng-click="FaturamentoList.notaHelper.printXML(pedido.id)"><i class="fa fa-file-code-o"></i>&nbsp; XML</a>
@@ -58,7 +55,7 @@
                         <li ng-if="pedido.nota">
                             <a ng-click="FaturamentoList.notaHelper.printDanfe(pedido.id)"><i class="fa fa-file-pdf-o"></i>&nbsp; DANFE</a>
                         </li>
-                        <li ng-if="pedido.rastreios[0]">
+                        <li ng-if="pedido.rastreios.length">
                             <a ng-click="FaturamentoList.rastreioHelper.printEtiqueta(pedido.rastreios[0].id)"><i class="fa fa-tag"></i>&nbsp; Etiqueta</a>
                         </li>
                 </dropdown>

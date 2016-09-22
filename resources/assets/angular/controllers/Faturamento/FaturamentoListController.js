@@ -26,7 +26,7 @@
         /**
          * @type {Object}
          */
-        vm.comentarioHelper = ComentarioHelper;
+        vm.comentarioHelper = ComentarioHelper.init(vm);
 
         /**
          * Filtros
