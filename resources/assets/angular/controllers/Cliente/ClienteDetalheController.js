@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('ClienteDetalheController', ClienteDetalheController);
 
-    function ClienteDetalheController($stateParams, Cliente, ClienteEnderecoHelper) {
+    function ClienteDetalheController($stateParams, Cliente, ClienteEnderecoHelper, ClienteHelper) {
         var vm = this;
 
         vm.cliente_id = $stateParams.id;
@@ -16,6 +16,11 @@
          * @type {Object}
          */
         vm.clienteEnderecoHelper = ClienteEnderecoHelper.init(vm);
+
+        /**
+         * @type {Object}
+         */
+        vm.clienteHelper = ClienteHelper.init(vm);
 
         vm.load = function() {
             vm.cliente = {};

@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('PedidoDetalheController', PedidoDetalheController);
 
-    function PedidoDetalheController($rootScope, $state, $stateParams, ngDialog, SweetAlert, toaster, Pedido, RastreioHelper, NotaHelper, ClienteEnderecoHelper, PedidoHelper) {
+    function PedidoDetalheController($rootScope, $state, $stateParams, ngDialog, SweetAlert, toaster, Pedido, RastreioHelper, NotaHelper, ClienteEnderecoHelper, PedidoHelper, ClienteHelper) {
         var vm = this;
 
         vm.pedido_id  = $stateParams.id;
@@ -31,6 +31,11 @@
          * @type {Object}
          */
         vm.pedidoHelper = PedidoHelper.init(vm);
+
+        /**
+         * @type {Object}
+         */
+        vm.clienteHelper = ClienteHelper.init(vm);
 
         vm.load = function() {
             vm.loading = true;

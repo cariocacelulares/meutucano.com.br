@@ -82,7 +82,12 @@
                     </div>
                     <div class="row">
                         <p class="pull-left">E-mail</p>
-                        <p class="pull-right bold">{{ PedidoDetalhe.pedido.cliente.email || 'Não informado' }}</p>
+                        <p class="pull-right bold">
+                            <span ng-click="PedidoDetalhe.clienteHelper.changeEmail(PedidoDetalhe.pedido.cliente, true)">
+                                <span ng-class="{ 'hint-text': !PedidoDetalhe.pedido.cliente.email }">{{ PedidoDetalhe.pedido.cliente.email || 'Não informado' }}</span>
+                                &nbsp;<i class="fa-pencil"></i>
+                            </span>
+                        </p>
                     </div>
                     <div class="row">
                         <p class="pull-left">CPF/CNPJ</p>

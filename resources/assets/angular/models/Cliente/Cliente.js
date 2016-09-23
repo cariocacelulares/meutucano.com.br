@@ -11,7 +11,7 @@
 
             angular.extend(rest, {
                 /**
-                 * Retorna os rastreios importantes
+                 * Retorna o detalhe do cliente
                  *
                  * @param  {Object} params
                  * @return {Object}
@@ -20,6 +20,17 @@
                     params = this.parseParams(params);
 
                     return Restangular.all('clientes/detail').customGET(params || {});
+                },
+
+                /**
+                 * Altera o e-mail do cliente
+                 *
+                 * @param  {int} cliente_id
+                 * @param  {string} email
+                 * @return {Object}
+                 */
+                changeEmail: function(cliente_id, email) {
+                    return Restangular.one('clientes/email/' + cliente_id).customPUT({ 'email': email });
                 }
             });
 
