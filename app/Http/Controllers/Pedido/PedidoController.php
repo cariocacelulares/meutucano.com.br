@@ -50,13 +50,14 @@ class PedidoController extends Controller
         $list = $m::with([
                 'cliente',
                 'endereco',
-                'nota',
+                'notas',
                 'rastreios',
                 'comentarios'
             ])
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
             ->leftJoin('pedido_notas', 'pedido_notas.pedido_id', '=', 'pedidos.id')
             ->where('status', '=', 1)
+            ->groupBy('pedidos.id')
             ->orderBy('priorizado', 'DESC')
             ->orderBy('estimated_delivery', 'ASC')
             ->orderBy('created_at', 'ASC');
@@ -160,7 +161,7 @@ class PedidoController extends Controller
             $data = $m::with([
                 'cliente',
                 'endereco',
-                'nota',
+                'notas',
                 'rastreios',
                 'produtos',
                 'comentarios',

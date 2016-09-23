@@ -1,29 +1,30 @@
-<?php namespace App\Models\Pedido;
+<?php namespace App\Models\Pedido\Nota;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
-use App\Models\Pedido\Nota\Devolucao;
+use App\Models\Pedido\Pedido;
+use App\Models\Usuario\Usuario;
+use App\Models\Pedido\Nota;
 
 /**
- * Class Nota
- * @package App\Models\Pedido
+ * Class Devolucao
+ * @package App\Models\Pedido\Nota
  */
-class Nota extends \Eloquent
+class Devolucao extends \Eloquent
 {
-    use SoftDeletes,
-        RevisionableTrait;
+    use RevisionableTrait;
 
-    protected $table = 'pedido_notas';
+    protected $table = 'pedido_nota_devolucoes';
 
     /**
      * @var array
      */
     protected $fillable = [
         'pedido_id',
-        'usuario_id',
+        'nota_id',
         'chave',
         'arquivo',
+        'tipo',
         'data',
     ];
 
@@ -32,14 +33,8 @@ class Nota extends \Eloquent
      */
     protected $appends = [
         'numero',
-        'serie'
-    ];
-
-    /**
-     * @var array
-     */
-    protected $with = [
-        'devolucao',
+        'serie',
+        'tipo_readable'
     ];
 
     /**
@@ -53,13 +48,13 @@ class Nota extends \Eloquent
     }
 
     /**
-     * Pedido
+     * Nota
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
      */
-    public function devolucao()
+    public function nota()
     {
-        return $this->HasOne(Devolucao::class);
+        return $this->belongsTo(Nota::class);
     }
 
     /**
@@ -80,6 +75,16 @@ class Nota extends \Eloquent
     public function getSerieAttribute()
     {
         return (substr($this->pedido_id, -1)) ?: 1;
+    }
+
+    /**
+     * Return tipo readable
+     *
+     * @return string
+     */
+    public function getTipoReadableAttribute()
+    {
+        return ($this->tipo == 1) ? 'Estorno' : 'Devolução';
     }
 
     /**

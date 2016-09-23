@@ -252,8 +252,8 @@ class SkyhubController extends Controller implements Integracao
 
             $marketplace = $this->parseMarketplaceName($order['code']);
             $operacao    = ($order['shipping_address']['region'] == \Config::get('tucano.uf'))
-                ? \Config::get('tucano.venda_interna')
-                : \Config::get('tucano.venda_externa');
+                ? \Config::get('tucano.notas.venda_interna')
+                : \Config::get('tucano.notas.venda_externa');
 
             $codMarketplace = $this->parseMarketplaceId(
                 $marketplace,

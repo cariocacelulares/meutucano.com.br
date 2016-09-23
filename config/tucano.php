@@ -44,12 +44,14 @@ return [
     /**
      * Operações fiscais
      */
-    'operacoes' => [5102, 5405, 6102, 6108, 6910],
-    'devolucao' => [1202, 2202],
-    'estorno' => [1949, 2949],
+    'notas' => [
+        'operacoes' => [5102, 5405, 6102, 6108, 6910],
+        'devolucao' => [1202, 2202],
+        'estorno' => [1949, 2949],
 
-    'venda_interna' => 5102,
-    'venda_externa' => 6108,
+        'venda_interna' => 5102,
+        'venda_externa' => 6108,
+    ],
 
     /**
      * Feriados

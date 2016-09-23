@@ -7,26 +7,33 @@
             return {
                 /**
                  * Generate XML
-                 * @param pedido_id
+                 * @param nota_id
+                 * @param devolucao
                  */
-                printXML: function(pedido_id) {
+                printXML: function(nota_id, devolucao) {
+                    if (typeof devolucao != 'undefined') {
+                        devolucao = devolucao ? 1 : 0;
+                    } else {
+                        devolucao = 0;
+                    }
+
                     var auth = {
                         token: localStorage.getItem("satellizer_token")
                     };
 
-                    $window.open(envService.read('apiUrl') + '/notas/xml/' + pedido_id + '?' + $httpParamSerializer(auth), 'xml');
+                    $window.open(envService.read('apiUrl') + '/notas/xml/' + nota_id + '/' + devolucao+ '?' + $httpParamSerializer(auth), 'xml');
                 },
 
                 /**
                  * Generate DANFE
-                 * @param pedido_id
+                 * @param nota_id
                  */
-                printDanfe: function(pedido_id) {
+                printDanfe: function(nota_id) {
                     var auth = {
                         token: localStorage.getItem("satellizer_token")
                     };
 
-                    $window.open(envService.read('apiUrl') + '/notas/danfe/' + pedido_id + '?' + $httpParamSerializer(auth), 'danfe');
+                    $window.open(envService.read('apiUrl') + '/notas/danfe/' + nota_id + '?' + $httpParamSerializer(auth), 'danfe');
                 },
 
                 /**

@@ -33,7 +33,7 @@ class RelatorioController extends Controller
         $relatorio[] = "\r\n";
         foreach ($notas as $nota) {
             $relatorio[] = $nota->pedido->operacao . ';';
-            $relatorio[] = ((in_array($nota->pedido->operacao, \Config::get('tucano.operacoes'))) ? 'VENDA' : 'DEVOLUCAO') . ';';
+            $relatorio[] = ((in_array($nota->pedido->operacao, \Config::get('tucano.notas.operacoes'))) ? 'VENDA' : 'DEVOLUCAO') . ';';
             $relatorio[] = $nota->numero . ';';
             $relatorio[] = \Config::get('tucano.uf'). ';';
             $relatorio[] = 'R$' . (count($nota->pedido->imposto) ? number_format($nota->pedido->imposto->icms_remetente, 2, ',', '.') : '0,00') . ';';

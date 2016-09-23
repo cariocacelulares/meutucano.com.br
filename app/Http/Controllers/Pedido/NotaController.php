@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Mail;
 use NFePHP\Extras\Danfe;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Models\Pedido\Nota\Devolucao;
 
 /**
  * Class NotaController
@@ -46,11 +47,17 @@ class NotaController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function xml($id)
+    public function xml($id, $devolucao)
     {
         $model = self::MODEL;
 
-        if ($nota = $model::find($id)) {
+        if ($devolucao) {
+            $nota = Devolucao::find($id);
+        } else {
+            $nota = $model::find($id);
+        }
+
+        if ($nota) {
             $file_path = storage_path('app/public/nota/'. $nota->arquivo);
 
             if (file_exists($file_path)) {

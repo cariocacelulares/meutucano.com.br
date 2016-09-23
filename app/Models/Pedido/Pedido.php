@@ -107,13 +107,13 @@ class Pedido extends \Eloquent
 
         // Set soft delete cascade
         static::deleting(function($pedido) {
-            $pedido->nota()->delete();
+            $pedido->notas()->delete();
             $pedido->rastreios()->delete();
         });
 
         // Set soft delete cascade
         static::restoring(function($pedido) {
-            $pedido->nota()->withTrashed()->restore();
+            $pedido->notas()->withTrashed()->restore();
             $pedido->rastreios()->withTrashed()->restore();
         });
     }
@@ -121,11 +121,11 @@ class Pedido extends \Eloquent
     /**
      * Nota fiscal
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\hasMany
      */
-    public function nota()
+    public function notas()
     {
-        return $this->hasOne(Nota::class);
+        return $this->hasMany(Nota::class);
     }
 
     /**

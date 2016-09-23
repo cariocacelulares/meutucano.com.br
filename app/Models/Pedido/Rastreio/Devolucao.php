@@ -79,7 +79,7 @@ class Devolucao extends \Eloquent
      * @return string
      */
     protected function getMotivoDescriptionAttribute() {
-        return ($this->motivo >= 0) ? \Config::get('tucano.devolucao_status')[$this->motivo] : null;
+        return ($this->motivo >= 0) ? \Config::get('tucano.notas.devolucao_status')[$this->motivo] : null;
     }
 
     /**

@@ -124,14 +124,16 @@
             background-color: #e6e6e6;
         }
 
-        &:before {
-            content: '';
-            top: 0;
-            left: 50%;
-            height: 1px;
-            width: 100%;
-            transform: translateY(-8px);
-            background-color: #f5f5f5;
+        &:not(.no-line) {
+            &:before {
+                content: '';
+                top: 0;
+                left: 50%;
+                height: 1px;
+                width: 100%;
+                transform: translateY(-8px);
+                background-color: #f5f5f5;
+            }
         }
 
         &.actions {

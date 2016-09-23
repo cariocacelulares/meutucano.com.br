@@ -204,8 +204,8 @@ class MagentoController extends Controller implements Integracao
             }
 
             $operacao = ($uf == \Config::get('tucano.uf'))
-                ? \Config::get('tucano.venda_interna')
-                : \Config::get('tucano.venda_externa');
+                ? \Config::get('tucano.notas.venda_interna')
+                : \Config::get('tucano.notas.venda_externa');
 
             // Abre um transaction no banco de dados
             DB::beginTransaction();

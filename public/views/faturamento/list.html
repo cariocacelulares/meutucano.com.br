@@ -46,14 +46,19 @@
                         <li>
                             <a ui-sref="app.pedidos.detalhe({id: pedido.id})"><i class="fa fa-eye"></i>&nbsp; Visualizar</a>
                         </li>
-                        <li ng-if="pedido.nota && !pedido.segurado">
+                        <li ng-if="pedido.notas.length && !pedido.segurado">
                             <a ng-click="FaturamentoList.pedidoHelper.faturar(pedido.id, true)"><i class="fa fa-barcode"></i>&nbsp; Faturar</a>
                         </li>
-                        <li ng-if="pedido.nota">
-                            <a ng-click="FaturamentoList.notaHelper.printXML(pedido.id)"><i class="fa fa-file-code-o"></i>&nbsp; XML</a>
+                        <li ng-if="pedido.notas.length">
+                            <a ng-click="FaturamentoList.notaHelper.printXML(pedido.notas[pedido.notas.length - 1].id)"><i class="fa fa-file-code-o"></i>&nbsp; XML</a>
                         </li>
-                        <li ng-if="pedido.nota">
-                            <a ng-click="FaturamentoList.notaHelper.printDanfe(pedido.id)"><i class="fa fa-file-pdf-o"></i>&nbsp; DANFE</a>
+                        <li ng-if="pedido.notas.length">
+                            <a ng-click="FaturamentoList.notaHelper.printDanfe(pedido.notas[pedido.notas.length - 1].id)"><i class="fa fa-file-pdf-o"></i>&nbsp; DANFE</a>
+                        </li>
+                        <li ng-if="pedido.notas[0].devolucao">
+                            <a ng-click="FaturamentoList.notaHelper.printXML(pedido.notas[0].devolucao.id, true)">
+                                <i class="fa-file-code-o"></i>&nbsp; XML Devolução
+                            </a>
                         </li>
                         <li ng-if="pedido.rastreios.length">
                             <a ng-click="FaturamentoList.rastreioHelper.printEtiqueta(pedido.rastreios[0].id)"><i class="fa fa-tag"></i>&nbsp; Etiqueta</a>

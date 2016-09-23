@@ -115,35 +115,46 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="panel-title"><i class="fa-barcode"></i>&nbsp; Nota fiscal</div>
-                        <div class="panel-controls" ng-if="PedidoDetalhe.pedido.nota">
+                        <div class="panel-controls" ng-if="PedidoDetalhe.pedido.notas.length">
                             <dropdown>
                                 <li>
-                                    <a ng-click="PedidoDetalhe.notaHelper.printXML(PedidoDetalhe.pedido.id)">
+                                    <a ng-click="PedidoDetalhe.notaHelper.printXML(PedidoDetalhe.pedido.notas[PedidoDetalhe.pedido.notas.length - 1].id)">
                                         <i class="fa-file-code-o"></i>&nbsp; XML
                                     </a>
                                 </li>
                                 <li>
-                                    <a ng-click="PedidoDetalhe.notaHelper.printDanfe(PedidoDetalhe.pedido.id)">
+                                    <a ng-click="PedidoDetalhe.notaHelper.printDanfe(PedidoDetalhe.pedido.notas[PedidoDetalhe.pedido.notas.length - 1].id)">
                                         <i class="fa-print"></i>&nbsp; DANFE
+                                    </a>
+                                </li>
+                                <li ng-if="PedidoDetalhe.pedido.notas[0].devolucao">
+                                    <a ng-click="PedidoDetalhe.notaHelper.printXML(PedidoDetalhe.pedido.notas[0].devolucao.id, true)">
+                                        <i class="fa-file-code-o"></i>&nbsp; XML Devolução
                                     </a>
                                 </li>
                             </dropdown>
                         </div>
                     </div>
                     <div class="panel-body">
-                        <div class="col-md-12 no-results" ng-if="!PedidoDetalhe.pedido.nota">
+                        <div class="col-md-12 no-results" ng-if="!PedidoDetalhe.pedido.notas.length">
                             A nota ainda não foi registrada.
                         </div>
-                        <div class="col-md-12" ng-if="PedidoDetalhe.pedido.nota">
+                        <div class="col-md-12"  ng-if="PedidoDetalhe.pedido.notas.length" ng-repeat="nota in PedidoDetalhe.pedido.notas">
+                            <hr ng-if="!$first" />
                             <div class="row">
                                 <p class="pull-left">Emissão</p>
-                                <p class="pull-right bold">{{ PedidoDetalhe.pedido.nota.data }}</p>
+                                <p class="pull-right bold">{{ nota.data }}</p>
                             </div>
                             <div class="row">
                                 <p class="pull-left">Número / Série</p>
                                 <p class="pull-right bold">
-                                    {{ PedidoDetalhe.pedido.nota.numero }}/{{ PedidoDetalhe.pedido.nota.serie }}
+                                    {{ nota.numero }}/{{ nota.serie }}
                                 </p>
+                            </div>
+                            <div ng-if="nota.devolucao" class="row no-line">
+                                <div class="alert alert-info">
+                                    <small><i class="fa-undo"></i>&nbsp; Devolução em {{ nota.devolucao.data }}</small>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -174,22 +185,22 @@
                                                 <i class="fa-edit"></i>&nbsp; Editar
                                             </a>
                                         </li>
-                                        <li ng-if="PedidoDetalhe.pedido.nota">
+                                        <li ng-if="PedidoDetalhe.pedido.notas.length">
                                             <a ng-click="PedidoDetalhe.rastreioHelper.printEtiqueta(rastreio.id)">
                                                 <i class="fa-tag"></i>&nbsp; Etiqueta
                                             </a>
                                         </li>
-                                        <li ng-if="PedidoDetalhe.pedido.nota">
+                                        <li ng-if="PedidoDetalhe.pedido.notas.length">
                                             <a ng-click="PedidoDetalhe.rastreioHelper.logistica(rastreio.id, true)">
                                                 <i class="fa-exchange"></i>&nbsp; Logística
                                             </a>
                                         </li>
-                                        <li ng-if="PedidoDetalhe.pedido.nota">
+                                        <li ng-if="PedidoDetalhe.pedido.notas.length">
                                             <a ng-click="PedidoDetalhe.rastreioHelper.devolucao(rastreio.id, true)">
                                                 <i class="fa-undo"></i>&nbsp; Devolução
                                             </a>
                                         </li>
-                                        <li ng-if="PedidoDetalhe.pedido.nota">
+                                        <li ng-if="PedidoDetalhe.pedido.notas.length">
                                             <a ng-click="PedidoDetalhe.rastreioHelper.pi(rastreio.id, true)">
                                                 <i class="fa-warning"></i>&nbsp; PI
                                             </a>

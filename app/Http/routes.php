@@ -24,9 +24,9 @@ Route::group(['prefix' => '/api'], function() {
             'middleware' => ['role:admin|gestor|atendimento|faturamento'],
             'uses' => 'Partials\UploadController@upload'
         ]);
-        Route::get('notas/xml/{id}',          'Pedido\NotaController@xml');
-        Route::get('notas/danfe/{id}',        'Pedido\NotaController@danfe');
-        Route::post('notas/email/{id}',       'Pedido\NotaController@email');
+        Route::get('notas/xml/{id}/{devolucao}', 'Pedido\NotaController@xml');
+        Route::get('notas/danfe/{id}',                  'Pedido\NotaController@danfe');
+        Route::post('notas/email/{id}',                 'Pedido\NotaController@email');
 
         Route::get('rastreios/etiqueta/{id}',  'Pedido\RastreioController@etiqueta');
 
