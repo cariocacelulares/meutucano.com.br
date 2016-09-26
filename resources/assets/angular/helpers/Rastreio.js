@@ -140,6 +140,23 @@
                     };
 
                     $window.open(envService.read('apiUrl') + '/rastreios/historico/' + rastreio_id + '?' + $httpParamSerializer(auth), 'historico');
+                },
+
+                /**
+                 * Força a geração ou regeração da imagem do rastreio
+                 *
+                 * @param  {int} rastreio_id
+                 * @param  {bool} updateVm
+                 * @return {void}
+                 */
+                imagem: function(rastreio_id, updateVm) {
+                    Rastreio.historico(rastreio_id).then(function() {
+                        if (updateVm &&
+                            typeof this.vm != 'undefined' &&
+                            typeof this.vm.load != 'undefined') {
+                            this.vm.load();
+                        }
+                    }.bind(this));
                 }
             };
         });

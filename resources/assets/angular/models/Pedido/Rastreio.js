@@ -29,6 +29,16 @@
                  */
                 refreshAll: function() {
                     return Restangular.all('rastreios/refresh_all').customPUT();
+                },
+
+                /**
+                 * Força a geração ou regeração da imagem do rastreio
+                 *
+                 * @param  {int} rastreio_id
+                 * @return {void}
+                 */
+                historico: function(rastreio_id) {
+                    return Restangular.one('rastreios/historico/' + rastreio_id).customPUT();
                 }
             });
 

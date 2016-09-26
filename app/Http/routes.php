@@ -52,6 +52,7 @@ Route::group(['prefix' => '/api'], function() {
             Route::put('rastreios/edit/{id}',           'Pedido\RastreioController@edit');
             Route::get('rastreios/important',           'Pedido\RastreioController@important');
             Route::get('rastreios/historico/{id}',      'Pedido\RastreioController@imagemHistorico');
+            Route::put('rastreios/historico/{id}',      'Pedido\RastreioController@forceScreenshot');
             Route::resource('rastreios',                'Pedido\RastreioController', ['except' => ['create', 'edit']]);
 
             /**

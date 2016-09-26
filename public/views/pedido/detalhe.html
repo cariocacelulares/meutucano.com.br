@@ -204,6 +204,11 @@
                                                 <i class="fa-warning"></i>&nbsp; PI
                                             </a>
                                         </li>
+                                        <li>
+                                            <a ng-click="PedidoDetalhe.rastreioHelper.imagem(rastreio.id, true)">
+                                                <i class="fa-picture-o"></i>&nbsp; {{ (rastreio.imagem_historico) ? 'Regerar'  : 'Gerar'}} imagem
+                                            </a>
+                                        </li>
                                     </dropdown>
                                 </div>
                                 <p class="clear">

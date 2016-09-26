@@ -184,7 +184,7 @@ class RastreioController extends Controller
 
     /**
      * Tira uma foto da tela do rastreio nos correios
-     * @param  Object  $rastreio
+     * @param  Rastreio|int  $rastreio
      * @return boolean
      */
     public function screenshot($rastreio)
@@ -200,8 +200,26 @@ class RastreioController extends Controller
 
             $rastreio->imagem_historico = $rastreio->rastreio . '.jpg';
             \Log::info('Screenshot salva com sucesso: ' . $rastreio->imagem_historico);
+            return $rastreio;
         } catch (\Exception $e) {
             \Log::error(logMessage($e, 'Não foi possível salvar a imagem do rastreio'));
+            return false;
+        }
+    }
+
+    /**
+     * Gera ou regera uma imagem do rastreio e salva
+     *
+     * @param  int $rastreio_id
+     * @return void
+     */
+    public function forceScreenshot($rastreio_id)
+    {
+        if ($rastreio = Rastreio::find($rastreio_id)) {
+            $rastreio = $this->screenshot($rastreio);
+            $rastreio->save();
+        } else {
+            \Log::error('Não foi possível gerar um screenshot: rastreio inválido');
         }
     }
 
