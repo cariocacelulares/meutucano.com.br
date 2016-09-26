@@ -66,8 +66,8 @@
 
 // Texto e fonte
 .font-alt { font-family: $font-alt }
-.bg-white { background-color: $color-white }
-.bg-gray { background: $color-info }
+.bg-white { background-color: $color-white !important }
+.bg-gray { background: $color-info !important }
 .text-gray { color: #ccc }
 .batida { background: $color-info url('../../assets/img/meta.png') no-repeat right bottom !important }
 .underline { text-decoration: underline }

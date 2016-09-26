@@ -1,5 +1,30 @@
 <div id="page-header" class="row">
     <page-title icon="fa-barcode" title="Faturamento" description="Todos pedidos prontos para serem faturados."></page-title>
+    <div class="col-md-6 button-bar">
+        <form class="form-default form-clean" ng-submit="FaturamentoList.rastreioHelper.generateCode()">
+            <div class="col-md-4 col-md-offset-2 form-group">
+                <div class="input-group">
+                    <select ng-model="FaturamentoList.rastreioHelper.codigo.servico" class="bg-white">
+                        <option value="0">PAC</option>
+                        <option value="1">SEDEX</option>
+                    </select>
+                    <div class="input-group-btn">
+                        <button class="btn btn-primary" type="submit">Gerar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 form-group p-r-0">
+                <div class="input-group">
+                    <input type="text" ng-model="FaturamentoList.rastreioHelper.codigo.rastreio" class="bg-white" readonly>
+                    <div class="input-group-btn">
+                        <button clipboard text="FaturamentoList.rastreioHelper.codigo.rastreio" on-copied="FaturamentoList.rastreioHelper.codeCopied()" class="btn-success" type="button">
+                            <i class="fa fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 <table table-list="FaturamentoList">
     <thead>

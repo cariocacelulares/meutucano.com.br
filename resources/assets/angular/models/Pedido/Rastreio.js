@@ -38,7 +38,17 @@
                  * @return {void}
                  */
                 historico: function(rastreio_id) {
-                    return Restangular.one('rastreios/historico/' + rastreio_id).customPUT();
+                    return Restangular.one('rastreios/historico/', rastreio_id).customPUT();
+                },
+
+                /**
+                 * Gera um código de rastreio
+                 *
+                 * @param  {int} servico pac|sedex
+                 * @return {void}
+                 */
+                codigo: function(servico) {
+                    return Restangular.one('codigos/gerar', servico).customGET();
                 }
             });
 

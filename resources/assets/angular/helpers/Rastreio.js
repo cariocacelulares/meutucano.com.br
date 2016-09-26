@@ -3,8 +3,13 @@
 
     angular
         .module('MeuTucano')
-        .service('RastreioHelper', function(ngDialog, Rastreio, Devolucao, Pi, Logistica, envService, $window, $httpParamSerializer) {
+        .service('RastreioHelper', function($window, $httpParamSerializer, envService, ngDialog, toaster, Rastreio, Devolucao, Pi, Logistica) {
             var vm;
+
+            var codigo = {
+                servico: null,
+                rastreio: null
+            };
 
             return {
                 /**
@@ -157,6 +162,42 @@
                             this.vm.load();
                         }
                     }.bind(this));
+                },
+
+                /**
+                 * Gera um código de rsastreio
+                 *
+                 * @param  {int} servico pac|sedex
+                 * @return {void}
+                 */
+                generateCode: function(servico) {
+                    if (typeof servico == 'undefined') {
+                        servico = this.codigo.servico;
+                    }
+
+                    this.codigo.rastreio = 'Gerando...';
+
+                    Rastreio.codigo(servico).then(function(response) {
+                        this.codigo.rastreio = response.codigo;
+
+                        if (response.hasOwnProperty('error')) {
+                            this.codigo.rastreio = 'Códigos esgotados!';
+                            toaster.pop('error', 'Erro', response.error);
+                        }
+
+                        if (response.hasOwnProperty('msg')) {
+                            toaster.pop('warning', 'Atenção', response.msg);
+                        }
+                    }.bind(this));
+                },
+
+                /**
+                 * Apenas notifica que o clipboard foi copiado
+                 *
+                 * @return {void}
+                 */
+                codeCopied: function() {
+                    toaster.pop('success', 'Sucesso!', 'O código foi copiado para sua área de transferência.');
                 }
             };
         });

@@ -28,9 +28,11 @@
 }
 
 .form-default {
-    padding: 20px;
-    border: 1px solid $color-master-light;
-    background: $color-white;
+    &:not(.form-clean) {
+        padding: 20px;
+        border: 1px solid $color-master-light;
+        background: $color-white;
+    }
 
     &:not(.no-space) {
         .row {
