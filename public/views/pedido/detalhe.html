@@ -115,25 +115,6 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="panel-title"><i class="fa-barcode"></i>&nbsp; Nota fiscal</div>
-                        <div class="panel-controls" ng-if="PedidoDetalhe.pedido.notas.length">
-                            <dropdown>
-                                <li>
-                                    <a ng-click="PedidoDetalhe.notaHelper.printXML(PedidoDetalhe.pedido.notas[PedidoDetalhe.pedido.notas.length - 1].id)">
-                                        <i class="fa-file-code-o"></i>&nbsp; XML
-                                    </a>
-                                </li>
-                                <li>
-                                    <a ng-click="PedidoDetalhe.notaHelper.printDanfe(PedidoDetalhe.pedido.notas[PedidoDetalhe.pedido.notas.length - 1].id)">
-                                        <i class="fa-print"></i>&nbsp; DANFE
-                                    </a>
-                                </li>
-                                <li ng-if="PedidoDetalhe.pedido.notas[0].devolucao">
-                                    <a ng-click="PedidoDetalhe.notaHelper.printXML(PedidoDetalhe.pedido.notas[0].devolucao.id, true)">
-                                        <i class="fa-file-code-o"></i>&nbsp; XML Devolução
-                                    </a>
-                                </li>
-                            </dropdown>
-                        </div>
                     </div>
                     <div class="panel-body">
                         <div class="col-md-12 no-results" ng-if="!PedidoDetalhe.pedido.notas.length">
@@ -142,8 +123,26 @@
                         <div class="col-md-12"  ng-if="PedidoDetalhe.pedido.notas.length" ng-repeat="nota in PedidoDetalhe.pedido.notas">
                             <hr ng-if="!$first" />
                             <div class="row">
-                                <p class="pull-left">Emissão</p>
-                                <p class="pull-right bold">{{ nota.data }}</p>
+                                <p class="pull-left bold">{{ nota.data }}</p>
+                                <div class="pull-right">
+                                    <dropdown size="xs">
+                                        <li>
+                                            <a ng-click="PedidoDetalhe.notaHelper.printXML(nota.id)">
+                                                <i class="fa-file-code-o"></i>&nbsp; XML
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a ng-click="PedidoDetalhe.notaHelper.printDanfe(nota.id)">
+                                                <i class="fa-print"></i>&nbsp; DANFE
+                                            </a>
+                                        </li>
+                                        <li ng-if="nota.devolucao">
+                                            <a ng-click="PedidoDetalhe.notaHelper.printXML(nota.devolucao.id, true)">
+                                                <i class="fa-file-code-o"></i>&nbsp; XML Devolução
+                                            </a>
+                                        </li>
+                                    </dropdown>
+                                </div>
                             </div>
                             <div class="row">
                                 <p class="pull-left">Número / Série</p>
