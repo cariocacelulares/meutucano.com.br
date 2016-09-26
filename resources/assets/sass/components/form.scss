@@ -28,10 +28,14 @@
 }
 
 .form-default {
-    &:not(.form-clean) {
-        padding: 20px;
-        border: 1px solid $color-master-light;
-        background: $color-white;
+    padding: 20px;
+    border: 1px solid $color-master-light;
+    background: $color-white;
+
+    &.form-clean {
+        padding: 0;
+        border: none;
+        background: none transparent;
     }
 
     &:not(.no-space) {

@@ -172,6 +172,20 @@
                 })
 
                 /**
+                 * Senhas
+                 */
+                .state('app.interno.senhas', {
+                    url: '/interno',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.interno.senhas.minhas', {
+                    url: '/minhas',
+                    templateUrl: 'views/usuario/senha/minhas.html',
+                    controller: 'MinhaSenhaController as MinhaSenha'
+                })
+
+                /**
                  * Marketing
                  */
                 .state('app.marketing', {
@@ -255,20 +269,6 @@
                     url: '/{id}',
                     templateUrl: 'views/produto/marca/form.html',
                     controller: 'MarcaFormController as MarcaForm'
-                })
-
-                /**
-                 * Interno
-                 */
-                .state('app.interno.senhas', {
-                    url: '/senhas',
-                    templateUrl: 'views/layouts/default.html'
-                })
-
-                .state('app.interno.senhas.minhas', {
-                    url: '/minhas',
-                    templateUrl: 'views/interno/senhas/minhas.html',
-                    controller: 'MinhaSenhaController as MinhaSenha'
                 })
             ;
         });

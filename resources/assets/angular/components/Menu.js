@@ -158,6 +158,11 @@
                                 icon: 'fa-users',
                                 sref: $state.href('app.interno.usuarios.index'),
                                 roles: ['admin']
+                            },
+                            {
+                                title: 'Minhas senhas',
+                                icon: 'fa-key',
+                                sref: $state.href('app.interno.senhas.minhas')
                             }
                         ]
                     },

@@ -20,6 +20,8 @@ Route::group(['prefix' => '/api'], function() {
     Route::group(['middleware' => 'jwt.auth'], function() {
         Route::controller('metas', 'Meta\MetaController');
 
+        Route::post('check-password/{user_id}', 'Usuario\UsuarioController@checkPassword');
+
         Route::post('upload', [
             'middleware' => ['role:admin|gestor|atendimento|faturamento'],
             'uses' => 'Partials\UploadController@upload'
