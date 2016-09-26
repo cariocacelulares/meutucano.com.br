@@ -145,12 +145,10 @@ class UploadController extends Controller
             $dataNota = $datetimeNota->format('Y-m-d');
 
             if (in_array($tipoOperacao, ['devolucao', 'estorno'])) {
-                $this->importDevolucao($chave, $usuario_id, $notaArquivo, $tipoOperacao, $dataNota);
+                return $this->importDevolucao($chave, $usuario_id, $notaArquivo, $tipoOperacao, $dataNota);
             } else {
-                $this->importVenda($chave, $pedido, $usuario_id, $dataNota, $notaArquivo, $produtos, $datetimeNota);
+                return $this->importVenda($chave, $pedido, $usuario_id, $dataNota, $notaArquivo, $produtos, $datetimeNota);
             }
-
-            return true;
         } catch (\Exception $e) {
             // Fecha a trasação e cancela as alterações
             DB::rollBack();
@@ -306,7 +304,9 @@ class UploadController extends Controller
         $notaRef = null;
         if ($ref = $this->nfe->ide->NFref->refNFe) {
             $notaRef = Nota::withTrashed()->where('chave', '=', $ref)->first();
-        } else {
+        }
+
+        if (!$notaRef) {
             throw new \Exception('Não foi possível encontrar a nota de referência para a devolução: ' . $chave);
         }
 
