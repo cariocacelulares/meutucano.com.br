@@ -13,13 +13,21 @@
                 /**
                  * Gera um novo SKU para o produto
                  *
-                 * @param  {Object} params
+                 * @param  {int} sku
                  * @return {Object}
                  */
-                generateSku: function(params) {
-                    params = this.parseParams(params);
+                generateSku: function(sku) {
+                    return Restangular.one(rest.baseUrl + '/generate-sku').customGET(sku || null);
+                },
 
-                    return Restangular.one(rest.baseUrl + '/generatesku').customGET(params.sku || null);
+                /**
+                 * Checa se o sku existe
+                 *
+                 * @param  {int} sku
+                 * @return {Object}
+                 */
+                checkSku: function(sku) {
+                    return Restangular.one(rest.baseUrl + '/check-sku').customGET(sku);
                 }
             });
 
