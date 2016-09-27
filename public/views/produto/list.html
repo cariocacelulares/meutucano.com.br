@@ -7,8 +7,7 @@
 <table table-list="ProdutoList">
     <thead>
         <tr>
-            <th width="100" class="text-center">SKU</th>
-            <th width="100" class="text-center">Ref</th>
+            <th width="150" class="text-center">SKU</th>
             <th>Título</th>
             <th width="160" class="text-center">Estoque</th>
             <th width="75"></th>
@@ -18,7 +17,6 @@
     <tbody ng-if="ProdutoList.tableData.data && !ProdutoList.loading">
         <tr ng-repeat="produto in ProdutoList.tableData.data">
             <td class="text-center">{{ produto.sku }}</td>
-            <td class="text-center">{{ produto.referencia || '-' }}</td>
             <td>
                 <strong>{{ produto.titulo }}</strong>
                 <br/>

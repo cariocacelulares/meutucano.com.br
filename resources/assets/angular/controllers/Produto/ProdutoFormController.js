@@ -187,7 +187,7 @@
          */
         vm.save = function() {
             function save() {
-                Produto.save(vm.produto, vm.produto.sku || null).then(function() {
+                Produto.save(vm.produto, ((vm.sku.gerado) ? vm.produto.sku : vm.sku.original)).then(function() {
                     toaster.pop('success', 'Sucesso!', 'Produto salvo com sucesso!');
                     $state.go('app.produtos.index');
                 });
