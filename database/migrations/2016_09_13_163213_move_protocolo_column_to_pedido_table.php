@@ -17,42 +17,32 @@ class MoveProtocoloColumnToPedidoTable extends Migration
      */
     public function up()
     {
-        Schema::table('pedidos', function (Blueprint $table) {
-            $table->integer('protocolo')->nullable()->after('status');
-        });
-
-        $pis = Pi::all();
+        $pis = Pi::where('protocolo', '!=', 0)->whereNotNull('protocolo')->get();
         foreach ($pis as $pi) {
-            if ($pi->protocolo) {
-                if ($rastreio = Rastreio::find($pi->rastreio_id)) {
-                    if ($pedido = Pedido::find($rastreio->pedido_id)) {
-                        $pedido->protocolo = $pi->protocolo;
-                        $pedido->save();
-                    }
+            if ($rastreio = Rastreio::find($pi->rastreio_id)) {
+                if ($pedido = Pedido::find($rastreio->pedido_id)) {
+                    $pedido->protocolo = $pi->protocolo;
+                    $pedido = $pedido->save();
                 }
             }
         }
 
-        $devolucoes = Devolucao::all();
+        $devolucoes = Devolucao::where('protocolo', '!=', 0)->whereNotNull('protocolo')->get();
         foreach ($devolucoes as $devolucao) {
-            if ($devolucao->protocolo) {
-                if ($rastreio = Rastreio::find($devolucao->rastreio_id)) {
-                    if ($pedido = Pedido::find($rastreio->pedido_id)) {
-                        $pedido->protocolo = $devolucao->protocolo;
-                        $pedido->save();
-                    }
+            if ($rastreio = Rastreio::find($devolucao->rastreio_id)) {
+                if ($pedido = Pedido::find($rastreio->pedido_id)) {
+                    $pedido->protocolo = $devolucao->protocolo;
+                    $pedido = $pedido->save();
                 }
             }
         }
 
-        $logisticas = Logistica::all();
+        $logisticas = Logistica::where('protocolo', '!=', 0)->whereNotNull('protocolo')->get();
         foreach ($logisticas as $logistica) {
-            if ($logistica->protocolo) {
-                if ($rastreio = Rastreio::find($logistica->rastreio_id)) {
-                    if ($pedido = Pedido::find($rastreio->pedido_id)) {
-                        $pedido->protocolo = $logistica->protocolo;
-                        $pedido->save();
-                    }
+            if ($rastreio = Rastreio::find($logistica->rastreio_id)) {
+                if ($pedido = Pedido::find($rastreio->pedido_id)) {
+                    $pedido->protocolo = $logistica->protocolo;
+                    $pedido = $pedido->save();
                 }
             }
         }
@@ -65,8 +55,5 @@ class MoveProtocoloColumnToPedidoTable extends Migration
      */
     public function down()
     {
-        Schema::table('pedidos', function (Blueprint $table) {
-            $table->dropColumn('protocolo');
-        });
     }
 }

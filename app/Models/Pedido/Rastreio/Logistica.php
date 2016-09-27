@@ -45,7 +45,7 @@ class Logistica extends \Eloquent
      * @var array
      */
     protected $appends = [
-        'protocolo'
+        /*'protocolo'*/
     ];
 
     /**
@@ -108,7 +108,7 @@ class Logistica extends \Eloquent
      *
      * @return string
      */
-    public function getProtocoloAttribute()
+    /*public function getProtocoloAttribute()
     {
         if ((int)$this->acao === 1) {
             $pedido = Pedido::find($this->pedido_id);
@@ -116,5 +116,5 @@ class Logistica extends \Eloquent
         } else {
             return null;
         }
-    }
+    }*/
 }
