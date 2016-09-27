@@ -35,7 +35,7 @@ class MagentoController extends Controller implements Integracao
      */
     public function __construct($useSoap = true)
     {
-        if ($useSoap) {
+        if ($useSoap && \Config::get('tucano.magento.enabled')) {
             $this->api = new \SoapClient(
                 \Config::get('tucano.magento.api.host'),
                 [
@@ -50,6 +50,8 @@ class MagentoController extends Controller implements Integracao
                 \Config::get('tucano.magento.api.key')
             );
             Log::debug('Requisição soap no magento realizada');
+        } else {
+            Log::debug('Requisição soap no magento foi bloqueada, a integração com o magento está desativada!');
         }
     }
 
@@ -127,18 +129,24 @@ class MagentoController extends Controller implements Integracao
 
         try {
             Log::debug('Requisição tucanomg para: ' . $url . ', method: ' . $method, $params);
-            $client = new \GuzzleHttp\Client([
-                'base_uri' => \Config::get('tucano.services.tucanomg.host'),
-                'headers' => [
-                    "Accept"         => "application/json",
-                    "Content-type"   => "application/json",
-                    "X-Access-Token" => \Config::get('tucano.services.tucanomg.token')
-                ]
-            ]);
 
-            $r = $client->request($method, $url, $params);
+            if (!\Config::get('tucano.services.tucanomg.enabled')) {
+                Log::debug('Requisição bloqueada, a integração com o tucanomg está desativada!');
+                return null;
+            } else {
+                $client = new \GuzzleHttp\Client([
+                    'base_uri' => \Config::get('tucano.services.tucanomg.host'),
+                    'headers' => [
+                        "Accept"         => "application/json",
+                        "Content-type"   => "application/json",
+                        "X-Access-Token" => \Config::get('tucano.services.tucanomg.token')
+                    ]
+                ]);
 
-            return json_decode($r->getBody(), true);
+                $r = $client->request($method, $url, $params);
+
+                return json_decode($r->getBody(), true);
+            }
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', com o method: ' . $method));
             return false;
@@ -320,8 +328,7 @@ class MagentoController extends Controller implements Integracao
                 throw new \Exception('Não foi possível cancelar o pedido: sem codigo_api válido', 1);
             }
 
-            # TODO: remover o comentário
-            if (true/*$cancel = $this->api->salesOrderCancel($this->session, $order->codigo_api)*/) {
+            if ($cancel = $this->api->salesOrderCancel($this->session, $order->codigo_api)) {
                 Log::notice("Pedido {$order->id} cancelado no magento.");
             } else {
                 Log::warning("Não foi possível cancelar o pedido {$order->id} no Magento");

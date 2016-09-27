@@ -158,19 +158,20 @@ return [
             'token'   => env('SKYHUB_TOKEN', 'ciBmtUvQviXkcey7tkPb'),
             'url'     => 'http://in.skyhub.com.br',
         ],
-        'oldOrder' => 4
+        'old_order' => 4
     ],
 
     /**
      * Magento
      */
     'magento' => [
+        'enabled' => env('MAGENTO_ENABLED', true),
         'api' => [
             'host' => env('MAGENTO_API_HOST', 'http://www.cariocacelulares.com.br/api/v2_soap/?wsdl'),
             'user' => env('MAGENTO_API_USER', 'carioca'),
             'key'  => env('MAGENTO_API_KEY', '#@carioca2016')
         ],
-        'oldOrder' => 7
+        'old_order' => 7
     ],
 
     /**
@@ -178,6 +179,7 @@ return [
      */
     'services' => [
         'tucanomg' => [
+            'enabled' => env('TUCANOMG_ENABLED', true),
             'host'  => 'http://servicos.cariocacelulares.com.br/tucanomg/public/',
             'token' => '#@carioca2016servicetoken'
         ]

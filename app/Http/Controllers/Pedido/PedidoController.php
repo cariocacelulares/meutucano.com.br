@@ -198,9 +198,9 @@ class PedidoController extends Controller
                 $diasUteis = diasUteisPeriodo($dataPedido, date('d/m/Y'), true);
 
                 if (
-                    (strtolower($pedido->marketplace) == 'site' && $diasUteis > \Config::get('tucano.magento.oldOrder'))
+                    (strtolower($pedido->marketplace) == 'site' && $diasUteis > \Config::get('tucano.magento.old_order'))
                     ||
-                    (strtolower($pedido->marketplace) != 'site' && $diasUteis > \Config::get('tucano.skyhub.oldOrder'))
+                    (strtolower($pedido->marketplace) != 'site' && $diasUteis > \Config::get('tucano.skyhub.old_order'))
                     ) {
                     $pedido->status = 5;
                     $pedido->save();
