@@ -158,7 +158,7 @@ class MagentoController extends Controller implements Integracao
         try {
             $taxvat = preg_replace('/\D/', '', $order['customer']['taxvat']);
 
-            $cliente        = Cliente::firstOrNew(['taxvat' => $taxvat]);
+            $cliente = Cliente::firstOrNew(['taxvat' => $taxvat]);
             $cliente->tipo  = (strlen($taxvat) > 11) ? 1 : 0;
             $cliente->nome  = $order['customer']['firstname'] . ' ' . $order['customer']['lastname'];
             $cliente->fone  = (isset($order['shipping_address']['fax'])) ? $order['shipping_address']['fax'] : (isset($order['shipping_address']['telephone']) ? $order['shipping_address']['telephone'] : null);
@@ -446,5 +446,33 @@ class MagentoController extends Controller implements Integracao
         $estimate = SomaDiasUteis(Carbon::createFromFormat('d/m/Y H:i', $orderDate)->format('d/m/Y'), $estimate);
 
         return Carbon::createFromFormat('d/m/Y', $estimate)->format('Y-m-d');
+    }
+
+    /**
+     * Sincroniza os produtos do magento para o tucano
+     *
+     * @return void
+     */
+    public function syncProducts()
+    {
+        try {
+            $result = $this->api->catalogProductList($this->session);
+
+            $count = 0;
+            foreach ($result as $product) {
+                $produto = Produto::firstOrNew(['sku' => $product->sku]);
+                $produto->sku = $product->sku;
+                $produto->titulo = $product->name;
+
+                if ($produto->save()) {
+                    $count++;
+                }
+            }
+
+            Log::info($count . ' de ' . count($result) . ' produtos foram sincronizados do magento para o tucano!');
+        } catch (\Exception $e) {
+            Log::warning(logMessage($e, 'Erro ao sincronizar os produtos do magento para o tucano'));
+            reportError('Erro ao sincronizar os produtos do magento para o tucano' . $e->getMessage() . ' - ' . $e->getLine());
+        }
     }
 }
