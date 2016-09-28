@@ -2,7 +2,6 @@
 
 use Illuminate\Console\Command;
 use App\Http\Controllers\Integracao\SkyhubController;
-use App\Models\Pedido\Pedido;
 
 class SkyhubPedido extends Command
 {
@@ -11,7 +10,7 @@ class SkyhubPedido extends Command
      *
      * @var string
      */
-    protected $signature = 'skyhub:pedido';// {pedido}';
+    protected $signature = 'skyhub:pedido {pedido}';
 
     /**
      * The console command description.
@@ -27,17 +26,11 @@ class SkyhubPedido extends Command
      */
     public function handle()
     {
-        $pedidos = Pedido::whereNull('status')->whereNotNull('codigo_api')->where('marketplace', '!=', 'Site')->get(['id', 'codigo_api']);
-
-        foreach ($pedidos as $pedido) {
-            with(new SkyhubController())->syncOrder($pedido->codigo_api);
-        }
-
-        /*if ($this->argument('pedido')) {
+        if ($this->argument('pedido')) {
             $return = with(new SkyhubController())->syncOrder($this->argument('pedido'));
             $this->comment($return);
         } else {
             throw new \Exception('Um pedido válido precisa ser passado como parâmetro', 1);
-        }*/
+        }
     }
 }
