@@ -101,10 +101,6 @@ class ClienteController extends Controller
         try {
             $email = \Request::get('email');
 
-            if (!$email && $email !== 0) {
-                throw new \Exception('"email" parameter not found!', 1);
-            }
-
             $data = $m::find($cliente_id);
             $data->email = $email;
             $data->save();

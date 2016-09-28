@@ -37,11 +37,13 @@ class SearchController extends Controller
             ])
             ->leftJoin('pedido_notas', 'pedidos.id', '=', 'pedido_notas.pedido_id')
             ->leftJoin('pedido_rastreios', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
+            ->leftJoin('pedido_rastreio_pis', 'pedido_rastreios.id', '=', 'pedido_rastreio_pis.rastreio_id')
             ->orWhere('pedidos.id', '=', numbers($term))
             ->orWhere('pedidos.codigo_marketplace', 'LIKE', '%' . $term . '%')
             ->orWhere('pedidos.codigo_api', 'LIKE', '%' . $term . '%')
             ->orWhere('pedido_rastreios.rastreio', 'LIKE', '%' . $term . '%')
             ->orWhere('pedido_notas.chave', 'LIKE', '%' . $term . '%')
+            ->orWhere('pedido_rastreio_pis.codigo_pi', 'LIKE', '%' . $term . '%')
             ->groupBy('pedidos.id')
             ->orderBy('pedidos.created_at', 'DESC')
             ->get([

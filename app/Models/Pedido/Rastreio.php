@@ -90,7 +90,7 @@ class Rastreio extends \Eloquent
      */
     public function pi()
     {
-        return $this->hasOne(Pi::class, 'rastreio_id');
+        return $this->hasOne(Pi::class);
     }
 
     /**
@@ -100,7 +100,7 @@ class Rastreio extends \Eloquent
      */
     public function devolucao()
     {
-        return $this->hasOne(Devolucao::class, 'rastreio_id');
+        return $this->hasOne(Devolucao::class);
     }
 
     /**
@@ -110,7 +110,7 @@ class Rastreio extends \Eloquent
      */
     public function logistica()
     {
-        return $this->hasOne(Logistica::class, 'rastreio_id');
+        return $this->hasOne(Logistica::class);
     }
 
     /**

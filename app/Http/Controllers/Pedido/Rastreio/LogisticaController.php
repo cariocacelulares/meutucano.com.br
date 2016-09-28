@@ -52,16 +52,9 @@ class LogisticaController extends Controller
             $data = $m::create(Input::except(['protocolo']));
 
             if (Input::has('acao')) {
-                if (!$data->rastreio && Input::get('rastreio_id')) {
-                    if ($rastreio = Rastreio::find(Input::get('rastreio_id'))) {
-                        $data->rastreio()->associate($rastreio);
-                    }
-                }
-
-                if ($data->rastreio) {
-                    $data->rastreio->status = 5;
-                    $data->rastreio->save();
-                }
+                $rastreio = Rastreio::find(Input::get('rastreio_id'));
+                $rastreio->status = 5;
+                $rastreio->save();
 
                 updateProtocolAndStatus($data, Input::get('protocolo'));
             }
