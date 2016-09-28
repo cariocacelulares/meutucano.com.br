@@ -51,7 +51,7 @@
                         title: 'Pedidos',
                         sref: $state.href('app.pedidos.index'),
                         icon: 'fa-cubes',
-                        roles: ['admin', 'gestor', 'atendimento']
+                        roles: ['admin', 'gestor', 'atendimento', 'faturamento']
                     },
                     {
                         title: 'Faturamento',

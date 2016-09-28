@@ -106,7 +106,7 @@
                     url: '/pedidos',
                     templateUrl: 'views/layouts/default.html',
                     data: {
-                        roles: ['admin', 'gestor', 'atendimento']
+                        roles: ['admin', 'gestor', 'atendimento', 'faturamento']
                     }
                 })
 
