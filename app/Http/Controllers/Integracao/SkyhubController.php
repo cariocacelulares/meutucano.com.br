@@ -422,7 +422,7 @@ class SkyhubController extends Controller implements Integracao
                     ]
                 ],
                 "invoice" => [
-                    "key" => $order->nota->chave
+                    "key" => $order->notas()->orderBy('created_at', 'DESC')->first()->chave
                 ]
             ];
 
