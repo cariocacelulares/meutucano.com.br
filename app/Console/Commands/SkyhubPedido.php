@@ -2,6 +2,7 @@
 
 use Illuminate\Console\Command;
 use App\Http\Controllers\Integracao\SkyhubController;
+use App\Models\Pedido\Pedido;
 
 class SkyhubPedido extends Command
 {
@@ -26,7 +27,7 @@ class SkyhubPedido extends Command
      */
     public function handle()
     {
-        $pedidos = App\Models\Pedido\Pedido::whereNull('status')->whereNotNull('codigo_api')->where('marketplace', '!=', 'Site')->get(['id', 'codigo_api']);
+        $pedidos = Pedido::whereNull('status')->whereNotNull('codigo_api')->where('marketplace', '!=', 'Site')->get(['id', 'codigo_api']);
 
         foreach ($pedidos as $pedido) {
             with(new SkyhubController())->syncOrder('codigo_api');
