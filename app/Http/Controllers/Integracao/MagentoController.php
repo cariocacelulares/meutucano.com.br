@@ -286,13 +286,17 @@ class MagentoController extends Controller implements Integracao
             $mg_order = $this->api->salesOrderInfo($this->session, $order['order_id']);
             $mg_order = json_decode(json_encode($mg_order), true);
 
-            $mg_customer = $this->api->customerCustomerInfo($this->session, $mg_order['customer_id']);
-            $mg_customer = json_decode(json_encode($mg_customer), true);
+            if (!isset($mg_order['customer_id'])) {
+                throw new \Exception("Pedido {$order['order_id']} não importado! O pedido não possui código do cliente.", 1);
+            } else {
+                $mg_customer = $this->api->customerCustomerInfo($this->session, $mg_order['customer_id']);
+                $mg_customer = json_decode(json_encode($mg_customer), true);
 
-            if ($mg_order['customer'] = $mg_customer) {
-                if ($this->importPedido($mg_order)) {
-                    $order = $this->request(sprintf('orders/%s', $order['order_id']), [], 'DELETE');
-                    Log::notice('Pedido ' . $mg_order['increment_id'] . ' removido da fila de espera no tucanomg.');
+                if ($mg_order['customer'] = $mg_customer) {
+                    if ($this->importPedido($mg_order)) {
+                        $order = $this->request(sprintf('orders/%s', $order['order_id']), [], 'DELETE');
+                        Log::notice('Pedido ' . $mg_order['increment_id'] . ' removido da fila de espera no tucanomg.');
+                    }
                 }
             }
         }
