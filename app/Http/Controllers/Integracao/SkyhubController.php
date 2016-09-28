@@ -383,7 +383,7 @@ class SkyhubController extends Controller implements Integracao
     {
         try {
             if (!$order->codigo_api) {
-                Log::warning(logMessage("Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub, pois o pedido não possui codigo_api válido."));
+                Log::warning("Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub, pois o pedido não possui codigo_api válido.");
             } else {
                 $this->request(
                     sprintf('/orders/%s/cancel', $order->codigo_api),
