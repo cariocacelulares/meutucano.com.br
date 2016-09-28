@@ -285,7 +285,7 @@ class SkyhubController extends Controller implements Integracao
             $pedido->marketplace         = $marketplace;
             $pedido->operacao            = $operacao;
             $pedido->total               = $order['total_ordered'];
-            $pedido->estimated_delivery  = ($order['estimated_delivery']) ? substr($order['estimated_delivery'], 0, 10) : calcEstimatedDelivery($pedido->frete_metodo, $order['shipping_address']['postcode']);
+            $pedido->estimated_delivery  = ($order['estimated_delivery']) ? substr($order['estimated_delivery'], 0, 10) : $this->calcEstimatedDelivery($pedido->frete_metodo, $order['shipping_address']['postcode']);
             $pedido->status              = $this->parseStatus(isset($order['status']['type']) ? $order['status']['type'] : null);
             $pedido->created_at          = substr($order['placed_at'], 0, 10) . ' ' . substr($order['placed_at'], 11, 8);
             if ($pedido->save()) {
