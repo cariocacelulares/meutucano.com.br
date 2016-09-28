@@ -43,7 +43,9 @@ class SkyhubController extends Controller implements Integracao
                 return $inicioId . '-' . $fim;
             }
         } elseif ($marketplace === 'WALMART') {
-            return substr($pedidoId, 0, strpos($pedidoId, '-'));
+            if (strpos($pedidoId, '-') > 0) {
+                return substr($pedidoId, 0, strpos($pedidoId, '-'));
+            }
         }
 
         return $pedidoId;
