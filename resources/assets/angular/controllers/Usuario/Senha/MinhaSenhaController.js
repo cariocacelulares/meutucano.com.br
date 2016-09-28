@@ -28,7 +28,7 @@
                         if (response === true) {
                             vm.loading = true;
 
-                            Senha.fromUser($rootScope.currentUser.id, {
+                            Senha.fromUser({
                                 page:     vm.tableHeader.pagination.page,
                                 per_page: vm.tableHeader.pagination.per_page,
                             }).then(function(response) {

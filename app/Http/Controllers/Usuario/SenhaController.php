@@ -3,6 +3,7 @@
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
 use App\Models\Usuario\Senha;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
  * Class SenhaController
@@ -22,9 +23,11 @@ class SenhaController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function userPassword($id)
+    public function userPassword()
     {
         $m = self::MODEL;
+
+        $id = JWTAuth::parseToken()->authenticate()->id;
 
         $list = $m::where('usuario_id', $id);
         $list = $this->handleRequest($list);

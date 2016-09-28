@@ -13,13 +13,13 @@
 
                 /**
                  * Retorna senhas do usuário
-                 * 
-                 * @param  {int}    id     
-                 * @param  {Object} params 
-                 * @return {Object}        
+                 *
+                 * @param  {int}    id
+                 * @param  {Object} params
+                 * @return {Object}
                  */
-                fromUser: function(id, params) {
-                    return Restangular.one('senhas/usuario', id).customGET("", params || {});
+                fromUser: function(params) {
+                    return Restangular.one('senhas/minhas').customGET("", params || {});
                 }
             });
 

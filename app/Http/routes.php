@@ -120,7 +120,7 @@ Route::group(['prefix' => '/api'], function() {
             /**
              * Senhas
              */
-            Route::get('senhas/usuario/{id}', 'Usuario\SenhaController@userPassword');
+            Route::get('senhas/minhas', 'Usuario\SenhaController@userPassword');
             Route::resource('senhas', 'Usuario\SenhaController', ['except' => ['create', 'edit']]);
 
             /**
