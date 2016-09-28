@@ -424,6 +424,10 @@ class MagentoController extends Controller implements Integracao
                     ]
                 );
 
+                if (is_soap_fault($stock)) {
+                    throw new \SoapFault("Produto inexistente no magento", 1);
+                }
+
                 if ($stock) {
                     Log::notice('Estoque do produto ' . $product->sku . ' alterado para ' . $product->estoque . ' / em estoque: ' . (($product->estoque > 0) ? 'sim' : 'não') . ' no magento.');
 
