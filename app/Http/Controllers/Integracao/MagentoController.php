@@ -37,20 +37,29 @@ class MagentoController extends Controller implements Integracao
     {
         if ($useSoap) {
             if (\Config::get('tucano.magento.enabled')) {
-                $this->api = new \SoapClient(
-                    \Config::get('tucano.magento.api.host'),
-                    [
-                        'trace' => true,
-                        'exceptions' => false,
-                        'connection_timeout' => 5,
-                        'cache_wsdl' => WSDL_CACHE_NONE
-                    ]
-                );
-                $this->session = $this->api->login(
-                    \Config::get('tucano.magento.api.user'),
-                    \Config::get('tucano.magento.api.key')
-                );
-                Log::debug('Requisição soap no magento realizada');
+                try {
+                    $this->api = new \SoapClient(
+                        \Config::get('tucano.magento.api.host'),
+                        [
+                            'trace' => true,
+                            'exceptions' => false,
+                            'connection_timeout' => 5,
+                            'cache_wsdl' => WSDL_CACHE_NONE
+                        ]
+                    );
+
+                    if (is_soap_fault($this->api)) {
+                        throw new \Exception('Falha ao tentar fazer conexão soap no magento', 1);
+                    }
+
+                    $this->session = $this->api->login(
+                        \Config::get('tucano.magento.api.user'),
+                        \Config::get('tucano.magento.api.key')
+                    );
+                    Log::debug('Requisição soap no magento realizada');
+                } catch (\Exception $e) {
+                    Log::debug('Falha ao tentar fazer conexão soap no magento: ' . $e->getMessage());
+                }
             } else {
                 Log::debug('Requisição soap no magento foi bloqueada, a integração com o magento está desativada!');
             }
@@ -429,7 +438,7 @@ class MagentoController extends Controller implements Integracao
                 );
 
                 if (is_soap_fault($stock)) {
-                    throw new \Exception("Produto inexistente no magento", 2);
+                    throw new \Exception('Produto inexistente no magento', 2);
                 }
 
                 if ($stock) {
