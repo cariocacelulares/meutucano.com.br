@@ -61,7 +61,9 @@ class UsuarioController extends Controller
             if (Input::get('novasRoles')) {
                 $data->detachRoles();
                 foreach (Input::get('novasRoles') as $role) {
-                    if ($role) $data->roles()->attach($role);
+                    if ($role) {
+                        $data->roles()->attach($role);
+                    }
                 }
             }
             $data->save();
@@ -97,7 +99,9 @@ class UsuarioController extends Controller
             if (Input::get('novasRoles')) {
                 $data->detachRoles();
                 foreach (Input::get('novasRoles') as $role) {
-                    if ($role) $data->roles()->attach($role);
+                    if ($role) {
+                        $data->roles()->attach($role);
+                    }
                 }
             }
 

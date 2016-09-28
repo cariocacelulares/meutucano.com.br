@@ -19,7 +19,11 @@
                  * @return {Object}
                  */
                 fromUser: function(id, params) {
-                    return Restangular.one('senhas', id || 0).customGET("", params || {});
+                    if (id) {
+                        return Restangular.one('senhas', id || 0).customGET("", params || {});
+                    } else {
+                        return Restangular.one('senhas/minhas').customGET("", params || {});
+                    }
                 }
             });
 

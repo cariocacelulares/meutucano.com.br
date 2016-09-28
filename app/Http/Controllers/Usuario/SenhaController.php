@@ -18,22 +18,37 @@ class SenhaController extends Controller
     protected $validationRules = [];
 
     /**
-     * Return password from user
+     * Return passwords from user
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function userPassword($id)
     {
+        return $this->listResponse($this->listPasswords($id));
+    }
+
+    /**
+     * Return passwords from current users
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function currentUserPassword()
+    {
+        $id = JWTAuth::parseToken()->authenticate()->id;
+        return $this->listResponse($this->listPasswords($id));
+    }
+
+    /**
+     * Reutn passwords form user
+     *
+     * @param  int $user_id
+     * @return Object
+     */
+    private function listPasswords($user_id)
+    {
         $m = self::MODEL;
-
-        if ($id == 0) {
-            $id = JWTAuth::parseToken()->authenticate()->id;
-        }
-
-        $list = $m::where('usuario_id', $id);
-        $list = $this->handleRequest($list);
-
-        return $this->listResponse($list);
+        $list = $m::where('usuario_id', $user_id);
+        return $this->handleRequest($list);
     }
 }
