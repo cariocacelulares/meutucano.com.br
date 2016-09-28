@@ -197,11 +197,12 @@ class PedidoController extends Controller
                 $dataPedido = Carbon::createFromFormat('d/m/Y H:i', $pedido->created_at)->format('d/m/Y');
                 $diasUteis = diasUteisPeriodo($dataPedido, date('d/m/Y'), true);
 
-                if (
+                /*if (
                     (strtolower($pedido->marketplace) == 'site' && $diasUteis > \Config::get('tucano.magento.old_order'))
                     ||
                     (strtolower($pedido->marketplace) != 'site' && $diasUteis > \Config::get('tucano.skyhub.old_order'))
-                    ) {
+                    ) {*/
+                if (strtolower($pedido->marketplace) == 'site' && $diasUteis > \Config::get('tucano.magento.old_order')) {
                     $pedido->status = 5;
                     $pedido->save();
                 }
