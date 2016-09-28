@@ -227,6 +227,8 @@ class PedidoController extends Controller
             } else {
                 (new SkyhubController())->orderInvoice($pedido);
             }
+
+            $pedido->save();
         }
     }
 }
