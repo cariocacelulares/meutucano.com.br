@@ -40,10 +40,10 @@ class MagentoController extends Controller implements Integracao
                 $this->api = new \SoapClient(
                     \Config::get('tucano.magento.api.host'),
                     [
-                        'trace'              => true,
-                        'exceptions'         => false,
+                        'trace' => true,
+                        'exceptions' => false,
                         'connection_timeout' => 5,
-                        'cache_wsdl'         => WSDL_CACHE_NONE
+                        'cache_wsdl' => WSDL_CACHE_NONE
                     ]
                 );
                 $this->session = $this->api->login(
@@ -331,13 +331,13 @@ class MagentoController extends Controller implements Integracao
     {
         try {
             if (!$order->codigo_api) {
-                throw new \Exception('Não foi possível cancelar o pedido: sem codigo_api válido', 1);
-            }
-
-            if ($cancel = $this->api->salesOrderCancel($this->session, $order->codigo_api)) {
-                Log::notice("Pedido {$order->id} cancelado no magento.");
+                Log::warning(logMessage($e, "Não foi possível cancelar o pedido {$order->id} no Magento, pois o pedido não possui codigo_api válido"));
             } else {
-                Log::warning("Não foi possível cancelar o pedido {$order->id} no Magento");
+                if ($cancel = $this->api->salesOrderCancel($this->session, $order->codigo_api)) {
+                    Log::notice("Pedido {$order->id} cancelado no magento.");
+                } else {
+                    Log::warning("Não foi possível cancelar o pedido {$order->id} no Magento");
+                }
             }
         } catch (Exception $e) {
             Log::warning(logMessage($e, "Não foi possível cancelar o pedido {$order->id} no Magento"));

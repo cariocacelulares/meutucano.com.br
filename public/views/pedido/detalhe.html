@@ -78,7 +78,7 @@
                 <div class="col-md-12">
                     <div class="row">
                         <p class="pull-left">Telefone</p>
-                        <p class="pull-right bold">{{ PedidoDetalhe.pedido.cliente.fone || 'Não informado' }}</p>
+                        <p class="pull-right bold" clipboard supported="supported" text="PedidoDetalhe.pedido.cliente.fone | digits" title="Clique para copiar apenas os números">{{ PedidoDetalhe.pedido.cliente.fone || 'Não informado' }}</p>
                     </div>
                     <div class="row">
                         <p class="pull-left">E-mail</p>
@@ -91,7 +91,7 @@
                     </div>
                     <div class="row">
                         <p class="pull-left">CPF/CNPJ</p>
-                        <p class="pull-right bold">{{ PedidoDetalhe.pedido.cliente.taxvat_readable }}</p>
+                        <p class="pull-right bold" clipboard supported="supported" text="PedidoDetalhe.pedido.cliente.taxvat" title="Clique para copiar apenas os números">{{ PedidoDetalhe.pedido.cliente.taxvat_readable }}</p>
                     </div>
                     <div class="row">
                         <p class="lh-25 text-upper">
@@ -99,7 +99,7 @@
                             {{ PedidoDetalhe.pedido.endereco.rua }} #{{ PedidoDetalhe.pedido.endereco.numero }} -
                             {{ PedidoDetalhe.pedido.endereco.bairro }} <br>
                             {{ PedidoDetalhe.pedido.endereco.cidade }}/{{ PedidoDetalhe.pedido.endereco.uf }} <br>
-                            {{ PedidoDetalhe.pedido.endereco.cep_readable }} <br>
+                            <span clipboard supported="supported" text="PedidoDetalhe.pedido.endereco.cep" title="Clique para copiar apenas os números">{{ PedidoDetalhe.pedido.endereco.cep_readable }}</span> <br>
                             {{ PedidoDetalhe.pedido.endereco.complemento || 'Sem complemento' }}
                         </p>
                     </div>
@@ -262,6 +262,12 @@
                     </td>
                     <td class="text-center">{{ produto.quantidade }}</td>
                     <td class="text-center">{{ produto.valor | currency }}</td>
+                </tr>
+                <tr ng-if="PedidoDetalhe.pedido.frete_valor != null" class="total">
+                    <td></td>
+                    <td></td>
+                    <td class="bold">Frete</td>
+                    <td>{{ PedidoDetalhe.pedido.frete_valor | currency }}</td>
                 </tr>
                 <tr ng-if="PedidoDetalhe.pedido.total" class="total">
                     <td></td>

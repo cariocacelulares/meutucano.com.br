@@ -19,7 +19,7 @@
                     </div>
                     <div class="row" ng-if="ClienteDetalhe.cliente.fone">
                         <p class="pull-left">Telefone</p>
-                        <p class="pull-right bold">{{ ClienteDetalhe.cliente.fone }}</p>
+                        <p class="pull-right bold" clipboard supported="supported" text="ClienteDetalhe.cliente.fone | digits" title="Clique para copiar apenas os números">{{ ClienteDetalhe.cliente.fone }}</p>
                     </div>
                     <div class="row">
                         <p class="pull-left">E-mail</p>
@@ -32,7 +32,7 @@
                     </div>
                     <div class="row" ng-if="ClienteDetalhe.cliente.taxvat_readable">
                         <p class="pull-left">CPF / CNPJ</p>
-                        <p class="pull-right bold">{{ ClienteDetalhe.cliente.taxvat_readable }}</p>
+                        <p class="pull-right bold" clipboard supported="supported" text="ClienteDetalhe.cliente.taxvat" title="Clique para copiar apenas os números">{{ ClienteDetalhe.cliente.taxvat_readable }}</p>
                     </div>
                     <div class="row" ng-if="ClienteDetalhe.cliente.inscricao">
                         <p class="pull-left">Inscrição</p>
@@ -62,7 +62,7 @@
                         {{ endereco.rua + ' - ' + endereco.numero }} <br/>
                         {{ endereco.bairro + ((endereco.complemento) ? ',' + endereco.complemento : '') }} <br/>
                         {{ endereco.cidade + ' / ' + endereco.uf }} <br/>
-                        {{ endereco.cep_readable }} <br/>
+                        <span clipboard supported="supported" text="endereco.cep" title="Clique para copiar apenas os números">{{ endereco.cep_readable }}</span> <br/>
                     </div>
                     <hr ng-if="!$last" />
                 </div>
