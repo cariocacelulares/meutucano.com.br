@@ -291,6 +291,9 @@ class SkyhubController extends Controller implements Integracao
             }
 
             foreach ($order['items'] as $s_produto) {
+                if (!(int) $s_produto['product_id'])
+                    continue;
+
                 $pedidoProduto = PedidoProduto::firstOrNew([
                     'pedido_id'   => $pedido->id,
                     'produto_sku' => $s_produto['product_id'],
