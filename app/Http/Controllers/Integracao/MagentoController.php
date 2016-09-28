@@ -40,10 +40,10 @@ class MagentoController extends Controller implements Integracao
                 $this->api = new \SoapClient(
                     \Config::get('tucano.magento.api.host'),
                     [
-                        'trace' => true,
-                        'exceptions' => false,
-                        'connection_timeout' => 1,
-                        'cache_wsdl' => WSDL_CACHE_NONE
+                        'trace'              => true,
+                        'exceptions'         => false,
+                        'connection_timeout' => 5,
+                        'cache_wsdl'         => WSDL_CACHE_NONE
                     ]
                 );
                 $this->session = $this->api->login(
