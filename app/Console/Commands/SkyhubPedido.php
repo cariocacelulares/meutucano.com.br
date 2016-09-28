@@ -10,7 +10,7 @@ class SkyhubPedido extends Command
      *
      * @var string
      */
-    protected $signature = 'skyhub:pedido {pedido}';
+    protected $signature = 'skyhub:pedido';// {pedido}';
 
     /**
      * The console command description.
@@ -26,11 +26,17 @@ class SkyhubPedido extends Command
      */
     public function handle()
     {
-        if ($this->argument('pedido')) {
+        $pedidos = App\Models\Pedido\Pedido::whereNull('status')->whereNotNull('codigo_api')->where('marketplace', '!=', 'Site')->get(['id', 'codigo_api']);
+
+        foreach ($pedidos as $pedido) {
+            with(new SkyhubController())->syncOrder('codigo_api');
+        }
+
+        /*if ($this->argument('pedido')) {
             $return = with(new SkyhubController())->syncOrder($this->argument('pedido'));
             $this->comment($return);
         } else {
             throw new \Exception('Um pedido válido precisa ser passado como parâmetro', 1);
-        }
+        }*/
     }
 }
