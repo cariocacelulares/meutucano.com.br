@@ -33,8 +33,6 @@ Route::group(['prefix' => '/api'], function() {
 
         Route::get('rastreios/etiqueta/{id}',  'Pedido\RastreioController@etiqueta');
 
-        Route::get('minhas-senhas', 'Usuario\SenhaController@currentUserPasswords');
-
         Route::get('search',  'Partials\SearchController@search');
 
         /**
@@ -120,7 +118,7 @@ Route::group(['prefix' => '/api'], function() {
             /**
              * Senhas
              */
-            Route::get('senhas/minhas', 'Usuario\SenhaController@userPassword');
+            Route::get('senhas/{id}', 'Usuario\SenhaController@userPassword');
             Route::resource('senhas', 'Usuario\SenhaController', ['except' => ['create', 'edit']]);
 
             /**
