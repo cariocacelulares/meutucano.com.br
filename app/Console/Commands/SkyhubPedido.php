@@ -30,7 +30,7 @@ class SkyhubPedido extends Command
         $pedidos = Pedido::whereNull('status')->whereNotNull('codigo_api')->where('marketplace', '!=', 'Site')->get(['id', 'codigo_api']);
 
         foreach ($pedidos as $pedido) {
-            with(new SkyhubController())->syncOrder('codigo_api');
+            with(new SkyhubController())->syncOrder($pedido->codigo_api);
         }
 
         /*if ($this->argument('pedido')) {
