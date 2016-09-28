@@ -141,6 +141,11 @@
                                                 <i class="fa-file-code-o"></i>&nbsp; XML Devolução
                                             </a>
                                         </li>
+                                        <li ng-if="PedidoDetalhe.pedido.cliente.email">
+                                            <a confirm="PedidoDetalhe.notaHelper.email(nota.id)">
+                                                <i class="fa-envelope"></i>&nbsp; E-mail cliente
+                                            </a>
+                                        </li>
                                     </dropdown>
                                 </div>
                             </div>

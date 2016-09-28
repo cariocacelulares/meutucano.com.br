@@ -79,28 +79,34 @@ class NotaController extends Controller
         $model = self::MODEL;
 
         if ($nota = $model::find($id)) {
-            $email = Input::get('email');
             $dataHora = date('His');
+            $arquivo = storage_path('app/public/' . $dataHora . '.pdf');
+            $email = $nota->pedido->cliente->email;
 
-            if (!$nota->pedido->cliente->email) {
-                $cliente = $nota->pedido->cliente;
-                $cliente->email = $email;
-                $cliente->save();
+            if ($email) {
+                $mail = Mail::send('emails.danfe', [], function($message) use ($id, $email, $arquivo) {
+                    with(new NotaController())->danfe($id, 'F', $arquivo);
+
+                    $message
+                        ->attach($arquivo, ['as' => 'nota.pdf', 'mime' => 'application/pdf'])
+                        ->from('vendas@cariocacelulares.com.br', 'Carioca Celulares Online')
+                        ->to($email)
+                        ->subject('Nota fiscal de compra na Carioca Celulares Online');
+                });
+
+                unlink($arquivo);
+
+                if  ($mail) {
+                    \Log::debug('E-mail de venda enviado para: ' . $email);
+                    return $this->showResponse(['send' => true]);
+                } else {
+                    \Log::warning('Falha ao enviar e-mail de venda para: ' . $email);
+                    return $this->showResponse(['send' => false]);
+                }
+            } else {
+                Log::warning('Falha ao enviar e-mail de venda, email inválido');
+                return $this->showResponse(['send' => false]);
             }
-
-            Mail::send('emails.danfe', [], function($message) use ($id, $dataHora, $email) {
-                with(new NotaController())->danfe($id, 'F', storage_path('app/public/' . $dataHora . '.pdf'));
-
-                $message
-                    ->attach(storage_path('app/public/' . $dataHora . '.pdf'), ['as' => 'nota.pdf', 'mime' => 'application/pdf'])
-                    ->from('vendas@cariocacelulares.com.br', 'Carioca Celulares Online')
-                    ->to($email)
-                    ->subject('Nota fiscal de compra na Carioca Celulares Online');
-            });
-
-            unlink(storage_path('app/public/' . $dataHora . '.pdf'));
-
-            return $this->showResponse([]);
         }
 
         return $this->notFoundResponse();

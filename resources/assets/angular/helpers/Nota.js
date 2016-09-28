@@ -3,7 +3,7 @@
 
     angular
         .module('MeuTucano')
-        .service('NotaHelper', function(ngDialog, $window, envService, $httpParamSerializer) {
+        .service('NotaHelper', function(ngDialog, $window, envService, $httpParamSerializer, Restangular, toaster) {
             return {
                 /**
                  * Generate XML
@@ -40,15 +40,12 @@
                  * Enviar nota por e-mail
                  * @param rastreio
                  */
-                email: function(pedido_id, email) {
-                    ngDialog.open({
-                        template: 'views/atendimento/partials/email.html',
-                        className: 'ngdialog-theme-default ngdialog-big',
-                        controller: 'EmailController',
-                        controllerAs: 'Email',
-                        data: {
-                            pedido_id: pedido_id,
-                            email: email
+                email: function(nota_id) {
+                    Restangular.one('notas/email', nota_id).customPOST().then(function(response) {
+                        if (response.data.send === true) {
+                            toaster.pop('success', 'Sucesso!', 'O e-mail foi enviado ao cliente');
+                        } else {
+                            toaster.pop('error', 'Falha!', 'Não foi possível enviar o e-mail ao cliente');
                         }
                     });
                 }
