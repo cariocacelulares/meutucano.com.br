@@ -238,15 +238,17 @@ class SkyhubController extends Controller implements Integracao
             }
 
             foreach ($order['items'] as $s_produto) {
-                $produto = Produto::firstOrCreate(['sku' => $s_produto['product_id']]);
+                if ((int) $s_produto['product_id']) {
+                    $produto = Produto::firstOrCreate(['sku' => $s_produto['product_id']]);
 
-                // Importa as informações do produto se não exisitir
-                if ($produto->wasRecentlyCreated) {
-                    $produto->titulo = $s_produto['name'];
-                    if ($produto->save()) {
-                        Log::info('Produto ' . $s_produto['product_id'] . ' importado no pedido ' . $order['code']);
-                    } else {
-                        Log::warning('Não foi possível importar o produto no pedido ' . $order['code']);
+                    // Importa as informações do produto se não exisitir
+                    if ($produto->wasRecentlyCreated) {
+                        $produto->titulo = $s_produto['name'];
+                        if ($produto->save()) {
+                            Log::info('Produto ' . $s_produto['product_id'] . ' importado no pedido ' . $order['code']);
+                        } else {
+                            Log::warning('Não foi possível importar o produto no pedido ' . $order['code']);
+                        }
                     }
                 }
             }

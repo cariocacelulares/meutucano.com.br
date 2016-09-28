@@ -40,10 +40,10 @@ class MagentoController extends Controller implements Integracao
                 $this->api = new \SoapClient(
                     \Config::get('tucano.magento.api.host'),
                     [
-                        'trace' => true,
-                        'exceptions' => true,
-                        'connection_timeout' => 1,
-                        'cache_wsdl' => WSDL_CACHE_NONE
+                        'trace'              => true,
+                        'exceptions'         => false,
+                        'connection_timeout' => 5,
+                        'cache_wsdl'         => WSDL_CACHE_NONE
                     ]
                 );
                 $this->session = $this->api->login(
@@ -424,6 +424,10 @@ class MagentoController extends Controller implements Integracao
                     ]
                 );
 
+                if (is_soap_fault($stock)) {
+                    throw new \Exception("Produto inexistente no magento", 2);
+                }
+
                 if ($stock) {
                     Log::notice('Estoque do produto ' . $product->sku . ' alterado para ' . $product->estoque . ' / em estoque: ' . (($product->estoque > 0) ? 'sim' : 'não') . ' no magento.');
 
@@ -433,13 +437,14 @@ class MagentoController extends Controller implements Integracao
                     Log::warning("Estoque do produto {$product->sku} não foi atualizado no magento.", (is_array($stock) ? $stock : [$stock]));
                 }
             }
-        } catch (\SoapFault $e) {
-            Log::debug('soap fault', [$e]);
-            /*$remove = $this->request('products/' . $product->sku, [], 'DELETE');
-            Log::notice("Produto {$product->sku} removido da fila de espera no tucanomg");*/
         } catch (\Exception $e) {
-            Log::critical(logMessage($e, "Erro ao atualizar o estoque do produto {$produto_sku} no magento."));
-            reportError("Erro ao atualizar o estoque do produto {$produto_sku} no magento." . $e->getMessage() . ' - ' . $e->getLine());
+            if ($e->getCode() == 2) {
+                $remove = $this->request('products/' . $product->sku, [], 'DELETE');
+                Log::notice("Produto {$product->sku} removido da fila de espera no tucanomg");
+            }
+
+            Log::critical(logMessage($e, "Erro ao atualizar o estoque do produto {$product->sku} no magento."));
+            reportError("Erro ao atualizar o estoque do produto {$product->sku} no magento." . $e->getMessage() . ' - ' . $e->getLine());
         }
     }
 
