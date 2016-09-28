@@ -425,7 +425,7 @@ class MagentoController extends Controller implements Integracao
                 );
 
                 if (is_soap_fault($stock)) {
-                    throw new \SoapFault("Produto inexistente no magento", 1);
+                    throw new \Exception("Produto inexistente no magento", 2);
                 }
 
                 if ($stock) {
