@@ -80,7 +80,9 @@ class Logistica extends \Eloquent
      * @return string
      */
     public function setDataPostagemAttribute($data_postagem) {
-        $this->attributes['data_postagem'] = Carbon::createFromFormat('d/m/Y', $data_postagem)->format('Y-m-d');
+        if ($data_postagem) {
+            $this->attributes['data_postagem'] = Carbon::createFromFormat('d/m/Y', $data_postagem)->format('Y-m-d');
+        }
     }
 
     /**

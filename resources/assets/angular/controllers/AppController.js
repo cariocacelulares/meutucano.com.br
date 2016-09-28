@@ -3,7 +3,12 @@
 
     angular
         .module('MeuTucano')
-        .controller('AppController', AppController);
+        .controller('AppController', AppController)
+        .filter('digits', function() {
+            return function(text) {
+                return String(text).replace(/[^0-9\.]+/g,  '');
+            };
+        });
 
     function AppController($rootScope, focus) {
         var vm = this;

@@ -13,7 +13,9 @@
     </thead>
     <tbody ng-if="ClienteList.tableData.data && !ClienteList.loading">
         <tr ng-repeat="cliente in ClienteList.tableData.data">
-            <td class="text-center">{{ cliente.taxvat_readable }}</td>
+            <td class="text-center">
+                <span clipboard supported="supported" text="cliente.taxvat" title="Clique para copiar apenas os números">{{ cliente.taxvat_readable }}</span>
+            </td>
             <td>
                 <strong>{{ cliente.nome }}</strong>
                 <br/>

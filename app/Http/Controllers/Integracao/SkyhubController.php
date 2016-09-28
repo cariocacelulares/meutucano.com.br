@@ -122,9 +122,9 @@ class SkyhubController extends Controller implements Integracao
 
         $shipping = mb_strtolower($shipping);
 
-        if (strpos($shipping, 'pac') !== false) {
+        if (strpos($shipping, 'pac') !== false || strpos($shipping, 'normal') !== false) {
             return 'PAC';
-        } elseif (strpos($shipping, 'sedex') !== false) {
+        } elseif (strpos($shipping, 'sedex') !== false || strpos($shipping, 'expresso') !== false) {
             return 'SEDEX';
         } else {
             return 'outro';
@@ -182,7 +182,7 @@ class SkyhubController extends Controller implements Integracao
                     'base_uri' => \Config::get('tucano.skyhub.api.url'),
                     'headers' => [
                         "Accept"       => "application/json",
-                        "Content-type" => "application/json",
+                        "Content-type" => "application/json; charset=utf-8",
                         "X-User-Email" => \Config::get('tucano.skyhub.api.email'),
                         "X-User-Token" => \Config::get('tucano.skyhub.api.token')
                     ]
@@ -227,12 +227,12 @@ class SkyhubController extends Controller implements Integracao
                 'cliente_id' => $cliente->id,
                 'cep'        => $order['shipping_address']['postcode']
             ]);
-            $clienteEndereco->rua         = $order['shipping_address']['street'];
-            $clienteEndereco->numero      = $order['shipping_address']['number'];
+            $clienteEndereco->rua = $order['shipping_address']['street'];
+            $clienteEndereco->numero = $order['shipping_address']['number'];
             $clienteEndereco->complemento = $order['shipping_address']['detail'];
-            $clienteEndereco->bairro      = $order['shipping_address']['neighborhood'];
-            $clienteEndereco->cidade      = $order['shipping_address']['city'];
-            $clienteEndereco->uf          = $order['shipping_address']['region'];
+            $clienteEndereco->bairro = $order['shipping_address']['neighborhood'];
+            $clienteEndereco->cidade = $order['shipping_address']['city'];
+            $clienteEndereco->uf = $order['shipping_address']['region'];
             if ($clienteEndereco->save()) {
                 Log::info("Endereço {$clienteEndereco->id} importado para o pedido " . $order['code']);
             } else {
@@ -285,7 +285,7 @@ class SkyhubController extends Controller implements Integracao
             $pedido->marketplace         = $marketplace;
             $pedido->operacao            = $operacao;
             $pedido->total               = $order['total_ordered'];
-            $pedido->estimated_delivery  = substr($order['estimated_delivery'], 0, 10);
+            $pedido->estimated_delivery  = ($order['estimated_delivery']) ? substr($order['estimated_delivery'], 0, 10) : calcEstimatedDelivery($pedido->frete_metodo, $order['shipping_address']['postcode']);
             $pedido->status              = $this->parseStatus(isset($order['status']['type']) ? $order['status']['type'] : null);
             $pedido->created_at          = substr($order['placed_at'], 0, 10) . ' ' . substr($order['placed_at'], 11, 8);
             if ($pedido->save()) {
@@ -383,17 +383,18 @@ class SkyhubController extends Controller implements Integracao
     {
         try {
             if (!$order->codigo_api) {
-                throw new \Exception('Não foi possível cancelar o pedido: sem codigo_api válido', 1);
+                Log::warning(logMessage($e, "Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub, pois o pedido não possui codigo_api válido."));
+            } else {
+                $this->request(
+                    sprintf('/orders/%s/cancel', $order->codigo_api),
+                    [],
+                    'POST'
+                );
+                Log::notice("Pedido {$order->id} / {$order->skyhub} cancelado na Skyhub.");
             }
-
-            $this->request(
-                sprintf('/orders/%s/cancel', $order->codigo_api),
-                [],
-                'POST'
-            );
-            Log::notice("Pedido {$order->id} / {$order->skyhub} cancelado na Skyhub.");
         } catch (Exception $e) {
             Log::warning(logMessage($e, "Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub"));
+            reportError("Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub" . $e->getMessage() . ' - ' . $e->getLine());
         }
     }
 
@@ -462,5 +463,23 @@ class SkyhubController extends Controller implements Integracao
             Log::critical(logMessage($e, 'Não foi possível alterar o status do pedido na Skyhub'), ['id' => $pedido->id, 'codigo_api' => $pedido->codigo_api]);
             reportError('Não foi possível alterar o status do pedido na Skyhub: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $pedido->id);
         }
+    }
+
+    /**
+     * Calcula a estimativa de entrega dos correios
+     *
+     * @param  string $frete_metodo
+     * @param  int|string $cep
+     * @return int                                  valor em dias
+     */
+    public function calcEstimatedDelivery($frete_metodo, $cep)
+    {
+        if (strtolower($frete_metodo) == 'sedex') {
+            $rastreio = 'D';
+        } else {
+            $rastreio = 'S';
+        }
+
+        return RastreioController::deadline($rastreio, $cep);
     }
 }

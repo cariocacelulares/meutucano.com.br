@@ -57,7 +57,7 @@
                 <strong>{{ pedido.cliente.nome | uppercase }}</strong>
                 <br>
                 <small>
-                    {{ pedido.cliente.fone }} - CEP: <strong>{{ pedido.endereco.cep_readable }}</strong> -
+                    <span clipboard supported="supported" text="pedido.cliente.fone | digits" title="Clique para copiar apenas os números">{{ pedido.cliente.fone }}</span> - CEP: <strong clipboard supported="supported" text="pedido.endereco.cep" title="Clique para copiar apenas os números">{{ pedido.endereco.cep_readable }}</strong> -
                     {{ pedido.endereco.cidade }} / {{ pedido.endereco.uf }}
                 </small>
             </td>
@@ -85,7 +85,7 @@
                                 <i class="fa-file-code-o"></i>&nbsp; XML Devolução
                             </a>
                         </li>
-                        <li ng-if="pedido.rastreios.length">
+                        <li ng-if="pedido.rastreios.length && pedido.marketplace != 'MERCADOLIVRE'">
                             <a ng-click="FaturamentoList.rastreioHelper.printEtiqueta(pedido.rastreios[0].id)"><i class="fa fa-tag"></i>&nbsp; Etiqueta</a>
                         </li>
                 </dropdown>
