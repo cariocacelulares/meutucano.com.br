@@ -1,21 +1,22 @@
 <?php
 
 return [
-    'env' => env('APP_ENV', 'production'),
-    'debug' => env('APP_DEBUG', false),
+    'env'             => env('APP_ENV', 'production'),
+    'debug'           => env('APP_DEBUG', false),
 
-    'url' => env('APP_URL', 'http://localhost/dev/tucanov3'),
+    'url'             => env('APP_URL', 'http://localhost/dev/tucanov3'),
 
-    'timezone' => 'America/Sao_Paulo',
-    'locale' => 'pt',
+    'timezone'        => 'America/Sao_Paulo',
+    'locale'          => 'pt',
     'fallback_locale' => 'pt',
 
-    'key' => env('APP_KEY', 'carioquinha20161carioquinha20161'),
+    'key'             => env('APP_KEY', 'carioquinha20161carioquinha20161'),
 
-    'cipher' => 'AES-256-CBC',
-    'log' => env('APP_LOG', 'single'),
+    'cipher'          => 'AES-256-CBC',
+    'log'             => env('APP_LOG', 'daily'),
+    'log_max_files'   => env('APP_LOG_MAX_FILES', 90),
 
-    'providers' => [
+    'providers'       => [
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
@@ -53,10 +54,12 @@ return [
         Xethron\MigrationsGenerator\MigrationsGeneratorServiceProvider::class,
 
         Zizaco\Entrust\EntrustServiceProvider::class,
+        Arcanedev\LogViewer\LogViewerServiceProvider::class,
+        Spatie\Browsershot\BrowsershotServiceProvider::class
     ],
 
 
-    'aliases' => [
+    'aliases'         => [
         'App' => Illuminate\Support\Facades\App::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,

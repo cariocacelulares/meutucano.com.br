@@ -1,9 +1,9 @@
 <?php namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\RestControllerTrait;
+use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Requests;
-use App\Models\PedidoNota;
+use App\Models\Pedido\Nota;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use NFePHP\Extras\Danfe;
@@ -24,7 +24,7 @@ class RelatorioController extends Controller
      */
     public function icms()
     {
-        $notas = PedidoNota::with(['pedido', 'pedido.imposto', 'pedido.endereco'])
+        $notas = Nota::with(['pedido', 'pedido.imposto', 'pedido.endereco'])
             ->where(DB::raw('MONTH(pedido_notas.data)'), '=', date("m", strtotime("-1 month")))
             ->where(DB::raw('YEAR(pedido_notas.data)'), '=', date('Y'))
             ->get();
@@ -33,7 +33,7 @@ class RelatorioController extends Controller
         $relatorio[] = "\r\n";
         foreach ($notas as $nota) {
             $relatorio[] = $nota->pedido->operacao . ';';
-            $relatorio[] = ((in_array($nota->pedido->operacao, \Config::get('tucano.operacoes'))) ? 'VENDA' : 'DEVOLUCAO') . ';';
+            $relatorio[] = ((in_array($nota->pedido->operacao, \Config::get('tucano.notas.operacoes'))) ? 'VENDA' : 'DEVOLUCAO') . ';';
             $relatorio[] = $nota->numero . ';';
             $relatorio[] = \Config::get('tucano.uf'). ';';
             $relatorio[] = 'R$' . (count($nota->pedido->imposto) ? number_format($nota->pedido->imposto->icms_remetente, 2, ',', '.') : '0,00') . ';';

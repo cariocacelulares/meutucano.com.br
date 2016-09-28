@@ -1,36 +1,29 @@
-<div class="page-sidebar" data-pages="sidebar">
-    <div static-include="views/partials/menu.html"></div>
+<div id="page-sidebar" data-pages="sidebar">
+    <menu-tucano></menu-tucano>
 </div>
-<div class="page-container">
-    <div class="header">
-        <div class="pull-left sm-table">
-            <div class="header-inner">
-                <div class="brand inline">
-                    <img src="assets/img/logo-image.png" alt="logo" data-src="assets/img/logo-image.png" height="22">
-                </div>
-                <a ng-click="App.openSearch()" class="search-link" data-toggle="search"><i class="fa fa-search"></i><span class="bold">Buscar</span> no tucano</a>
+<div id="page-container">
+    <header id="main-header">
+        <div id="logo-search">
+            <div>
+                <img src="assets/img/logo-image.png" alt="logo" data-src="assets/img/logo-image.png" height="22">
             </div>
+            <a roles="admin|gestor|atendimento" ng-click="App.openSearch()" data-toggle="search" class="search-link">
+                <i class="fa-search"></i><span>Buscar</span> no tucano
+            </a>
         </div>
-        <div class="pull-right">
-            <div class="visible-lg visible-md m-t-10">
-                <div roles="admin|gestor|atendimento|faturamento" class="pull-left p-r-15 b-r b-grey m-r-15" style="margin-top: 2px;" ng-controller="UploadController as Upload">
-                    <div class="btn-group">
-                        <button title="Fazer upload de notas" ngf-select ngf-change="Upload.upload($files)" ngf-multiple="true" class="btn btn-success btn-cons m-r-0"><i class="fa fa-upload"></i>&nbsp; Upload</button>
-                    </div>
-                </div>
-                <div class="pull-left p-r-10 fs-12 font-heading" style="margin-top: 5px; line-height: 14px;">
-                    <span ng-bind="::App.user.name"></span><br>
-                    <small class="hint-text" ng-bind="::App.user.email"></small>
-                </div>
-                <button ng-click="App.logout()" class="btn btn-danger pull-right m-l-10" style="margin-top: 2px;"><i class="fa fa-sign-out"></i></button>
+        <div id="header-actions">
+            <upload></upload>
+            <div id="user-info">
+                <span ng-bind="::App.user.name"></span><br>
+                <small ng-bind="::App.user.email"></small>
             </div>
-            <!-- END User Info-->
+            <logout></logout>
         </div>
-        <div static-include="views/partials/metas.html"></div>
-    </div>
+        <metas></metas>
+    </header>
     <div class="page-content-wrapper">
         <div class="content">
-            <div class="container-fluid container-fixed-lg m-t-20">
+            <div class="container-fluid container-fixed-lg">
                 <div ui-view></div>
             </div>
         </div>

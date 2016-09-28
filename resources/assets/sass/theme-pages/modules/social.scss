@@ -1,0 +1,511 @@
+// 
+// Social
+// --------------------------------------------------
+
+.social-wrapper, 
+.social{
+    height: 100%;
+    width: 100%;
+}
+
+// Cover
+
+.social-wrapper .social .cover {
+    position: relative;
+    margin: 0 auto;
+    min-height: 560px;
+    width: 100%;
+    height: 100%;
+}
+ .cover-img-container {
+    position: absolute;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+.cover-img-container .cover-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    min-width: 100%;
+    min-height: 100%;
+}
+.cover-overview{
+    @include transition(all .3s ease);
+    position: relative;
+    z-index: 1;
+}
+
+// Feed
+
+.social-wrapper .social .feed {
+    overflow-y: hidden;
+    width: 100%;
+    & > .day {
+        white-space: normal;
+        display: block;
+        width: 100%;
+        margin: 0 auto;
+        & > .item {
+            // margin: 6px;
+            padding-bottom: 0;
+            margin-bottom: 0;
+            background: #FFF;
+            float: left;
+            position: relative;
+            border-radius: 4px;
+            border-bottom-right-radius: 2px;
+            border-bottom-left-radius: 2px;
+            margin-bottom: 20px;
+            width: 300px;
+            border:1px solid $color-master-light;
+            .circle {
+                position: absolute;
+                right: 20px;
+                top: 20px;
+                display: block;
+                border-radius: 50%;
+                border:2px solid $color-master-lighter;
+                width: 9px;
+                height: 9px;
+                background: $color-info-light;
+                z-index: 1;
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+            &.status {
+                background: $color-complete-lighter;
+                border-radius: 4px;
+                padding: 15px 25px;
+                @include box-sizing(border-box);
+                border:1px solid transparent;
+                &:hover,&.hover {
+                    border-color: $color-info-lighter !important;
+                }
+                h5 {
+                    font-size: 12px;
+                    margin: 0;
+                    .time {
+                        color: #fff;
+                    }
+                }
+                h2 {
+                    color: $color-master-dark;
+                    font-size: 25px;
+                    margin: 0;
+                    font-weight: normal;
+                }
+                .reactions {
+                    color: $color-master-lighter;
+                    opacity: .45;
+                    font-size: 12px;
+                    padding: 0;
+                    margin: 5px 0 0;
+                    padding: 0;
+                    li {
+                        display: inline-block;
+                        list-style: none;
+                        padding: 0;
+                    }
+                }
+                .circle {
+                    width: 9px;
+                    height: 9px;
+                    border: none;
+                    background: $color-complete;
+                }
+            }
+            &.share {
+                .item-header {
+                    padding: 15px 15px 12px;
+                    border-bottom:1px solid $color-complete-lighter;
+                    &:hover {
+                        background: $color-complete-lighter;
+                        cursor: pointer;
+                        border-top-right-radius: 2px;
+                        border-top-left-radius: 2px;
+                        h6 {
+                            opacity: .6;
+                        }
+                    }
+                    .user-pic {
+                        float:left;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        margin-right: 10px;
+                        & > img {
+                            width: 30px;
+                            height: 30px;
+                        }
+                    }
+                    h5 {
+                        font-weight: bold;
+                        font-size: 14px;
+                        margin: 0;
+                        line-height: 22.7px;
+                        font-family: arial;
+                        letter-spacing: -0.006em;
+                        margin-top: -3px;
+                    }
+                    h6 {
+                        font-size: 12px;
+                        margin: 0;
+                        opacity: .45;
+                        font-family: arial;
+                        opacity: .45;
+                    }
+                }
+                .item-description {
+                    padding:12px 16px 11px;
+                    font-size: 14px;
+                    line-height: 21px;
+                    margin: 0;
+                    p {
+                        margin-bottom: 4px;
+                    }
+                    &:hover {
+                    }
+                    .via {
+                        opacity: .45;
+                        display: block;
+                        font-size: 12px;
+                        font-family: arial;
+                    }
+                }
+                .item-content{
+                    position: relative;
+                    .buttons{
+                        left: 17px;
+                        padding: 0;
+                        position: absolute;
+                        top: 10px;
+                        li {
+                            display: inline-block;
+                            list-style: none;
+                            margin-right: 10px;
+                            a{
+                                color: #fff;
+                            }
+                        }
+                    }
+                }
+                .item-feed {
+                    overflow: hidden;
+                    position: relative;
+                    max-height: 400px;
+                    &:hover {
+                        .buttons {
+                            opacity: 1;
+                        }
+                    }
+                    .buttons {
+                        position: absolute;
+                        top: 5px;
+                        right: 0;
+                        opacity: 0;
+                        li {
+                            display: inline-block;
+                            list-style: none;
+                            a {
+                                color: #fff;
+                                opacity: 0.8;
+                                padding: 5px;
+                            }
+                        }
+                    }
+                    & > * {
+                        max-width: 100%;
+                    }
+                }
+                .item-footer {
+                    padding: 14px 16px 11px;
+                    font-size: 12px !important;
+                    &:hover {
+                        background: $color-complete-lighter;
+                        cursor: pointer;
+                        .reactions, .time {
+                            opacity: .8;
+                        }
+                    }
+                    .time {
+                        float: left;
+                        opacity: .45;
+                        font-family: arial;
+                        margin-top: 1px;
+                    }
+                    .reactions {
+                        float: right;
+                        margin:0;
+                        padding: 0;
+                        opacity: .45;
+                        li {
+                            display: inline-block;
+                            list-style: none;
+                            a {
+                                color: inherit;
+                            }
+                        }
+                    }
+                }
+                .item-description, .item-feed, .item-footer {
+                    border-color: transparent;
+                    border-style: solid;
+                }
+                .item-description {
+                    border-width: 1px;
+                }
+                .item-feed {
+                    border-width: 0 1px;
+                    margin-top: -2px;
+                }
+                .item-footer {
+                    border-width: 0 1px 1px 1px;
+                }
+                &.share-other {
+                    .item-description {
+                        padding-bottom: 0;
+                    }
+                    .item-footer {
+                        padding-top: 0;
+                        border-radius: 0;
+                        &:hover {
+                            background: #fff;
+                        }
+                    }
+                    .item-header {
+                        border-top:1px solid $color-complete-lighter;
+                    }
+                    .circle {
+                        background: $color-warning;
+                    }
+                }
+            }
+            &.col1 {
+                width: 300px;
+            }
+            &.col2 {
+                width: 620px;
+            }
+            &.col3 {
+                width: 920px;
+            }
+            img {
+                //max-width: none;
+                width: 100%;
+            }
+        }
+        &:after {
+            feed:'';
+            display: block;
+            clear: both;
+        }
+        &:hover {
+            & > .timeline:after {
+                background: $color-complete;
+            }
+        }
+    }
+}
+
+.cover-effect:not(.modify) .cover *{
+    color:#fff;
+}
+
+.cover-effect:not(.notrans) .cover-img-container {
+    -webkit-transition-property: top, left, right, bottom;
+    transition-property: top, left, right, bottom;
+}
+
+.cover-effect:not(.notrans) .cover h1,
+.cover-effect:not(.notrans) .codrops-top a {
+    -webkit-transition-property: color;
+    transition-property: color;
+}
+
+.cover-effect:not(.notrans) .codrops-demos a {
+    -webkit-transition-property: border-color, color;
+    transition-property: border-color, color;
+}
+
+.cover-effect:not(.notrans) .cover p {
+    -webkit-transition-property: color, opacity, -webkit-transform;
+    transition-property: color, opacity, transform;
+}
+
+.cover-effect:not(.notrans) .feed > div {
+    -webkit-transition-property: opacity, -webkit-transform;
+    transition-property: opacity, transform;
+}
+
+.cover-effect:not(.notrans) .cover-img-container,
+.cover-effect:not(.notrans) .cover-overview,
+.cover-effect:not(.notrans) .cover h1,
+.cover-effect:not(.notrans) .codrops-top a,
+.cover-effect:not(.notrans) .codrops-demos a,
+.cover-effect:not(.notrans) .feed > div {
+    -webkit-transition-duration: 0.5s;
+    transition-duration: 0.5s;
+    -webkit-transition-timing-function: cubic-bezier(0.7,0,0.3,1);
+    transition-timing-function: cubic-bezier(0.7,0,0.3,1);
+}
+
+.cover-effect:not(.notrans) .cover p,
+.cover-effect:not(.notrans) .cover p.subline,
+.cover-effect:not(.notrans) .feed > div {
+    -webkit-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+}
+
+.cover-effect.modify:not(.notrans) .cover p,
+.cover-effect.modify:not(.notrans) .cover p.subline,
+.cover-effect.modify:not(.notrans) .feed > div {
+    -webkit-transition-duration: 0.5s;
+    transition-duration: 0.5s;
+}
+
+.cover-effect .codrops-demos a {
+    color: #fff;
+}
+
+.cover-effect .codrops-demos a.current-demo {
+    border-color: #fff;
+}
+
+.cover-effect.modify .codrops-demos a {
+    color: #c03b5d;
+}
+
+.cover-effect.modify .codrops-demos a.current-demo {
+    border-color: #c03b5d;
+}
+
+.cover-effect.modify .thumbnail-wrapper:last-child .bg-master{
+    background-color: #fff;
+}
+
+.cover-effect.social {
+    padding: 30px;
+}
+
+.cover-effect .cover-img-container {
+    top: -45px;
+    right: -30px;
+    bottom: -45px;
+    left: -30px;
+    background: #514753;
+     &:after{
+        background-image: url("../img/linear_gradient.png");
+        background-repeat: repeat-x;
+        bottom: 0;
+        content: " ";
+        height: 45%;
+        left: 0;
+        position: absolute;
+        right: 0;
+        z-index: 0;
+        background-size: contain;
+        opacity: .6;
+        @include transition(opacity .3s ease);
+    }
+}
+
+.cover-effect.modify .cover-img-container {
+    top: 0;
+    right: 0;
+    bottom: 65%;
+    left: 0;
+    &:after{
+        opacity: 0;
+    }
+}
+
+.cover-effect.modify .cover h1 {
+    color: #514753;
+}
+.cover-effect.modify .cover-overview{
+    bottom: calc('65% - 180px');
+
+}
+
+.cover-effect .cover,
+.cover-effect .feed {
+    background: #fff;
+}
+
+.cover-effect .feed > div {
+    opacity: 0;
+    @include translateY(150px);
+}
+
+.cover-effect.modify .feed > div {
+    opacity: 1;
+    @include translateY(0);
+}
+
+.cover-effect.modify .codrops-top a {
+    color: #514753;
+}
+
+/* Delays */
+.cover-effect.modify:not(.notrans) .cover p:nth-last-child(2) {
+    -webkit-transition-delay: 0.1s;
+    transition-delay: 0.1s;
+}
+
+.cover-effect.modify:not(.notrans) .cover p:last-child {
+    -webkit-transition-delay: 0.15s;
+    transition-delay: 0.15s;
+}
+
+.cover-effect.modify:not(.notrans) .feed > div {
+    -webkit-transition-delay: 0.2s;
+    transition-delay: 0.2s;
+}
+
+.cover-effect.modify .cover{
+    height: 400px;
+    min-height: 400px;
+}
+
+// Mobile only styles
+
+.mobile{
+    .cover-effect .feed > div {
+        opacity: 1;
+        @include translateY(0);
+    }    
+    .cover-effect .cover{
+        color:#fff;
+    }
+    
+}
+
+// Responsive handlers
+
+@media (max-width: 979px) {
+    .social-wrapper .social .feed > .day,
+    .social-wrapper .social .feed > .day .item{
+        width: 100% !important;
+    }
+    .cover-effect.modify .cover{
+        background: transparent;
+         height: auto;
+        min-height: 100%;
+    }
+    .cover-effect.modify .cover-img-container{
+        height: 116px;
+    }
+    .cover-effect.modify .cover-overview{
+         padding-top: 134px;
+    position: relative;
+    }
+    .cover-effect .cover, .cover-effect .feed{
+        background: transparent;
+    }
+}

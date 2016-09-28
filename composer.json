@@ -5,8 +5,8 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": ">=5.5.9",
-        "laravel/framework": "dev-carioca as 5.2.29.0",
+        "php": ">= 5.5.9",
+        "laravel/framework": "^5.2",
         "tymon/jwt-auth": "0.5.*",
         "barryvdh/laravel-ide-helper": "^2.1",
         "stavarengo/php-sigep": "dev-carioca as 1.0.x-dev",
@@ -16,7 +16,10 @@
         "zizaco/entrust": "5.2.x-dev",
         "sunra/php-simple-html-dom-parser": "^1.5",
         "guzzlehttp/guzzle": "~6.0",
-        "swiftmailer/swiftmailer": "^5.4"
+        "swiftmailer/swiftmailer": "^5.4",
+        "venturecraft/revisionable": "1.*",
+        "arcanedev/log-viewer": "4.0.x-dev",
+        "spatie/browsershot": "^1.5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

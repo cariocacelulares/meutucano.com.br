@@ -1,28 +1,12 @@
-<div class="row m-b-20">
-    <div class="col-md-6">
-        <div class="widget-16-header">
-            <span class="icon-thumbnail bg-master-light pull-left text-master"><i class="fa fa-clipboard"></i></span>
-            <div class="pull-left">
-                <strong class="page-title no-margin font-montserrat all-caps fs-13">Template ML</strong><br>
-                <small class="small-hint">Gera o template do Mercado Livre baseado em uma URL do site.</small>
-            </div>
-            <div class="clearfix"></div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <form class="form-inline pull-right" style="margin-top: 3px;" ng-submit="Templateml.generateTemplate()">
-            <div class="form-group">
-                <div class="input-group">
-                    <input placeholder="Digite a URL do site para buscar o produto" class="form-control" style="width: 400px;" type="text" ng-model="Templateml.url">
-                    <div class="input-group-btn">
-                        <button class="btn btn-success m-l-5" type="submit"><i class="fa fa-thumbs-up"></i></button>
-                    </div>
-                </div>
-            </div>
+<div id="page-header" class="row">
+    <page-title icon="fa-clipboard" title="Template ML" description="Gera o template do Mercado Livre baseado em uma URL do site."></page-title>
+    <div class="col-md-6 button-bar form-group">
+        <form class="form-inline pull-right m-t-5" ng-submit="Templateml.generateTemplate()">
+            <button class="btn-success m-l-5 m-t-0" type="submit"><i class="fa-thumbs-up"></i></button>
+            <input placeholder="Digite a URL do site para buscar o produto" class="pull-right form-control" style="width: 400px;" type="text" ng-model="Templateml.url" required>
         </form>
     </div>
 </div>
-<hr>
 <div ng-if="Templateml.template">
     <div class="row">
         <div class="col-md-12">

@@ -1,0 +1,87 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-tasks" title="Editar linha" description="Aqui você pode editar a linha {{ LinhaForm.linha.titulo }} e seus atributos."></page-title>
+    <div class="button-bar">
+        <a ng-click="LinhaForm.save()" title="Salvar linha" class="btn-success">
+            <i class="fa-save"></i>&nbsp; Salvar
+        </a>
+        <a confirm="LinhaForm.destroy()" title="Excluir linha" class="btn-danger">
+            <i class="fa-trash"></i>&nbsp; Excluir
+        </a>
+        <a onclick="history.back()" title="Voltar para a página anterior" class="btn-default">
+            <i class="fa-reply"></i>&nbsp; Voltar
+        </a>
+    </div>
+</div>
+<form ng-submit="LinhaForm.save()" novalidate="novalidate" class="form-default">
+    <fieldset>
+        <legend>Informações da linha</legend>
+        <div class="row m-t-0">
+            <div class="col-md-12">
+                <div class="row form-group m-b-0">
+                    <div class="col-md-9">
+                        <label for="titulo">Título</label>
+                        <input type="text" ng-model="LinhaForm.linha.titulo" id="titulo" placeholder="Título da linha" required />
+                    </div>
+                    <div class="col-md-3">
+                        <label for="ncm_padrao">NCM Padrão</label>
+                        <input type="text" ng-model="LinhaForm.linha.ncm_padrao" id="ncm_padrao" placeholder="Código NCM padrão" required />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Atributos da Linha</legend>
+        <div class="fieldset-actions">
+            <a ng-click="LinhaForm.addAttribute()" title="Adicionar novo atributo" class="btn-primary">
+                <i class="fa-plus"></i>&nbsp; Adicionar atributo
+            </a>
+        </div>
+        <div class="row m-t-0">
+            <div class="col-md-12">
+                <table class="table-alt">
+                    <thead>
+                        <tr>
+                            <th width="300">Título</th>
+                            <th width="150">Tipo</th>
+                            <th>Opções</th>
+                            <th width="48"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-empty" ng-if="!LinhaForm.linha.atributos.length">
+                        <tr><td colspan="50">Nada foi cadastrado. Clique em adicionar atributo para começar!</td></tr>
+                    </tbody>
+                    <tbody>
+                        <tr ng-repeat="atributo in LinhaForm.linha.atributos">
+                            <td class="form-group">
+                                <input type="text" ng-model="atributo.titulo" id="titulo-novo" placeholder="Título do atributo" required />
+                            </td>
+                            <td class="form-group">
+                                <select ng-model="atributo.tipo" ng-init="atributo.tipo = atributo.tipo || '0'" id="tipo-novo" required>
+                                    <option value="0">Texto</option>
+                                    <option value="1">Seleção</option>
+                                </select>
+                            </td>
+                            <td ng-class="{'no-data': atributo.tipo != 1}" class="form-group">
+                                <tags-input
+                                    ng-if="atributo.tipo == 1"
+                                    ng-model="atributo.opcoes"
+                                    display-property="valor"
+                                    on-tag-removed="LinhaForm.removeTag($tag)"
+                                    min-length="1"
+                                    id="opcoes-novo"
+                                    placeholder="Adicionar">
+                                </tags-input>
+                            </td>
+                            <td class="text-center form-group">
+                                <a ng-click="LinhaForm.removeAttribute($index)" class="btn-danger btn-sm" title="Remover atributo">
+                                    <i class="fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+</form>

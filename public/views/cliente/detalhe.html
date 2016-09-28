@@ -1,0 +1,105 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-user" title="{{ ClienteDetalhe.cliente.nome }}" description="Informações do Cliente"></page-title>
+    <div class="col-md-6 button-bar">
+            <a onclick="history.back()" title="Voltar para a página anterior" class="btn-default"><i class="fa-reply"></i>&nbsp; Voltar</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <!-- Informações Pessoais -->
+        <div class="panel-primary">
+            <div class="panel-heading">
+                <div class="panel-title"><i class="fa-user"></i>&nbsp; Informações Pessoais</div>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="row">
+                        <p class="pull-left">Nome</p>
+                        <p class="pull-right bold">{{ ClienteDetalhe.cliente.nome }}</p>
+                    </div>
+                    <div class="row" ng-if="ClienteDetalhe.cliente.fone">
+                        <p class="pull-left">Telefone</p>
+                        <p class="pull-right bold">{{ ClienteDetalhe.cliente.fone }}</p>
+                    </div>
+                    <div class="row">
+                        <p class="pull-left">E-mail</p>
+                        <p class="pull-right bold">
+                            <span ng-click="ClienteDetalhe.clienteHelper.changeEmail(ClienteDetalhe.cliente, true)">
+                                <span ng-class="{ 'hint-text': !ClienteDetalhe.cliente.email }">{{ ClienteDetalhe.cliente.email || 'Não informado' }}</span>
+                                &nbsp;<i class="fa-pencil"></i>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="row" ng-if="ClienteDetalhe.cliente.taxvat_readable">
+                        <p class="pull-left">CPF / CNPJ</p>
+                        <p class="pull-right bold">{{ ClienteDetalhe.cliente.taxvat_readable }}</p>
+                    </div>
+                    <div class="row" ng-if="ClienteDetalhe.cliente.inscricao">
+                        <p class="pull-left">Inscrição</p>
+                        <p class="pull-right bold">{{ ClienteDetalhe.cliente.inscricao }}</p>
+                    </div>
+                    <div class="row">
+                        <p class="pull-left">Cadastro</p>
+                        <p class="pull-right bold">{{ ClienteDetalhe.cliente.created_at }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fim Informações Pessoais -->
+    </div>
+    <div class="col-md-6">
+        <!-- Endereços -->
+        <div class="panel-primary">
+            <div class="panel-heading">
+                <div class="panel-title"><i class="fa-map"></i>&nbsp; Endereço</div>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12" ng-repeat="endereco in ClienteDetalhe.cliente.enderecos">
+                    <div class="row lh-25 text-upper">
+                        <a ng-click="ClienteDetalhe.clienteEnderecoHelper.editar(endereco.id, true)" class="pull-right transform-none">
+                            <i class="fa-pencil"></i>&nbsp; Editar
+                        </a>
+                        {{ endereco.rua + ' - ' + endereco.numero }} <br/>
+                        {{ endereco.bairro + ((endereco.complemento) ? ',' + endereco.complemento : '') }} <br/>
+                        {{ endereco.cidade + ' / ' + endereco.uf }} <br/>
+                        {{ endereco.cep_readable }} <br/>
+                    </div>
+                    <hr ng-if="!$last" />
+                </div>
+            </div>
+        </div>
+        <!-- Fim Endereços -->
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <hr/>
+        <!-- Lista de pedidos -->
+        <table class="table-products">
+            <thead>
+                <th>Código</th>
+                <th>Marketplace</th>
+                <th>Status</th>
+                <th>Data</th>
+                <th>Valor</th>
+            </thead>
+            <tbody ng-if="!ClienteDetalhe.cliente.pedidos.length">
+                <tr>
+                    <td colspan="50" class="no-results">
+                        Este cliente ainda não realizou nenhum pedido.
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr ng-if="ClienteDetalhe.cliente.pedidos.length" ng-repeat="pedido in ClienteDetalhe.cliente.pedidos">
+                    <td><a ui-sref="app.pedidos.detalhe({id: pedido.id})">{{ pedido.codigo_marketplace || 'Sem código' }}</a></td>
+                    <td>{{ pedido.marketplace_readable || 'Site' }}</td>
+                    <td><span class="label label-{{ ClienteDetalhe.parseStatusClass(pedido) }}">{{ pedido.status_description }}</span></td>
+                    <td>{{ pedido.created_at }}</td>
+                    <td>{{ pedido.total | currency }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- Fim Lista de pedidos -->
+    </div>
+</div>

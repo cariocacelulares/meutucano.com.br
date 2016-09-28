@@ -1,0 +1,64 @@
+.host:focus {
+    border: none !important;
+}
+
+form .tags {
+    float: left;
+
+    @extend .clear;
+    font-family: Arial, sans-serif;
+    width: 100%;
+    min-height: 35px;
+    line-height: normal;
+    padding: 9px 12px 0 12px;
+    font-size: 14px;
+    font-weight: 400;
+    vertical-align: middle;
+    outline: 0;
+    box-shadow: none;
+    border-radius: 2px;
+    border: 1px solid $color-master-light !important;
+    color: $color-master;
+    background-color: $color-white;
+    transition: all 200ms linear 0ms;
+
+    &:focus,
+    &:hover {
+        border: 1px solid darken($color-master-light, 10%)  !important;
+    }
+
+    * {
+        color: inherit;
+        font: inherit;
+    }
+
+    .tag-list {
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+
+        li {
+            clear: none;
+            display: inline-block;
+            list-style: none;
+            line-height: 1;
+            margin: 0 5px 5px 0;
+            padding: 3px 6px;
+            font-size: 12px;
+            border-radius: 4px;
+            background-color: $color-info-lighter;
+        }
+    }
+
+    input {
+        clear: none;
+        float: none !important;
+        display: inline-block !important;
+        height: auto !important;
+        min-height: 0 !important;
+        line-height: 1 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+    }
+}

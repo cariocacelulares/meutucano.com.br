@@ -13,7 +13,16 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-
+        'App\Events\ProductStockChange' => [
+            'App\Listeners\SendProductToQueue',
+        ],
+        'App\Events\OrderCancel' => [
+            'App\Listeners\SumStock',
+            'App\Listeners\SendCancelInfo'
+        ],
+        'App\Events\ProductDispach' => [
+            'App\Listeners\SubtractStock'
+        ],
     ];
 
     /**

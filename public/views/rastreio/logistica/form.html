@@ -1,0 +1,66 @@
+<h1>Logística reversa</h1>
+<div class="alert alert-info m-b-10"><i class="fa fa-info"></i>&nbsp; O rastreio assumirá o status de "Devolvido" caso receber ação.</div>
+<form ng-submit="Logistica.save()" novalidate="novalidate" class="form-default">
+    <div class="row">
+        <div class="col-md-6 form-group">
+            <label for="autorizacao">Autorização de postagem</label>
+            <input id="autorizacao" class="form-control" ng-model="Logistica.logistica.autorizacao" placeholder="Código da autorização" required>
+        </div>
+        <div class="col-md-6 form-group">
+            <label for="motivo">Motivo</label>
+            <select ng-model="Logistica.logistica.motivo" id="motivo" class="form-control" required>
+                <option value="" disabled selected hidden>Motivo</option>
+                <option value="0">Defeito</option>
+                <option value="1">Arrependimento</option>
+                <option value="2">Duplicidade</option>
+                <option value="3">Aparelho divergente</option>
+                <option value="4">Outro</option>
+            </select>
+        </div>
+    </div>
+
+    <hr>
+    <div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i>&nbsp; Incluir as informações abaixo apenas quando o cliente enviar a mercadoria.</div>
+    <div class="row">
+        <div class="col-md-6 form-group">
+            <label for="acao">Ação realizada</label>
+            <select ng-model="Logistica.logistica.acao" id="acao" class="form-control">
+                <option value="" disabled selected hidden>Ação realizada</option>
+                <option value="0">Reenvio</option>
+                <option value="1">Cancelamento</option>
+            </select>
+        </div>
+        <div class="col-md-6 form-group">
+            <label for="motivo">Data de postagem</label>
+            <div class="date-picker">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    <input class="form-control" id="data" ng-model="Logistica.logistica.data_postagem" placeholder="Data de postagem" ui-date-mask />
+                    <div class="picker-wrap">
+                        <date-picker ng-model="Logistica.logistica.data_postagem"></date-picker>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-if="Logistica.logistica.acao == 1 && Logistica.rastreio.pedido.marketplace !== 'MERCADOLIVRE'">
+        <div class="col-md-12 form-group">
+            <label for="protocolo">Protocolo</label>
+            <input class="form-control" id="protocolo" ng-model="Logistica.logistica.protocolo" placeholder="Protocolo de cancelamento" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <label for="observacoes">Observações</label>
+            <textarea class="form-control" id="observacoes" ng-model="Logistica.logistica.observacoes" placeholder="Observacões gerais"></textarea>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="pull-right">
+            <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
+            <button busy="Salvando..." type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+    </div>
+</form>

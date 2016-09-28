@@ -24,5 +24,5 @@ class FaturamentoCodigo extends \Eloquent
     /**
      * @var array
      */
-    protected $fillable = ['servico', 'atual', 'fim'];
+    protected $fillable = ['*'];
 }

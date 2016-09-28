@@ -1,0 +1,179 @@
+.input-masked {
+    display: inline-block;
+    width: auto;
+    outline: none;
+    border: none;
+}
+
+.between-group {
+    > *:first-child,
+    > *:last-child {
+        width: calc(50% - 9px) !important;
+    }
+
+    > *:first-child {
+        float: left;
+    }
+
+    > *:last-child {
+        float: right;
+    }
+
+    > span {
+        float: left;
+        width: 18px;
+        line-height: 35px;
+        text-align: center;
+    }
+}
+
+.form-default {
+    padding: 20px;
+    border: 1px solid $color-master-light;
+    background: $color-white;
+
+    &.form-clean {
+        padding: 0;
+        border: none;
+        background: none transparent;
+    }
+
+    &:not(.no-space) {
+        .row {
+            margin-top: 20px;
+
+            &:first-of-type {
+                margin-top: 0;
+            }
+        }
+    }
+
+    .tabs-wrapper {
+        .tabs .tab a {
+            padding-left: 0;
+        }
+
+        .tabs-container {
+            padding-right: 0;
+        }
+    }
+
+    .form-group {
+        &.has-success input {
+            border-color: $color-success;
+        }
+
+        &.has-error input {
+            border-color: $color-danger;
+        }
+    }
+
+    textarea,
+    select,
+    input {
+        display: block;
+        width: 100%;
+        height: 35px;
+        line-height: 35px;
+        vertical-align: middle;
+        padding: 9px 12px;
+        margin: 0;
+        box-shadow: none;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        font-weight: 400;
+        outline: 0;
+        color: $color-master;
+        border: 1px solid $color-master-light;
+        background-image: none;
+        background-color: $color-master-lightest;
+
+        &:focus {
+            color: darken($color-master, 20%);
+            border-color: darken($color-master-light, 20%);
+            background-color: $color-master-lightest !important;
+        }
+    }
+
+    select {
+        padding-top: 0;
+        padding-bottom: 0;
+
+        /* &.ng-empty {
+            color: $color-master-light;
+
+            &:focus,
+            &:hover {
+                color: $color-master;
+            }
+        } */
+    }
+
+    textarea {
+        min-height: 100px;
+    }
+
+    fieldset {
+        position: relative;
+        padding: 20px 0;
+        margin: 10px 0 0 0;
+        outline: none;
+        border: none;
+        border-top: 1px solid $color-master-light;
+
+        &:first-child {
+            margin-top: 0;
+        }
+
+        &:last-child {
+            padding-bottom: 0;
+        }
+
+        legend {
+            font-family: $font-alt;
+            font-weight: bold;
+            font-size: 12px;
+            text-transform: uppercase;
+            padding: 0 10px 0 0;
+        }
+
+        .fieldset-actions {
+            position: absolute;
+            top: -3px;
+            right: 0;
+            padding: 0 0 0 10px;
+            background-color: $color-white;
+
+            [class*='btn-'] {
+                float: left;
+                height: 25px;
+                line-height: 24px;
+                margin-right: 5px;
+                padding: 0 8px;
+                font-size: 10px;
+
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+        }
+
+        > .row:first-of-type {
+            margin-top: 0;
+        }
+    }
+
+    .actions {
+        @extend .clearfix;
+        margin-top: 20px;
+
+        > * {
+            float: right;
+            margin-left: 10px;
+
+            &:last-child {
+                margin-left: 0;
+            }
+        }
+    }
+}

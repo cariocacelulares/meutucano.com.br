@@ -1,0 +1,19 @@
+<th>
+    <input class="form-control big" ng-model="ClienteList.filter['clientes.taxvat']" placeholder="CPF/CNPJ" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <input class="form-control big" ng-model="ClienteList.filter['clientes.nome']" placeholder="Nome do cliente" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <div class="date-picker">
+        <input class="form-control" ng-model="ClienteList.filter['clientes.created_at']" placeholder="Data"  />
+        <div class="picker-wrap">
+            <date-picker ng-model="ClienteList.filter['clientes.created_at']"></date-picker>
+        </div>
+    </div>
+</th>
+<th class="item-button">
+    <a title="Limpar filtros" class="btn-danger btn-reset-filter" ng-click="ClienteList.filterList.clear()">
+        <i class="fa-eraser"></i>
+    </a>
+</th>

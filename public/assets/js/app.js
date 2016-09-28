@@ -13,12 +13,14 @@
             'jcs-autoValidate',
             'ngFileUpload',
             'angular-loading-bar',
-            'angular.morris-chart',
             'ngDialog',
             'ngOnload',
-            'tableSort',
             'mp.datePicker',
             'ui.utils.masks',
-            'angular-clipboard'
+            'angular-clipboard',
+            'ngStorage',
+            'ngTagsInput',
+            'oitozero.ngSweetAlert',
+            '720kb.tooltips'
         ]);
 })();

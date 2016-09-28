@@ -1,0 +1,106 @@
+.live-tile, .list-tile, .copy-tile, .tile-strip .flip-list > li{
+	height:100%;
+	width:100%;
+	display: block;
+	margin: 0;
+	padding: 0;
+	//opacity: .6;
+}
+
+.tiles-container{
+	height: 100%;
+}
+/* clear fix */
+.tiles-container:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+.grid-sizer-large{
+	display: none;
+}
+.grid-sizer, .tile {
+  height: calc('50% - 1px');
+}
+
+
+.tile {
+  float: left;
+  width: 100px;
+  border-color: hsla(0, 0%, 0%, 0.7);
+  white-space: normal;
+  &.tile-first{
+  	position: relative;
+  	display: block;
+  	background-color: $color-complete-dark;
+  	
+		// background-image:url("http://inspirationhut3.inspirationhut.netdna-cdn.com/wp-content/uploads/2012/12/07c4b4610c538683b72a6e408729b38b.jpg"); 
+  // 		background-size:cover;
+  	&:after{
+  		background-image:url("http://inspirationhut3.inspirationhut.netdna-cdn.com/wp-content/uploads/2012/12/07c4b4610c538683b72a6e408729b38b.jpg"); 
+  		background-size:cover;
+  		content: " ";
+  		left: 0;
+  		right: 0;
+  		top: 0;
+  		bottom: 0;
+  		position: absolute;
+  		z-index: 0;
+  		opacity: .69;
+
+  	}
+  	&:before{
+  		background-image: url('../img/linear_gradient.png');
+  		background-repeat: repeat-x;
+  		content: " ";
+  		left: 0;
+  		right: 0;
+  		height: 45%;
+  		bottom: 0;
+  		position: absolute;
+  		z-index: 1;
+
+  	}
+  	.stock-rates > .company:nth-child(2) > div{
+  		display: table;
+  		margin: 0 auto;
+  		width:127px;
+  	}
+  	& > *{
+  			z-index: 1;
+  		}
+  }
+}
+
+.tile.height2 { height: calc('100% - 1px') ; }
+
+.tile.tile-split .live-tile{
+		width: 100%;
+}
+	.tile.tile-split .hidden-medium{
+		display: none;
+	}
+
+@media (min-height:800px){
+	.grid-sizer-large{
+		display: block;
+	}
+	.grid-sizer, .tile {
+  		height: calc('100% / 3 - 1px');
+	}
+	.tile.height2 { height: calc('(100% / 3)*2  - 1px '); }
+
+	.tile{
+		&.tile-split > div{
+			width: 50% !important;
+			display: inline-block;
+			white-space: normal;
+		}
+		&.tile-split .hidden-medium{
+			
+			display: inline-block;
+	
+		}
+	}
+
+}

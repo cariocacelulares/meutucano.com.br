@@ -12,8 +12,13 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\RefreshRastreios::class,
+        Commands\RefreshMagentoStock::class,
+        Commands\SkyhubPedido::class,
         Commands\SkyhubPedidos::class,
-        Commands\SkyhubCancelOldOrders::class
+        Commands\MagentoPedido::class,
+        Commands\MagentoPedidos::class,
+        Commands\MagentoProdutos::class,
+        Commands\CancelOldOrders::class,
     ];
 
     /**

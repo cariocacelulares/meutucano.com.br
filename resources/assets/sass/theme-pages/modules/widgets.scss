@@ -1,0 +1,10 @@
+
+
+#chart-1{
+	.nvd3 .nv-axis path.domain{
+		stroke-opacity: 0;
+	}
+	.nvd3 .nv-x.nv-axis .nv-axisMaxMin{
+		display: none;
+	}
+}

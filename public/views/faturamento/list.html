@@ -1,0 +1,95 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-barcode" title="Faturamento" description="Todos pedidos prontos para serem faturados."></page-title>
+    <div class="col-md-6 button-bar">
+        <form class="form-default form-clean" ng-submit="FaturamentoList.rastreioHelper.generateCode()">
+            <div class="col-md-4 col-md-offset-2 form-group">
+                <div class="input-group">
+                    <select ng-model="FaturamentoList.rastreioHelper.codigo.servico" class="bg-white">
+                        <option value="0">PAC</option>
+                        <option value="1">SEDEX</option>
+                    </select>
+                    <div class="input-group-btn">
+                        <button class="btn btn-primary" type="submit">Gerar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 form-group p-r-0">
+                <div class="input-group">
+                    <input type="text" ng-model="FaturamentoList.rastreioHelper.codigo.rastreio" class="bg-white" readonly>
+                    <div class="input-group-btn">
+                        <button clipboard text="FaturamentoList.rastreioHelper.codigo.rastreio" on-copied="FaturamentoList.rastreioHelper.codeCopied()" class="btn-success" type="button">
+                            <i class="fa fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<table table-list="FaturamentoList">
+    <thead>
+        <tr>
+            <th class="text-center" width="135">Código</th>
+            <th class="text-center" width="110">Marketplace</th>
+            <th class="text-center" width="130">Rastreio</th>
+            <th>Cliente</th>
+            <th class="text-center" width="100">Entrega</th>
+            <th class="text-center" width="100">Data</th>
+            <th width="20"></th>
+            <th width="75"></th>
+        </tr>
+        <tr class="table-filter" static-include="views/faturamento/list_filter.html"></tr>
+    </thead>
+    <tbody ng-if="FaturamentoList.tableData.data.length && !FaturamentoList.loading">
+        <tr ng-repeat="pedido in FaturamentoList.tableData.data" ng-class="{ 'priorizado': pedido.priorizado, 'segurado': pedido.segurado }">
+            <td class="text-center">
+                <i ng-if="pedido.segurado" tooltips tooltip-template="Pedido segurado" class="fa-lock"></i>
+                <span ng-if="!pedido.priorizado">
+                    {{ pedido.codigo_marketplace || 'Sem código' }}
+                </span>
+                <span ng-if="pedido.priorizado" tooltips tooltip-template="Pedido priorizado">
+                    {{ pedido.codigo_marketplace || 'Sem código' }}
+                </span>
+            </td>
+            <td class="text-center">{{ pedido.marketplace_readable }}</td>
+            <td class="text-center"><a ng-href="{{ pedido.rastreios[0].rastreio_url }}" target="_blank">{{ pedido.rastreios[0].rastreio || '-' }}</a></td>
+            <td>
+                <strong>{{ pedido.cliente.nome | uppercase }}</strong>
+                <br>
+                <small>
+                    {{ pedido.cliente.fone }} - CEP: <strong>{{ pedido.endereco.cep_readable }}</strong> -
+                    {{ pedido.endereco.cidade }} / {{ pedido.endereco.uf }}
+                </small>
+            </td>
+            <td class="text-center">{{ pedido.estimated_delivery }}</td>
+            <td class="text-center">{{ pedido.created_at }}</td>
+            <td class="text-center">
+                <a ng-click="FaturamentoList.comentarioHelper.openModal(pedido.id, true)" ng-class="{ 'text-gray': !pedido.comentarios.length }"><i class="fa-comments"></i></a>
+            </td>
+            <td class="text-center">
+                <dropdown>
+                        <li>
+                            <a ui-sref="app.pedidos.detalhe({id: pedido.id})"><i class="fa fa-eye"></i>&nbsp; Visualizar</a>
+                        </li>
+                        <li ng-if="pedido.notas.length && !pedido.segurado">
+                            <a ng-click="FaturamentoList.pedidoHelper.faturar(pedido.id, true)"><i class="fa fa-barcode"></i>&nbsp; Faturar</a>
+                        </li>
+                        <li ng-if="pedido.notas.length">
+                            <a ng-click="FaturamentoList.notaHelper.printXML(pedido.notas[pedido.notas.length - 1].id)"><i class="fa fa-file-code-o"></i>&nbsp; XML</a>
+                        </li>
+                        <li ng-if="pedido.notas.length">
+                            <a ng-click="FaturamentoList.notaHelper.printDanfe(pedido.notas[pedido.notas.length - 1].id)"><i class="fa fa-file-pdf-o"></i>&nbsp; DANFE</a>
+                        </li>
+                        <li ng-if="pedido.notas[0].devolucao">
+                            <a ng-click="FaturamentoList.notaHelper.printXML(pedido.notas[0].devolucao.id, true)">
+                                <i class="fa-file-code-o"></i>&nbsp; XML Devolução
+                            </a>
+                        </li>
+                        <li ng-if="pedido.rastreios.length">
+                            <a ng-click="FaturamentoList.rastreioHelper.printEtiqueta(pedido.rastreios[0].id)"><i class="fa fa-tag"></i>&nbsp; Etiqueta</a>
+                        </li>
+                </dropdown>
+            </td>
+        </tr>
+    </tbody>
+</table>

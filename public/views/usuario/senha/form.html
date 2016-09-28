@@ -1,0 +1,29 @@
+<h1>Gerenciando senha</h1>
+<form ng-submit="SenhaForm.save()" novalidate="novalidate" class="form-default">
+    <div class="row">
+        <div class="col-md-6 form-group">
+            <label for="site">Site/Serviço</label>
+            <input ng-model="SenhaForm.senha.site" class="form-control" id="site" placeholder="Nome do site" required />
+        </div>
+        <div class="col-md-6 form-group">
+            <label for="url">URL</label>
+            <input ng-model="SenhaForm.senha.url" class="form-control" id="url" placeholder="URL para acesso" />
+        </div>
+    </div>
+    <div class="row m-t-20">
+        <div class="col-md-6 form-group">
+            <label for="usuario">Usuário</label>
+            <input ng-model="SenhaForm.senha.usuario" class="form-control" id="usuario" placeholder="Usuário de acesso" required />
+        </div>
+        <div class="col-md-6 form-group">
+            <label for="senha">Senha</label>
+            <input ng-model="SenhaForm.senha.senha" class="form-control" id="senha" placeholder="Senha de acesso" required />
+        </div>
+    </div>
+    <div class="row">
+        <div class="pull-right">
+            <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
+            <button busy="Salvando..." type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+    </div>
+</form>

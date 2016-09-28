@@ -1,7 +1,7 @@
 <?php namespace App\Console\Commands;
 
-use App\Http\Controllers\SkyhubController;
 use Illuminate\Console\Command;
+use App\Http\Controllers\Integracao\SkyhubController;
 
 class SkyhubPedidos extends Command
 {
@@ -17,7 +17,7 @@ class SkyhubPedidos extends Command
      *
      * @var string
      */
-    protected $description = 'Importa pedidos aprovados da Skyhub';
+    protected $description = 'Importa pedidos da Skyhub';
 
     /**
      * Execute the console command.

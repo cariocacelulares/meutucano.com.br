@@ -1,3 +1,3 @@
 Aconteceu um erro:
 <br>
-{{ error }}
+{{ $error }}

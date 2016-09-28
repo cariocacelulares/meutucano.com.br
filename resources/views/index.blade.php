@@ -7,18 +7,14 @@
 
         <title>Meu Tucano</title>
 
-        <link rel="stylesheet" href="assets/css/bootstrap.css" />
-        <link rel="stylesheet" href="assets/css/pages.css" />
         <link rel="stylesheet" href="assets/css/app.css" />
 
-        <link rel="stylesheet" href="assets/css/toaster.css" />
-        <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" />
         <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.min.css" />
-        <link rel="stylesheet" href="bower_components/morris.js/morris.css" />
         <link rel="stylesheet" href="bower_components/ng-dialog/css/ngDialog.min.css" />
         <link rel="stylesheet" href="bower_components/ng-dialog/css/ngDialog-theme-default.min.css" />
-        <link rel="stylesheet" href="bower_components/angular-tablesort/tablesort.css">
         <link rel="stylesheet" href="bower_components/angular-date-picker/angular-date-picker.css" />
+        <link rel="stylesheet" href="bower_components/sweetalert/dist/sweetalert.css" />
+        <link rel="stylesheet" href="bower_components/angular-tooltips/dist/angular-tooltips.min.css" />
 
         <link rel="icon" type="image/x-icon" href="favicon.ico" />
     </head>
@@ -43,8 +39,6 @@
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/raphael/raphael.min.js"></script>
-    <script src="bower_components/morris.js/morris.min.js"></script>
-    <script src="bower_components/angular-morris-chart/src/angular-morris-chart.min.js"></script>
 
     <script src="bower_components/lodash/dist/lodash.min.js"></script>
     <script src="bower_components/restangular/dist/restangular.min.js"></script>
@@ -57,8 +51,6 @@
     <script src="bower_components/moment/locale/pt-br.js"></script>
     <script src="bower_components/moment-timezone/builds/moment-timezone.min.js"></script>
 
-    <script src="bower_components/angular-tablesort/js/angular-tablesort.js"></script>
-
     <script src="bower_components/angular-date-picker/angular-date-picker.js"></script>
 
     <script src="bower_components/ng-onload/release/ng-onload.min.js"></script>
@@ -66,12 +58,21 @@
 
     <script src="bower_components/angular-clipboard/angular-clipboard.js"></script>
 
+    <script src="bower_components/ngstorage/ngStorage.min.js"></script>
+    <script src="bower_components/ng-tags-input/ng-tags-input.min.js"></script>
+    <script src="bower_components/ngSweetAlert/SweetAlert.min.js"></script>
+    <script src="bower_components/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="bower_components/angular-tooltips/dist/angular-tooltips.min.js"></script>
+
     <!-- Application Scripts -->
     <script src="assets/js/app.js"></script>
 
     <script src="assets/js/src/services.js"></script>
     <script src="assets/js/src/directives.js"></script>
     <script src="assets/js/src/controllers.js"></script>
+    <script src="assets/js/src/components.js"></script>
+    <script src="assets/js/src/models.js"></script>
+    <script src="assets/js/src/helpers.js"></script>
 
     <script src="assets/js/config.js"></script>
     <script src="assets/js/routes.js"></script>
