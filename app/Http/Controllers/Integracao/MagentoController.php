@@ -438,8 +438,14 @@ class MagentoController extends Controller implements Integracao
                 }
             }
         } catch (\Exception $e) {
+            if ($e->getCode() == 2) {
+                $remove = $this->request('products/' . $product->sku, [], 'DELETE');
+                Log::notice("Produto {$product->sku} removido da fila de espera no tucanomg");
+            }
+
             Log::critical(logMessage($e, "Erro ao atualizar o estoque do produto {$product->sku} no magento."));
             reportError("Erro ao atualizar o estoque do produto {$product->sku} no magento." . $e->getMessage() . ' - ' . $e->getLine());
+            }
         }
     }
 
