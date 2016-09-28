@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Pedido\Rastreio;
 use App\Models\Pedido\Rastreio\Devolucao;
 use Illuminate\Support\Facades\Input;
+use App\Http\Controllers\Pedido\Rastreio\RastreioTrait;
 
 /**
  * Class DevolucaoController
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Input;
  */
 class DevolucaoController extends Controller
 {
-    use RestControllerTrait;
+    use RestControllerTrait, RastreioTrait;
 
     const MODEL = Devolucao::class;
 
@@ -77,7 +78,7 @@ class DevolucaoController extends Controller
             $rastreio->status = 5;
             $rastreio->save();
 
-            updateProtocolAndStatus($data, Input::get('protocolo'));
+            $this->updateProtocolAndStatus($data, Input::get('protocolo'));
 
             return $this->createdResponse($data);
         } catch(\Exception $ex) {
@@ -112,7 +113,7 @@ class DevolucaoController extends Controller
             $data->fill(Input::except(['protocolo']));
             $data->save();
 
-            updateProtocolAndStatus($data, Input::get('protocolo'));
+            $this->updateProtocolAndStatus($data, Input::get('protocolo'));
 
             return $this->showResponse($data);
         } catch(\Exception $ex) {

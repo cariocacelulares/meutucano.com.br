@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Pedido\Rastreio;
 use App\Models\Pedido\Rastreio\Logistica;
 use Illuminate\Support\Facades\Input;
+use App\Http\Controllers\Pedido\Rastreio\RastreioTrait;
 
 /**
  * Class LogisticaController
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Input;
  */
 class LogisticaController extends Controller
 {
-    use RestControllerTrait;
+    use RestControllerTrait, RastreioTrait;
 
     const MODEL = Logistica::class;
 
@@ -56,7 +57,7 @@ class LogisticaController extends Controller
                 $rastreio->status = 5;
                 $rastreio->save();
 
-                updateProtocolAndStatus($data, Input::get('protocolo'));
+                $this->updateProtocolAndStatus($data, Input::get('protocolo'));
             }
 
             return $this->createdResponse($data);
@@ -92,7 +93,7 @@ class LogisticaController extends Controller
             $data->fill(Input::except(['protocolo']));
             $data->save();
 
-            updateProtocolAndStatus($data, Input::get('protocolo'));
+            $this->updateProtocolAndStatus($data, Input::get('protocolo'));
 
             return $this->showResponse($data);
         } catch(\Exception $ex) {

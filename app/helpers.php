@@ -122,25 +122,6 @@ if (!function_exists('diasUteisPeriodo')) {
 }
 
 /**
- * Atualiza o protocolo e o status
- *
- * @param  Object $obj      Pi, Devolucao ou Logistica
- * @param  int $protocol    numero de procolo
- * @return void
- */
-function updateProtocolAndStatus($obj, $protocol) {
-    if ((int)$obj->acao === 1 && $protocol) {
-        if ($rastreio = App\Models\Pedido\Rastreio::find($obj->rastreio_id)) {
-            if ($pedido = App\Models\Pedido\Pedido::find($rastreio->pedido_id)) {
-                $pedido->protocolo = $protocol;
-                $pedido->status = 5;
-                $pedido->save();
-            }
-        }
-    }
-}
-
-/**
  * Envia um e-mail informando o erro para o desenvolvedor
  *
  * @param  string $error a mensagem completa de erro

@@ -17,7 +17,6 @@ class Devolucao extends \Eloquent
      * @var string
      */
     protected $table = 'pedido_rastreio_devolucoes';
-    protected $primaryKey = 'rastreio_id';
 
     /**
      * @var boolean
