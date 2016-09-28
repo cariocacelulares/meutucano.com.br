@@ -41,7 +41,7 @@ class MagentoController extends Controller implements Integracao
                     \Config::get('tucano.magento.api.host'),
                     [
                         'trace' => true,
-                        'exceptions' => true,
+                        'exceptions' => false,
                         'connection_timeout' => 1,
                         'cache_wsdl' => WSDL_CACHE_NONE
                     ]
