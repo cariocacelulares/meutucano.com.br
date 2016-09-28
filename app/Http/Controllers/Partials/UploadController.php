@@ -271,7 +271,6 @@ class UploadController extends Controller
                 $pedido->codigo_marketplace = $idMarketplace;
             }
 
-            $pedido->status = 2;
             $pedido->cliente_id = $cliente->id;
             $pedido->cliente_endereco_id = $clienteEndereco->id;
             $pedido->marketplace = $marketplace;
