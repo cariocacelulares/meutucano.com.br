@@ -14,7 +14,6 @@ class Pi extends \Eloquent
     use RevisionableTrait;
 
     protected $table = 'pedido_rastreio_pis';
-    protected $primaryKey = 'rastreio_id';
 
     /**
      * @var boolean
