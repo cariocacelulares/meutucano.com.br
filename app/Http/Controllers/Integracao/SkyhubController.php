@@ -10,6 +10,7 @@ use App\Models\Produto\Produto;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Pedido\RastreioController;
 
 /**
  * Class SkyhubController
