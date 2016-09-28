@@ -4,7 +4,7 @@
         <form class="form-default form-clean" ng-submit="FaturamentoList.rastreioHelper.generateCode()">
             <div class="col-md-4 col-md-offset-2 form-group">
                 <div class="input-group">
-                    <select ng-model="FaturamentoList.rastreioHelper.codigo.servico" class="bg-white">
+                    <select ng-model="FaturamentoList.rastreioHelper.codigo.servico" ng-init="FaturamentoList.rastreioHelper.codigo.servico = '0'" class="bg-white">
                         <option value="0">PAC</option>
                         <option value="1">SEDEX</option>
                     </select>
