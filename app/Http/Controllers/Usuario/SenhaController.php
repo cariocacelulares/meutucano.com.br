@@ -23,11 +23,13 @@ class SenhaController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function userPassword()
+    public function userPassword($id)
     {
         $m = self::MODEL;
 
-        $id = JWTAuth::parseToken()->authenticate()->id;
+        if ($id == 0) {
+            $id = JWTAuth::parseToken()->authenticate()->id;
+        }
 
         $list = $m::where('usuario_id', $id);
         $list = $this->handleRequest($list);

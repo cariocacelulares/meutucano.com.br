@@ -18,8 +18,8 @@
                  * @param  {Object} params
                  * @return {Object}
                  */
-                fromUser: function(params) {
-                    return Restangular.one('senhas/minhas').customGET("", params || {});
+                fromUser: function(id, params) {
+                    return Restangular.one('senhas', id || 0).customGET("", params || {});
                 }
             });
 
