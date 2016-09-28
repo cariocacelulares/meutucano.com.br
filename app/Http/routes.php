@@ -34,6 +34,7 @@ Route::group(['prefix' => '/api'], function() {
         Route::get('rastreios/etiqueta/{id}',  'Pedido\RastreioController@etiqueta');
 
         Route::get('search',  'Partials\SearchController@search');
+        Route::get('senhas/{id}', 'Usuario\SenhaController@userPassword');
 
         /**
          * Template ML
@@ -118,7 +119,6 @@ Route::group(['prefix' => '/api'], function() {
             /**
              * Senhas
              */
-            Route::get('senhas/{id}', 'Usuario\SenhaController@userPassword');
             Route::resource('senhas', 'Usuario\SenhaController', ['except' => ['create', 'edit']]);
 
             /**
