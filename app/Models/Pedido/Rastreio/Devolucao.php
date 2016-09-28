@@ -41,7 +41,7 @@ class Devolucao extends \Eloquent
      */
     protected $appends = [
         'motivo_description',
-        /*'protocolo'*/
+        'protocolo'
     ];
 
     /**
@@ -107,7 +107,7 @@ class Devolucao extends \Eloquent
      *
      * @return string
      */
-    /*public function getProtocoloAttribute()
+    public function getProtocoloAttribute()
     {
         if ((int)$this->acao === 1) {
             $pedido = Pedido::find($this->pedido_id);
@@ -115,5 +115,5 @@ class Devolucao extends \Eloquent
         } else {
             return null;
         }
-    }*/
+    }
 }
