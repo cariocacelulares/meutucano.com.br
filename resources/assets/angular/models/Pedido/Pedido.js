@@ -64,6 +64,15 @@
                 faturar: function(pedido_id) {
                     return Restangular.one('pedidos/faturar', pedido_id).get();
                 },
+
+                /**
+                 * Retorna dados do pedido para ser utilizados no grafico
+                 *
+                 * @return {Object}
+                 */
+                grafico: function() {
+                    return Restangular.one('pedidos/grafico').get();
+                },
             });
 
             return rest;

@@ -131,6 +131,7 @@ Route::group(['prefix' => '/api'], function() {
         /**
          * Pedidos
          */
+        Route::get('pedidos/grafico', 'Pedido\PedidoController@grafico');
         Route::put('pedidos/status/{pedido_id}', 'Pedido\PedidoController@alterarStatus');
         Route::put('pedidos/prioridade/{pedido_id}', 'Pedido\PedidoController@prioridade');
         Route::put('pedidos/segurar/{pedido_id}', 'Pedido\PedidoController@segurar');

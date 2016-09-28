@@ -63,6 +63,8 @@
     <script src="bower_components/ngSweetAlert/SweetAlert.min.js"></script>
     <script src="bower_components/sweetalert/dist/sweetalert.min.js"></script>
     <script src="bower_components/angular-tooltips/dist/angular-tooltips.min.js"></script>
+    <script src="bower_components/highcharts-ng/dist/highcharts-ng.min.js"></script>
+    <script src="bower_components/highcharts/highstock.src.js"></script>
 
     <!-- Application Scripts -->
     <script src="assets/js/app.js"></script>
