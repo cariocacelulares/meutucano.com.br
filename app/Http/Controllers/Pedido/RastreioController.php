@@ -351,6 +351,32 @@ class RastreioController extends Controller
     }
 
     /**
+     * Abre a tela de abertura de PI nos Correios
+     *
+     * @param  int $id
+     * @return void
+     */
+    public function pi($id)
+    {
+        $rastreio = Rastreio::find($id);
+
+        $infoPi = http_build_query([
+            'rastreio'    => $rastreio->rastreio,
+            'nome'        => $rastreio->pedido->cliente->nome,
+            'cep'         => $rastreio->pedido->endereco->cep,
+            'endereco'    => $rastreio->pedido->endereco->rua,
+            'numero'      => $rastreio->pedido->endereco->numero,
+            'complemento' => $rastreio->pedido->endereco->complemento,
+            'bairro'      => $rastreio->pedido->endereco->bairro,
+            'data'        => $rastreio->data_envio_readable,
+            'tipo'        => $rastreio->servico,
+            'status'      => ($rastreio->status == 3) ? 'e' : 'a'
+        ]);
+
+        return redirect()->away('http://www2.correios.com.br/sistemas/falecomoscorreios/?' . $infoPi);
+    }
+
+    /**
      * Gera o PDF da etiqueta dos correios
      *
      * @param $id

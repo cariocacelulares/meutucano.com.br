@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('PiFormController', PiFormController);
 
-    function PiFormController(Pi, $scope, toaster, $window, $httpParamSerializer) {
+    function PiFormController(Pi, $scope, toaster, $window, $httpParamSerializer, envService) {
         var vm = this;
 
         vm.pi = $scope.ngDialogData.pi;
@@ -26,20 +26,11 @@
          * Open PI
          */
         vm.openPi = function() {
-            var infoPi = {
-                rastreio: vm.rastreio.rastreio,
-                nome: vm.rastreio.pedido.cliente.nome,
-                cep: vm.rastreio.pedido.endereco.cep,
-                endereco: vm.rastreio.pedido.endereco.rua,
-                numero: vm.rastreio.pedido.endereco.numero,
-                complemento: vm.rastreio.pedido.endereco.complemento,
-                bairro: vm.rastreio.pedido.endereco.bairro,
-                data: vm.rastreio.data_envio_readable,
-                tipo: vm.rastreio.servico,
-                status: (vm.rastreio.status == 3) ? 'e' : 'a'
+            var auth = {
+                token: localStorage.getItem("satellizer_token")
             };
 
-            $window.open('http://www2.correios.com.br/sistemas/falecomoscorreios/?' + $httpParamSerializer(infoPi));
+            $window.open(envService.read('apiUrl') + '/rastreios/pi/' + vm.pi.rastreio_id + '?' + $httpParamSerializer(auth));
         };
     }
 
