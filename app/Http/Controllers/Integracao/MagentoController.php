@@ -437,10 +437,6 @@ class MagentoController extends Controller implements Integracao
                     Log::warning("Estoque do produto {$product->sku} não foi atualizado no magento.", (is_array($stock) ? $stock : [$stock]));
                 }
             }
-        } catch (\SoapFault $e) {
-            Log::debug('soap fault', [$e]);
-            /*$remove = $this->request('products/' . $product->sku, [], 'DELETE');
-            Log::notice("Produto {$product->sku} removido da fila de espera no tucanomg");*/
         } catch (\Exception $e) {
             Log::critical(logMessage($e, "Erro ao atualizar o estoque do produto {$produto_sku} no magento."));
             reportError("Erro ao atualizar o estoque do produto {$produto_sku} no magento." . $e->getMessage() . ' - ' . $e->getLine());
