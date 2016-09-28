@@ -35,23 +35,25 @@ class MagentoController extends Controller implements Integracao
      */
     public function __construct($useSoap = true)
     {
-        if ($useSoap && \Config::get('tucano.magento.enabled')) {
-            $this->api = new \SoapClient(
-                \Config::get('tucano.magento.api.host'),
-                [
-                    'trace' => true,
-                    'exceptions' => true,
-                    'connection_timeout' => 1,
-                    'cache_wsdl' => WSDL_CACHE_NONE
-                ]
-            );
-            $this->session = $this->api->login(
-                \Config::get('tucano.magento.api.user'),
-                \Config::get('tucano.magento.api.key')
-            );
-            Log::debug('Requisição soap no magento realizada');
-        } else {
-            Log::debug('Requisição soap no magento foi bloqueada, a integração com o magento está desativada!');
+        if ($useSoap) {
+            if (\Config::get('tucano.magento.enabled')) {
+                $this->api = new \SoapClient(
+                    \Config::get('tucano.magento.api.host'),
+                    [
+                        'trace' => true,
+                        'exceptions' => true,
+                        'connection_timeout' => 1,
+                        'cache_wsdl' => WSDL_CACHE_NONE
+                    ]
+                );
+                $this->session = $this->api->login(
+                    \Config::get('tucano.magento.api.user'),
+                    \Config::get('tucano.magento.api.key')
+                );
+                Log::debug('Requisição soap no magento realizada');
+            } else {
+                Log::debug('Requisição soap no magento foi bloqueada, a integração com o magento está desativada!');
+            }
         }
     }
 

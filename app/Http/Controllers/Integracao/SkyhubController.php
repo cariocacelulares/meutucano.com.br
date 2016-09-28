@@ -215,7 +215,6 @@ class SkyhubController extends Controller implements Integracao
             $cliente->tipo  = (strlen($order['customer']['vat_number']) > 11) ? 1 : 0;
             $cliente->nome  = $order['customer']['name'];
             $cliente->fone  = '(' . substr($clienteFone, 0, 2) . ')' . substr($clienteFone, 2, 5) . '-' . substr($clienteFone, 7);
-            $cliente->email = $order['customer']['email'];
             if ($cliente->save()) {
                 Log::info("Cliente {$cliente->id} importado para o pedido " . $order['code']);
             } else {
