@@ -35,7 +35,13 @@ class Kernel extends ConsoleKernel
         $schedule->command('skyhub:pedidos')
             ->everyMinute();
 
-        $schedule->command('skyhub:cancel')
+        $schedule->command('magento:pedidos')
+            ->everyMinute();
+
+        $schedule->command('refresh:stock')
+            ->everyMinute();
+
+        $schedule->command('pedidos:cancelold')
             ->daily();
     }
 }
