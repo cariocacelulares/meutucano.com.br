@@ -77,6 +77,24 @@ class ProdutoController extends Controller
     }
 
     /**
+     * Check if sku exists
+     *
+     * @param  int $sku
+     * @return bool      if exists
+     */
+    public function checkSku($sku)
+    {
+        try {
+            if ($produto = Produto::find($sku)) {
+                return $this->showResponse(['exists' => true]);
+            }
+        } catch (\Exception $e) {
+        }
+
+        return $this->showResponse(['exists' => false]);
+    }
+
+    /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */

@@ -172,22 +172,24 @@ class SkyhubController extends Controller implements Integracao
         try {
             Log::debug('Requisição skyhub para: ' . $url . ', method: ' . $method, $params);
 
-            # TODO: remover o return
-            return true;
+            if (!\Config::get('tucano.skyhub.enabled')) {
+                Log::debug('Requisição bloqueada, a integração com o skyhub está desativada!');
+                return null;
+            } else {
+                $client = new Client([
+                    'base_uri' => \Config::get('tucano.skyhub.api.url'),
+                    'headers' => [
+                        "Accept"       => "application/json",
+                        "Content-type" => "application/json",
+                        "X-User-Email" => \Config::get('tucano.skyhub.api.email'),
+                        "X-User-Token" => \Config::get('tucano.skyhub.api.token')
+                    ]
+                ]);
 
-            $client = new Client([
-                'base_uri' => \Config::get('tucano.skyhub.api.url'),
-                'headers' => [
-                    "Accept"       => "application/json",
-                    "Content-type" => "application/json",
-                    "X-User-Email" => \Config::get('tucano.skyhub.api.email'),
-                    "X-User-Token" => \Config::get('tucano.skyhub.api.token')
-                ]
-            ]);
+                $r = $client->request($method, $url, $params);
 
-            $r = $client->request($method, $url, $params);
-
-            return json_decode($r->getBody(), true);
+                return json_decode($r->getBody(), true);
+            }
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', method: ' . $method));
             return $e->getMessage();
@@ -398,37 +400,35 @@ class SkyhubController extends Controller implements Integracao
     public function orderInvoice($order)
     {
         try {
-            if (\Config::get('tucano.skyhub.enabled')) {
-                foreach ($order->produtos as $produto) {
-                    $jsonItens[] = [
-                        "sku" => $produto->produto->sku,
-                        "qty" => $produto->quantidade
-                    ];
-                }
-
-                $jsonData = [
-                    "shipment" => [
-                        "code"  => $order->rastreios->first()->rastreio,
-                        "items" => $jsonItens,
-                        "track" => [
-                            "code"    => $order->rastreios->first()->rastreio,
-                            "carrier" => "CORREIOS",
-                            "method"  => $order->rastreios->first()->servico
-                        ]
-                    ],
-                    "invoice" => [
-                        "key" => $order->nota->chave
-                    ]
+            foreach ($order->produtos as $produto) {
+                $jsonItens[] = [
+                    "sku" => $produto->produto->sku,
+                    "qty" => $produto->quantidade
                 ];
-
-                $this->request(
-                    sprintf('/orders/%s/shipments', $order->codigo_api),
-                    ['json' => $jsonData],
-                    'POST'
-                );
-
-                Log::notice("Dados de envio e nota fiscal atualizados do pedido {$order->id} / {$order->codigo_api} na Skyhub", $jsonData);
             }
+
+            $jsonData = [
+                "shipment" => [
+                    "code"  => $order->rastreios->first()->rastreio,
+                    "items" => $jsonItens,
+                    "track" => [
+                        "code"    => $order->rastreios->first()->rastreio,
+                        "carrier" => "CORREIOS",
+                        "method"  => $order->rastreios->first()->servico
+                    ]
+                ],
+                "invoice" => [
+                    "key" => $order->nota->chave
+                ]
+            ];
+
+            $this->request(
+                sprintf('/orders/%s/shipments', $order->codigo_api),
+                ['json' => $jsonData],
+                'POST'
+            );
+
+            Log::notice("Dados de envio e nota fiscal atualizados do pedido {$order->id} / {$order->codigo_api} na Skyhub", $jsonData);
         } catch (\Exception $e) {
             Log::critical(logMessage($e, 'Pedido não faturado na Skyhub'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);
             reportError('Pedido não faturado na Skyhub: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $order->id);
@@ -444,7 +444,7 @@ class SkyhubController extends Controller implements Integracao
     public function orderDelivered($pedido)
     {
         try {
-            if (\Config::get('tucano.skyhub.enabled') && (int)$pedido->status === 3 && $pedido->codigo_api) {
+            if ((int)$pedido->status === 3 && $pedido->codigo_api) {
                 $this->request(
                     sprintf('/orders/%s/delivery', $pedido->codigo_api),
                     [],

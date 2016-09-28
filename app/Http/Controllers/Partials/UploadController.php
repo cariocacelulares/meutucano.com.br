@@ -525,22 +525,29 @@ class UploadController extends Controller
         if ($this->nfe->dest->email) {
             $nome = (string) $this->nfe->dest->xNome;
             $email = (string) $this->nfe->dest->email;
-            $dataHora = date('His');
+            $nota_id = $nota->id;
+            $arquivo = storage_path('app/public/' . date('His') . '.pdf');
 
-            /*Mail::send('emails.compra', [
+            $mail = Mail::send('emails.compra', [
                 'nome' => $this->nfe->dest->xNome,
                 'produtos' => $produtos,
                 'rastreio' => $rastreio
-            ], function($message) use ($pedido->id, $dataHora, $email, $nome) {
-                with(new NotaController())->danfe($pedido->id, 'F', storage_path('app/public/' . $dataHora . '.pdf'));
+            ], function($message) use ($nota_id, $email, $nome, $arquivo) {
+                with(new NotaController())->danfe($nota_id, 'F', $arquivo);
 
                 $message
-                    ->attach(storage_path('app/public/' . $dataHora . '.pdf'), ['as' => 'nota.pdf', 'mime' => 'application/pdf'])
+                    ->attach($arquivo, ['as' => 'nota.pdf', 'mime' => 'application/pdf'])
                     ->to($email)
                     ->subject('Obrigado por comprar na Carioca Celulares On-line');
             });
 
-            unlink(storage_path('app/public/' . $dataHora . '.pdf'));*/
+            if  ($mail) {
+                Log::debug('E-mail com a nota enviado para: ' . $email);
+            } else {
+                Log::warning('Falha ao enviar e-mail com a nota para: ' . $email);
+            }
+
+            unlink($arquivo);
         }
 
         return true;

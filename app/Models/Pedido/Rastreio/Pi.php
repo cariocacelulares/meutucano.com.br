@@ -42,7 +42,7 @@ class Pi extends \Eloquent
      */
     protected $appends = [
         'status_description',
-        'protocolo'
+        /*'protocolo'*/
     ];
 
     /**
@@ -114,7 +114,7 @@ class Pi extends \Eloquent
      *
      * @return string
      */
-    public function getProtocoloAttribute()
+    /*public function getProtocoloAttribute()
     {
         if ((int)$this->acao === 1) {
             $pedido = Pedido::find($this->pedido_id);
@@ -122,5 +122,5 @@ class Pi extends \Eloquent
         } else {
             return null;
         }
-    }
+    }*/
 }
