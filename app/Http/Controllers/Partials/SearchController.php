@@ -33,7 +33,7 @@ class SearchController extends Controller
                 'rastreios.devolucao',
                 'rastreios.logistica',
                 'cliente',
-                'nota'
+                'notas'
             ])
             ->leftJoin('pedido_notas', 'pedidos.id', '=', 'pedido_notas.pedido_id')
             ->leftJoin('pedido_rastreios', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
