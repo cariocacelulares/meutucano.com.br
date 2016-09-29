@@ -6,6 +6,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Pedido\Rastreio\Pi;
 use App\Models\Pedido\Rastreio\Devolucao;
 use App\Models\Pedido\Rastreio\Logistica;
+use App\Models\Pedido\Rastreio\Monitorado;
 use App\Http\Controllers\Pedido\RastreioController;
 
 /**
@@ -46,7 +47,8 @@ class Rastreio extends \Eloquent
         'tipo_description',
         'data_envio_readable',
         'prazo_date',
-        'rastreio_url'
+        'rastreio_url',
+        'monitorado',
     ];
 
     /**
@@ -111,6 +113,16 @@ class Rastreio extends \Eloquent
     public function logistica()
     {
         return $this->hasOne(Logistica::class);
+    }
+
+    /**
+     * Monitorado
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function monitoramentos()
+    {
+        return $this->hasMany(Monitorado::class);
     }
 
     /**
@@ -183,5 +195,10 @@ class Rastreio extends \Eloquent
             'http://websro.correios.com.br/sro_bin/txect01$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS=%s',
             $this->rastreio
         );
+    }
+
+    public function getMonitoradoAttribute()
+    {
+        return !!$this->monitoramentos()->where('usuario_id', '=', getCurrentUserId())->first();
     }
 }

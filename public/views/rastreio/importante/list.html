@@ -9,7 +9,7 @@
             <th class="text-center" width="120">Envio</th>
             <th class="text-center" width="120">Prazo</th>
             <th class="text-center" width="150">Rastreio</th>
-            <th width="150">Status</th>
+            <th class="text-center" width="150">Status</th>
             <th width="45"></th>
         </tr>
         <tr class="table-filter" static-include="views/rastreio/importante/list_filter.html"></tr>
@@ -24,7 +24,7 @@
                 <strong>{{ rastreio.pedido.cliente.nome | uppercase }}</strong>
                 <br>
                 <small>
-                    {{ rastreio.pedido.cliente.fone }} - CEP: <strong>{{ rastreio.pedido.endereco.cep_readable }}</strong> -
+                    <span clipboard supported="supported" text="rastreio.pedido.cliente.fone | digits" title="Clique para copiar apenas os números">{{ rastreio.pedido.cliente.fone }}</span> - CEP: <strong clipboard supported="supported" text="rastreio.pedido.endereco.cep" title="Clique para copiar apenas os números">{{ rastreio.pedido.endereco.cep_readable }}</strong> -
                     {{ rastreio.pedido.endereco.cidade }} / {{ rastreio.pedido.endereco.uf }}
                 </small>
             </td>
