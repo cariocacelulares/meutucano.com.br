@@ -238,54 +238,56 @@ class PedidoController extends Controller
         $dia = date('d');
         $inicioMes = "{$ano}-{$mes}-01 00:00:00";
 
-        /*$list = [
-            'pendente'  => Pedido::selectRaw('DAY(created_at) as date, COUNT(*) as count')->where('status', '=', 0)->where('created_at', '>=', $inicioMes)->groupBy(DB::raw('DAY(created_at)'))->orderBy(DB::raw('DAY(created_at)'), 'ASC')->lists('count', 'date'),
-            'pago'         => Pedido::selectRaw('DAY(created_at) as date, COUNT(*) as count')->where('status', '=', 1)->where('created_at', '>=', $inicioMes)->groupBy(DB::raw('DAY(created_at)'))->orderBy(DB::raw('DAY(created_at)'), 'ASC')->lists('count', 'date'),
-            'enviado'     => Pedido::selectRaw('DAY(created_at) as date, COUNT(*) as count')->where('status', '=', 2)->where('created_at', '>=', $inicioMes)->groupBy(DB::raw('DAY(created_at)'))->orderBy(DB::raw('DAY(created_at)'), 'ASC')->lists('count', 'date'),
-            'entregue'   => Pedido::selectRaw('DAY(created_at) as date, COUNT(*) as count')->where('status', '=', 3)->where('created_at', '>=', $inicioMes)->groupBy(DB::raw('DAY(created_at)'))->orderBy(DB::raw('DAY(created_at)'), 'ASC')->lists('count', 'date'),
-            'cancelado' => Pedido::selectRaw('DAY(created_at) as date, COUNT(*) as count')->where('status', '=', 5)->where('created_at', '>=', $inicioMes)->groupBy(DB::raw('DAY(created_at)'))->orderBy(DB::raw('DAY(created_at)'), 'ASC')->lists('count', 'date'),
-        ];
+       $pedidos = Pedido
+            ::selectRaw('status, marketplace, COUNT(*) as count')
+            ->whereNotNull('status')
+            ->where('created_at', '>=', $inicioMes)
+            ->groupBy('status')
+            ->groupBy('marketplace')
+            ->orderBy('status', 'ASC')
+            ->orderBy('marketplace', 'ASC')
+            ->get();
 
-        foreach ($list as $key => $value) {
-            $aux = [];
-            for ($day=1; $day <= $dia; $day++) {
-                // $aux[] = (isset($value[$day])) ? $value[$day] : 0;
-                $aux[] = [$day, (isset($value[$day])) ? $value[$day] : 0];
+        /**
+         * Organiza os marketplaces
+         */
+        $marketplaces = [];
+        foreach ($pedidos as $pedido) {
+            if (!in_array(strtoupper($pedido->marketplace), $marketplaces)) {
+                $marketplaces[] = strtoupper($pedido->marketplace);
             }
-            $list[$key] = $aux;
         }
 
-        $list['ano'] = Pedido::where('created_at', 'LIKE', $ano . '-%')->orderBy('created_at', 'DESC')->count();
-        $list['mes'] = Pedido::where('created_at', 'LIKE', "{$ano}-{$mes}-%")->orderBy('created_at', 'DESC')->count();
-        $list['dia'] = Pedido::where('created_at', 'LIKE', "{$ano}-{$mes}-{$dia}%")->orderBy('created_at', 'DESC')->count();*/
+        /**
+         * Status possíveis
+         */
+        $status = \Config::get('tucano.pedido_status');
 
-        $marketplaces = Pedido::selectRaw('DISTINCT(marketplace) marketplace')->where('created_at', '>=', $inicioMes)->orderBy('marketplace', 'ASC')->lists('marketplace');
-        $marketplacesNames = $marketplaces;
-        $aux = [];
-        foreach ($marketplaces as $key => $marketplace) {
-            $aux[$marketplace] = 0;
-        }
-        $marketplaces = $aux;
-        unset($aux);
-
-        $list = [
-            'pendente'  => Pedido::selectRaw('marketplace, COUNT(*) as count')->where('status', '=', 0)->where('created_at', '>=', $inicioMes)->groupBy('marketplace')->orderBy('marketplace', 'ASC')->lists('count', 'marketplace'),
-            'pago'         => Pedido::selectRaw('marketplace, COUNT(*) as count')->where('status', '=', 1)->where('created_at', '>=', $inicioMes)->groupBy('marketplace')->orderBy('marketplace', 'ASC')->lists('count', 'marketplace'),
-            'enviado'     => Pedido::selectRaw('marketplace, COUNT(*) as count')->where('status', '=', 2)->where('created_at', '>=', $inicioMes)->groupBy('marketplace')->orderBy('marketplace', 'ASC')->lists('count', 'marketplace'),
-            'entregue'   => Pedido::selectRaw('marketplace, COUNT(*) as count')->where('status', '=', 3)->where('created_at', '>=', $inicioMes)->groupBy('marketplace')->orderBy('marketplace', 'ASC')->lists('count', 'marketplace'),
-            'cancelado' => Pedido::selectRaw('marketplace, COUNT(*) as count')->where('status', '=', 5)->where('created_at', '>=', $inicioMes)->groupBy('marketplace')->orderBy('marketplace', 'ASC')->lists('count', 'marketplace'),
-        ];
-
-        foreach ($list as $key => $value) {
-            $aux = [];
-
-            foreach ($value as $mkt => $qtd) {
-                $aux[$mkt] = $qtd;
+        /**
+         * Prepara a lista para quando não existir preenche corretamente com 0
+         */
+        $list = [];
+        foreach ($status as $state) {
+            foreach ($marketplaces as $marketplace) {
+                $list[strtolower($state)][] = 0;
             }
-            $list[$key] = array_values(array_merge($marketplaces, $aux));
         }
 
-        $list['marketplaces'] = $marketplacesNames;
+        /**
+         * Organiza os dados pra mostrar no gráfico
+         */
+        foreach ($pedidos as $pedido) {
+            $list[strtolower($status[$pedido->status])][array_search(strtoupper($pedido->marketplace), $marketplaces)] = $pedido->count;
+        }
+
+        /**
+         * Altera o nome do marketplace
+         */
+        if ($index = array_search('MERCADOLIVRE', $marketplaces)) {
+            $marketplaces[$index] = 'M.LIVRE';
+        }
+
+        $list['marketplaces'] = $marketplaces;
 
         return $this->listResponse($list);
     }

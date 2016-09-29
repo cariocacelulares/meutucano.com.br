@@ -21,7 +21,7 @@
 
 .thumbnail-wrapper{
     display: inline-block;
-    overflow: hidden;    
+    overflow: hidden;
     float:left;
     &.circular{
        @include border-radius(50%);
@@ -32,58 +32,58 @@
         &.d16{
             @include square(16+4*1px);
               & > *{
-                line-height: 12px 
-             }           
+                line-height: 12px
+             }
         }
         &.d24{
             @include square(24+4*1px);
              & > *{
-                line-height: 24px 
+                line-height: 24px
              }
-        }           
+        }
         &.d32{
             @include square(32+4*1px);
              & > *{
-                line-height: 28px 
-             }            
+                line-height: 28px
+             }
         }
         &.d48{
             @include square(48+4*1px);
              & > *{
-                line-height: 44px 
-             }            
+                line-height: 44px
+             }
         }
     }
     &.d16{
         @include square(16px);
          & > *{
-            line-height: 16px 
+            line-height: 16px
          }
     }
     &.d24{
         @include square(24px);
          & > *{
-            line-height: 24px 
+            line-height: 24px
          }
-    }    
+    }
     &.d32{
         @include square(32px);
          & > *{
-            line-height: 32px 
+            line-height: 32px
          }
     }
     &.d39{
         @include square(39px);
          & > *{
-            line-height: 39px 
+            line-height: 39px
          }
     }
     &.d48{
         @include square(48px);
          & > *{
-            line-height: 50px 
-         }        
-    } 
+            line-height: 50px
+         }
+    }
     & > *{
         vertical-align: middle;
         width: 100%;
@@ -174,52 +174,52 @@
 .scroll-x-hidden{
   overflow-x: hidden !important;
 }
-//Generic Padding Options 
+//Generic Padding Options
 
 @for $i from 1 through 17{
-  $step : $i*5;	
+  $step : $i*5;
   .p-t-#{$step} {
-    padding-top: ($step*1px);
+    padding-top: ($step*1px) !important;
   }
   .p-r-#{$step} {
-    padding-right: ($step*1px);
+    padding-right: ($step*1px) !important;
   }
    .p-l-#{$step} {
-    padding-left: ($step*1px);
+    padding-left: ($step*1px) !important;
   }
    .p-b-#{$step} {
-    padding-bottom: ($step*1px);
+    padding-bottom: ($step*1px) !important;
   }
   .padding-#{$step} {
-    padding: ($step*1px);
+    padding: ($step*1px) !important;
   }
 }
 
 
 @for $i from 1 through 17{
-  $step : $i*5;	
+  $step : $i*5;
   .m-t-#{$step} {
-    margin-top: ($step*1px);
+    margin-top: ($step*1px) !important;
   }
   .m-r-#{$step} {
-    margin-right: ($step*1px);
+    margin-right: ($step*1px) !important;
   }
    .m-l-#{$step} {
-    margin-left: ($step*1px);
+    margin-left: ($step*1px) !important;
   }
    .m-b-#{$step} {
-    margin-bottom: ($step*1px);
+    margin-bottom: ($step*1px) !important;
   }
 }
 //TODO add 768 hander
 //RESPONSIVER HANDLER BEGIN
-@media (max-width: 767px) { 
+@media (max-width: 767px) {
   .sm-pull-bottom, .sm-pull-up{
     position: relative;
   }
 
 @for $i from 1 through 17 {
-  $step : $i*5; 
+  $step : $i*5;
   .sm-p-t-#{$step} {
     padding-top: ($step*1px);
   }
@@ -238,7 +238,7 @@
 }
 
 @for $i from 1 through 17 {
-  $step : $i*5; 
+  $step : $i*5;
   .sm-m-t-#{$step} {
     margin-top: ($step*1px);
   }
@@ -272,7 +272,7 @@
   }
   .sm-pull-left{
   float: left !important;
-  } 
+  }
   .sm-pull-reset{
     float: none !important;
   }
@@ -334,13 +334,13 @@
 }
 
 .b-transparent{
-	border-color:rgba(0, 0, 0, 0.4);	
+	border-color:rgba(0, 0, 0, 0.4);
 }
 .b-transparent-white{
 	border-color:rgba(255, 255, 255, 0.3);
 }
 .b-grey{
-	border-color:#e5e9ec;	
+	border-color:#e5e9ec;
 }
 .b-white{
   border-color:#fff;
@@ -418,7 +418,7 @@
     margin-right: auto;
     width: 360px;
 }
-.error-container{  
+.error-container{
     margin-top: -100px;
     margin-left: auto;
     margin-right: auto;
