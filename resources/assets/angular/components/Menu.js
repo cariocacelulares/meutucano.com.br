@@ -117,6 +117,11 @@
                                 title: 'Devoluções pendentes',
                                 icon: 'fa-undo',
                                 sref: $state.href('app.rastreios.devolucoes')
+                            },
+                            {
+                                title: 'Rastreios monitorados',
+                                icon: 'fa-video-camera ',
+                                sref: $state.href('app.rastreios.monitorados')
                             }
                         ]
                     },

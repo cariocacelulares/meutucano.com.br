@@ -36,6 +36,12 @@
                     }
                 })
 
+                .state('app.rastreios.monitorados', {
+                    url: '/monitorados',
+                    templateUrl: 'views/rastreio/monitorado/list.html',
+                    controller: 'RastreioMonitoradoListController as RastreioMonitoradoList'
+                })
+
                 .state('app.rastreios.importantes', {
                     url: '/importantes',
                     templateUrl: 'views/rastreio/importante/list.html',

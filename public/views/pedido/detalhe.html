@@ -214,6 +214,11 @@
                                                 <i class="fa-picture-o"></i>&nbsp; {{ (rastreio.imagem_historico) ? 'Regerar'  : 'Gerar'}} imagem
                                             </a>
                                         </li>
+                                        <li>
+                                            <a ng-click="PedidoDetalhe.rastreioHelper.monitorar(rastreio.id, !rastreio.monitorado, true)">
+                                                <i class="fa-video-camera"></i>&nbsp; {{ (rastreio.monitorado) ? 'Parar de monitorar' : 'Monitorar' }}
+                                            </a>
+                                        </li>
                                     </dropdown>
                                 </div>
                                 <p class="clear">

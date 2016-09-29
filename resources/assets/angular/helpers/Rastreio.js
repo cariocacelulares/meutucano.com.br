@@ -198,6 +198,49 @@
                  */
                 codeCopied: function() {
                     toaster.pop('success', 'Sucesso!', 'O código foi copiado para sua área de transferência.');
+                },
+
+                /**
+                 * Monitora ou para de monitorar um rastreio
+                 *
+                 * @param  {int} rastreio_id
+                 * @param  {bool} monitorar
+                 * @param  {bool} updateVm
+                 * @return {void}
+                 */
+                monitorar: function(rastreio_id, monitorar, updateVm) {
+                    Rastreio.monitorar(rastreio_id, monitorar).then(function() {
+                        toaster.pop('success', 'Sucesso!', 'Agora você está monitorando este rastreio.');
+
+                        if (updateVm &&
+                            typeof this.vm != 'undefined' &&
+                            typeof this.vm.load != 'undefined') {
+                            this.vm.load();
+                        }
+                    }.bind(this));
+                },
+
+                /**
+                 * Retorna a classe da label para o status do rastreio
+                 *
+                 * @param  {string|int} rastreio_status
+                 * @return {string}
+                 */
+                parseStatusClass: function(rastreio_status) {
+                    switch (rastreio_status) {
+                        case '1':
+                        case '7':
+                        case '8':
+                            return 'info';
+                        case '2':
+                            return 'warning';
+                        case '4':
+                            return 'success';
+                        case '3':
+                        case '5':
+                        case '6':
+                            return 'danger';
+                    }
                 }
             };
         });

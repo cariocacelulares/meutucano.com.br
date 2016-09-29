@@ -28,12 +28,12 @@ Route::group(['prefix' => '/api'], function() {
         ]);
 
         Route::get('notas/xml/{id}/{devolucao}', 'Pedido\NotaController@xml');
-        Route::get('notas/danfe/{id}',                  'Pedido\NotaController@danfe');
-        Route::post('notas/email/{id}',                 'Pedido\NotaController@email');
+        Route::get('notas/danfe/{id}', 'Pedido\NotaController@danfe');
+        Route::post('notas/email/{id}', 'Pedido\NotaController@email');
 
-        Route::get('rastreios/etiqueta/{id}',  'Pedido\RastreioController@etiqueta');
+        Route::get('rastreios/etiqueta/{id}', 'Pedido\RastreioController@etiqueta');
 
-        Route::get('search',  'Partials\SearchController@search');
+        Route::get('search', 'Partials\SearchController@search');
         Route::get('senhas/minhas', 'Usuario\SenhaController@currentUserPassword');
 
         /**
@@ -49,34 +49,42 @@ Route::group(['prefix' => '/api'], function() {
             /**
              * Rastreios
              */
-            Route::put('rastreios/refresh_all',         'Pedido\RastreioController@refreshAll');
+            Route::put('rastreios/refresh_all', 'Pedido\RastreioController@refreshAll');
             Route::put('rastreios/refresh_status/{id}', 'Pedido\RastreioController@refreshStatus');
-            Route::put('rastreios/edit/{id}',           'Pedido\RastreioController@edit');
-            Route::get('rastreios/important',           'Pedido\RastreioController@important');
-            Route::get('rastreios/historico/{id}',      'Pedido\RastreioController@imagemHistorico');
-            Route::put('rastreios/historico/{id}',      'Pedido\RastreioController@forceScreenshot');
-            Route::get('rastreios/pi/{id}',             'Pedido\RastreioController@pi');
-            Route::resource('rastreios',                'Pedido\RastreioController', ['except' => ['create', 'edit']]);
+            Route::put('rastreios/edit/{id}', 'Pedido\RastreioController@edit');
+            Route::get('rastreios/important', 'Pedido\RastreioController@important');
+            Route::get('rastreios/historico/{id}', 'Pedido\RastreioController@imagemHistorico');
+            Route::put('rastreios/historico/{id}', 'Pedido\RastreioController@forceScreenshot');
+            Route::get('rastreios/pi/{id}', 'Pedido\RastreioController@pi');
+            Route::resource('rastreios', 'Pedido\RastreioController', ['except' => ['create', 'edit']]);
 
             /**
              * PI's
              */
             Route::put('pis/edit/{id}', 'Pedido\Rastreio\PiController@edit');
-            Route::get('pis/pending',   'Pedido\Rastreio\PiController@pending');
-            Route::resource('pis',      'Pedido\Rastreio\PiController', ['except' => ['create', 'edit']]);
+            Route::get('pis/pending', 'Pedido\Rastreio\PiController@pending');
+            Route::resource('pis', 'Pedido\Rastreio\PiController', ['except' => ['create', 'edit']]);
 
             /**
              * Devoluções
              */
             Route::put('devolucoes/edit/{id}', 'Pedido\Rastreio\DevolucaoController@edit');
-            Route::get('devolucoes/pending',   'Pedido\Rastreio\DevolucaoController@pending');
-            Route::resource('devolucoes',      'Pedido\Rastreio\DevolucaoController', ['except' => ['create', 'edit']]);
+            Route::get('devolucoes/pending', 'Pedido\Rastreio\DevolucaoController@pending');
+            Route::resource('devolucoes', 'Pedido\Rastreio\DevolucaoController', ['except' => ['create', 'edit']]);
 
             /**
              * Logística reversa
              */
             Route::put('logisticas/edit/{id}', 'Pedido\Rastreio\LogisticaController@edit');
-            Route::resource('logisticas',      'Pedido\Rastreio\LogisticaController', ['except' => ['create', 'edit']]);
+            Route::resource('logisticas', 'Pedido\Rastreio\LogisticaController', ['except' => ['create', 'edit']]);
+
+            /**
+             * Rastreios monitorados
+             */
+            Route::get('rastreio/monitorados/simple-list', 'Pedido\Rastreio\MonitoradoController@simpleList');
+            Route::get('rastreio/monitorados/list', 'Pedido\Rastreio\MonitoradoController@tableList');
+            Route::delete('rastreio/monitorados/parar/{rastreio_id}', 'Pedido\Rastreio\MonitoradoController@stop');
+            Route::resource('rastreio/monitorados', 'Pedido\Rastreio\MonitoradoController');
         });
 
         /**

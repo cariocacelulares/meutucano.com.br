@@ -49,6 +49,21 @@
                  */
                 codigo: function(servico) {
                     return Restangular.one('codigos/gerar', servico).customGET();
+                },
+
+                /**
+                 * Monitora ou para de monitorar um rastreio
+                 *
+                 * @param  {int} rastreio_id
+                 * @param  {bool} monitorar
+                 * @return {Object}
+                 */
+                monitorar: function(rastreio_id, monitorar) {
+                    if (monitorar) {
+                        return Restangular.one('rastreio/monitorados').customPOST({ 'rastreio_id': rastreio_id });
+                    } else {
+                        return Restangular.one('rastreio/monitorados/parar', rastreio_id).customDELETE();
+                    }
                 }
             });
 

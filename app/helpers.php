@@ -145,3 +145,15 @@ function reportError($error) {
 function numbers($string) {
     return preg_replace('/\D/', '', $string);
 }
+
+if (!function_exists('getCurrentUserId')) {
+    /**
+     * Retorna o id do usuário logado
+     *
+     * @return int
+     */
+    function getCurrentUserId()
+    {
+        return Tymon\JWTAuth\Facades\JWTAuth::parseToken()->authenticate()->id;
+    }
+}
