@@ -1,0 +1,14 @@
+<h1>Acessar minhas senhas</h1>
+<form ng-submit="closeThisDialog(protocolo)" novalidate="novalidate" class="form-default">
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <label for="protocolo">Informe sua senha</label>
+            <input ng-model="protocolo" id="protocolo" placeholder="Senha do tucano" type="password" required />
+        </div>
+    </div>
+    <div class="row">
+        <div class="pull-right">
+            <button busy="Salvando..." type="submit" class="btn btn-success">Acessar</button>
+        </div>
+    </div>
+</form>

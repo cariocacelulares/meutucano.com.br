@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Pedido\Rastreio;
+use App\Models\Pedido\Pedido;
 
 /**
  * Class Devolucao
@@ -16,7 +17,6 @@ class Devolucao extends \Eloquent
      * @var string
      */
     protected $table = 'pedido_rastreio_devolucoes';
-    protected $primaryKey = 'rastreio_id';
 
     /**
      * @var boolean
@@ -78,7 +78,7 @@ class Devolucao extends \Eloquent
      * @return string
      */
     protected function getMotivoDescriptionAttribute() {
-        return ($this->motivo >= 0) ? \Config::get('tucano.devolucao_status')[$this->motivo] : null;
+        return ($this->motivo >= 0) ? \Config::get('tucano.notas.devolucao_status')[$this->motivo] : null;
     }
 
     /**
@@ -102,15 +102,15 @@ class Devolucao extends \Eloquent
     }
 
     /**
-     * Return protocolo from rastreio
+     * Return protocolo from pedido
      *
      * @return string
      */
     public function getProtocoloAttribute()
     {
         if ((int)$this->acao === 1) {
-            $rastreio = Rastreio::find($this->rastreio_id);
-            return ($rastreio) ? $rastreio->protocolo : null;
+            $pedido = Pedido::find($this->pedido_id);
+            return ($pedido) ? $pedido->protocolo : null;
         } else {
             return null;
         }

@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Usuario\Usuario;
 use Illuminate\Support\Facades\Input;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * Class UsuarioController
@@ -57,7 +58,9 @@ class UsuarioController extends Controller
             if (Input::get('novasRoles')) {
                 $data->detachRoles();
                 foreach (Input::get('novasRoles') as $role) {
-                    if ($role) $data->roles()->attach($role);
+                    if ($role) {
+                        $data->roles()->attach($role);
+                    }
                 }
             }
             $data->save();
@@ -90,7 +93,9 @@ class UsuarioController extends Controller
             if (Input::get('novasRoles')) {
                 $data->detachRoles();
                 foreach (Input::get('novasRoles') as $role) {
-                    if ($role) $data->roles()->attach($role);
+                    if ($role) {
+                        $data->roles()->attach($role);
+                    }
                 }
             }
 
@@ -101,5 +106,24 @@ class UsuarioController extends Controller
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
+    }
+
+    /**
+     * Checa se a senha é igual
+     *
+     * @param  string $user_id
+     * @return bool
+     */
+    public function checkPassword($user_id)
+    {
+        $password = Input::get('password');
+
+        if ($usuario = Usuario::find($user_id)) {
+            if (Hash::check($password, $usuario->password)) {
+                return $this->showResponse(true);
+            }
+        }
+
+        return $this->showResponse(false);
     }
 }

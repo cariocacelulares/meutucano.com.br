@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Pedido\Rastreio;
+use App\Models\Pedido\Pedido;
 
 /**
  * Class Pi
@@ -13,7 +14,6 @@ class Pi extends \Eloquent
     use RevisionableTrait;
 
     protected $table = 'pedido_rastreio_pis';
-    protected $primaryKey = 'rastreio_id';
 
     /**
      * @var boolean
@@ -85,7 +85,7 @@ class Pi extends \Eloquent
      * @return string
      */
     public function setDataPagamentoAttribute($data_pagamento) {
-        $this->attributes['data_pagamento'] = Carbon::createFromFormat('d/m/Y', $data_pagamento)->format('Y-m-d');
+        $this->attributes['data_pagamento'] = ($data_pagamento) ? Carbon::createFromFormat('d/m/Y', $data_pagamento)->format('Y-m-d') : null;
     }
 
     /**
@@ -109,15 +109,15 @@ class Pi extends \Eloquent
     }
 
     /**
-     * Return protocolo from rastreio
+     * Return protocolo from pedido
      *
      * @return string
      */
     public function getProtocoloAttribute()
     {
         if ((int)$this->acao === 1) {
-            $rastreio = Rastreio::find($this->rastreio_id);
-            return ($rastreio) ? $rastreio->protocolo : null;
+            $pedido = Pedido::find($this->pedido_id);
+            return ($pedido) ? $pedido->protocolo : null;
         } else {
             return null;
         }

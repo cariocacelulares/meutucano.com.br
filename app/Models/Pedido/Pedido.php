@@ -5,6 +5,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Cliente\Cliente;
 use App\Models\Cliente\Endereco;
+use App\Events\OrderCancel;
+use App\Http\Controllers\Integracao\SkyhubController;
 
 /**
  * Class Pedido
@@ -37,6 +39,9 @@ class Pedido extends \Eloquent
         'total',
         'estimated_delivery',
         'status',
+        'protocolo',
+        'segurado',
+        'reembolso',
         'priorizado'
     ];
 
@@ -48,6 +53,9 @@ class Pedido extends \Eloquent
         'status_description',
         'can_prioritize',
         'can_hold',
+        'can_cancel',
+        'pagamento_metodo_readable',
+        'frete_metodo_readable'
     ];
 
     /**
@@ -58,18 +66,54 @@ class Pedido extends \Eloquent
     ];
 
     /**
-     * Set soft delete cascade
+     * Actions
      */
     protected static function boot() {
         parent::boot();
 
+        // Salvar pedido (novo ou existente)
+        static::saving(function($pedido) {
+            $oldStatus = ($pedido->getOriginal('status') === null) ? null : (int)$pedido->getOriginal('status');
+            $newStatus = ($pedido->status === null) ? null : (int)$pedido->status;
+
+            // Se realmente ocorreu uma mudança de status e o pedido não veio do site
+            if ($newStatus !== $oldStatus && strtolower($pedido->marketplace) != 'site') {
+                // Se o novo status for entregue, notifica a Skyhub
+                if ($newStatus === 3) {
+                    with(new SkyhubController())->orderDelivered($pedido);
+                }
+            }
+        });
+
+        // Atualizar pedido (existente)
+        static::updating(function($pedido) {
+            $oldStatus = ($pedido->getOriginal('status') === null) ? null : (int)$pedido->getOriginal('status');
+            $newStatus = ($pedido->status === null) ? null : (int)$pedido->status;
+
+            // Se realmente ocorreu uma mudança de status
+            if ($newStatus !== $oldStatus) {
+                // Se o status for cancelado
+                if ($newStatus === 5) {
+                    // Dispara o evento de cancelamento do pedido
+                    \Event::fire(new OrderCancel($pedido));
+
+                    // Se o status era enviado, pago ou entregue
+                    if (in_array($oldStatus, [1, 2, 3])) {
+                        $pedido->reembolso = true;
+                    }
+                }
+            }
+        });
+
+        // Set soft delete cascade
         static::deleting(function($pedido) {
-            $pedido->nota()->delete();
+            $pedido->notas()->delete();
             $pedido->rastreios()->delete();
         });
 
+        // Set soft delete cascade
         static::restoring(function($pedido) {
-            $pedido->nota()->withTrashed()->restore();
+            $pedido->notas()->withTrashed()->restore();
             $pedido->rastreios()->withTrashed()->restore();
         });
     }
@@ -77,11 +121,11 @@ class Pedido extends \Eloquent
     /**
      * Nota fiscal
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\hasMany
      */
-    public function nota()
+    public function notas()
     {
-        return $this->hasOne(Nota::class);
+        return $this->hasMany(Nota::class);
     }
 
     /**
@@ -151,17 +195,11 @@ class Pedido extends \Eloquent
      */
     protected function getStatusDescriptionAttribute()
     {
-        return ($this->status) ? \Config::get('tucano.pedido_status')[$this->status] : 'Desconhecido';
-    }
-
-    /**
-     * Return readable created_at
-     *
-     * @return string
-     */
-    protected function getCreatedAtReadableAttribute()
-    {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y H:i');
+        if (!isset(\Config::get('tucano.pedido_status')[$this->status])) {
+            return 'Desconhecido';
+        } else {
+            return \Config::get('tucano.pedido_status')[$this->status];
+        }
     }
 
     /**
@@ -182,19 +220,74 @@ class Pedido extends \Eloquent
     }
 
     /**
+     * Return readable payment method description
+     *
+     * @return string
+     */
+    protected function getPagamentoMetodoReadableAttribute()
+    {
+        $metodo = strtolower($this->pagamento_metodo);
+
+        if (!$metodo)
+            return null;
+
+        switch ($metodo) {
+            case 'credito':
+                $metodo = 'cartão de crédito';
+                break;
+            case 'debito':
+                $metodo = 'cartão de débito';
+                break;
+            case 'boleto':
+                $metodo = 'boleto';
+                break;
+            default:
+                $metodo = 'outro meio';
+                break;
+        }
+
+        return 'Pagamento via ' . $metodo;
+    }
+
+    /**
+     * Return readable shipment method description
+     *
+     * @return string
+     */
+    protected function getFreteMetodoReadableAttribute()
+    {
+        $metodo = strtolower($this->frete_metodo);
+
+        if (!$metodo)
+            return null;
+
+        switch ($metodo) {
+            case 'pac':
+                $metodo = 'PAC';
+                break;
+            case 'sedex':
+                $metodo = 'SEDEX';
+                break;
+            default:
+                $metodo = 'outro meio';
+                break;
+        }
+
+        return 'Envio via ' . $metodo;
+    }
+
+    /**
      * Return can_hold
      *
      * @return string
      */
     protected function getCanHoldAttribute()
     {
-        switch ($this->status) {
-            case 0:
-            case 1:
-                return true;
-            default:
-                return false;
+        if (in_array($this->status, [0,1])) {
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -204,13 +297,25 @@ class Pedido extends \Eloquent
      */
     protected function getCanPrioritizeAttribute()
     {
-        switch ($this->status) {
-            case 0:
-            case 1:
-                return true;
-            default:
-                return false;
+        if (in_array($this->status, [0,1])) {
+            return true;
         }
+
+        return false;
+    }
+
+    /**
+     * Return can_cancel
+     *
+     * @return string
+     */
+    protected function getCanCancelAttribute()
+    {
+        if (in_array($this->status, [0,1])) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -231,5 +336,15 @@ class Pedido extends \Eloquent
             return null;
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
+    }
+
+    /**
+     * @return string
+     */
+    public function getEstimatedDeliveryAttribute($estimated_delivery) {
+        if (!$estimated_delivery)
+            return null;
+
+        return Carbon::createFromFormat('Y-m-d', $estimated_delivery)->format('d/m/Y');
     }
 }

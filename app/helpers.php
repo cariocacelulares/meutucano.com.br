@@ -120,3 +120,40 @@ if (!function_exists('diasUteisPeriodo')) {
         }
     }
 }
+
+/**
+ * Envia um e-mail informando o erro para o desenvolvedor
+ *
+ * @param  string $error a mensagem completa de erro
+ * @return void
+ */
+function reportError($error) {
+    \Mail::send('emails.error', [
+        'error' => $error
+    ], function ($m) {
+        $m->from(\Config('tucano.report_email'), 'Meu Tucano');
+        $m->to(\Config('tucano.report_email'), 'DEV')->subject('Erro no sistema!');
+    });
+}
+
+/**
+ * Retorna apenas os digitos de uma string
+ *
+ * @param  string $string
+ * @return string
+ */
+function numbers($string) {
+    return preg_replace('/\D/', '', $string);
+}
+
+if (!function_exists('getCurrentUserId')) {
+    /**
+     * Retorna o id do usuário logado
+     *
+     * @return int
+     */
+    function getCurrentUserId()
+    {
+        return Tymon\JWTAuth\Facades\JWTAuth::parseToken()->authenticate()->id;
+    }
+}

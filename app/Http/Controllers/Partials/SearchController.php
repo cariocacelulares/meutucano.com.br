@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\Rest\RestResponseTrait;
 use App\Http\Controllers\Controller;
-use App\Models\Pedido;
+use App\Models\Pedido\Pedido;
+use App\Models\Produto\Produto;
+use App\Models\Cliente\Cliente;
+use App\Models\Pedido\Rastreio;
 use Illuminate\Support\Facades\Input;
 
 /**
@@ -20,43 +23,56 @@ class SearchController extends Controller
      */
     public function search()
     {
-        $query = Input::get('search');
+        $term = Input::get('term');
+        $busca = [];
 
-        /**
-         * Pedidos
-         */
-        $busca = Pedido::with([
-            'nota',
-            'cliente',
-            'rastreios', 'rastreios.rastreioRef',
-            'rastreios.pedido', 'rastreios.pedido.cliente', 'rastreios.pedido.endereco',
-            'rastreios.pi', 'rastreios.pi.rastreioRef',
-            'rastreios.devolucao', 'rastreios.devolucao.rastreioRef',
-            'rastreios.logistica', 'rastreios.logistica.rastreioRef',
-        ])
+        $busca['pedidos'] = Pedido
+            ::with([
+                'rastreios',
+                'rastreios.pi',
+                'rastreios.devolucao',
+                'rastreios.logistica',
+                'cliente',
+                'notas'
+            ])
             ->leftJoin('pedido_notas', 'pedidos.id', '=', 'pedido_notas.pedido_id')
-            ->join('clientes', 'pedidos.cliente_id', '=', 'clientes.id')
-            ->join('cliente_enderecos', 'pedidos.cliente_endereco_id', '=', 'cliente_enderecos.id')
             ->leftJoin('pedido_rastreios', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
             ->leftJoin('pedido_rastreio_pis', 'pedido_rastreios.id', '=', 'pedido_rastreio_pis.rastreio_id')
-            ->leftJoin('pedido_rastreio_logisticas', 'pedido_rastreios.id', '=', 'pedido_rastreio_logisticas.rastreio_id')
-            ->leftJoin('pedido_produtos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
-
-            ->orWhere('pedidos.id', 'LIKE', '%' . $query . '%')
-            ->orWhere('pedidos.codigo_marketplace', 'LIKE', '%' . $query . '%')
-            ->orWhere('clientes.nome', 'LIKE', '%' . $query . '%')
-            ->orWhere('cliente_enderecos.cep', 'LIKE', '%' . $query . '%')
-            ->orWhere('pedido_rastreios.rastreio', 'LIKE', '%' . $query . '%')
-            ->orWhere('pedido_rastreio_pis.codigo_pi', 'LIKE', '%' . $query . '%')
-            ->orWhere('pedido_rastreio_logisticas.autorizacao', 'LIKE', '%' . $query . '%')
-            ->orWhere('pedido_produtos.imei', 'LIKE', '%' . $query . '%')
-
+            ->orWhere('pedidos.id', '=', numbers($term))
+            ->orWhere('pedidos.codigo_marketplace', 'LIKE', '%' . $term . '%')
+            ->orWhere('pedidos.codigo_api', 'LIKE', '%' . $term . '%')
+            ->orWhere('pedido_rastreios.rastreio', 'LIKE', '%' . $term . '%')
+            ->orWhere('pedido_notas.chave', 'LIKE', '%' . $term . '%')
+            ->orWhere('pedido_rastreio_pis.codigo_pi', 'LIKE', '%' . $term . '%')
             ->groupBy('pedidos.id')
             ->orderBy('pedidos.created_at', 'DESC')
-
             ->get([
                 'pedidos.*'
             ]);
+
+        $busca['produtos'] = Produto
+            ::where('sku', 'LIKE', '%' . $term . '%')
+            ->orWhere('titulo', 'LIKE', '%' . $term . '%')
+            ->orWhere('ncm', 'LIKE', '%' . $term . '%')
+            ->orWhere('ean', 'LIKE', '%' . $term . '%')
+            ->orWhere('referencia', 'LIKE', '%' . $term . '%')
+            ->groupBy('sku')
+            ->orderBy('titulo', 'ASC')
+            ->get();
+
+        $busca['clientes'] = Cliente
+            ::with(['enderecos' => function($query)
+                {
+                    $query->orderBy('created_at', 'DESC')->take(1);
+                }])
+            ->orWhere('taxvat', 'LIKE', '%' . $term . '%')
+            ->orWhere('inscricao', 'LIKE', '%' . $term . '%')
+            ->orWhere('nome', 'LIKE', '%' . $term . '%')
+            ->orWhere('fone', 'LIKE', '%' . $term . '%')
+            ->orWhere('email', 'LIKE', '%' . $term . '%')
+            ->groupBy('id')
+            ->orderBy('nome', 'ASC')
+            ->get();
 
         return $this->listResponse($busca);
     }

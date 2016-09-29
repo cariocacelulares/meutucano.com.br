@@ -1,7 +1,7 @@
 <?php
 
 return [
-
+    'report_email' => env('REPORT_EMAIL', 'dev@cariocacelulares.com.br'),
     /**
      * CEP Padrão de envio
      */
@@ -44,11 +44,14 @@ return [
     /**
      * Operações fiscais
      */
-    'operacoes' => [5102, 5405, 6102, 6108, 6910],
-    'devolucao' => [1202, 2202],
+    'notas' => [
+        'operacoes' => [5102, 5405, 6102, 6108, 6910],
+        'devolucao' => [1202, 2202],
+        'estorno' => [1949, 2949],
 
-    'venda_interna' => 5102,
-    'venda_externa' => 6108,
+        'venda_interna' => 5102,
+        'venda_externa' => 6108,
+    ],
 
     /**
      * Feriados
@@ -64,7 +67,6 @@ return [
         '01/05',
         date('d/m', (easter_date(date('Y'))) + (60 * 86400)),
         '07/09',
-        '20/09',
         '12/10',
         '02/11',
         '15/11',
@@ -105,7 +107,6 @@ return [
         1 => 'Pago',
         2 => 'Enviado',
         3 => 'Entregue',
-        4 => 'Segurado',
         5 => 'Cancelado'
     ],
 
@@ -155,18 +156,21 @@ return [
             'email'   => 'dev@cariocacelulares.com.br',
             'token'   => env('SKYHUB_TOKEN', 'ciBmtUvQviXkcey7tkPb'),
             'url'     => 'http://in.skyhub.com.br',
-        ]
+        ],
+        'old_order' => 4
     ],
 
     /**
      * Magento
      */
     'magento' => [
+        'enabled' => env('MAGENTO_ENABLED', true),
         'api' => [
             'host' => env('MAGENTO_API_HOST', 'http://www.cariocacelulares.com.br/api/v2_soap/?wsdl'),
             'user' => env('MAGENTO_API_USER', 'carioca'),
             'key'  => env('MAGENTO_API_KEY', '#@carioca2016')
-        ]
+        ],
+        'old_order' => 7
     ],
 
     /**
@@ -174,6 +178,7 @@ return [
      */
     'services' => [
         'tucanomg' => [
+            'enabled' => env('TUCANOMG_ENABLED', true),
             'host'  => 'http://servicos.cariocacelulares.com.br/tucanomg/public/',
             'token' => '#@carioca2016servicetoken'
         ]

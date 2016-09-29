@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
+use App\Models\Pedido\Nota\Devolucao;
 
 /**
  * Class Nota
@@ -16,19 +17,15 @@ class Nota extends \Eloquent
     protected $table = 'pedido_notas';
 
     /**
-     * @var string
-     */
-    protected $primaryKey = 'pedido_id';
-
-    /**
-     * @var bool
-     */
-    public $incrementing = false;
-
-    /**
      * @var array
      */
-    protected $fillable = ['*'];
+    protected $fillable = [
+        'pedido_id',
+        'usuario_id',
+        'chave',
+        'arquivo',
+        'data',
+    ];
 
     /**
      * @var array
@@ -39,13 +36,30 @@ class Nota extends \Eloquent
     ];
 
     /**
+     * @var array
+     */
+    protected $with = [
+        'devolucao',
+    ];
+
+    /**
      * Pedido
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
      */
     public function pedido()
     {
         return $this->belongsTo(Pedido::class);
+    }
+
+    /**
+     * Pedido
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function devolucao()
+    {
+        return $this->HasOne(Devolucao::class);
     }
 
     /**

@@ -48,7 +48,8 @@
     }
 
     .button-bar {
-        [class*='btn'] {
+        &:not(.input-group-btn) > [class*='btn-'],
+        :not(.input-group-btn) > [class*='btn-'] {
             float: right;
             margin: 3px 0 0 10px;
 

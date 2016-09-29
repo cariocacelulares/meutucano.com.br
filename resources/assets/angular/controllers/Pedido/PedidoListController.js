@@ -14,7 +14,9 @@
          */
         vm.filterList = Filter.init('pedidos', vm, {
             'pedidos.codigo_marketplace': 'LIKE',
-            'clientes.nome':              'LIKE'
+            'clientes.nome':              'LIKE',
+            'pedidos.total':              'BETWEEN',
+            'pedidos.created_at':         'BETWEEN'
         });
 
         /**
@@ -23,7 +25,7 @@
          */
         vm.tableHeader = TableHeader.init('pedidos', vm);
 
-        vm.load = function(teste) {
+        vm.load = function() {
             vm.loading = true;
 
             Pedido.getList({

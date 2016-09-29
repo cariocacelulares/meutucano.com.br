@@ -1,23 +1,37 @@
+@mixin ellipsis($width) {
+    max-width: $width;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 // Posicionamento, comportamento e espaçamento
-.affix { position: fixed; }
-.hidden, .hide { display: none !important; }
-.show { display: block !important; }
-.invisible { visibility: hidden; }
-.pull-right { float: right !important; }
-.pull-left { float: left !important; }
-.clearfix { @include clearfix; }
-.m-t-0 { margin-top: 0 !important; }
-.m-l-0 { margin-left: 0 !important; }
-.m-b-0 { margin-bottom: 0 !important; }
-.m-r-0 { margin-right: 0 !important; }
-.p-t-0 { padding-top: 0 !important; }
-.p-l-0 { padding-left: 0 !important; }
-.p-b-0 { padding-bottom: 0 !important; }
-.p-r-0 { padding-right: 0 !important; }
-.m-t-100 { margin-top: 100px !important; }
-.m-b-100 { margin-bottom: 100px !important; }
-.m-r-100 { margin-right: 100px !important; }
-.m-l-100 { margin-left: 100px !important; }
+.affix { position: fixed }
+.hidden, .hide { display: none !important }
+.show { display: block !important }
+.invisible { visibility: hidden }
+.pull-right { float: right !important }
+.pull-left { float: left !important }
+.clearfix { @include clearfix }
+.m-t-0 { margin-top: 0 !important }
+.m-l-0 { margin-left: 0 !important }
+.m-b-0 { margin-bottom: 0 !important }
+.m-r-0 { margin-right: 0 !important }
+.p-t-0 { padding-top: 0 !important }
+.p-l-0 { padding-left: 0 !important }
+.p-b-0 { padding-bottom: 0 !important }
+.p-r-0 { padding-right: 0 !important }
+.m-t-100 { margin-top: 100px !important }
+.m-b-100 { margin-bottom: 100px !important }
+.m-r-100 { margin-right: 100px !important }
+.m-l-100 { margin-left: 100px !important }
+.m-t-3 { margin-top: 3px }
+
+.ellipsis-100 { @include ellipsis(100px); }
+.ellipsis-120 { @include ellipsis(120px); }
+.ellipsis-150 { @include ellipsis(150px); }
+.ellipsis-170 { @include ellipsis(170px); }
+.ellipsis-200 { @include ellipsis(200px); }
 
 .clear {
     display: block;
@@ -51,17 +65,19 @@
 }
 
 // Texto e fonte
-.font-alt { font-family: $font-alt; }
-.bg-white { background-color: $color-white; }
-.bg-gray { background: $color-info; }
-.text-gray { color: #ccc; }
-.batida { background: $color-info url('../../assets/img/meta.png') no-repeat right bottom !important; }
-.underline { text-decoration: underline; }
-.text-bold { font-weight: 700; }
-.text-upper { text-transform: uppercase; }
-.text-lower { text-transform: lowercase; }
-.transform-none { text-transform: none; }
-.lh-25 { line-height: 25px; }
+.font-alt { font-family: $font-alt }
+.bg-white { background-color: $color-white !important }
+.bg-gray { background: $color-info !important }
+.text-gray { color: #ccc }
+.batida { background: $color-info url('../../assets/img/meta.png') no-repeat right bottom !important }
+.underline { text-decoration: underline }
+.text-bold { font-weight: 700 }
+.text-upper { text-transform: uppercase }
+.text-lower { text-transform: lowercase }
+.transform-none { text-transform: none }
+.lh-25 { line-height: 25px }
+.d-rtl { direction: rtl }
+.d-ltr { direction: ltr }
 
 .text-hide {
     font: 0/0 a;
@@ -113,4 +129,31 @@
     text-overflow:ellipsis;
     width:100%;
     display:block;
+}
+
+.ellipsis-group {
+    span {
+        float: left;
+        width: calc(100% - 47px - 24px);
+        height: 30px;
+        line-height: 30px;
+        padding: 0 6px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border: 1px solid rgba($color-master-light, .70);
+        border-radius: 3px 0 0 3px;
+    }
+
+    [class*="btn-"]:not(.btn-group) {
+        float: right;
+        width: 34px;
+        border-radius: 0 3px 3px 0 !important;
+    }
+
+    &.w-150 {
+        span {
+            width: calc(150px - 34px - 24px);
+        }
+    }
 }

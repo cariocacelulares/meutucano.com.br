@@ -88,4 +88,27 @@ class ClienteController extends Controller
             return $this->clientErrorResponse($data);
         }
     }
+
+    /**
+     * Altera o e-mail do cliente
+     *
+     * @param  int $cliente_id
+     * @return  \Symfony\Component\HttpFoundation\Response
+     */
+    public function changeEmail($cliente_id) {
+        $m = self::MODEL;
+
+        try {
+            $email = \Request::get('email');
+
+            $data = $m::find($cliente_id);
+            $data->email = $email;
+            $data->save();
+
+            return $this->showResponse($data);
+        } catch(\Exception $ex) {
+            $data = ['exception' => $ex->getMessage()];
+            return $this->clientErrorResponse($data);
+        }
+    }
 }

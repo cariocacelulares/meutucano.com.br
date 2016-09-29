@@ -15,7 +15,7 @@
                  */
                 vm.openSub = function(menu) {
                     angular.forEach(vm.items, function(item) {
-                        if (item != menu)
+                        if (item !== menu)
                             item.subOpen = false;
                     });
 
@@ -30,7 +30,7 @@
                  */
                 vm.openInf = function(menu, sub) {
                     angular.forEach(menu.sub, function(item) {
-                        if (item != sub)
+                        if (item !== sub)
                             item.subOpen = false;
                     });
 
@@ -51,7 +51,13 @@
                         title: 'Pedidos',
                         sref: $state.href('app.pedidos.index'),
                         icon: 'fa-cubes',
-                        roles: ['admin', 'gestor', 'atendimento']
+                        roles: ['admin', 'gestor', 'atendimento', 'faturamento']
+                    },
+                    {
+                        title: 'Faturamento',
+                        sref: $state.href('app.faturamento.index'),
+                        icon: 'fa-barcode',
+                        roles: ['admin', 'faturamento']
                     },
                     {
                         title: 'Clientes',
@@ -62,12 +68,13 @@
                     {
                         title: 'Produtos',
                         icon: 'fa-dropbox',
-                        sub: [
-                            { title: 'Produtos', icon: 'fa-list', sref: $state.href('app.produtos.index') },
-                            { title: 'Linhas', icon: 'fa-list-alt', sref: $state.href('app.produtos.linhas.index') },
-                            { title: 'Marcas', icon: 'fa-list-alt', sref: $state.href('app.produtos.marcas.index') },
+                        sref: $state.href('app.produtos.index'),
+                        //sub: [
+                            // { title: 'Produtos', icon: 'fa-list', sref: $state.href('app.produtos.index') },
+                            // { title: 'Linhas', icon: 'fa-list-alt', sref: $state.href('app.produtos.linhas.index') },
+                            // { title: 'Marcas', icon: 'fa-list-alt', sref: $state.href('app.produtos.marcas.index') },
                             // { title: 'Assistência', icon: 'fa-wrench' },
-                        ],
+                        //],
                         roles: ['admin', 'gestor']
                     },
                     // {
@@ -110,6 +117,11 @@
                                 title: 'Devoluções pendentes',
                                 icon: 'fa-undo',
                                 sref: $state.href('app.rastreios.devolucoes')
+                            },
+                            {
+                                title: 'Rastreios monitorados',
+                                icon: 'fa-video-camera ',
+                                sref: $state.href('app.rastreios.monitorados')
                             }
                         ]
                     },
@@ -152,6 +164,11 @@
                                 icon: 'fa-users',
                                 sref: $state.href('app.interno.usuarios.index'),
                                 roles: ['admin']
+                            },
+                            {
+                                title: 'Minhas senhas',
+                                icon: 'fa-key',
+                                sref: $state.href('app.interno.senhas.minhas')
                             }
                         ]
                     },

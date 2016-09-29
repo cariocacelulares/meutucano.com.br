@@ -18,6 +18,11 @@
             ativo: '1'
         };
 
+        vm.sku = {
+            original: vm.produto.sku,
+            gerado: false
+        };
+
         vm.tabsHelper = TabsHelper;
         vm.linhas = {};
         vm.marcas = {};
@@ -138,9 +143,10 @@
          */
         vm.generateSku = function() {
             function generate() {
-                Produto.generateSku(vm.produto).then(function(product) {
+                Produto.generateSku(vm.sku.original).then(function(product) {
                     vm.produto.sku = product.sku;
                     $state.go('app.produtos.form', {sku: product.sku}, {notify: false});
+                    vm.sku.gerado = true;
 
                     toaster.pop('success', 'Sucesso!', 'Um novo SKU foi gerado para este produto!');
 
@@ -149,7 +155,7 @@
                             if (!vm.produto.atributos[i].pivot)
                                 vm.produto.atributos[i].pivot = {};
 
-                            vm.produto.atributos[i].pivot.produto_id = product.sku;
+                            vm.produto.atributos[i].pivot.produto_sku = product.sku;
                         }
                     }
                 });
@@ -180,10 +186,24 @@
          * @return {void}
          */
         vm.save = function() {
-            Produto.save(vm.produto, vm.produto.sku || null).then(function() {
-                toaster.pop('success', 'Sucesso!', 'Produto salvo com sucesso!');
-                $state.go('app.produtos.index');
-            });
+            function save() {
+                Produto.save(vm.produto, ((vm.sku.gerado) ? vm.produto.sku : vm.sku.original)).then(function() {
+                    toaster.pop('success', 'Sucesso!', 'Produto salvo com sucesso!');
+                    $state.go('app.produtos.index');
+                });
+            }
+
+            if (vm.sku.gerado || vm.sku.original == vm.produto.sku) {
+                save();
+            } else {
+                Produto.checkSku(vm.produto.sku).then(function(response) {
+                    if (response.exists) {
+                        toaster.pop('error', 'SKU existente!', 'Impossível cadastrar produto! Utilize outro SKU!');
+                    } else {
+                        save();
+                    }
+                });
+            }
         };
 
         /**

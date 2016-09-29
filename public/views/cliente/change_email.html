@@ -1,0 +1,15 @@
+<h1>E-mail do cliente</h1>
+<form ng-submit="closeThisDialog(ChangeEmail.email)" novalidate="novalidate" class="form-default">
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <label for="email">E-mail</label>
+            <input ng-model="ChangeEmail.email" id="email" placeholder="E-mail" type="email" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="pull-right">
+            <button type="button" ng-click="closeThisDialog(null)" class="btn btn-default m-r-10">Cancelar</button>
+            <button busy="Salvando..." type="submit" class="btn btn-success">Salvar</button>
+        </div>
+    </div>
+</form>

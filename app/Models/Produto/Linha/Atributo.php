@@ -67,7 +67,7 @@ class Atributo extends Model
      */
     public function produtos()
     {
-        return $this->belongsToMany(Produto::class, 'produto_atributo', 'atributo_id', 'produto_id');
+        return $this->belongsToMany(Produto::class, 'produto_atributo', 'atributo_id', 'produto_sku');
     }
 
     public function newPivot(Model $parent, array $attributes, $table, $exists)

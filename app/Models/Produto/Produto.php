@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Produto\Linha\Atributo;
+use App\Events\ProductStockChange;
 
 /**
  * Class Produto
@@ -58,6 +59,19 @@ class Produto extends Model
     ];
 
     /**
+     * Fire update event
+     */
+    protected static function boot() {
+        parent::boot();
+
+        static::updating(function($produto) {
+            if ($produto->getOriginal('estoque') != $produto->estoque) {
+                \Event::fire(new ProductStockChange($produto->sku));
+            }
+        });
+    }
+
+    /**
      * Linha
      *
      * @return \Illuminate\Database\Eloquent\Relations\belongsTo
@@ -84,7 +98,7 @@ class Produto extends Model
     public function atributos()
     {
         return $this
-            ->belongsToMany(Atributo::class, 'produto_atributo', 'produto_id', 'atributo_id')
+            ->belongsToMany(Atributo::class, 'produto_atributo', 'produto_sku', 'atributo_id')
             ->withPivot('opcao_id', 'valor');
     }
 

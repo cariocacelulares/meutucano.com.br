@@ -459,6 +459,10 @@ hr{
     font-weight: 600;
     color: $color-master;
 }
+.label-primary {
+    background-color: $color-primary;
+    color: #fff;
+}
 .label-success {
     background-color: $color-success;
     color: #fff;

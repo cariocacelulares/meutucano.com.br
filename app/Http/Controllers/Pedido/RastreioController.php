@@ -103,16 +103,12 @@ class RastreioController extends Controller
 
             $rastreios = $model::whereNotIn('status', [2, 3, 4, 5, 7, 8])->get();
 
-            dd($rastreios);
-
             foreach ($rastreios as $rastreio) {
                 $this->refresh($rastreio);
             }
-
-            return $this->showResponse([]);
         } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+            Log::warning(logMessage($e, 'Erro ao atualizar os rastreios'));
+            reportError('Erro ao atualizar os rastreios ' . $e->getMessage() . ' - ' . $e->getLine());
         }
     }
 
@@ -156,23 +152,17 @@ class RastreioController extends Controller
             if (!$ultimoEvento['acao']) {
                 $status = $rastreio->status;
             } elseif (strpos($ultimoEvento['detalhes'], 'por favor, entre em contato conosco clicando') !== false) {
-                $this->screenshot($rastreio);
                 $status = 3;
             } elseif(strpos($ultimoEvento['acao'], 'fluxo postal') !== false) {
-                $this->screenshot($rastreio);
                 $status = 3;
             } elseif ((strpos($ultimoEvento['acao'], 'devolvido ao remetente') !== false) || strpos($ultimoEvento['acao'], 'devolução ao remetente') !== false) {
-                $this->screenshot($rastreio);
                 $status = 5;
             } elseif (strpos($ultimoEvento['acao'], 'entrega efetuada') !== false) {
                 $rastreio->pedido->status = 3;
                 $rastreio->pedido->save();
 
-                $this->screenshot($rastreio);
-
                 $status = 4;
             } elseif (strpos($ultimoEvento['acao'], 'aguardando retirada') !== false) {
-                $this->screenshot($rastreio);
                 $status = 6;
             } elseif ($prazoEntrega < date('Ymd')) {
                 $status = 2;
@@ -182,7 +172,7 @@ class RastreioController extends Controller
                 $rastreio->data_envio = Carbon::createFromFormat('d/m/Y H:i', $this->firstStatus($rastreio->rastreio)['data'])->format('Y-m-d');
             }
 
-            $rastreio->status           = $status;
+            $rastreio->status = $status;
             $rastreio->save();
 
             return $rastreio;
@@ -194,10 +184,10 @@ class RastreioController extends Controller
 
     /**
      * Tira uma foto da tela do rastreio nos correios
-     * @param  Object  $rastreio
+     * @param  Rastreio|int  $rastreio
      * @return boolean
      */
-    protected function screenshot($rastreio)
+    public function screenshot($rastreio)
     {
         try {
             $browsershot = new \Spatie\Browsershot\Browsershot();
@@ -209,9 +199,27 @@ class RastreioController extends Controller
                 ->save(storage_path('app/public/rastreio/'. $rastreio->rastreio .'.jpg'));
 
             $rastreio->imagem_historico = $rastreio->rastreio . '.jpg';
-            $rastreio->save();
+            \Log::info('Screenshot salva com sucesso: ' . $rastreio->imagem_historico);
+            return $rastreio;
         } catch (\Exception $e) {
             \Log::error(logMessage($e, 'Não foi possível salvar a imagem do rastreio'));
+            return false;
+        }
+    }
+
+    /**
+     * Gera ou regera uma imagem do rastreio e salva
+     *
+     * @param  int $rastreio_id
+     * @return void
+     */
+    public function forceScreenshot($rastreio_id)
+    {
+        if ($rastreio = Rastreio::find($rastreio_id)) {
+            $rastreio = $this->screenshot($rastreio);
+            $rastreio->save();
+        } else {
+            \Log::error('Não foi possível gerar um screenshot: rastreio inválido');
         }
     }
 
@@ -343,6 +351,32 @@ class RastreioController extends Controller
     }
 
     /**
+     * Abre a tela de abertura de PI nos Correios
+     *
+     * @param  int $id
+     * @return void
+     */
+    public function pi($id)
+    {
+        $rastreio = Rastreio::find($id);
+
+        $infoPi = http_build_query([
+            'rastreio'    => $rastreio->rastreio,
+            'nome'        => $rastreio->pedido->cliente->nome,
+            'cep'         => $rastreio->pedido->endereco->cep,
+            'endereco'    => $rastreio->pedido->endereco->rua,
+            'numero'      => $rastreio->pedido->endereco->numero,
+            'complemento' => $rastreio->pedido->endereco->complemento,
+            'bairro'      => $rastreio->pedido->endereco->bairro,
+            'data'        => $rastreio->data_envio_readable,
+            'tipo'        => $rastreio->servico,
+            'status'      => ($rastreio->status == 3) ? 'e' : 'a'
+        ]);
+
+        return redirect()->away('http://www2.correios.com.br/sistemas/falecomoscorreios/?' . $infoPi);
+    }
+
+    /**
      * Gera o PDF da etiqueta dos correios
      *
      * @param $id
@@ -424,7 +458,7 @@ class RastreioController extends Controller
             $encomenda->setDestino($destino);
             $encomenda->setDimensao($dimensao);
             $encomenda->setEtiqueta($etiqueta);
-            $encomenda->setNotaNumero($rastreio->pedido->nota->numero);
+            $encomenda->setNotaNumero($rastreio->pedido->notas()->orderBy('created_at', 'DESC')->first()->numero);
             $encomenda->setLote(round($rastreio->pedido->total));
             $encomenda->setPeso(0.500 * (int) $rastreio->pedido->produtos->count());
 

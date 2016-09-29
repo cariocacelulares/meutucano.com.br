@@ -12,8 +12,13 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\RefreshRastreios::class,
+        Commands\RefreshMagentoStock::class,
+        Commands\SkyhubPedido::class,
         Commands\SkyhubPedidos::class,
-        Commands\SkyhubCancelOldOrders::class
+        Commands\MagentoPedido::class,
+        Commands\MagentoPedidos::class,
+        Commands\MagentoProdutos::class,
+        Commands\CancelOldOrders::class,
     ];
 
     /**
@@ -30,7 +35,13 @@ class Kernel extends ConsoleKernel
         $schedule->command('skyhub:pedidos')
             ->everyMinute();
 
-        $schedule->command('skyhub:cancel')
+        $schedule->command('magento:pedidos')
+            ->everyMinute();
+
+        $schedule->command('refresh:stock')
+            ->everyMinute();
+
+        $schedule->command('pedidos:cancelold')
             ->daily();
     }
 }

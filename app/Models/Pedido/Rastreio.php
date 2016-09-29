@@ -6,6 +6,8 @@ use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Pedido\Rastreio\Pi;
 use App\Models\Pedido\Rastreio\Devolucao;
 use App\Models\Pedido\Rastreio\Logistica;
+use App\Models\Pedido\Rastreio\Monitorado;
+use App\Http\Controllers\Pedido\RastreioController;
 
 /**
  * Class Rastreio
@@ -33,9 +35,7 @@ class Rastreio extends \Eloquent
         'servico',
         'valor',
         'prazo',
-        'observacao',
         'status',
-        'protocolo',
         'imagem_historico'
     ];
 
@@ -47,7 +47,8 @@ class Rastreio extends \Eloquent
         'tipo_description',
         'data_envio_readable',
         'prazo_date',
-        'rastreio_url'
+        'rastreio_url',
+        'monitorado',
     ];
 
     /**
@@ -56,6 +57,23 @@ class Rastreio extends \Eloquent
     protected $casts = [
         'status' => 'string'
     ];
+
+    /**
+     * Actions
+     */
+    protected static function boot() {
+        parent::boot();
+
+        // Salvar rastreio (novo ou existente)
+        static::saving(function($rastreio) {
+            $oldStatus = ($rastreio->getOriginal('status') === null) ? null : (int)$rastreio->getOriginal('status');
+            $newStatus = ($rastreio->status === null) ? null : (int)$rastreio->status;
+
+            if ($newStatus !== $oldStatus && in_array($newStatus, [3, 4, 5, 6])) {
+                with(new RastreioController())->screenshot($rastreio);
+            }
+        });
+    }
 
     /**
      * Pedido
@@ -74,7 +92,7 @@ class Rastreio extends \Eloquent
      */
     public function pi()
     {
-        return $this->hasOne(Pi::class, 'rastreio_id');
+        return $this->hasOne(Pi::class);
     }
 
     /**
@@ -84,7 +102,7 @@ class Rastreio extends \Eloquent
      */
     public function devolucao()
     {
-        return $this->hasOne(Devolucao::class, 'rastreio_id');
+        return $this->hasOne(Devolucao::class);
     }
 
     /**
@@ -94,7 +112,17 @@ class Rastreio extends \Eloquent
      */
     public function logistica()
     {
-        return $this->hasOne(Logistica::class, 'rastreio_id');
+        return $this->hasOne(Logistica::class);
+    }
+
+    /**
+     * Monitorado
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function monitoramentos()
+    {
+        return $this->hasMany(Monitorado::class);
     }
 
     /**
@@ -167,5 +195,10 @@ class Rastreio extends \Eloquent
             'http://websro.correios.com.br/sro_bin/txect01$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS=%s',
             $this->rastreio
         );
+    }
+
+    public function getMonitoradoAttribute()
+    {
+        return !!$this->monitoramentos()->where('usuario_id', '=', getCurrentUserId())->first();
     }
 }

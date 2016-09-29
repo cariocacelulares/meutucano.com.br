@@ -1,6 +1,7 @@
 <?php namespace App\Models\Pedido;
 
 use App\Models\Produto\Produto;
+use App\Events\ProductDispach;
 
 /**
  * Class PedidoProduto
@@ -33,6 +34,22 @@ class PedidoProduto extends \Eloquent
      * @var array
      */
     protected $appends = ['total'];
+
+    /**
+     * Actions
+     */
+    protected static function boot() {
+        parent::boot();
+
+        // Quando um novo pedido produto for criado
+        static::created(function($pedidoProduto) {
+            $pedido = $pedidoProduto->pedido;
+
+            if ((int)$pedido->status !== 5) {
+                \Event::fire(new ProductDispach($pedidoProduto->produto, $pedidoProduto->quantidade));
+            }
+        });
+    }
 
     /**
      * Produto

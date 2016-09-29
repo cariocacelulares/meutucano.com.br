@@ -36,6 +36,12 @@
                     }
                 })
 
+                .state('app.rastreios.monitorados', {
+                    url: '/monitorados',
+                    templateUrl: 'views/rastreio/monitorado/list.html',
+                    controller: 'RastreioMonitoradoListController as RastreioMonitoradoList'
+                })
+
                 .state('app.rastreios.importantes', {
                     url: '/importantes',
                     templateUrl: 'views/rastreio/importante/list.html',
@@ -70,6 +76,12 @@
                     }
                 })
 
+                .state('app.faturamento.index', {
+                    url: '/list',
+                    templateUrl: 'views/faturamento/list.html',
+                    controller: 'FaturamentoListController as FaturamentoList'
+                })
+
                 .state('app.faturamento.notas', {
                     url: '/notas',
                     templateUrl: 'views/faturamento/notas.html',
@@ -100,7 +112,7 @@
                     url: '/pedidos',
                     templateUrl: 'views/layouts/default.html',
                     data: {
-                        roles: ['admin', 'gestor', 'atendimento']
+                        roles: ['admin', 'gestor', 'atendimento', 'faturamento']
                     }
                 })
 
@@ -163,6 +175,20 @@
                     url: '/{id}/senhas',
                     templateUrl: 'views/usuario/senha/list.html',
                     controller: 'SenhaListController as SenhaList'
+                })
+
+                /**
+                 * Senhas
+                 */
+                .state('app.interno.senhas', {
+                    url: '/interno',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.interno.senhas.minhas', {
+                    url: '/minhas',
+                    templateUrl: 'views/usuario/senha/minhas.html',
+                    controller: 'MinhaSenhaController as MinhaSenha'
                 })
 
                 /**
@@ -249,20 +275,6 @@
                     url: '/{id}',
                     templateUrl: 'views/produto/marca/form.html',
                     controller: 'MarcaFormController as MarcaForm'
-                })
-
-                /**
-                 * Interno
-                 */
-                .state('app.interno.senhas', {
-                    url: '/senhas',
-                    templateUrl: 'views/layouts/default.html'
-                })
-
-                .state('app.interno.senhas.minhas', {
-                    url: '/minhas',
-                    templateUrl: 'views/interno/senhas/minhas.html',
-                    controller: 'MinhaSenhaController as MinhaSenha'
                 })
             ;
         });

@@ -1,5 +1,8 @@
 <div id="page-header" class="row">
     <page-title icon="fa-user" title="{{ ClienteDetalhe.cliente.nome }}" description="Informações do Cliente"></page-title>
+    <div class="col-md-6 button-bar">
+            <a onclick="history.back()" title="Voltar para a página anterior" class="btn-default"><i class="fa-reply"></i>&nbsp; Voltar</a>
+    </div>
 </div>
 <div class="row">
     <div class="col-md-6">
@@ -16,15 +19,20 @@
                     </div>
                     <div class="row" ng-if="ClienteDetalhe.cliente.fone">
                         <p class="pull-left">Telefone</p>
-                        <p class="pull-right bold">{{ ClienteDetalhe.cliente.fone }}</p>
+                        <p class="pull-right bold" clipboard supported="supported" text="ClienteDetalhe.cliente.fone | digits" title="Clique para copiar apenas os números">{{ ClienteDetalhe.cliente.fone }}</p>
                     </div>
-                    <div class="row" ng-if="ClienteDetalhe.cliente.email">
+                    <div class="row">
                         <p class="pull-left">E-mail</p>
-                        <p class="pull-right bold">{{ ClienteDetalhe.cliente.email }}</p>
+                        <p class="pull-right bold">
+                            <span ng-click="ClienteDetalhe.clienteHelper.changeEmail(ClienteDetalhe.cliente, true)">
+                                <span ng-class="{ 'hint-text': !ClienteDetalhe.cliente.email }">{{ ClienteDetalhe.cliente.email || 'Não informado' }}</span>
+                                &nbsp;<i class="fa-pencil"></i>
+                            </span>
+                        </p>
                     </div>
                     <div class="row" ng-if="ClienteDetalhe.cliente.taxvat_readable">
                         <p class="pull-left">CPF / CNPJ</p>
-                        <p class="pull-right bold">{{ ClienteDetalhe.cliente.taxvat_readable }}</p>
+                        <p class="pull-right bold" clipboard supported="supported" text="ClienteDetalhe.cliente.taxvat" title="Clique para copiar apenas os números">{{ ClienteDetalhe.cliente.taxvat_readable }}</p>
                     </div>
                     <div class="row" ng-if="ClienteDetalhe.cliente.inscricao">
                         <p class="pull-left">Inscrição</p>
@@ -54,7 +62,7 @@
                         {{ endereco.rua + ' - ' + endereco.numero }} <br/>
                         {{ endereco.bairro + ((endereco.complemento) ? ',' + endereco.complemento : '') }} <br/>
                         {{ endereco.cidade + ' / ' + endereco.uf }} <br/>
-                        {{ endereco.cep_readable }} <br/>
+                        <span clipboard supported="supported" text="endereco.cep" title="Clique para copiar apenas os números">{{ endereco.cep_readable }}</span> <br/>
                     </div>
                     <hr ng-if="!$last" />
                 </div>
@@ -74,7 +82,6 @@
                 <th>Status</th>
                 <th>Data</th>
                 <th>Valor</th>
-                <th width="45"></th>
             </thead>
             <tbody ng-if="!ClienteDetalhe.cliente.pedidos.length">
                 <tr>
@@ -85,16 +92,11 @@
             </tbody>
             <tbody>
                 <tr ng-if="ClienteDetalhe.cliente.pedidos.length" ng-repeat="pedido in ClienteDetalhe.cliente.pedidos">
-                    <td>{{ pedido.codigo_marketplace || 'Sem código' }}</td>
+                    <td><a ui-sref="app.pedidos.detalhe({id: pedido.id})">{{ pedido.codigo_marketplace || 'Sem código' }}</a></td>
                     <td>{{ pedido.marketplace_readable || 'Site' }}</td>
                     <td><span class="label label-{{ ClienteDetalhe.parseStatusClass(pedido) }}">{{ pedido.status_description }}</span></td>
                     <td>{{ pedido.created_at }}</td>
                     <td>{{ pedido.total | currency }}</td>
-                    <td>
-                        <a class="btn-info" ui-sref="app.pedidos.detalhe({id: pedido.id})">
-                            <i class="fa-eye"></i>
-                        </a>
-                    </td>
                 </tr>
             </tbody>
         </table>

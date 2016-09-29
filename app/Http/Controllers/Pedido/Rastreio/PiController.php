@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Pedido\Rastreio;
 use App\Models\Pedido\Rastreio\Pi;
 use Illuminate\Support\Facades\Input;
+use App\Http\Controllers\Pedido\Rastreio\RastreioTrait;
 
 /**
  * Class PiController
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Input;
  */
 class PiController extends Controller
 {
-    use RestControllerTrait;
+    use RestControllerTrait, RastreioTrait;
 
     const MODEL = Pi::class;
 
@@ -73,22 +74,16 @@ class PiController extends Controller
             }
             $data = $m::create(Input::except(['protocolo']));
 
+            $rastreio = Rastreio::find(Input::get('rastreio_id'));
             if (Input::has('valor_pago')) {
-                $data->rastreio->status = 8;
+                $rastreio->status = 8;
             } else {
-                $data->rastreio->status = 7;
+                $rastreio->status = 7;
             }
 
-            $data->rastreio->save();
+            $rastreio->save();
 
-            if ((int)$data->acao === 1) {
-                if ($protocolo = Input::get('protocolo')) {
-                    if ($rastreio = Rastreio::find($data->rastreio_id)) {
-                        $rastreio->protocolo = $protocolo;
-                        $rastreio->save();
-                    }
-                }
-            }
+            $this->updateProtocolAndStatus($data, Input::get('protocolo'));
 
             return $this->createdResponse($data);
         } catch(\Exception $ex) {
@@ -123,14 +118,15 @@ class PiController extends Controller
             $data->fill(Input::except(['protocolo']));
             $data->save();
 
-            if ((int)$data->acao === 1) {
-                if ($protocolo = Input::get('protocolo')) {
-                    if ($rastreio = Rastreio::find($data->rastreio_id)) {
-                        $rastreio->protocolo = $protocolo;
-                        $rastreio->save();
-                    }
-                }
+            if (Input::has('valor_pago')) {
+                $data->rastreio->status = 8;
+            } else {
+                $data->rastreio->status = 7;
             }
+
+            $data->rastreio->save();
+
+            $this->updateProtocolAndStatus($data, Input::get('protocolo'));
 
             return $this->showResponse($data);
         } catch(\Exception $ex) {

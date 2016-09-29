@@ -20,7 +20,8 @@ class Usuario extends Authenticatable
         'name',
         'email',
         'username',
-        'password'
+        'password',
+        'remember_token',
     ];
 
     /**

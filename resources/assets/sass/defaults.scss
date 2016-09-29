@@ -35,6 +35,10 @@ input,
 select {
     background-color: #FFF;
 
+    &[type="number"] {
+        padding-right: 0 !important;
+    }
+
     &:focus {
         outline: none;
     }
@@ -97,4 +101,8 @@ hr {
 
 [for] {
     cursor: pointer;
+}
+
+[clipboard] {
+    cursor: copy;
 }

@@ -17,7 +17,7 @@ class ProdutoAtributoPivot extends Pivot
      * @var array
      */
     protected $fillable = [
-        'produto_id',
+        'produto_sku',
         'atributo_id',
         'opcao_id',
         'valor',
@@ -27,7 +27,7 @@ class ProdutoAtributoPivot extends Pivot
      * @var array
      */
     protected $casts = [
-        'produto_id' => 'string',
+        'produto_sku' => 'string',
         'atributo_id' => 'string',
         'opcao_id' => 'string',
     ];
@@ -49,6 +49,6 @@ class ProdutoAtributoPivot extends Pivot
      */
     public function produto()
     {
-        return $this->belongsTo(Produto::class, 'produto_id');
+        return $this->belongsTo(Produto::class, 'produto_sku');
     }
 }

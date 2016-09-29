@@ -1,23 +1,23 @@
 <?php namespace App\Console\Commands;
 
-use App\Http\Controllers\Integracao\SkyhubController;
 use Illuminate\Console\Command;
+use App\Http\Controllers\Integracao\MagentoController;
 
-class SkyhubCancelOldOrders extends Command
+class MagentoPedidos extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'skyhub:cancel';
+    protected $signature = 'magento:pedidos';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Cancela os pedidos com mais de 3 dias úteis sem pagamento';
+    protected $description = 'Importa pedidos do Magento';
 
     /**
      * Execute the console command.
@@ -26,7 +26,7 @@ class SkyhubCancelOldOrders extends Command
      */
     public function handle()
     {
-        $return = with(new SkyhubController())->cancelOldOrders();
+        $return = with(new MagentoController())->queue();
         $this->comment($return);
     }
 }

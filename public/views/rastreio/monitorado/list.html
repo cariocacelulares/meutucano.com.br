@@ -1,0 +1,51 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-video-camera" title="Rastreios monitorados" description="Mostra os rastreios que você está monitorando."></page-title>
+</div>
+<table table-list="RastreioMonitoradoList">
+    <thead>
+        <tr>
+            <th class="text-center" width="140">Código</th>
+            <th>Cliente</th>
+            <th class="text-center" width="120">Envio</th>
+            <th class="text-center" width="120">Prazo</th>
+            <th class="text-center" width="150">Rastreio</th>
+            <th class="text-center" width="150">Status</th>
+            <th width="45"></th>
+        </tr>
+        <tr class="table-filter" static-include="views/rastreio/monitorado/list_filter.html"></tr>
+    </thead>
+    <tbody ng-if="RastreioMonitoradoList.tableData && !RastreioMonitoradoList.loading">
+        <tr ng-repeat="monitorado in RastreioMonitoradoList.tableData.data">
+            <td class="text-center fs-11">
+                <strong>{{ monitorado.rastreio.pedido.marketplace }}</strong><br>
+                {{ monitorado.rastreio.pedido.codigo_marketplace || 'Sem código' }}
+            </td>
+            <td>
+                <strong>{{ monitorado.rastreio.pedido.cliente.nome | uppercase }}</strong>
+                <br>
+                <small>
+                    <span clipboard supported="supported" text="monitorado.rastreio.pedido.cliente.fone | digits" title="Clique para copiar apenas os números">{{ monitorado.rastreio.pedido.cliente.fone }}</span> - CEP: <strong clipboard supported="supported" text="monitorado.rastreio.pedido.endereco.cep" title="Clique para copiar apenas os números">{{ monitorado.rastreio.pedido.endereco.cep_readable }}</strong> -
+                    {{ monitorado.rastreio.pedido.endereco.cidade }} / {{ monitorado.rastreio.pedido.endereco.uf }}
+                </small>
+            </td>
+            <td class="text-center">{{ monitorado.rastreio.data_envio_readable }}</td>
+            <td class="text-center">
+                {{ monitorado.rastreio.prazo_date }}<br>
+                <small class="hint-text">{{ monitorado.rastreio.prazo }} dia(s)</small>
+            </td>
+            <td class="text-center">
+                <a title="Rastrear código" target="_blank" ng-href="{{ monitorado.rastreio.rastreio_url }}">{{ monitorado.rastreio.rastreio }}</a>
+            </td>
+            <td class="text-center">
+                <span class="label {{ (monitorado.rastreio.status == 2) ? 'label-warning' : 'label-danger' }} m-b-0">
+                    {{ monitorado.rastreio.status_description }}
+                </span>
+            </td>
+            <td>
+                <a class="btn-info" ui-sref="app.pedidos.detalhe({id: monitorado.rastreio.pedido.id})">
+                    <i class="fa-eye"></i>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>

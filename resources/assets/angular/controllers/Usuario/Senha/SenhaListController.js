@@ -57,6 +57,18 @@
                 vm.load();
             });
         };
-    }
 
+        /**
+         * Esconde / mostra a senha
+         * @param  {int} index indice da senha
+         * @return {void}
+         */
+        vm.toglePassword = function(index) {
+            if (vm.tableData.data[index].inputType == 'text') {
+                vm.tableData.data[index].inputType = 'password';
+            } else {
+                vm.tableData.data[index].inputType = 'text';
+            }
+        };
+    }
 })();

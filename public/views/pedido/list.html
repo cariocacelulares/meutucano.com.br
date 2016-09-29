@@ -4,13 +4,13 @@
 <table table-list="PedidoList">
     <thead>
         <tr>
-            <th class="text-center" width="160">Código</th>
-            <th class="text-center" width="150">Marketplace</th>
+            <th class="text-center" width="140">Código</th>
+            <th class="text-center" width="130">Marketplace</th>
             <th>Cliente</th>
-            <th class="text-center" width="120">Valor</th>
-            <th class="text-center" width="120">Data</th>
-            <th class="text-center" width="150">Status</th>
-            <th width="75" style="min-width: 75px;"></th>
+            <th class="text-center" width="180">Valor</th>
+            <th class="text-center" width="230">Data</th>
+            <th class="text-center" width="120">Status</th>
+            <th width="75"></th>
         </tr>
         <tr class="table-filter" static-include="views/pedido/list_filter.html"></tr>
     </thead>
@@ -22,7 +22,7 @@
                 <strong>{{ pedido.cliente.nome | uppercase }}</strong>
                 <br>
                 <small>
-                    {{ pedido.cliente.fone }} - CEP: <strong>{{ pedido.endereco.cep_readable }}</strong> -
+                    <span clipboard supported="supported" text="pedido.cliente.fone | digits" title="Clique para copiar apenas os números">{{ pedido.cliente.fone }}</span> - CEP: <strong clipboard supported="supported" text="pedido.endereco.cep" title="Clique para copiar apenas os números">{{ pedido.endereco.cep_readable }}</strong> -
                     {{ pedido.endereco.cidade }} / {{ pedido.endereco.uf }}
                 </small>
             </td>
@@ -31,6 +31,9 @@
             <td class="text-center bold">
                 <span class="label label-{{ PedidoList.parseStatusClass(pedido) }} m-b-0">
                     {{ pedido.status_description }}
+                    <small ng-if="pedido.reembolso">(Reembolsado)</small>
+                    <small ng-if="pedido.segurado">(Segurado)</small>
+                    <small ng-if="pedido.protocolo">({{ pedido.protocolo }})</small>
                 </span>
             </td>
             <td class="text-center">
