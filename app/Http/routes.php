@@ -5,7 +5,7 @@
  */
 Route::get('/', function() { return view('index'); });
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
-Route::get('clientes/shopsystem/{taxvat}', 'Cliente\ClienteController@shopsystem');
+Route::get('pedidos/shopsystem/{taxvat}', 'Pedido\PedidoController@shopsystem');
 
 /**
  * API
