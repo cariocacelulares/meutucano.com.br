@@ -72,6 +72,26 @@
                 totalOrdersDate: function() {
                     return Restangular.one('pedidos/total-orders-date').get();
                 },
+
+                totalOrders: function(mes, ano) {
+                    if (typeof mes !== 'undefined' && !isNaN(parseInt(mes))) {
+                        mes = parseInt(mes);
+                    } else {
+                        mes = false;
+                    }
+
+                    if (typeof ano !== 'undefined' && !isNaN(parseInt(ano))) {
+                        ano = parseInt(ano);
+                    } else {
+                        ano = false;
+                    }
+
+                    var string = '';
+                    string = (mes) ? '/' + mes : '';
+                    string += (ano) ? '/' + ano : '';
+
+                    return Restangular.one('pedidos/total-orders' + string).get();
+                },
             });
 
             return rest;

@@ -26,6 +26,8 @@
 .m-r-100 { margin-right: 100px !important }
 .m-l-100 { margin-left: 100px !important }
 .m-t-3 { margin-top: 3px }
+.b-l-1 { border-left: 1px solid $color-master-light }
+.b-r-1 { border-left: 1px solid $color-master-light }
 
 .ellipsis-100 { @include ellipsis(100px); }
 .ellipsis-120 { @include ellipsis(120px); }
@@ -81,6 +83,7 @@
 .fz-10 { font-size: 10px }
 .fz-15 { font-size: 15px }
 .fz-20 { font-size: 20px }
+.fz-22 { font-size: 22px }
 .fz-25 { font-size: 25px }
 .fz-30 { font-size: 30px }
 .fz-35 { font-size: 35px }

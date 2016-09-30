@@ -3,7 +3,12 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <div class="panel-title">
-                    <i class="fa-cubes"></i>&nbsp; Pedidos
+                    <i class="fa-cubes"></i>&nbsp; Status por marketplace
+                </div>
+                <div class="panel-controls">
+                    <a ng-click="Dashboard.loadTotalOrdersStatus()" class="btn-default">
+                        <i class="fa-refresh"></i>
+                    </a>
                 </div>
             </div>
             <div class="panel-body p-l-5 p-r-15">
@@ -17,47 +22,67 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="panel-title">
-                            <i class="fa-arrow-{{ (Dashboard.ordersDate.ano.atual[1] > Dashboard.ordersDate.ano.ultimo[1]) ? 'up' : 'down' }}"
-                                tooltips tooltip-template="{{ Dashboard.ordersDate.ano.ultimo[0] + ': ' + Dashboard.ordersDate.ano.ultimo[1] }}"></i>&nbsp;
-                                {{ Dashboard.ordersDate.ano.atual[0] }}
+                                <i class="fa-shopping-cart"></i>&nbsp; Pedidos
+                        </div>
+                        <div class="panel-controls">
+                            <a ng-click="Dashboard.loadTotalOrdersDate()" class="btn-default">
+                                <i class="fa-refresh"></i>
+                            </a>
                         </div>
                     </div>
                     <div class="panel-body text-center">
-                        <span class="bold fz-30">{{ Dashboard.ordersDate.ano.atual[1] }}</span>
+                        <div class="row">
+                            <div class="col-md-6 p-l-10">
+                                <span class="fz-22" ng-bind="Dashboard.ordersDate.dia.ultimo[1]"></span>
+                                <br/>
+                                <small class="hint-text">Ontem</small>
+                            </div>
+                            <div class="col-md-6 p-r-10 b-l-1">
+                                <span class="fz-22 text-success"
+                                    ng-bind="Dashboard.ordersDate.dia.atual[1]"
+                                    ng-class="{ 'text-danger': (Dashboard.ordersDate.dia.atual[1] < Dashboard.ordersDate.dia.ultimo[1]) }">
+                                </span>
+                                <br/>
+                                <small class="hint-text">Hoje</small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 p-l-10 p-t-5">
+                                <span class="fz-22" ng-bind="Dashboard.ordersDate.mes.ultimo[1]"></span>
+                                <br/>
+                                <small class="hint-text">{{ Dashboard.ordersDate.mes.ultimo[0] }}</small>
+                            </div>
+                            <div class="col-md-6 p-r-10 b-l-1 p-t-5">
+                                <span class="fz-22 text-success"
+                                    ng-bind="Dashboard.ordersDate.mes.atual[1]"
+                                    ng-class="{ 'text-danger': (Dashboard.ordersDate.mes.atual[1] < Dashboard.ordersDate.mes.ultimo[1]) }">
+                                </span>
+                                <br/>
+                                <small class="hint-text">{{ Dashboard.ordersDate.mes.atual[0] }}</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row m-b-20">
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="panel-title">
-                            <i class="fa-arrow-{{ (Dashboard.ordersDate.mes.atual[1] > Dashboard.ordersDate.mes.ultimo[1]) ? 'up' : 'down' }}"
-                                tooltips tooltip-template="{{ Dashboard.ordersDate.mes.ultimo[0] + ': ' + Dashboard.ordersDate.mes.ultimo[1] }}"></i>&nbsp;
-                                {{ Dashboard.ordersDate.mes.atual[0] }}
-                        </div>
-                    </div>
-                    <div class="panel-body text-center">
-                        <span class="bold fz-30">{{ Dashboard.ordersDate.mes.atual[1] }}</span>
-                    </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <i class="fa-line-chart"></i>&nbsp; Pedidos por dia
+                </div>
+                <div class="panel-controls">
+                    <a ng-click="Dashboard.loadTotalOrders(false, true)" tooltips tooltip-template="Adicionar" class="btn-default m-l-5">
+                        <i class="fa-plus"></i>
+                    </a>
+                    <a ng-click="Dashboard.loadTotalOrders(true)" tooltips tooltip-template="Limpar" class="btn-default">
+                        <i class="fa-eraser"></i>
+                    </a>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="panel-title">
-                            <i class="fa-arrow-{{ (Dashboard.ordersDate.dia.atual[1] > Dashboard.ordersDate.dia.ultimo[1]) ? 'up' : 'down' }}"
-                                tooltips tooltip-template="{{ Dashboard.ordersDate.dia.ultimo[0] + ': ' + Dashboard.ordersDate.dia.ultimo[1] }}"></i>&nbsp;
-                                {{ Dashboard.ordersDate.dia.atual[0] }}
-                        </div>
-                    </div>
-                    <div class="panel-body text-center">
-                        <span class="bold fz-30">{{ Dashboard.ordersDate.dia.atual[1] }}</span>
-                    </div>
-                </div>
+            <div class="panel-body p-l-5 p-r-15">
+                <highchart id="dashboardChart" config="Dashboard.chartOrders"></highchart>
             </div>
         </div>
     </div>
