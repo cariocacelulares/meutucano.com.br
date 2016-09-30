@@ -75,13 +75,13 @@ class MagentoController extends Controller implements Integracao
     public function parseStatus($status, $reverse = false)
     {
         $statusConvert = [
-            'new'             => 0,
-            'pending'         => 0,
+            'new' => 0,
+            'pending' => 0,
             'pending_payment' => 0,
-            'processing'      => 1,
-            'complete'        => 2,
-            'canceled'        => 5,
-            'closed'          => 5
+            'processing' => 1,
+            'complete' => 2,
+            'canceled' => 5,
+            'closed' => 5
         ];
 
         return (!$reverse) ? (isset($statusConvert[$status]) ? $statusConvert[$status] : 0) : array_search($status, $statusConvert);
@@ -148,7 +148,7 @@ class MagentoController extends Controller implements Integracao
                 $client = new \GuzzleHttp\Client([
                     'base_uri' => \Config::get('tucano.services.tucanomg.host'),
                     'headers' => [
-                        "Accept"         => "application/json",
+                        "Accept" => "application/json",
                         "Content-type"   => "application/json",
                         "X-Access-Token" => \Config::get('tucano.services.tucanomg.token')
                     ]
@@ -194,14 +194,14 @@ class MagentoController extends Controller implements Integracao
             ]);
 
             $endereco = explode("\n", $order['shipping_address']['street']);
-            $uf       = array_search($order['shipping_address']['region'], \Config::get('tucano.estados_uf'));
+            $uf = array_search($order['shipping_address']['region'], \Config::get('tucano.estados_uf'));
 
-            $clienteEndereco->rua         = (isset($endereco[0])) ? $endereco[0] : null;
-            $clienteEndereco->numero      = (isset($endereco[1])) ? $endereco[1] : null;
-            $clienteEndereco->bairro      = (isset($endereco[2])) ? $endereco[2] : null;
+            $clienteEndereco->rua = (isset($endereco[0])) ? $endereco[0] : null;
+            $clienteEndereco->numero = (isset($endereco[1])) ? $endereco[1] : null;
+            $clienteEndereco->bairro = (isset($endereco[2])) ? $endereco[2] : null;
             $clienteEndereco->complemento = (isset($endereco[3])) ? $endereco[3] : null;
-            $clienteEndereco->cidade      = $order['shipping_address']['city'];
-            $clienteEndereco->uf          = $uf;
+            $clienteEndereco->cidade = $order['shipping_address']['city'];
+            $clienteEndereco->uf = $uf;
             if ($clienteEndereco->save()) {
                 Log::info("Endereço {$clienteEndereco->id} importado para o pedido " . $order['increment_id']);
             } else {
@@ -231,24 +231,30 @@ class MagentoController extends Controller implements Integracao
             Log::debug('Transaction - begin');
 
             $pedido = Pedido::firstOrNew([
-                'cliente_id'          => $cliente->id,
+                'cliente_id' => $cliente->id,
                 'cliente_endereco_id' => $clienteEndereco->id,
                 'codigo_marketplace'  => $order['increment_id']
             ]);
 
-            $pedido->cliente_id          = $cliente->id;
+            $pedido->cliente_id = $cliente->id;
             $pedido->cliente_endereco_id = $clienteEndereco->id;
-            $pedido->frete_valor         = $order['shipping_amount'];
-            $pedido->frete_metodo        = $this->parseShippingMethod($order['shipping_description']);
-            $pedido->pagamento_metodo    = $this->parsePaymentMethod($order['payment']['method']);
+            $pedido->frete_valor = $order['shipping_amount'];
+            $pedido->frete_metodo = $this->parseShippingMethod($order['shipping_description']);
+            $pedido->pagamento_metodo = $this->parsePaymentMethod($order['payment']['method']);
             $pedido->codigo_marketplace  = $order['increment_id'];
-            $pedido->codigo_api          = $order['increment_id'];
-            $pedido->marketplace         = 'Site';
-            $pedido->operacao            = $operacao;
-            $pedido->total               = $order['subtotal'];
-            $pedido->status              = $this->parseStatus((isset($order['state'])) ? $order['state'] : ((isset($order['status'])) ? $order['status'] : null ));
-            $pedido->created_at          = Carbon::createFromFormat('Y-m-d H:i:s', $order['created_at'])->subHours(3);
-            $pedido->estimated_delivery  = $this->calcEstimatedDelivery($order['shipping_description'], $pedido->created_at);
+            $pedido->codigo_api = $order['increment_id'];
+            $pedido->marketplace = 'Site';
+            $pedido->operacao = $operacao;
+            $pedido->total = $order['subtotal'];
+            $pedido->status = $this->parseStatus((isset($order['state'])) ? $order['state'] : ((isset($order['status'])) ? $order['status'] : null ));
+            $pedido->created_at = Carbon::createFromFormat('Y-m-d H:i:s', $order['created_at'])->subHours(3);
+
+            if (in_array($pedido->status, [1,2,3])) {
+                $pedido->estimated_delivery  = $this->calcEstimatedDelivery($order['shipping_description'], $pedido->created_at);
+            } else {
+                $pedido->estimated_delivery = null;
+            }
+
             if ($pedido->save()) {
                 Log::info('Pedido importado ' . $order['increment_id']);
             } else {
@@ -259,7 +265,7 @@ class MagentoController extends Controller implements Integracao
                 $pedidoProduto = PedidoProduto::firstOrNew([
                     'pedido_id'   => $pedido->id,
                     'produto_sku' => $s_produto['sku'],
-                    'valor'       => $s_produto['row_total'],
+                    'valor' => $s_produto['row_total'],
                     'quantidade'  => $s_produto['qty_ordered']
                 ]);
                 if ($pedidoProduto->save()) {
