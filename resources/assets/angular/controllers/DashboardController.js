@@ -12,7 +12,7 @@
             credits: false,
             loading: true,
             size: {
-                height: 220,
+                height: 276,
             },
             options: {
                 title: false,
