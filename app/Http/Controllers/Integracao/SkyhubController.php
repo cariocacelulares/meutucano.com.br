@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Integracao;
 
+use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Integracao\Integracao;
 use App\Models\Cliente\Cliente;
@@ -483,20 +484,17 @@ class SkyhubController extends Controller implements Integracao
             $rastreio = 'S';
         }
 
-        Log::debug('$rastreio, $cep', [$rastreio, $cep]);
-        return RastreioController::deadline($rastreio, $cep);
+        $diasPrazo = RastreioController::deadline($rastreio, $cep);
+        $prazo = SomaDiasUteis(date('d/m/Y'), $diasPrazo);
+        return Carbon::createFromFormat('d/m/Y', $prazo)->format('Y-m-d');
     }
 
     public function parseEstimatedDelivery($estimatedDelivery, $freteMetodo, $cep)
     {
-        Log::debug('1 - $estimatedDelivery', [$estimatedDelivery]);
         $estimatedDelivery = \DateTime::createFromFormat('Y-m-d', $estimatedDelivery);
-        Log::debug('2 - $estimatedDelivery', [$estimatedDelivery]);
         if ($estimatedDelivery !== false) {
-            Log::debug('3 - $estimatedDelivery->format(\'d/m/Y\')', [$estimatedDelivery->format('d/m/Y')]);
             return $estimatedDelivery->format('d/m/Y');
         } else {
-            Log::debug('4 - $this->calcEstimatedDelivery($freteMetodo, $cep)', [$this->calcEstimatedDelivery($freteMetodo, $cep)]);
             return $this->calcEstimatedDelivery($freteMetodo, $cep);
         }
     }

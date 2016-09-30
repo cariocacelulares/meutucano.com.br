@@ -246,18 +246,17 @@ class RastreioController extends Controller
             $cep,
             $servicoPostagem
         );
-        \Log::debug('url', [$correios]);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $correios);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, 'POST');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         $string = curl_exec($ch);
-
         $correios = simplexml_load_string($string);
-        \Log::debug('$correios', [Config::get('tucano.cep'), $cep, $servicoPostagem, $correios]);
-        $prazoEntrega = $correios->cServico->PrazoEntrega;
+
+        $prazoEntrega = (string) $correios->cServico->PrazoEntrega;
 
         return $prazoEntrega;
     }
