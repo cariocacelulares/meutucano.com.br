@@ -213,8 +213,9 @@ class SkyhubController extends Controller implements Integracao
             $clienteFone = (sizeof($order['customer']['phones']) > 1)
                 ? $order['customer']['phones'][1]
                 : $order['customer']['phones'][0];
+            $clienteFone = trim(str_replace(' ', '', $clienteFone));
 
-            $cliente        = Cliente::firstOrNew(['taxvat' => $order['customer']['vat_number']]);
+            $cliente = Cliente::firstOrNew(['taxvat' => $order['customer']['vat_number']]);
             $cliente->tipo  = (strlen($order['customer']['vat_number']) > 11) ? 1 : 0;
             $cliente->nome  = $order['customer']['name'];
             $cliente->fone  = '(' . substr($clienteFone, 0, 2) . ')' . substr($clienteFone, 2, 5) . '-' . substr($clienteFone, 7);
@@ -228,6 +229,7 @@ class SkyhubController extends Controller implements Integracao
                 'cliente_id' => $cliente->id,
                 'cep'        => $order['shipping_address']['postcode']
             ]);
+            $clienteEndereco->cep = $order['shipping_address']['postcode'];
             $clienteEndereco->rua = $order['shipping_address']['street'];
             $clienteEndereco->numero = $order['shipping_address']['number'];
             $clienteEndereco->complemento = $order['shipping_address']['detail'];
@@ -276,19 +278,19 @@ class SkyhubController extends Controller implements Integracao
                 'codigo_marketplace'  => $codMarketplace
             ]);
 
-            $pedido->cliente_id          = $cliente->id;
+            $pedido->cliente_id = $cliente->id;
             $pedido->cliente_endereco_id = $clienteEndereco->id;
-            $pedido->codigo_api          = isset($order['code']) ? $order['code'] : null;
-            $pedido->frete_valor         = isset($order['shipping_cost']) ? $order['shipping_cost'] : null;
-            $pedido->frete_metodo        = $this->parseShippingMethod(isset($order['shipping_method']) ? $order['shipping_method'] : null);
-            $pedido->pagamento_metodo    = $this->parsePaymentMethod(isset($order['payments']) ? $order['payments'] : null);
-            $pedido->codigo_marketplace  = $codMarketplace;
-            $pedido->marketplace         = $marketplace;
-            $pedido->operacao            = $operacao;
-            $pedido->total               = $order['total_ordered'];
-            $pedido->estimated_delivery  = ($order['estimated_delivery']) ? substr($order['estimated_delivery'], 0, 10) : $this->calcEstimatedDelivery($pedido->frete_metodo, $order['shipping_address']['postcode']);
-            $pedido->status              = $this->parseStatus(isset($order['status']['type']) ? $order['status']['type'] : null);
-            $pedido->created_at          = substr($order['placed_at'], 0, 10) . ' ' . substr($order['placed_at'], 11, 8);
+            $pedido->codigo_api = isset($order['code']) ? $order['code'] : null;
+            $pedido->frete_valor = isset($order['shipping_cost']) ? $order['shipping_cost'] : null;
+            $pedido->frete_metodo = $this->parseShippingMethod(isset($order['shipping_method']) ? $order['shipping_method'] : null);
+            $pedido->pagamento_metodo = $this->parsePaymentMethod(isset($order['payments']) ? $order['payments'] : null);
+            $pedido->codigo_marketplace = $codMarketplace;
+            $pedido->marketplace = $marketplace;
+            $pedido->operacao = $operacao;
+            $pedido->total = $order['total_ordered'];
+            $pedido->estimated_delivery  = $this->parseEstimatedDelivery($order['estimated_delivery'], $pedido->frete_metodo, $clienteEndereco->cep);
+            $pedido->status = $this->parseStatus(isset($order['status']['type']) ? $order['status']['type'] : null);
+            $pedido->created_at = substr($order['placed_at'], 0, 10) . ' ' . substr($order['placed_at'], 11, 8);
             if ($pedido->save()) {
                 Log::info('Pedido importado ' . $order['code']);
             } else {
@@ -481,6 +483,21 @@ class SkyhubController extends Controller implements Integracao
             $rastreio = 'S';
         }
 
+        Log::debug('$rastreio, $cep', [$rastreio, $cep]);
         return RastreioController::deadline($rastreio, $cep);
+    }
+
+    public function parseEstimatedDelivery($estimatedDelivery, $freteMetodo, $cep)
+    {
+        Log::debug('1 - $estimatedDelivery', [$estimatedDelivery]);
+        $estimatedDelivery = \DateTime::createFromFormat('Y-m-d', $estimatedDelivery);
+        Log::debug('2 - $estimatedDelivery', [$estimatedDelivery]);
+        if ($estimatedDelivery !== false) {
+            Log::debug('3 - $estimatedDelivery->format(\'d/m/Y\')', [$estimatedDelivery->format('d/m/Y')]);
+            return $estimatedDelivery->format('d/m/Y');
+        } else {
+            Log::debug('4 - $this->calcEstimatedDelivery($freteMetodo, $cep)', [$this->calcEstimatedDelivery($freteMetodo, $cep)]);
+            return $this->calcEstimatedDelivery($freteMetodo, $cep);
+        }
     }
 }
