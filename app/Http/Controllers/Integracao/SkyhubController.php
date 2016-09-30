@@ -213,12 +213,12 @@ class SkyhubController extends Controller implements Integracao
             $clienteFone = (sizeof($order['customer']['phones']) > 1)
                 ? $order['customer']['phones'][1]
                 : $order['customer']['phones'][0];
-            $clienteFone = trim(str_replace(' ', '', $clienteFone));
+            $clienteFone = trim(preg_replace('/\D/', '', $clienteFone));
 
             $cliente = Cliente::firstOrNew(['taxvat' => $order['customer']['vat_number']]);
             $cliente->tipo  = (strlen($order['customer']['vat_number']) > 11) ? 1 : 0;
             $cliente->nome  = $order['customer']['name'];
-            $cliente->fone  = '(' . substr($clienteFone, 0, 2) . ')' . substr($clienteFone, 2, 5) . '-' . substr($clienteFone, 7);
+            $cliente->fone  = '(' . substr($clienteFone, 0, 2) . ') ' . substr($clienteFone, 2, 4) . '-' . substr($clienteFone, 6);
             if ($cliente->save()) {
                 Log::info("Cliente {$cliente->id} importado para o pedido " . $order['code']);
             } else {
