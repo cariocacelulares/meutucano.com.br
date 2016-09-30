@@ -7,7 +7,7 @@
                 </div>
             </div>
             <div class="panel-body p-l-5 p-r-15">
-                <highchart id="dashboardChart" config="Dashboard.chart"></highchart>
+                <highchart id="dashboardChart" config="Dashboard.chartOrdersStatus"></highchart>
             </div>
         </div>
     </div>
@@ -17,11 +17,13 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="panel-title">
-                            <i class="fa-arrow-up"></i>&nbsp; 2016
+                            <i class="fa-arrow-{{ (Dashboard.ordersDate.ano.atual[1] > Dashboard.ordersDate.ano.ultimo[1]) ? 'up' : 'down' }}"
+                                tooltips tooltip-template="{{ Dashboard.ordersDate.ano.ultimo[0] + ': ' + Dashboard.ordersDate.ano.ultimo[1] }}"></i>&nbsp;
+                                {{ Dashboard.ordersDate.ano.atual[0] }}
                         </div>
                     </div>
                     <div class="panel-body text-center">
-                        <span class="bold fz-30">258956</span>
+                        <span class="bold fz-30">{{ Dashboard.ordersDate.ano.atual[1] }}</span>
                     </div>
                 </div>
             </div>
@@ -31,11 +33,13 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="panel-title">
-                            <i class="fa-arrow-down"></i>&nbsp; Outubro
+                            <i class="fa-arrow-{{ (Dashboard.ordersDate.mes.atual[1] > Dashboard.ordersDate.mes.ultimo[1]) ? 'up' : 'down' }}"
+                                tooltips tooltip-template="{{ Dashboard.ordersDate.mes.ultimo[0] + ': ' + Dashboard.ordersDate.mes.ultimo[1] }}"></i>&nbsp;
+                                {{ Dashboard.ordersDate.mes.atual[0] }}
                         </div>
                     </div>
                     <div class="panel-body text-center">
-                        <span class="bold fz-30">45652</span>
+                        <span class="bold fz-30">{{ Dashboard.ordersDate.mes.atual[1] }}</span>
                     </div>
                 </div>
             </div>
@@ -45,11 +49,13 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="panel-title">
-                            <i class="fa-arrow-up"></i>&nbsp; Hoje
+                            <i class="fa-arrow-{{ (Dashboard.ordersDate.dia.atual[1] > Dashboard.ordersDate.dia.ultimo[1]) ? 'up' : 'down' }}"
+                                tooltips tooltip-template="{{ Dashboard.ordersDate.dia.ultimo[0] + ': ' + Dashboard.ordersDate.dia.ultimo[1] }}"></i>&nbsp;
+                                {{ Dashboard.ordersDate.dia.atual[0] }}
                         </div>
                     </div>
                     <div class="panel-body text-center">
-                        <span class="bold fz-30">234</span>
+                        <span class="bold fz-30">{{ Dashboard.ordersDate.dia.atual[1] }}</span>
                     </div>
                 </div>
             </div>

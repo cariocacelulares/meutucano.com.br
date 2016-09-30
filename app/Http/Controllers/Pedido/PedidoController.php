@@ -231,7 +231,7 @@ class PedidoController extends Controller
         }
     }
 
-    public function grafico()
+    public function totalOrdersByStatus()
     {
         $ano = date('Y');
         $mes = date('m');
@@ -290,5 +290,76 @@ class PedidoController extends Controller
         $list['marketplaces'] = $marketplaces;
 
         return $this->listResponse($list);
+    }
+
+    public function totalOrdersByDate()
+    {
+        $data = [
+            'ano' => date('Y'),
+            'mes' => date('m'),
+            'dia' => date('d'),
+        ];
+
+       $ano = Pedido
+            ::selectRaw('YEAR(created_at) as ano, COUNT(*) as count')
+            ->whereIn('status', [1,2,3])
+            ->whereIn(DB::raw('YEAR(created_at)'), [$data['ano'], $data['ano'] - 1])
+            ->groupBy(DB::raw('YEAR(created_at)'))
+            ->orderBy(DB::raw('YEAR(created_at)'), 'DESC')
+            ->get()->toArray();
+
+        if (count($ano) == 1 && $data['ano'] == $ano[0]['ano']) {
+            $ano[] = [
+                'ano' => $data['ano'] - 1,
+                'count' => 0
+            ];
+        }
+
+       $mes = Pedido
+            ::selectRaw('MONTH(created_at) as mes, COUNT(*) as count')
+            ->whereIn('status', [1,2,3])
+            ->whereIn(DB::raw('MONTH(created_at)'), [$data['mes'], $data['mes'] - 1])
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->orderBy(DB::raw('MONTH(created_at)'), 'DESC')
+            ->get()->toArray();
+
+        if (count($mes) == 1 && $data['mes'] == $mes[0]['mes']) {
+            $mes[] = [
+                'mes' => $data['mes'] - 1,
+                'count' => 0
+            ];
+        }
+
+       $dia = Pedido
+            ::selectRaw('DAY(created_at) as dia, COUNT(*) as count')
+            ->whereIn('status', [1,2,3])
+            ->whereIn(DB::raw('DAY(created_at)'), [$data['dia'], $data['dia'] - 1])
+            ->groupBy(DB::raw('DAY(created_at)'))
+            ->orderBy(DB::raw('DAY(created_at)'), 'DESC')
+            ->get()->toArray();
+
+        if (count($dia) == 1 && $data['dia'] == $dia[0]['dia']) {
+            $dia[] = [
+                'dia' => $data['dia'] - 1,
+                'count' => 0
+            ];
+        }
+
+        $pedidos = [
+            'ano' => [
+                'atual' => [$ano[0]['ano'], $ano[0]['count']],
+                'ultimo' => [$ano[1]['ano'], $ano[1]['count']],
+            ],
+            'mes' => [
+                'atual' => [$mes[0]['mes'], $mes[0]['count']],
+                'ultimo' => [$mes[1]['mes'], $mes[1]['count']],
+            ],
+            'dia' => [
+                'atual' => [$dia[0]['dia'], $dia[0]['count']],
+                'ultimo' => [$dia[1]['dia'], $dia[1]['count']],
+            ]
+        ];
+
+        return $this->listResponse($pedidos);
     }
 }

@@ -8,7 +8,9 @@
     function DashboardController(Pedido) {
         var vm = this;
 
-        vm.chart = {
+        vm.ordersDate = {};
+
+        vm.chartOrdersStatus = {
             credits: false,
             loading: true,
             size: {
@@ -35,42 +37,46 @@
         };
 
         vm.load = function() {
-            Pedido.grafico().then(function(response) {
-                vm.chart.loading = false;
+            Pedido.totalOrdersDate().then(function(response) {
+                vm.ordersDate = response;
+            });
 
-                vm.chart.xAxis = {
+            Pedido.totalOrdersStatus().then(function(response) {
+                vm.chartOrdersStatus.loading = false;
+
+                vm.chartOrdersStatus.xAxis = {
                     categories: response.marketplaces
                 };
 
-                vm.chart.series.push({
+                vm.chartOrdersStatus.series.push({
                     name: 'Cancelados',
                     data: response.cancelado,
                     color: '#F55753',
                     id: 'cancelados'
                 });
 
-                vm.chart.series.push({
+                vm.chartOrdersStatus.series.push({
                     name: 'Pendentes',
                     data: response.pendente,
                     color: '#E6E6E6',
                     id: 'pendentes'
                 });
 
-                vm.chart.series.push({
+                vm.chartOrdersStatus.series.push({
                     name: 'Pagos',
                     data: response.pago,
                     color: '#48B0F7',
                     id: 'pagos'
                 });
 
-                vm.chart.series.push({
+                vm.chartOrdersStatus.series.push({
                     name: 'Enviados',
                     data: response.enviado,
                     color: '#437DA5',
                     id: 'enviados'
                 });
 
-                vm.chart.series.push({
+                vm.chartOrdersStatus.series.push({
                     name: 'Entregues',
                     data: response.entregue,
                     color: '#10CFBD',
@@ -79,17 +85,17 @@
 
                 var maior = 0;
                 var total = 0;
-                for (var i = 0; i < vm.chart.series[0].data.length; i++) {
+                for (var i = 0; i < vm.chartOrdersStatus.series[0].data.length; i++) {
                     total = 0;
 
-                    for (var k in vm.chart.series) {
-                        total += vm.chart.series[k].data[i];
+                    for (var k in vm.chartOrdersStatus.series) {
+                        total += vm.chartOrdersStatus.series[k].data[i];
                     }
 
                     if (total > maior)
                         maior = total;
                 }
-                 vm.chart.yAxis.max = maior;
+                 vm.chartOrdersStatus.yAxis.max = maior;
 
             });
         };
