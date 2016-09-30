@@ -85,7 +85,7 @@ class Pi extends \Eloquent
      * @return string
      */
     public function setDataPagamentoAttribute($data_pagamento) {
-        $this->attributes['data_pagamento'] = Carbon::createFromFormat('d/m/Y', $data_pagamento)->format('Y-m-d');
+        $this->attributes['data_pagamento'] = ($data_pagamento) ? Carbon::createFromFormat('d/m/Y', $data_pagamento)->format('Y-m-d') : null;
     }
 
     /**
