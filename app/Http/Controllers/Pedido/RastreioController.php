@@ -252,10 +252,11 @@ class RastreioController extends Controller
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, 'POST');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         $string = curl_exec($ch);
-
         $correios = simplexml_load_string($string);
-        $prazoEntrega = $correios->cServico->PrazoEntrega;
+
+        $prazoEntrega = (string) $correios->cServico->PrazoEntrega;
 
         return $prazoEntrega;
     }

@@ -204,21 +204,23 @@ class UploadController extends Controller
      * @return Endereco
      */
     private function importClienteEndereco($cliente) {
-        $clienteEndereco = Endereco::firstOrNew(['cliente_id' => $cliente->id, 'cep' => $this->nfe->dest->enderDest->CEP]);
+        $clienteEndereco = Endereco::firstOrCreate(['cliente_id' => $cliente->id, 'cep' => $this->nfe->dest->enderDest->CEP]);
 
-        $clienteEndereco->cliente_id = $cliente->id;
-        $clienteEndereco->cep = $this->nfe->dest->enderDest->CEP;
-        $clienteEndereco->rua = $this->nfe->dest->enderDest->xLgr;
-        $clienteEndereco->numero = $this->nfe->dest->enderDest->nro;
-        $clienteEndereco->complemento = $this->nfe->dest->enderDest->xCpl;
-        $clienteEndereco->bairro = $this->nfe->dest->enderDest->xBairro;
-        $clienteEndereco->cidade = $this->nfe->dest->enderDest->xMun;
-        $clienteEndereco->uf = $this->nfe->dest->enderDest->UF;
+        if ($clienteEndereco->wasRecentlyCreated) {
+            $clienteEndereco->cliente_id = $cliente->id;
+            $clienteEndereco->cep = $this->nfe->dest->enderDest->CEP;
+            $clienteEndereco->rua = $this->nfe->dest->enderDest->xLgr;
+            $clienteEndereco->numero = $this->nfe->dest->enderDest->nro;
+            $clienteEndereco->complemento = removeAcentos($this->nfe->dest->enderDest->xCpl);
+            $clienteEndereco->bairro = $this->nfe->dest->enderDest->xBairro;
+            $clienteEndereco->cidade = $this->nfe->dest->enderDest->xMun;
+            $clienteEndereco->uf = $this->nfe->dest->enderDest->UF;
 
-        if ($clienteEndereco->save()) {
-            Log::info('Endereço do cliente importado ' . $clienteEndereco->id);
-        } else {
-            Log::warning('Não foi possível importar o endereço do cliente ' . $cliente->id);
+            if ($clienteEndereco->save()) {
+                Log::info('Endereço do cliente importado ' . $clienteEndereco->id);
+            } else {
+                Log::warning('Não foi possível importar o endereço do cliente ' . $cliente->id);
+            }
         }
 
         return $clienteEndereco;

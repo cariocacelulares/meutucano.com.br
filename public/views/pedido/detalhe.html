@@ -189,7 +189,7 @@
                                                 <i class="fa-edit"></i>&nbsp; Editar
                                             </a>
                                         </li>
-                                        <li ng-if="PedidoDetalhe.pedido.notas.length">
+                                        <li ng-if="PedidoDetalhe.pedido.marketplace != 'MERCADOLIVRE'">
                                             <a ng-click="PedidoDetalhe.rastreioHelper.printEtiqueta(rastreio.id)">
                                                 <i class="fa-tag"></i>&nbsp; Etiqueta
                                             </a>
