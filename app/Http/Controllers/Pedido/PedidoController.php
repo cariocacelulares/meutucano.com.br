@@ -234,6 +234,11 @@ class PedidoController extends Controller
         }
     }
 
+    /**
+     * Retorna o total de pedidos por marketplace por status
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function totalOrdersByStatus()
     {
         $ano = date('Y');
@@ -295,6 +300,11 @@ class PedidoController extends Controller
         return $this->listResponse($list);
     }
 
+    /**
+     * Retorna o total de pedidos pagos, entregues e enviados no dia mes e ano atual, bem como seu anterior imediato
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function totalOrdersByDate()
     {
         $data = [
@@ -370,6 +380,13 @@ class PedidoController extends Controller
         return $this->listResponse($pedidos);
     }
 
+    /**
+     * Retorna o total de pedidos pagos, enviados e entregues por dia no mês/ano atual ou por parâmetro
+     *
+     * @param  int $mes
+     * @param  int $ano
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     function totalOrders($mes = null, $ano = null)
     {
         if ($mes === null) {

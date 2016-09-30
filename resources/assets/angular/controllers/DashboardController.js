@@ -13,8 +13,10 @@
          */
         vm.rastreioHelper = RastreioHelper.init(vm);
 
+        // Dados dos pedidos
         vm.ordersDate = {};
 
+        // Configuração do gráfico com marketplaces
         vm.chartOrdersStatus = {
             credits: false,
             loading: true,
@@ -41,6 +43,7 @@
             series: []
         };
 
+        // Configuração do gráfico por meses
         vm.chartOrders = {
             mes: null,
             ano: null,
@@ -68,12 +71,18 @@
             series: []
         };
 
+        /**
+         * Carrega os dados dos pedidos
+         */
         vm.loadTotalOrdersDate = function() {
             Pedido.totalOrdersDate().then(function(response) {
                 vm.ordersDate = response;
             });
         };
 
+        /**
+         * Carrega os pedidos por marketplaces por status
+         */
         vm.loadTotalOrdersStatus = function() {
             vm.chartOrdersStatus.loading = true;
 
@@ -138,6 +147,11 @@
             });
         };
 
+        /**
+         * Carrega os dados do gráfico por mês
+         *
+         * @param  {bool} clear limpar meses, manter apens o primeiro
+         */
         vm.loadTotalOrders = function(clear) {
             vm.chartOrders.loading = true;
 
@@ -180,6 +194,9 @@
             });
         };
 
+        /**
+         * Carrega os rastreios monitorados
+         */
         vm.loadRastreios = function() {
             vm.loading = true;
 
@@ -191,6 +208,9 @@
             });
         };
 
+        /**
+         * Carrega tudo
+         */
         vm.load = function() {
             vm.loadTotalOrdersDate();
             vm.loadTotalOrdersStatus();

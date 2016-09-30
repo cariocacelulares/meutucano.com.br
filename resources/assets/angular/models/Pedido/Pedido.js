@@ -65,14 +65,31 @@
                     return Restangular.one('pedidos/faturar', pedido_id).get();
                 },
 
+                /**
+                 * Retorna o total de pedidos por marketplace por status
+                 *
+                 * @return {Object}
+                 */
                 totalOrdersStatus: function() {
                     return Restangular.one('pedidos/total-orders-status').get();
                 },
 
+                /**
+                 * Retorna o total de pedidos pagos, entregues e enviados no dia mes e ano atual, bem como seu anterior imediato
+                 *
+                 * @return {Object}
+                 */
                 totalOrdersDate: function() {
                     return Restangular.one('pedidos/total-orders-date').get();
                 },
 
+                /**
+                 * Retorna o total de pedidos pagos, enviados e entregues por dia no mês/ano atual ou por parâmetro
+                 *
+                 * @param  {int} mes
+                 * @param  {int} ano
+                 * @return {Object}
+                 */
                 totalOrders: function(mes, ano) {
                     if (typeof mes !== 'undefined' && !isNaN(parseInt(mes))) {
                         mes = parseInt(mes);
