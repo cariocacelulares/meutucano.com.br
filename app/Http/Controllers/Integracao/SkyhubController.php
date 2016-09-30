@@ -334,7 +334,7 @@ class SkyhubController extends Controller implements Integracao
             DB::rollBack();
             Log::debug('Transaction - rollback');
 
-            Log::critical(logMessage($e, 'Pedido ' . (isset($order['code']) ? $order['code'] : '') . ' não importado'), $order);
+            Log::critical(logMessage($e, 'Pedido ' . (isset($order['code']) ? $order['code'] : '') . ' não importado'), [$order]);
             reportError('Pedido ' . (isset($order['code']) ? $order['code'] : '') . ' não importado: ' . $e->getMessage() . ' - ' . $e->getLine());
             return false;
         }
