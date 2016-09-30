@@ -484,7 +484,7 @@ class SkyhubController extends Controller implements Integracao
             $rastreio = 'S';
         }
 
-        $diasPrazo = RastreioController::deadline($rastreio, $cep);
+        $diasPrazo = (int) RastreioController::deadline($rastreio, $cep) + 3;
         $prazo = SomaDiasUteis(date('d/m/Y'), $diasPrazo);
         return Carbon::createFromFormat('d/m/Y', $prazo)->format('Y-m-d');
     }
