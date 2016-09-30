@@ -235,6 +235,40 @@ class PedidoController extends Controller
     }
 
     /**
+     * Retorna as informações do pedido para importar no Shopsystem
+     *
+     * @param  string $pedido
+     * @return array
+     */
+    public function shopsystem($codigo_pedido)
+    {
+        $m = self::MODEL;
+
+        $pedido = $m::where('codigo_marketplace', '=', $codigo_pedido)->first();
+
+        $infoReturn = [
+            'taxvat'      => $pedido->cliente->taxvat,
+            'nome'        => mb_strtolower(removeAcentos($pedido->cliente->nome)),
+            'email'       => removeAcentos($pedido->cliente->email),
+            'cep'         => removeAcentos($pedido->endereco->cep),
+            'telefone'    => numbers($pedido->cliente->fone),
+            'rua'         => removeAcentos($pedido->endereco->rua),
+            'numero'      => numbers($pedido->endereco->numero),
+            'bairro'      => removeAcentos($pedido->endereco->bairro),
+            'complemento' => removeAcentos($pedido->endereco->complemento),
+            'marketplace' => mb_strtolower($pedido->marketplace),
+            'pedido'      => $codigo_pedido,
+            'frete'       => $pedido->frete_valor
+        ];
+
+        if ($pedido) {
+            return $this->showResponse($infoReturn);
+        }
+
+        return $this->notFoundResponse();
+    }
+
+    /**
      * Retorna o total de pedidos por marketplace por status
      *
      * @return \Symfony\Component\HttpFoundation\Response
