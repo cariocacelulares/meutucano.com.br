@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;
 use App\Http\Controllers\Integracao\SkyhubController;
 use App\Http\Controllers\Integracao\MagentoController;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class PedidoController
@@ -265,5 +266,178 @@ class PedidoController extends Controller
         }
 
         return $this->notFoundResponse();
+    }
+
+    public function totalOrdersByStatus()
+    {
+        $ano = date('Y');
+        $mes = date('m');
+        $dia = date('d');
+        $inicioMes = "{$ano}-{$mes}-01 00:00:00";
+
+       $pedidos = Pedido
+            ::selectRaw('status, marketplace, COUNT(*) as count')
+            ->whereNotNull('status')
+            ->where('created_at', '>=', $inicioMes)
+            ->groupBy('status')
+            ->groupBy('marketplace')
+            ->orderBy('status', 'ASC')
+            ->orderBy('marketplace', 'ASC')
+            ->get();
+
+        /**
+         * Organiza os marketplaces
+         */
+        $marketplaces = [];
+        foreach ($pedidos as $pedido) {
+            if (!in_array(strtoupper($pedido->marketplace), $marketplaces)) {
+                $marketplaces[] = strtoupper($pedido->marketplace);
+            }
+        }
+
+        /**
+         * Status possíveis
+         */
+        $status = \Config::get('tucano.pedido_status');
+
+        /**
+         * Prepara a lista para quando não existir preenche corretamente com 0
+         */
+        $list = [];
+        foreach ($status as $state) {
+            foreach ($marketplaces as $marketplace) {
+                $list[strtolower($state)][] = 0;
+            }
+        }
+
+        /**
+         * Organiza os dados pra mostrar no gráfico
+         */
+        foreach ($pedidos as $pedido) {
+            $list[strtolower($status[$pedido->status])][array_search(strtoupper($pedido->marketplace), $marketplaces)] = $pedido->count;
+        }
+
+        /**
+         * Altera o nome do marketplace
+         */
+        if ($index = array_search('MERCADOLIVRE', $marketplaces)) {
+            $marketplaces[$index] = 'M.LIVRE';
+        }
+
+        $list['marketplaces'] = $marketplaces;
+
+        return $this->listResponse($list);
+    }
+
+    public function totalOrdersByDate()
+    {
+        $data = [
+            'ano' => (int)date('Y'),
+            'mes' => (int)date('m'),
+            'dia' => (int)date('d'),
+        ];
+
+       $ano = Pedido
+            ::selectRaw('YEAR(created_at) as ano, COUNT(*) as count')
+            ->whereIn('status', [1,2,3])
+            ->whereIn(DB::raw('YEAR(created_at)'), [$data['ano'], $data['ano'] - 1])
+            ->groupBy(DB::raw('YEAR(created_at)'))
+            ->orderBy(DB::raw('YEAR(created_at)'), 'DESC')
+            ->get()->toArray();
+
+        if (count($ano) == 1 && $data['ano'] == $ano[0]['ano']) {
+            $ano[] = [
+                'ano' => $data['ano'] - 1,
+                'count' => 0
+            ];
+        }
+
+       $mes = Pedido
+            ::selectRaw('MONTH(created_at) as mes, COUNT(*) as count')
+            ->whereIn('status', [1,2,3])
+            ->whereIn(DB::raw('MONTH(created_at)'), [$data['mes'], $data['mes'] - 1])
+            ->where(DB::raw('YEAR(created_at)'), '=', $data['ano'])
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->orderBy(DB::raw('MONTH(created_at)'), 'DESC')
+            ->get()->toArray();
+
+        if (count($mes) == 1 && $data['mes'] == $mes[0]['mes']) {
+            $mes[] = [
+                'mes' => $data['mes'] - 1,
+                'count' => 0
+            ];
+        }
+
+       $dia = Pedido
+            ::selectRaw('DAY(created_at) as dia, COUNT(*) as count')
+            ->whereIn('status', [1,2,3])
+            ->whereIn(DB::raw('DAY(created_at)'), [$data['dia'], $data['dia'] - 1])
+            ->where(DB::raw('YEAR(created_at)'), '=', $data['ano'])
+            ->groupBy(DB::raw('DAY(created_at)'))
+            ->orderBy(DB::raw('DAY(created_at)'), 'DESC')
+            ->get()->toArray();
+
+        if (count($dia) == 1 && $data['dia'] == $dia[0]['dia']) {
+            $dia[] = [
+                'dia' => $data['dia'] - 1,
+                'count' => 0
+            ];
+        }
+
+        $mesesExtenso = Config::get('tucano.meses');
+
+        $pedidos = [
+            'ano' => [
+                'atual' => [$ano[0]['ano'], $ano[0]['count']],
+                'ultimo' => [$ano[1]['ano'], $ano[1]['count']],
+            ],
+            'mes' => [
+                'atual' => [$mesesExtenso[(int)$mes[0]['mes']], $mes[0]['count']],
+                'ultimo' => [$mesesExtenso[(int)$mes[1]['mes']], $mes[1]['count']],
+            ],
+            'dia' => [
+                'atual' => [$dia[0]['dia'], $dia[0]['count']],
+                'ultimo' => [$dia[1]['dia'], $dia[1]['count']],
+            ]
+        ];
+
+        return $this->listResponse($pedidos);
+    }
+
+    function totalOrders($mes = null, $ano = null)
+    {
+        if ($mes === null) {
+            $mes = (int)date('m');
+        }
+
+        if ($ano === null) {
+            $ano = (int)date('Y');
+        }
+
+        $lastDay = cal_days_in_month(CAL_GREGORIAN, $mes, $ano);
+        $days = range(1, $lastDay);
+
+       $pedidos = Pedido
+            ::selectRaw('DAY(created_at) AS dia, COUNT(*) as total')
+            ->whereIn('status', [1,2,3])
+            ->where(DB::raw('MONTH(created_at)'), '=', $mes)
+            ->where(DB::raw('YEAR(created_at)'), '=', $ano)
+            ->groupBy(DB::raw('DAY(created_at)'))
+            ->orderBy(DB::raw('DAY(created_at)'), 'ASC')
+            ->get()->toArray();
+
+        $list = array_fill_keys(array_keys(array_flip($days)), 0);
+        foreach ($pedidos as $pedido) {
+            $list[$pedido['dia']] = $pedido['total'];
+        }
+
+        $list = [
+            'mes' => $mes,
+            'ano' => $ano,
+            'name' => Config::get('tucano.meses')[$mes],
+            'data' => array_values($list)
+        ];
+
+        return $this->listResponse($list);
     }
 }

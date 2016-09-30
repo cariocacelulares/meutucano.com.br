@@ -21,6 +21,7 @@
             'ngStorage',
             'ngTagsInput',
             'oitozero.ngSweetAlert',
-            '720kb.tooltips'
+            '720kb.tooltips',
+            'highcharts-ng'
         ]);
 })();

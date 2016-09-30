@@ -213,9 +213,12 @@
                         toaster.pop('success', 'Sucesso!', 'Agora você está monitorando este rastreio.');
 
                         if (updateVm &&
-                            typeof this.vm != 'undefined' &&
-                            typeof this.vm.load != 'undefined') {
-                            this.vm.load();
+                            typeof this.vm != 'undefined') {
+                            if (typeof this.vm.loadRastreios != 'undefined') {
+                                this.vm.loadRastreios();
+                            } else if (typeof this.vm.load != 'undefined') {
+                                this.vm.load();
+                            }
                         }
                     }.bind(this));
                 },
