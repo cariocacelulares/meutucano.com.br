@@ -347,7 +347,7 @@ class PedidoController extends Controller
             'dia' => (int)date('d'),
         ];
 
-       $ano = Pedido
+       /*$ano = Pedido
             ::selectRaw('YEAR(created_at) as ano, COUNT(*) as count')
             ->whereIn('status', [1,2,3])
             ->whereIn(DB::raw('YEAR(created_at)'), [$data['ano'], $data['ano'] - 1])
@@ -360,7 +360,7 @@ class PedidoController extends Controller
                 'ano' => $data['ano'] - 1,
                 'count' => 0
             ];
-        }
+        }*/
 
        $mes = Pedido
             ::selectRaw('MONTH(created_at) as mes, COUNT(*) as count')
@@ -370,6 +370,13 @@ class PedidoController extends Controller
             ->groupBy(DB::raw('MONTH(created_at)'))
             ->orderBy(DB::raw('MONTH(created_at)'), 'DESC')
             ->get()->toArray();
+
+        if (!isset($mes[0])) {
+            $mes[] = [
+                'mes' => $data['mes'],
+                'count' => 0
+            ];
+        }
 
         if (count($mes) == 1 && $data['mes'] == $mes[0]['mes']) {
             $mes[] = [
@@ -387,6 +394,13 @@ class PedidoController extends Controller
             ->orderBy(DB::raw('DAY(created_at)'), 'DESC')
             ->get()->toArray();
 
+        if (!isset($dia[0])) {
+            $dia[] = [
+                'dia' => $data['dia'],
+                'count' => 0
+            ];
+        }
+
         if (count($dia) == 1 && $data['dia'] == $dia[0]['dia']) {
             $dia[] = [
                 'dia' => $data['dia'] - 1,
@@ -397,10 +411,10 @@ class PedidoController extends Controller
         $mesesExtenso = Config::get('tucano.meses');
 
         $pedidos = [
-            'ano' => [
+            /*'ano' => [
                 'atual' => [$ano[0]['ano'], $ano[0]['count']],
                 'ultimo' => [$ano[1]['ano'], $ano[1]['count']],
-            ],
+            ],*/
             'mes' => [
                 'atual' => [$mesesExtenso[(int)$mes[0]['mes']], $mes[0]['count']],
                 'ultimo' => [$mesesExtenso[(int)$mes[1]['mes']], $mes[1]['count']],
