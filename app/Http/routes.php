@@ -7,10 +7,37 @@ Route::get('/', function() { return view('index'); });
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Route::get('pedidos/shopsystem/{taxvat}', 'Pedido\PedidoController@shopsystem');
 
+// Gamification - testes
+Route::get('gamification/{usuario_id}/{tarefa_id}', function($usuario_id, $tarefa_id){
+    $tarefa = App\Models\Gamification\Tarefa::find($tarefa_id);
+    $usuario = App\Models\Usuario\Usuario::find($usuario_id);
+
+    $usuarioTarefa = new App\Models\Gamification\UsuarioTarefa();
+    $usuarioTarefa->pontos = $tarefa->pontos;
+    $usuarioTarefa->moedas = $tarefa->moedas;
+    $usuarioTarefa->tarefa_id = $tarefa->id;
+    $usuarioTarefa->usuario()->associate($usuario);
+    $usuarioTarefa->save();
+});
+
 /**
  * API
  */
 Route::group(['prefix' => '/api'], function() {
+    /**
+     * Gamification
+     */
+    Route::get('gamification/perfil', 'Gamification\GamificationController@perfil');
+    Route::group(['prefix' => '/gamification'], function() {
+        Route::post('upload', 'Gamification\UploadController@upload');
+
+        Route::get('tarefas/list', 'Gamification\TarefaController@tableList');
+        Route::resource('tarefas', 'Gamification\TarefaController');
+
+        Route::get('conquistas/list', 'Gamification\ConquistaController@tableList');
+        Route::resource('conquistas', 'Gamification\ConquistaController');
+    });
+
     /**
      * Auth
      */

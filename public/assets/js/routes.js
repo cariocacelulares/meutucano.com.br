@@ -276,6 +276,38 @@
                     templateUrl: 'views/produto/marca/form.html',
                     controller: 'MarcaFormController as MarcaForm'
                 })
+
+                /**
+                 * Gamification
+                 */
+                .state('app.gamification', {
+                    url: '/gamification',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.gamification.ranking', {
+                    url: '/ranking',
+                    templateUrl: 'views/gamification/ranking.html',
+                    controller: 'RankingController as Ranking'
+                })
+
+                .state('app.gamification.tarefas', {
+                    url: '/tarefas',
+                    templateUrl: 'views/gamification/tarefas/list.html',
+                    controller: 'TarefaListController as TarefaList'
+                })
+
+                .state('app.gamification.conquistas', {
+                    url: '/conquistas',
+                    templateUrl: 'views/gamification/conquistas/list.html',
+                    controller: 'ConquistaListController as ConquistaList'
+                })
+
+                .state('app.gamification.perfil', {
+                    url: '/perfil',
+                    templateUrl: 'views/gamification/perfil.html',
+                    controller: 'PerfilController as Perfil'
+                })
             ;
         });
 })();

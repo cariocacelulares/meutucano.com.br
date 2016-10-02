@@ -12,6 +12,7 @@
             'ngAnimate',
             'jcs-autoValidate',
             'ngFileUpload',
+            'ngImgCrop',
             'angular-loading-bar',
             'ngDialog',
             'ngOnload',

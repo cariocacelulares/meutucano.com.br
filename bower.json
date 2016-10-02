@@ -42,7 +42,8 @@
     "ngSweetAlert": "^1.1.0",
     "angular-tooltips": "^1.1.7",
     "highcharts-ng": "^0.0.12",
-    "highcharts": "^4.2.7"
+    "highcharts": "^4.2.7",
+    "ng-img-crop": "ngImgCrop#^0.3.2"
   },
   "resolutions": {
     "angular": "~1.5"

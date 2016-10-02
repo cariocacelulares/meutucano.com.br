@@ -172,6 +172,33 @@
                             }
                         ]
                     },
+                    {
+                        title: 'Gamification',
+                        icon: 'fa-gamepad',
+                        sub: [
+                            {
+                                title: 'Ranking',
+                                icon: 'fa-list-ol',
+                                sref: $state.href('app.gamification.ranking')
+                            },
+                            {
+                                title: 'Perfil',
+                                icon: 'fa-user',
+                                sref: $state.href('app.gamification.perfil')
+                            },
+                            {
+                                title: 'Tarefas',
+                                icon: 'fa-trophy',
+                                sref: $state.href('app.gamification.tarefas')
+                            },
+                            {
+                                title: 'Conquistas',
+                                icon: 'fa-heart',
+                                sref: $state.href('app.gamification.conquistas')
+                            }
+                        ],
+                        roles: ['admin', 'gestor']
+                    }
                 ];
             },
             controllerAs: 'Menu'

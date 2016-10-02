@@ -1,0 +1,21 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-trophy" title="Conquistas" description="Todas as conquistas do sistema de gamificação."></page-title>
+    <div class="col-md-6 button-bar">
+        <button ng-click="ConquistaList.openForm()" class="btn-success"><i class="fa-user-plus"></i>&nbsp; Nova</button>
+    </div>
+</div>
+<div class="row">
+    <div ng-repeat="conquista in ConquistaList.tableData.data" class="col-md-3 m-b-20">
+        <div class="panel panel-default">
+            <div class="panel-body text-center">
+                <a ng-click="ConquistaList.openForm(conquista)" class="pull-right text-gray">
+                    <i class="fa-pencil"></i>
+                </a>
+                <div class="clearfix m-b-15">
+                    <img ng-src="./{{ conquista.icone }}" width="150" class="circle" />
+                </div>
+                <span class="fz-16">{{ conquista.titulo }}</span>
+            </div>
+        </div>
+    </div>
+</div>
