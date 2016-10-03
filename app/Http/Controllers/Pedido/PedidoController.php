@@ -401,6 +401,7 @@ class PedidoController extends Controller
             ::selectRaw('DAY(created_at) as dia, COUNT(*) as count')
             ->whereIn('status', [1,2,3])
             ->whereIn(DB::raw('DAY(created_at)'), [$data['dia'], $data['dia'] - 1])
+            ->where(DB::raw('MONTH(created_at)'), '=', $data['mes'])
             ->where(DB::raw('YEAR(created_at)'), '=', $data['ano'])
             ->groupBy(DB::raw('DAY(created_at)'))
             ->orderBy(DB::raw('DAY(created_at)'), 'DESC')
