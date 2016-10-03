@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('DashboardController', DashboardController);
 
-    function DashboardController(RastreioHelper, Monitorado, Pedido) {
+    function DashboardController($rootScope, RastreioHelper, Monitorado, Pedido) {
         var vm = this;
 
         /**
@@ -219,7 +219,13 @@
             vm.loadTotalOrdersDate();
             vm.loadTotalOrdersStatus();
             vm.loadTotalOrders();
-            vm.loadRastreios();
+
+            var role = 'atendimento';
+            angular.forEach($rootScope.currentUser.roles, function(role) {
+                if (role.name == role) {
+                    vm.loadRastreios();
+                }
+            });
         };
 
         vm.load();
