@@ -207,5 +207,10 @@ Route::group(['prefix' => '/api'], function() {
          */
         Route::get('inspecao_tecnica/list', 'Inspecao\InspecaoTecnicaController@tableList');
         Route::resource('inspecao_tecnica', 'Inspecao\InspecaoTecnicaController');
+
+        /**
+         * Sugestão
+         */
+        Route::resource('sugestoes', 'Sugestao\SugestaCoontroller');
     });
 });
