@@ -1,18 +1,18 @@
-<?php namespace App\Models\Inspecao;
+<?php namespace App\Models\Sugestao;
 
 use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Usuario\Usuario;
 
 /**
- * Class InspecaoTecnica
- * @package App\Models\Inspecao
+ * Class Sugestao
+ * @package App\Models\Sugestao
  */
-class InspecaoTecnica extends \Eloquent
+class Sugestao extends \Eloquent
 {
     use RevisionableTrait;
 
-    protected $table = 'inspecao_tecnica';
+    protected $table = 'sugestoes';
 
     /**
      * @var boolean
@@ -24,8 +24,18 @@ class InspecaoTecnica extends \Eloquent
      */
     protected $fillable = [
         'usuario_id',
-        'imei',
+        'anonimo',
+        'setor',
+        'pessoa',
         'descricao',
+        'status',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $appends = [
+        'status_description',
     ];
 
     /**
@@ -56,5 +66,19 @@ class InspecaoTecnica extends \Eloquent
             return null;
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusDescriptionAttribute() {
+        switch ($this->status) {
+            case '1':
+                return 'Acatada';
+            case '2':
+                return 'Arquivada';
+            default:
+                return 'Pendente';
+        }
     }
 }

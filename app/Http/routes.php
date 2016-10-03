@@ -211,6 +211,7 @@ Route::group(['prefix' => '/api'], function() {
         /**
          * Sugestão
          */
-        Route::resource('sugestoes', 'Sugestao\SugestaCoontroller');
+        Route::get('sugestoes/list', 'Sugestao\SugestaoController@tableList');
+        Route::resource('sugestoes', 'Sugestao\SugestaoController');
     });
 });

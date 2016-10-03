@@ -19,6 +19,7 @@ class CreateSugestoesTable extends Migration
             $table->string('setor', 150)->nullable();
             $table->string('pessoa', 150)->nullable();
             $table->text('descricao');
+            $table->unsignedTinyInteger('status')->default(0)->comment('1 - Acatada, 2 - Arquivada');
             $table->timestamps();
         });
     }

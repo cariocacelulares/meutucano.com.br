@@ -1,0 +1,37 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-bug" title="Inspeção técnica" description="Todas as inspeções realizadas nos produtos."></page-title>
+    <div class="col-md-6 button-bar">
+        <button ng-click="SugestaoList.openForm()" class="btn-success"><i class="fa-plus"></i>&nbsp; Nova</button>
+    </div>
+</div>
+<table table-list="SugestaoList">
+    <thead>
+        <tr>
+            <th width="150" class="text-center">Status</th>
+            <th class="text-center">Relator</th>
+            <th class="text-center">Setor</th>
+            <th class="text-center">Pessoa</th>
+            <th class="text-center" width="225">Data</th>
+            <th width="75"></th>
+        </tr>
+        <tr class="table-filter" static-include="views/sugestoes/list_filter.html"></tr>
+    </thead>
+    <tbody ng-if="SugestaoList.tableData.data && !SugestaoList.loading">
+        <tr ng-repeat="sugestao in SugestaoList.tableData.data">
+            <td class="text-center">
+                <span class="label label-{{ SugestaoList.parseStatusClass(sugestao.status) }} m-b-0">
+                    {{ sugestao.status_description }}
+                </span>
+            </td>
+            <td class="text-center">{{ (sugestao.anonimo) ? 'Anônimo' : sugestao.usuario.name }}</td>
+            <td class="text-center">{{ sugestao.setor }}</td>
+            <td class="text-center">{{ sugestao.pessoa }}</td>
+            <td class="text-center">{{ sugestao.created_at }}</td>
+            <td class="text-center">
+                <a class="btn-info" ng-click="SugestaoList.openForm(sugestao)">
+                    <i class="fa-eye"></i>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
