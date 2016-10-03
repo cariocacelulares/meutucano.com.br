@@ -1,42 +1,42 @@
 <div id="page-header" class="row">
     <page-title icon="fa-trophy" title="Ranking" description="Ranking mensal do gamification."></page-title>
 </div>
-<table class="table">
-    <thead>
-        <td width="80"></td>
-        <td width="150"></td>
-        <td></td>
-        <td width="200"></td>
-        <td width="80"></td>
-        <td width="20"></td>
-    </thead>
-    <tbody>
-        <td><span class="fz-50 p-l-20">#1</span></td>
-        <td class="text-center">
-            <div class="avatar">
-                <span class="nivel">1</span>
-                <span class="avatar-container">
-                    <img src="https://scontent.fbnu1-1.fna.fbcdn.net/t31.0-8/s960x960/10658948_723980151015378_6366157510603332615_o.jpg">
+
+<div class="panel panel-default">
+    <div class="panel-body ranking">
+        <div ng-repeat="ranking in Ranking.dados" class="row">
+            <div class="col-md-1">
+                <span class="position p-l-10">#{{ $index + 1 }}</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <div class="avatar">
+                    <span class="nivel">{{ ranking.jogador.nivel }}</span>
+                    <span class="avatar-container">
+                        <img ng-src="./{{ ranking.jogador.avatar }}" width="200" class="circle">
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <h1 class="m-t-50 m-b-15 m-l-40 fz-40">{{ ranking.jogador.usuario.name }}</h1>
+                <span class="m-l-45 fz-20">
+                    <span class="text-primary"><i class="fa-check"></i>&nbsp; {{ ranking.tarefas }}</span>
+                    &nbsp; / &nbsp;
+                    <span class="text-success">$ {{ ranking.jogador.moedas }}</span>
                 </span>
             </div>
-        </td>
-        <td>
-            <h1 class="m-t-0 m-b-5 fz-40">Cleiton Souza</h1>
-            <span class="m-l-5">
-                <span class="text-primary">Explorador</span> / <span class="text-success">$ 500</span>
-            </span>
-        </td>
-        <td>
-            <span class="fz-40 text-complete">
-                <i class="fa-certificate"></i>&nbsp;575
-            </span>
-        </td>
-        <td>
-            <span class="btn-default btn-lg">
-                <i class="fa-thumbs-o-up"></i>&nbsp;
-                2
-            </span>
-        </td>
-        <td></td>
-    </tbody>
-</table>
+            <div class="col-md-2">
+                <span class="text-complete points">
+                    <i class="fa-certificate"></i>&nbsp;{{ ranking.pontos }}
+                </span>
+            </div>
+            <div class="col-md-2">
+                <div class="votes">
+                    <span ng-click="Ranking.votar(ranking.jogador.usuario.id)" class="btn-default btn-lg">
+                        <i class="fa-thumbs-o-up"></i>&nbsp;
+                        {{ ranking.votos }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

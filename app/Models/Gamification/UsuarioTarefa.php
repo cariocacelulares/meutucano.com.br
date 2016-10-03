@@ -32,6 +32,7 @@ class UsuarioTarefa extends \Eloquent
         parent::boot();
 
         static::creating(function($usuarioTarefa) {
+            // Cria / atualiza a tabela gamification
             if ($gamification = Gamification::where('usuario_id', '=', $usuarioTarefa->usuario_id)->first()) {
                 $gamification->experiencia = $gamification->experiencia + $usuarioTarefa->pontos;
                 $gamification->moedas = $gamification->moedas + $usuarioTarefa->moedas;
@@ -45,7 +46,36 @@ class UsuarioTarefa extends \Eloquent
                 ]);
             }
 
-            // $currentUserId = JWTAuth::parseToken()->authenticate()->id;
+            // Ranking
+            $mes = date('m');
+            $ano = date('Y');
+            $ranking = Ranking
+                ::where('usuario_id', '=', $usuarioTarefa->usuario_id)
+                ->where('mes', '=', $mes)
+                ->where('ano', '=', $ano)
+                ->first();
+
+            if (!$ranking) {
+                $ranking = new Ranking([
+                    'usuario_id' => $usuarioTarefa->usuario_id,
+                    'mes' => $mes,
+                    'ano' => $ano,
+                ]);
+            }
+
+            $ultimoDia = cal_days_in_month(CAL_GREGORIAN, $mes, $ano);
+            $tarefas = UsuarioTarefa
+                ::selectRaw('SUM(pontos) AS pontos, COUNT(*) as total')
+                ->where('usuario_id', '=', $usuarioTarefa->usuario_id)
+                ->where('created_at', '>=', "{$ano}-{$mes}-01 00:00:00")
+                ->where('created_at', '<=', "{$ano}-{$mes}-{$ultimoDia} 23:59:59")
+                ->first()->toArray();
+
+            $ranking->pontos = (int)$tarefas['pontos'];
+            $ranking->tarefas = (int)$tarefas['total'];
+            $ranking->save();
+
+            // Conquistas
             $conquistas = Conquista::where('tarefa_id', '=', $usuarioTarefa->tarefa_id)->get();
             $dia = date('d');
             $mes = date('m');

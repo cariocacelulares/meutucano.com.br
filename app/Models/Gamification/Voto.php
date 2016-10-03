@@ -11,9 +11,25 @@ class voto extends \Eloquent
     protected $table = 'gamification_votos';
 
     protected $fillable = [
-        'eleitor',
-        'candidato'
+        'eleitor_id',
+        'candidato_id'
     ];
+
+    protected static function boot() {
+        parent::boot();
+
+        static::creating(function($voto) {
+            // Ranking
+            $ranking = Ranking
+                ::where('usuario_id', '=', $voto->candidato_id)
+                ->where('mes', '=', date('m'))
+                ->where('ano', '=', date('Y'))
+                ->first();
+
+            $ranking->votos = $ranking->votos + 1;
+            $ranking->save();
+        });
+    }
 
     public function candidato()
     {

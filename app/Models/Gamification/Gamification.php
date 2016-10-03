@@ -1,6 +1,7 @@
 <?php namespace App\Models\Gamification;
 
 use App\Models\Usuario\Usuario;
+use App\Models\Gamification\Voto;
 
 /**
  * Class Gamification
@@ -21,7 +22,7 @@ class Gamification extends \Eloquent
     ];
 
     protected $appends = [
-        'progresso'
+        'progresso',
     ];
 
     protected static function boot() {
@@ -29,12 +30,35 @@ class Gamification extends \Eloquent
 
         static::saving(function($gamification) {
             $gamification->nivel = (int)(\Config::get('gamification.level_constant') * sqrt($gamification->experiencia));
+
+            $mes = date('m');
+            $ano = date('Y');
+            $ranking = Ranking
+                ::where('usuario_id', '=', $gamification->usuario_id)
+                ->where('mes', '=', $mes)
+                ->where('ano', '=', $ano)
+                ->first();
+
+            if (!$ranking) {
+                $ranking = Ranking::create([
+                    'usuario_id' => $gamification->usuario_id,
+                    'mes' => $mes,
+                    'ano' => $ano,
+                ]);
+            }
+
+            $ranking->save();
         });
     }
 
     public function usuario()
     {
         return $this->belongsTo(Usuario::class, 'usuario_id', 'id');
+    }
+
+    public function votos()
+    {
+        return $this->belongsTo(Voto::class, 'usuario_id', 'candidato_id');
     }
 
     public function getAvatarAttribute($avatar)

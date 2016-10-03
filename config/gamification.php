@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'votos_mes' => 1,
     'level_constant' => 0.05,
 
     // Vá até o fim do arquivo para visualizar o gerador de xp, você deve regerar caso a constant mude

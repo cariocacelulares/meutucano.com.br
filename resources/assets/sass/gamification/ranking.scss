@@ -1,0 +1,48 @@
+.ranking {
+    > .row {
+        margin-top: 0 !important;
+        padding-top: 20px !important;
+        padding-bottom: 20px;
+
+        &:before {
+            background-color: #E2E2E2 !important;
+            transform: translateY(-20px) !important;
+        }
+
+        &:first-child {
+            .avatar .avatar-container,
+            .avatar .nivel {
+                border-color: #D9C349;
+            }
+        }
+
+        &:nth-child(2) {
+            .avatar .avatar-container,
+            .avatar .nivel {
+                border-color: #B5C7C9;
+            }
+        }
+
+        &:nth-child(3) {
+            .avatar .avatar-container,
+            .avatar .nivel {
+                border-color: #B57627;
+            }
+        }
+    }
+
+    .position,
+    .points,
+    .votes {
+        @extend .va-middle;
+        height: 200px;
+    }
+
+    .position {
+        font-size: 50px;
+    }
+
+    .points {
+        font-size: 40px;
+    }
+}
