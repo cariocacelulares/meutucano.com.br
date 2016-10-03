@@ -349,7 +349,7 @@ class SkyhubController extends Controller implements Integracao
     {
         $s_pedido = $this->request('/queues/orders');
 
-        if ($s_pedido && is_array($order)) {
+        if ($s_pedido && is_array($s_pedido)) {
             if ($this->importPedido($s_pedido)) {
                 $this->request(
                     sprintf('/queues/orders/%s', $s_pedido['code']),
