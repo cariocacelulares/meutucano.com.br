@@ -372,6 +372,13 @@ class PedidoController extends Controller
             ->orderBy(DB::raw('MONTH(created_at)'), 'DESC')
             ->get()->toArray();
 
+        if (!isset($mes[0])) {
+            $mes[] = [
+                'mes' => $data['mes'],
+                'count' => 0
+            ];
+        }
+
         if (count($mes) == 1) {
             if ($data['mes'] == $mes[0]['mes']) {
                 $mes[] = [
@@ -396,6 +403,13 @@ class PedidoController extends Controller
             ->groupBy(DB::raw('DAY(created_at)'))
             ->orderBy(DB::raw('DAY(created_at)'), 'DESC')
             ->get()->toArray();
+
+        if (!isset($dia[0])) {
+            $dia[] = [
+                'dia' => $data['dia'],
+                'count' => 0
+            ];
+        }
 
         if (count($dia) == 1) {
             if ($data['dia'] == $dia[0]['dia']) {
