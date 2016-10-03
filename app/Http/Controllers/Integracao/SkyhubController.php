@@ -196,10 +196,10 @@ class SkyhubController extends Controller implements Integracao
             }
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', method: ' . $method));
-            return $e->getMessage();
+            return false;
         } catch (\Exception $e) {
             Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', method: ' . $method));
-            return $e->getMessage();
+            return false;
         }
     }
 
@@ -349,7 +349,7 @@ class SkyhubController extends Controller implements Integracao
     {
         $s_pedido = $this->request('/queues/orders');
 
-        if ($s_pedido) {
+        if ($s_pedido && is_array($order)) {
             if ($this->importPedido($s_pedido)) {
                 $this->request(
                     sprintf('/queues/orders/%s', $s_pedido['code']),
