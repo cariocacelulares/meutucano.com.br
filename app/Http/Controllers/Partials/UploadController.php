@@ -126,9 +126,9 @@ class UploadController extends Controller
             $tipoOperacao = null;
             if (in_array($operacao, Config::get('tucano.notas.operacoes'))) {
                 $tipoOperacao = 'venda';
-            } else if (!in_array($operacao, Config::get('tucano.notas.devolucao'))) {
+            } else if (in_array($operacao, Config::get('tucano.notas.devolucao'))) {
                 $tipoOperacao = 'devolucao';
-            } else if (!in_array($operacao, Config::get('tucano.notas.estorno'))) {
+            } else if (in_array($operacao, Config::get('tucano.notas.estorno'))) {
                 $tipoOperacao = 'estorno';
             } else {
                 return false;
