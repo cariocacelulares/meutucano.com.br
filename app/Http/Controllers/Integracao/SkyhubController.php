@@ -496,7 +496,7 @@ class SkyhubController extends Controller implements Integracao
         $estimatedDelivery = ($estimatedDelivery) ? : \DateTime::createFromFormat('Y-m-d', substr($data, 0, 10));
 
         if ($estimatedDelivery !== false) {
-            return $estimatedDelivery->format('d/m/Y');
+            return $estimatedDelivery->format('Y-m-d');
         } else {
             return $this->calcEstimatedDelivery($freteMetodo, $cep);
         }
