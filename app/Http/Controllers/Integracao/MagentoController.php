@@ -131,7 +131,7 @@ class MagentoController extends Controller implements Integracao
      * @param  string $url
      * @param  array  $params
      * @param  string $method
-     * @return array
+     * @return array|bool
      */
     public function request($url = null, $params = [], $method = 'GET')
     {
