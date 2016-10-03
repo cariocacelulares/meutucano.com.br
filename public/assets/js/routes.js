@@ -276,6 +276,29 @@
                     templateUrl: 'views/produto/marca/form.html',
                     controller: 'MarcaFormController as MarcaForm'
                 })
+
+                /**
+                 * Inspeção técnica
+                 */
+                .state('app.inspecao', {
+                    url: '/inspecao',
+                    templateUrl: 'views/layouts/default.html',
+                    data: {
+                        roles: ['admin', 'tecnico']
+                    }
+                })
+
+                .state('app.inspecao.index', {
+                    url: '/list',
+                    templateUrl: 'views/inspecao/list.html',
+                    controller: 'InspecaoTecnicaListController as InspecaoTecnicaList'
+                })
+
+                .state('app.inspecao.form', {
+                    url: '/{sku}',
+                    templateUrl: 'views/inspecao/form.html',
+                    controller: 'InspecaoTecnicaFormController as InspecaoTecnicaForm'
+                })
             ;
         });
 })();
