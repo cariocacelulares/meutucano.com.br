@@ -1,0 +1,31 @@
+<h1>Enviar sugestão / crítica</h1>
+<form ng-submit="InspecaoTecnicaForm.save()" novalidate="novalidate" class="form-default">
+    <div class="row">
+        <div class="col-md-4 form-group">
+            <label for="setor">Setor</label>
+            <input ng-model="InspecaoTecnicaForm.inspecao.setor" id="setor" placeholder="Código único do produto" required />
+        </div>
+        <div class="col-md-4 form-group">
+            <label for="pessoa">Pessoa</label>
+            <input ng-model="InspecaoTecnicaForm.inspecao.pessoa" id="pessoa" placeholder="Código único do produto" required />
+        </div>
+        <div class="col-md-4 form-group p-t-20">
+            <div class="checkbox check-success">
+                <input id="anonimo" type="checkbox" ng-model="UsuarioForm.usuario.anonimo" ng-true-value="true">
+                <label for="anonimo">Anônimo</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <label for="descricao">Descrição</label>
+            <textarea class="form-control" id="descricao" ng-model="InspecaoTecnicaForm.inspecao.descricao" placeholder="Descreva sua crítica / sugestão"></textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="pull-right">
+            <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
+            <button busy="Salvando..." type="submit" class="btn btn-success">Enviar</button>
+        </div>
+    </div>
+</form>
