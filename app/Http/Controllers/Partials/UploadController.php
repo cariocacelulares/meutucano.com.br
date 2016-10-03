@@ -507,10 +507,13 @@ class UploadController extends Controller
 
             $pedidoProduto = PedidoProduto::firstOrNew(['pedido_id' => $pedido->id, 'produto_sku' => $produto->sku]);
 
-            $pedidoProduto->pedido_id = $pedido->id;
-            $pedidoProduto->produto_sku = (int)$item->prod->cProd;
-            $pedidoProduto->valor = $item->prod->vUnCom;
-            $pedidoProduto->quantidade = $item->prod->qCom;
+            if ($pedidoProduto->wasRecentlyCreated) {
+                $pedidoProduto->pedido_id   = $pedido->id;
+                $pedidoProduto->produto_sku = (int)$item->prod->cProd;
+                $pedidoProduto->valor       = $item->prod->vUnCom;
+                $pedidoProduto->quantidade  = $item->prod->qCom;
+            }
+
             $pedidoProduto->imei = array_key_exists((int)$item->prod->cProd, $produtoImei) ? $produtoImei[(int)$item->prod->cProd] : '';
 
             if ($pedidoProduto->save()) {
