@@ -283,6 +283,7 @@ class PedidoController extends Controller
        $pedidos = Pedido
             ::selectRaw('status, marketplace, COUNT(*) as count')
             ->whereNotNull('status')
+            ->where('status', '!=', 5)
             ->where('created_at', '>=', $inicioMes)
             ->groupBy('status')
             ->groupBy('marketplace')
@@ -347,7 +348,7 @@ class PedidoController extends Controller
             'dia' => (int)date('d'),
         ];
 
-       $ano = Pedido
+       /*$ano = Pedido
             ::selectRaw('YEAR(created_at) as ano, COUNT(*) as count')
             ->whereIn('status', [1,2,3])
             ->whereIn(DB::raw('YEAR(created_at)'), [$data['ano'], $data['ano'] - 1])
@@ -360,7 +361,7 @@ class PedidoController extends Controller
                 'ano' => $data['ano'] - 1,
                 'count' => 0
             ];
-        }
+        }*/
 
        $mes = Pedido
             ::selectRaw('MONTH(created_at) as mes, COUNT(*) as count')
@@ -371,11 +372,20 @@ class PedidoController extends Controller
             ->orderBy(DB::raw('MONTH(created_at)'), 'DESC')
             ->get()->toArray();
 
-        if (count($mes) == 1 && $data['mes'] == $mes[0]['mes']) {
-            $mes[] = [
-                'mes' => $data['mes'] - 1,
-                'count' => 0
-            ];
+        if (count($mes) == 1) {
+            if ($data['mes'] == $mes[0]['mes']) {
+                $mes[] = [
+                    'mes' => $data['mes'] - 1,
+                    'count' => 0
+                ];
+            } else if (($data['mes'] - 1) == $mes[0]['mes']) {
+                $mes[] = $mes[0];
+
+                $mes[0] = [
+                    'mes' => $data['mes'],
+                    'count' => 0
+                ];
+            }
         }
 
        $dia = Pedido
@@ -387,20 +397,29 @@ class PedidoController extends Controller
             ->orderBy(DB::raw('DAY(created_at)'), 'DESC')
             ->get()->toArray();
 
-        if (count($dia) == 1 && $data['dia'] == $dia[0]['dia']) {
-            $dia[] = [
-                'dia' => $data['dia'] - 1,
-                'count' => 0
-            ];
+        if (count($dia) == 1) {
+            if ($data['dia'] == $dia[0]['dia']) {
+                $dia[] = [
+                    'dia' => $data['dia'] - 1,
+                    'count' => 0
+                ];
+            } else if (($data['dia'] - 1) == $dia[0]['dia']) {
+                $dia[] = $dia[0];
+
+                $dia[0] = [
+                    'dia' => $data['dia'],
+                    'count' => 0
+                ];
+            }
         }
 
         $mesesExtenso = Config::get('tucano.meses');
 
         $pedidos = [
-            'ano' => [
+            /*'ano' => [
                 'atual' => [$ano[0]['ano'], $ano[0]['count']],
                 'ultimo' => [$ano[1]['ano'], $ano[1]['count']],
-            ],
+            ],*/
             'mes' => [
                 'atual' => [$mesesExtenso[(int)$mes[0]['mes']], $mes[0]['count']],
                 'ultimo' => [$mesesExtenso[(int)$mes[1]['mes']], $mes[1]['count']],
@@ -423,16 +442,16 @@ class PedidoController extends Controller
      */
     function totalOrders($mes = null, $ano = null)
     {
+        $atual = false;
+
         if ($mes === null) {
             $mes = (int)date('m');
+            $atual = true;
         }
 
         if ($ano === null) {
             $ano = (int)date('Y');
         }
-
-        $lastDay = cal_days_in_month(CAL_GREGORIAN, $mes, $ano);
-        $days = range(1, $lastDay);
 
        $pedidos = Pedido
             ::selectRaw('DAY(created_at) AS dia, COUNT(*) as total')
@@ -443,6 +462,8 @@ class PedidoController extends Controller
             ->orderBy(DB::raw('DAY(created_at)'), 'ASC')
             ->get()->toArray();
 
+        $lastDay = cal_days_in_month(CAL_GREGORIAN, $mes, $ano);
+        $days = range(1, (($atual) ? date('d') : $lastDay));
         $list = array_fill_keys(array_keys(array_flip($days)), 0);
         foreach ($pedidos as $pedido) {
             $list[$pedido['dia']] = $pedido['total'];

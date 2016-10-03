@@ -75,6 +75,8 @@
          * Carrega os dados dos pedidos
          */
         vm.loadTotalOrdersDate = function() {
+            vm.ordersDate = {};
+
             Pedido.totalOrdersDate().then(function(response) {
                 vm.ordersDate = response;
             });
@@ -95,12 +97,12 @@
 
                 vm.chartOrdersStatus.series = [];
 
-                vm.chartOrdersStatus.series.push({
+                /*vm.chartOrdersStatus.series.push({
                     name: 'Cancelados',
                     data: response.cancelado,
                     color: '#F55753',
                     id: 'cancelados'
-                });
+                });*/
 
                 vm.chartOrdersStatus.series.push({
                     name: 'Pendentes',
@@ -132,17 +134,19 @@
 
                 var maior = 0;
                 var total = 0;
-                for (var i = 0; i < vm.chartOrdersStatus.series[0].data.length; i++) {
-                    total = 0;
+                if (typeof vm.chartOrdersStatus.series[0].data !== 'undefined') {
+                    for (var i = 0; i < vm.chartOrdersStatus.series[0].data.length; i++) {
+                        total = 0;
 
-                    for (var k in vm.chartOrdersStatus.series) {
-                        total += vm.chartOrdersStatus.series[k].data[i];
+                        for (var k in vm.chartOrdersStatus.series) {
+                            total += vm.chartOrdersStatus.series[k].data[i];
+                        }
+
+                        if (total > maior)
+                            maior = total;
                     }
-
-                    if (total > maior)
-                        maior = total;
+                     vm.chartOrdersStatus.yAxis.max = maior;
                 }
-                 vm.chartOrdersStatus.yAxis.max = maior;
 
             });
         };

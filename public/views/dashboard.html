@@ -33,13 +33,13 @@
                     <div class="panel-body text-center">
                         <div class="row">
                             <div class="col-md-6 p-l-10">
-                                <span class="fz-22" ng-bind="Dashboard.ordersDate.dia.ultimo[1]"></span>
+                                <span class="fz-22" ng-bind="Dashboard.ordersDate.dia.ultimo[1] || '-'"></span>
                                 <br/>
                                 <small class="hint-text">Ontem</small>
                             </div>
                             <div class="col-md-6 p-r-10 b-l-1">
                                 <span class="fz-22 text-success"
-                                    ng-bind="Dashboard.ordersDate.dia.atual[1]"
+                                    ng-bind="Dashboard.ordersDate.dia.atual[1] || '-'"
                                     ng-class="{ 'text-danger': (Dashboard.ordersDate.dia.atual[1] < Dashboard.ordersDate.dia.ultimo[1]) }">
                                 </span>
                                 <br/>
@@ -48,13 +48,13 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 p-l-10 p-t-5">
-                                <span class="fz-22" ng-bind="Dashboard.ordersDate.mes.ultimo[1]"></span>
+                                <span class="fz-22" ng-bind="Dashboard.ordersDate.mes.ultimo[1] || '-'"></span>
                                 <br/>
                                 <small class="hint-text">{{ Dashboard.ordersDate.mes.ultimo[0] }}</small>
                             </div>
                             <div class="col-md-6 p-r-10 b-l-1 p-t-5">
                                 <span class="fz-22 text-success"
-                                    ng-bind="Dashboard.ordersDate.mes.atual[1]"
+                                    ng-bind="Dashboard.ordersDate.mes.atual[1] || '-'"
                                     ng-class="{ 'text-danger': (Dashboard.ordersDate.mes.atual[1] < Dashboard.ordersDate.mes.ultimo[1]) }">
                                 </span>
                                 <br/>
