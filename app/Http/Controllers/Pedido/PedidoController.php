@@ -53,9 +53,11 @@ class PedidoController extends Controller
                 'endereco',
                 'notas',
                 'rastreios',
+                'produtos',
                 'comentarios'
             ])
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
+            ->leftJoin('pedido_produtos', 'pedido_produtos.pedido_id', '=', 'pedidos.id')
             ->leftJoin('pedido_notas', 'pedido_notas.pedido_id', '=', 'pedidos.id')
             ->where('status', '=', 1)
             ->groupBy('pedidos.id')

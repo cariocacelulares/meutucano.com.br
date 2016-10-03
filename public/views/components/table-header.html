@@ -21,6 +21,10 @@
             por página
         </div>
 
+        <div class="m-l-15 p-l-15 b-l b-grey" style="display: inline-block;">
+            {{ $ctrl.data.vm.tableData.total }} registros encontrados
+        </div>
+
         <button ng-click="$ctrl.data.vm.load()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i></button>
     </div>
 </div>
