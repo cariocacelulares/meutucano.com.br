@@ -201,5 +201,11 @@ Route::group(['prefix' => '/api'], function() {
          * Atributos
          */
         Route::get('atributos/linha/{linha_id}', 'Produto\Linha\AtributoController@fromLinha');
+
+        /**
+         * Inspeção Técnica
+         */
+        Route::get('inspecao_tecnica/list', 'Inspecao\InspecaoTecnicaController@tableList');
+        Route::resource('inspecao_tecnica', 'Inspecao\InspecaoTecnicaController');
     });
 });

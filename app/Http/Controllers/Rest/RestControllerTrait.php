@@ -120,7 +120,7 @@ trait RestControllerTrait
         try {
             $v = \Validator::make(Input::all(), $this->validationRules);
 
-            if($v->fails()) {
+            if ($v->fails()) {
                 throw new \Exception("ValidationException");
             }
             $data = $m::create(Input::all());
