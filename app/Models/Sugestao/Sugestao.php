@@ -74,7 +74,7 @@ class Sugestao extends \Eloquent
     public function getStatusDescriptionAttribute() {
         switch ($this->status) {
             case '1':
-                return 'Acatada';
+                return 'Aceita';
             case '2':
                 return 'Arquivada';
             default:

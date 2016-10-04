@@ -15,7 +15,7 @@
             vm.save();
         };
 
-        vm.acatar = function() {
+        vm.aceitar = function() {
             vm.sugestao.status = 1;
             vm.save();
         };
