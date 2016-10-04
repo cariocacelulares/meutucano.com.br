@@ -129,6 +129,11 @@
                         title: 'Relatórios',
                         icon: 'fa-pie-chart',
                         sub: [
+                            {
+                                title: 'Pedidos',
+                                icon: 'fa-cubes',
+                                sref: $state.href('app.relatorios.pedidos')
+                            },
                             {title: 'Caixa diário', icon: 'fa-money'},
                             {title: 'ICMS mensal', icon: 'fa-file-pdf-o', sref: $state.href('app.admin.icms')}
                         ],

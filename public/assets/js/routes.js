@@ -307,6 +307,23 @@
                     templateUrl: 'views/inspecao/list.html',
                     controller: 'InspecaoTecnicaListController as InspecaoTecnicaList'
                 })
+
+                /**
+                 * Relatórios
+                 */
+                .state('app.relatorios', {
+                    url: '/relatorios',
+                    templateUrl: 'views/layouts/default.html',
+                    data: {
+                        roles: ['admin']
+                    }
+                })
+
+                .state('app.relatorios.pedidos', {
+                    url: '/relatorios',
+                    templateUrl: 'views/relatorio/pedidos.html',
+                    controller: 'RelatorioPedidosController as RelatorioPedidos'
+                })
             ;
         });
 })();
