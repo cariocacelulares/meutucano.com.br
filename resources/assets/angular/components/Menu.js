@@ -179,7 +179,8 @@
                             {
                                 title: 'Sugestões',
                                 icon: 'fa-comments-o',
-                                sref: $state.href('app.interno.sugestoes.index')
+                                sref: $state.href('app.interno.sugestoes.index'),
+                                roles: ['admin']
                             }
                         ]
                     },
