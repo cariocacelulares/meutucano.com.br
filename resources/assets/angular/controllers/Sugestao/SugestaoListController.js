@@ -63,17 +63,17 @@
          *
          * @return {void}
          */
-        /*vm.openForm = function(inspecao) {
+        vm.openForm = function(sugestao) {
             ngDialog.open({
-                template: 'views/inspecao/form.html',
-                controller: 'InspecaoTecnicaFormController',
-                controllerAs: 'InspecaoTecnicaForm',
+                template: 'views/sugestoes/detalhe.html',
+                controller: 'SugestaoDetalheController',
+                controllerAs: 'SugestaoDetalhe',
                 data: {
-                    inspecao: inspecao || {}
+                    sugestao: sugestao || {}
                 }
             }).closePromise.then(function(data) {
                 if (data.value === true) vm.load();
             });
-        };*/
+        };
     }
 })();

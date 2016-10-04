@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('SugestaoFormController', SugestaoFormController);
 
-    function SugestaoFormController($scope, Restangular, toaster,  Usuario) {
+    function SugestaoFormController($scope, toaster, Sugestao, Usuario) {
         var vm = this;
 
         vm.pessoas = {};
@@ -25,7 +25,7 @@
          * @return {void}
          */
         vm.save = function() {
-            Restangular.all('sugestoes').post(vm.sugestao).then(function() {
+            Sugestao.save(vm.sugestao).then(function() {
                 toaster.pop('success', 'Sucesso!', 'Sugestão / crítica enviada com sucesso!');
                 $scope.closeThisDialog(true);
             });

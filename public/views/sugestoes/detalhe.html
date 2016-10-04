@@ -1,0 +1,34 @@
+<h1>Visualizar sugestão / crítica</h1>
+<form novalidate="novalidate" class="form-default">
+    <div class="row">
+        <div class="col-md-12 fz-12">
+            Enviado por
+            <b ng-if="SugestaoDetalhe.sugestao.anonimo">Anônimo</b>
+            <b ng-if="!SugestaoDetalhe.sugestao.anonimo">{{ SugestaoDetalhe.sugestao.usuario.name }}</b>
+            sobre:
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 form-group">
+            <label for="setor">Setor</label>
+            <input ng-model="SugestaoDetalhe.sugestao.setor" id="motivo" class="form-control text-master" readonly="readonly" />
+        </div>
+        <div class="col-md-6 form-group">
+            <label for="pessoa">Pessoa</label>
+            <input ng-model="SugestaoDetalhe.sugestao.pessoa" id="motivo" class="form-control text-master" readonly="readonly" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <label for="descricao">Descrição</label>
+            <textarea class="form-control text-master" readonly="readonly" id="descricao" ng-model="SugestaoDetalhe.sugestao.descricao" placeholder="Descreva sua crítica / sugestão"></textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="pull-right">
+            <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
+            <button  ng-click="SugestaoDetalhe.arquivar()" busy="Salvando..." type="submit" class="btn btn-warning">Arquivar</button>
+            <button  ng-click="SugestaoDetalhe.acatar()" busy="Salvando..." type="submit" class="btn btn-success">Acatar</button>
+        </div>
+    </div>
+</form>
