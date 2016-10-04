@@ -54,7 +54,7 @@
         </div>
     </div>
 </div>
-<div ng-if="Perfil.proprio" class="row m-t-20">
+<div ng-if="Perfil.proprio && Perfil.usuario.tarefas.length" class="row m-t-20">
     <div class="col-md-12">
         <h2>Tarefas realizadas</h2>
         <hr class="m-t-10" />
@@ -88,7 +88,7 @@
         </table>
     </div>
 </div>
-<div class="row m-t-20">
+<div ng-if="Perfil.usuario.conquistas.length" class="row m-t-20">
     <div class="col-md-12">
         <h2>Conquistas obtidas</h2>
         <hr class="m-t-10" />

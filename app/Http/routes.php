@@ -12,12 +12,16 @@ Route::get('gamification/tarefa/{usuario_id}/{tarefa_id}', function($usuario_id,
     $tarefa = App\Models\Gamification\Tarefa::find($tarefa_id);
     $usuario = App\Models\Usuario\Usuario::find($usuario_id);
 
-    $usuarioTarefa = new App\Models\Gamification\UsuarioTarefa();
+    if ($tarefa && $usuario) {
+        \Event::fire(new App\Events\Gamification\TarefaRealizada($tarefa->slug, $usuario->id));
+    }
+
+    /*$usuarioTarefa = new App\Models\Gamification\UsuarioTarefa();
     $usuarioTarefa->pontos = $tarefa->pontos;
     $usuarioTarefa->moedas = $tarefa->moedas;
     $usuarioTarefa->tarefa_id = $tarefa->id;
     $usuarioTarefa->usuario()->associate($usuario);
-    $usuarioTarefa->save();
+    $usuarioTarefa->save();*/
 });
 Route::get('gamification/voto/{candidato_id}/{eleitor_id}', function($candidato_id, $eleitor_id){
     $voto = App\Models\Gamification\Voto::create([

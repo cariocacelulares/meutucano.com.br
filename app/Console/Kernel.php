@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
         Commands\MagentoPedidos::class,
         Commands\MagentoProdutos::class,
         Commands\CancelOldOrders::class,
+        Commands\Gamification\LerFila::class,
     ];
 
     /**

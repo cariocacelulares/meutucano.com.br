@@ -71,6 +71,10 @@ class GamificationController extends Controller
             $ranking = Ranking
                 ::where('mes', '=', $mes)
                 ->where('ano', '=', $ano)
+                ->orderBy('pontos', 'DESC')
+                ->orderBy('tarefas', 'DESC')
+                ->orderBy('votos', 'DESC')
+                ->orderBy('usuario_id', 'ASC')
                 ->get();
 
             return $this->showResponse($ranking);

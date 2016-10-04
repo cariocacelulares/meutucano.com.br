@@ -71,8 +71,8 @@ class UsuarioTarefa extends \Eloquent
                 ->where('created_at', '<=', "{$ano}-{$mes}-{$ultimoDia} 23:59:59")
                 ->first()->toArray();
 
-            $ranking->pontos = (int)$tarefas['pontos'];
-            $ranking->tarefas = (int)$tarefas['total'];
+            $ranking->pontos = (int)$tarefas['pontos'] + $usuarioTarefa->pontos;
+            $ranking->tarefas = (int)$tarefas['total'] + 1;
             $ranking->save();
 
             // Conquistas
