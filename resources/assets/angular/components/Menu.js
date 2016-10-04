@@ -175,6 +175,11 @@
                                 title: 'Minhas senhas',
                                 icon: 'fa-key',
                                 sref: $state.href('app.interno.senhas.minhas')
+                            },
+                            {
+                                title: 'Sugestões',
+                                icon: 'fa-comments-o',
+                                sref: $state.href('app.interno.sugestoes.index')
                             }
                         ]
                     },

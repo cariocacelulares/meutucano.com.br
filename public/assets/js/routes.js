@@ -192,6 +192,20 @@
                 })
 
                 /**
+                 * Sugestões
+                 */
+                .state('app.interno.sugestoes', {
+                    url: '/sugestoes',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.interno.sugestoes.index', {
+                    url: '/list',
+                    templateUrl: 'views/sugestoes/list.html',
+                    controller: 'SugestaoListController as SugestaoList'
+                })
+
+                /**
                  * Marketing
                  */
                 .state('app.marketing', {
@@ -292,12 +306,6 @@
                     url: '/list',
                     templateUrl: 'views/inspecao/list.html',
                     controller: 'InspecaoTecnicaListController as InspecaoTecnicaList'
-                })
-
-                .state('app.inspecao.form', {
-                    url: '/{sku}',
-                    templateUrl: 'views/inspecao/form.html',
-                    controller: 'InspecaoTecnicaFormController as InspecaoTecnicaForm'
                 })
             ;
         });

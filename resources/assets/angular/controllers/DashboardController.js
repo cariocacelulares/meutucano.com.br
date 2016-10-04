@@ -5,13 +5,18 @@
         .module('MeuTucano')
         .controller('DashboardController', DashboardController);
 
-    function DashboardController($rootScope, RastreioHelper, Monitorado, Pedido) {
+    function DashboardController($rootScope, SugestaoHelper, RastreioHelper, Monitorado, Pedido) {
         var vm = this;
 
         /**
          * @type {Object}
          */
         vm.rastreioHelper = RastreioHelper.init(vm);
+
+        /**
+         * @type {Object}
+         */
+        vm.sugestaoHelper = SugestaoHelper.init(vm);
 
         // Dados dos pedidos
         vm.ordersDate = {};
