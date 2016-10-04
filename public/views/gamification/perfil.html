@@ -1,5 +1,8 @@
 <div id="page-header" class="row">
     <page-title icon="fa-user" title="Perfil" description="Aqui estão todas as informações do usuário."></page-title>
+    <div ng-if="Perfil.proprio" class="col-md-6 button-bar">
+        <button ng-click="Perfil.openForm(Perfil.usuario)" class="btn-info"><i class="fa-refresh"></i>&nbsp; Alterar avatar</button>
+    </div>
 </div>
 <div class="row">
     <div class="col-md-12">
@@ -51,7 +54,7 @@
         </div>
     </div>
 </div>
-<div class="row m-t-20">
+<div ng-if="Perfil.proprio" class="row m-t-20">
     <div class="col-md-12">
         <h2>Tarefas realizadas</h2>
         <hr class="m-t-10" />

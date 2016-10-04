@@ -15,6 +15,12 @@
 
                 ranking: function() {
                     return Restangular.one(baseUrl + '/ranking').customGET();
+                },
+
+                avatar: function(gamification_id, avatar) {
+                    return Restangular.one(baseUrl + '/avatar', gamification_id).customPOST({
+                        avatar: avatar
+                    });
                 }
             };
         }

@@ -304,7 +304,7 @@
                 })
 
                 .state('app.gamification.perfil', {
-                    url: '/perfil',
+                    url: '/perfil/?{id}',
                     templateUrl: 'views/gamification/perfil.html',
                     controller: 'PerfilController as Perfil'
                 })

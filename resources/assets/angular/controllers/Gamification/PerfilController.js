@@ -5,10 +5,18 @@
         .module('MeuTucano')
         .controller('PerfilController', PerfilController);
 
-    function PerfilController(Gamification) {
+    function PerfilController($stateParams, ngDialog, Gamification) {
         var vm = this;
 
-        vm.usuario = {};
+        if (typeof $stateParams.id !== 'undefined') {
+            vm.usuario = {
+                id: $stateParams.id
+            };
+            vm.proprio = false;
+        } else {
+            vm.usuario = {};
+            vm.proprio = true;
+        }
 
         vm.grafico = {
             credits: false,
@@ -44,7 +52,7 @@
         vm.load = function() {
             vm.loading = true;
 
-            Gamification.perfil().then(function(response) {
+            Gamification.perfil(vm.usuario.id || null).then(function(response) {
                 vm.usuario = response.usuario;
                 vm.grafico.series.push({
                     name: 'Tarefas',
@@ -57,6 +65,24 @@
         };
 
         vm.load();
+
+        /**
+         * Abre o formulário de conquistas
+         *
+         * @return {void}
+         */
+        vm.openForm = function(usuario) {
+            ngDialog.open({
+                template: 'views/gamification/avatar.html',
+                controller: 'AvatarFormController',
+                controllerAs: 'AvatarForm',
+                data: {
+                    usuario: usuario || {}
+                }
+            }).closePromise.then(function(data) {
+                if (data.value === true) vm.load();
+            });
+        };
     }
 
 })();

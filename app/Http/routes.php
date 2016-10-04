@@ -36,8 +36,9 @@ Route::group(['prefix' => '/api'], function() {
      */
     Route::group(['prefix' => '/gamification'], function() {
         Route::post('upload', 'Gamification\UploadController@upload');
+        Route::post('avatar/{gamification_id}', 'Gamification\GamificationController@avatar');
 
-        Route::get('perfil', 'Gamification\GamificationController@perfil');
+        Route::get('perfil/{id?}', 'Gamification\GamificationController@perfil');
         Route::get('ranking', 'Gamification\GamificationController@ranking');
 
         Route::get('tarefas/list', 'Gamification\TarefaController@tableList');

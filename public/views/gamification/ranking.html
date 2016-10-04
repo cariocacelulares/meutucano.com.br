@@ -17,7 +17,11 @@
                 </div>
             </div>
             <div class="col-md-5">
-                <h1 class="m-t-50 m-b-15 m-l-40 fz-40">{{ ranking.jogador.usuario.name }}</h1>
+                <h1 class="m-t-50 m-b-15 m-l-40 fz-40">
+                    <a ui-sref="app.gamification.perfil({id: ranking.jogador.usuario.id})" class="text-master">
+                        {{ ranking.jogador.usuario.name }}
+                    </a>
+                </h1>
                 <span class="m-l-45 fz-20">
                     <span class="text-primary"><i class="fa-check"></i>&nbsp; {{ ranking.tarefas }}</span>
                     &nbsp; / &nbsp;
