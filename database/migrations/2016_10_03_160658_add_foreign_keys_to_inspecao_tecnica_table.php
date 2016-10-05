@@ -25,6 +25,9 @@ class AddForeignKeysToInspecaoTecnicaTable extends Migration
      */
     public function down()
     {
-        $table->dropForeign('InspecaoTecnicaUsuario');
+        Schema::table('inspecao_tecnica', function(Blueprint $table)
+        {
+            $table->dropForeign('InspecaoTecnicaUsuario');
+        });
     }
 }

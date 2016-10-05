@@ -25,6 +25,9 @@ class AddForeignKeysToSugestoesTable extends Migration
      */
     public function down()
     {
-        $table->dropForeign('SugestoesUsuario');
+        Schema::table('sugestoes', function(Blueprint $table)
+        {
+            $table->dropForeign('SugestoesUsuario');
+        });
     }
 }
