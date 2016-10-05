@@ -141,6 +141,7 @@ Route::group(['prefix' => '/api'], function() {
         /**
          * Pedidos
          */
+        Route::get('pedidos/cidades/{uf}', 'Pedido\PedidoController@cidades');
         Route::get('pedidos/total-orders-status', 'Pedido\PedidoController@totalOrdersByStatus');
         Route::get('pedidos/total-orders-date', 'Pedido\PedidoController@totalOrdersByDate');
         Route::get('pedidos/total-orders/{mes?}/{ano?}', 'Pedido\PedidoController@totalOrders');

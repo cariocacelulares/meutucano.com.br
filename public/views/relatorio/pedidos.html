@@ -4,17 +4,36 @@
 
 <form ng-submit="RelatorioPedidos.gerar()" novalidate="novalidate" class="form-default" id="formProduto">
     <fieldset class="form-group">
+        <legend>Relações</legend>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group pull-left">
+                    <div class="checkbox check-success">
+                        <input id="cliete" type="checkbox" ng-model="RelatorioPedidos.relation.cliente" ng-change="RelatorioPedidos.changeRelation()">
+                        <label for="cliete">Clientes</label>
+                    </div>
+                </div>
+                <div class="form-group pull-left">
+                    <div class="checkbox check-success">
+                        <input id="endereco" type="checkbox" ng-model="RelatorioPedidos.relation.endereco" ng-change="RelatorioPedidos.changeRelation()">
+                        <label for="endereco">Endereços</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="form-group">
         <legend>Filtros</legend>
         <div class="row">
             <div class="col-md-2">
                 <label for="marketplace">Marketplace</label>
                 <select ng-model="RelatorioPedidos.setFilters.marketplace" id="marketplace" class="form-control"  ng-change="RelatorioPedidos.addFilter('marketplace')">
-                    <option value="">Todos</option>
+                    <option value="">Selecione</option>
                     <option ng-repeat="(key, marketplace) in RelatorioPedidos.list.marketplace" value="{{ key }}">{{ marketplace }}</option>
                 </select>
             </div>
             <div class="col-md-4 p-t-25">
-                <div ng-repeat="(key, field) in RelatorioPedidos.filter.marketplace.data" class="btn-group p-t-5 m-r-10 m-b-10" role="group">
+                <div ng-repeat="(key, field) in RelatorioPedidos.filter.marketplace.value" class="btn-group p-t-5 m-r-10 m-b-10" role="group">
                     <a class="btn-default btn-sm fz-10">{{ field }}</a>
                     <a ng-click="RelatorioPedidos.removeFilter('marketplace', key)" class="btn-default btn-sm fz-10"><i class="fa-close"></i></a>
                 </div>
@@ -22,12 +41,12 @@
             <div class="col-md-2">
                 <label for="status">Status</label>
                 <select ng-model="RelatorioPedidos.setFilters.status" id="status" class="form-control"  ng-change="RelatorioPedidos.addFilter('status')">
-                    <option value="">Todos</option>
+                    <option value="">Selecione</option>
                     <option ng-repeat="(key, status) in RelatorioPedidos.list.status" value="{{ key }}">{{ status }}</option>
                 </select>
             </div>
             <div class="col-md-4 p-t-25">
-                <div ng-repeat="(key, field) in RelatorioPedidos.filter.status.data" class="btn-group p-t-5 m-r-10 m-b-10" role="group">
+                <div ng-repeat="(key, field) in RelatorioPedidos.filter.status.value" class="btn-group p-t-5 m-r-10 m-b-10" role="group">
                     <a class="btn-default btn-sm fz-10">{{ field }}</a>
                     <a ng-click="RelatorioPedidos.removeFilter('status', key)" class="btn-default btn-sm fz-10"><i class="fa-close"></i></a>
                 </div>
@@ -64,19 +83,59 @@
                 <label for="created_at">Data</label>
                 <div class="between-group">
                     <div class="date-picker">
-                        <input class="form-control" ng-model="RelatorioPedidos.filter.created_at.value.from" placeholder="De" id="created_at" />
+                        <input class="form-control" ng-model="RelatorioPedidos.filter['pedidos.created_at'].value.from" placeholder="De" id="created_at" />
                         <div class="picker-wrap">
-                            <date-picker ng-model="RelatorioPedidos.filter.created_at.value.from"></date-picker>
+                            <date-picker ng-model="RelatorioPedidos.filter['pedidos.created_at'].value.from"></date-picker>
                         </div>
                     </div>
                     <span>/</span>
                     <div class="date-picker">
-                        <input class="form-control" ng-model="RelatorioPedidos.filter.created_at.value.to" placeholder="Áté" />
+                        <input class="form-control" ng-model="RelatorioPedidos.filter['pedidos.created_at'].value.to" placeholder="Áté" />
                         <div class="picker-wrap">
-                            <date-picker ng-model="RelatorioPedidos.filter.created_at.value.to"></date-picker>
+                            <date-picker ng-model="RelatorioPedidos.filter['pedidos.created_at'].value.to"></date-picker>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div ng-if="RelatorioPedidos.relation.endereco" class="col-md-2">
+                <label for="uf">Estado</label>
+                <select ng-model="RelatorioPedidos.filter['cliente_enderecos.uf'].value" id="uf" class="form-control" ng-change="RelatorioPedidos.loadCities()">
+                    <option value="">Selecione</option>
+                    <option value="ac">Acre</option>
+                    <option value="al">Alagoas</option>
+                    <option value="am">Amazonas</option>
+                    <option value="ap">Amapá</option>
+                    <option value="ba">Bahia</option>
+                    <option value="ce">Ceará</option>
+                    <option value="df">Distrito Federal</option>
+                    <option value="es">Espírito Santo</option>
+                    <option value="go">Goiás</option>
+                    <option value="ma">Maranhão</option>
+                    <option value="mt">Mato Grosso</option>
+                    <option value="ms">Mato Grosso do Sul</option>
+                    <option value="mg">Minas Gerais</option>
+                    <option value="pa">Pará</option>
+                    <option value="pb">Paraíba</option>
+                    <option value="pr">Paraná</option>
+                    <option value="pe">Pernambuco</option>
+                    <option value="pi">Piauí</option>
+                    <option value="rj">Rio de Janeiro</option>
+                    <option value="rn">Rio Grande do Norte</option>
+                    <option value="ro">Rondônia</option>
+                    <option value="rs">Rio Grande do Sul</option>
+                    <option value="rr">Roraima</option>
+                    <option value="sc">Santa Catarina</option>
+                    <option value="se">Sergipe</option>
+                    <option value="sp">São Paulo</option>
+                    <option value="to">Tocantins</option>
+                </select>
+            </div>
+            <div ng-if="RelatorioPedidos.relation.endereco" class="col-md-2">
+                <label for="cidade">Cidade</label>
+                <select ng-model="RelatorioPedidos.filter['cliente_enderecos.cidade'].value" id="cidade" class="form-control">
+                    <option value="">Selecione</option>
+                    <option ng-repeat="cidade in RelatorioPedidos.list.cities" value="{{ cidade }}">{{ cidade }}</option>
+                </select>
             </div>
         </div>
     </fieldset>
@@ -91,6 +150,9 @@
                         <option value="month">Mês</option>
                         <option value="status">Status</option>
                         <option value="marketplace">Marketplace</option>
+                        <option ng-if="RelatorioPedidos.relation.cliente" value="clientes.nome">Cliente</option>
+                        <option ng-if="RelatorioPedidos.relation.endereco" value="cliente_enderecos.cidade">Cidade</option>
+                        <option ng-if="RelatorioPedidos.relation.endereco" value="cliente_enderecos.uf">Estado</option>
                     </select>
                 </div>
             </fieldset>
@@ -101,7 +163,7 @@
             <div class="col-md-2">
                 <select ng-model="RelatorioPedidos.setOrder" class="form-control" ng-change="RelatorioPedidos.addOrder()">
                     <option value="">Selecione</option>
-                    <option ng-repeat="(key, field) in RelatorioPedidos.campos" value="{{ key }}">{{ field }}</option>
+                    <option ng-repeat="(key, field) in RelatorioPedidos.list.fields" value="{{ key }}">{{ field }}</option>
                 </select>
             </div>
             <div class="col-md-10">
@@ -118,7 +180,7 @@
         <div class="col-md-2">
             <select ng-model="RelatorioPedidos.setField" class="form-control" ng-change="RelatorioPedidos.addField()">
                 <option value="">Selecione</option>
-                <option ng-repeat="(key, field) in RelatorioPedidos.campos" value="{{ key }}">{{ field }}</option>
+                <option ng-repeat="(key, field) in RelatorioPedidos.list.fields" value="{{ key }}">{{ field }}</option>
             </select>
         </div>
         <div class="col-md-10">
