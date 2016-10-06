@@ -19,6 +19,7 @@ class RelatorioController extends Controller
     {
         $list = [];
         $pedidos = Pedido::whereNull('deleted_at');
+        $fields = Input::get('fields');
 
         // Relations
         $relation = Input::get('relation');
@@ -88,17 +89,21 @@ class RelatorioController extends Controller
                 $groupOrder = 'marketplace';
                 $group = 'marketplace_readable';
             } elseif ($group == 'day') {
-                $groupOrder = DB::raw('DAY(created_at)');
+                $groupOrder = DB::raw('DAY(pedidos.created_at)');
             } elseif ($group == 'month') {
-                $groupOrder = DB::raw('MONTH(created_at)');
-            /*} elseif ($group == 'cliente.nome') {
-                $groupOrder = 'clientes.nome';
-            } elseif ($group == 'endereco.cidade') {
-                $groupOrder = 'cliente_enderecos.cidade';
-            } elseif ($group == 'endereco.uf') {
-                $groupOrder = 'cliente_enderecos.uf';*/
+                $groupOrder = DB::raw('MONTH(pedidos.created_at)');
             } else {
                 $groupOrder = $group;
+            }
+
+            if (in_array($group, ['day', 'month']) && $fields && !isset($fields['created_at'])) {
+                $fields['created_at'] = 'Data';
+            } else if ($group == 'cliente_enderecos.uf' && $fields && !isset($fields['endereco.uf'])) {
+                    $fields['endereco.uf'] = 'Estado';
+            } else if ($group == 'cliente_enderecos.cidade' && $fields && !isset($fields['endereco.cidade'])) {
+                    $fields['endereco.cidade'] = 'Cidade';
+            } else if ($group == 'clientes.nome' && $fields && !isset($fields['cliente.nome'])) {
+                    $fields['cliente.nome'] = 'Nome';
             }
 
             $pedidos->orderBy($groupOrder, 'ASC');
@@ -115,7 +120,6 @@ class RelatorioController extends Controller
         $pedidos = $pedidos->get()->toArray();
 
         // Campos
-        $fields = Input::get('fields');
         if ($fields) {
             if ($group == 'marketplace_readable') {
                 $fields['marketplace'] = '';
@@ -168,6 +172,19 @@ class RelatorioController extends Controller
                             $pedidos[$key][$field] = array_intersect_key($pedidos[$key][$field], $fields[$field]);
                         }
                     }
+
+                    foreach ($pedidos[$key] as $field => $value) {
+                        if (is_array($value)) {
+                            foreach ($value as $relationKey => $relationValue) {
+                                if (!isset($pedidos[$key][$relationKey])) {
+                                    $pedidos[$key][$relationKey] = $relationValue;
+                                } else {
+                                    $pedidos[$key]["{$field}_{$relationKey}"] = $relationValue;
+                                }
+                            }
+                            unset($pedidos[$key][$field]);
+                        }
+                    }
                 }
             }
         }
@@ -175,31 +192,35 @@ class RelatorioController extends Controller
         // Agrupamento
         if ($group) {
             foreach ($pedidos as $pedido) {
-                if ($group == 'day') {
-                    $list[substr($pedido['created_at'], 0, 10)][] = $pedido;
-                } elseif ($group == 'month') {
-                    $list[Carbon::createFromFormat('d/m/Y H:i', $pedido['created_at'])->format('m/Y')][] = $pedido;
-                } elseif ($group == 'clientes.nome') {
-                    $list[$pedido['cliente']['nome']][] = $pedido;
-                } elseif ($group == 'cliente_enderecos.cidade') {
-                    $list[$pedido['endereco']['cidade']][] = $pedido;
-                } elseif ($group == 'cliente_enderecos.uf') {
-                    $list[$pedido['endereco']['uf']][] = $pedido;
-                } else {
-                    $key = $pedido[$group];
+                $key = false;
 
-                    if ($group == 'marketplace_readable') {
-                        unset($pedido['marketplace_readable']);
-                        unset($pedido['marketplace']);
+                if (!isset($pedido[$group])) {
+                    if ($group == 'day') {
+                        $key = substr($pedido['created_at'], 0, 10);
+                    } elseif ($group == 'month') {
+                        $key = Carbon::createFromFormat('d/m/Y H:i', $pedido['created_at'])->format('m/Y');
+                    } elseif ($group == 'clientes.nome') {
+                        $key = (isset($pedido['cliente.nome'])) ? $pedido['clientes.nome'] : $pedido['nome'];
+                    } elseif ($group == 'cliente_enderecos.cidade') {
+                        $key = (isset($pedido['endereco.cidade'])) ? $pedido['cliente_enderecos.cidade'] : $pedido['cidade'];
+                    } elseif ($group == 'cliente_enderecos.uf') {
+                        $key = (isset($pedido['endereco.uf'])) ? $pedido['cliente_enderecos.uf'] : $pedido['uf'];
                     }
-
-                    if ($group == 'status_description') {
-                        unset($pedido['status_description']);
-                        unset($pedido['status']);
-                    }
-
-                    $list[$key][] = $pedido;
                 }
+
+                $key = ($key) ?: $pedido[$group];
+
+                if ($group == 'marketplace_readable') {
+                    unset($pedido['marketplace_readable']);
+                    unset($pedido['marketplace']);
+                }
+
+                if ($group == 'status_description') {
+                    unset($pedido['status_description']);
+                    unset($pedido['status']);
+                }
+
+                $list[$key][] = $pedido;
             }
         } else {
             $list = $pedidos;

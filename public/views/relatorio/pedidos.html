@@ -192,8 +192,23 @@
     </fieldset>
     <div class="row">
         <div class="col-md-12">
-            <button type="submit" busy="Gerando..." class="btn-success pull-right m-l-10"><i class="fa-file-pdf-o"></i>&nbsp; Gerar</button>
+            <button type="submit" busy="Gerando..." class="btn-success pull-right m-l-10"><i class="fa-play"></i>&nbsp; Gerar</button>
             <a ng-click="RelatorioPedidos.limpar()" class="btn-danger pull-right"><i class="fa-eraser"></i>&nbsp; Limpar</a>
         </div>
     </div>
 </form>
+<hr />
+<div id="relatorio-resultado">
+    <table class="table info-style">
+        <thead>
+            <tr>
+                <th ng-repeat="(chave, campo) in RelatorioPedidos.result[0]">{{ chave }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="campos in RelatorioPedidos.result">
+                <td ng-repeat="campo in campos">{{ campo }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

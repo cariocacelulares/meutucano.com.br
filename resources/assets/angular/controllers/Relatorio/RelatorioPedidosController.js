@@ -5,8 +5,10 @@
         .module('MeuTucano')
         .controller('RelatorioPedidosController', RelatorioPedidosController);
 
-    function RelatorioPedidosController(Restangular) {
+    function RelatorioPedidosController($location, $anchorScroll, Restangular) {
         var vm = this;
+
+        vm.result = {};
 
         vm.gerar = function() {
             Restangular.one('relatorios/pedido').customPOST({
@@ -17,6 +19,9 @@
                 relation: vm.relation
             }).then(function(response) {
                 console.log(response);
+                vm.result = response;
+                $location.hash('relatorio-resultado');
+                $anchorScroll();
             });
         };
 
@@ -72,7 +77,7 @@
                 'cliente.nome': 'Nome (cliente)',
                 'cliente.taxvat': 'Documento (cliente)',
                 'cliente.fone': 'Telefone (cliente)',
-                'cliente.email': 'E-mai (cliente)',
+                'cliente.email': 'E-mail (cliente)',
                 'cliente.created_at': 'Data (cliente)'
             };
 
@@ -108,6 +113,8 @@
 
         vm.limpar = function() {
             vm.defaults();
+            $location.hash('');
+            $anchorScroll();
         };
 
         vm.load = function() {
@@ -117,9 +124,11 @@
         vm.load();
 
         vm.loadCities = function() {
+            if (vm.filter['cliente_enderecos.uf'].value) {
                 Restangular.one('pedidos/cidades', vm.filter['cliente_enderecos.uf'].value).getList().then(function(response) {
                     vm.list.cities = response;
                 });
+            }
         };
 
         vm.changeRelation = function() {
@@ -132,6 +141,9 @@
 
             if (vm.relation.endereco === true) {
                 fields = _.extend(fields, vm.listFieldsEndereco);
+            } else {
+                vm.filter['cliente_enderecos.uf'] = {};
+                vm.filter['cliente_enderecos.cidade'] = {};
             }
 
             vm.list.fields = fields;
