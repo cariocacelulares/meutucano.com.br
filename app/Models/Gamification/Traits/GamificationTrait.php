@@ -13,7 +13,6 @@ trait GamificationTrait
         return $this->hasOne(Gamification::class);
     }
 
-
     public function categoria()
     {
         return $this->hasOne(Categoria::class, 'id', 'categoria_id');

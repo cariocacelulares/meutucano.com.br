@@ -9,6 +9,10 @@
         left: -24px;
         width: calc(100% + 48px);
 
+        .progress-bar {
+            float: left;
+        }
+
         small {
             font-size: 10px;
             line-height: 12px;

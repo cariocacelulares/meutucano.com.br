@@ -29,7 +29,8 @@ class Gamification extends \Eloquent
         parent::boot();
 
         static::saving(function($gamification) {
-            $gamification->nivel = (int)(\Config::get('gamification.level_constant') * sqrt($gamification->experiencia));
+            $nivel = \Config::get('gamification.nivel');
+            $gamification->nivel = $nivel($gamification->experiencia);
 
             $mes = date('m');
             $ano = date('Y');
@@ -71,14 +72,14 @@ class Gamification extends \Eloquent
 
     public function getProgressoAttribute()
     {
-        $levels = \Config::get('gamification.levels');
+        $nivel_exp = \Config::get('gamification.nivel_exp');
 
         if (!$this->nivel || !$this->experiencia) {
             return 0;
         }
 
-        $xpAtual = $levels[$this->nivel];
-        $xpProximo = $levels[$this->nivel + 1];
+        $xpAtual = $nivel_exp($this->nivel);
+        $xpProximo = $nivel_exp($this->nivel + 1);
         $diferenca = $xpProximo - $xpAtual;
 
         $progresso = $this->experiencia - $xpAtual;
