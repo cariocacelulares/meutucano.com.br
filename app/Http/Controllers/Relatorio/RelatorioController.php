@@ -18,8 +18,12 @@ class RelatorioController extends Controller
     public function pedido()
     {
         $list = [];
+
         $pedidos = Pedido::whereNull('deleted_at');
+
+        /*
         $fields = Input::get('fields');
+        $originalFields = Input::get('fields');
 
         // Relations
         $relation = Input::get('relation');
@@ -27,7 +31,13 @@ class RelatorioController extends Controller
         if ($relation) {
             foreach ($relation as $key => $value) {
                 if ($value === true) {
-                    $pedidos->with($key);
+                    if ($key ==  'produto') {
+                        $pedidos->join('pedido_produtos', 'pedido_produtos.pedido_id', '=', 'pedidos.id');
+                        $pedidos->join('produtos', 'produtos.sku', '=', 'pedido_produtos.produto_sku');
+                    } else {
+                        $pedidos->with($key);
+                    }
+
                     $relations[] = $key;
 
                     if ($key == 'cliente') {
@@ -50,10 +60,10 @@ class RelatorioController extends Controller
                 }
 
                 if ($config['operator'] == 'BETWEEN') {
-                    if ((!isset($config['value']['to']) || is_null($config['value']['to']) || empty($config['value']['to'])) && isset($config['value']['from'])) {
+                    if ((!isset($config['value']['to']) || (!$config['value']['to'] && $config['value']['to'] !== 0)) && isset($config['value']['from'])) {
                         $config['operator'] = '>=';
                         $config['value'] = $config['value']['from'];
-                    } elseif ((!isset($config['value']['from']) || is_null($config['value']['from']) || empty($config['value']['from'])) && isset($config['value']['to'])) {
+                    } elseif ((!isset($config['value']['from']) || (!$config['value']['from'] && $config['value']['from'] !== 0)) && isset($config['value']['to'])) {
                         $config['operator'] = '<=';
                         $config['value'] = $config['value']['to'];
                     }
@@ -69,6 +79,8 @@ class RelatorioController extends Controller
                     $pedidos->whereBetween($key, [$config['value']['from'], $config['value']['to']]);
                 } else if ($config['operator'] == 'IN') {
                     $pedidos->whereIn($key, array_keys($config['value']));
+                } else if ($config['operator'] == 'LIKE') {
+                    $pedidos->where($key, $config['operator'], "%{$config['value']}%");
                 } else {
                     if (is_string($config['value']) && \DateTime::createFromFormat('d/m/Y', $config['value']) !== false) {
                         $config['value'] = Carbon::createFromFormat('d/m/Y', $config['value'])->format('Y-m-d');
@@ -117,47 +129,52 @@ class RelatorioController extends Controller
             }
         }
 
-        $pedidos = $pedidos->get()->toArray();
+        $getFields = ['pedidos.*'];
+        foreach ($fields as $field => $value) {
+            if (strstr($field, 'pedido_produtos.') || strstr($field, 'produtos.')) {
+                $getFields[] = "{$field} AS {$field}";
+            }
+        }
+        $pedidos = $pedidos->get($getFields)->toArray();
 
         // Campos
         if ($fields) {
             if ($group == 'marketplace_readable') {
-                $fields['marketplace'] = '';
+                $fields['marketplace'] = 'Marketplace';
             }
 
             if ($group == 'status_description') {
-                $fields['status'] = '';
+                $fields['status'] = 'Status';
             }
 
             $keys = array_keys($fields);
 
             if (in_array('marketplace', $keys)) {
-                $fields['marketplace_readable'] = '';
+                $fields['marketplace_readable'] = 'Marketplace';
             }
 
             if (in_array('pagamento_metodo', $keys)) {
-                $fields['pagamento_metodo_readable'] = '';
+                $fields['pagamento_metodo_readable'] = 'Pagamento método';
             }
 
             if (in_array('frete_metodo', $keys)) {
-                $fields['frete_metodo_readable'] = '';
+                $fields['frete_metodo_readable'] = 'Frete método';
             }
 
             if (in_array('status', $keys)) {
-                $fields['status_description'] = '';
+                $fields['status_description'] = 'Status';
             }
 
             if ($relations) {
                 foreach ($fields as $field => $value) {
                     foreach ($relations as $relation) {
                         if (strstr($field, "{$relation}.")) {
-                            unset($fields[$field]);
-
                             if (!isset($fields[$relation]) || !is_array($fields[$relation])) {
                                 $fields[$relation] = [];
                             }
 
-                            $fields[$relation][str_replace("{$relation}.", '', $field)] = true;
+                            $fields[$relation][str_replace("{$relation}.", '', $field)] = $fields[$field];
+                            unset($fields[$field]);
                         }
                     }
                 }
@@ -223,8 +240,24 @@ class RelatorioController extends Controller
                 $list[$key][] = $pedido;
             }
         } else {
+            foreach ($pedidos as $key => $pedido) {
+                $aux = [];
+                foreach ($originalFields as $field => $label) {
+                    if (isset($pedido[$field])) {
+                        $aux[$label] = $pedido[$field];
+                    } else {
+                        if (strstr($field, '.')) {
+                            $pieces = explode('.', $field);
+                            $index = (isset($pedidos[$key][$pieces[0] . '_' . $pieces[1]])) ? $pieces[0] . '_' . $pieces[1]: $pieces[1];
+                            $aux[$fields[$pieces[0]][$pieces[1]]] = $pedido[$index];
+                        }
+                    }
+                }
+                $pedidos[$key] = $aux;
+            }
+
             $list = $pedidos;
-        }
+        }*/
 
         return $this->listResponse($list);
     }

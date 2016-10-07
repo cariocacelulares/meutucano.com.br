@@ -11,33 +11,32 @@
         vm.result = {};
 
         vm.gerar = function() {
-            Restangular.one('relatorios/pedido').customPOST({
+            console.log(vm.params);
+
+            /*Restangular.one('relatorios/pedido').customPOST({
                 filter: vm.filter,
                 group: vm.group,
                 fields: vm.fields,
                 order: vm.order,
                 relation: vm.relation
             }).then(function(response) {
-                console.log(response);
                 vm.result = response;
                 $location.hash('relatorio-resultado');
                 $anchorScroll();
-            });
+            });*/
         };
 
         vm.defaults = function() {
-            vm.filter = {
-                total: {operator: 'BETWEEN'},
-                'pedidos.created_at': {operator: 'BETWEEN'},
-                estimated_delivery: {operator: 'BETWEEN'},
-                status: {operator: 'IN', value: {}},
-                marketplace: {operator: 'IN', value: {}},
-                'cliente_enderecos.uf': {},
-                'cliente_enderecos.cidade': {}
-            };
-
             vm.list = {};
             vm.list.cities = {};
+
+            vm.params = {
+                filter: [],
+                group: '',
+                fields: [],
+                order: [],
+                relation: []
+            };
 
             vm.list.status = {
                 0: 'Pendente',
@@ -55,11 +54,13 @@
                 site: 'Site'
             };
 
-            vm.listFieldsPedido = {
+            vm.list.fields = {};
+
+            vm.list.fields.pedido = {
                 codigo_api: 'Código',
-                frete_valor: 'Valor Frete',
-                frete_metodo: 'Método Frete',
-                pagamento_metodo: 'Método pagamento',
+                frete_valor: 'Frete valor',
+                frete_metodo: 'Frete método',
+                pagamento_metodo: 'Pagamento método',
                 codigo_marketplace: 'Código marketplace',
                 marketplace: 'Marketplace',
                 operacao: 'Operação',
@@ -73,25 +74,50 @@
                 created_at: 'Data'
             };
 
-            vm.listFieldsCliente = {
-                'cliente.nome': 'Nome (cliente)',
-                'cliente.taxvat': 'Documento (cliente)',
-                'cliente.fone': 'Telefone (cliente)',
-                'cliente.email': 'E-mail (cliente)',
-                'cliente.created_at': 'Data (cliente)'
+            vm.list.fields.cliente = {
+                'cliente.nome': 'Nome',
+                'cliente.taxvat': 'Documento',
+                'cliente.fone': 'Telefone',
+                'cliente.email': 'E-mail',
+                'cliente.created_at': 'Data'
             };
 
-            vm.listFieldsEndereco = {
-                'endereco.rua': 'Rua (endereço)',
-                'endereco.numero': 'Número (endereço)',
-                'endereco.bairro': 'Bairro (endereço)',
-                'endereco.complemento': 'Complemento (endereço)',
-                'endereco.cidade': 'Cidade (endereço)',
-                'endereco.uf': 'UF (endereço)',
-                'endereco.cep': 'CEP (endereço)'
+            vm.list.fields.endereco = {
+                'endereco.rua': 'Rua',
+                'endereco.numero': 'Número',
+                'endereco.bairro': 'Bairro',
+                'endereco.complemento': 'Complemento',
+                'endereco.cidade': 'Cidade',
+                'endereco.uf': 'UF',
+                'endereco.cep': 'CEP'
             };
 
-            vm.list.fields = vm.listFieldsPedido;
+            vm.list.fields.produto = {
+                'produtos.titulo': 'Título',
+                'pedido_produtos.produto_sku': 'SKU',
+                'pedido_produtos.imei': 'IMEI',
+                'pedido_produtos.quantidade': 'Quantidade',
+                'pedido_produtos.valor': 'Valor'
+            };
+
+            vm.list.fields.all = vm.list.fields.pedido;
+            vm.list.fields.all = _.extend(vm.list.fields.all, vm.list.fields.cliente);
+            vm.list.fields.all = _.extend(vm.list.fields.all, vm.list.fields.endereco);
+            vm.list.fields.all = _.extend(vm.list.fields.all, vm.list.fields.produto);
+
+            vm.params.filter = {
+                total: {operator: 'BETWEEN'},
+                'pedidos.created_at': {operator: 'BETWEEN'},
+                estimated_delivery: {operator: 'BETWEEN'},
+                status: {operator: 'IN', value: {}},
+                marketplace: {operator: 'IN', value: {}},
+                'cliente_enderecos.uf': {},
+                'cliente_enderecos.cidade': {},
+                'pedido_produtos.produto_sku': {operator: 'LIKE'},
+                'pedido_produtos.imei': {operator: 'LIKE'},
+                'pedido_produtos.quantidade': {operator: 'BETWEEN'},
+                'pedido_produtos.valor': {operator: 'BETWEEN'}
+            };
 
             vm.setFilters = {
                 status: '',
@@ -100,15 +126,12 @@
 
             vm.relation = {
                 cliente: false,
-                endereco: false
+                endereco: false,
+                produto: false
             };
 
-            vm.group = null;
-
-            vm.order = {};
-            vm.setOrder = '';
-            vm.fields = {};
             vm.setField = '';
+            vm.setOrder = '';
         };
 
         vm.limpar = function() {
@@ -131,8 +154,7 @@
             }
         };
 
-        vm.changeRelation = function() {
-            var key = null;
+        /*vm.changeRelation = function() {
             var fields = _.clone(vm.listFieldsPedido);
 
             if (vm.relation.cliente === true) {
@@ -146,42 +168,53 @@
                 vm.filter['cliente_enderecos.cidade'] = {};
             }
 
+            if (vm.relation.produto === true) {
+                fields = _.extend(fields, vm.listFieldsProduto);
+            }
+
             vm.list.fields = fields;
-        };
+        };*/
 
         vm.addFilter = function(key) {
-            vm.filter[key].value[vm.setFilters[key]] = vm.list[key][vm.setFilters[key]];
+            vm.params.filter[key].value[vm.setFilters[key]] = vm.list[key][vm.setFilters[key]];
             vm.setFilters[key] = '';
         };
 
         vm.removeFilter = function(key, index) {
-            delete vm.filter[key].value[index];
+            delete vm.params.filter[key].value[index];
         };
 
         vm.addOrder = function() {
-            vm.order[vm.setOrder] = {
-                name: vm.list.fields[vm.setOrder],
+            vm.params.order.push({
+                label: vm.list.fields.all[vm.setOrder],
+                name: vm.setOrder,
                 order: 'asc'
-            };
+            });
 
             vm.setOrder = '';
         };
 
-        vm.changeOrder = function(key) {
-            vm.order[key].order = (vm.order[key].order == 'asc') ? 'desc' : 'asc';
+        vm.changeOrder = function(index) {
+            vm.params.order[index].order = (vm.params.order[index].order == 'asc') ? 'desc' : 'asc';
         };
 
-        vm.removeOrder = function(key) {
-            delete vm.order[key];
+        vm.removeOrder = function(index) {
+            delete vm.params.order[index];
+            vm.params.order = _.compact(vm.params.order);
         };
 
         vm.addField = function() {
-            vm.fields[vm.setField] = vm.list.fields[vm.setField];
+            vm.params.fields.push({
+                label: vm.list.fields.all[vm.setField],
+                name: vm.setField
+            });
+
             vm.setField = '';
         };
 
-        vm.removeField = function(key) {
-            delete vm.fields[key];
+        vm.removeField = function(index) {
+            delete vm.params.fields[index];
+            vm.params.fields = _.compact(vm.params.fields);
         };
     }
 
