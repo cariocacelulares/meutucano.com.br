@@ -9,19 +9,19 @@
             <div class="col-md-12">
                 <div class="form-group pull-left">
                     <div class="checkbox check-success">
-                        <input id="cliete" type="checkbox" ng-model="RelatorioPedidos.relation.cliente" ng-change="RelatorioPedidos.changeRelation()">
+                        <input id="cliete" type="checkbox" ng-model="RelatorioPedidos.params.relation.cliente" ng-change="RelatorioPedidos.changeRelation()">
                         <label for="cliete">Clientes</label>
                     </div>
                 </div>
                 <div class="form-group pull-left">
                     <div class="checkbox check-success">
-                        <input id="endereco" type="checkbox" ng-model="RelatorioPedidos.relation.endereco" ng-change="RelatorioPedidos.changeRelation()">
+                        <input id="endereco" type="checkbox" ng-model="RelatorioPedidos.params.relation.endereco" ng-change="RelatorioPedidos.changeRelation()">
                         <label for="endereco">Endereços</label>
                     </div>
                 </div>
                 <div class="form-group pull-left">
                     <div class="checkbox check-success">
-                        <input id="produto" type="checkbox" ng-model="RelatorioPedidos.relation.produto" ng-change="RelatorioPedidos.changeRelation()">
+                        <input id="produto" type="checkbox" ng-model="RelatorioPedidos.params.relation.produtos" ng-change="RelatorioPedidos.changeRelation()">
                         <label for="produto">Produtos</label>
                     </div>
                 </div>
@@ -103,7 +103,7 @@
                     </div>
                 </div>
             </div>
-            <div ng-if="RelatorioPedidos.relation.endereco" class="col-md-2">
+            <div ng-if="RelatorioPedidos.params.relation.endereco" class="col-md-2">
                 <label for="uf">Estado</label>
                 <select ng-model="RelatorioPedidos.params.filter['cliente_enderecos.uf'].value" id="uf" class="form-control" ng-change="RelatorioPedidos.loadCities()">
                     <option value="">Selecione</option>
@@ -136,7 +136,7 @@
                     <option value="to">Tocantins</option>
                 </select>
             </div>
-            <div ng-if="RelatorioPedidos.relation.endereco" class="col-md-2">
+            <div ng-if="RelatorioPedidos.params.relation.endereco" class="col-md-2">
                 <label for="cidade">Cidade</label>
                 <select ng-model="RelatorioPedidos.params.filter['cliente_enderecos.cidade'].value" id="cidade" class="form-control">
                     <option value="">Selecione</option>
@@ -144,7 +144,7 @@
                 </select>
             </div>
         </div>
-        <div class="row" ng-if="RelatorioPedidos.relation.produto">
+        <div class="row" ng-if="RelatorioPedidos.params.relation.produtos">
             <div class="col-md-2">
                 <label for="sku">SKU</label>
                 <input class="form-control" ng-model="RelatorioPedidos.params.filter['pedido_produtos.produto_sku'].value" placeholder="Código do produto" type="number" id="sku" />
@@ -182,10 +182,10 @@
                         <option value="month">Mês</option>
                         <option value="status">Status</option>
                         <option value="marketplace">Marketplace</option>
-                        <option ng-if="RelatorioPedidos.relation.cliente" value="clientes.nome">Cliente</option>
-                        <option ng-if="RelatorioPedidos.relation.endereco" value="cliente_enderecos.cidade">Cidade</option>
-                        <option ng-if="RelatorioPedidos.relation.endereco" value="cliente_enderecos.uf">Estado</option>
-                        <option ng-if="RelatorioPedidos.relation.produto" value="pedido_produtos.produto_sku">SKU</option>
+                        <option ng-if="RelatorioPedidos.params.relation.cliente" value="clientes.nome">Cliente</option>
+                        <option ng-if="RelatorioPedidos.params.relation.endereco" value="cliente_enderecos.cidade">Cidade</option>
+                        <option ng-if="RelatorioPedidos.params.relation.endereco" value="cliente_enderecos.uf">Estado</option>
+                        <option ng-if="RelatorioPedidos.params.relation.produtos" value="pedido_produtos.produto_sku">SKU</option>
                     </select>
                 </div>
             </fieldset>
@@ -199,13 +199,13 @@
                     <optgroup label="Pedido">
                         <option ng-repeat="(key, field) in RelatorioPedidos.list.fields.pedido" value="{{ key }}">{{ field }}</option>
                     </optgroup>
-                    <optgroup ng-if="RelatorioPedidos.relation.cliente"  label="Cliente">
+                    <optgroup ng-if="RelatorioPedidos.params.relation.cliente"  label="Cliente">
                         <option ng-repeat="(key, field) in RelatorioPedidos.list.fields.cliente" value="{{ key }}">{{ field }}</option>
                     </optgroup>
-                    <optgroup ng-if="RelatorioPedidos.relation.endereco"  label="Endereço">
+                    <optgroup ng-if="RelatorioPedidos.params.relation.endereco"  label="Endereço">
                         <option ng-repeat="(key, field) in RelatorioPedidos.list.fields.endereco" value="{{ key }}">{{ field }}</option>
                     </optgroup>
-                    <optgroup ng-if="RelatorioPedidos.relation.produto"  label="Produto">
+                    <optgroup ng-if="RelatorioPedidos.params.relation.produtos"  label="Produto">
                         <option ng-repeat="(key, field) in RelatorioPedidos.list.fields.produto" value="{{ key }}">{{ field }}</option>
                     </optgroup>
                 </select>
@@ -227,13 +227,13 @@
                 <optgroup label="Pedido">
                     <option ng-repeat="(key, field) in RelatorioPedidos.list.fields.pedido" value="{{ key }}">{{ field }}</option>
                 </optgroup>
-                <optgroup ng-if="RelatorioPedidos.relation.cliente"  label="Cliente">
+                <optgroup ng-if="RelatorioPedidos.params.relation.cliente"  label="Cliente">
                     <option ng-repeat="(key, field) in RelatorioPedidos.list.fields.cliente" value="{{ key }}">{{ field }}</option>
                 </optgroup>
-                <optgroup ng-if="RelatorioPedidos.relation.endereco"  label="Endereço">
+                <optgroup ng-if="RelatorioPedidos.params.relation.endereco"  label="Endereço">
                     <option ng-repeat="(key, field) in RelatorioPedidos.list.fields.endereco" value="{{ key }}">{{ field }}</option>
                 </optgroup>
-                <optgroup ng-if="RelatorioPedidos.relation.produto"  label="Produto">
+                <optgroup ng-if="RelatorioPedidos.params.relation.produtos"  label="Produto">
                     <option ng-repeat="(key, field) in RelatorioPedidos.list.fields.produto" value="{{ key }}">{{ field }}</option>
                 </optgroup>
             </select>

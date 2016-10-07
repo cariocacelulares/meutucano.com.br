@@ -18,87 +18,95 @@ class RelatorioController extends Controller
     public function pedido()
     {
         $list = [];
+        // Pega todos os parametros
+        $relation = Input::get('relation');
+        $fields = Input::get('fields');
+        $filter = Input::get('filter');
+        $group = Input::get('group');
+        $order = Input::get('order');
 
+        // Inicializa os pedidos
         $pedidos = Pedido::whereNull('deleted_at');
 
-        /*
-        $fields = Input::get('fields');
-        $originalFields = Input::get('fields');
-
-        // Relations
-        $relation = Input::get('relation');
-        $relations = [];
+        // Relações - joins e with
         if ($relation) {
-            foreach ($relation as $key => $value) {
-                if ($value === true) {
-                    if ($key ==  'produto') {
+            // pra cada relaçao onde a chave é a relação e o valor é bool
+            foreach ($relation as $rel => $bool) {
+                if ($bool === true) {
+                    if ($rel ==  'produtos') {
+                        // join no pedido_produtos e no produtos pra ter acesso o nome do produto
                         $pedidos->join('pedido_produtos', 'pedido_produtos.pedido_id', '=', 'pedidos.id');
                         $pedidos->join('produtos', 'produtos.sku', '=', 'pedido_produtos.produto_sku');
-                    } else {
-                        $pedidos->with($key);
-                    }
-
-                    $relations[] = $key;
-
-                    if ($key == 'cliente') {
+                    } else if ($rel == 'cliente') {
                         $pedidos->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id');
-                    } else if ($key ==  'endereco') {
+                    } else if ($rel ==  'endereco') {
                         $pedidos->join('cliente_enderecos', 'cliente_enderecos.id', '=', 'pedidos.cliente_endereco_id');
                     }
+
+                    $pedidos->with($rel);
+                    $relations[] = $rel;
                 }
             }
         }
 
-        // FIlters (where)
-        $filter = Input::get('filter');
-        foreach ($filter as $key => $config) {
-            if (isset($config['value']) && $config['value'] && $config['value'] !== 0) {
-                $config['operator'] = (isset($config['operator']) && $config['operator']) ? $config['operator'] : '=';
+        // Filtros - where
+        if ($filter) {
+            // para cada filtro onde a chave é o nome do campo e o valor é a configuração (operator, value)
+            foreach ($filter as $field => $config) {
+                // se foi passado algum valor
+                if (isset($config['value']) && $config['value'] && $config['value'] !== 0) {
+                    // se não foi passado o operador, considera =
+                    $config['operator'] = (isset($config['operator']) && $config['operator']) ? $config['operator'] : '=';
 
-                if (in_array($config['operator'], ['BETWEEN', 'IN']) && !is_array($config['value'])) {
-                    $config['value']  = '=';
-                }
-
-                if ($config['operator'] == 'BETWEEN') {
-                    if ((!isset($config['value']['to']) || (!$config['value']['to'] && $config['value']['to'] !== 0)) && isset($config['value']['from'])) {
-                        $config['operator'] = '>=';
-                        $config['value'] = $config['value']['from'];
-                    } elseif ((!isset($config['value']['from']) || (!$config['value']['from'] && $config['value']['from'] !== 0)) && isset($config['value']['to'])) {
-                        $config['operator'] = '<=';
-                        $config['value'] = $config['value']['to'];
+                    // se o operador for in w between os valores precisam ser arrays, se não forem, considera o operador =
+                    if (in_array($config['operator'], ['BETWEEN', 'IN']) && !is_array($config['value'])) {
+                        $config['operator']  = '=';
                     }
-                }
 
-                if ($config['operator'] == 'BETWEEN') {
-                    foreach ($config['value'] as $chave => $valor) {
-                        if (is_string($valor) && \DateTime::createFromFormat('d/m/Y', $valor) !== false) {
-                            $config['value'][$chave] = Carbon::createFromFormat('d/m/Y', $valor)->format('Y-m-d');
+                    // se o operador for between e só tiver um parametro, muda o operador pra >= ou <=
+                    if ($config['operator'] == 'BETWEEN') {
+                        if ((!isset($config['value']['to']) || (!$config['value']['to'] && $config['value']['to'] !== 0)) && isset($config['value']['from'])) {
+                            $config['operator'] = '>=';
+                            $config['value'] = $config['value']['from'];
+                        } elseif ((!isset($config['value']['from']) || (!$config['value']['from'] && $config['value']['from'] !== 0)) && isset($config['value']['to'])) {
+                            $config['operator'] = '<=';
+                            $config['value'] = $config['value']['to'];
                         }
                     }
 
-                    $pedidos->whereBetween($key, [$config['value']['from'], $config['value']['to']]);
-                } else if ($config['operator'] == 'IN') {
-                    $pedidos->whereIn($key, array_keys($config['value']));
-                } else if ($config['operator'] == 'LIKE') {
-                    $pedidos->where($key, $config['operator'], "%{$config['value']}%");
-                } else {
-                    if (is_string($config['value']) && \DateTime::createFromFormat('d/m/Y', $config['value']) !== false) {
-                        $config['value'] = Carbon::createFromFormat('d/m/Y', $config['value'])->format('Y-m-d');
-                    }
+                    if ($config['operator'] == 'BETWEEN') {
+                        // se for uma data no formato d/m/Y, converte pra Y-m-d
+                        foreach ($config['value'] as $chave => $valor) {
+                            if (is_string($valor) && \DateTime::createFromFormat('d/m/Y', $valor) !== false) {
+                                $config['value'][$chave] = Carbon::createFromFormat('d/m/Y', $valor)->format('Y-m-d');
+                            }
+                        }
 
-                    $pedidos->where($key, $config['operator'], $config['value']);
+                        $pedidos->whereBetween($field, [$config['value']['from'], $config['value']['to']]);
+                    } else if ($config['operator'] == 'IN') {
+                        $pedidos->whereIn($field, array_keys($config['value']));
+                    } else if ($config['operator'] == 'LIKE') {
+                        $pedidos->where($field, $config['operator'], "%{$config['value']}%");
+                    } else {
+                        // se for uma data no formato d/m/Y, converte pra Y-m-d
+                        if (is_string($config['value']) && \DateTime::createFromFormat('d/m/Y', $config['value']) !== false) {
+                            $config['value'] = Carbon::createFromFormat('d/m/Y', $config['value'])->format('Y-m-d');
+                        }
+
+                        $pedidos->where($field, $config['operator'], $config['value']);
+                    }
                 }
             }
         }
 
-        // Group
-        $group = Input::get('group');
+        // Agrupamentos - preparação - ordenação e campos
         if ($group) {
+            // se agrupar, precisa ordenar por este grupo, em alguns casos, alterar o campo que é ordenado
             if ($group == 'status') {
                 $groupOrder = $group;
                 $group = 'status_description';
             } elseif ($group == 'marketplace') {
-                $groupOrder = 'marketplace';
+                $groupOrder = $group;
                 $group = 'marketplace_readable';
             } elseif ($group == 'day') {
                 $groupOrder = DB::raw('DAY(pedidos.created_at)');
@@ -108,27 +116,69 @@ class RelatorioController extends Controller
                 $groupOrder = $group;
             }
 
-            if (in_array($group, ['day', 'month']) && $fields && !isset($fields['created_at'])) {
+            // se o campo agrupado não existe na lista de campos e tem um nome diferente, adiciona ele
+            /*if (in_array($group, ['day', 'month']) && $fields && !isset($fields['created_at'])) {
                 $fields['created_at'] = 'Data';
             } else if ($group == 'cliente_enderecos.uf' && $fields && !isset($fields['endereco.uf'])) {
-                    $fields['endereco.uf'] = 'Estado';
+                $fields['endereco.uf'] = 'Estado';
             } else if ($group == 'cliente_enderecos.cidade' && $fields && !isset($fields['endereco.cidade'])) {
-                    $fields['endereco.cidade'] = 'Cidade';
+                $fields['endereco.cidade'] = 'Cidade';
             } else if ($group == 'clientes.nome' && $fields && !isset($fields['cliente.nome'])) {
-                    $fields['cliente.nome'] = 'Nome';
-            }
+                $fields['cliente.nome'] = 'Nome';
+            }*/
 
             $pedidos->orderBy($groupOrder, 'ASC');
         }
 
-        $order = Input::get('order');
+        // Ordenação
         if ($order) {
-            foreach ($order as $key => $value) {
-                $key = str_replace(['cliente.', 'endereco.'], ['clientes.', 'cliente_enderecos.'], $key);
-                $pedidos->orderBy($key, $value['order']);
+            foreach ($order as $field) {
+                $key = str_replace(['cliente.', 'endereco.'], ['clientes.', 'cliente_enderecos.'], $field['name']);
+                $pedidos->orderBy($key, $field['order']);
             }
         }
 
+        // pega apenas os campos do pedido pra colocar das outras entidades em um novo array
+        $pedidos = $pedidos->get(['pedidos.*'])->toArray();
+
+        // Mostra apenas os campos selecionados, na ordem que foram
+        foreach ($pedidos as $key => $pedido) {
+            $clearedOrder = [];
+            // pra cada campo selecionado
+            foreach ($fields as $field) {
+                // se o campo existir, adiciona
+                if (isset($pedido[$field['name']])) {
+                    $clearedOrder[$field['label']] = $pedido[$field['name']];
+                } else if (strstr($field['name'], '.')) {
+                    $pieces = explode('.', $field['name']);
+
+                    // o indice do array é produtos
+                    if ($pieces[0] == 'pedido_produtos') {
+                        $pieces[0] = 'produtos';
+                    }
+
+                    // se for um campo de produtos
+                    if ($pieces[0] == 'produtos') {
+                        // podem ter vários produtos
+                        foreach ($pedidos[$key]['produtos'] as $pedidoProduto) {
+                            // se for titulo, pega do produto e nao do pedido produto
+                            if ($pieces[1] == 'titulo') {
+                                $clearedOrder['produtos'][$field['label']] = $pedidoProduto['produto'][$pieces[1]];
+                            } else {
+                                $clearedOrder['produtos'][$field['label']] = $pedidoProduto[$pieces[1]];
+                            }
+                        }
+                    } else {
+                        $clearedOrder[$field['label']] = $pedidos[$key][$pieces[0]][$pieces[1]];
+                    }
+                }
+            }
+            $pedidos[$key] = $clearedOrder;
+        }
+
+        dd($pedidos);
+
+        /*
         $getFields = ['pedidos.*'];
         foreach ($fields as $field => $value) {
             if (strstr($field, 'pedido_produtos.') || strstr($field, 'produtos.')) {

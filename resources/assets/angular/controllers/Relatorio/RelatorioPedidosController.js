@@ -11,19 +11,17 @@
         vm.result = {};
 
         vm.gerar = function() {
-            console.log(vm.params);
-
-            /*Restangular.one('relatorios/pedido').customPOST({
-                filter: vm.filter,
-                group: vm.group,
-                fields: vm.fields,
-                order: vm.order,
-                relation: vm.relation
+            Restangular.one('relatorios/pedido').customPOST({
+                filter: vm.params.filter,
+                group: vm.params.group,
+                fields: vm.params.fields,
+                order: vm.params.order,
+                relation: vm.params.relation
             }).then(function(response) {
                 vm.result = response;
                 $location.hash('relatorio-resultado');
                 $anchorScroll();
-            });*/
+            });
         };
 
         vm.defaults = function() {
@@ -35,7 +33,11 @@
                 group: '',
                 fields: [],
                 order: [],
-                relation: []
+                relation: {
+                    cliente: false,
+                    endereco: false,
+                    produtos: false
+                }
             };
 
             vm.list.status = {
@@ -111,8 +113,8 @@
                 estimated_delivery: {operator: 'BETWEEN'},
                 status: {operator: 'IN', value: {}},
                 marketplace: {operator: 'IN', value: {}},
-                'cliente_enderecos.uf': {},
-                'cliente_enderecos.cidade': {},
+                'cliente_enderecos.uf': '',
+                'cliente_enderecos.cidade': '',
                 'pedido_produtos.produto_sku': {operator: 'LIKE'},
                 'pedido_produtos.imei': {operator: 'LIKE'},
                 'pedido_produtos.quantidade': {operator: 'BETWEEN'},
@@ -122,12 +124,6 @@
             vm.setFilters = {
                 status: '',
                 marketplace: ''
-            };
-
-            vm.relation = {
-                cliente: false,
-                endereco: false,
-                produto: false
             };
 
             vm.setField = '';
@@ -147,33 +143,26 @@
         vm.load();
 
         vm.loadCities = function() {
-            if (vm.filter['cliente_enderecos.uf'].value) {
-                Restangular.one('pedidos/cidades', vm.filter['cliente_enderecos.uf'].value).getList().then(function(response) {
+            if (typeof vm.params.filter['cliente_enderecos.uf'].value !== 'undefined' && vm.params.filter['cliente_enderecos.uf'].value) {
+                Restangular.one('pedidos/cidades', vm.params.filter['cliente_enderecos.uf'].value).getList().then(function(response) {
                     vm.list.cities = response;
                 });
             }
         };
 
-        /*vm.changeRelation = function() {
-            var fields = _.clone(vm.listFieldsPedido);
-
-            if (vm.relation.cliente === true) {
-                fields = _.extend(fields, vm.listFieldsCliente);
+        vm.changeRelation = function() {
+            if (vm.params.relation.endereco !== true) {
+                vm.params.filter['cliente_enderecos.uf'] = '';
+                vm.params.filter['cliente_enderecos.cidade'] = '';
             }
 
-            if (vm.relation.endereco === true) {
-                fields = _.extend(fields, vm.listFieldsEndereco);
-            } else {
-                vm.filter['cliente_enderecos.uf'] = {};
-                vm.filter['cliente_enderecos.cidade'] = {};
+            if (vm.params.relation.produtos !== true) {
+                vm.params.filter['pedido_produtos.produto_sku'] = {operator: 'LIKE'};
+                vm.params.filter['pedido_produtos.imei'] = {operator: 'LIKE'};
+                vm.params.filter['pedido_produtos.quantidade'] = {operator: 'BETWEEN'};
+                vm.params.filter['pedido_produtos.valor'] = {operator: 'BETWEEN'};
             }
-
-            if (vm.relation.produto === true) {
-                fields = _.extend(fields, vm.listFieldsProduto);
-            }
-
-            vm.list.fields = fields;
-        };*/
+        };
 
         vm.addFilter = function(key) {
             vm.params.filter[key].value[vm.setFilters[key]] = vm.list[key][vm.setFilters[key]];
