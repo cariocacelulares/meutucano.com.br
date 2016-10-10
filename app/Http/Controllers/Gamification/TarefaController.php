@@ -83,7 +83,10 @@ class TarefaController extends Controller
             }
 
             $data->fill(Input::all());
-            $data->slug = $this->generateSlug('slug', $data->titulo);
+            if ($data->getOriginal('titulo') !== $data->titulo) {
+                $data->slug = $this->generateSlug('slug', $data->titulo);
+            }
+
             $data->save();
             return $this->showResponse($data);
         } catch(\Exception $ex) {
