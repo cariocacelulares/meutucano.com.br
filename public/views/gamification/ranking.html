@@ -25,20 +25,20 @@
                 <span class="m-l-45 fz-20">
                     <span class="text-primary"><i class="fa-check"></i>&nbsp; {{ ranking.tarefas }}</span>
                     &nbsp; / &nbsp;
-                    <span class="text-success">$ {{ ranking.jogador.moedas }}</span>
+                    <span class="text-moeda"><img src="./images/gamification/coin.svg" height="20" style="margin-top:-4px"> {{ ranking.jogador.moedas }}</span>
                 </span>
             </div>
             <div class="col-md-2">
-                <span class="text-complete points">
-                    <i class="fa-certificate"></i>&nbsp;{{ ranking.pontos }}
+                <span class="text-ponto points">
+                    <i class="fa-star-o"></i>&nbsp;{{ ranking.pontos }}
                 </span>
             </div>
             <div class="col-md-2">
                 <div class="votes">
-                    <span ng-click="Ranking.votar(ranking.jogador.usuario.id)" class="btn-default btn-lg">
+                    <a ng-click="Ranking.votar(ranking.jogador.usuario.id)" class="btn-default btn-lg">
                         <i class="fa-thumbs-o-up"></i>&nbsp;
                         {{ ranking.votos }}
-                    </span>
+                    </a>
                 </div>
             </div>
         </div>

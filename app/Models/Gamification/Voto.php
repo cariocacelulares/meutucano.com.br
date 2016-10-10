@@ -3,10 +3,10 @@
 use App\Models\Usuario\Usuario;
 
 /**
- * Class voto
+ * Class Voto
  * @package App\Models\Gamification
  */
-class voto extends \Eloquent
+class Voto extends \Eloquent
 {
     protected $table = 'gamification_votos';
 

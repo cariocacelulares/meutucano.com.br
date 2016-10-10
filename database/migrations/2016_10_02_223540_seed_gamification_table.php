@@ -17,7 +17,7 @@ class SeedGamificationTable extends Migration
         $usuarios = Usuario::all();
 
         foreach ($usuarios as $usuario) {
-            Gamification::create(['usuario_id' => $usuario->id, 'nivel' => 1]);
+            Gamification::create(['usuario_id' => $usuario->id]);
         }
     }
 

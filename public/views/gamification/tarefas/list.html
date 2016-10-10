@@ -1,6 +1,6 @@
 <div id="page-header" class="row">
     <page-title icon="fa-trophy" title="Tarefas" description="Realize essas tarefas e ganhe experiência, pontos e moedas."></page-title>
-    <div class="col-md-6 button-bar">
+    <div class="col-md-6 button-bar" roles="admin">
         <button ng-click="TarefaList.openForm()" class="btn-success"><i class="fa-user-plus"></i>&nbsp; Nova</button>
     </div>
 </div>
@@ -28,7 +28,7 @@
                 {{ terefa.moedas }}
             </td>
             <td class="text-center">
-                <a class="btn-info" ng-click="TarefaList.openForm(terefa)">
+                <a class="btn-info" ng-click="TarefaList.openForm(terefa)" roles="admin">
                     <i class="fa-pencil"></i>
                 </a>
             </td>

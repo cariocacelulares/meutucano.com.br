@@ -1,4 +1,11 @@
 <?php
+
+/*
+TODO:
+• Processo de recompensas
+• Histórico ranking
+ */
+
 $nivel_constante = 0.05;
 
 return [

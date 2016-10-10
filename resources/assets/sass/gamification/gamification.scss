@@ -1,6 +1,12 @@
 @import 'utils';
 @import 'ranking';
 
+// Cores
+.text-moeda { color: #FFC003 !important }
+.bg-moeda { background-color: #FFC003 !important }
+.text-ponto { color: #FB2020 !important }
+.bg-ponto { background-color: #FB2020 !important }
+
 // Barra de progresso
 .panel-body {
     .progress {
@@ -24,6 +30,12 @@
 .avatar {
     position: relative;
     display: inline-block;
+
+    .votos {
+        position: absolute;
+        right: 5px;
+        bottom: 5px;
+    }
 
     .avatar-container {
         position: relative;

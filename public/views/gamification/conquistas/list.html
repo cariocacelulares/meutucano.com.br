@@ -1,6 +1,6 @@
 <div id="page-header" class="row">
     <page-title icon="fa-trophy" title="Conquistas" description="Todas as conquistas do sistema de gamificação."></page-title>
-    <div class="col-md-6 button-bar">
+    <div class="col-md-6 button-bar" roles="admin">
         <button ng-click="ConquistaList.openForm()" class="btn-success"><i class="fa-user-plus"></i>&nbsp; Nova</button>
     </div>
 </div>
@@ -8,7 +8,7 @@
     <div ng-repeat="conquista in ConquistaList.tableData.data" class="col-md-3 m-b-20">
         <div class="panel panel-default">
             <div class="panel-body text-center">
-                <a ng-click="ConquistaList.openForm(conquista)" class="pull-right text-gray">
+                <a ng-click="ConquistaList.openForm(conquista)" class="pull-right text-gray" roles="admin">
                     <i class="fa-pencil"></i>
                 </a>
                 <div class="clearfix m-b-15">

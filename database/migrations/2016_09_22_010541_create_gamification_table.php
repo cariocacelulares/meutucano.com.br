@@ -15,7 +15,6 @@ class CreateGamificationTable extends Migration
         Schema::create('gamification', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('usuario_id')->unsigned();
-            $table->integer('categoria_id')->unsigned()->index()->nullable();
             $table->string('avatar', 250)->nullable()->default(null);
             $table->integer('moedas')->unsigned()->default(0);
             $table->integer('pontos')->unsigned()->default(0);

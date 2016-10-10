@@ -53,6 +53,8 @@
             vm.loading = true;
 
             Gamification.perfil(vm.usuario.id || null).then(function(response) {
+                vm.votos = response.votos;
+                vm.conquistas = response.conquistas;
                 vm.usuario = response.usuario;
                 vm.grafico.series.push({
                     name: 'Tarefas',
@@ -66,11 +68,6 @@
 
         vm.load();
 
-        /**
-         * Abre o formulário de conquistas
-         *
-         * @return {void}
-         */
         vm.openForm = function(usuario) {
             ngDialog.open({
                 template: 'views/gamification/avatar.html',

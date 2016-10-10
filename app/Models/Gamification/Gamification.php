@@ -13,7 +13,6 @@ class Gamification extends \Eloquent
 
     protected $fillable = [
         'usuario_id',
-        'categoria_id',
         'avatar',
         'moedas',
         'pontos',

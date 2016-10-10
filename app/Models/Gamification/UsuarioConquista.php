@@ -2,7 +2,6 @@
 
 use Carbon\Carbon;
 use App\Models\Usuario\Usuario;
-use App\Models\Gamification\Categoria;
 
 /**
  * Class UsuarioConquista

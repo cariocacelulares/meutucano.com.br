@@ -33,22 +33,28 @@ class VotoController extends Controller
                 throw new \Exception("ValidationException");
             }
 
-            $limite = \Config::get('gamification.votos_mes');
-            $mes = date('m');
-            $ano = date('Y');
-            $ultimoDia = cal_days_in_month(CAL_GREGORIAN, $mes, $ano);
-            $votos = Voto
-                ::where('eleitor_id', '=', getCurrentUserId())
-                ->where('created_at', '>=', "{$ano}-{$mes}-01 00:00:00")
-                ->where('created_at', '<=', "{$ano}-{$mes}-{$ultimoDia} 23:59:59")
-                ->count();
+            $eleitor_id = getCurrentUserId();
 
-            if ($votos >= $limite) {
-                return $this->createdResponse(['erro' => "Você já atingiu seu limite de votos este mês ({$limite})."]);
+            if ($eleitor_id == Input::get('candidato_id')) {
+                return $this->createdResponse(['erro' => 'Você não pode votar em si mesmo!']);
             } else {
-                $data = $m::create(array_merge(Input::all(), ['eleitor_id' => getCurrentUserId()]));
+                $limite = \Config::get('gamification.votos_mes');
+                $mes = date('m');
+                $ano = date('Y');
+                $ultimoDia = cal_days_in_month(CAL_GREGORIAN, $mes, $ano);
+                $votos = Voto
+                    ::where('eleitor_id', '=', $eleitor_id)
+                    ->where('created_at', '>=', "{$ano}-{$mes}-01 00:00:00")
+                    ->where('created_at', '<=', "{$ano}-{$mes}-{$ultimoDia} 23:59:59")
+                    ->count();
 
-                return $this->createdResponse($data);
+                if ($votos >= $limite) {
+                    return $this->createdResponse(['erro' => "Você já atingiu seu limite de votos este mês ({$limite})."]);
+                } else {
+                    $data = $m::create(array_merge(Input::all(), ['eleitor_id' => $eleitor_id]));
+
+                    return $this->createdResponse($data);
+                }
             }
         } catch(\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
