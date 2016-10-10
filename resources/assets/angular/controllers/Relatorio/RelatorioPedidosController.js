@@ -5,24 +5,34 @@
         .module('MeuTucano')
         .controller('RelatorioPedidosController', RelatorioPedidosController);
 
-    function RelatorioPedidosController($location, $anchorScroll, toaster, Restangular) {
+    function RelatorioPedidosController($window, $location, $anchorScroll, $httpParamSerializer, envService, toaster, Restangular) {
         var vm = this;
 
-        vm.result = {};
+        vm.result = false;
 
-        vm.gerar = function() {
+        vm.gerar = function(tipo) {
             if (vm.params.fields.length) {
-                Restangular.one('relatorios/pedido').customPOST({
+                var params = {
                     filter: vm.params.filter,
                     group: vm.params.group,
                     fields: vm.params.fields,
                     order: vm.params.order,
                     relation: vm.params.relation
-                }).then(function(response) {
-                    vm.result = response;
-                    $location.hash('relatorio-resultado');
-                    $anchorScroll();
-                });
+                };
+
+                if (tipo) {
+                    var auth = {
+                        token: localStorage.getItem('satellizer_token')
+                    };
+
+                    $window.open(envService.read('apiUrl') + '/relatorios/pedido/' + tipo + '?params=' + JSON.stringify(params) + '&' + $httpParamSerializer(auth), '_self');
+                } else {
+                    Restangular.one('relatorios/pedido', tipo || null).customPOST(params).then(function(response) {
+                        vm.result = response;
+                        $location.hash('relatorio-resultado');
+                        $anchorScroll();
+                    });
+                }
             } else {
                 toaster.pop('warning', '', 'Você precisa selecionar os campos antes de gerar o relatório!');
             }

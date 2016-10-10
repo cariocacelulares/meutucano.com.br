@@ -252,6 +252,21 @@
     </div>
 </form>
 <hr />
+<div ng-if="RelatorioPedidos.result" class="row m-b-15">
+    <div class="col-md-6">
+        <span class="m-t-5">
+            {{ RelatorioPedidos.result.length }} {{ (RelatorioPedidos.result.length == 1) ? 'registro encontrado' : 'registros encontrados'}}
+        </span>
+    </div>
+    <div class="col-md-6">
+        <a ng-click="RelatorioPedidos.gerar('pdf')" class="btn-complete pull-right m-l-10">
+            PDF&nbsp; <i class="fa-file-pdf-o"></i>
+        </a>
+        <a ng-click="RelatorioPedidos.gerar('xls')" class="btn-complete pull-right">
+            XLS&nbsp; <i class="fa-file-excel-o"></i>
+        </a>
+    </div>
+</div>
 <div id="relatorio-resultado">
     <table class="table info-style">
         <thead>
@@ -263,7 +278,7 @@
             <tr ng-repeat="campos in RelatorioPedidos.result">
                 <td ng-repeat="(key, campo) in campos" class="text-center">
                     <span ng-if="key != 'produtos'">{{ campo }}</span>
-                    <span ng-if="key == 'produtos'" ng-repeat="produto in campo">
+                    <span ng-if="RelatorioPedidos.params.relation.produtos && key == 'produtos'" ng-repeat="produto in campo track by $index">
                         <span ng-repeat="atributo in produto">{{ atributo }}<span ng-hide="$last">, </span><br ng-if="$last"/></span>
                     </span>
                 </td>

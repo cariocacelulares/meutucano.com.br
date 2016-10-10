@@ -19,7 +19,9 @@
         "swiftmailer/swiftmailer": "^5.4",
         "venturecraft/revisionable": "1.*",
         "arcanedev/log-viewer": "4.0.x-dev",
-        "spatie/browsershot": "^1.5"
+        "spatie/browsershot": "^1.5",
+        "maatwebsite/excel": "~2.1.0",
+        "dompdf/dompdf": "~0.6.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

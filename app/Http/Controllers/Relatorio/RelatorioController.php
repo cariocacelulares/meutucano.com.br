@@ -15,16 +15,26 @@ class RelatorioController extends Controller
 {
     use RestResponseTrait;
 
-    public function pedido()
+    public function pedido($return_type = 'array')
     {
-        try {
+        // try {
             $list = [];
+
             // Pega todos os parametros
-            $relation = Input::get('relation');
-            $fields = Input::get('fields');
-            $filter = Input::get('filter');
-            $group = Input::get('group');
-            $order = Input::get('order');
+            if (Input::get('params')) {
+                $params = json_decode(Input::get('params'), true);
+                $relation = $params['relation'];
+                $fields = $params['fields'];
+                $filter = $params['filter'];
+                $group = $params['group'];
+                $order = $params['order'];
+            } else {
+                $relation = Input::get('relation');
+                $fields = Input::get('fields');
+                $filter = Input::get('filter');
+                $group = Input::get('group');
+                $order = Input::get('order');
+            }
 
             // Inicializa os pedidos
             $pedidos = Pedido::groupBy('pedidos.id');
@@ -203,9 +213,42 @@ class RelatorioController extends Controller
                 $list = $pedidos;
             }
 
+            if (in_array($return_type, ['xls', 'pdf'])) {
+                $data = \Excel::create("relatorio-pedidos-" . date('Y-m-d'), function($excel) use ($list) {
+                    $excel->sheet("relatorio-pedidos-" . date('Y-m-d'), function($sheet) use ($list) {
+                        foreach ($list as $key => $value) {
+                            foreach ($value as $chave => $valor) {
+                                if (is_array($valor)) {
+                                    foreach ($valor as $campo => $produto) {
+                                        foreach ($produto as $field => $data) {
+                                            $list[$key][$field][] = $data;
+                                        }
+                                    }
+                                    unset($list[$key][$chave]);
+                                }
+                            }
+                        }
+
+                        foreach ($list as $key => $value) {
+                            foreach ($value as $chave => $valor) {
+                                if (is_array($valor)) {
+                                    $list[$key][$chave] = implode(',', $valor);
+                                }
+                            }
+                        }
+
+                        $sheet->setOrientation((count($list[0]) > 6) ? 'landscape' : 'portrait');
+
+                        $sheet->fromArray($list);
+                    });
+                })->export($return_type);//, storage_path('excel/exports'));
+
+                return response()->make($data, '200')->header('Content-Type', 'image/' . $return_type);
+            }
+
             return $this->listResponse($list);
-        } catch (\Exception $e) {
+        /*} catch (\Exception $e) {
             return $this->notFoundResponse();
-        }
+        }*/
     }
 }
