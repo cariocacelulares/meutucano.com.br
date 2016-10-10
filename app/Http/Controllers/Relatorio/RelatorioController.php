@@ -27,7 +27,7 @@ class RelatorioController extends Controller
             $order = Input::get('order');
 
             // Inicializa os pedidos
-            $pedidos = Pedido::whereNull('deleted_at');
+            $pedidos = Pedido::groupBy('pedidos.id');
 
             // Relações - joins e with
             if ($relation) {
@@ -45,7 +45,6 @@ class RelatorioController extends Controller
                         }
 
                         $pedidos->with($rel);
-                        $relations[] = $rel;
                     }
                 }
             }
@@ -153,6 +152,16 @@ class RelatorioController extends Controller
 
                 // pra cada campo selecionado
                 foreach ($fields as $field) {
+                    if ($field['name'] == 'status') {
+                        $field['name'] = 'status_description';
+                    } else if ($field['name'] == 'marketplace') {
+                        $field['name'] = 'marketplace_readable';
+                    } else if ($field['name'] == 'pagamento_metodo') {
+                        $field['name'] = 'pagamento_metodo_readable';
+                    } else if ($field['name'] == 'frete_metodo') {
+                        $field['name'] = 'frete_metodo_readable';
+                    }
+
                     // se o campo existir, adiciona
                     if (array_key_exists($field['name'], $pedido)) {
                         $clearedOrder[$field['label']] = $pedido[$field['name']];
@@ -170,9 +179,9 @@ class RelatorioController extends Controller
                             foreach ($pedidos[$key]['produtos'] as $pedidoProduto) {
                                 // se for titulo, pega do produto e nao do pedido produto
                                 if ($pieces[1] == 'titulo') {
-                                    $clearedOrder['produtos'][$field['label']] = $pedidoProduto['produto'][$pieces[1]];
+                                    $clearedOrder['produtos'][$pedidoProduto['id']][$field['label']] = $pedidoProduto['produto'][$pieces[1]];
                                 } else {
-                                    $clearedOrder['produtos'][$field['label']] = $pedidoProduto[$pieces[1]];
+                                    $clearedOrder['produtos'][$pedidoProduto['id']][$field['label']] = $pedidoProduto[$pieces[1]];
                                 }
                             }
                         } else {

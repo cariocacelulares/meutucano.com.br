@@ -5,23 +5,27 @@
         .module('MeuTucano')
         .controller('RelatorioPedidosController', RelatorioPedidosController);
 
-    function RelatorioPedidosController($location, $anchorScroll, Restangular) {
+    function RelatorioPedidosController($location, $anchorScroll, toaster, Restangular) {
         var vm = this;
 
         vm.result = {};
 
         vm.gerar = function() {
-            Restangular.one('relatorios/pedido').customPOST({
-                filter: vm.params.filter,
-                group: vm.params.group,
-                fields: vm.params.fields,
-                order: vm.params.order,
-                relation: vm.params.relation
-            }).then(function(response) {
-                vm.result = response;
-                $location.hash('relatorio-resultado');
-                $anchorScroll();
-            });
+            if (vm.params.fields.length) {
+                Restangular.one('relatorios/pedido').customPOST({
+                    filter: vm.params.filter,
+                    group: vm.params.group,
+                    fields: vm.params.fields,
+                    order: vm.params.order,
+                    relation: vm.params.relation
+                }).then(function(response) {
+                    vm.result = response;
+                    $location.hash('relatorio-resultado');
+                    $anchorScroll();
+                });
+            } else {
+                toaster.pop('warning', '', 'Você precisa selecionar os campos antes de gerar o relatório!');
+            }
         };
 
         vm.defaults = function() {

@@ -256,12 +256,17 @@
     <table class="table info-style">
         <thead>
             <tr>
-                <th ng-repeat="(chave, campo) in RelatorioPedidos.result[0]">{{ chave }}</th>
+                <th ng-repeat="(chave, campo) in RelatorioPedidos.result[0]" class="text-center">{{ chave }}</th>
             </tr>
         </thead>
         <tbody>
             <tr ng-repeat="campos in RelatorioPedidos.result">
-                <td ng-repeat="campo in campos">{{ campo }}</td>
+                <td ng-repeat="(key, campo) in campos" class="text-center">
+                    <span ng-if="key != 'produtos'">{{ campo }}</span>
+                    <span ng-if="key == 'produtos'" ng-repeat="produto in campo">
+                        <span ng-repeat="atributo in produto">{{ atributo }}<span ng-hide="$last">, </span><br ng-if="$last"/></span>
+                    </span>
+                </td>
             </tr>
         </tbody>
     </table>
