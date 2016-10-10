@@ -80,8 +80,7 @@
                 'cliente.nome': 'Nome',
                 'cliente.taxvat': 'Documento',
                 'cliente.fone': 'Telefone',
-                'cliente.email': 'E-mail',
-                'cliente.created_at': 'Data'
+                'cliente.email': 'E-mail'
             };
 
             vm.list.fields.endereco = {
@@ -102,7 +101,7 @@
                 'pedido_produtos.valor': 'Valor'
             };
 
-            vm.list.fields.all = vm.list.fields.pedido;
+            vm.list.fields.all = _.extend(vm.list.fields.all, vm.list.fields.pedido);
             vm.list.fields.all = _.extend(vm.list.fields.all, vm.list.fields.cliente);
             vm.list.fields.all = _.extend(vm.list.fields.all, vm.list.fields.endereco);
             vm.list.fields.all = _.extend(vm.list.fields.all, vm.list.fields.produto);
@@ -143,6 +142,8 @@
         vm.load();
 
         vm.loadCities = function() {
+            vm.params.filter['cliente_enderecos.cidade'] = '';
+
             if (typeof vm.params.filter['cliente_enderecos.uf'].value !== 'undefined' && vm.params.filter['cliente_enderecos.uf'].value) {
                 Restangular.one('pedidos/cidades', vm.params.filter['cliente_enderecos.uf'].value).getList().then(function(response) {
                     vm.list.cities = response;
@@ -174,11 +175,17 @@
         };
 
         vm.addOrder = function() {
-            vm.params.order.push({
-                label: vm.list.fields.all[vm.setOrder],
-                name: vm.setOrder,
-                order: 'asc'
+            var exists = _.some(vm.params.order, function(p) {
+                return p.name == vm.setOrder;
             });
+
+            if (!exists) {
+                vm.params.order.push({
+                    label: vm.list.fields.all[vm.setOrder],
+                    name: vm.setOrder,
+                    order: 'asc'
+                });
+            }
 
             vm.setOrder = '';
         };
@@ -193,10 +200,16 @@
         };
 
         vm.addField = function() {
-            vm.params.fields.push({
-                label: vm.list.fields.all[vm.setField],
-                name: vm.setField
+            var exists = _.some(vm.params.fields, function(p) {
+                return p.name == vm.setField;
             });
+
+            if (!exists) {
+                vm.params.fields.push({
+                    label: vm.list.fields.all[vm.setField],
+                    name: vm.setField
+                });
+            }
 
             vm.setField = '';
         };
