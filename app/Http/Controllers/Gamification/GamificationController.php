@@ -73,7 +73,10 @@ class GamificationController extends Controller
             $recursos = ['gamification'];
 
             if ($proprio) {
-                $recursos[] = 'tarefas';
+                $recursos['tarefas'] = function($query)
+                {
+                    $query->orderBy('created_at', 'DESC');
+                };
             }
 
             $usuario = Usuario

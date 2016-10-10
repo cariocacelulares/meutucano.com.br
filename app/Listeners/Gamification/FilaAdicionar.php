@@ -17,7 +17,7 @@ class FilaAdicionar
     {
         $usuario_id = $event->usuario_id;
         $tarefa_id = $event->tarefa_id;
-        \Log::debug('Listener AdicionarFila ativado', ['usuario' => $usuario_id, 'tarefa' => $tarefa_id]);
+        \Log::debug('Gamification: listener AdicionarFila ativado', ['usuario' => $usuario_id, 'tarefa' => $tarefa_id]);
 
         if ($tarefa_id && $usuario_id) {
             Fila::create([
@@ -25,7 +25,7 @@ class FilaAdicionar
                 'tarefa_id' => $tarefa_id
             ]);
         } else {
-            \Log::warning('Não foi possível adicionar na fila. A tarefa ou usuário não foi encontrada.', ['usuario' => $usuario_id, 'tarefa' => $tarefa_id]);
+            \Log::warning('Gamification: não foi possível adicionar na fila. A tarefa ou usuário não foi encontrada.', ['usuario' => $usuario_id, 'tarefa' => $tarefa_id]);
         }
     }
 }

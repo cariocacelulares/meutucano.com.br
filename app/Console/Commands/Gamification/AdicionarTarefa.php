@@ -31,20 +31,9 @@ class AdicionarTarefa extends Command
         $ok = false;
         $usuario = (int) $this->argument('usuario');
         if ($usuario = Usuario::find($usuario)) {
-            $tarefa = $this->argument('tarefa');
-
-            if (is_numeric($tarefa)) {
-                $tarefa = Tarefa::find($tarefa);
-            } else {
-                $tarefa = Tarefa::where('slug', '=', $tarefa)->first();
-            }
-
-            if ($tarefa) {
-                \Log::debug('sdas', [$tarefa->toArray()]);
-                \Event::fire(new TarefaRealizada($tarefa->slug, $usuario->id));
-                $ok = true;
-                $this->comment('Tarefa adiciona na fila!');
-            }
+            \Event::fire(new TarefaRealizada($this->argument('tarefa'), $usuario->id));
+            $ok = true;
+            $this->comment('Tarefa adiciona na fila!');
         }
 
         if (!$ok) {

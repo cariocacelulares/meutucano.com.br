@@ -10,11 +10,17 @@ class TarefaRealizada extends \Event
     public $tarefa_id;
     public $usuario_id;
 
-    public function __construct($tarefa_slug, $usuario_id = false)
+    public function __construct($tarefa, $usuario_id = false)
     {
-        \Log::debug('Evento TarefaRealizada disparado');
+        \Log::debug('Gamification: evento TarefaRealizada disparado');
 
-        if ($tarefa = Tarefa::where('slug', '=', $tarefa_slug)->first()) {
+        if (is_numeric($tarefa)) {
+            $tarefa = Tarefa::find($tarefa);
+        } else {
+            $tarefa = Tarefa::where('slug', '=', $tarefa)->first();
+        }
+
+        if ($tarefa) {
             $this->tarefa_id = $tarefa->id;
         }
 
