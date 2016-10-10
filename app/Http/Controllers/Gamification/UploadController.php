@@ -25,6 +25,7 @@ class UploadController extends Controller
                 }
             }
         } catch (\Exception $e) {
+            \Log::warning(logMessage($e, 'Gamification: não foi possível efetuar o upload do arquivo'));
         }
 
         return $this->clientErrorResponse('Não foi possível efetuar o upload do arquivo');
