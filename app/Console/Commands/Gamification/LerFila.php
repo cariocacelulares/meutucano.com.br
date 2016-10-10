@@ -28,16 +28,26 @@ class LerFila extends Command
      */
     public function handle()
     {
-        if ($fila = Fila::orderBy('created_at', 'DESC')->first()) {
-            if ($tarefa = Tarefa::find($fila->tarefa_id)) {
-                UsuarioTarefa::create([
-                    'usuario_id' => $fila->usuario_id,
-                    'tarefa_id' => $fila->tarefa_id,
-                    'experiencia' => $tarefa->experiencia,
-                    'pontos' => $tarefa->pontos,
-                    'moedas' => $tarefa->moedas,
-                ]);
-                $fila->delete();
+        try {
+            $ativo = (bool) \Config::get('gamification.ativo');
+        } catch(\Exception $ex) {
+            $ativo = false;
+        }
+
+        if (!$ativo) {
+            $this->comment('Impossivel ler a fila, o gamification esta desativado! (em config\gamification.php ou .env GAMIFICATION_ATIVO)');
+        } else {
+            if ($fila = Fila::orderBy('created_at', 'DESC')->first()) {
+                if ($tarefa = Tarefa::find($fila->tarefa_id)) {
+                    UsuarioTarefa::create([
+                        'usuario_id' => $fila->usuario_id,
+                        'tarefa_id' => $fila->tarefa_id,
+                        'experiencia' => $tarefa->experiencia,
+                        'pontos' => $tarefa->pontos,
+                        'moedas' => $tarefa->moedas,
+                    ]);
+                    $fila->delete();
+                }
             }
         }
     }
