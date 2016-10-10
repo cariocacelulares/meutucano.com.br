@@ -46,5 +46,11 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('pedidos:cancelold')
             ->daily();
+
+        /**
+         * Gamification
+         */
+        $schedule->command('gamification:fila')
+            ->everyMinute();
     }
 }

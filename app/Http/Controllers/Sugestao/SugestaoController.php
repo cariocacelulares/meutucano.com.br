@@ -65,4 +65,41 @@ class SugestaoController extends Controller
             return $this->clientErrorResponse($data);
         }
     }
+
+    /**
+     * Atualiza um recurso
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function update($id)
+    {
+        $m = self::MODEL;
+
+        if (!$data = $m::find($id)) {
+            return $this->notFoundResponse();
+        }
+
+        try {
+            $v = \Validator::make(Input::all(), $this->validationRules);
+
+            if ($v->fails()) {
+                throw new \Exception("ValidationException");
+            }
+
+            if (Input::get('status') == 1) {
+                \Event::fire(new \App\Events\Gamification\TarefaRealizada('tenha-uma-sugestaocritica-aceita'));
+            }
+
+            $data->fill(Input::all());
+            $data->save();
+
+            return $this->showResponse($data);
+        } catch(\Exception $ex) {
+            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
+
+            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            return $this->clientErrorResponse($data);
+        }
+    }
 }

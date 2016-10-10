@@ -184,6 +184,9 @@
                             }
                         ]
                     },
+                    /**
+                     * Gamification
+                     */
                     {
                         title: 'Gamification',
                         icon: 'fa-gamepad',
@@ -209,7 +212,7 @@
                                 sref: $state.href('app.gamification.conquistas')
                             }
                         ],
-                        roles: ['admin', 'gestor']
+                        roles: ['admin']
                     }
                 ];
             },
