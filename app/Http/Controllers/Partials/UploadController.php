@@ -126,9 +126,9 @@ class UploadController extends Controller
             $tipoOperacao = null;
             if (in_array($operacao, Config::get('tucano.notas.operacoes'))) {
                 $tipoOperacao = 'venda';
-            } else if (!in_array($operacao, Config::get('tucano.notas.devolucao'))) {
+            } else if (in_array($operacao, Config::get('tucano.notas.devolucao'))) {
                 $tipoOperacao = 'devolucao';
-            } else if (!in_array($operacao, Config::get('tucano.notas.estorno'))) {
+            } else if (in_array($operacao, Config::get('tucano.notas.estorno'))) {
                 $tipoOperacao = 'estorno';
             } else {
                 return false;
@@ -507,10 +507,13 @@ class UploadController extends Controller
 
             $pedidoProduto = PedidoProduto::firstOrNew(['pedido_id' => $pedido->id, 'produto_sku' => $produto->sku]);
 
-            $pedidoProduto->pedido_id = $pedido->id;
-            $pedidoProduto->produto_sku = (int)$item->prod->cProd;
-            $pedidoProduto->valor = $item->prod->vUnCom;
-            $pedidoProduto->quantidade = $item->prod->qCom;
+            if ($pedidoProduto->wasRecentlyCreated) {
+                $pedidoProduto->pedido_id   = $pedido->id;
+                $pedidoProduto->produto_sku = (int)$item->prod->cProd;
+                $pedidoProduto->valor       = $item->prod->vUnCom;
+                $pedidoProduto->quantidade  = $item->prod->qCom;
+            }
+
             $pedidoProduto->imei = array_key_exists((int)$item->prod->cProd, $produtoImei) ? $produtoImei[(int)$item->prod->cProd] : '';
 
             if ($pedidoProduto->save()) {

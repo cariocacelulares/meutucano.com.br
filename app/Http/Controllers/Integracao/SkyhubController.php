@@ -196,10 +196,10 @@ class SkyhubController extends Controller implements Integracao
             }
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', method: ' . $method));
-            return $e->getMessage();
+            return false;
         } catch (\Exception $e) {
             Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', method: ' . $method));
-            return $e->getMessage();
+            return false;
         }
     }
 
@@ -349,7 +349,7 @@ class SkyhubController extends Controller implements Integracao
     {
         $s_pedido = $this->request('/queues/orders');
 
-        if ($s_pedido) {
+        if ($s_pedido && is_array($s_pedido)) {
             if ($this->importPedido($s_pedido)) {
                 $this->request(
                     sprintf('/queues/orders/%s', $s_pedido['code']),
@@ -491,9 +491,12 @@ class SkyhubController extends Controller implements Integracao
 
     public function parseEstimatedDelivery($estimatedDelivery, $freteMetodo, $cep)
     {
-        $estimatedDelivery = \DateTime::createFromFormat('Y-m-d', $estimatedDelivery);
+        $data = $estimatedDelivery;
+        $estimatedDelivery = \DateTime::createFromFormat('Y-m-d', $data);
+        $estimatedDelivery = ($estimatedDelivery) ? : \DateTime::createFromFormat('Y-m-d', substr($data, 0, 10));
+
         if ($estimatedDelivery !== false) {
-            return $estimatedDelivery->format('d/m/Y');
+            return $estimatedDelivery->format('Y-m-d');
         } else {
             return $this->calcEstimatedDelivery($freteMetodo, $cep);
         }

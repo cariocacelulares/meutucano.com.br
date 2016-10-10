@@ -1,0 +1,50 @@
+<h1>Enviar sugestão / crítica</h1>
+<form ng-submit="SugestaoForm.save()" novalidate="novalidate" class="form-default">
+    <div class="row">
+        <div class="col-md-12 fz-12">
+            Relacione abaixo a qual setor ou pessoa você se refere
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 form-group">
+            <label for="setor">Setor</label>
+            <select ng-model="SugestaoForm.sugestao.setor" id="motivo" class="form-control" required>
+                <option value="" disabled selected hidden>Selecione</option>
+                <option value="Todos / Nenhum">Todos / Nenhum</option>
+                <option value="Administrativo">Administrativo</option>
+                <option value="Gerência">Gerência</option>
+                <option value="Atendimento">Atendimento</option>
+                <option value="Faturamento">Faturamento</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Desenvolvimento">Desenvolvimento</option>
+                <option value="Manutenção">Manutenção</option>
+            </select>
+        </div>
+        <div class="col-md-4 form-group">
+            <label for="pessoa">Pessoa</label>
+            <select ng-model="SugestaoForm.sugestao.pessoa" id="motivo" class="form-control" required>
+                <option value="" disabled selected hidden>Selecione</option>
+                <option value="Todos / Nenhum">Todos / Nenhum</option>
+                <option ng-repeat="pessoa in SugestaoForm.pessoas.data" value="{{ pessoa.name }}">{{ pessoa.name }}</option>
+            </select>
+        </div>
+        <div class="col-md-4 form-group p-t-20">
+            <div class="checkbox check-success">
+                <input id="anonimo" type="checkbox" ng-model="SugestaoForm.sugestao.anonimo" ng-true-value="true">
+                <label for="anonimo">Anônimo</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <label for="descricao">Descrição</label>
+            <textarea class="form-control" id="descricao" ng-model="SugestaoForm.sugestao.descricao" placeholder="Descreva sua crítica / sugestão"></textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="pull-right">
+            <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
+            <button busy="Salvando..." type="submit" class="btn btn-success">Enviar</button>
+        </div>
+    </div>
+</form>

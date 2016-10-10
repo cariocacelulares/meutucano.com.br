@@ -148,6 +148,12 @@
                         roles: ['admin', 'marketing']
                     },
                     {
+                        title: 'Inspeção técnica',
+                        icon: 'fa-bug',
+                        sref: $state.href('app.inspecao.index'),
+                        roles: ['admin', 'tecnico']
+                    },
+                    {
                         title: 'Interno',
                         icon: 'fa-desktop',
                         sub: [
@@ -169,6 +175,12 @@
                                 title: 'Minhas senhas',
                                 icon: 'fa-key',
                                 sref: $state.href('app.interno.senhas.minhas')
+                            },
+                            {
+                                title: 'Sugestões',
+                                icon: 'fa-comments-o',
+                                sref: $state.href('app.interno.sugestoes.index'),
+                                roles: ['admin']
                             }
                         ]
                     },

@@ -53,9 +53,11 @@ class PedidoController extends Controller
                 'endereco',
                 'notas',
                 'rastreios',
+                'produtos',
                 'comentarios'
             ])
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
+            ->leftJoin('pedido_produtos', 'pedido_produtos.pedido_id', '=', 'pedidos.id')
             ->leftJoin('pedido_notas', 'pedido_notas.pedido_id', '=', 'pedidos.id')
             ->where('status', '=', 1)
             ->groupBy('pedidos.id')
@@ -283,6 +285,7 @@ class PedidoController extends Controller
        $pedidos = Pedido
             ::selectRaw('status, marketplace, COUNT(*) as count')
             ->whereNotNull('status')
+            ->where('status', '!=', 5)
             ->where('created_at', '>=', $inicioMes)
             ->groupBy('status')
             ->groupBy('marketplace')
@@ -378,17 +381,27 @@ class PedidoController extends Controller
             ];
         }
 
-        if (count($mes) == 1 && $data['mes'] == $mes[0]['mes']) {
-            $mes[] = [
-                'mes' => $data['mes'] - 1,
-                'count' => 0
-            ];
+        if (count($mes) == 1) {
+            if ($data['mes'] == $mes[0]['mes']) {
+                $mes[] = [
+                    'mes' => $data['mes'] - 1,
+                    'count' => 0
+                ];
+            } else if (($data['mes'] - 1) == $mes[0]['mes']) {
+                $mes[] = $mes[0];
+
+                $mes[0] = [
+                    'mes' => $data['mes'],
+                    'count' => 0
+                ];
+            }
         }
 
        $dia = Pedido
             ::selectRaw('DAY(created_at) as dia, COUNT(*) as count')
             ->whereIn('status', [1,2,3])
             ->whereIn(DB::raw('DAY(created_at)'), [$data['dia'], $data['dia'] - 1])
+            ->where(DB::raw('MONTH(created_at)'), '=', $data['mes'])
             ->where(DB::raw('YEAR(created_at)'), '=', $data['ano'])
             ->groupBy(DB::raw('DAY(created_at)'))
             ->orderBy(DB::raw('DAY(created_at)'), 'DESC')
@@ -401,11 +414,20 @@ class PedidoController extends Controller
             ];
         }
 
-        if (count($dia) == 1 && $data['dia'] == $dia[0]['dia']) {
-            $dia[] = [
-                'dia' => $data['dia'] - 1,
-                'count' => 0
-            ];
+        if (count($dia) == 1) {
+            if ($data['dia'] == $dia[0]['dia']) {
+                $dia[] = [
+                    'dia' => $data['dia'] - 1,
+                    'count' => 0
+                ];
+            } else if (($data['dia'] - 1) == $dia[0]['dia']) {
+                $dia[] = $dia[0];
+
+                $dia[0] = [
+                    'dia' => $data['dia'],
+                    'count' => 0
+                ];
+            }
         }
 
         $mesesExtenso = Config::get('tucano.meses');
@@ -437,16 +459,16 @@ class PedidoController extends Controller
      */
     function totalOrders($mes = null, $ano = null)
     {
+        $atual = false;
+
         if ($mes === null) {
             $mes = (int)date('m');
+            $atual = true;
         }
 
         if ($ano === null) {
             $ano = (int)date('Y');
         }
-
-        $lastDay = cal_days_in_month(CAL_GREGORIAN, $mes, $ano);
-        $days = range(1, $lastDay);
 
        $pedidos = Pedido
             ::selectRaw('DAY(created_at) AS dia, COUNT(*) as total')
@@ -457,6 +479,8 @@ class PedidoController extends Controller
             ->orderBy(DB::raw('DAY(created_at)'), 'ASC')
             ->get()->toArray();
 
+        $lastDay = cal_days_in_month(CAL_GREGORIAN, $mes, $ano);
+        $days = range(1, (($atual) ? date('d') : $lastDay));
         $list = array_fill_keys(array_keys(array_flip($days)), 0);
         foreach ($pedidos as $pedido) {
             $list[$pedido['dia']] = $pedido['total'];

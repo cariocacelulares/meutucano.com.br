@@ -192,6 +192,20 @@
                 })
 
                 /**
+                 * Sugestões
+                 */
+                .state('app.interno.sugestoes', {
+                    url: '/sugestoes',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.interno.sugestoes.index', {
+                    url: '/list',
+                    templateUrl: 'views/sugestoes/list.html',
+                    controller: 'SugestaoListController as SugestaoList'
+                })
+
+                /**
                  * Marketing
                  */
                 .state('app.marketing', {
@@ -275,6 +289,23 @@
                     url: '/{id}',
                     templateUrl: 'views/produto/marca/form.html',
                     controller: 'MarcaFormController as MarcaForm'
+                })
+
+                /**
+                 * Inspeção técnica
+                 */
+                .state('app.inspecao', {
+                    url: '/inspecao',
+                    templateUrl: 'views/layouts/default.html',
+                    data: {
+                        roles: ['admin', 'tecnico']
+                    }
+                })
+
+                .state('app.inspecao.index', {
+                    url: '/list',
+                    templateUrl: 'views/inspecao/list.html',
+                    controller: 'InspecaoTecnicaListController as InspecaoTecnicaList'
                 })
 
                 /**

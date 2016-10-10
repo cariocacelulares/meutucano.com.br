@@ -5,13 +5,18 @@
         .module('MeuTucano')
         .controller('DashboardController', DashboardController);
 
-    function DashboardController(RastreioHelper, Monitorado, Pedido) {
+    function DashboardController($rootScope, SugestaoHelper, RastreioHelper, Monitorado, Pedido) {
         var vm = this;
 
         /**
          * @type {Object}
          */
         vm.rastreioHelper = RastreioHelper.init(vm);
+
+        /**
+         * @type {Object}
+         */
+        vm.sugestaoHelper = SugestaoHelper.init(vm);
 
         // Dados dos pedidos
         vm.ordersDate = {};
@@ -75,6 +80,8 @@
          * Carrega os dados dos pedidos
          */
         vm.loadTotalOrdersDate = function() {
+            vm.ordersDate = {};
+
             Pedido.totalOrdersDate().then(function(response) {
                 vm.ordersDate = response;
             });
@@ -95,12 +102,12 @@
 
                 vm.chartOrdersStatus.series = [];
 
-                vm.chartOrdersStatus.series.push({
+                /*vm.chartOrdersStatus.series.push({
                     name: 'Cancelados',
                     data: response.cancelado,
                     color: '#F55753',
                     id: 'cancelados'
-                });
+                });*/
 
                 vm.chartOrdersStatus.series.push({
                     name: 'Pendentes',
@@ -132,17 +139,19 @@
 
                 var maior = 0;
                 var total = 0;
-                for (var i = 0; i < vm.chartOrdersStatus.series[0].data.length; i++) {
-                    total = 0;
+                if (typeof vm.chartOrdersStatus.series[0].data !== 'undefined') {
+                    for (var i = 0; i < vm.chartOrdersStatus.series[0].data.length; i++) {
+                        total = 0;
 
-                    for (var k in vm.chartOrdersStatus.series) {
-                        total += vm.chartOrdersStatus.series[k].data[i];
+                        for (var k in vm.chartOrdersStatus.series) {
+                            total += vm.chartOrdersStatus.series[k].data[i];
+                        }
+
+                        if (total > maior)
+                            maior = total;
                     }
-
-                    if (total > maior)
-                        maior = total;
+                     vm.chartOrdersStatus.yAxis.max = maior;
                 }
-                 vm.chartOrdersStatus.yAxis.max = maior;
 
             });
         };
@@ -215,7 +224,13 @@
             vm.loadTotalOrdersDate();
             vm.loadTotalOrdersStatus();
             vm.loadTotalOrders();
-            vm.loadRastreios();
+
+            var role = 'atendimento';
+            angular.forEach($rootScope.currentUser.roles, function(role) {
+                if (role.name == role) {
+                    vm.loadRastreios();
+                }
+            });
         };
 
         vm.load();

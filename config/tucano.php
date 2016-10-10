@@ -188,7 +188,7 @@ return [
             'user' => env('MAGENTO_API_USER', 'carioca'),
             'key'  => env('MAGENTO_API_KEY', '#@carioca2016')
         ],
-        'old_order' => 7
+        'old_order' => 4
     ],
 
     /**
