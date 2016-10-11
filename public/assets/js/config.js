@@ -9,7 +9,7 @@
                 domains: {
                     development: ['tucano.app'],
                     production:  ['192.168.2.170'],
-                    aws:         ['52.67.179.143']
+                    aws:         ['meutucano.com.br']
                 },
                 vars: {
                     development: {
@@ -19,7 +19,7 @@
                         apiUrl: 'http://192.168.2.170/meutucano/public/index.php/api'
                     },
                     aws: {
-                        apiUrl: 'http://52.67.179.143/api'
+                        apiUrl: 'http://www.meutucano.com.br/api'
                     }
                 }
             });
