@@ -58,7 +58,7 @@
         }
     }
 
-    .form-group {
+    .form-group:not(.no-validate) {
         &.has-success input {
             border-color: $color-success;
         }
