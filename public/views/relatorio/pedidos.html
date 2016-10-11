@@ -237,10 +237,14 @@
                 </optgroup>
             </select>
         </div>
-        <div class="col-md-10">
-            <div ng-repeat="(index, field) in RelatorioPedidos.params.fields" class="btn-group p-t-5 m-r-10 m-b-10" role="group">
-                <a class="btn-default btn-sm fz-10">{{ field.label }}</a>
-                <a ng-click="RelatorioPedidos.removeField(index)" class="btn-default btn-sm fz-10"><i class="fa-close"></i></a>
+        <div id="horizontal-container" class="col-md-10">
+            <div class="sortable-row" as-sortable="RelatorioPedidos.sortableOptions" data-ng-model="RelatorioPedidos.params.fields">
+                <div ng-repeat="field in RelatorioPedidos.params.fields" as-sortable-item>
+                    <div class="btn-group p-t-5 m-r-10 m-b-10" role="group" as-sortable-item-handle>
+                        <div class="btn-default btn-sm fz-10">{{ field.label }}</div>
+                        <a ng-click="RelatorioPedidos.removeField($index)" class="btn-default btn-sm fz-10"><i class="fa-close"></i></a>
+                    </div>
+                </div>
             </div>
         </div>
     </fieldset>

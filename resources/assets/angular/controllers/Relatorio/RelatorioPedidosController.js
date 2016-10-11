@@ -8,6 +8,15 @@
     function RelatorioPedidosController($window, $location, $anchorScroll, $httpParamSerializer, envService, toaster, Restangular) {
         var vm = this;
 
+        vm.dragControlListeners = {
+            clone: false,
+            allowDuplicates: false,
+            containment: '#horizontal-container',
+            accept: function (sourceItemHandleScope, destSortableScope) {
+                return sourceItemHandleScope.itemScope.sortableScope.$id === destSortableScope.$id;
+            }
+        };
+
         vm.result = false;
         vm.groupedResult = false;
         vm.totalResults = 0;

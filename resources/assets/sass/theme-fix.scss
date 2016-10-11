@@ -44,3 +44,26 @@
         line-height: inherit !important;
     }
 }
+
+// ng-sortable
+.sortable-row {
+    position: relative !important;
+
+    .as-sortable-item {
+        display: inline-block !important;
+    }
+
+    .as-sortable-placeholder {
+        @extend .btn;
+        @extend .btn-sm;
+        display: inline-block !important;
+        height: 27px !important;
+        margin: 5px 10px 10px 0;
+        border: 1px dashed darken(#DBDBDB, 20%);
+        background-color: #DBDBDB;
+    }
+
+    .as-sortable-drag {
+        opacity: .8;
+    }
+}
