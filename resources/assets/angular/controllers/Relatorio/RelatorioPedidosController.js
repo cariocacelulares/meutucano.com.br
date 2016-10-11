@@ -9,6 +9,9 @@
         var vm = this;
 
         vm.result = false;
+        vm.groupedResult = false;
+        vm.totalResults = 0;
+        vm.labels = [];
 
         vm.gerar = function(tipo) {
             if (vm.params.fields.length) {
@@ -25,10 +28,30 @@
                         token: localStorage.getItem('satellizer_token')
                     };
 
-                    $window.open(envService.read('apiUrl') + '/relatorios/pedido/' + tipo + '?params=' + JSON.stringify(params) + '&' + $httpParamSerializer(auth), '_self');
+                    $window.open(envService.read('apiUrl') + '/relatorios/pedido/' + tipo + '?params=' + JSON.stringify(params) + '&' + $httpParamSerializer(auth), 'relatorio-pedido');
                 } else {
+                    vm.result = false;
                     Restangular.one('relatorios/pedido', tipo || null).customPOST(params).then(function(response) {
-                        vm.result = response;
+                        vm.groupedResult  = !!vm.params.group;
+                        vm.result = Restangular.copy(response, vm.result);
+                        vm.result = angular.copy(response, vm.result);
+
+                        vm.labels = [];
+                        vm.totalResults = [];
+                        if (!vm.groupedResult) {
+                            vm.totalResults = vm.result.length;
+                            vm.totalResults = vm.totalResults + ((vm.totalResults == 1) ? ' registro encontrado' : ' registros encontrados');
+                            for (var key in vm.result[0]) {
+                                vm.labels.push(key);
+                            }
+                        } else {
+                            vm.totalResults = vm.result.length;
+                            vm.totalResults = vm.totalResults + ((vm.totalResults == 1) ? ' grupo encontrado' : ' grupos encontrados');
+                            for (var chave in vm.result[0].data[0]) {
+                                vm.labels.push(chave);
+                            }
+                        }
+
                         $location.hash('relatorio-resultado');
                         $anchorScroll();
                     });
@@ -45,7 +68,7 @@
             vm.params = {
                 filter: [],
                 group: '',
-                fields: [],
+                fields: [{label: 'Código marketplace',name: 'codigo_marketplace'}],
                 order: [],
                 relation: {
                     cliente: false,

@@ -196,6 +196,11 @@
         tr.segurado {
             cursor: not-allowed;
         }
+
+        tr.destaque td {
+            text-align: center;
+            background-color: #EFEFEF;
+        }
     }
 
     thead th {

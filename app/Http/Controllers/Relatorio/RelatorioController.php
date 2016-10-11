@@ -209,35 +209,81 @@ class RelatorioController extends Controller
                     unset($pedido['group']);
                     $list[$group][] = $pedido;
                 }
+
+                $aux = [];
+                foreach ($list as $group => $values) {
+                    $aux[] = [
+                        'group' => $group,
+                        'data' => $values
+                    ];
+                }
+                $list = $aux;
+                unset($aux);
             } else {
                 $list = $pedidos;
             }
 
             if (in_array($return_type, ['xls', 'pdf'])) {
-                $data = \Excel::create("relatorio-pedidos-" . date('Y-m-d'), function($excel) use ($list) {
-                    $excel->sheet("relatorio-pedidos-" . date('Y-m-d'), function($sheet) use ($list) {
-                        foreach ($list as $key => $value) {
-                            foreach ($value as $chave => $valor) {
-                                if (is_array($valor)) {
-                                    foreach ($valor as $campo => $produto) {
-                                        foreach ($produto as $field => $data) {
-                                            $list[$key][$field][] = $data;
+                $data = \Excel::create("relatorio-pedidos-" . date('Y-m-d'), function($excel) use ($list, $group) {
+                    $excel->sheet("relatorio-pedidos-" . date('Y-m-d'), function($sheet) use ($list, $group) {
+                        if (!$group) {
+                            foreach ($list as $key => $value) {
+                                foreach ($value as $chave => $valor) {
+                                    if (is_array($valor)) {
+                                        foreach ($valor as $campo => $produto) {
+                                            foreach ($produto as $field => $data) {
+                                                $list[$key][$field][] = $data;
+                                            }
+                                        }
+                                        unset($list[$key][$chave]);
+                                    }
+                                }
+                            }
+
+                            foreach ($list as $key => $value) {
+                                foreach ($value as $chave => $valor) {
+                                    if (is_array($valor)) {
+                                        $list[$key][$chave] = implode(',', $valor);
+                                    }
+                                }
+                            }
+
+                            $sheet->setOrientation((count($list[0]) > 6) ? 'landscape' : 'portrait');
+                        } else {
+                            $fields = array_map(create_function('$n', 'return \'\';'), $list[0]['data'][0]);
+
+                            foreach ($list as $index => $item) {
+                                $list[$index]['group'] = array_merge($fields, [key($fields) => $item['group']]);
+
+                                foreach ($item['data'] as $indice => $linha) {
+                                    foreach ($linha as $key => $value) {
+                                        if (is_array($value)) {
+                                            foreach ($value as $chave => $produtos) {
+                                                foreach ($produtos as $campo => $valor) {
+                                                    if (isset($list[$index]['data'][$indice][$campo]) && $list[$index]['data'][$indice][$campo]) {
+                                                        $list[$index]['data'][$indice][$campo] .= ',' . $valor;
+                                                    } else {
+                                                        $list[$index]['data'][$indice][$campo] = $valor;
+                                                    }
+                                                }
+                                            }
+
+                                            unset($list[$index]['data'][$indice][$key]);
                                         }
                                     }
-                                    unset($list[$key][$chave]);
+                                }
+
+                                $list[$index] = array_merge([$list[$index]['group']], array_values($list[$index]['data']));
+                            }
+
+                            $aux = [];
+                            foreach ($list as $item) {
+                                foreach ($item as $linha) {
+                                    $aux[] = $linha;
                                 }
                             }
+                            $list = $aux;
                         }
-
-                        foreach ($list as $key => $value) {
-                            foreach ($value as $chave => $valor) {
-                                if (is_array($valor)) {
-                                    $list[$key][$chave] = implode(',', $valor);
-                                }
-                            }
-                        }
-
-                        $sheet->setOrientation((count($list[0]) > 6) ? 'landscape' : 'portrait');
 
                         $sheet->fromArray($list);
                     });
