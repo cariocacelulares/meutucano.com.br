@@ -38,13 +38,22 @@ class MagentoController extends Controller implements Integracao
         if ($useSoap) {
             if (\Config::get('tucano.magento.enabled')) {
                 try {
+                    $opts = [
+                        'http' => [
+                            'user_agent' => 'PHPSoapClient'
+                        ]
+                    ];
+
+                    $context = stream_context_create($opts);
+
                     $this->api = new \SoapClient(
                         \Config::get('tucano.magento.api.host'),
                         [
-                            'trace' => true,
-                            'exceptions' => false,
+                            'stream_context'     => $context,
+                            'trace'              => true,
+                            'exceptions'         => false,
                             'connection_timeout' => 5,
-                            'cache_wsdl' => WSDL_CACHE_NONE
+                            'cache_wsdl'         => WSDL_CACHE_NONE
                         ]
                     );
 
