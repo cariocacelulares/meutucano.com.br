@@ -49,11 +49,11 @@ class MagentoController extends Controller implements Integracao
                     $this->api = new \SoapClient(
                         \Config::get('tucano.magento.api.host'),
                         [
-                            'stream_context'     => $context,
-                            'trace'              => true,
-                            'exceptions'         => false,
+                            'stream_context' => $context,
+                            'trace' => true,
+                            'exceptions' => false,
                             'connection_timeout' => 5,
-                            'cache_wsdl'         => WSDL_CACHE_NONE
+                            'cache_wsdl' => WSDL_CACHE_NONE
                         ]
                     );
 
@@ -61,6 +61,7 @@ class MagentoController extends Controller implements Integracao
                         throw new \Exception('Falha ao tentar fazer conexão soap no magento', 1);
                     }
 
+                    Log::debug('magento api', [$this->api]);
                     $this->session = $this->api->login(
                         \Config::get('tucano.magento.api.user'),
                         \Config::get('tucano.magento.api.key')
