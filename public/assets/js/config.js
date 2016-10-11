@@ -8,7 +8,8 @@
             envServiceProvider.config({
                 domains: {
                     development: ['tucano.app'],
-                    production:  ['192.168.2.170']
+                    production:  ['192.168.2.170'],
+                    aws:         ['52.67.77.176']
                 },
                 vars: {
                     development: {
@@ -16,6 +17,9 @@
                     },
                     production: {
                         apiUrl: 'http://192.168.2.170/meutucano/public/index.php/api'
+                    },
+                    aws: {
+                        apiUrl: 'http://52.67.77.176/api'
                     }
                 }
             });
