@@ -61,7 +61,6 @@ class MagentoController extends Controller implements Integracao
                         throw new \Exception('Falha ao tentar fazer conexão soap no magento', 1);
                     }
 
-                    Log::debug('magento api', [$this->api]);
                     $this->session = $this->api->login(
                         \Config::get('tucano.magento.api.user'),
                         \Config::get('tucano.magento.api.key')
@@ -452,7 +451,7 @@ class MagentoController extends Controller implements Integracao
                 );
 
                 if (is_soap_fault($stock)) {
-                    Log::debug('Não foi possível atualizar o estoque no magento', [$stock]);
+                    Log::critical('Não foi possível atualizar o estoque no magento', [$stock]);
                     throw new \Exception('Produto inexistente no magento', 2);
                 }
 
