@@ -61,6 +61,7 @@ class MagentoController extends Controller implements Integracao
                         throw new \Exception('Falha ao tentar fazer conexão soap no magento', 1);
                     }
 
+                    Log::debug('magento api', [$this->api]);
                     $this->session = $this->api->login(
                         \Config::get('tucano.magento.api.user'),
                         \Config::get('tucano.magento.api.key')

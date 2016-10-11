@@ -184,7 +184,7 @@ return [
     'magento' => [
         'enabled' => env('MAGENTO_ENABLED', true),
         'api' => [
-            'host' => env('MAGENTO_API_HOST', 'http://www.cariocacelulares.com.br/api/v2_soap/?wsdl'),
+            'host' => env('MAGENTO_API_HOST', 'http://www.cariocacelulares.com.br/index.php/api/index/index/wsdl/1/'),
             'user' => env('MAGENTO_API_USER', 'carioca'),
             'key'  => env('MAGENTO_API_KEY', '#@carioca2016')
         ],
