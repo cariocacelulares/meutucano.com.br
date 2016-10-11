@@ -442,6 +442,7 @@ class MagentoController extends Controller implements Integracao
                 );
 
                 if (is_soap_fault($stock)) {
+                    Debug::log('Não foi possível atualizar o estoque no magento', [$stock]);
                     throw new \Exception('Produto inexistente no magento', 2);
                 }
 
