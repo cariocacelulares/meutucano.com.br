@@ -53,11 +53,6 @@ class MagentoController extends Controller implements Integracao
                         ]
                     );
 
-                    echo "====== REQUEST HEADERS =====" . PHP_EOL;
-                    Log::error($this->api->__getLastRequestHeaders());
-                    echo "========= REQUEST ==========" . PHP_EOL;
-                    Log::error($this->api->__getLastRequest());
-
                     if (is_soap_fault($this->api)) {
                         throw new \Exception('Falha ao tentar fazer conexão soap no magento', 1);
                     }
