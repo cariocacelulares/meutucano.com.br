@@ -9,7 +9,7 @@
                 domains: {
                     development: ['tucano.app'],
                     production:  ['192.168.2.170'],
-                    aws:         ['meutucano.com.br']
+                    aws:         ['www.meutucano.com.br', 'meutucano.com.br']
                 },
                 vars: {
                     development: {
