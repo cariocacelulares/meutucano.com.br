@@ -13,16 +13,7 @@ use Illuminate\Support\Facades\Input;
  */
 class PedidoController extends Controller
 {
-    use RestResponseTrait;
-
-    private $list;
-    private $pedidos;
-
-    private $relation;
-    private $fields;
-    private $filter;
-    private $group;
-    private $order;
+    use RestResponseTrait, RelatorioTrait;
 
     private function prepare()
     {
@@ -49,16 +40,16 @@ class PedidoController extends Controller
                 if ($bool === true) {
                     if ($rel ==  'produtos') {
                         // join no pedido_produtos e no produtos pra ter acesso o nome do produto
-                        $this->pedidos->join('pedido_produtos', 'pedido_produtos.pedido_id', '=', 'pedidos.id');
-                        $this->pedidos->join('produtos', 'produtos.sku', '=', 'pedido_produtos.produto_sku');
-                        $this->pedidos->with('produtos.produto');
+                        $this->model->join('pedido_produtos', 'pedido_produtos.pedido_id', '=', 'pedidos.id');
+                        $this->model->join('produtos', 'produtos.sku', '=', 'pedido_produtos.produto_sku');
+                        $this->model->with('produtos.produto');
                     } else if ($rel == 'cliente') {
-                        $this->pedidos->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id');
+                        $this->model->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id');
                     } else if ($rel ==  'endereco') {
-                        $this->pedidos->join('cliente_enderecos', 'cliente_enderecos.id', '=', 'pedidos.cliente_endereco_id');
+                        $this->model->join('cliente_enderecos', 'cliente_enderecos.id', '=', 'pedidos.cliente_endereco_id');
                     }
 
-                    $this->pedidos->with($rel);
+                    $this->model->with($rel);
                 }
             }
         }
@@ -97,19 +88,19 @@ class PedidoController extends Controller
                                 }
                             }
 
-                            $this->pedidos->whereBetween($field, [$config['value']['from'], $config['value']['to']]);
+                            $this->model->whereBetween($field, [$config['value']['from'], $config['value']['to']]);
                         }
                     } else if ($config['operator'] == 'IN') {
-                        $this->pedidos->whereIn($field, array_keys($config['value']));
+                        $this->model->whereIn($field, array_keys($config['value']));
                     } else if ($config['operator'] == 'LIKE') {
-                        $this->pedidos->where($field, $config['operator'], "%{$config['value']}%");
+                        $this->model->where($field, $config['operator'], "%{$config['value']}%");
                     } else {
                         // se for uma data no formato d/m/Y, converte pra Y-m-d
                         if (is_string($config['value']) && \DateTime::createFromFormat('d/m/Y', $config['value']) !== false) {
                             $config['value'] = Carbon::createFromFormat('d/m/Y', $config['value'])->format('Y-m-d');
                         }
 
-                        $this->pedidos->where($field, $config['operator'], $config['value']);
+                        $this->model->where($field, $config['operator'], $config['value']);
                     }
                 }
             }
@@ -132,22 +123,22 @@ class PedidoController extends Controller
                 $groupOrder = $this->group;
             }
 
-            $this->pedidos->orderBy($groupOrder, 'ASC');
+            $this->model->orderBy($groupOrder, 'ASC');
         }
 
         // Ordenação
         if ($this->order) {
             foreach ($this->order as $field) {
                 $key = str_replace(['cliente.', 'endereco.'], ['clientes.', 'cliente_enderecos.'], $field['name']);
-                $this->pedidos->orderBy($key, $field['order']);
+                $this->model->orderBy($key, $field['order']);
             }
         }
 
         // pega apenas os campos do pedido pra colocar das outras entidades em um novo array
-        $this->pedidos = $this->pedidos->get(['pedidos.*'])->toArray();
+        $this->model = $this->model->get(['pedidos.*'])->toArray();
 
         // Mostra apenas os campos selecionados, na ordem que foram
-        foreach ($this->pedidos as $key => $pedido) {
+        foreach ($this->model as $key => $pedido) {
             $clearedOrder = [];
 
             if ($this->group) {
@@ -190,7 +181,7 @@ class PedidoController extends Controller
                     // se for um campo de produtos
                     if ($pieces[0] == 'produtos') {
                         // podem ter vários produtos
-                        foreach ($this->pedidos[$key]['produtos'] as $pedidoProduto) {
+                        foreach ($this->model[$key]['produtos'] as $pedidoProduto) {
                             // se for titulo, pega do produto e nao do pedido produto
                             if ($pieces[1] == 'titulo') {
                                 $clearedOrder['produtos'][$pedidoProduto['id']][$field['label']] = $pedidoProduto['produto'][$pieces[1]];
@@ -199,16 +190,16 @@ class PedidoController extends Controller
                             }
                         }
                     } else {
-                        $clearedOrder[$field['label']] = $this->pedidos[$key][$pieces[0]][$pieces[1]];
+                        $clearedOrder[$field['label']] = $this->model[$key][$pieces[0]][$pieces[1]];
                     }
                 }
             }
-            $this->pedidos[$key] = $clearedOrder;
+            $this->model[$key] = $clearedOrder;
         }
 
         if ($this->group) {
             $this->list = [];
-            foreach ($this->pedidos as $pedido) {
+            foreach ($this->model as $pedido) {
                 $this->group = $pedido['group'];
                 unset($pedido['group']);
                 $this->list[$this->group][] = $pedido;
@@ -224,89 +215,15 @@ class PedidoController extends Controller
             $this->list = $aux;
             unset($aux);
         } else {
-            $this->list = $this->pedidos;
+            $this->list = $this->model;
         }
-    }
-
-    private function getFile($return_type)
-    {
-        $data = \Excel::create("relatorio-pedidos-" . date('Y-m-d'), function($excel) {
-            $excel->sheet("relatorio-pedidos-" . date('Y-m-d'), function($sheet) {
-                if (!$this->group) {
-                    foreach ($this->list as $key => $value) {
-                        foreach ($value as $chave => $valor) {
-                            if (is_array($valor)) {
-                                foreach ($valor as $campo => $produto) {
-                                    foreach ($produto as $field => $data) {
-                                        $this->list[$key][$field][] = $data;
-                                    }
-                                }
-                                unset($this->list[$key][$chave]);
-                            } else if ($valor === 0) {
-                                $this->list[$key][$chave] = '0';
-                            }
-                        }
-                    }
-
-                    foreach ($this->list as $key => $value) {
-                        foreach ($value as $chave => $valor) {
-                            if (is_array($valor)) {
-                                $this->list[$key][$chave] = implode(',', $valor);
-                            } else if ($valor === 0) {
-                                $this->list[$key][$chave] = '0';
-                            }
-                        }
-                    }
-
-                    $sheet->setOrientation((count($this->list[0]) > 6) ? 'landscape' : 'portrait');
-                } else {
-                    $this->fields = array_map(create_function('$n', 'return \'\';'), $this->list[0]['data'][0]);
-
-                    foreach ($this->list as $index => $item) {
-                        $this->list[$index]['group'] = array_merge($this->fields, [key($this->fields) => $item['group']]);
-
-                        foreach ($item['data'] as $indice => $linha) {
-                            foreach ($linha as $key => $value) {
-                                if (is_array($value)) {
-                                    foreach ($value as $chave => $produtos) {
-                                        foreach ($produtos as $campo => $valor) {
-                                            if (isset($this->list[$index]['data'][$indice][$campo]) && $this->list[$index]['data'][$indice][$campo]) {
-                                                $this->list[$index]['data'][$indice][$campo] .= ',' . $valor;
-                                            } else {
-                                                $this->list[$index]['data'][$indice][$campo] = $valor;
-                                            }
-                                        }
-                                    }
-
-                                    unset($this->list[$index]['data'][$indice][$key]);
-                                }
-                            }
-                        }
-
-                        $this->list[$index] = array_merge([$this->list[$index]['group']], array_values($this->list[$index]['data']));
-                    }
-
-                    $aux = [];
-                    foreach ($this->list as $item) {
-                        foreach ($item as $linha) {
-                            $aux[] = $linha;
-                        }
-                    }
-                    $this->list = $aux;
-                }
-
-                $sheet->fromArray($this->list);
-            });
-        })->export($return_type);//, storage_path('excel/exports'));
-
-        return response()->make($data, '200')->header('Content-Type', 'image/' . $return_type);
     }
 
     public function run($return_type = 'array')
     {
         try {
             // Inicializa os pedidos
-            $this->pedidos = Pedido::groupBy('pedidos.id');
+            $this->model = Pedido::groupBy('pedidos.id');
             $this->list = [];
 
             $this->prepare();

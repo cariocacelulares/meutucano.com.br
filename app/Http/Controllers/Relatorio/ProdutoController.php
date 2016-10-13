@@ -15,16 +15,7 @@ use Illuminate\Support\Facades\Input;
  */
 class ProdutoController extends Controller
 {
-    use RestResponseTrait;
-
-    private $list;
-    private $produtos;
-
-    private $relation;
-    private $fields;
-    private $filter;
-    private $group;
-    private $order;
+    use RestResponseTrait, RelatorioTrait;
 
     private function prepare()
     {
@@ -50,10 +41,10 @@ class ProdutoController extends Controller
             foreach ($this->relation as $rel => $bool) {
                 if ($bool === true) {
                     if ($rel ==  'pedido') {
-                        $this->produtos->join('pedido_produtos', 'pedido_produtos.produto_sku', '=', 'produtos.sku');
-                        $this->produtos->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id');
+                        $this->model->join('pedido_produtos', 'pedido_produtos.produto_sku', '=', 'produtos.sku');
+                        $this->model->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id');
                     } else {
-                        $this->produtos->with($rel);
+                        $this->model->with($rel);
                     }
                 }
             }
@@ -93,19 +84,19 @@ class ProdutoController extends Controller
                                 }
                             }
 
-                            $this->produtos->whereBetween($field, [$config['value']['from'], $config['value']['to']]);
+                            $this->model->whereBetween($field, [$config['value']['from'], $config['value']['to']]);
                         }
                     } else if ($config['operator'] == 'IN') {
-                        $this->produtos->whereIn($field, array_keys($config['value']));
+                        $this->model->whereIn($field, array_keys($config['value']));
                     } else if ($config['operator'] == 'LIKE') {
-                        $this->produtos->where($field, $config['operator'], "%{$config['value']}%");
+                        $this->model->where($field, $config['operator'], "%{$config['value']}%");
                     } else {
                         // se for uma data no formato d/m/Y, converte pra Y-m-d
                         if (is_string($config['value']) && \DateTime::createFromFormat('d/m/Y', $config['value']) !== false) {
                             $config['value'] = Carbon::createFromFormat('d/m/Y', $config['value'])->format('Y-m-d');
                         }
 
-                        $this->produtos->where($field, $config['operator'], $config['value']);
+                        $this->model->where($field, $config['operator'], $config['value']);
                     }
                 }
             }
@@ -114,14 +105,14 @@ class ProdutoController extends Controller
         // Agrupamentos - preparação - ordenação e campos
         if ($this->group) {
             $groupOrder = $this->group;
-            // $this->produtos->orderBy($groupOrder, 'ASC');
+            // $this->model->orderBy($groupOrder, 'ASC');
         }
 
         // Ordenação
         if ($this->order) {
             foreach ($this->order as $field) {
                 $key = str_replace(['cliente.', 'endereco.'], ['clientes.', 'cliente_enderecos.'], $field['name']);
-                $this->produtos->orderBy($key, $field['order']);
+                $this->model->orderBy($key, $field['order']);
             }
         }
 
@@ -140,15 +131,15 @@ class ProdutoController extends Controller
             $getFields[] = DB::raw('pedidos.estimated_delivery AS \'pedidos.estimated_delivery\'');
             $getFields[] = DB::raw('pedidos.created_at AS \'pedidos.created_at\'');
         }
-        $this->produtos = $this->produtos->get($getFields)->toArray();
+        $this->model = $this->model->get($getFields)->toArray();
 
         // Mostra apenas os campos selecionados, na ordem que foram
-        foreach ($this->produtos as $key => $produto) {
+        foreach ($this->model as $key => $produto) {
             if (isset($produto['pedidos.status'])) {
                 $status = $produto['pedidos.status'];
                 $status = (is_null($status)) ? 'Desconhecido' : \Config::get('tucano.pedido_status')[$status];
                 $produto['pedidos.status'] = $status;
-                $this->produtos[$key]['pedidos.status'] = $status;
+                $this->model[$key]['pedidos.status'] = $status;
             }
 
             $clearedOrder = [];
@@ -170,12 +161,12 @@ class ProdutoController extends Controller
                     }
                 }
             }
-            $this->produtos[$key] = $clearedOrder;
+            $this->model[$key] = $clearedOrder;
         }
 
         if ($this->group) {
             $this->list = [];
-            foreach ($this->produtos as $produto) {
+            foreach ($this->model as $produto) {
                 $this->group = $produto['group'];
                 unset($produto['group']);
                 $this->list[$this->group][] = $produto;
@@ -191,89 +182,15 @@ class ProdutoController extends Controller
             $this->list = $aux;
             unset($aux);
         } else {
-            $this->list = $this->produtos;
+            $this->list = $this->model;
         }
-    }
-
-    private function getFile($return_type)
-    {
-        $data = \Excel::create("relatorio-pedidos-" . date('Y-m-d'), function($excel) {
-            $excel->sheet("relatorio-pedidos-" . date('Y-m-d'), function($sheet) {
-                if (!$this->group) {
-                    foreach ($this->list as $key => $value) {
-                        foreach ($value as $chave => $valor) {
-                            if (is_array($valor)) {
-                                foreach ($valor as $campo => $produto) {
-                                    foreach ($produto as $field => $data) {
-                                        $this->list[$key][$field][] = $data;
-                                    }
-                                }
-                                unset($this->list[$key][$chave]);
-                            } else if ($valor === 0) {
-                                $this->list[$key][$chave] = '0';
-                            }
-                        }
-                    }
-
-                    foreach ($this->list as $key => $value) {
-                        foreach ($value as $chave => $valor) {
-                            if (is_array($valor)) {
-                                $this->list[$key][$chave] = implode(',', $valor);
-                            } else if ($valor === 0) {
-                                $this->list[$key][$chave] = '0';
-                            }
-                        }
-                    }
-
-                    $sheet->setOrientation((count($this->list[0]) > 6) ? 'landscape' : 'portrait');
-                } else {
-                    $this->fields = array_map(create_function('$n', 'return \'\';'), $this->list[0]['data'][0]);
-
-                    foreach ($this->list as $index => $item) {
-                        $this->list[$index]['group'] = array_merge($this->fields, [key($this->fields) => $item['group']]);
-
-                        foreach ($item['data'] as $indice => $linha) {
-                            foreach ($linha as $key => $value) {
-                                if (is_array($value)) {
-                                    foreach ($value as $chave => $produtos) {
-                                        foreach ($produtos as $campo => $valor) {
-                                            if (isset($this->list[$index]['data'][$indice][$campo]) && $this->list[$index]['data'][$indice][$campo]) {
-                                                $this->list[$index]['data'][$indice][$campo] .= ',' . $valor;
-                                            } else {
-                                                $this->list[$index]['data'][$indice][$campo] = $valor;
-                                            }
-                                        }
-                                    }
-
-                                    unset($this->list[$index]['data'][$indice][$key]);
-                                }
-                            }
-                        }
-
-                        $this->list[$index] = array_merge([$this->list[$index]['group']], array_values($this->list[$index]['data']));
-                    }
-
-                    $aux = [];
-                    foreach ($this->list as $item) {
-                        foreach ($item as $linha) {
-                            $aux[] = $linha;
-                        }
-                    }
-                    $this->list = $aux;
-                }
-
-                $sheet->fromArray($this->list);
-            });
-        })->export($return_type);//, storage_path('excel/exports'));
-
-        return response()->make($data, '200')->header('Content-Type', 'image/' . $return_type);
     }
 
     public function run($return_type = 'array')
     {
-        // try {
+        try {
             // Inicializa os pedidos
-            $this->produtos = Produto::where(DB::raw('1'), '=', '1');
+            $this->model = Produto::where(DB::raw('1'), '=', '1');
             $this->list = [];
 
             $this->prepare();
@@ -284,9 +201,9 @@ class ProdutoController extends Controller
                 return $this->listResponse($this->list);
             }
 
-        /*} catch (\Exception $e) {
+        } catch (\Exception $e) {
             \Log::warning(logMessage($e, 'Erro ao tentar gerar relatório'));
             return $this->notFoundResponse();
-        }*/
+        }
     }
 }
