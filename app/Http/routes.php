@@ -218,7 +218,7 @@ Route::group(['prefix' => '/api'], function() {
         /**
          * Relatórios
          */
-        Route::post('relatorios/pedido', 'Relatorio\RelatorioController@pedido');
-        Route::get('relatorios/pedido/{return_type}', 'Relatorio\RelatorioController@pedido');
+        Route::post('relatorios/pedido', 'Relatorio\PedidoController@run');
+        Route::get('relatorios/pedido/{return_type}', 'Relatorio\PedidoController@run');
     });
 });

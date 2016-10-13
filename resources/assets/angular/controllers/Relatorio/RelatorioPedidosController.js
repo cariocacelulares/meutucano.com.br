@@ -77,7 +77,13 @@
             vm.params = {
                 filter: [],
                 group: '',
-                fields: [{label: 'Código marketplace',name: 'codigo_marketplace'}],
+                fields: [
+                    {label: 'Código marketplace', name: 'codigo_marketplace'},
+                    {label: 'Marketplace', name: 'marketplace'},
+                    {label: 'Status', name: 'status'},
+                    {label: 'Total', name: 'total'},
+                    {label: 'Data', name: 'created_at'},
+                ],
                 order: [],
                 relation: {
                     cliente: false,
