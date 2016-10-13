@@ -47,7 +47,7 @@ class MagentoController extends Controller implements Integracao
                                 ]
                             ]),
                             'trace' => true,
-                            'exceptions' => true,
+                            'exceptions' => false,
                             'connection_timeout' => 20,
                             'cache_wsdl' => WSDL_CACHE_NONE
                         ]
