@@ -3,9 +3,9 @@
 
     angular
         .module('MeuTucano')
-        .controller('RelatorioPedidosController', RelatorioPedidosController);
+        .controller('RelatorioProdutosController', RelatorioProdutosController);
 
-    function RelatorioPedidosController($window, $location, $anchorScroll, $httpParamSerializer, envService, toaster, Restangular) {
+    function RelatorioProdutosController($window, $location, $anchorScroll, $httpParamSerializer, envService, toaster, Restangular) {
         var vm = this;
 
         vm.dragControlListeners = {
@@ -18,9 +18,9 @@
         };
 
         vm.result = false;
+        vm.labels = [];
         vm.groupedResult = false;
         vm.totalResults = 0;
-        vm.labels = [];
 
         vm.gerar = function(tipo) {
             if (vm.params.fields.length) {
@@ -37,10 +37,11 @@
                         token: localStorage.getItem('satellizer_token')
                     };
 
-                    $window.open(envService.read('apiUrl') + '/relatorios/pedido/' + tipo + '?params=' + JSON.stringify(params) + '&' + $httpParamSerializer(auth), 'relatorio-pedido');
+                    $window.open(envService.read('apiUrl') + '/relatorios/produto/' + tipo + '?params=' + JSON.stringify(params) + '&' + $httpParamSerializer(auth), 'relatorio-produto');
                 } else {
                     vm.result = false;
-                    Restangular.one('relatorios/pedido', tipo || null).customPOST(params).then(function(response) {
+                    vm.labels = [];
+                    Restangular.one('relatorios/produto', tipo || null).customPOST(params).then(function(response) {
                         vm.groupedResult  = !!vm.params.group;
                         vm.result = Restangular.copy(response, vm.result);
                         vm.result = angular.copy(response, vm.result);
@@ -71,28 +72,25 @@
         };
 
         vm.defaults = function() {
-            vm.list = {};
-            vm.list.cities = {};
-
+            vm.labels = [];
             vm.params = {
                 filter: [],
                 group: '',
                 fields: [
-                    {label: 'Código marketplace', name: 'codigo_marketplace'},
-                    {label: 'Marketplace', name: 'marketplace'},
-                    {label: 'Status', name: 'status'},
-                    {label: 'Total', name: 'total'},
-                    {label: 'Data de abertura', name: 'created_at'},
+                    {label: 'Título', name: 'titulo'},
+                    {label: 'SKU', name: 'sku'},
+                    {label: 'Estoque', name: 'estoque'},
+                    {label: 'Data de criação', name: 'created_at'}
                 ],
                 order: [],
                 relation: {
-                    cliente: false,
-                    endereco: false,
-                    produtos: false
+                    pedido: false
                 }
             };
 
-            vm.list.status = {
+            vm.list = {};
+
+            vm.list['pedidos.status'] = {
                 0: 'Pendente',
                 1: 'Pago',
                 2: 'Enviado',
@@ -100,7 +98,7 @@
                 5: 'Cancelado'
             };
 
-            vm.list.marketplace = {
+            vm.list['pedidos.marketplace'] = {
                 b2w: 'B2W',
                 cnova: 'CNOVA',
                 mercadolivre: 'Mercado Livre',
@@ -110,71 +108,45 @@
 
             vm.list.fields = {};
 
-            vm.list.fields.pedido = {
-                codigo_api: 'Código',
-                frete_valor: 'Frete valor',
-                frete_metodo: 'Frete método',
-                pagamento_metodo: 'Pagamento método',
-                codigo_marketplace: 'Código marketplace',
-                marketplace: 'Marketplace',
-                operacao: 'Operação',
-                total: 'Total',
-                estimated_delivery: 'Entrega estimada',
-                status: 'Status',
-                protocolo: 'Protocolo cancelamento',
-                segurado: 'Segurado',
-                reembolso: 'Reembolso',
-                priorizado: 'Priorizado',
-                created_at: 'Data de abertura'
-            };
-
-            vm.list.fields.cliente = {
-                'cliente.nome': 'Nome',
-                'cliente.taxvat': 'Documento',
-                'cliente.fone': 'Telefone',
-                'cliente.email': 'E-mail'
-            };
-
-            vm.list.fields.endereco = {
-                'endereco.rua': 'Rua',
-                'endereco.numero': 'Número',
-                'endereco.bairro': 'Bairro',
-                'endereco.complemento': 'Complemento',
-                'endereco.cidade': 'Cidade',
-                'endereco.uf': 'UF',
-                'endereco.cep': 'CEP'
-            };
-
             vm.list.fields.produto = {
-                'produtos.titulo': 'Título',
-                'pedido_produtos.produto_sku': 'SKU',
-                'pedido_produtos.imei': 'IMEI',
-                'pedido_produtos.quantidade': 'Quantidade',
-                'pedido_produtos.valor': 'Valor'
+                titulo: 'Título',
+                sku: 'SKU',
+                estoque: 'Estoque',
+                created_at: 'Data de criação'
             };
 
-            vm.list.fields.all = _.extend(vm.list.fields.all, vm.list.fields.pedido);
-            vm.list.fields.all = _.extend(vm.list.fields.all, vm.list.fields.cliente);
-            vm.list.fields.all = _.extend(vm.list.fields.all, vm.list.fields.endereco);
+            vm.list.fields.pedido = {
+                'pedido_produtos.quantidade': 'Quantidade',
+                'pedido_produtos.valor': 'Valor do produto',
+                'pedidos.codigo_marketplace': 'Código marketplace',
+                'pedidos.marketplace': 'Marketplace',
+                'pedidos.status': 'Status',
+                'pedidos.total': 'Valor total',
+                'pedidos.estimated_delivery': 'Entrega estimada',
+                'pedidos.created_at': 'Data do pedido'
+            };
+
             vm.list.fields.all = _.extend(vm.list.fields.all, vm.list.fields.produto);
+            vm.list.fields.all = _.extend(vm.list.fields.all, vm.list.fields.pedido);
 
             vm.params.filter = {
-                total: {operator: 'BETWEEN'},
-                'pedidos.created_at': {operator: 'BETWEEN'},
-                estimated_delivery: {operator: 'BETWEEN'},
-                status: {operator: 'IN', value: {}},
-                marketplace: {operator: 'IN', value: {}},
-                'cliente_enderecos.uf': '',
-                'cliente_enderecos.cidade': '',
-                'pedido_produtos.produto_sku': {operator: 'LIKE'},
+                sku: {operator: 'LIKE'},
+                titulo: {operator: 'LIKE'},
+                estoque: {operator: 'BETWEEN'},
+                'produtos.created_at': {operator: 'BETWEEN'},
                 'pedido_produtos.imei': {operator: 'LIKE'},
                 'pedido_produtos.quantidade': {operator: 'BETWEEN'},
-                'pedido_produtos.valor': {operator: 'BETWEEN'}
+                'pedido_produtos.valor': {operator: 'BETWEEN'},
+                'pedidos.marketplace': {operator: 'IN', value: {}},
+                'pedidos.status': {operator: 'IN', value: {}},
+                'pedidos.total': {operator: 'BETWEEN'},
+                'pedidos.created_at': {operator: 'BETWEEN'},
+                'pedidos.estimated_delivery': {operator: 'BETWEEN'}
             };
 
             vm.setFilters = {
-                status: '',
-                marketplace: ''
+                'pedidos.status': '',
+                'pedidos.marketplace': ''
             };
 
             vm.setField = '';
@@ -193,27 +165,15 @@
 
         vm.load();
 
-        vm.loadCities = function() {
-            vm.params.filter['cliente_enderecos.cidade'] = '';
-
-            if (typeof vm.params.filter['cliente_enderecos.uf'].value !== 'undefined' && vm.params.filter['cliente_enderecos.uf'].value) {
-                Restangular.one('pedidos/cidades', vm.params.filter['cliente_enderecos.uf'].value).getList().then(function(response) {
-                    vm.list.cities = response;
-                });
-            }
-        };
-
         vm.changeRelation = function() {
-            if (vm.params.relation.endereco !== true) {
-                vm.params.filter['cliente_enderecos.uf'] = '';
-                vm.params.filter['cliente_enderecos.cidade'] = '';
-            }
-
-            if (vm.params.relation.produtos !== true) {
-                vm.params.filter['pedido_produtos.produto_sku'] = {operator: 'LIKE'};
-                vm.params.filter['pedido_produtos.imei'] = {operator: 'LIKE'};
+            if (vm.params.relation.pedido !== true) {
                 vm.params.filter['pedido_produtos.quantidade'] = {operator: 'BETWEEN'};
                 vm.params.filter['pedido_produtos.valor'] = {operator: 'BETWEEN'};
+                vm.params.filter['pedidos.marketplace'] = {operator: 'IN', value: {}};
+                vm.params.filter['pedidos.status'] = {operator: 'IN', value: {}};
+                vm.params.filter['pedidos.total'] = {operator: 'BETWEEN'};
+                vm.params.filter['pedidos.created_at'] = {operator: 'BETWEEN'};
+                vm.params.filter['pedidos.estimated_delivery'] = {operator: 'BETWEEN'};
             }
         };
 

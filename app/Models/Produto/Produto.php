@@ -52,11 +52,11 @@ class Produto extends Model
     /**
      * @var array
      */
-    protected $with = [
+    /*protected $with = [
         'linha',
         'marca',
         'atributos',
-    ];
+    ];*/
 
     /**
      * Fire update event

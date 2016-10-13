@@ -2,21 +2,23 @@
 
 use App\Http\Controllers\Rest\RestResponseTrait;
 use App\Http\Controllers\Controller;
+use App\Models\Produto\Produto;
 use App\Models\Pedido\Pedido;
+use App\Models\Pedido\PedidoProduto;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 
 /**
- * Class PedidoController
+ * Class ProdutoController
  * @package App\Http\Controllers\Relatorio
  */
-class PedidoController extends Controller
+class ProdutoController extends Controller
 {
     use RestResponseTrait;
 
     private $list;
-    private $pedidos;
+    private $produtos;
 
     private $relation;
     private $fields;
@@ -47,18 +49,12 @@ class PedidoController extends Controller
             // pra cada relaçao onde a chave é a relação e o valor é bool
             foreach ($this->relation as $rel => $bool) {
                 if ($bool === true) {
-                    if ($rel ==  'produtos') {
-                        // join no pedido_produtos e no produtos pra ter acesso o nome do produto
-                        $this->pedidos->join('pedido_produtos', 'pedido_produtos.pedido_id', '=', 'pedidos.id');
-                        $this->pedidos->join('produtos', 'produtos.sku', '=', 'pedido_produtos.produto_sku');
-                        $this->pedidos->with('produtos.produto');
-                    } else if ($rel == 'cliente') {
-                        $this->pedidos->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id');
-                    } else if ($rel ==  'endereco') {
-                        $this->pedidos->join('cliente_enderecos', 'cliente_enderecos.id', '=', 'pedidos.cliente_endereco_id');
+                    if ($rel ==  'pedido') {
+                        $this->produtos->join('pedido_produtos', 'pedido_produtos.produto_sku', '=', 'produtos.sku');
+                        $this->produtos->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id');
+                    } else {
+                        $this->produtos->with($rel);
                     }
-
-                    $this->pedidos->with($rel);
                 }
             }
         }
@@ -97,19 +93,19 @@ class PedidoController extends Controller
                                 }
                             }
 
-                            $this->pedidos->whereBetween($field, [$config['value']['from'], $config['value']['to']]);
+                            $this->produtos->whereBetween($field, [$config['value']['from'], $config['value']['to']]);
                         }
                     } else if ($config['operator'] == 'IN') {
-                        $this->pedidos->whereIn($field, array_keys($config['value']));
+                        $this->produtos->whereIn($field, array_keys($config['value']));
                     } else if ($config['operator'] == 'LIKE') {
-                        $this->pedidos->where($field, $config['operator'], "%{$config['value']}%");
+                        $this->produtos->where($field, $config['operator'], "%{$config['value']}%");
                     } else {
                         // se for uma data no formato d/m/Y, converte pra Y-m-d
                         if (is_string($config['value']) && \DateTime::createFromFormat('d/m/Y', $config['value']) !== false) {
                             $config['value'] = Carbon::createFromFormat('d/m/Y', $config['value'])->format('Y-m-d');
                         }
 
-                        $this->pedidos->where($field, $config['operator'], $config['value']);
+                        $this->produtos->where($field, $config['operator'], $config['value']);
                     }
                 }
             }
@@ -117,101 +113,72 @@ class PedidoController extends Controller
 
         // Agrupamentos - preparação - ordenação e campos
         if ($this->group) {
-            // se agrupar, precisa ordenar por este grupo, em alguns casos, alterar o campo que é ordenado
-            if ($this->group == 'status') {
-                $groupOrder = $this->group;
-                $this->group = 'status_description';
-            } elseif ($this->group == 'marketplace') {
-                $groupOrder = $this->group;
-                $this->group = 'marketplace_readable';
-            } elseif ($this->group == 'day') {
-                $groupOrder = DB::raw('DAY(pedidos.created_at)');
-            } elseif ($this->group == 'month') {
-                $groupOrder = DB::raw('MONTH(pedidos.created_at)');
-            } else {
-                $groupOrder = $this->group;
-            }
-
-            $this->pedidos->orderBy($groupOrder, 'ASC');
+            $groupOrder = $this->group;
+            // $this->produtos->orderBy($groupOrder, 'ASC');
         }
 
         // Ordenação
         if ($this->order) {
             foreach ($this->order as $field) {
                 $key = str_replace(['cliente.', 'endereco.'], ['clientes.', 'cliente_enderecos.'], $field['name']);
-                $this->pedidos->orderBy($key, $field['order']);
+                $this->produtos->orderBy($key, $field['order']);
             }
         }
 
-        // pega apenas os campos do pedido pra colocar das outras entidades em um novo array
-        $this->pedidos = $this->pedidos->get(['pedidos.*'])->toArray();
+        // pega os campos do produto e apenas o id dos pedidos e da tabela pivot
+        $getFields = ['produtos.*'];
+        if (isset($this->relation['pedido']) && $this->relation['pedido']) {
+            $getFields[] = DB::raw('pedido_produtos.id AS \'pedido_produtos.id\'');
+            $getFields[] = DB::raw('pedido_produtos.quantidade AS \'pedido_produtos.quantidade\'');
+            $getFields[] = DB::raw('pedido_produtos.valor AS \'pedido_produtos.valor\'');
+
+            $getFields[] = DB::raw('pedidos.id AS \'pedidos.id\'');
+            $getFields[] = DB::raw('pedidos.codigo_marketplace AS \'pedidos.codigo_marketplace\'');
+            $getFields[] = DB::raw('pedidos.marketplace AS \'pedidos.marketplace\'');
+            $getFields[] = DB::raw('pedidos.status AS \'pedidos.status\'');
+            $getFields[] = DB::raw('pedidos.total AS \'pedidos.total\'');
+            $getFields[] = DB::raw('pedidos.estimated_delivery AS \'pedidos.estimated_delivery\'');
+            $getFields[] = DB::raw('pedidos.created_at AS \'pedidos.created_at\'');
+        }
+        $this->produtos = $this->produtos->get($getFields)->toArray();
 
         // Mostra apenas os campos selecionados, na ordem que foram
-        foreach ($this->pedidos as $key => $pedido) {
+        foreach ($this->produtos as $key => $produto) {
+            if (isset($produto['pedidos.status'])) {
+                $status = $produto['pedidos.status'];
+                $status = (is_null($status)) ? 'Desconhecido' : \Config::get('tucano.pedido_status')[$status];
+                $produto['pedidos.status'] = $status;
+                $this->produtos[$key]['pedidos.status'] = $status;
+            }
+
             $clearedOrder = [];
 
             if ($this->group) {
-                if (strstr($this->group, '.')) {
-                    $pieces = explode('.', $this->group);
-                    $pieces[0] = str_replace(['clientes', 'cliente_enderecos', 'pedido_produtos'], ['cliente', 'endereco', 'produtos'], $pieces[0]);
-                    $clearedOrder['group'] = array_key_exists($pieces[1], $pedido[$pieces[0]]) ? $pedido[$pieces[0]][$pieces[1]] : null;
-                } else if ($this->group == 'day') {
-                    $clearedOrder['group'] = substr($pedido['created_at'], 0, 10);
-                } else if ($this->group == 'month') {
-                    $clearedOrder['group'] = Carbon::createFromFormat('d/m/Y H:i', $pedido['created_at'])->format('m/Y');
-                } else {
-                    $clearedOrder['group'] = array_key_exists($this->group, $pedido) ? $pedido[$this->group] : null;
-                }
+                $clearedOrder['group'] = array_key_exists($this->group, $produto) ? $produto[$this->group] : null;
             }
 
             // pra cada campo selecionado
             foreach ($this->fields as $field) {
-                if ($field['name'] == 'status') {
-                    $field['name'] = 'status_description';
-                } else if ($field['name'] == 'marketplace') {
-                    $field['name'] = 'marketplace_readable';
-                } else if ($field['name'] == 'pagamento_metodo') {
-                    $field['name'] = 'pagamento_metodo_readable';
-                } else if ($field['name'] == 'frete_metodo') {
-                    $field['name'] = 'frete_metodo_readable';
-                }
-
                 // se o campo existir, adiciona
-                if (array_key_exists($field['name'], $pedido)) {
-                    $clearedOrder[$field['label']] = $pedido[$field['name']];
-                } else if (strstr($field['name'], '.')) {
-                    $pieces = explode('.', $field['name']);
-
-                    // o indice do array é produtos
-                    if ($pieces[0] == 'pedido_produtos') {
-                        $pieces[0] = 'produtos';
-                    }
-
-                    // se for um campo de produtos
-                    if ($pieces[0] == 'produtos') {
-                        // podem ter vários produtos
-                        foreach ($this->pedidos[$key]['produtos'] as $pedidoProduto) {
-                            // se for titulo, pega do produto e nao do pedido produto
-                            if ($pieces[1] == 'titulo') {
-                                $clearedOrder['produtos'][$pedidoProduto['id']][$field['label']] = $pedidoProduto['produto'][$pieces[1]];
-                            } else {
-                                $clearedOrder['produtos'][$pedidoProduto['id']][$field['label']] = $pedidoProduto[$pieces[1]];
-                            }
-                        }
+                if (array_key_exists($field['name'], $produto)) {
+                    if ($field['name'] == 'pedidos.created_at' && is_string($produto['pedidos.created_at']) && \DateTime::createFromFormat('Y-m-d H:i:s', $produto['pedidos.created_at']) !== false) {
+                        $clearedOrder[$field['label']] = Carbon::createFromFormat('Y-m-d H:i:s', $produto['pedidos.created_at'])->format('d/m/Y H:i');
+                    } else if ($field['name'] == 'pedidos.estimated_delivery' && is_string($produto['pedidos.estimated_delivery']) && \DateTime::createFromFormat('Y-m-d', $produto['pedidos.estimated_delivery']) !== false) {
+                        $clearedOrder[$field['label']] = Carbon::createFromFormat('Y-m-d', $produto['pedidos.estimated_delivery'])->format('d/m/Y');
                     } else {
-                        $clearedOrder[$field['label']] = $this->pedidos[$key][$pieces[0]][$pieces[1]];
+                        $clearedOrder[$field['label']] = $produto[$field['name']];
                     }
                 }
             }
-            $this->pedidos[$key] = $clearedOrder;
+            $this->produtos[$key] = $clearedOrder;
         }
 
         if ($this->group) {
             $this->list = [];
-            foreach ($this->pedidos as $pedido) {
-                $this->group = $pedido['group'];
-                unset($pedido['group']);
-                $this->list[$this->group][] = $pedido;
+            foreach ($this->produtos as $produto) {
+                $this->group = $produto['group'];
+                unset($produto['group']);
+                $this->list[$this->group][] = $produto;
             }
 
             $aux = [];
@@ -224,7 +191,7 @@ class PedidoController extends Controller
             $this->list = $aux;
             unset($aux);
         } else {
-            $this->list = $this->pedidos;
+            $this->list = $this->produtos;
         }
     }
 
@@ -304,9 +271,9 @@ class PedidoController extends Controller
 
     public function run($return_type = 'array')
     {
-        try {
+        // try {
             // Inicializa os pedidos
-            $this->pedidos = Pedido::groupBy('pedidos.id');
+            $this->produtos = Produto::where(DB::raw('1'), '=', '1');
             $this->list = [];
 
             $this->prepare();
@@ -317,9 +284,9 @@ class PedidoController extends Controller
                 return $this->listResponse($this->list);
             }
 
-        } catch (\Exception $e) {
+        /*} catch (\Exception $e) {
             \Log::warning(logMessage($e, 'Erro ao tentar gerar relatório'));
             return $this->notFoundResponse();
-        }
+        }*/
     }
 }

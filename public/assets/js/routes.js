@@ -320,9 +320,15 @@
                 })
 
                 .state('app.relatorios.pedidos', {
-                    url: '/relatorios',
+                    url: '/pedidos',
                     templateUrl: 'views/relatorio/pedidos.html',
                     controller: 'RelatorioPedidosController as RelatorioPedidos'
+                })
+
+                .state('app.relatorios.produtos', {
+                    url: '/produtos',
+                    templateUrl: 'views/relatorio/produtos.html',
+                    controller: 'RelatorioProdutosController as RelatorioProdutos'
                 })
             ;
         });

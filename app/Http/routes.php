@@ -218,7 +218,12 @@ Route::group(['prefix' => '/api'], function() {
         /**
          * Relatórios
          */
+        // Pedidos genérico
         Route::post('relatorios/pedido', 'Relatorio\PedidoController@run');
         Route::get('relatorios/pedido/{return_type}', 'Relatorio\PedidoController@run');
+
+        // Produtos genérico
+        Route::post('relatorios/produto', 'Relatorio\ProdutoController@run');
+        Route::get('relatorios/produto/{return_type}', 'Relatorio\ProdutoController@run');
     });
 });

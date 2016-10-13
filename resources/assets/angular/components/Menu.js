@@ -134,6 +134,11 @@
                                 icon: 'fa-cubes',
                                 sref: $state.href('app.relatorios.pedidos')
                             },
+                            {
+                                title: 'Produtos',
+                                icon: 'fa-dropbox',
+                                sref: $state.href('app.relatorios.produtos')
+                            },
                             {title: 'Caixa diário', icon: 'fa-money'},
                             {title: 'ICMS mensal', icon: 'fa-file-pdf-o', sref: $state.href('app.admin.icms')}
                         ],
