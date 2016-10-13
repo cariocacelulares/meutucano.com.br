@@ -51,11 +51,16 @@ class MagentoController extends Controller implements Integracao
                         [
                             'stream_context'     => $context,
                             'trace'              => true,
-                            'exceptions'         => false,
+                            'exceptions'         => true,
                             'connection_timeout' => 20,
                             'cache_wsdl'         => WSDL_CACHE_NONE
                         ]
                     );
+
+                    echo "====== REQUEST HEADERS =====" . PHP_EOL;
+                    Log::error($this->api->__getLastRequestHeaders());
+                    echo "========= REQUEST ==========" . PHP_EOL;
+                    Log::error($this->api->__getLastRequest());
 
                     if (is_soap_fault($this->api)) {
                         throw new \Exception('Falha ao tentar fazer conexão soap no magento', 1);
