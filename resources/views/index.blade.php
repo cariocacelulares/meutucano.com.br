@@ -69,6 +69,8 @@
     <script src="bower_components/highcharts/highstock.src.js"></script>
     <script src="bower_components/ng-img-crop/compile/minified/ng-img-crop.js"></script>
     <script type="text/javascript" src="bower_components/ng-sortable/dist/ng-sortable.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular-ui-select/dist/select.min.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
 
     <!-- Application Scripts -->
     <script src="assets/js/app.js"></script>

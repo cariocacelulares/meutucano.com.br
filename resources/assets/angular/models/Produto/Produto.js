@@ -28,6 +28,10 @@
                  */
                 checkSku: function(sku) {
                     return Restangular.one(rest.baseUrl + '/check-sku').customGET(sku);
+                },
+
+                search: function(term) {
+                    return Restangular.one(rest.baseUrl + '/search').customGET(term);
                 }
             });
 

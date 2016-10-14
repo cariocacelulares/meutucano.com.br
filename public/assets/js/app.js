@@ -24,6 +24,8 @@
             'oitozero.ngSweetAlert',
             '720kb.tooltips',
             'highcharts-ng',
-            'as.sortable'
+            'as.sortable',
+            'ngSanitize',
+            'ui.select'
         ]);
 })();

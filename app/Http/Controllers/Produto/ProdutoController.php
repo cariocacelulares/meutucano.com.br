@@ -161,4 +161,14 @@ class ProdutoController extends Controller
             return $this->clientErrorResponse($data);
         }
     }
+
+    public function search($term)
+    {
+        try {
+            $list = Produto::where('titulo', 'LIKE', "%{$term}%")->orWhere('sku', 'LIKE', "%{$term}%")->get(['produtos.sku', 'produtos.titulo'])->toArray();
+            return $this->listResponse($list);
+        } catch (\Exception $e) {
+            return $this->listResponse([]);
+        }
+    }
 }

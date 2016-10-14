@@ -5,8 +5,10 @@
         .module('MeuTucano')
         .controller('InspecaoTecnicaFormController', InspecaoTecnicaFormController);
 
-    function InspecaoTecnicaFormController($rootScope, $scope, $state, $stateParams, InspecaoTecnica, toaster) {
+    function InspecaoTecnicaFormController($rootScope, $scope, $state, $stateParams, InspecaoTecnica, Produto, toaster) {
         var vm = this;
+
+       vm.produtos = [];
 
         if (typeof $scope.ngDialogData.inspecao != 'undefined') {
             vm.inspecao = angular.copy($scope.ngDialogData.inspecao);
@@ -27,12 +29,22 @@
             vm.load();
         }
 
+        vm.search = function(term) {
+            if (term) {
+                Produto.search(term).then(function(response) {
+                    vm.produtos = response;
+                });
+            }
+        };
+
         /**
          * Salva a inspecao
          *
          * @return {void}
          */
         vm.save = function() {
+            vm.inspecao.pedido_produtos_id = vm.inspecao.produto.sku;
+
             InspecaoTecnica.save(vm.inspecao, vm.inspecao.id || null).then(function() {
                 toaster.pop('success', 'Sucesso!', 'Inspeção técnica salva com sucesso!');
                 $scope.closeThisDialog(true);
