@@ -1,13 +1,16 @@
-var elixir = require('laravel-elixir');
-require('laravel-elixir-angular');
-
-var gulp = require('gulp');
-var sass = require('gulp-sass');
-var cleanCss = require('gulp-clean-css');
+var elixir       = require('laravel-elixir');
+var angular      = require('laravel-elixir-angular');
+var gulp         = require('gulp');
+var sass         = require('gulp-sass');
+var concat       = require('gulp-concat');
+var uglify       = require('gulp-uglify');
+var ngmin        = require('gulp-ngmin');
+var cleanCss     = require('gulp-clean-css');
 var autoprefixer = require('gulp-autoprefixer');
-var rename = require('gulp-rename');
-var sourcemaps = require('gulp-sourcemaps');
-var notify = require('gulp-notify');
+var rename       = require('gulp-rename');
+var sourcemaps   = require('gulp-sourcemaps');
+var notify       = require('gulp-notify');
+var lib          = require('bower-files')();
 
 elixir.extend('customSass', function() {
     new elixir.Task('customSass', function() {
@@ -22,15 +25,40 @@ elixir.extend('customSass', function() {
             .pipe(notify('Sass compiled!'));
     })
     .watch('resources/assets/sass/**/*.scss');
- });
+});
+
+elixir.extend('bowerJs', function() {
+    new elixir.Task('bowerJs', function() {
+        return gulp.src(lib.ext('js').files)
+            .pipe(concat('lib.min.js'))
+            .pipe(uglify())
+            .pipe(gulp.dest('public/assets/js'));
+    });
+});
+
+elixir.extend('bowerCss', function() {
+    new elixir.Task('bowerCss', function() {
+        return gulp.src(lib.ext('css').files)
+            .pipe(concat('lib.min.css'))
+            .pipe(gulp.dest('public/assets/css'));
+    });
+});
+
+elixir.extend('angularMinify', function() {
+    new elixir.Task('angularMinify', function() {
+        return gulp.src("resources/assets/angular/**/*.js")
+            .pipe(ngmin())
+            .pipe(concat('app.min.js'))
+            .pipe(uglify({mangle: false}))
+            .pipe(gulp.dest('public/assets/js/'));
+    })
+    .watch('resources/assets/angular/**/*.js');
+});
 
 elixir(function(mix) {
     mix
         .customSass()
-        .angular("resources/assets/angular/components/",  "public/assets/js/src/", "components.js")
-        .angular("resources/assets/angular/models/",      "public/assets/js/src/", "models.js")
-        .angular("resources/assets/angular/controllers/", "public/assets/js/src/", "controllers.js")
-        .angular("resources/assets/angular/services/",    "public/assets/js/src/", "services.js")
-        .angular("resources/assets/angular/helpers/",     "public/assets/js/src/", "helpers.js")
-        .angular("resources/assets/angular/directives/",  "public/assets/js/src/", "directives.js");
+        .bowerJs()
+        .bowerCss()
+        .angularMinify();
 });
