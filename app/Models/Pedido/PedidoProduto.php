@@ -28,7 +28,7 @@ class PedidoProduto extends \Eloquent
     /**
      * @var array
      */
-    protected $with = ['produto'];
+    // protected $with = ['produto'];
 
     /**
      * @var array

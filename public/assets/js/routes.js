@@ -307,6 +307,28 @@
                     templateUrl: 'views/inspecao/list.html',
                     controller: 'InspecaoTecnicaListController as InspecaoTecnicaList'
                 })
+                /**
+                 * Relatórios
+                 */
+                .state('app.relatorios', {
+                    url: '/relatorios',
+                    templateUrl: 'views/layouts/default.html',
+                    data: {
+                        roles: ['admin']
+                    }
+                })
+
+                .state('app.relatorios.pedidos', {
+                    url: '/pedidos',
+                    templateUrl: 'views/relatorio/pedidos.html',
+                    controller: 'RelatorioPedidosController as RelatorioPedidos'
+                })
+
+                .state('app.relatorios.produtos', {
+                    url: '/produtos',
+                    templateUrl: 'views/relatorio/produtos.html',
+                    controller: 'RelatorioProdutosController as RelatorioProdutos'
+                })
 
                 /**
                  * Gamification

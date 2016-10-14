@@ -196,6 +196,11 @@
         tr.segurado {
             cursor: not-allowed;
         }
+
+        tr.destaque td {
+            text-align: center;
+            background-color: #EFEFEF;
+        }
     }
 
     thead th {
@@ -207,4 +212,9 @@
     [class*='btn-'] {
         margin: 0;
     }
+}
+
+#relatorio-resultado .table thead tr th:last-child {
+    padding-left: 8px!important;
+    padding-right: 8px!important;
 }

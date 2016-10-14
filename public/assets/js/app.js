@@ -23,6 +23,7 @@
             'ngTagsInput',
             'oitozero.ngSweetAlert',
             '720kb.tooltips',
-            'highcharts-ng'
+            'highcharts-ng',
+            'as.sortable'
         ]);
 })();

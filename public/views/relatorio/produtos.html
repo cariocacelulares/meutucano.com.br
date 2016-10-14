@@ -1,0 +1,266 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-cubes" title="Relatório de produtos" description="Relatórios personalizados dos produtos do tucano."></page-title>
+</div>
+
+<form ng-submit="RelatorioProdutos.gerar()" class="form-default" id="formProduto">
+    <fieldset class="form-group no-validate">
+        <legend>Relações</legend>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group no-validate pull-left">
+                    <div class="checkbox check-success">
+                        <input id="cliete" type="checkbox" ng-model="RelatorioProdutos.params.relation.pedido" ng-change="RelatorioProdutos.changeRelation()">
+                        <label for="cliete">Pedidos</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="form-group no-validate">
+        <legend>Filtros</legend>
+        <div class="row">
+            <div class="col-md-3">
+                <label for="titulo">Título</label>
+                <input ng-model="RelatorioProdutos.params.filter.titulo.value" placeholder="Título do produto" id="titulo" />
+            </div>
+            <div class="col-md-2">
+                <label for="sku">SKU</label>
+                <input ng-model="RelatorioProdutos.params.filter.sku.value" placeholder="Código do produto" type="number" id="sku" />
+            </div>
+            <div class="col-md-2">
+                <label for="imei">IMEI</label>
+                <input ng-model="RelatorioProdutos.params.filter['pedido_produtos.imei'].value" placeholder="Serial do produto" type="number" id="imei" />
+            </div>
+            <div class="col-md-2">
+                <label for="estoque">Estoque</label>
+                <div class="between-group">
+                    <input class="big" ng-model="RelatorioProdutos.params.filter.estoque.value.from" placeholder="De" type="number" id="estoque" />
+                    <span>/</span>
+                    <input class="big" ng-model="RelatorioProdutos.params.filter.estoque.value.to" placeholder="Até" type="number" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="created_at">Data de criação produto</label>
+                <div class="between-group">
+                    <div class="date-picker">
+                        <input ng-model="RelatorioProdutos.params.filter['produtos.created_at'].value.from" placeholder="De" id="created_at" />
+                        <div class="picker-wrap">
+                            <date-picker ng-model="RelatorioProdutos.params.filter['produtos.created_at'].value.from"></date-picker>
+                        </div>
+                    </div>
+                    <span>/</span>
+                    <div class="date-picker">
+                        <input ng-model="RelatorioProdutos.params.filter['produtos.created_at'].value.to" placeholder="Áté" />
+                        <div class="picker-wrap">
+                            <date-picker ng-model="RelatorioProdutos.params.filter['produtos.created_at'].value.to"></date-picker>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-if="RelatorioProdutos.params.relation.pedido" class="row">
+            <div class="col-md-2">
+                <label for="marketplace">Marketplace</label>
+                <select ng-model="RelatorioProdutos.setFilters['pedidos.marketplace']" id="marketplace" ng-change="RelatorioProdutos.addFilter('pedidos.marketplace')">
+                    <option value="">Selecione</option>
+                    <option ng-repeat="(key, marketplace) in RelatorioProdutos.list['pedidos.marketplace']" value="{{ key }}">{{ marketplace }}</option>
+                </select>
+            </div>
+            <div class="col-md-4 p-t-25">
+                <div ng-repeat="(key, field) in RelatorioProdutos.params.filter['pedidos.marketplace'].value" class="btn-group p-t-5 m-r-10 m-b-10" role="group">
+                    <a class="btn-default btn-sm fz-10">{{ field }}</a>
+                    <a ng-click="RelatorioProdutos.removeFilter('marketplace', key)" class="btn-default btn-sm fz-10"><i class="fa-close"></i></a>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <label for="status">Status</label>
+                <select ng-model="RelatorioProdutos.setFilters['pedidos.status']" id="status"  ng-change="RelatorioProdutos.addFilter('pedidos.status')">
+                    <option value="">Selecione</option>
+                    <option ng-repeat="(key, status) in RelatorioProdutos.list['pedidos.status']" value="{{ key }}">{{ status }}</option>
+                </select>
+            </div>
+            <div class="col-md-4 p-t-25">
+                <div ng-repeat="(key, field) in RelatorioProdutos.params.filter['pedidos.status'].value" class="btn-group p-t-5 m-r-10 m-b-10" role="group">
+                    <a class="btn-default btn-sm fz-10">{{ field }}</a>
+                    <a ng-click="RelatorioProdutos.removeFilter('status', key)" class="btn-default btn-sm fz-10"><i class="fa-close"></i></a>
+                </div>
+            </div>
+        </div>
+        <div ng-if="RelatorioProdutos.params.relation.pedido" class="row">
+            <div class="col-md-2">
+                <label for="total">Valor total do pedido</label>
+                <div class="between-group">
+                    <input class="big" ng-model="RelatorioProdutos.params.filter['pedidos.total'].value.from" placeholder="De" type="number" id="total" />
+                    <span>/</span>
+                    <input class="big" ng-model="RelatorioProdutos.params.filter['pedidos.total'].value.to" placeholder="Até" type="number" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="estimated_delivery">Estimativa de entrega</label>
+                <div class="between-group">
+                    <div class="date-picker">
+                        <input ng-model="RelatorioProdutos.params.filter['pedidos.estimated_delivery'].value.from" placeholder="De" id="estimated_delivery" />
+                        <div class="picker-wrap">
+                            <date-picker ng-model="RelatorioProdutos.params.filter['pedidos.estimated_delivery'].value.from"></date-picker>
+                        </div>
+                    </div>
+                    <span>/</span>
+                    <div class="date-picker">
+                        <input ng-model="RelatorioProdutos.params.filter['pedidos.estimated_delivery'].value.to" placeholder="Áté" />
+                        <div class="picker-wrap">
+                            <date-picker ng-model="RelatorioProdutos.params.filter['pedidos.estimated_delivery'].value.to"></date-picker>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="created_at">Data de abertura</label>
+                <div class="between-group">
+                    <div class="date-picker">
+                        <input ng-model="RelatorioProdutos.params.filter['pedidos.created_at'].value.from" placeholder="De" id="created_at" />
+                        <div class="picker-wrap">
+                            <date-picker ng-model="RelatorioProdutos.params.filter['pedidos.created_at'].value.from"></date-picker>
+                        </div>
+                    </div>
+                    <span>/</span>
+                    <div class="date-picker">
+                        <input ng-model="RelatorioProdutos.params.filter['pedidos.created_at'].value.to" placeholder="Áté" />
+                        <div class="picker-wrap">
+                            <date-picker ng-model="RelatorioProdutos.params.filter['pedidos.created_at'].value.to"></date-picker>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <label for="quantidade">Quantidade do produto</label>
+                <div class="between-group">
+                    <input class="big" ng-model="RelatorioProdutos.params.filter['pedido_produtos.quantidade'].value.from" placeholder="De" type="number" id="quantidade" />
+                    <span>/</span>
+                    <input class="big" ng-model="RelatorioProdutos.params.filter['pedido_produtos.quantidade'].value.to" placeholder="Até" type="number" />
+                </div>
+            </div>
+            <div class="col-md-2">
+                <label for="valor">Valor do produto</label>
+                <div class="between-group">
+                    <input class="big" ng-model="RelatorioProdutos.params.filter['pedido_produtos.valor'].value.from" placeholder="De" type="number" id="valor" />
+                    <span>/</span>
+                    <input class="big" ng-model="RelatorioProdutos.params.filter['pedido_produtos.valor'].value.to" placeholder="Até" type="number" />
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <div class="row">
+        <div class="col-md-2">
+            <fieldset class="row form-group no-validate">
+                <legend>Agrupamento</legend>
+                <div class="col-md-12">
+                    <select ng-model="RelatorioProdutos.params.group">
+                        <option value="">Nenhum</option>
+                        <option value="estoque">Estoque</option>
+                        <option ng-if="RelatorioProdutos.params.relation.pedido" value="sku">SKU</option>
+                        <option ng-if="RelatorioProdutos.params.relation.pedido" value="pedidos.status">Status</option>
+                        <option ng-if="RelatorioProdutos.params.relation.pedido" value="pedidos.marketplace">Marketplace</option>
+                    </select>
+                </div>
+            </fieldset>
+        </div>
+        <div class="col-md-10">
+            <fieldset class="row form-group no-validate">
+            <legend>Ordenação</legend>
+            <div class="col-md-2">
+                <select ng-model="RelatorioProdutos.setOrder" ng-change="RelatorioProdutos.addOrder()">
+                    <option value="">Selecione</option>
+                    <optgroup label="Produto">
+                        <option ng-repeat="(key, field) in RelatorioProdutos.list.fields.produto" value="{{ key }}">{{ field }}</option>
+                    </optgroup>
+                    <optgroup ng-if="RelatorioProdutos.params.relation.pedido"  label="Pedido">
+                        <option ng-repeat="(key, field) in RelatorioProdutos.list.fields.pedido" value="{{ key }}">{{ field }}</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="col-md-10">
+                <div ng-repeat="(index, field) in RelatorioProdutos.params.order" class="btn-group p-t-5 m-r-10 m-b-10" role="group">
+                    <a ng-click="RelatorioProdutos.changeOrder(index)" class="btn-default btn-sm fz-10">{{ field.label }}&nbsp; <i  class="fa-long-arrow-{{ (field.order == 'asc') ? 'up' : 'down' }}"></i></a>
+                    <a ng-click="RelatorioProdutos.removeOrder(index)" class="btn-default btn-sm fz-10"><i class="fa-close"></i></a>
+                </div>
+            </div>
+        </fieldset>
+        </div>
+    </div>
+    <fieldset class="row form-group no-validate">
+        <legend>Campos</legend>
+        <div class="col-md-2">
+            <select ng-model="RelatorioProdutos.setField" ng-change="RelatorioProdutos.addField()">
+                <option value="">Selecione</option>
+                <optgroup label="Produto">
+                    <option ng-repeat="(key, field) in RelatorioProdutos.list.fields.produto" value="{{ key }}">{{ field }}</option>
+                </optgroup>
+                <optgroup ng-if="RelatorioProdutos.params.relation.pedido"  label="Pedido">
+                    <option ng-repeat="(key, field) in RelatorioProdutos.list.fields.pedido" value="{{ key }}">{{ field }}</option>
+                </optgroup>
+            </select>
+        </div>
+        <div id="horizontal-container" class="col-md-10">
+            <div class="sortable-row" as-sortable="RelatorioProdutos.sortableOptions" data-ng-model="RelatorioProdutos.params.fields">
+                <div ng-repeat="field in RelatorioProdutos.params.fields" as-sortable-item>
+                    <div class="btn-group p-t-5 m-r-10 m-b-10" role="group" as-sortable-item-handle>
+                        <div class="btn-default btn-sm fz-10">{{ field.label }}</div>
+                        <a ng-click="RelatorioProdutos.removeField($index)" class="btn-default btn-sm fz-10"><i class="fa-close"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <div class="row">
+        <div class="col-md-12">
+            <button type="submit" busy="Gerando..." class="btn-success pull-right m-l-10"><i class="fa-play"></i>&nbsp; Gerar</button>
+            <a ng-click="RelatorioProdutos.limpar()" class="btn-danger pull-right"><i class="fa-eraser"></i>&nbsp; Limpar</a>
+        </div>
+    </div>
+</form>
+<hr />
+<div ng-if="RelatorioProdutos.result" class="row m-b-15">
+    <div class="col-md-6">
+        <span>{{ RelatorioProdutos.totalResults }}</span>
+    </div>
+    <div class="col-md-6">
+        <!-- <a ng-click="RelatorioProdutos.gerar('pdf')" class="btn-complete pull-right m-l-10">
+            PDF&nbsp; <i class="fa-file-pdf-o"></i>
+        </a> -->
+        <a ng-click="RelatorioProdutos.gerar('xls')" class="btn-complete pull-right">
+            XLS&nbsp; <i class="fa-file-excel-o"></i>
+        </a>
+    </div>
+</div>
+<div id="relatorio-resultado">
+    <table class="table info-style">
+        <thead>
+            <tr>
+                <th ng-repeat="campo in RelatorioProdutos.labels" class="text-center">{{ campo }}</th>
+            </tr>
+        </thead>
+        <tbody ng-if="!RelatorioProdutos.groupedResult">
+            <tr ng-repeat="campos in RelatorioProdutos.result">
+                <td ng-repeat="(key, campo) in campos" class="text-center">
+                    <span ng-if="key != 'produtos'">{{ campo }}</span>
+                    <span ng-if="RelatorioProdutos.params.relation.produtos && key == 'produtos'" ng-repeat="produto in campo track by $index">
+                        <span ng-repeat="atributo in produto">{{ atributo }}<span ng-hide="$last">, </span><br ng-if="$last"/></span>
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+        <tbody ng-if="RelatorioProdutos.groupedResult" ng-repeat="grupo in RelatorioProdutos.result">
+            <tr class="destaque">
+                <td colspan="50">{{ grupo.group }}</td>
+            </tr>
+            <tr ng-repeat="item in grupo.data track by $index">
+                <td ng-repeat="(key, campo) in item track by $index" class="text-center">
+                    <span ng-if="key != 'produtos'">{{ campo }}</span>
+                    <span ng-if="RelatorioProdutos.params.relation.produtos && key == 'produtos'" ng-repeat="produto in campo track by $index">
+                        <span ng-repeat="atributo in produto">{{ atributo }}<span ng-hide="$last">, </span><br ng-if="$last"/></span>
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

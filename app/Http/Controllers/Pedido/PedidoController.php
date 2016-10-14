@@ -54,6 +54,7 @@ class PedidoController extends Controller
                 'notas',
                 'rastreios',
                 'produtos',
+                'produtos.produto',
                 'comentarios'
             ])
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
@@ -167,6 +168,7 @@ class PedidoController extends Controller
                 'notas',
                 'rastreios',
                 'produtos',
+                'produtos.produto',
                 'comentarios',
                 'rastreios.devolucao',
                 'rastreios.pi',
@@ -496,5 +498,29 @@ class PedidoController extends Controller
         ];
 
         return $this->listResponse($list);
+    }
+
+    public function cidades($uf)
+    {
+        try {
+            $list = Pedido
+                ::selectRaw('DISTINCT(cliente_enderecos.cidade)')
+                ->join('cliente_enderecos', 'cliente_enderecos.id', '=', 'pedidos.cliente_endereco_id')
+                ->with('endereco')
+                ->where('cliente_enderecos.uf', '=', $uf)
+                ->orderBy('cliente_enderecos.cidade', 'ASC')
+                ->get()
+                ->toArray();
+
+            foreach ($list as $key => $item) {
+                $list[$key] = ucwords(strtolower(array_values(array_intersect_key($item, ['cidade' => '']))[0]));
+            }
+
+            // arsort($list);
+            return $this->listResponse($list);
+        } catch(\Exception $ex) {
+            $data = ['exception' => $ex->getMessage()];
+            return $this->clientErrorResponse($data);
+        }
     }
 }
