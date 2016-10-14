@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0f53a15ac9f39a183ee285ab15f715eb",
-    "content-hash": "b77e238b262a3621100c9021109886af",
+    "hash": "91fe60d27a22efca72896c3a22675777",
+    "content-hash": "aa139a7906df23516579ed86e6f3c900",
     "packages": [
         {
             "name": "arcanedev/log-viewer",
@@ -128,6 +128,86 @@
                 "support"
             ],
             "time": "2016-10-07 18:11:30"
+        },
+        {
+            "name": "aws/aws-sdk-php",
+            "version": "3.19.15",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aws/aws-sdk-php.git",
+                "reference": "83e9522a0a1abce0b1a0c2971428a5bd975a212d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/83e9522a0a1abce0b1a0c2971428a5bd975a212d",
+                "reference": "83e9522a0a1abce0b1a0c2971428a5bd975a212d",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^5.3.1|^6.2.1",
+                "guzzlehttp/promises": "~1.0",
+                "guzzlehttp/psr7": "~1.3.1",
+                "mtdowling/jmespath.php": "~2.2",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "andrewsville/php-token-reflection": "^1.4",
+                "aws/aws-php-sns-message-validator": "~1.0",
+                "behat/behat": "~3.0",
+                "doctrine/cache": "~1.4",
+                "ext-dom": "*",
+                "ext-json": "*",
+                "ext-openssl": "*",
+                "ext-pcre": "*",
+                "ext-simplexml": "*",
+                "ext-spl": "*",
+                "nette/neon": "^2.3",
+                "phpunit/phpunit": "~4.0|~5.0",
+                "psr/cache": "^1.0"
+            },
+            "suggest": {
+                "aws/aws-php-sns-message-validator": "To validate incoming SNS notifications",
+                "doctrine/cache": "To use the DoctrineCacheAdapter",
+                "ext-curl": "To send requests using cURL",
+                "ext-openssl": "Allows working with CloudFront private distributions and verifying received SNS messages"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Aws\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Amazon Web Services",
+                    "homepage": "http://aws.amazon.com"
+                }
+            ],
+            "description": "AWS SDK for PHP - Use Amazon Web Services in your PHP project",
+            "homepage": "http://aws.amazon.com/sdkforphp",
+            "keywords": [
+                "amazon",
+                "aws",
+                "cloud",
+                "dynamodb",
+                "ec2",
+                "glacier",
+                "s3",
+                "sdk"
+            ],
+            "time": "2016-10-13 18:56:16"
         },
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -1372,6 +1452,61 @@
                 "schedule"
             ],
             "time": "2016-01-26 21:23:30"
+        },
+        {
+            "name": "mtdowling/jmespath.php",
+            "version": "2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jmespath/jmespath.php.git",
+                "reference": "192f93e43c2c97acde7694993ab171b3de284093"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jmespath/jmespath.php/zipball/192f93e43c2c97acde7694993ab171b3de284093",
+                "reference": "192f93e43c2c97acde7694993ab171b3de284093",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "bin": [
+                "bin/jp.php"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "JmesPath\\": "src/"
+                },
+                "files": [
+                    "src/JmesPath.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Declaratively specify how to extract elements from a JSON document",
+            "keywords": [
+                "json",
+                "jsonpath"
+            ],
+            "time": "2016-01-05 18:25:05"
         },
         {
             "name": "namshi/jose",
@@ -3412,6 +3547,70 @@
                 "revision"
             ],
             "time": "2016-08-02 02:32:00"
+        },
+        {
+            "name": "vinelab/cdn",
+            "version": "v1.4.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Vinelab/cdn.git",
+                "reference": "c8ef55322d0792373272ec6d9b6f8df55f5991cf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Vinelab/cdn/zipball/c8ef55322d0792373272ec6d9b6f8df55f5991cf",
+                "reference": "c8ef55322d0792373272ec6d9b6f8df55f5991cf",
+                "shasum": ""
+            },
+            "require": {
+                "aws/aws-sdk-php": "~3.0",
+                "illuminate/config": "~5.0",
+                "illuminate/support": "~5.0",
+                "php": ">=5.5.0",
+                "symfony/console": "2.*|3.*",
+                "symfony/finder": "2.*|3.*"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.3",
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "tests/TestCase.php",
+                    "src/Vinelab/Cdn/Exceptions"
+                ],
+                "psr-0": {
+                    "Vinelab\\Cdn\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Abed Halawi",
+                    "email": "abed.halawi@vinelab.com"
+                },
+                {
+                    "name": "Mahmoud Zalt",
+                    "email": "mahmoud@vinelab.com"
+                }
+            ],
+            "description": "Content Delivery Network (CDN) Package for Laravel",
+            "keywords": [
+                "AWS S3",
+                "Assets Upload",
+                "amazon",
+                "aws",
+                "cdn",
+                "content delivery network",
+                "laravel",
+                "s3",
+                "upload"
+            ],
+            "time": "2016-06-30 14:02:13"
         },
         {
             "name": "vlucas/phpdotenv",
