@@ -15,7 +15,6 @@
             'ngImgCrop',
             'angular-loading-bar',
             'ngDialog',
-            'ngOnload',
             'mp.datePicker',
             'ui.utils.masks',
             'angular-clipboard',
