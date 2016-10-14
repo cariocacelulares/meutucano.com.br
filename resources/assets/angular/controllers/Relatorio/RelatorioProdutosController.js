@@ -8,6 +8,7 @@
     function RelatorioProdutosController($window, $location, $anchorScroll, $httpParamSerializer, envService, toaster, Restangular) {
         var vm = this;
 
+        // configuração do drag and drop
         vm.dragControlListeners = {
             clone: false,
             allowDuplicates: false,
@@ -22,6 +23,7 @@
         vm.groupedResult = false;
         vm.totalResults = 0;
 
+        // Colhe os parametros e gera o resultado
         vm.gerar = function(tipo) {
             if (vm.params.fields.length) {
                 var params = {
@@ -46,7 +48,6 @@
                         vm.result = Restangular.copy(response, vm.result);
                         vm.result = angular.copy(response, vm.result);
 
-                        vm.labels = [];
                         vm.totalResults = [];
                         if (!vm.groupedResult) {
                             vm.totalResults = vm.result.length;
@@ -71,8 +72,11 @@
             }
         };
 
+        // valores padrão
         vm.defaults = function() {
+            vm.result = false;
             vm.labels = [];
+
             vm.params = {
                 filter: [],
                 group: '',
@@ -153,18 +157,21 @@
             vm.setOrder = '';
         };
 
+        // limpa os campos
         vm.limpar = function() {
             vm.defaults();
             $location.hash('');
             $anchorScroll();
         };
 
+        // carrega de inicio
         vm.load = function() {
             vm.defaults();
         };
 
         vm.load();
 
+        // Dispara ao alterar uma relacao, limpando os paramtros da relacao antiga
         vm.changeRelation = function() {
             if (vm.params.relation.pedido !== true) {
                 vm.params.filter['pedido_produtos.quantidade'] = {operator: 'BETWEEN'};
@@ -177,15 +184,18 @@
             }
         };
 
+        // adiciona um filtro
         vm.addFilter = function(key) {
             vm.params.filter[key].value[vm.setFilters[key]] = vm.list[key][vm.setFilters[key]];
             vm.setFilters[key] = '';
         };
 
+        // remove um filtro
         vm.removeFilter = function(key, index) {
             delete vm.params.filter[key].value[index];
         };
 
+        // adiciona uma ordenacao
         vm.addOrder = function() {
             var exists = _.some(vm.params.order, function(p) {
                 return p.name == vm.setOrder;
@@ -202,15 +212,18 @@
             vm.setOrder = '';
         };
 
+        // altera o sentido de uma ordenacao
         vm.changeOrder = function(index) {
             vm.params.order[index].order = (vm.params.order[index].order == 'asc') ? 'desc' : 'asc';
         };
 
+        // remove uma ordenacao
         vm.removeOrder = function(index) {
             delete vm.params.order[index];
             vm.params.order = _.compact(vm.params.order);
         };
 
+        // adiciona um campo
         vm.addField = function() {
             var exists = _.some(vm.params.fields, function(p) {
                 return p.name == vm.setField;
@@ -226,6 +239,7 @@
             vm.setField = '';
         };
 
+        // remove um campo
         vm.removeField = function(index) {
             delete vm.params.fields[index];
             vm.params.fields = _.compact(vm.params.fields);

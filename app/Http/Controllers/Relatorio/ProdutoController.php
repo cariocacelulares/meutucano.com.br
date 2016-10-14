@@ -3,8 +3,6 @@
 use App\Http\Controllers\Rest\RestResponseTrait;
 use App\Http\Controllers\Controller;
 use App\Models\Produto\Produto;
-use App\Models\Pedido\Pedido;
-use App\Models\Pedido\PedidoProduto;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
@@ -17,6 +15,11 @@ class ProdutoController extends Controller
 {
     use RestResponseTrait, RelatorioTrait;
 
+    /**
+     * Prepara o retorno, pega os parametros, fields, group, order, filters...
+     *
+     * @return void
+     */
     private function prepare()
     {
         // Pega todos os parametros
@@ -186,6 +189,12 @@ class ProdutoController extends Controller
         }
     }
 
+    /**
+     * Invoca todos os metodos necessários para retornar a lista de acordo com os parametros
+     *
+     * @param  string $return_type tipo de retorno
+     * @return Response|void
+     */
     public function run($return_type = 'array')
     {
         try {

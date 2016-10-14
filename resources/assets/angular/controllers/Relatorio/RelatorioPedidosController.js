@@ -8,6 +8,7 @@
     function RelatorioPedidosController($window, $location, $anchorScroll, $httpParamSerializer, envService, toaster, Restangular) {
         var vm = this;
 
+        // configuracao do drag and drop
         vm.dragControlListeners = {
             clone: false,
             allowDuplicates: false,
@@ -22,6 +23,7 @@
         vm.totalResults = 0;
         vm.labels = [];
 
+        // gera o retorno de acordo com os parametros
         vm.gerar = function(tipo) {
             if (vm.params.fields.length) {
                 var params = {
@@ -40,12 +42,12 @@
                     $window.open(envService.read('apiUrl') + '/relatorios/pedido/' + tipo + '?params=' + JSON.stringify(params) + '&' + $httpParamSerializer(auth), 'relatorio-pedido');
                 } else {
                     vm.result = false;
+                    vm.labels = [];
                     Restangular.one('relatorios/pedido', tipo || null).customPOST(params).then(function(response) {
                         vm.groupedResult  = !!vm.params.group;
                         vm.result = Restangular.copy(response, vm.result);
                         vm.result = angular.copy(response, vm.result);
 
-                        vm.labels = [];
                         vm.totalResults = [];
                         if (!vm.groupedResult) {
                             vm.totalResults = vm.result.length;
@@ -70,7 +72,11 @@
             }
         };
 
+        // valores padrao
         vm.defaults = function() {
+            vm.result = false;
+            vm.labels = [];
+
             vm.list = {};
             vm.list.cities = {};
 
@@ -181,18 +187,21 @@
             vm.setOrder = '';
         };
 
+        // limpa os parametros
         vm.limpar = function() {
             vm.defaults();
             $location.hash('');
             $anchorScroll();
         };
 
+        // carrega de inicio
         vm.load = function() {
             vm.defaults();
         };
 
         vm.load();
 
+        // pega as cidades daquele estado
         vm.loadCities = function() {
             vm.params.filter['cliente_enderecos.cidade'] = '';
 
@@ -203,6 +212,7 @@
             }
         };
 
+        // limpa os parametros da relacao antiga
         vm.changeRelation = function() {
             if (vm.params.relation.endereco !== true) {
                 vm.params.filter['cliente_enderecos.uf'] = '';
@@ -217,15 +227,18 @@
             }
         };
 
+        // adiciona um filtro
         vm.addFilter = function(key) {
             vm.params.filter[key].value[vm.setFilters[key]] = vm.list[key][vm.setFilters[key]];
             vm.setFilters[key] = '';
         };
 
+        // remove um filtro
         vm.removeFilter = function(key, index) {
             delete vm.params.filter[key].value[index];
         };
 
+        // adiciona uma ordenacao
         vm.addOrder = function() {
             var exists = _.some(vm.params.order, function(p) {
                 return p.name == vm.setOrder;
@@ -242,15 +255,18 @@
             vm.setOrder = '';
         };
 
+        // aletra o sentido de uma ordem
         vm.changeOrder = function(index) {
             vm.params.order[index].order = (vm.params.order[index].order == 'asc') ? 'desc' : 'asc';
         };
 
+        // remove um ordenacao
         vm.removeOrder = function(index) {
             delete vm.params.order[index];
             vm.params.order = _.compact(vm.params.order);
         };
 
+        // adiciona um campo
         vm.addField = function() {
             var exists = _.some(vm.params.fields, function(p) {
                 return p.name == vm.setField;
@@ -266,6 +282,7 @@
             vm.setField = '';
         };
 
+        // remove um campo
         vm.removeField = function(index) {
             delete vm.params.fields[index];
             vm.params.fields = _.compact(vm.params.fields);

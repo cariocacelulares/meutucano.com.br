@@ -6,15 +6,48 @@
  */
 trait RelatorioTrait
 {
+    /**
+     * Lista que será retornada
+     * @var array
+     */
     private $list;
+
+    /**
+     * Collection que é manipulada e prepara a $list
+     * @var [type]
+     */
     private $model;
 
+    /**
+     * Relações com outras entidades
+     */
     private $relation;
+
+    /**
+     * Campos que se quer retornar
+     */
     private $fields;
+
+    /**
+     * FIltros, wheres
+     */
     private $filter;
+
+    /**
+     * Agrupamento
+     */
     private $group;
+
+    /**
+     * Ordenação
+     */
     private $order;
 
+    /**
+     * Prepara o array e retona um pdf ou xls
+     *
+     * @param  string $return_type extensão do arquivo que vai ser retornado
+     */
     private function getFile($return_type)
     {
         $data = \Excel::create("relatorio-" . date('Y-m-d'), function($excel) {
@@ -25,7 +58,7 @@ trait RelatorioTrait
                             if (is_array($valor)) {
                                 foreach ($valor as $campo => $produto) {
                                     foreach ($produto as $field => $data) {
-                                        $this->list[$key][$field][] = $data;
+                                        $this->list[$key][$field][] = ($data === 0) ? '0' : $data;
                                     }
                                 }
                                 unset($this->list[$key][$chave]);
@@ -60,7 +93,7 @@ trait RelatorioTrait
                                             if (isset($this->list[$index]['data'][$indice][$campo]) && $this->list[$index]['data'][$indice][$campo]) {
                                                 $this->list[$index]['data'][$indice][$campo] .= ',' . $valor;
                                             } else {
-                                                $this->list[$index]['data'][$indice][$campo] = $valor;
+                                                $this->list[$index]['data'][$indice][$campo] = ($valor === 0) ? '0' : $valor;
                                             }
                                         }
                                     }

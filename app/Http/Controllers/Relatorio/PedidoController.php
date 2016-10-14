@@ -15,6 +15,11 @@ class PedidoController extends Controller
 {
     use RestResponseTrait, RelatorioTrait;
 
+    /**
+     * Prepara o retorno, pega os parametros, fields, group, order, filters...
+     *
+     * @return void
+     */
     private function prepare()
     {
         // Pega todos os parametros
@@ -219,6 +224,12 @@ class PedidoController extends Controller
         }
     }
 
+    /**
+     * Invoca todos os metodos necessários para retornar a lista de acordo com os parametros
+     *
+     * @param  string $return_type tipo de retorno
+     * @return Response|void
+     */
     public function run($return_type = 'array')
     {
         try {
