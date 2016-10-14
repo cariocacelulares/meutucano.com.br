@@ -44,7 +44,9 @@
         /**
          * Get user information before app starts
          */
-        .run(function($rootScope, $state) {
+        .run(function($anchorScroll, $rootScope, $state) {
+            $anchorScroll.yOffset = 70;
+
             $rootScope.$on('$stateChangeStart', function(event, toState) {
                 var user = JSON.parse(localStorage.getItem('user'));
 

@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="bower_components/sweetalert/dist/sweetalert.css" />
         <link rel="stylesheet" href="bower_components/angular-tooltips/dist/angular-tooltips.min.css" />
         <link rel="stylesheet" type="text/css" href="bower_components/ng-img-crop/compile/minified/ng-img-crop.css">
+        <link rel="stylesheet" type="text/css" href="bower_components/ng-sortable/dist/ng-sortable.min.css">
 
         <link rel="icon" type="image/x-icon" href="favicon.ico" />
     </head>
@@ -67,6 +68,7 @@
     <script src="bower_components/highcharts-ng/dist/highcharts-ng.min.js"></script>
     <script src="bower_components/highcharts/highstock.src.js"></script>
     <script src="bower_components/ng-img-crop/compile/minified/ng-img-crop.js"></script>
+    <script type="text/javascript" src="bower_components/ng-sortable/dist/ng-sortable.min.js"></script>
 
     <!-- Application Scripts -->
     <script src="assets/js/app.js"></script>
