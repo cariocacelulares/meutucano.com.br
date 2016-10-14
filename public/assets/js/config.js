@@ -19,7 +19,7 @@
                         apiUrl: 'http://192.168.2.170/meutucano/public/index.php/api'
                     },
                     aws: {
-                        apiUrl: 'http://www.meutucano.com.br/index.php/api'
+                        apiUrl: 'https://www.meutucano.com.br/index.php/api'
                     }
                 }
             });
