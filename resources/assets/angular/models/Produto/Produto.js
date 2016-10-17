@@ -30,8 +30,21 @@
                     return Restangular.one(rest.baseUrl + '/check-sku').customGET(sku);
                 },
 
-                search: function(term) {
-                    return Restangular.one(rest.baseUrl + '/search').customGET(term);
+                /**
+                 * Busca produtos por sku ou titulo baseado no parametro
+                 *
+                 * @param  {string} term   termo a ser buscado
+                 * @param  {int|string}      estado estado do item (novo/seminovo)
+                 * @return {Object}
+                 */
+                search: function(term, estado) {
+                    if (typeof estado !== 'undefined' && estado) {
+                        estado = '?estado=' + estado;
+                    } else {
+                        estado = '';
+                    }
+
+                    return Restangular.one(rest.baseUrl + '/search/' + term + estado).customGET();
                 }
             });
 

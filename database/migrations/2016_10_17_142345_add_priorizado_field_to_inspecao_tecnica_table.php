@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddPedidoProdutosIdToInspecaoTecnicaTable extends Migration
+class AddPriorizadoFieldToInspecaoTecnicaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,7 @@ class AddPedidoProdutosIdToInspecaoTecnicaTable extends Migration
     public function up()
     {
         Schema::table('inspecao_tecnica', function (Blueprint $table) {
-            $table->text('imei')->nullable()->change();
-            $table->integer('pedido_produtos_id')->unsigned()->index()->nullable()->after('usuario_id');
+            $table->boolean('priorizado')->default(false)->after('descricao');
         });
     }
 
@@ -26,8 +25,7 @@ class AddPedidoProdutosIdToInspecaoTecnicaTable extends Migration
     public function down()
     {
         Schema::table('inspecao_tecnica', function (Blueprint $table) {
-            $table->text('imei')->change();
-            $table->dropColumn('pedido_produtos_id');
+            $table->dropColumn('priorizado');
         });
     }
 }

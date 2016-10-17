@@ -160,7 +160,18 @@
                     {
                         title: 'Inspeção técnica',
                         icon: 'fa-bug',
-                        sref: $state.href('app.inspecao.index'),
+                        sub: [
+                            {
+                                title: 'Inspeções Realizadas',
+                                icon: 'fa-bug',
+                                sref: $state.href('app.inspecao.realizada'),
+                            },
+                            {
+                                title: 'Fila de Inspeção',
+                                icon: 'fa-cogs',
+                                sref: $state.href('app.inspecao.fila'),
+                            }
+                        ],
                         roles: ['admin', 'tecnico']
                     },
                     {

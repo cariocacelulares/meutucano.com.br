@@ -1,0 +1,32 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-cogs" title="Fila de inspeção técnica" description="Aqui estão todos os pedidos de seminovos que estão aguardando a inspeção técnica."></page-title>
+</div>
+<table table-list="InspecaoFilaList">
+    <thead>
+        <tr>
+            <th width="250">Pedido</th>
+            <th>Produto</th>
+            <th width="250">IMEI</th>
+            <th class="text-center" width="225">Data</th>
+            <th width="75"></th>
+        </tr>
+        <tr class="table-filter" static-include="views/inspecao/fila/list_filter.html"></tr>
+    </thead>
+    <tbody ng-if="InspecaoFilaList.tableData.data && !InspecaoFilaList.loading">
+        <tr ng-repeat="inspecao in InspecaoFilaList.tableData.data" ng-class="{ 'priorizado': inspecao.priorizado }">
+            <td>
+                {{ inspecao.pedido_produto.pedido.marketplace_readable || '-' }} <a ui-sref="app.pedidos.detalhe({id: inspecao.pedido_produto.pedido.id})">{{ inspecao.pedido_produto.pedido.codigo_marketplace }}</a>
+            </td>
+            <td>
+                <a ui-sref="app.produtos.form({sku: inspecao.produto.sku})">{{ inspecao.produto.sku }}</a> {{ inspecao.produto.titulo || '-' }}
+            </td>
+            <td><strong>{{ inspecao.imei }}</strong></td>
+            <td class="text-center">{{ inspecao.created_at }}</td>
+            <td class="text-center">
+                <a class="btn-info" ng-click="InspecaoFilaList.openForm(inspecao)">
+                    <i class="fa-pencil"></i>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>

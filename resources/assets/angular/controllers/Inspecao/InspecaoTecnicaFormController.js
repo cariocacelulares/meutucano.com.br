@@ -20,7 +20,12 @@
             vm.loading = true;
 
             InspecaoTecnica.get(vm.inspecao.id).then(function(inspecao) {
-                vm.inspecao   = inspecao;
+                vm.inspecao = inspecao;
+
+                if (typeof vm.inspecao.produto !== 'undefined' && vm.inspecao.produto) {
+                    vm.produtos = [ vm.inspecao.produto ];
+                }
+
                 vm.loading = false;
             });
         };
@@ -31,7 +36,7 @@
 
         vm.search = function(term) {
             if (term) {
-                Produto.search(term).then(function(response) {
+                Produto.search(term, 1).then(function(response) {
                     vm.produtos = response;
                 });
             }
@@ -43,7 +48,7 @@
          * @return {void}
          */
         vm.save = function() {
-            vm.inspecao.pedido_produtos_id = vm.inspecao.produto.sku;
+            vm.inspecao.produto_sku = vm.inspecao.produto.sku;
 
             InspecaoTecnica.save(vm.inspecao, vm.inspecao.id || null).then(function() {
                 toaster.pop('success', 'Sucesso!', 'Inspeção técnica salva com sucesso!');

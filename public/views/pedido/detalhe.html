@@ -268,6 +268,10 @@
                     <td class="text-center"><a ui-sref="app.produtos.form({sku: produto.produto_sku})" title="Visualizar produto {{ produto.produto.titulo }}">{{ produto.produto_sku }}</a></td>
                     <td class="text-left">
                         <b>{{ produto.produto.titulo }}</b><br>
+                        <a ng-if="!produto.imei && produto.produto.estado == '1' && produto.inspecao_tecnica"
+                            ng-click="PedidoDetalhe.inspecaoTecnicaHelper.alterarPrioridade(produto.inspecao_tecnica.id, true)" class="btn-xs btn-primary">
+                                <i class="fa-arrow-{{ produto.inspecao_tecnica.priorizado ? 'down' : 'up' }}"></i>&nbsp; {{ produto.inspecao_tecnica.priorizado ? 'Remover prioridade da' : 'Priorizar' }} inspeção
+                        </a>
                         <small class="hint-text">{{ produto.imei }}</small>
                     </td>
                     <td class="text-center">{{ produto.quantidade }}</td>

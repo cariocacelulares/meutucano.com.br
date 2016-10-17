@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddPedidoProdutosIdForeignKeyToInspecaoTecnicaTable extends Migration
+class AddProdutoIdForeignKeyToInspecaoTecnicaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddPedidoProdutosIdForeignKeyToInspecaoTecnicaTable extends Migration
     {
         Schema::table('inspecao_tecnica', function(Blueprint $table)
         {
-            $table->foreign('pedido_produtos_id', 'InspecaoTecnicaPedidoProdutos')->references('id')->on('pedido_produtos')->onUpdate('CASCADE')->onDelete('NO ACTION');
+            $table->foreign('produto_sku', 'InspecaoTecnicaProduto')->references('sku')->on('produtos')->onUpdate('CASCADE')->onDelete('NO ACTION');
         });
     }
 
@@ -27,7 +27,7 @@ class AddPedidoProdutosIdForeignKeyToInspecaoTecnicaTable extends Migration
     {
         Schema::table('inspecao_tecnica', function(Blueprint $table)
         {
-            $table->dropForeign('InspecaoTecnicaPedidoProdutos');
+            $table->dropForeign('InspecaoTecnicaProduto');
         });
     }
 }

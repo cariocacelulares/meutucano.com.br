@@ -15,7 +15,8 @@
         vm.produto = {
             sku: $stateParams.sku || null,
             unidade: 'un',
-            ativo: '1'
+            ativo: '1',
+            estado: '0'
         };
 
         vm.sku = {
@@ -38,6 +39,9 @@
 
                 if (vm.produto.ativo === null)
                     vm.produto.ativo = '1';
+
+                if (vm.produto.estado === null)
+                    vm.produto.estado = '0';
 
                 if (vm.produto.linha_id)
                     original.linha_id = vm.produto.linha_id;
