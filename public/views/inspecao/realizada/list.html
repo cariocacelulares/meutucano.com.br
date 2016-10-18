@@ -1,0 +1,35 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-bug" title="Inspeção técnica" description="Todas as inspeções realizadas nos produtos."></page-title>
+    <div class="col-md-6 button-bar">
+        <button ng-click="InspecaoRealizadaList.openForm()" class="btn-success"><i class="fa-plus"></i>&nbsp; Nova</button>
+    </div>
+</div>
+<table table-list="InspecaoRealizadaList">
+    <thead>
+        <tr>
+            <th width="250">Pedido</th>
+            <th>Produto</th>
+            <th width="250">IMEI</th>
+            <th class="text-center" width="225">Data</th>
+            <th width="75"></th>
+        </tr>
+        <tr class="table-filter" static-include="views/inspecao/realizada/list_filter.html"></tr>
+    </thead>
+    <tbody ng-if="InspecaoRealizadaList.tableData.data && !InspecaoRealizadaList.loading">
+        <tr ng-repeat="inspecao in InspecaoRealizadaList.tableData.data">
+            <td>
+                {{ inspecao.pedido_produto.pedido.marketplace_readable || '-' }} <a ui-sref="app.pedidos.detalhe({id: inspecao.pedido_produto.pedido.id})">{{ inspecao.pedido_produto.pedido.codigo_marketplace }}</a>
+            </td>
+            <td>
+                <a ui-sref="app.produtos.form({sku: inspecao.produto.sku})">{{ inspecao.produto.sku }}</a> {{ inspecao.produto.titulo || '-' }}
+            </td>
+            <td><strong>{{ inspecao.imei }}</strong></td>
+            <td class="text-center">{{ inspecao.created_at }}</td>
+            <td class="text-center">
+                <a class="btn-info" ng-click="InspecaoRealizadaList.openForm(inspecao)">
+                    <i class="fa-pencil"></i>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>

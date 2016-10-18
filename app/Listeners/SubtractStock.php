@@ -28,6 +28,9 @@ class SubtractStock
                 } else {
                     \Log::warning("Não foi possível subtrair o estoque do produto {$produto->sku} no tucano.");
                 }
+            } else {
+                \Log::warning('Não foi possível subtrair o estoque de um produto no tucano.', [$produto, $quantidade]);
+                reportError('Não foi possível subtrair o estoque no tucano, consulte os logs para detalhes - ' . ($produto && $produto->sku) ? "sku: {$produto->sku}" : '');
             }
         } catch (\Exception $e) {
             \Log::warning(logMessage($e, "Não foi possível subtrair o estoque do produto {$produto->sku} no tucano."));

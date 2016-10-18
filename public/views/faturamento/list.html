@@ -64,6 +64,7 @@
             <td class="text-center">
                 <span ng-repeat="produto in pedido.produtos">
                     <small><strong>{{ produto.produto_sku }}</strong>: {{ produto.quantidade }}x {{ produto.valor | currency }}</small>
+                    <br ng-if="produto.imei" /><span class="label">{{ produto.imei }}</span>
                 </span><br>
             </td>
             <td class="text-center">{{ pedido.estimated_delivery }}</td>

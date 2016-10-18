@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Produto\Produto;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
+use App\Models\Inspecao\InspecaoTecnica;
 
 /**
  * Class ProdutoController
@@ -35,6 +36,34 @@ class ProdutoController extends Controller
         $list = $this->handleRequest($list);
 
         return $this->listResponse($list);
+    }
+
+    /**
+     * Retorna um único recurso
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function show($id)
+    {
+        $m = self::MODEL;
+        $data = $m::find($id);
+
+        if ($data) {
+            $revisoes = InspecaoTecnica
+                ::leftJoin('pedido_produtos', 'pedido_produtos.imei', '=', 'inspecao_tecnica.imei')
+                ->where('inspecao_tecnica.produto_sku', '=', $data->sku)
+                ->whereNull('pedido_produtos.imei')
+                ->whereNotNull('inspecao_tecnica.imei')
+                ->get(['inspecao_tecnica.imei'])
+                ->toArray();
+
+            $data->revisoes = $revisoes ?: [];
+
+            return $this->showResponse($data);
+        }
+
+        return $this->notFoundResponse();
     }
 
     /**
@@ -159,6 +188,33 @@ class ProdutoController extends Controller
         } catch(\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
+        }
+    }
+
+    /**
+     * Busca produtos por sku ou titulo baseado no parametro
+     *
+     * @param  string $term termo a ser buscado
+     * @return Object
+     */
+    public function search($term)
+    {
+        try {
+            $estado = Input::get('estado');
+            $estado = $estado ?: false;
+
+            if ($estado) {
+                $list = Produto::where('estado', '=', $estado);
+                $list->whereRaw("(titulo LIKE '%{$term}%' OR sku LIKE '%{$term}%')");
+            } else {
+                $list = Produto::where('titulo', 'LIKE', "%{$term}%")->orWhere('sku', 'LIKE', "%{$term}%");
+            }
+
+            $list = $list->get(['produtos.sku', 'produtos.titulo'])->toArray();
+
+            return $this->listResponse($list);
+        } catch (\Exception $e) {
+            return $this->listResponse([]);
         }
     }
 }

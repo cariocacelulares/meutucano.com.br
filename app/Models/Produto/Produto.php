@@ -37,6 +37,7 @@ class Produto extends Model
         'referencia',
         'unidade',
         'estoque',
+        'estado',
         'controle_serial',
         'ativo',
     ];
@@ -46,7 +47,15 @@ class Produto extends Model
      */
     protected $casts = [
         'ativo' => 'string',
+        'estado' => 'string',
         'controle_serial' => 'boolean',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $appends = [
+        'estado_description'
     ];
 
     /**
@@ -109,6 +118,23 @@ class Produto extends Model
         }
 
         return parent::newPivot($parent, $attributes, $table, $exists);
+    }
+
+    /**
+     * Retorna o estado de um produto legível
+     *
+     * @return string
+     */
+    protected function getEstadoDescriptionAttribute()
+    {
+        switch ($this->estado) {
+            case '0':
+                return 'Novo';
+            case '1':
+                return 'Seminovo';
+            default:
+                return 'Novo';
+        }
     }
 
     /**

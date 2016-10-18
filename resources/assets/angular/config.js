@@ -130,7 +130,7 @@
                 if (toState.data && toState.data.roles) {
                     var block = true;
                     angular.forEach(toState.data.roles, function(role) {
-                        if (_.find($rootScope.currentUser.roles, {name: role})) {
+                        if (typeof $rootScope.currentUser !== 'undefined' && _.find($rootScope.currentUser.roles, {name: role})) {
                             block = false;
                         }
                     });

@@ -169,6 +169,7 @@ class PedidoController extends Controller
                 'rastreios',
                 'produtos',
                 'produtos.produto',
+                'produtos.inspecao_tecnica',
                 'comentarios',
                 'rastreios.devolucao',
                 'rastreios.pi',

@@ -203,6 +203,7 @@ Route::group(['prefix' => '/api'], function() {
         Route::get('produtos/generate-sku/{old_sku?}', 'Produto\ProdutoController@gerenateSku');
         Route::get('produtos/check-sku/{sku}', 'Produto\ProdutoController@checkSku');
         Route::get('produtos/list', 'Produto\ProdutoController@tableList');
+        Route::get('produtos/search/{term}', 'Produto\ProdutoController@search');
         Route::resource('produtos', 'Produto\ProdutoController');
 
         /**
@@ -225,7 +226,9 @@ Route::group(['prefix' => '/api'], function() {
         /**
          * Inspeção Técnica
          */
+        Route::get('inspecao_tecnica/fila', 'Inspecao\InspecaoTecnicaController@fila');
         Route::get('inspecao_tecnica/list', 'Inspecao\InspecaoTecnicaController@tableList');
+        Route::post('inspecao_tecnica/priority/{id}', 'Inspecao\InspecaoTecnicaController@changePriority');
         Route::resource('inspecao_tecnica', 'Inspecao\InspecaoTecnicaController');
 
         /**

@@ -3,6 +3,8 @@
 use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Usuario\Usuario;
+use App\Models\Produto\Produto;
+use App\Models\Pedido\PedidoProduto;
 
 /**
  * Class InspecaoTecnica
@@ -24,6 +26,8 @@ class InspecaoTecnica extends \Eloquent
      */
     protected $fillable = [
         'usuario_id',
+        'produto_sku',
+        'pedido_produtos_id',
         'imei',
         'descricao',
     ];
@@ -36,6 +40,26 @@ class InspecaoTecnica extends \Eloquent
     public function usuario()
     {
         return $this->belongsTo(Usuario::class);
+    }
+
+    /**
+     * Produto
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function produto()
+    {
+        return $this->hasOne(Produto::class, 'sku', 'produto_sku');
+    }
+
+    /**
+     * PedidoProduto
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function pedido_produto()
+    {
+        return $this->hasOne(PedidoProduto::class, 'id', 'pedido_produtos_id');
     }
 
     /**

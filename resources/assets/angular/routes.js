@@ -302,11 +302,18 @@
                     }
                 })
 
-                .state('app.inspecao.index', {
-                    url: '/list',
-                    templateUrl: 'views/inspecao/list.html',
-                    controller: 'InspecaoTecnicaListController as InspecaoTecnicaList'
+                .state('app.inspecao.realizada', {
+                    url: '/realizada',
+                    templateUrl: 'views/inspecao/realizada/list.html',
+                    controller: 'InspecaoRealizadaListController as InspecaoRealizadaList'
                 })
+
+                .state('app.inspecao.fila', {
+                    url: '/fila',
+                    templateUrl: 'views/inspecao/fila/list.html',
+                    controller: 'InspecaoFilaListController as InspecaoFilaList'
+                })
+
                 /**
                  * Relatórios
                  */

@@ -175,7 +175,7 @@ class UploadController extends Controller
             $ie = null;
         }
 
-        $cliente = Cliente::firstOrNew(['taxvat' => $taxvat]);
+        $cliente = Cliente::firstOrCreate(['taxvat' => $taxvat]);
 
         $cliente->taxvat = $taxvat;
         $cliente->tipo = $tipo;
@@ -505,13 +505,13 @@ class UploadController extends Controller
                 }
             }
 
-            $pedidoProduto = PedidoProduto::firstOrNew(['pedido_id' => $pedido->id, 'produto_sku' => $produto->sku]);
+            $pedidoProduto = PedidoProduto::firstOrCreate(['pedido_id' => $pedido->id, 'produto_sku' => $produto->sku]);
 
             if ($pedidoProduto->wasRecentlyCreated) {
-                $pedidoProduto->pedido_id   = $pedido->id;
+                $pedidoProduto->pedido_id = $pedido->id;
                 $pedidoProduto->produto_sku = (int)$item->prod->cProd;
-                $pedidoProduto->valor       = $item->prod->vUnCom;
-                $pedidoProduto->quantidade  = $item->prod->qCom;
+                $pedidoProduto->valor = (float)$item->prod->vUnCom;
+                $pedidoProduto->quantidade = (int)$item->prod->qCom;
             }
 
             $pedidoProduto->imei = array_key_exists((int)$item->prod->cProd, $produtoImei) ? $produtoImei[(int)$item->prod->cProd] : '';
