@@ -7,6 +7,7 @@
 <table table-list="InspecaoRealizadaList">
     <thead>
         <tr>
+            <th width="150">Cód.</th>
             <th width="250">Pedido</th>
             <th>Produto</th>
             <th width="250">IMEI</th>
@@ -17,6 +18,7 @@
     </thead>
     <tbody ng-if="InspecaoRealizadaList.tableData.data && !InspecaoRealizadaList.loading">
         <tr ng-repeat="inspecao in InspecaoRealizadaList.tableData.data">
+            <td class="text-center">{{ inspecao.id }}</td>
             <td>
                 {{ inspecao.pedido_produto.pedido.marketplace_readable || '-' }} <a ui-sref="app.pedidos.detalhe({id: inspecao.pedido_produto.pedido.id})">{{ inspecao.pedido_produto.pedido.codigo_marketplace }}</a>
             </td>

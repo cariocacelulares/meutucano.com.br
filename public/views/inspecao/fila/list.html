@@ -4,6 +4,7 @@
 <table table-list="InspecaoFilaList">
     <thead>
         <tr>
+            <th width="150">Cód</th>
             <th width="250">Pedido</th>
             <th>Produto</th>
             <th width="250">IMEI</th>
@@ -14,6 +15,7 @@
     </thead>
     <tbody ng-if="InspecaoFilaList.tableData.data && !InspecaoFilaList.loading">
         <tr ng-repeat="inspecao in InspecaoFilaList.tableData.data" ng-class="{ 'priorizado': inspecao.priorizado }">
+            <td class="text-center">{{ inspecao.id }}</td>
             <td>
                 {{ inspecao.pedido_produto.pedido.marketplace_readable || '-' }} <a ui-sref="app.pedidos.detalhe({id: inspecao.pedido_produto.pedido.id})">{{ inspecao.pedido_produto.pedido.codigo_marketplace }}</a>
             </td>

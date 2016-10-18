@@ -131,16 +131,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.19.15",
+            "version": "3.19.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "83e9522a0a1abce0b1a0c2971428a5bd975a212d"
+                "reference": "5161b8956e0c0f8e4260edbfe36c1a78392e4934"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/83e9522a0a1abce0b1a0c2971428a5bd975a212d",
-                "reference": "83e9522a0a1abce0b1a0c2971428a5bd975a212d",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/5161b8956e0c0f8e4260edbfe36c1a78392e4934",
+                "reference": "5161b8956e0c0f8e4260edbfe36c1a78392e4934",
                 "shasum": ""
             },
             "require": {
@@ -207,7 +207,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2016-10-13 18:56:16"
+            "time": "2016-10-17 20:08:45"
         },
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -1140,20 +1140,20 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.28",
+            "version": "1.0.29",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "a9663643ff2d16d7f66ed1e0d3212c5491bc9044"
+                "reference": "b732cc946c48cf102ddffd41ffcd54901a28ccdb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/a9663643ff2d16d7f66ed1e0d3212c5491bc9044",
-                "reference": "a9663643ff2d16d7f66ed1e0d3212c5491bc9044",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/b732cc946c48cf102ddffd41ffcd54901a28ccdb",
+                "reference": "b732cc946c48cf102ddffd41ffcd54901a28ccdb",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=5.6.0"
             },
             "conflict": {
                 "league/flysystem-sftp": "<1.0.6"
@@ -1219,7 +1219,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2016-10-07 12:20:37"
+            "time": "2016-10-17 23:14:19"
         },
         {
             "name": "maatwebsite/excel",
