@@ -8,8 +8,8 @@
 
         <title>Meu Tucano</title>
 
-        <link rel="stylesheet" href="{{ Cdn::asset('assets/css/app.css') }}" />
         <link rel="stylesheet" href="{{ Cdn::asset('assets/css/lib.min.css') }}" />
+        <link rel="stylesheet" href="{{ Cdn::asset('assets/css/app.min.css') }}" />
 
         <link rel="icon" type="image/x-icon" href="{{ Cdn::asset('assets/img/favicon.ico') }}" />
     </head>
