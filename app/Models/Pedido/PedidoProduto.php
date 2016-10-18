@@ -55,7 +55,7 @@ class PedidoProduto extends \Eloquent
             }
 
             // Inspecao tecnica
-            if ((int)$pedido->status !== 5 && $produto->estado == 1) {
+            if ((int)$pedido->status !== 5 && $produto->estado == 1 && !$pedidoProduto->inspecao_tecnica) {
                 // se o status do pedido for qualquer um diferente de cancelado, e for seminovo
 
                 // se o pedido nao tiver imei
