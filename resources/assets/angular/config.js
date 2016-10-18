@@ -14,7 +14,7 @@
                 vars: {
                     development: {
                         apiUrl:    'http://tucano.app/api',
-                        assetUrl : 'https://meutucano.s3-sa-east-1.amazonaws.com/public/'
+                        assetUrl : 'http://tucano.app/'
                     },
                     production: {
                         apiUrl:    'http://192.168.2.170/meutucano/public/index.php/api',
