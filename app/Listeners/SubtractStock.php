@@ -21,7 +21,7 @@ class SubtractStock
         try {
             $oldEstoque = $produto->estoque;
 
-            if ($produto && $quantidade) {
+            if ($produto && isset($quantidade)) {
                 $produto->estoque = $oldEstoque - $quantidade;
                 if ($produto->save()) {
                     \Log::notice("Estoque do produto {$produto->sku} alterado de {$oldEstoque} para {$produto->estoque}.");
