@@ -375,15 +375,18 @@ class MagentoController extends Controller implements Integracao
             $shipmentId = $request = $this->api->salesOrderShipmentCreate($this->session, $order->codigo_api);
 
             $rastreio = $order->rastreios->first();
-            $carrier = 'Correios - ' . $rastreio->servico;
+            if ($rastreio) {
+                $carrier = 'Correios - ' . $rastreio->servico;
 
-            $request = $this->api->salesOrderShipmentAddTrack(
-                $this->session,
-                $shipmentId, // increments do magento
-                'pedroteixeira_correios', // carrier code
-                $carrier,
-                $rastreio->rastreio
-            );
+                // rastreio
+                $request = $this->api->salesOrderShipmentAddTrack(
+                    $this->session,
+                    $shipmentId, // increments do magento
+                    'pedroteixeira_correios', // carrier code
+                    $carrier,
+                    $rastreio->rastreio
+                );
+            }
 
             $qty = [];
             foreach ($order->produtos as $produto) {
@@ -393,6 +396,7 @@ class MagentoController extends Controller implements Integracao
                 ];
             }
 
+            // fatura
             $request = $this->api->salesOrderInvoiceCreate(
                 $this->session,
                 $order->codigo_api, // increments do magento
