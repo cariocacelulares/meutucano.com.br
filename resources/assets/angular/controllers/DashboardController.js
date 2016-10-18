@@ -29,6 +29,7 @@
                 height: 276,
             },
             options: {
+                exporting: { enabled: false },
                 title: false,
                 legend: false,
                 chart: {
@@ -58,6 +59,7 @@
                 height: 276,
             },
             options: {
+                exporting: { enabled: false },
                 tooltip: {
                     followPointer: true,
                     shared: true,

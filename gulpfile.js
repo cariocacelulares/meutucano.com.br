@@ -33,7 +33,8 @@ elixir.extend('angularMinify', function() {
             .pipe(ngmin())
             .pipe(concat('app.min.js'))
             .pipe(uglify({mangle: false}))
-            .pipe(gulp.dest('public/assets/js/'));
+            .pipe(gulp.dest('public/assets/js/'))
+            .pipe(notify('JS compiled!'));
     })
     .watch('resources/assets/angular/**/*.js');
 });
