@@ -55,6 +55,7 @@ class PedidoController extends Controller
                 'rastreios',
                 'produtos',
                 'produtos.produto',
+                'produtos.inspecao_tecnica',
                 'comentarios'
             ])
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')

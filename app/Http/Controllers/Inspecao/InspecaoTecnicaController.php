@@ -30,6 +30,7 @@ class InspecaoTecnicaController extends Controller
             ->leftJoin('pedido_produtos', 'pedido_produtos.id', '=', 'inspecao_tecnica.pedido_produtos_id')
             ->leftJoin('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
             ->with(['produto', 'pedido_produto', 'pedido_produto.pedido'])
+            ->whereNotNull('inspecao_tecnica.imei')
             ->orderBy('inspecao_tecnica.created_at', 'DESC');
 
         $list = $this->handleRequest($list);

@@ -5,8 +5,6 @@
 /public/bower_components
 /.idea
 /media
-/public/assets/css/app.css
-/public/assets/css/app.min.css
-/public/assets/js/app.min.js
-/public/assets/js/lib.min.js
+/public/assets/css
+/public/assets/js
 /public/images/gamification

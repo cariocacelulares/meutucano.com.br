@@ -41,11 +41,15 @@
             };
         });
 
-    function AppController($rootScope, focus) {
+    function AppController($rootScope, focus, envService) {
         var vm = this;
 
         vm.searchOpen = false;
         vm.user = $rootScope.currentUser;
+
+        $rootScope.asset = function(assetUrl) {
+            return envService.read('assetUrl') + assetUrl;
+        };
 
         /**
          * Open search overlay

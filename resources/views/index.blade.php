@@ -8,10 +8,10 @@
 
         <title>Meu Tucano</title>
 
-        <link rel="stylesheet" href="assets/css/lib.min.css" />
-        <link rel="stylesheet" href="assets/css/app.min.css" />
+        <link rel="stylesheet" href="{{ Cdn::asset('assets/css/lib.min.css') }}" />
+        <link rel="stylesheet" href="{{ Cdn::asset('assets/css/app.min.css') }}" />
 
-        <link rel="icon" type="image/x-icon" href="favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="{{ Cdn::asset('assets/img/favicon.ico') }}" />
     </head>
 
     <body class="fixed-header menu-behind">
@@ -21,8 +21,8 @@
     </body>
 
     <!-- Application Dependencies -->
-    <script src="assets/js/lib.min.js"></script>
+    <script src="{{ Cdn::asset('assets/js/lib.min.js') }}"></script>
 
     <!-- Application Scripts -->
-    <script src="assets/js/app.min.js"></script>
+    <script src="{{ Cdn::asset('assets/js/app.min.js') }}"></script>
 </html>

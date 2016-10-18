@@ -13,13 +13,16 @@
                 },
                 vars: {
                     development: {
-                        apiUrl: 'http://tucano.app/api'
+                        apiUrl:    'http://tucano.app/api',
+                        assetUrl : 'http://tucano.app/'
                     },
                     production: {
-                        apiUrl: 'http://192.168.2.170/meutucano/public/index.php/api'
+                        apiUrl:    'http://192.168.2.170/meutucano/public/index.php/api',
+                        assetUrl : 'http://192.168.2.170/meutucano/public/'
                     },
                     aws: {
-                        apiUrl: 'https://www.meutucano.com.br/index.php/api'
+                        apiUrl:   'https://www.meutucano.com.br/index.php/api',
+                        assetUrl: 'https://meutucano.s3-sa-east-1.amazonaws.com/public/'
                     }
                 }
             });
