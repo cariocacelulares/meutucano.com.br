@@ -8,8 +8,8 @@
 
         <title>Meu Tucano</title>
 
-        <link rel="stylesheet" href="assets/css/app.min.css" />
         <link rel="stylesheet" href="assets/css/lib.min.css" />
+        <link rel="stylesheet" href="assets/css/app.min.css" />
 
         <link rel="icon" type="image/x-icon" href="favicon.ico" />
     </head>
