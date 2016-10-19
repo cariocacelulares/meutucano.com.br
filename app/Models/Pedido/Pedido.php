@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Cliente\Cliente;
 use App\Models\Cliente\Endereco;
+use App\Models\Inspecao\InspecaoTecnica;
 use App\Events\OrderCancel;
 use App\Http\Controllers\Integracao\SkyhubController;
 
@@ -100,6 +101,20 @@ class Pedido extends \Eloquent
                     // Se o status era enviado, pago ou entregue
                     if (in_array($oldStatus, [1, 2, 3])) {
                         $pedido->reembolso = true;
+                    }
+
+                    // Se tiver alguma inspeção na fila, deleta ela
+                    foreach ($pedido->produtos as $pedidoProduto) {
+                        $inspecoes = InspecaoTecnica
+                            ::where('pedido_produtos_id', '=', $pedidoProduto->id)
+                            ->whereNull('imei')
+                            ->get();
+
+                        if ($inspecoes) {
+                            foreach ($inspecoes as $inspecao) {
+                                $inspecao->delete();
+                            }
+                        }
                     }
                 }
             }

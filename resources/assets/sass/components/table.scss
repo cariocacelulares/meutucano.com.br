@@ -217,6 +217,10 @@
             cursor: not-allowed;
         }
 
+        tr.no-stock td {
+            background-color: #F0F0F0;
+        }
+
         tr.destaque td {
             text-align: center;
             background-color: #EFEFEF;

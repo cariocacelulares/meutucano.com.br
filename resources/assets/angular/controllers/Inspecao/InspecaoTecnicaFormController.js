@@ -48,7 +48,9 @@
          * @return {void}
          */
         vm.save = function() {
-            vm.inspecao.produto_sku = vm.inspecao.produto.sku;
+            if (typeof vm.inspecao.produto !== 'undefined') {
+                vm.inspecao.produto_sku = vm.inspecao.produto.sku;
+            }
 
             InspecaoTecnica.save(vm.inspecao, vm.inspecao.id || null).then(function() {
                 toaster.pop('success', 'Sucesso!', 'Inspeção técnica salva com sucesso!');

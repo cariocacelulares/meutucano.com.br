@@ -58,6 +58,7 @@ class InspecaoTecnicaController extends Controller
             ->whereNotNull('inspecao_tecnica.pedido_produtos_id')
             ->whereNull('inspecao_tecnica.imei')
             ->orderBy('inspecao_tecnica.priorizado', 'DESC')
+            ->orderBy('pedidos.status', 'DESC')
             ->orderBy('inspecao_tecnica.created_at', 'ASC');
 
         $list = $this->handleRequest($list);

@@ -51,14 +51,12 @@ class ProdutoController extends Controller
 
         if ($data) {
             $revisoes = InspecaoTecnica
-                ::leftJoin('pedido_produtos', 'pedido_produtos.imei', '=', 'inspecao_tecnica.imei')
-                ->where('inspecao_tecnica.produto_sku', '=', $data->sku)
-                ->whereNull('pedido_produtos.imei')
-                ->whereNotNull('inspecao_tecnica.imei')
-                ->get(['inspecao_tecnica.imei'])
-                ->toArray();
+                ::where('produto_sku', '=', $data->sku)
+                ->whereNull('pedido_produtos_id')
+                ->whereNotNull('imei')
+                ->lists('imei', 'id');
 
-            $data->revisoes = $revisoes ?: [];
+            $data->revisoes = $revisoes ?: false;
 
             return $this->showResponse($data);
         }
