@@ -7,10 +7,12 @@
 <table table-list="InspecaoRealizadaList">
     <thead>
         <tr>
-            <th width="150">Cód.</th>
-            <th width="250">Pedido</th>
+            <th width="100">Cód.</th>
+            <th width="150">Técnico</th>
+            <th width="150">Usuário</th>
+            <th width="150">Pedido</th>
             <th>Produto</th>
-            <th width="250">IMEI</th>
+            <th width="150">IMEI</th>
             <th class="text-center" width="225">Data</th>
             <th width="75"></th>
         </tr>
@@ -19,8 +21,14 @@
     <tbody ng-if="InspecaoRealizadaList.tableData.data && !InspecaoRealizadaList.loading">
         <tr ng-repeat="inspecao in InspecaoRealizadaList.tableData.data">
             <td class="text-center">{{ inspecao.id }}</td>
+            <td class="text-center">{{ inspecao.usuario.name }}</td>
+            <td class="text-center">
+                <span ng-if="inspecao.solicitante_id">{{ inspecao.solicitante.name }}</span>
+                <span ng-if="!inspecao.solicitante_id">Tucano</span>
+            </td>
             <td>
-                {{ inspecao.pedido_produto.pedido.marketplace_readable || '-' }} <a ui-sref="app.pedidos.detalhe({id: inspecao.pedido_produto.pedido.id})">{{ inspecao.pedido_produto.pedido.codigo_marketplace }}</a>
+                {{ inspecao.pedido_produto.pedido.marketplace_readable || '-' }}<br/>
+                <a ui-sref="app.pedidos.detalhe({id: inspecao.pedido_produto.pedido.id})">{{ inspecao.pedido_produto.pedido.codigo_marketplace }}</a>
             </td>
             <td>
                 <a ui-sref="app.produtos.form({sku: inspecao.produto.sku})">{{ inspecao.produto.sku }}</a> {{ inspecao.produto.titulo || '-' }}

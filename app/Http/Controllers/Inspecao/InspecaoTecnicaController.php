@@ -29,7 +29,9 @@ class InspecaoTecnicaController extends Controller
             ::leftJoin('produtos', 'produtos.sku', '=', 'inspecao_tecnica.produto_sku')
             ->leftJoin('pedido_produtos', 'pedido_produtos.id', '=', 'inspecao_tecnica.pedido_produtos_id')
             ->leftJoin('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
-            ->with(['produto', 'pedido_produto', 'pedido_produto.pedido'])
+            ->leftJoin('usuarios as tecnico_table', 'tecnico_table.id', '=', 'inspecao_tecnica.usuario_id')
+            ->leftJoin('usuarios as solicitante_table', 'solicitante_table.id', '=', 'inspecao_tecnica.solicitante_id')
+            ->with(['produto', 'pedido_produto', 'pedido_produto.pedido', 'usuario', 'solicitante'])
             ->whereNotNull('inspecao_tecnica.imei')
             ->orderBy('inspecao_tecnica.created_at', 'DESC');
 
@@ -50,7 +52,8 @@ class InspecaoTecnicaController extends Controller
             ::leftJoin('produtos', 'produtos.sku', '=', 'inspecao_tecnica.produto_sku')
             ->leftJoin('pedido_produtos', 'pedido_produtos.id', '=', 'inspecao_tecnica.pedido_produtos_id')
             ->leftJoin('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
-            ->with(['produto', 'pedido_produto', 'pedido_produto.pedido'])
+            ->leftJoin('usuarios', 'usuarios.id', '=', 'inspecao_tecnica.solicitante_id')
+            ->with(['produto', 'pedido_produto', 'pedido_produto.pedido', 'solicitante'])
             ->whereNotNull('inspecao_tecnica.produto_sku')
             ->whereNotNull('inspecao_tecnica.pedido_produtos_id')
             ->whereNull('inspecao_tecnica.imei')

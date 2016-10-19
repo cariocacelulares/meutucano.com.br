@@ -64,6 +64,26 @@
                     } else {
                         return Restangular.one('rastreio/monitorados/parar', rastreio_id).customDELETE();
                     }
+                },
+
+                /**
+                 * Retorna os dados necessários
+                 *
+                 * @param  {int} rastreio_id
+                 * @return {Object}
+                 */
+                getInspecaoData: function(rastreio_id) {
+                    return Restangular.one('rastreios/inspecao-tecnica', rastreio_id).customGET();
+                },
+
+                /**
+                 * Verfica se existem produtos seminovos
+                 *
+                 * @param  {int} rastreio_id
+                 * @return {Object}
+                 */
+                existsSeminovos: function(rastreio_id) {
+                    return Restangular.one('rastreios/busca-seminovos', rastreio_id).customGET();
                 }
             });
 

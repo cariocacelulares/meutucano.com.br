@@ -16,6 +16,7 @@
             'inspecao_tecnica.imei': 'LIKE',
             'inspecao_tecnica.created_at': 'BETWEEN',
             'pedidos.codigo_marketplace': 'LIKE',
+            'usuarios.name': 'LIKE',
             'produtos.titulo': 'LIKE'
         });
 

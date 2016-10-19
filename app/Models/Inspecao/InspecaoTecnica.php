@@ -26,6 +26,7 @@ class InspecaoTecnica extends \Eloquent
      */
     protected $fillable = [
         'usuario_id',
+        'solicitante_id',
         'produto_sku',
         'pedido_produtos_id',
         'imei',
@@ -38,6 +39,16 @@ class InspecaoTecnica extends \Eloquent
      * @return \Illuminate\Database\Eloquent\Relations\belongsTo
      */
     public function usuario()
+    {
+        return $this->belongsTo(Usuario::class);
+    }
+
+    /**
+     * Solicitante
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
+     */
+    public function solicitante()
     {
         return $this->belongsTo(Usuario::class);
     }

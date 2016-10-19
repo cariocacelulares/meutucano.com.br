@@ -3,6 +3,9 @@
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
 use App\Models\Pedido\Rastreio;
+use App\Models\Pedido\Pedido;
+use App\Models\Pedido\PedidoProduto;
+use App\Models\Inspecao\InspecaoTecnica;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
@@ -480,6 +483,97 @@ class RastreioController extends Controller
 
             $pdf = new CartaoDePostagem($plp, '', public_path('assets/img/carioca.png'));
             $pdf->render();
+        }
+
+        return $this->notFoundResponse();
+    }
+
+    /**
+     * Busca produtos seminovos
+     *
+     * @param  int $rastreio_id
+     * @return Object
+     */
+    public function existsSeminovos($rastreio_id)
+    {
+        if ($rastreio = Rastreio::find($rastreio_id)) {
+            if ($pedido = Pedido::find($rastreio->pedido_id)) {
+                if ($pedidoProdutos = PedidoProduto::where('pedido_id', '=', $pedido->id)->get()) {
+                    foreach ($pedidoProdutos as $pedidoProduto) {
+                        if ((int)$pedidoProduto->produto->estado == 1) {
+                            return $this->listResponse(['exists' => true]);
+                        }
+                    }
+                }
+            }
+        }
+
+        return $this->listResponse(['exists' => false]);
+    }
+
+    /**
+     * Busca inspeções técnicas para os seminovos do pedido
+     *
+     * @param  int $rastreio_id
+     * @return Object
+     */
+    public function getPedidoProdutoInspecao($rastreio_id)
+    {
+        if ($rastreio = Rastreio::find($rastreio_id)) {
+            if ($pedido = Pedido::find($rastreio->pedido_id)) {
+                if ($pedidoProdutos = PedidoProduto::where('pedido_id', '=', $pedido->id)->get()) {
+                    $semiNovos = [];
+
+                    foreach ($pedidoProdutos as $pedidoProduto) {
+                        if ((int)$pedidoProduto->produto->estado == 1) {
+                            $semiNovos[] = $pedidoProduto->toArray();
+                        }
+                    }
+
+                    $inspecoes = [
+                        'criar' => [],
+                        'reservar' => []
+                    ];
+
+                    foreach ($semiNovos as $semiNovo) {
+                        $inspecoesDisponiveis = InspecaoTecnica
+                            ::where('inspecao_tecnica.produto_sku', '=', $semiNovo['produto_sku'])
+                            ->whereNull('inspecao_tecnica.pedido_produtos_id')
+                            ->whereNotNull('inspecao_tecnica.imei')
+                            ->orderBy('created_at', 'ASC')
+                            ->get(['inspecao_tecnica.*'])
+                            ->toArray();
+
+                        for ($i=0; $i < $semiNovo['quantidade']; $i++) {
+                            // se existirem produtos revisados
+                            if (!empty($inspecoesDisponiveis)) {
+                                $inspecoesDisponiveis = array_values($inspecoesDisponiveis);
+
+                                $inspecoes['reservar'][] = [
+                                    'inspecao_id' => $inspecoesDisponiveis[0]['id'],
+                                    'imei' => $inspecoesDisponiveis[0]['imei'],
+                                    'pedido_produtos_id' => $semiNovo['id'],
+                                    'produto_sku' => $semiNovo['produto_sku'],
+                                    'titulo' => $semiNovo['produto']['titulo'],
+                                    'aplicar' => 1
+                                ];
+
+                                unset($inspecoesDisponiveis[0]);
+                            } else {
+                                // se não precisa adicionar na fila
+                                $inspecoes['criar'][] = [
+                                    'produto_sku' => $semiNovo['produto_sku'],
+                                    'pedido_produtos_id' => $semiNovo['id'],
+                                    'titulo' => $semiNovo['produto']['titulo'],
+                                    'aplicar' => 1
+                                ];
+                            }
+                        }
+                    }
+
+                    return $this->listResponse($inspecoes);
+                }
+            }
         }
 
         return $this->notFoundResponse();
