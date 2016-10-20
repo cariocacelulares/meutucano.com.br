@@ -55,59 +55,51 @@ class PedidoProduto extends \Eloquent
             }
 
             // Inspecao tecnica
-            // se o status do pedido for qualquer um diferente de cancelado, e for seminovo
-            if ((int)$pedido->status !== 5 && $produto->estado == 1 && !$pedidoProduto->inspecao_tecnica) {
-                $itens = [];
-                $pedidoProduto->quantidade = 2;
-                if ($pedidoProduto->quantidade > 1) {
-                    $imeis = explode(',', $pedidoProduto->imei);
+            // se o status do pedido for qualquer um diferente de cancelado, for seminovo, e não tiver imei
+            if ((int)$pedido->status !== 5 && $produto->estado == 1 && !$pedidoProduto->inspecao_tecnica && !$pedidoProduto->imei) {
+                // Pega as inspecoes disponveis para associar
+                $inspecoesDisponiveis = InspecaoTecnica
+                    ::where('inspecao_tecnica.produto_sku', '=', $produto->sku)
+                    ->whereNull('inspecao_tecnica.pedido_produtos_id')
+                    ->whereNotNull('inspecao_tecnica.imei')
+                    ->orderBy('created_at', 'ASC')
+                    ->get(['inspecao_tecnica.*']);
 
-                    for ($i = 0; $i < $pedidoProduto->quantidade; $i++) {
-                        if ($pedidoProduto->imei && isset($imeis[$i])) {
-                            $pedidoProduto->imei = $imeis[$i];
-                        }
-
-                        $itens[] = $pedidoProduto;
-                    }
-                } else {
-                    $itens[] = $pedidoProduto;
+                // Organiza as inspeções em um array
+                $aux = [];
+                foreach ($inspecoesDisponiveis as $inspecaoDisponivel) {
+                    $aux[] = $inspecaoDisponivel;
                 }
+                $inspecoesDisponiveis = $aux;
+                unset($aux);
 
-                foreach ($itens as $item) {
-                    \Log::debug('item', [$item]);
-                    // se o pedido nao tiver imei
-                    if (!$item->imei) {
-                        $inspecao = InspecaoTecnica
-                            ::where('produto_sku', '=', $produto->sku)
-                            ->whereNull('pedido_produtos_id')
-                            ->whereNotNull('imei')
-                            ->orderBy('created_at', 'ASC')
-                            ->get()
-                            ->first();
-                    } else {
-                        // se tiver imei (pega o mais antigo pra nao ficar la pra sempre)
-                        $inspecao = InspecaoTecnica::where('imei', '=', $item->imei)->orderBy('created_at', 'ASC')->first();
+                // pra cada quantidade do produto
+                for ($i = 0; $i < $pedidoProduto->quantidade; $i++) {
+                    $inspecao = null;
+                    // se tiver alguma inspecao, usa ela e tira ela do array
+                    if (!empty($inspecoesDisponiveis) && $inspecoesDisponiveis[0]) {
+                        $inspecao = $inspecoesDisponiveis[0];
+                        unset($inspecoesDisponiveis[0]);
+                        $inspecoesDisponiveis = array_values($inspecoesDisponiveis);
                     }
-                    \Log::debug('inspecao', [$inspecao]);
 
-                    // se existe um imei do produto revisado, aguardando um pedido
                     if ($inspecao) {
-                        // associado este pedido produto com a inspecao pronta
-                        if (!$item->imei) {
-                            $item->imei = $inspecao->imei;
-                            $item->save();
+                        // Concatena os imeis
+                        if ($pedidoProduto->imei) {
+                            $pedidoProduto->imei = $pedidoProduto->imei . ',' . $inspecao->imei;
+                        } else {
+                            $pedidoProduto->imei = $inspecao->imei;
                         }
+                        $pedidoProduto->save();
 
-                        $inspecao->pedido_produtos_id = $item->id;
+                        $inspecao->pedido_produtos_id = $pedidoProduto->id;
                         $inspecao->save();
-                        \Log::debug('inspecao relacionada', [$inspecao->id]);
                     } else {
-                        // se não existe
+                        // se não tem inspeção, cria uma (adiciona na fila)
                         $inspecao = InspecaoTecnica::create([
                             'produto_sku' => $produto->sku,
-                            'pedido_produtos_id' => $item->id
+                            'pedido_produtos_id' => $pedidoProduto->id
                         ]);
-                        \Log::debug('inspecao criada'. [$inspecao->id]);
                     }
                 }
             }
