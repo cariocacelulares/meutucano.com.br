@@ -1,6 +1,8 @@
 <?php namespace App\Models\Pedido;
 
+use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Produto\Produto;
+use App\Events\OrderSeminovo;
 use App\Events\ProductDispach;
 use App\Models\Inspecao\InspecaoTecnica;
 
@@ -10,6 +12,13 @@ use App\Models\Inspecao\InspecaoTecnica;
  */
 class PedidoProduto extends \Eloquent
 {
+    use RevisionableTrait;
+
+    /**
+     * @var boolean
+     */
+    protected $revisionCreationsEnabled = true;
+
     /**
      * @var array
      */
@@ -52,55 +61,10 @@ class PedidoProduto extends \Eloquent
                 if ((int)$pedido->status !== 5) {
                     \Event::fire(new ProductDispach($pedidoProduto->produto, $pedidoProduto->quantidade));
                 }
-            }
 
-            // Inspecao tecnica
-            // se o status do pedido for qualquer um diferente de cancelado, for seminovo, e não tiver imei
-            if ((int)$pedido->status !== 5 && $produto->estado == 1 && !$pedidoProduto->inspecao_tecnica && !$pedidoProduto->imei) {
-                // Pega as inspecoes disponveis para associar
-                $inspecoesDisponiveis = InspecaoTecnica
-                    ::where('inspecao_tecnica.produto_sku', '=', $produto->sku)
-                    ->whereNull('inspecao_tecnica.pedido_produtos_id')
-                    ->whereNotNull('inspecao_tecnica.imei')
-                    ->orderBy('created_at', 'ASC')
-                    ->get(['inspecao_tecnica.*']);
-
-                // Organiza as inspeções em um array
-                $aux = [];
-                foreach ($inspecoesDisponiveis as $inspecaoDisponivel) {
-                    $aux[] = $inspecaoDisponivel;
-                }
-                $inspecoesDisponiveis = $aux;
-                unset($aux);
-
-                // pra cada quantidade do produto
-                for ($i = 0; $i < $pedidoProduto->quantidade; $i++) {
-                    $inspecao = null;
-                    // se tiver alguma inspecao, usa ela e tira ela do array
-                    if (!empty($inspecoesDisponiveis) && $inspecoesDisponiveis[0]) {
-                        $inspecao = $inspecoesDisponiveis[0];
-                        unset($inspecoesDisponiveis[0]);
-                        $inspecoesDisponiveis = array_values($inspecoesDisponiveis);
-                    }
-
-                    if ($inspecao) {
-                        // Concatena os imeis
-                        if ($pedidoProduto->imei) {
-                            $pedidoProduto->imei = $pedidoProduto->imei . ',' . $inspecao->imei;
-                        } else {
-                            $pedidoProduto->imei = $inspecao->imei;
-                        }
-                        $pedidoProduto->save();
-
-                        $inspecao->pedido_produtos_id = $pedidoProduto->id;
-                        $inspecao->save();
-                    } else {
-                        // se não tem inspeção, cria uma (adiciona na fila)
-                        $inspecao = InspecaoTecnica::create([
-                            'produto_sku' => $produto->sku,
-                            'pedido_produtos_id' => $pedidoProduto->id
-                        ]);
-                    }
+                // Se o status do pedido for pago, o pedido produto nao tiver inspecao nem imei e o produto for seminovo
+                if ($pedido->status == 1 && !$pedidoProduto->inspecao_tecnica && !$pedidoProduto->imei && $produto->estado == 1) {
+                    \Event::fire(new OrderSeminovo($pedidoProduto));
                 }
             }
         });

@@ -7,6 +7,7 @@ use App\Models\Cliente\Cliente;
 use App\Models\Cliente\Endereco;
 use App\Models\Inspecao\InspecaoTecnica;
 use App\Events\OrderCancel;
+use App\Events\OrderSeminovo;
 use App\Http\Controllers\Integracao\SkyhubController;
 
 /**
@@ -75,13 +76,24 @@ class Pedido extends \Eloquent
         // Salvar pedido (novo ou existente)
         static::saving(function($pedido) {
             $oldStatus = ($pedido->getOriginal('status') === null) ? null : (int)$pedido->getOriginal('status');
-            $newStatus = ($pedido->status === null) ? null : (int)$pedido->status;
+            $newStatus = (is_null($pedido->status)) ? null : (int)$pedido->status;
 
             // Se realmente ocorreu uma mudança de status e o pedido não veio do site
             if ($newStatus !== $oldStatus && strtolower($pedido->marketplace) != 'site') {
                 // Se o novo status for entregue, notifica a Skyhub
                 if ($newStatus === 3) {
                     with(new SkyhubController())->orderDelivered($pedido);
+                }
+            }
+
+            // Se o status foi alterado e o novo status for pago
+            if ($newStatus !== $oldStatus && $newStatus === 1) {
+                // pra cada produto do pedido
+                foreach ($pedido->produtos as $pedidoProduto) {
+                    // se o produto do pedido nao tiver inspecao tecnica nem imei, e for seminovo
+                    if (!$pedidoProduto->inspecao_tecnica && !$pedidoProduto->imei && $pedidoProduto->produto->estado == 1) {
+                        \Event::fire(new OrderSeminovo($pedidoProduto));
+                    }
                 }
             }
         });

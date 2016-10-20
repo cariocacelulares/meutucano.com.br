@@ -23,6 +23,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\ProductDispach' => [
             'App\Listeners\SubtractStock'
         ],
+        'App\Events\OrderSeminovo' => [
+            'App\Listeners\CheckInspecoes'
+        ],
         'App\Events\Gamification\TarefaRealizada' => [
             'App\Listeners\Gamification\FilaAdicionar'
         ],
