@@ -114,11 +114,12 @@ class InspecaoTecnicaController extends Controller
                 throw new \Exception("ValidationException");
             }
 
+            $data->fill(Input::all());
+
             if (!$data->usuario_id) {
                 $data->usuario_id = getCurrentUserId();
             }
 
-            $data->fill(Input::all());
             $data->save();
             return $this->showResponse($data);
         } catch(\Exception $ex) {
