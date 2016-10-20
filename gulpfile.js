@@ -10,6 +10,7 @@ var autoprefixer = require('gulp-autoprefixer');
 var rename       = require('gulp-rename');
 var sourcemaps   = require('gulp-sourcemaps');
 var notify       = require('gulp-notify');
+var gulpUtil     = require('gulp-util');
 var lib          = require('bower-files')();
 
 elixir.extend('customSass', function() {
@@ -30,9 +31,9 @@ elixir.extend('customSass', function() {
 elixir.extend('angularMinify', function() {
     new elixir.Task('angularMinify', function() {
         return gulp.src("resources/assets/angular/**/*.js")
-            .pipe(ngmin())
+            .pipe(ngmin().on('error', gulpUtil.log))
             .pipe(concat('app.min.js'))
-            .pipe(uglify({mangle: false}))
+            .pipe(uglify({mangle: false}).on('error', gulpUtil.log))
             .pipe(gulp.dest('public/assets/js/'))
             .pipe(notify('JS compiled!'));
     })
