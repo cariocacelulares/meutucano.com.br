@@ -314,6 +314,12 @@
                     controller: 'InspecaoFilaListController as InspecaoFilaList'
                 })
 
+                .state('app.inspecao.solicitada', {
+                    url: '/solicitada',
+                    templateUrl: 'views/inspecao/solicitada/list.html',
+                    controller: 'InspecaoSolicitadaListController as InspecaoSolicitadaList'
+                })
+
                 /**
                  * Relatórios
                  */

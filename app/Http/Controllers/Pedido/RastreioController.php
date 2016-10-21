@@ -540,6 +540,7 @@ class RastreioController extends Controller
                             ::where('inspecao_tecnica.produto_sku', '=', $semiNovo['produto_sku'])
                             ->whereNull('inspecao_tecnica.pedido_produtos_id')
                             ->whereNotNull('inspecao_tecnica.imei')
+                            ->where('reservado', '=', false)
                             ->orderBy('created_at', 'ASC')
                             ->get(['inspecao_tecnica.*'])
                             ->toArray();

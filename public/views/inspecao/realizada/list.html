@@ -20,7 +20,10 @@
     </thead>
     <tbody ng-if="InspecaoRealizadaList.tableData.data && !InspecaoRealizadaList.loading">
         <tr ng-repeat="inspecao in InspecaoRealizadaList.tableData.data">
-            <td class="text-center">{{ inspecao.id }}</td>
+            <td class="text-center">
+                <i ng-if="inspecao.reservado" tooltips tooltip-template="Inspeção reservada" class="fa-lock"></i>
+                {{ inspecao.id }}
+            </td>
             <td class="text-center">{{ inspecao.usuario.name }}</td>
             <td class="text-center">
                 <span ng-if="inspecao.solicitante_id">{{ inspecao.solicitante.name }}</span>

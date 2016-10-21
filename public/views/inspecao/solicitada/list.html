@@ -1,0 +1,33 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-bug" title="Inspeções solicitadas" description="Todas as inspeções técnicas que você solicitou."></page-title>
+    <div class="col-md-6 button-bar">
+        <button ng-click="InspecaoSolicitadaList.openForm()" class="btn-success"><i class="fa-plus"></i>&nbsp; Nova</button>
+    </div>
+</div>
+<table table-list="InspecaoSolicitadaList">
+    <thead>
+        <tr>
+            <th width="100">Cód.</th>
+            <th>Produto</th>
+            <th width="150">IMEI</th>
+            <th class="text-center" width="225">Data</th>
+            <th width="75"></th>
+        </tr>
+        <tr class="table-filter" static-include="views/inspecao/solicitada/list_filter.html"></tr>
+    </thead>
+    <tbody ng-if="InspecaoSolicitadaList.tableData.data && !InspecaoSolicitadaList.loading">
+        <tr ng-repeat="inspecao in InspecaoSolicitadaList.tableData.data">
+            <td class="text-center">{{ inspecao.id }}</td>
+            <td>
+                <a ui-sref="app.produtos.form({sku: inspecao.produto.sku})">{{ inspecao.produto.sku }}</a> {{ inspecao.produto.titulo || '-' }}
+            </td>
+            <td><strong>{{ inspecao.imei }}</strong></td>
+            <td class="text-center">{{ inspecao.created_at }}</td>
+            <td class="text-center">
+                <a ng-if="!inspecao.imei" class="btn-danger" confirm="InspecaoSolicitadaList.destroy(inspecao)">
+                    <i class="fa-trash"></i>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>

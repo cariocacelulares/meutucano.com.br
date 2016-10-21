@@ -24,6 +24,7 @@ class CheckInspecoes
             ::where('inspecao_tecnica.produto_sku', '=', $produto->sku)
             ->whereNull('inspecao_tecnica.pedido_produtos_id')
             ->whereNotNull('inspecao_tecnica.imei')
+            ->where('reservado', '=', false)
             ->orderBy('created_at', 'ASC')
             ->get(['inspecao_tecnica.*']);
 

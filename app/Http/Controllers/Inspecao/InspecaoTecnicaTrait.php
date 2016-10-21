@@ -30,7 +30,7 @@ trait InspecaoTecnicaTrait
             if (is_array($inspecoes['reservar']) && !empty($inspecoes['reservar'])) {
                 foreach ($inspecoes['reservar'] as $config) {
                     if ($config['aplicar']) {
-                        if ($inspecao = InspecaoTecnica::where('id', '=', $config['inspecao_id'])->whereNull('pedido_produtos_id')->first()) {
+                        if ($inspecao = InspecaoTecnica::where('id', '=', $config['inspecao_id'])->whereNull('pedido_produtos_id')->where('reservado', '=', false)->first()) {
                             $inspecao->pedido_produtos_id = $config['pedido_produtos_id'];
                             $inspecao->solicitante_id = getCurrentUserId();
                             $inspecao->save();

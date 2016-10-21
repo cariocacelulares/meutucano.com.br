@@ -228,6 +228,9 @@ Route::group(['prefix' => '/api'], function() {
         /**
          * Inspeção Técnica
          */
+        Route::post('inspecao_tecnica/verificar-reserva', 'Inspecao\InspecaoTecnicaController@verificarReserva');
+        Route::post('inspecao_tecnica/reserva', 'Inspecao\InspecaoTecnicaController@reservar');
+        Route::get('inspecao_tecnica/solicitadas', 'Inspecao\InspecaoTecnicaController@solicitadas');
         Route::get('inspecao_tecnica/fila', 'Inspecao\InspecaoTecnicaController@fila');
         Route::get('inspecao_tecnica/list', 'Inspecao\InspecaoTecnicaController@tableList');
         Route::post('inspecao_tecnica/priority/{id}', 'Inspecao\InspecaoTecnicaController@changePriority');

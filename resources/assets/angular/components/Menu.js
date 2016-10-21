@@ -165,14 +165,21 @@
                                 title: 'Inspeções Realizadas',
                                 icon: 'fa-bug',
                                 sref: $state.href('app.inspecao.realizada'),
+                                roles: ['admin', 'tecnico']
                             },
                             {
                                 title: 'Fila de Inspeção',
                                 icon: 'fa-cogs',
                                 sref: $state.href('app.inspecao.fila'),
+                                roles: ['admin', 'tecnico']
+                            },
+                            {
+                                title: 'Solicitar Inspeção',
+                                icon: 'fa-cogs',
+                                sref: $state.href('app.inspecao.solicitada'),
+                                roles: ['admin', 'atendimento', 'faturamento']
                             }
-                        ],
-                        roles: ['admin', 'tecnico']
+                        ]
                     },
                     {
                         title: 'Interno',

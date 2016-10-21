@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
+use App\Models\Produto\Produto;
 use App\Models\Pedido\PedidoProduto;
 use App\Models\Inspecao\InspecaoTecnica;
 use Illuminate\Support\Facades\Input;
@@ -61,6 +62,25 @@ class InspecaoTecnicaController extends Controller
             ->orderBy('inspecao_tecnica.priorizado', 'DESC')
             ->orderBy('pedidos.status', 'DESC')
             ->orderBy('inspecao_tecnica.created_at', 'ASC');
+
+        $list = $this->handleRequest($list);
+
+        return $this->listResponse($list);
+    }
+
+    /**
+     * Retorna as inspecoes solicitadas pelo usuario atual
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function solicitadas() {
+        $m = self::MODEL;
+
+        $list = $m
+            ::with('produto')
+            ->where('solicitante_id', '=', getCurrentUserId())
+            ->orderBy('priorizado', 'DESC')
+            ->orderBy('created_at', 'DESC');
 
         $list = $this->handleRequest($list);
 
@@ -185,5 +205,151 @@ class InspecaoTecnicaController extends Controller
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
+    }
+
+    /**
+     * Verifica os ites de inpecao por produto e quntidade, retornando se deve reservar ou adicionar na fila
+     *
+     * @return Object
+     */
+    public function verificarReserva()
+    {
+        $acoes = [
+            'reservar' => [
+                'quantidade' => 0,
+                'aplicar' => 1,
+                'ids' => []
+            ],
+            'fila' => [
+                'quantidade' => 0,
+                'aplicar' => 1
+            ],
+            'sem_estoque' => [
+                'quantidade' => 0,
+                'aplicar' => 1
+            ],
+        ];
+
+        $produto_sku = Input::get('produto');
+        $quantidade = (int)Input::get('quantidade');
+
+        if (!$produto = Produto::find($produto_sku)) {
+            return $this->notFoundResponse();
+        }
+
+        // Pega os produtos já inspecionados disponiveis
+        $inspecoes = InspecaoTecnica
+            ::where('produto_sku', '=', $produto_sku)
+            ->whereNull('pedido_produtos_id')
+            ->whereNotNull('imei')
+            ->where('reservado', '=', false)
+            ->take($quantidade)
+            ->get();
+
+        // Se tiver algum produto pronto
+        if ($inspecoes->count() > 0) {
+            foreach ($inspecoes as $inspecao) {
+                $acoes['reservar']['quantidade']++;
+                $quantidade--;
+                $acoes['reservar']['ids'][] = $inspecao->id;
+            }
+        }
+
+        // Se ainda sobraram produtos solicitados
+        if ($quantidade > 0) {
+            // Se tiver menos produtos em estoque do que foi solicitado
+            if ($produto->estoque < $quantidade) {
+                if ($produto->estoque > 0) {
+                    $acoes['fila']['quantidade'] = $produto->estoque;
+                }
+
+                $acoes['sem_estoque']['quantidade'] = ($quantidade - $produto->estoque);
+            } else {
+                // Se tiver produtos o suficiente
+                $acoes['fila']['quantidade'] = $quantidade;
+            }
+        }
+
+        $acoes['reservar']['ids'] = implode(',', $acoes['reservar']['ids']);
+        return $this->listResponse($acoes);
+    }
+
+    /**
+     * Reserva as inspecoes para o usuario atual
+     *
+     * @return Object
+     */
+    public function reservar()
+    {
+        $retorno = [];
+        $produto_sku = Input::get('produto_sku');
+        $reservar = Input::get('reservar');
+        $fila = Input::get('fila');
+        $semEstoque = Input::get('sem_estoque');
+
+        if ($reservar['aplicar'] == 1) {
+            $itensReservar = explode(',', $reservar['ids']);
+            foreach ($itensReservar as $id) {
+                $inspecao = InspecaoTecnica
+                    ::where('id', '=', $id)
+                    ->whereNull('pedido_produtos_id')
+                    ->whereNotNull('imei')
+                    ->where('reservado', '=', false)
+                    ->first();
+
+                if (!$inspecao) {
+                    // Tenta encontrar outra inspeção
+                    $inspecao = InspecaoTecnica
+                        ::where('produto_sku', '=', $produto_sku)
+                        ->whereNull('pedido_produtos_id')
+                        ->whereNotNull('imei')
+                        ->where('reservado', '=', false)
+                        ->whereNotIn('id', $itensReservar)
+                        ->first();
+
+                    if ($inspecao) {
+                        $inspecao->reservado = true;
+                        $inspecao->solicitante_id = getCurrentUserId();
+                        $inspecao->save();
+
+                        $retorno[] = ['antigo' => $id, 'novo' => $inspecao->id];
+                    } else {
+                        $inspecao = InspecaoTecnica::create([
+                            'produto_sku' => $produto_sku,
+                            'reservado' => true,
+                            'solicitante_id' => getCurrentUserId(),
+                        ]);
+
+                        $retorno[] = ['antigo' => $id, 'novo' => false];
+                    }
+                } else {
+                    $inspecao->reservado = true;
+                    $inspecao->solicitante_id = getCurrentUserId();
+                    $inspecao->save();
+                }
+            }
+        }
+
+        if ($fila['aplicar'] == 1) {
+            for ($i=0; $i < $fila['quantidade']; $i++) {
+                $inspecao = InspecaoTecnica::create([
+                    'produto_sku' => $produto_sku,
+                    'reservado' => true,
+                    'solicitante_id' => getCurrentUserId(),
+                ]);
+            }
+        }
+
+        if ($semEstoque['aplicar'] == 1) {
+            for ($i=0; $i < $semEstoque['quantidade']; $i++) {
+                $inspecao = InspecaoTecnica::create([
+                    'produto_sku' => $produto_sku,
+                    'reservado' => true,
+                    'solicitante_id' => getCurrentUserId(),
+                ]);
+            }
+        }
+
+        return $this->listResponse(['dados' => $retorno]);
     }
 }

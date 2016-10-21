@@ -10,9 +10,8 @@
             rest.baseUrl = 'inspecao_tecnica';
 
             angular.extend(rest, {
-
                 /**
-                 * Retorna as PI's pendentes de resposta
+                 * Retorna as inspecoes sem imei
                  *
                  * @param  {Object} params
                  * @return {Object}
@@ -24,6 +23,18 @@
                 },
 
                 /**
+                 * Retorna as inspecoes solicitadas pelo usuário atual
+                 *
+                 * @param  {Object} params
+                 * @return {Object}
+                 */
+                solicitadas: function(params) {
+                    params = this.parseParams(params);
+
+                    return Restangular.all(this.baseUrl + '/solicitadas').customGET("", params || {});
+                },
+
+                /**
                  * Altera a prioridade da inspecao
                  *
                  * @param  {int} pedido_produtos_id
@@ -31,6 +42,26 @@
                  */
                 alterarPrioridade: function(pedido_produtos_id) {
                     return Restangular.one(this.baseUrl + '/priority', pedido_produtos_id).customPOST();
+                },
+
+                /**
+                 * Cria uma reserva
+                 *
+                 * @param  {Object} params
+                 * @return {Object}
+                 */
+                reserva: function(params) {
+                    return Restangular.all(this.baseUrl + '/reserva').post(params);
+                },
+
+                /**
+                 * Verifica uma reserva
+                 *
+                 * @param  {Object} params
+                 * @return {Object}
+                 */
+                verificarReserva: function(params) {
+                    return Restangular.all(this.baseUrl + '/verificar-reserva').post(params);
                 }
             });
 
