@@ -26,11 +26,11 @@
                 /**
                  * Altera a prioridade da inspecao
                  *
-                 * @param  {int} inspecao_id
+                 * @param  {int} pedido_produtos_id
                  * @return {Object}
                  */
-                alterarPrioridade: function(inspecao_id) {
-                    return Restangular.one(this.baseUrl + '/priority', inspecao_id).customPOST();
+                alterarPrioridade: function(pedido_produtos_id) {
+                    return Restangular.one(this.baseUrl + '/priority', pedido_produtos_id).customPOST();
                 }
             });
 

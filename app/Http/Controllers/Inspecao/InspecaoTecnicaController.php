@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
+use App\Models\Pedido\PedidoProduto;
 use App\Models\Inspecao\InspecaoTecnica;
 use Illuminate\Support\Facades\Input;
 
@@ -148,11 +149,21 @@ class InspecaoTecnicaController extends Controller
         return $this->notFoundResponse();
     }
 
+    /**
+     * Altera a prioridade da inspecao
+     *
+     * @param  int $id pedido_produtos_id
+     * @return Object
+     */
     public function changePriority($id)
     {
         $m = self::MODEL;
 
-        if (!$data = $m::find($id)) {
+        if (!$pedidoProduto = PedidoProduto::find($id)) {
+            return $this->notFoundResponse();
+        }
+
+        if (!$data = $m::where('pedido_produtos_id', '=', $id)->whereNull('imei')->get()) {
             return $this->notFoundResponse();
         }
 
@@ -163,8 +174,10 @@ class InspecaoTecnicaController extends Controller
                 throw new \Exception("ValidationException");
             }
 
-            $data->priorizado = !((int) $data->priorizado);
-            $data->save();
+            foreach ($data as $inspecao) {
+                $inspecao->priorizado = !((int) $inspecao->priorizado);
+                $inspecao->save();
+            }
 
             return $this->showResponse($data);
         } catch (\Exception $e) {

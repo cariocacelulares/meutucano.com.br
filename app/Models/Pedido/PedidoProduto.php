@@ -93,11 +93,11 @@ class PedidoProduto extends \Eloquent
     /**
      * InspecaoTecnica
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\belongsToMany
      */
-    public function inspecao_tecnica()
+    public function inspecoes()
     {
-        return $this->belongsTo(InspecaoTecnica::class, 'id', 'pedido_produtos_id');
+        return $this->hasMany(InspecaoTecnica::class, 'pedido_produtos_id', 'id');
     }
 
     /**

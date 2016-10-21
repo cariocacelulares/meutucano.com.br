@@ -31,6 +31,8 @@ class InspecaoTecnica extends \Eloquent
         'pedido_produtos_id',
         'imei',
         'descricao',
+        'priorizado',
+        'reservado',
     ];
 
     /**

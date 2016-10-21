@@ -22,12 +22,12 @@
                 /**
                  * Altera a prioridade da inspecao
                  *
-                 * @param  {int} inspecao_id
+                 * @param  {int} pedido_produtos_id
                  * @param  {bool} updateVm
                  * @return {void}
                  */
-                alterarPrioridade: function(inspecao_id, updateVm) {
-                    InspecaoTecnica.alterarPrioridade(inspecao_id).then(function() {
+                alterarPrioridade: function(pedido_produtos_id, updateVm) {
+                    InspecaoTecnica.alterarPrioridade(pedido_produtos_id).then(function() {
                         toaster.pop('success', 'Sucesso!', 'Prioridade alterada com sucesso!');
 
                         if (typeof this.vm != 'undefined' &&

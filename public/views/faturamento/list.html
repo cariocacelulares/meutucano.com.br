@@ -64,7 +64,7 @@
             <td class="text-center">
                 <span ng-repeat="produto in pedido.produtos">
                     <small><strong>{{ produto.produto_sku }}</strong>: {{ produto.quantidade }}x {{ produto.valor | currency }}</small>
-                    <br ng-if="produto.inspecao_tecnica.id" /><span class="label" ng-class="{'label-success': produto.inspecao_tecnica.imei}">{{ produto.inspecao_tecnica.id }}</span>
+                    <span ng-repeat="inspecao in produto.inspecoes" ng-class="{ 'label-success': inspecao.imei, 'm-r-10': !$last }" tooltips tooltip-template="{{ inspecao.imei }}" class="label">{{ inspecao.id }}</span>
                 </span><br>
             </td>
             <td class="text-center">{{ pedido.estimated_delivery }}</td>
