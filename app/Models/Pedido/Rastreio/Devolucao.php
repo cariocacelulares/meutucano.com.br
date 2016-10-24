@@ -109,10 +109,13 @@ class Devolucao extends \Eloquent
     public function getProtocoloAttribute()
     {
         if ((int)$this->acao === 1) {
-            $pedido = Pedido::find($this->pedido_id);
-            return ($pedido) ? $pedido->protocolo : null;
-        } else {
-            return null;
+            if ($rastreio = Rastreio::find($this->rastreio_id)) {
+                if ($pedido = Pedido::find($rastreio->pedido_id)) {
+                    return ($pedido) ? $pedido->protocolo : null;
+                }
+            }
         }
+
+        return null;
     }
 }
