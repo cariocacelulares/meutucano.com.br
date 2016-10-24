@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'email_send_enabled' => env('EMAIL_SEND_ENABLED', true),
     'report_email' => env('REPORT_EMAIL', 'dev@cariocacelulares.com.br'),
     /**
      * CEP Padrão de envio

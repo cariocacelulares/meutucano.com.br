@@ -71,13 +71,19 @@ class UploadController extends Controller
                 }
 
                 if ($this->uploadNota($notaArquivo, $usuario_id)) {
+                    if ($uploadCount > 0) {
+                        continue;
+                    }
+
                     $uploadCount++;
                 }
             }
 
-            $data = ['msg' => sprintf('Foram importados %d arquivo(s) de %d enviado(s).', $uploadCount, count($arquivos))];
             Log::info(sprintf('Foram importados %d arquivo(s) de %d enviado(s).', $uploadCount, count($arquivos)));
-            return $this->createdResponse($data);
+            return $this->createdResponse([
+                'success' => $uploadCount,
+                'error' => (count($arquivos) - $uploadCount)
+            ]);
         } catch (\Exception $e) {
             Log::alert(logMessage($e, 'Não foi possível fazer upload do arquivo'));
 
@@ -532,23 +538,27 @@ class UploadController extends Controller
             $nota_id = $nota->id;
             $arquivo = storage_path('app/public/' . date('His') . '.pdf');
 
-            $mail = Mail::send('emails.compra', [
-                'nome' => $this->nfe->dest->xNome,
-                'produtos' => $produtos,
-                'rastreio' => $rastreio
-            ], function($message) use ($nota_id, $email, $nome, $arquivo) {
-                with(new NotaController())->danfe($nota_id, 'F', $arquivo);
+            if (\Config::get('tucano.email_send_enabled')) {
+                $mail = Mail::send('emails.compra', [
+                    'nome' => $this->nfe->dest->xNome,
+                    'produtos' => $produtos,
+                    'rastreio' => $rastreio
+                ], function($message) use ($nota_id, $email, $nome, $arquivo) {
+                    with(new NotaController())->danfe($nota_id, 'F', $arquivo);
 
-                $message
-                    ->attach($arquivo, ['as' => 'nota.pdf', 'mime' => 'application/pdf'])
-                    ->to($email)
-                    ->subject('Obrigado por comprar na Carioca Celulares On-line');
-            });
+                    $message
+                        ->attach($arquivo, ['as' => 'nota.pdf', 'mime' => 'application/pdf'])
+                        ->to($email)
+                        ->subject('Obrigado por comprar na Carioca Celulares On-line');
+                });
 
-            if  ($mail) {
-                Log::debug('E-mail com a nota enviado para: ' . $email);
+                if  ($mail) {
+                    Log::debug('E-mail com a nota enviado para: ' . $email);
+                } else {
+                    Log::warning('Falha ao enviar e-mail com a nota para: ' . $email);
+                }
             } else {
-                Log::warning('Falha ao enviar e-mail com a nota para: ' . $email);
+                Log::debug("O e-mail não foi enviado para {$email} pois o envio está desativado (upload)!");
             }
 
             unlink($arquivo);

@@ -84,15 +84,19 @@ class NotaController extends Controller
             $email = $nota->pedido->cliente->email;
 
             if ($email) {
-                $mail = Mail::send('emails.danfe', [], function($message) use ($id, $email, $arquivo) {
-                    with(new NotaController())->danfe($id, 'F', $arquivo);
+                if (\Config::get('tucano.email_send_enabled')) {
+                    $mail = Mail::send('emails.danfe', [], function($message) use ($id, $email, $arquivo) {
+                        with(new NotaController())->danfe($id, 'F', $arquivo);
 
-                    $message
-                        ->attach($arquivo, ['as' => 'nota.pdf', 'mime' => 'application/pdf'])
-                        ->from('vendas@cariocacelulares.com.br', 'Carioca Celulares Online')
-                        ->to($email)
-                        ->subject('Nota fiscal de compra na Carioca Celulares Online');
-                });
+                        $message
+                            ->attach($arquivo, ['as' => 'nota.pdf', 'mime' => 'application/pdf'])
+                            ->from('vendas@cariocacelulares.com.br', 'Carioca Celulares Online')
+                            ->to($email)
+                            ->subject('Nota fiscal de compra na Carioca Celulares Online');
+                    });
+                } else {
+                    Log::debug("O e-mail não foi enviado para {$email} pois o envio está desativado (nota)!");
+                }
 
                 unlink($arquivo);
 
