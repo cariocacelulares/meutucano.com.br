@@ -139,6 +139,10 @@ class UploadController extends Controller
             // Chave
             $chave = $this->protNfe->infProt->chNFe;
 
+            // Abre um transaction no banco de dados
+            DB::beginTransaction();
+            Log::debug('Transaction - begin');
+
             // Pedido
             $pedido = $this->importPedido($chave, $cliente, $clienteEndereco, $operacao, $tipoOperacao);
 
@@ -151,6 +155,10 @@ class UploadController extends Controller
             } else {
                 return $this->importVenda($chave, $pedido, $usuario_id, $dataNota, $notaArquivo, $produtos, $datetimeNota);
             }
+
+            // Fecha a transação e comita as alterações
+            DB::commit();
+            Log::debug('Transaction - commit');
         } catch (\Exception $e) {
             // Fecha a trasação e cancela as alterações
             DB::rollBack();
@@ -355,10 +363,6 @@ class UploadController extends Controller
      */
     private function importVenda($chave, $pedido, $usuario_id, $dataNota, $notaArquivo, $produtos, $datetimeNota)
     {
-        // Abre um transaction no banco de dados
-        DB::beginTransaction();
-        Log::debug('Transaction - begin');
-
         /**
          * Salva a nota
          */
@@ -461,10 +465,6 @@ class UploadController extends Controller
         } else {
             Log::warning('Não foi possível importar o imposto do pedido ' . $pedido->id);
         }
-
-        // Fecha a transação e comita as alterações
-        DB::commit();
-        Log::debug('Transaction - commit');
 
         /**
          * IMEI's

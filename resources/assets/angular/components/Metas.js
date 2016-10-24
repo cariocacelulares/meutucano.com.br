@@ -11,14 +11,6 @@
                 vm.data = {};
                 vm.loading = false;
 
-                $rootScope.$on('loading', function() {
-                    vm.loading = true;
-                });
-
-                $rootScope.$on('stop-loading', function() {
-                    vm.loading = false;
-                });
-
                 vm.loadMeta = function() {
                     vm.loading = true;
 
