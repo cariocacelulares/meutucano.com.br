@@ -47,7 +47,7 @@ class MagentoController extends Controller implements Integracao
                                 ]
                             ]),
                             'trace' => true,
-                            'exceptions' => false,
+                            'exceptions' => true,
                             'connection_timeout' => 20,
                             'cache_wsdl' => WSDL_CACHE_NONE
                         ]
@@ -250,7 +250,7 @@ class MagentoController extends Controller implements Integracao
             $pedido->codigo_api = $order['increment_id'];
             $pedido->marketplace = 'Site';
             $pedido->operacao = $operacao;
-            $pedido->total = $order['subtotal'];
+            $pedido->total = $order['total_invoiced'];
             $pedido->status = $this->parseStatus((isset($order['state'])) ? $order['state'] : ((isset($order['status'])) ? $order['status'] : null ));
             $pedido->created_at = Carbon::createFromFormat('Y-m-d H:i:s', $order['created_at'])->subHours(3);
 

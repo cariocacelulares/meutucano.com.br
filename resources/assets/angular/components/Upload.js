@@ -36,7 +36,6 @@
                             $rootScope.$broadcast('upload');
                             $rootScope.$broadcast('stop-loading');
 
-                            console.log(response.data);
                             if (response.data.error) {
                                 SweetAlert.swal({
                                     title: 'Atenção!',
