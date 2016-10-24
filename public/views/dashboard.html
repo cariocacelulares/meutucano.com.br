@@ -1,188 +1,26 @@
 <div class="row">
     <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="panel-title">
-                    <i class="fa-cubes"></i>&nbsp; Status por marketplace
-                </div>
-                <div class="panel-controls">
-                    <a ng-click="Dashboard.loadTotalOrdersStatus()" class="btn-default">
-                        <i class="fa-refresh"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="panel-body p-l-5 p-r-15">
-                <highchart id="dashboardChart" config="Dashboard.chartOrdersStatus"></highchart>
-            </div>
-        </div>
+        <chart-status-by-marketplace></chart-status-by-marketplace>
     </div>
     <div class="col-md-2">
         <div class="row m-b-20">
             <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="panel-title">
-                                <i class="fa-shopping-cart"></i>&nbsp; Pedidos
-                        </div>
-                        <div class="panel-controls">
-                            <a ng-click="Dashboard.loadTotalOrdersDate()" class="btn-default">
-                                <i class="fa-refresh"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="panel-body text-center">
-                        <div class="row">
-                            <div class="col-md-6 p-l-10">
-                                <span class="fz-22" ng-bind="Dashboard.ordersDate.dia.ultimo[1] || '-'"></span>
-                                <br/>
-                                <small class="hint-text">Ontem</small>
-                            </div>
-                            <div class="col-md-6 p-r-10 b-l-1">
-                                <span class="fz-22 text-success"
-                                    ng-bind="Dashboard.ordersDate.dia.atual[1] || '-'"
-                                    ng-class="{ 'text-danger': (Dashboard.ordersDate.dia.atual[1] < Dashboard.ordersDate.dia.ultimo[1]) }">
-                                </span>
-                                <br/>
-                                <small class="hint-text">Hoje</small>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 p-l-10 p-t-5">
-                                <span class="fz-22" ng-bind="Dashboard.ordersDate.mes.ultimo[1] || '-'"></span>
-                                <br/>
-                                <small class="hint-text">{{ Dashboard.ordersDate.mes.ultimo[0] }}</small>
-                            </div>
-                            <div class="col-md-6 p-r-10 b-l-1 p-t-5">
-                                <span class="fz-22 text-success"
-                                    ng-bind="Dashboard.ordersDate.mes.atual[1] || '-'"
-                                    ng-class="{ 'text-danger': (Dashboard.ordersDate.mes.atual[1] < Dashboard.ordersDate.mes.ultimo[1]) }">
-                                </span>
-                                <br/>
-                                <small class="hint-text">{{ Dashboard.ordersDate.mes.atual[0] }}</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <total-orders-by-date></total-orders-by-date>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12 text-center">
-                <div class="panel panel-default p-t-20 p-b-20">
-                    <div class="panel-body">
-                        <span class="clear fz-12">Sugestões?</span>
-                        <span class="clear fz-12">Críticas?</span>
-                        <a ng-click="Dashboard.sugestaoHelper.sugestao()" class="btn btn-default" style="margin-top:4px">
-                            Enviar&nbsp; <i class="fa-comments-o"></i>
-                        </a>
-                    </div>
-                </div>
+                <caixa-sugestao></caixa-sugestao>
             </div>
         </div>
     </div>
     <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="panel-title">
-                    <i class="fa-line-chart"></i>&nbsp; Pedidos por dia
-                </div>
-                <div class="panel-controls">
-                    <a ng-click="Dashboard.loadTotalOrders(false, true)" tooltips tooltip-template="Adicionar" class="btn-default m-l-5">
-                        <i class="fa-plus"></i>
-                    </a>
-                    <a ng-click="Dashboard.loadTotalOrders(true)" tooltips tooltip-template="Limpar" class="btn-default">
-                        <i class="fa-eraser"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="panel-body p-l-5 p-r-15">
-                <highchart id="dashboardChart" config="Dashboard.chartOrders"></highchart>
-            </div>
-        </div>
+        <chart-total-orders></chart-total-orders>
     </div>
 </div>
 
 <div class="row m-t-20" roles="atendimento">
     <div class="col-md-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="panel-title"><i class="fa-video-camera"></i>&nbsp; Rastreios monitorados</div>
-                <div class="panel-controls">
-                    <a ui-sref="app.rastreios.monitorados()"" class="btn-default"><i class="fa-eye"></i></a>
-                </div>
-            </div>
-            <div class="panel-body">
-                <div class="col-md-12 no-results" ng-if="!Dashboard.rastreiosMonitorados.length">
-                    Você não está monitorando nenhum rastreio
-                </div>
-                <div class="col-md-12" ng-if="Dashboard.rastreiosMonitorados.length" ng-repeat="monitorado in Dashboard.rastreiosMonitorados">
-                    <div class="row">
-                        <p class="pull-left">
-                            <a target="_blank" ng-href="{{ monitorado.rastreio.rastreio_url }}">{{ monitorado.rastreio.rastreio }}</a>
-                            &nbsp;
-                            <a ng-if="monitorado.rastreio.imagem_historico" target="_blank" ng-click="Dashboard.rastreioHelper.printHistorico(monitorado.rastreio.id)"><i class="fa-picture-o"></i></a>
-                        </p>
-                        <div class="pull-right">
-                            <dropdown size="xs">
-                                <li>
-                                    <a ui-sref="app.pedidos.detalhe({id: monitorado.rastreio.pedido_id})">
-                                        <i class="fa fa-eye"></i>&nbsp; Visualizar
-                                    </a>
-                                </li>
-                                <li>
-                                    <a ng-click="Dashboard.rastreioHelper.editar(monitorado.rastreio.id, true)">
-                                        <i class="fa-edit"></i>&nbsp; Editar
-                                    </a>
-                                </li>
-                                <li ng-if="Dashboard.pedido.notas.length">
-                                    <a ng-click="Dashboard.rastreioHelper.printEtiqueta(monitorado.rastreio.id)">
-                                        <i class="fa-tag"></i>&nbsp; Etiqueta
-                                    </a>
-                                </li>
-                                <li ng-if="Dashboard.pedido.notas.length">
-                                    <a ng-click="Dashboard.rastreioHelper.logistica(monitorado.rastreio.id, true)">
-                                        <i class="fa-exchange"></i>&nbsp; Logística
-                                    </a>
-                                </li>
-                                <li ng-if="Dashboard.pedido.notas.length">
-                                    <a ng-click="Dashboard.rastreioHelper.devolucao(monitorado.rastreio.id, true)">
-                                        <i class="fa-undo"></i>&nbsp; Devolução
-                                    </a>
-                                </li>
-                                <li ng-if="Dashboard.pedido.notas.length">
-                                    <a ng-click="Dashboard.rastreioHelper.pi(monitorado.rastreio.id, true)">
-                                        <i class="fa-warning"></i>&nbsp; PI
-                                    </a>
-                                </li>
-                                <li>
-                                    <a ng-click="Dashboard.rastreioHelper.imagem(monitorado.rastreio.id, true)">
-                                        <i class="fa-picture-o"></i>&nbsp; {{ (monitorado.rastreio.imagem_historico) ? 'Regerar'  : 'Gerar'}} imagem
-                                    </a>
-                                </li>
-                                <li>
-                                    <a ng-click="Dashboard.rastreioHelper.monitorar(monitorado.rastreio.id, !monitorado.rastreio.monitorado, true)">
-                                        <i class="fa-video-camera"></i>&nbsp; {{ (monitorado.rastreio.monitorado) ? 'Parar de monitorar' : 'Monitorar' }}
-                                    </a>
-                                </li>
-                            </dropdown>
-                        </div>
-                        <p class="clear">
-                            <span class="label label-{{ Dashboard.rastreioHelper.parseStatusClass(monitorado.rastreio.status) }}">{{ monitorado.rastreio.status_description }}</span>
-                            <br>
-                            <small class="hint-text">Enviado {{ monitorado.rastreio.data_envio_readable }}. Prazo de {{ monitorado.rastreio.prazo }} dia(s)</small>
-                        </p>
-                        <div ng-if="monitorado.rastreio.devolucao" class="alert alert-info m-t-10">
-                            <small><i class="fa-undo"></i>&nbsp; Devolução em {{ monitorado.rastreio.devolucao.created_at }}</small>
-                        </div>
-                        <div ng-if="monitorado.rastreio.logistica" class="alert alert-info m-t-10">
-                            <small><i class="fa-exchange"></i>&nbsp; Logística em {{ monitorado.rastreio.logistica.created_at }}</small>
-                        </div>
-                        <div ng-if="monitorado.rastreio.pi" class="alert alert-info m-t-10">
-                            <small><i class="fa-warning"></i>&nbsp; PI em {{ monitorado.rastreio.pi.created_at }}</small>
-                        </div>
-                    </div>
-                    <hr ng-hide="$last" />
-                </div>
-            </div>
-        </div>
+        <rastreios-monitorados></rastreios-monitorados>
     </div>
 </div>
