@@ -71,10 +71,6 @@ class UploadController extends Controller
                 }
 
                 if ($this->uploadNota($notaArquivo, $usuario_id)) {
-                    if ($uploadCount > 0) {
-                        continue;
-                    }
-
                     $uploadCount++;
                 }
             }
