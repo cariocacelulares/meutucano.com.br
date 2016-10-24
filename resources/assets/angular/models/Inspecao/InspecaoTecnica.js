@@ -11,7 +11,7 @@
 
             angular.extend(rest, {
                 /**
-                 * Retorna as inspecoes sem imei
+                 * Retorna as inspecoes não revisadas
                  *
                  * @param  {Object} params
                  * @return {Object}

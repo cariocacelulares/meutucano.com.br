@@ -34,13 +34,6 @@ trait InspecaoTecnicaTrait
                             $inspecao->pedido_produtos_id = $config['pedido_produtos_id'];
                             $inspecao->solicitante_id = getCurrentUserId();
                             $inspecao->save();
-
-                            if ($pedidoProduto = PedidoProduto::find($config['pedido_produtos_id'])) {
-                                $pedidoProduto->imei = $config['imei'];
-                                $pedidoProduto->save();
-                            } else {
-                                \Log::warning("A inspeção técnica {$config['inspecao_id']} não foi associada ao pedidoProduto {$config['pedido_produtos_id']} pois não foi possível encontrar ele", $config);
-                            }
                         } else {
                             \Log::warning("A inspeção técnica {$config['inspecao_id']} não foi associada ao pedidoProduto {$config['pedido_produtos_id']} pois não está liberada, foi adicionada uma nova inspeção na fila", $config);
                             InspecaoTecnica::create([

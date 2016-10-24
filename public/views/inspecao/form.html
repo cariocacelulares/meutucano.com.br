@@ -1,11 +1,7 @@
 <h1>Gerenciando inspeção técnica</h1>
 <form ng-submit="InspecaoTecnicaForm.save()" novalidate="novalidate" class="form-default">
     <div class="row">
-        <div class="col-md-6 form-group">
-            <label for="imei">IMEI</label>
-            <input ng-model="InspecaoTecnicaForm.inspecao.imei" id="imei" placeholder="Código único do produto" ng-minlength="15" ng-maxlength="15" required />
-        </div>
-        <div class="col-md-6 form-group">
+        <div class="col-md-12 form-group">
             <label for="produto">Produto</label>
             <ui-select ng-model="InspecaoTecnicaForm.inspecao.produto" theme="selectize" id="produto">
                 <ui-select-match placeholder="Selecione um produto">{{ $select.selected.titulo }}</ui-select-match>

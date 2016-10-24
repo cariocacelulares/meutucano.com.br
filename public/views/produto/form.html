@@ -39,12 +39,12 @@
                 </div>
             </div>
         </tab>
-        <tab ng-if="ProdutoForm.produto.estado == '1'" name="produtosRevisados" title="Imei's Revisados">
+        <tab ng-if="ProdutoForm.produto.estado == '1'" name="produtosRevisados" title="Itens Revisados">
             <div ng-if="ProdutoForm.produto.revisoes">
-                <p class="m-b-30">Os IMEI's abaixo já foram revisados e estão aguardando um pedido</p>
-                <span ng-repeat="(id, imei) in ProdutoForm.produto.revisoes" class="col-md-3 fz-15 m-b-10 text-center"><b>{{ id }}</b>: {{ imei }}</span>
+                <p class="m-b-30">Os códigos de inspeção abaixo já foram revisados e estão aguardando um pedido ({{ ProdutoForm.produto.revisoes.length }})</p>
+                <span ng-repeat="revisao in ProdutoForm.produto.revisoes" class="col-md-3 fz-15 m-b-10 text-center">{{ revisao.id }}</span>
             </div>
-            <p ng-if="!ProdutoForm.produto.revisoes" class="text-center m-t-40">Não existe nenhum IMEI revisado para este produto.</p>
+            <p ng-if="!ProdutoForm.produto.revisoes" class="text-center m-t-40">Não existe nenhum item revisado para este produto.</p>
         </tab>
     </tabs>
 </form>

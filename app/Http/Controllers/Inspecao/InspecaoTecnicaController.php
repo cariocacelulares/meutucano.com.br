@@ -34,7 +34,7 @@ class InspecaoTecnicaController extends Controller
             ->leftJoin('usuarios as tecnico_table', 'tecnico_table.id', '=', 'inspecao_tecnica.usuario_id')
             ->leftJoin('usuarios as solicitante_table', 'solicitante_table.id', '=', 'inspecao_tecnica.solicitante_id')
             ->with(['produto', 'pedido_produto', 'pedido_produto.pedido', 'usuario', 'solicitante'])
-            ->whereNotNull('inspecao_tecnica.imei')
+            ->whereNotNull('inspecao_tecnica.revisado_at')
             ->orderBy('inspecao_tecnica.created_at', 'DESC');
 
         $list = $this->handleRequest($list);
@@ -58,7 +58,7 @@ class InspecaoTecnicaController extends Controller
             ->with(['produto', 'pedido_produto', 'pedido_produto.pedido', 'solicitante'])
             ->whereNotNull('inspecao_tecnica.produto_sku')
             ->whereNotNull('inspecao_tecnica.pedido_produtos_id')
-            ->whereNull('inspecao_tecnica.imei')
+            ->whereNull('inspecao_tecnica.revisado_at')
             ->orderBy('inspecao_tecnica.priorizado', 'DESC')
             ->orderBy('pedidos.status', 'DESC')
             ->orderBy('inspecao_tecnica.created_at', 'ASC');
@@ -103,7 +103,10 @@ class InspecaoTecnicaController extends Controller
                 throw new \Exception("ValidationException");
             }
 
-            $data = $m::create(array_merge(Input::all(), ['usuario_id' => getCurrentUserId()]));
+            $data = $m::create(array_merge(Input::all(), [
+                'usuario_id' => getCurrentUserId(),
+                'revisado_at' => date('Y-m-d H:i:s')
+            ]));
 
             return $this->createdResponse($data);
         } catch(\Exception $ex) {
@@ -139,6 +142,7 @@ class InspecaoTecnicaController extends Controller
 
             if (!$data->usuario_id) {
                 $data->usuario_id = getCurrentUserId();
+                $data->revisado_at = date('Y-m-d H:i:s');
             }
 
             $data->save();
@@ -183,7 +187,7 @@ class InspecaoTecnicaController extends Controller
             return $this->notFoundResponse();
         }
 
-        if (!$data = $m::where('pedido_produtos_id', '=', $id)->whereNull('imei')->get()) {
+        if (!$data = $m::where('pedido_produtos_id', '=', $id)->whereNull('revisado_at')->get()) {
             return $this->notFoundResponse();
         }
 
@@ -241,7 +245,7 @@ class InspecaoTecnicaController extends Controller
         $inspecoes = InspecaoTecnica
             ::where('produto_sku', '=', $produto_sku)
             ->whereNull('pedido_produtos_id')
-            ->whereNotNull('imei')
+            ->whereNotNull('revisado_at')
             ->where('reservado', '=', false)
             ->take($quantidade)
             ->get();
@@ -293,7 +297,7 @@ class InspecaoTecnicaController extends Controller
                 $inspecao = InspecaoTecnica
                     ::where('id', '=', $id)
                     ->whereNull('pedido_produtos_id')
-                    ->whereNotNull('imei')
+                    ->whereNotNull('revisado_at')
                     ->where('reservado', '=', false)
                     ->first();
 
@@ -302,7 +306,7 @@ class InspecaoTecnicaController extends Controller
                     $inspecao = InspecaoTecnica
                         ::where('produto_sku', '=', $produto_sku)
                         ->whereNull('pedido_produtos_id')
-                        ->whereNotNull('imei')
+                        ->whereNotNull('revisado_at')
                         ->where('reservado', '=', false)
                         ->whereNotIn('id', $itensReservar)
                         ->first();

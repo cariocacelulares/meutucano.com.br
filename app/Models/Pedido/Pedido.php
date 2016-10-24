@@ -119,7 +119,7 @@ class Pedido extends \Eloquent
                     foreach ($pedido->produtos as $pedidoProduto) {
                         $inspecoes = InspecaoTecnica
                             ::where('pedido_produtos_id', '=', $pedidoProduto->id)
-                            ->whereNull('imei')
+                            ->whereNull('revisado_at')
                             ->get();
 
                         if ($inspecoes) {

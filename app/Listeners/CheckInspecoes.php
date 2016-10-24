@@ -23,7 +23,7 @@ class CheckInspecoes
         $inspecoesDisponiveis = InspecaoTecnica
             ::where('inspecao_tecnica.produto_sku', '=', $produto->sku)
             ->whereNull('inspecao_tecnica.pedido_produtos_id')
-            ->whereNotNull('inspecao_tecnica.imei')
+            ->whereNotNull('inspecao_tecnica.revisado_at')
             ->where('reservado', '=', false)
             ->orderBy('created_at', 'ASC')
             ->get(['inspecao_tecnica.*']);
@@ -47,14 +47,7 @@ class CheckInspecoes
             }
 
             if ($inspecao) {
-                // Concatena os imeis
-                if ($pedidoProduto->imei) {
-                    $pedidoProduto->imei = $pedidoProduto->imei . ',' . $inspecao->imei;
-                } else {
-                    $pedidoProduto->imei = $inspecao->imei;
-                }
-                $pedidoProduto->save();
-
+                // Relaciona a inspecao com o pedido_produtos
                 $inspecao->pedido_produtos_id = $pedidoProduto->id;
                 $inspecao->save();
                 \Log::notice("Inspecao {$inspecao->id} relacionada com o pedidoProduto {$pedidoProduto->id}");

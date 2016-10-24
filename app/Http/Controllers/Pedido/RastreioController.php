@@ -539,7 +539,7 @@ class RastreioController extends Controller
                         $inspecoesDisponiveis = InspecaoTecnica
                             ::where('inspecao_tecnica.produto_sku', '=', $semiNovo['produto_sku'])
                             ->whereNull('inspecao_tecnica.pedido_produtos_id')
-                            ->whereNotNull('inspecao_tecnica.imei')
+                            ->whereNotNull('inspecao_tecnica.revisado_at')
                             ->where('reservado', '=', false)
                             ->orderBy('created_at', 'ASC')
                             ->get(['inspecao_tecnica.*'])
@@ -552,7 +552,6 @@ class RastreioController extends Controller
 
                                 $inspecoes['reservar'][] = [
                                     'inspecao_id' => $inspecoesDisponiveis[0]['id'],
-                                    'imei' => $inspecoesDisponiveis[0]['imei'],
                                     'pedido_produtos_id' => $semiNovo['id'],
                                     'produto_sku' => $semiNovo['produto_sku'],
                                     'titulo' => $semiNovo['produto']['titulo'],

@@ -29,10 +29,17 @@ class InspecaoTecnica extends \Eloquent
         'solicitante_id',
         'produto_sku',
         'pedido_produtos_id',
-        'imei',
         'descricao',
         'priorizado',
         'reservado',
+        'revisado_at',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $appends = [
+        'revisado_at_readable',
     ];
 
     /**
@@ -93,5 +100,15 @@ class InspecaoTecnica extends \Eloquent
             return null;
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
+    }
+
+    /**
+     * @return string
+     */
+    public function getRevisadoAtReadableAttribute() {
+        if (!$this->revisado_at)
+            return null;
+
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->revisado_at)->format('d/m/Y H:i');
     }
 }

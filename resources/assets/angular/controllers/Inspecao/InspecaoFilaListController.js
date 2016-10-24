@@ -13,7 +13,6 @@
          * @type {Filter}
          */
         vm.filterList = Filter.init('inspecao_tecnica_fila', vm, {
-            'inspecao_tecnica.imei': 'LIKE',
             'inspecao_tecnica.created_at': 'BETWEEN',
             'pedidos.codigo_marketplace': 'LIKE',
             'usuarios.name': 'LIKE',

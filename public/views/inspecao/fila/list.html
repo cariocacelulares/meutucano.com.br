@@ -8,7 +8,6 @@
             <th width="150">Usuário</th>
             <th width="200">Pedido</th>
             <th>Produto</th>
-            <th width="200">IMEI</th>
             <th class="text-center" width="225">Data</th>
             <th width="75"></th>
         </tr>
@@ -28,7 +27,6 @@
                 <i ng-if="inspecao.produto.estoque <= 0" class="fa-ban" tooltips tooltip-template="Sem estoque">&nbsp; </i>
                 <a ui-sref="app.produtos.form({sku: inspecao.produto.sku})">{{ inspecao.produto.sku }}</a> {{ inspecao.produto.titulo || '-' }}
             </td>
-            <td><strong>{{ inspecao.imei }}</strong></td>
             <td class="text-center">{{ inspecao.created_at }}</td>
             <td class="text-center">
                 <a class="btn-info" ng-click="InspecaoFilaList.openForm(inspecao)">

@@ -53,8 +53,8 @@ class ProdutoController extends Controller
             $revisoes = InspecaoTecnica
                 ::where('produto_sku', '=', $data->sku)
                 ->whereNull('pedido_produtos_id')
-                ->whereNotNull('imei')
-                ->lists('imei', 'id');
+                ->whereNotNull('revisado_at')
+                ->get(['id']);
 
             $data->revisoes = $revisoes ?: false;
 
