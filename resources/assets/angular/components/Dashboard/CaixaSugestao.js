@@ -4,9 +4,6 @@
     angular
         .module('MeuTucano')
         .component('caixaSugestao', {
-            bindings: {
-                title: '@'
-            },
             templateUrl: 'views/components/dashboard/caixa-sugestao.html',
             controller: function(SugestaoHelper) {
                 var vm = this;

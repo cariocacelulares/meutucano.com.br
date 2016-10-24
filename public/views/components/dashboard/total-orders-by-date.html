@@ -1,7 +1,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         <div class="panel-title">
-                <i class="fa-shopping-cart"></i>&nbsp; Pedidos
+                <i class="fa-shopping-cart"></i>&nbsp; {{ $ctrl.title || 'Pedidos' }}
         </div>
         <div class="panel-controls">
             <a ng-click="$ctrl.loadTotalOrdersDate()" class="btn-default">

@@ -1,7 +1,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         <div class="panel-title">
-            <i class="fa-line-chart"></i>&nbsp; Pedidos por dia
+            <i class="fa-line-chart"></i>&nbsp; {{ $ctrl.title || 'Pedidos por dia' }}
         </div>
         <div class="panel-controls">
             <a ng-click="$ctrl.loadTotalOrders(false, true)" tooltips tooltip-template="Adicionar" class="btn-default m-l-5">
