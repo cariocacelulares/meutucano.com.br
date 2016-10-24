@@ -250,9 +250,16 @@ class MagentoController extends Controller implements Integracao
             $pedido->codigo_api = $order['increment_id'];
             $pedido->marketplace = 'Site';
             $pedido->operacao = $operacao;
-            $pedido->total = $order['total_invoiced'];
-            $pedido->status = $this->parseStatus((isset($order['state'])) ? $order['state'] : ((isset($order['status'])) ? $order['status'] : null ));
+            $pedido->total = $order['grand_total'];
             $pedido->created_at = Carbon::createFromFormat('Y-m-d H:i:s', $order['created_at'])->subHours(3);
+
+            $pedido->status = $this->parseStatus((isset($order['state'])) ? $order['state'] : ((isset($order['status'])) ? $order['status'] : null ));
+            // Se o status do pedido for pendente, verifica se o mercado pago não rejeitou (salvo em call_for_authorize)
+            if ($pedido->status == 0 && isset($order['status_history']) && isset($order['status_history'][0]) && isset($order['status_history'][0]['comment'])) {
+                if (strstr($order['status_history'][0]['comment'], 'Status: rejected') !== false && strstr($order['status_history'][0]['comment'], 'cc_rejected_call_for_authorize') === false) {
+                    $pedido->status = 5;
+                }
+            }
 
             if (in_array($pedido->status, [1,2,3])) {
                 $pedido->estimated_delivery  = $this->calcEstimatedDelivery($order['shipping_description'], $pedido->created_at);
