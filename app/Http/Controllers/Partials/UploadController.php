@@ -44,7 +44,10 @@ class UploadController extends Controller
             $usuario_id = JWTAuth::parseToken()->authenticate()->id;
 
             $uploadCount = 0;
+            $errors = [];
             foreach ($arquivos as $nota) {
+                $erro = false;
+
                 /**
                  * Ambiente de testes
                  */
@@ -54,34 +57,54 @@ class UploadController extends Controller
 
                 // Arquivos XML
                 if ($extensao !== 'xml') {
-                    throw new \Exception('Certifique-se de enviar apenas arquivos XML.');
-                }
-
-                $nota->move(storage_path('app/public/nota'), $notaArquivo);
-                $xml = simplexml_load_file(storage_path('app/public/nota/' . $notaArquivo));
-
-                if (!isset($xml->NFe->infNFe)) {
-                    continue;
+                    $erro = true;
+                    $errors[] = ['chave' => $notaArquivo, 'message' => 'Formato de arquivo inválido!'];
                 } else {
-                    $this->nfe = $xml->NFe->infNFe;
+                    $nota->move(storage_path('app/public/nota'), $notaArquivo);
 
-                    if (isset($xml->protNFe)) {
-                        $this->protNfe = $xml->protNFe;
+                    try {
+                        $xml = simplexml_load_file(storage_path('app/public/nota/' . $notaArquivo));
+                    } catch (\Exception $e) {
+                        $erro = true;
+                        $errors[] = ['chave' => $notaArquivo, 'message' => 'XML inválido!'];
                     }
-                }
 
-                if ($this->uploadNota($notaArquivo, $usuario_id)) {
-                    $uploadCount++;
+                    if (!$erro) {
+                        if (!isset($xml->NFe->infNFe)) {
+                            $erro = true;
+                            $errors[] = ['chave' => $notaArquivo, 'message' => 'Nota não reconhecida!'];
+                        } else {
+                            $this->nfe = $xml->NFe->infNFe;
+
+                            if (isset($xml->protNFe)) {
+                                $this->protNfe = $xml->protNFe;
+                            } else {
+                                $erro = true;
+                                $errors[] = ['chave' => $notaArquivo, 'message' => 'Não foi possível identificar o protocolo da nota!'];
+                            }
+                        }
+                    }
+
+                    if (!$erro) {
+                        $upload = $this->uploadNota($notaArquivo, $usuario_id);
+                        if ($upload === true) {
+                            $uploadCount++;
+                        } else {
+                            $chave = $notaArquivo;
+                            $errors[] = ['chave' => $chave, 'message' => $upload];
+                        }
+                    }
                 }
             }
 
             Log::info(sprintf('Foram importados %d arquivo(s) de %d enviado(s).', $uploadCount, count($arquivos)));
             return $this->createdResponse([
+                'total' => count($arquivos),
                 'success' => $uploadCount,
-                'error' => (count($arquivos) - $uploadCount)
+                'errors' => $errors
             ]);
         } catch (\Exception $e) {
-            Log::alert(logMessage($e, 'Não foi possível fazer upload do arquivo'));
+            Log::alert(logMessage($e, 'Não foi possível fazer upload do(s) arquivo(s)'));
 
             $data = ['exception' => $e->getMessage()];
             return $this->clientErrorResponse($data);
@@ -133,7 +156,7 @@ class UploadController extends Controller
             } else if (in_array($operacao, Config::get('tucano.notas.estorno'))) {
                 $tipoOperacao = 'estorno';
             } else {
-                return false;
+                return 'Não foi possível identificar a operação da nota (CFOP)!';
             }
 
             // Chave
@@ -160,12 +183,27 @@ class UploadController extends Controller
             DB::commit();
             Log::debug('Transaction - commit');
         } catch (\Exception $e) {
-            // Fecha a trasação e cancela as alterações
-            DB::rollBack();
-            Log::debug('Transaction - rollback');
+            if (strstr($e->getMessage(), 'No such file or directory') !== false) {
+                // Fecha a transação e comita as alterações
+                DB::commit();
+                Log::debug('Transaction - commit');
 
-            Log::alert(logMessage($e, 'Não foi possível fazer upload do arquivo'));
-            return false;
+                Log::warning(logMessage($e, 'Não foi possível enviar o e-mail ao cliente!'));
+
+                return 'A nota foi importada, mas não foi possível enviar o e-mail ao cliente!';
+            } else {
+                // Fecha a trasação e cancela as alterações
+                DB::rollBack();
+                Log::debug('Transaction - rollback');
+
+                Log::alert(logMessage($e, 'Não foi possível fazer upload do arquivo'));
+
+                if ($e->getCode() == 7) {
+                    return $e->getMessage();
+                } else {
+                    return 'Erro desconhecido!';
+                }
+            }
         }
     }
 
@@ -318,7 +356,7 @@ class UploadController extends Controller
         }
 
         if (!$notaRef) {
-            throw new \Exception('Não foi possível encontrar a nota de referência para a devolução: ' . $chave);
+            throw new \Exception('Não foi possível encontrar a nota de referência para a devolução', 7);
         }
 
         if (!$notaRef) {
@@ -347,7 +385,7 @@ class UploadController extends Controller
             Log::warning('Não foi possível importar a devolução da nota de venda: ' . $notaRef->id);
         }
 
-        return $devolucao;
+        return true;
     }
 
     /**
