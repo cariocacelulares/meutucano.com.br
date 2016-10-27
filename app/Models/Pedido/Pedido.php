@@ -108,7 +108,7 @@ class Pedido extends \Eloquent
                 // Se o status for cancelado
                 if ($newStatus === 5) {
                     // Dispara o evento de cancelamento do pedido
-                    \Event::fire(new OrderCancel($pedido));
+                    \Event::fire(new OrderCancel($pedido, getCurrentUserId()));
 
                     // Se o status era enviado, pago ou entregue
                     if (in_array($oldStatus, [1, 2, 3])) {

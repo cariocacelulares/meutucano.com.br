@@ -154,7 +154,12 @@ if (!function_exists('getCurrentUserId')) {
      */
     function getCurrentUserId()
     {
-        return Tymon\JWTAuth\Facades\JWTAuth::parseToken()->authenticate()->id;
+        try {
+            return Tymon\JWTAuth\Facades\JWTAuth::parseToken()->authenticate()->id;
+        } catch (\Exception $e) {
+        }
+
+        return null;
     }
 }
 
