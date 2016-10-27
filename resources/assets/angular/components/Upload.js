@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .component('upload', {
             templateUrl: 'views/components/upload.html',
-            controller: function(Upload, toaster, envService, $rootScope, SweetAlert, $timeout) {
+            controller: function($rootScope, $timeout, toaster, envService, Upload) {
                 var vm = this;
 
                 vm.loading = false;

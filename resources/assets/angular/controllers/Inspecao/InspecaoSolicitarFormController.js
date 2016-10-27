@@ -44,13 +44,11 @@
                 InspecaoTecnica.reserva(vm.acoes).then(function(response) {
                     $scope.closeThisDialog(true);
 
-                    console.log(response.dados);
                     if (response.dados.length) {
                         var dados = response.dados;
                         var string = '';
 
                         for (var i in dados) {
-                            console.log(dados[i]);
                             if (dados[i].novo != false) {
                                 string += 'A inspeção ' + dados[i].antigo + ' foi ocupada e agora substituida por ' + dados[i].novo + '.</br>';
                             } else {

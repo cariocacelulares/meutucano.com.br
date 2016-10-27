@@ -57,8 +57,11 @@ class InspecaoTecnicaController extends Controller
             ->leftJoin('usuarios', 'usuarios.id', '=', 'inspecao_tecnica.solicitante_id')
             ->with(['produto', 'pedido_produto', 'pedido_produto.pedido', 'solicitante'])
             ->whereNotNull('inspecao_tecnica.produto_sku')
-            ->whereNotNull('inspecao_tecnica.pedido_produtos_id')
             ->whereNull('inspecao_tecnica.revisado_at')
+            ->where(function($query) {
+                    $query->whereNotNull('inspecao_tecnica.pedido_produtos_id')
+                        ->orWhereNotNull('reservado');
+            })
             ->orderBy('inspecao_tecnica.priorizado', 'DESC')
             ->orderBy('pedidos.status', 'DESC')
             ->orderBy('inspecao_tecnica.created_at', 'ASC');
@@ -221,16 +224,16 @@ class InspecaoTecnicaController extends Controller
         $acoes = [
             'reservar' => [
                 'quantidade' => 0,
-                'aplicar' => 1,
+                'aplicar' => 0,
                 'ids' => []
             ],
             'fila' => [
                 'quantidade' => 0,
-                'aplicar' => 1
+                'aplicar' => 0
             ],
             'sem_estoque' => [
                 'quantidade' => 0,
-                'aplicar' => 1
+                'aplicar' => 0
             ],
         ];
 
@@ -275,6 +278,11 @@ class InspecaoTecnicaController extends Controller
         }
 
         $acoes['reservar']['ids'] = implode(',', $acoes['reservar']['ids']);
+
+        $acoes['reservar']['aplicar'] = ($acoes['reservar']['quantidade'] > 0) ? 1 : 0;
+        $acoes['fila']['aplicar'] = ($acoes['fila']['quantidade'] > 0) ? 1 : 0;
+        $acoes['sem_estoque']['aplicar'] = ($acoes['sem_estoque']['quantidade'] > 0) ? 1 : 0;
+
         return $this->listResponse($acoes);
     }
 

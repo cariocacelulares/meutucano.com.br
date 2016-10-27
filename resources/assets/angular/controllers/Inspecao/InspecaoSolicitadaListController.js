@@ -64,6 +64,7 @@
         vm.destroy = function(inspecao) {
             InspecaoTecnica.delete(inspecao.id).then(function() {
                 toaster.pop('success', 'Sucesso!', 'Inspeção técnica excluida com sucesso!');
+                vm.load();
             });
         };
     }
