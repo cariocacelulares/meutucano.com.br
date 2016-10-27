@@ -313,7 +313,11 @@ class UploadController extends Controller
         }
 
         if ($pedido == null) {
-            $pedido = Pedido::withTrashed()->findOrNew((int)substr($chave, 25, 10));
+            $pedido = Pedido::withTrashed()->find((int)substr($chave, 25, 10));
+        }
+
+        if (!$pedido) {
+            throw new \Exception('O pedido não existe no tucano!', 7);
         }
 
         if (!in_array($tipoOperacao, ['devolucao', 'estorno'])) {
