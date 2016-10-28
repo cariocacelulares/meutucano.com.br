@@ -174,14 +174,16 @@ class UploadController extends Controller
             $dataNota = $datetimeNota->format('Y-m-d');
 
             if (in_array($tipoOperacao, ['devolucao', 'estorno'])) {
-                return $this->importDevolucao($chave, $usuario_id, $notaArquivo, $tipoOperacao, $dataNota);
+                $return = $this->importDevolucao($chave, $usuario_id, $notaArquivo, $tipoOperacao, $dataNota);
             } else {
-                return $this->importVenda($chave, $pedido, $usuario_id, $dataNota, $notaArquivo, $produtos, $datetimeNota);
+                $return = $this->importVenda($chave, $pedido, $usuario_id, $dataNota, $notaArquivo, $produtos, $datetimeNota);
             }
 
             // Fecha a transação e comita as alterações
             DB::commit();
             Log::debug('Transaction - commit');
+
+            return $return;
         } catch (\Exception $e) {
             if (strstr($e->getMessage(), 'No such file or directory') !== false) {
                 // Fecha a transação e comita as alterações
@@ -518,6 +520,7 @@ class UploadController extends Controller
             $lastPos = $lastPos + strlen('PROD.:');
         }
 
+        // Separa os imeis por produto
         $produtoImei = [];
         foreach ($positions as $key => $pos) {
             $posFind = ' | ';
@@ -532,7 +535,142 @@ class UploadController extends Controller
             $produtoImei[$skuProduto] = $imeis;
         }
 
-        foreach ($produtos as $item) {
+        // Organiza os imeis
+        foreach ($produtoImei as $sku => $imeis) {
+            $produtoImei[$sku] = explode(',', $imeis);
+            $produtoImei[$sku] = array_map(function($imei) {
+                return trim($imei);
+            }, $produtoImei[$sku]);
+        }
+
+        // Organiza os produtos da nota
+        $produtosNota = [];
+        foreach ($produtos as $produto) {
+            $produtosNota[(int)$produto->prod->cProd][] = [
+                'sku' => (int) $produto->prod->cProd,
+                'titulo' => (string) $produto->prod->xProd,
+                'ncm' => (string) $produto->prod->NCM,
+                'ean' => (string) $produto->prod->cEAN,
+                'quantidade' => (float) $produto->prod->qCom,
+                'valor' => (string) $produto->prod->vUnCom,
+            ];
+        }
+
+        // Organiza as quantidades
+        // Se um item da nota for diferente da primeira, vai continuar separada
+        foreach ($produtosNota as $sku => $itens) {
+            foreach ($itens as $key => $item) {
+                if ($key !== 0 && $item === $itens[0]) {
+                    $produtosNota[$sku][0]['quantidade'] = (int)$itens[0]['quantidade'] + 1;
+                    unset($produtosNota[$sku][$key]);
+                }
+            }
+
+            $produtosNota[$sku] = array_values($produtosNota[$sku]);
+        }
+
+        // Produtos que já estao no pedido
+        $produtosExistentesOriginal = PedidoProduto::where('pedido_id', '=', $pedido->id)->get();
+
+        // Cadastra os pedidoProdutos
+        $cadastrados = [];
+        $utilizados = [];
+        foreach ($produtosNota as $sku => $itens) {
+            foreach ($itens as $key => $item) {
+                Log::debug('imeis', [$produtoImei]);
+                // Pega o produto por sku
+                $produto = Produto::where('sku', '=', $sku)->first();
+
+                // Pega o pedidoProduto
+                $pedidoProduto = PedidoProduto
+                    ::where('pedido_id', '=', $pedido->id)
+                    ->where('produto_sku', '=', $produto->sku)
+                    ->where('valor', '=', $item['valor'])
+                    ->whereNotIn('id', $utilizados)
+                    ->first();
+
+                // Se nao tiver pedidoProduto, cria um
+                if (!$pedidoProduto) {
+                    $pedidoProduto = PedidoProduto::create([
+                        'pedido_id' => $pedido->id,
+                        'produto_sku' => $produto->sku
+                    ]);
+                }
+
+                // Seta quantos já foram sincronizados com esse sku
+                $cadastrados[$sku][numbers($item['valor'])] = (isset($cadastrados[$sku][numbers($item['valor'])])) ? ($cadastrados[$sku][numbers($item['valor'])] + $item['quantidade']) : $item['quantidade'];
+
+                // Pega os imeis para essa quantidade e tira da lista de imeis disponiveis
+                $imeis = '';
+                if (isset($produtoImei[$sku]) && !empty($produtoImei[$sku])) {
+                    for ($i=0; $i < $item['quantidade']; $i++) {
+                        if (isset($produtoImei[$sku][$i])) {
+                            $imeis[] = $produtoImei[$sku][$i];
+                            unset($produtoImei[$sku][$i]);
+                            $produtoImei[$sku] = array_values($produtoImei[$sku]);
+                        }
+                    }
+                }
+                $imeis = ($imeis) ? implode(', ', $imeis) : null;
+
+                // Se acabou de ser criado, seta os valores
+                if ($pedidoProduto->wasRecentlyCreated) {
+                    $pedidoProduto->pedido_id = $pedido->id;
+                    $pedidoProduto->produto_sku = $sku;
+                    $pedidoProduto->valor = $item['valor'];
+                    $pedidoProduto->quantidade = $item['quantidade'];
+                } else if ($pedidoProduto->getOriginal('quantidade') < $item['quantidade']) {
+                    // Se o pedidoProduto já exisita e tinha menos qtd que na nota, atualiza a qtd
+                    $pedidoProduto->quantidade = $item['quantidade'];
+                }
+
+                $pedidoProduto->imei = $imeis;
+
+                if ($pedidoProduto->save()) {
+                    $utilizados[] = $pedidoProduto->id;
+                    Log::info('Pedido Produto importado ' . $sku . ' / ' . $pedido->id);
+                } else {
+                    Log::warning('Não foi possível importar o Pedido Produto ' . $sku . ' / ' . $pedido->id);
+                }
+            }
+        }
+
+        // Organiza os produtos existentes
+        $produtosExistentes = [];
+        foreach ($produtosExistentesOriginal as $pedidoProduto) {
+            if (!isset($produtosExistentes[$pedidoProduto->produto_sku])) {
+                $produtosExistentes[$pedidoProduto->produto_sku] = [];
+            }
+
+            if (isset($produtosExistentes[$pedidoProduto->produto_sku][numbers($pedidoProduto->valor)])) {
+                $produtosExistentes[$pedidoProduto->produto_sku][numbers($pedidoProduto->valor)] = $produtosExistentes[$pedidoProduto->produto_sku][numbers($pedidoProduto->valor)] + $pedidoProduto->quantidade;
+            } else {
+                $produtosExistentes[$pedidoProduto->produto_sku][numbers($pedidoProduto->valor)] = $pedidoProduto->quantidade;
+            }
+        }
+
+        DB::rollback();
+        dd($cadastrados, $produtosExistentes);
+
+        foreach ($cadastrados as $sku => $quantidade) {
+            if (isset($produtosExistentes[$sku])) {
+                if ($produtosExistentes[$sku] > $quantidade) {
+                    throw new \Exception("O produto {$sku} deve ter no mínimo {$produtosExistentes[$sku]} quantidades. A nota possui apenas {$quantidade}.", 7);
+                } else {
+                    unset($produtosExistentes[$sku]);
+                }
+            }
+        }
+
+        if (!empty($produtosExistentes)) {
+            if (count($produtosExistentes) == 1) {
+                throw new \Exception('O produto ' . array_keys($produtosExistentes)[0] . ' está no pedido mas não está na nota!', 7);
+            } else {
+                throw new \Exception('Os produtos ' . implode(', ', array_keys($produtosExistentes)) . ' estão no pedido mas não estão na nota!', 7);
+            }
+        }
+
+        /*foreach ($produtos as $item) {
             $produto = Produto::firstOrCreate([ 'sku' => (int)$item->prod->cProd ]);
 
             // Cria as informações do produto se ele nao existir
@@ -558,14 +696,14 @@ class UploadController extends Controller
                 $pedidoProduto->quantidade = (int)$item->prod->qCom;
             }
 
-            $pedidoProduto->imei = array_key_exists((int)$item->prod->cProd, $produtoImei) ? $produtoImei[(int)$item->prod->cProd] : '';
+            $pedidoProduto->imei = array_key_exists((int)$item->prod->cProd, $produtoImei) ? $produtoImei[(int)$item->prod->cProd] : null;
 
             if ($pedidoProduto->save()) {
                 Log::info('Pedido Produto importado ' . $item->prod->cProd . ' / ' . $pedido->id);
             } else {
                 Log::warning('Não foi possível importar o Pedido Produto ' . $item->prod->cProd . ' / ' . $pedido->id);
             }
-        }
+        }*/
 
         /**
          * Envia e-mail de compra
