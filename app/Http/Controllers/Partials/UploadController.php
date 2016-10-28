@@ -174,14 +174,16 @@ class UploadController extends Controller
             $dataNota = $datetimeNota->format('Y-m-d');
 
             if (in_array($tipoOperacao, ['devolucao', 'estorno'])) {
-                return $this->importDevolucao($chave, $usuario_id, $notaArquivo, $tipoOperacao, $dataNota);
+                $return = $this->importDevolucao($chave, $usuario_id, $notaArquivo, $tipoOperacao, $dataNota);
             } else {
-                return $this->importVenda($chave, $pedido, $usuario_id, $dataNota, $notaArquivo, $produtos, $datetimeNota);
+                $return = $this->importVenda($chave, $pedido, $usuario_id, $dataNota, $notaArquivo, $produtos, $datetimeNota);
             }
 
             // Fecha a transação e comita as alterações
             DB::commit();
             Log::debug('Transaction - commit');
+
+            return $return;
         } catch (\Exception $e) {
             if (strstr($e->getMessage(), 'No such file or directory') !== false) {
                 // Fecha a transação e comita as alterações
