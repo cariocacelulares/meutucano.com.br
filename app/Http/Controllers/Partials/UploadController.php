@@ -478,6 +478,12 @@ class UploadController extends Controller
             /**
              * Salva o rastreio
              */
+
+            $pedidoRastreio = Rastreio::where('pedido_id', '!=', $pedido->id)->where('rastreio', '=', $rastreio)->first();
+
+            if ($pedidoRastreio) {
+                throw new \Exception('O código de rastreio já está sendo utilizado por outra.', 7);
+            }
             $pedidoRastreio = Rastreio::firstOrNew(['pedido_id' => $pedido->id, 'rastreio' => $rastreio]);
             $pedidoRastreio->pedido_id = $pedido->id;
             $pedidoRastreio->rastreio = $rastreio;
