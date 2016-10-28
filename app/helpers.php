@@ -146,6 +146,18 @@ function numbers($string) {
     return preg_replace('/\D/', '', $string);
 }
 
+/**
+ * Retorna o numero sem ponto e com duas casas após ele
+ *
+ * @param  string $string
+ * @return string
+ */
+function currencyNumbers($string) {
+    $dot = strpos($string, '.');
+    $decimals = str_pad(substr($string, ($dot + 1), 2), 2, '0');
+    return (int) (substr($string, 0, $dot) . $decimals);
+}
+
 if (!function_exists('getCurrentUserId')) {
     /**
      * Retorna o id do usuário logado

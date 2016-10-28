@@ -598,7 +598,8 @@ class UploadController extends Controller
                 }
 
                 // Seta quantos já foram sincronizados com esse sku
-                $cadastrados[$sku][numbers($item['valor'])] = (isset($cadastrados[$sku][numbers($item['valor'])])) ? ($cadastrados[$sku][numbers($item['valor'])] + $item['quantidade']) : $item['quantidade'];
+                $parsedValue = currencyNumbers($item['valor']);
+                $cadastrados[$sku][$parsedValue] = (isset($cadastrados[$sku][$parsedValue])) ? ($cadastrados[$sku][$parsedValue] + $item['quantidade']) : $item['quantidade'];
 
                 // Pega os imeis para essa quantidade e tira da lista de imeis disponiveis
                 $imeis = '';
@@ -642,22 +643,26 @@ class UploadController extends Controller
                 $produtosExistentes[$pedidoProduto->produto_sku] = [];
             }
 
-            if (isset($produtosExistentes[$pedidoProduto->produto_sku][numbers($pedidoProduto->valor)])) {
-                $produtosExistentes[$pedidoProduto->produto_sku][numbers($pedidoProduto->valor)] = $produtosExistentes[$pedidoProduto->produto_sku][numbers($pedidoProduto->valor)] + $pedidoProduto->quantidade;
+            $parsedValue = currencyNumbers($pedidoProduto->valor);
+            if (isset($produtosExistentes[$pedidoProduto->produto_sku][$parsedValue])) {
+                $produtosExistentes[$pedidoProduto->produto_sku][$parsedValue] = $produtosExistentes[$pedidoProduto->produto_sku][$parsedValue] + $pedidoProduto->quantidade;
             } else {
-                $produtosExistentes[$pedidoProduto->produto_sku][numbers($pedidoProduto->valor)] = $pedidoProduto->quantidade;
+                $produtosExistentes[$pedidoProduto->produto_sku][$parsedValue] = $pedidoProduto->quantidade;
             }
         }
 
-        DB::rollback();
-        dd($cadastrados, $produtosExistentes);
+        foreach ($cadastrados as $sku => $valores) {
+            foreach ($valores as $valor => $quantidade) {
+                if (isset($produtosExistentes[$sku][$valor])) {
+                    if ($produtosExistentes[$sku][$valor] > $quantidade) {
+                        throw new \Exception("O produto {$sku} deve ter no mínimo {$produtosExistentes[$sku][$valor]} quantidades. A nota possui apenas {$quantidade}.", 7);
+                    } else {
+                        unset($produtosExistentes[$sku][$valor]);
 
-        foreach ($cadastrados as $sku => $quantidade) {
-            if (isset($produtosExistentes[$sku])) {
-                if ($produtosExistentes[$sku] > $quantidade) {
-                    throw new \Exception("O produto {$sku} deve ter no mínimo {$produtosExistentes[$sku]} quantidades. A nota possui apenas {$quantidade}.", 7);
-                } else {
-                    unset($produtosExistentes[$sku]);
+                        if (isset($produtosExistentes[$sku]) && count($produtosExistentes[$sku]) < 1) {
+                            unset($produtosExistentes[$sku]);
+                        }
+                    }
                 }
             }
         }
@@ -669,41 +674,6 @@ class UploadController extends Controller
                 throw new \Exception('Os produtos ' . implode(', ', array_keys($produtosExistentes)) . ' estão no pedido mas não estão na nota!', 7);
             }
         }
-
-        /*foreach ($produtos as $item) {
-            $produto = Produto::firstOrCreate([ 'sku' => (int)$item->prod->cProd ]);
-
-            // Cria as informações do produto se ele nao existir
-            if ($produto->wasRecentlyCreated) {
-                $produto->sku = (int)$item->prod->cProd;
-                $produto->titulo = $item->prod->xProd;
-                $produto->ncm = $item->prod->NCM;
-                $produto->ean = $item->prod->cEAN;
-
-                if ($produto->save()) {
-                    Log::info('Produto importado ' . $produto->id);
-                } else {
-                    Log::warning('Não foi possível importar o produto ' . $item->prod->cProd);
-                }
-            }
-
-            $pedidoProduto = PedidoProduto::firstOrCreate(['pedido_id' => $pedido->id, 'produto_sku' => $produto->sku]);
-
-            if ($pedidoProduto->wasRecentlyCreated) {
-                $pedidoProduto->pedido_id = $pedido->id;
-                $pedidoProduto->produto_sku = (int)$item->prod->cProd;
-                $pedidoProduto->valor = (float)$item->prod->vUnCom;
-                $pedidoProduto->quantidade = (int)$item->prod->qCom;
-            }
-
-            $pedidoProduto->imei = array_key_exists((int)$item->prod->cProd, $produtoImei) ? $produtoImei[(int)$item->prod->cProd] : null;
-
-            if ($pedidoProduto->save()) {
-                Log::info('Pedido Produto importado ' . $item->prod->cProd . ' / ' . $pedido->id);
-            } else {
-                Log::warning('Não foi possível importar o Pedido Produto ' . $item->prod->cProd . ' / ' . $pedido->id);
-            }
-        }*/
 
         /**
          * Envia e-mail de compra
