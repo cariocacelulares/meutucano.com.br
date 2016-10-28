@@ -57,6 +57,19 @@
         };
 
         /**
+         * Altera a prioridade da inspecao
+         *
+         * @return {void}
+         */
+        vm.changePriority = function(inspecao) {
+            inspecao.priorizado = !inspecao.priorizado;
+            InspecaoTecnica.save(inspecao, inspecao.id).then(function() {
+                toaster.pop('success', 'Sucesso!', 'Prioridade alterada com sucesso!');
+                vm.load();
+            });
+        };
+
+        /**
          * Exclui a inspecao
          *
          * @return {void}

@@ -143,7 +143,7 @@ class InspecaoTecnicaController extends Controller
 
             $data->fill(Input::all());
 
-            if (!$data->usuario_id) {
+            if (!$data->usuario_id && $data->getOriginal('priorizado') == $data->priorizado) {
                 $data->usuario_id = getCurrentUserId();
                 $data->revisado_at = date('Y-m-d H:i:s');
             }

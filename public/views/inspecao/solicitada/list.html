@@ -11,7 +11,7 @@
             <th>Produto</th>
             <th class="text-center" width="100">Revisado</th>
             <th class="text-center" width="225">Data</th>
-            <th width="75"></th>
+            <th width="120"></th>
         </tr>
         <tr class="table-filter" static-include="views/inspecao/solicitada/list_filter.html"></tr>
     </thead>
@@ -27,6 +27,9 @@
             </td>
             <td class="text-center">{{ inspecao.created_at }}</td>
             <td class="text-center">
+                <a ng-if="!inspecao.revisado_at" class="btn-primary" ng-click="InspecaoSolicitadaList.changePriority(inspecao)">
+                    <i class="fa-arrow-{{ inspecao.priorizado ? 'down' : 'up' }}"></i>
+                </a>
                 <a ng-if="!inspecao.revisado_at" class="btn-danger" confirm="InspecaoSolicitadaList.destroy(inspecao)">
                     <i class="fa-trash"></i>
                 </a>
