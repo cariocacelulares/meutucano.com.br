@@ -296,28 +296,34 @@
                  */
                 .state('app.inspecao', {
                     url: '/inspecao',
-                    templateUrl: 'views/layouts/default.html',
-                    data: {
-                        roles: ['admin', 'tecnico']
-                    }
+                    templateUrl: 'views/layouts/default.html'
                 })
 
                 .state('app.inspecao.realizada', {
                     url: '/realizada',
                     templateUrl: 'views/inspecao/realizada/list.html',
-                    controller: 'InspecaoRealizadaListController as InspecaoRealizadaList'
+                    controller: 'InspecaoRealizadaListController as InspecaoRealizadaList',
+                    data: {
+                        roles: ['admin', 'tecnico']
+                    }
                 })
 
                 .state('app.inspecao.fila', {
                     url: '/fila',
                     templateUrl: 'views/inspecao/fila/list.html',
-                    controller: 'InspecaoFilaListController as InspecaoFilaList'
+                    controller: 'InspecaoFilaListController as InspecaoFilaList',
+                    data: {
+                        roles: ['admin', 'tecnico']
+                    }
                 })
 
                 .state('app.inspecao.solicitada', {
                     url: '/solicitada',
                     templateUrl: 'views/inspecao/solicitada/list.html',
-                    controller: 'InspecaoSolicitadaListController as InspecaoSolicitadaList'
+                    controller: 'InspecaoSolicitadaListController as InspecaoSolicitadaList',
+                    data: {
+                        roles: ['admin', 'gestor', 'tecnico', 'atendimento']
+                    }
                 })
 
                 /**
