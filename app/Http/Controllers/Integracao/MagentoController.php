@@ -308,22 +308,34 @@ class MagentoController extends Controller implements Integracao
      */
     public function queue()
     {
-        $order = $this->request('orders');
-        if ($order && $this->api) {
-            $mg_order = $this->api->salesOrderInfo($this->session, $order['order_id']);
-            $mg_order = json_decode(json_encode($mg_order), true);
+        try {
+            $order = $this->request('orders');
+            if ($order && $this->api) {
+                $mg_order = $this->api->salesOrderInfo($this->session, $order['order_id']);
+                $mg_order = json_decode(json_encode($mg_order), true);
 
-            if (isset($mg_order['customer_id'])) {
-                $mg_customer = $this->api->customerCustomerInfo($this->session, $mg_order['customer_id']);
-                $mg_customer = json_decode(json_encode($mg_customer), true);
+                if (isset($mg_order['customer_id'])) {
+                    $mg_customer = $this->api->customerCustomerInfo($this->session, $mg_order['customer_id']);
+                    $mg_customer = json_decode(json_encode($mg_customer), true);
 
-                if ($mg_order['customer'] = $mg_customer) {
-                    $this->importPedido($mg_order);
+                    if ($mg_order['customer'] = $mg_customer) {
+                        $this->importPedido($mg_order);
+                    }
                 }
-            }
 
-            $order = $this->request(sprintf('orders/%s', $order['order_id']), [], 'DELETE');
-            Log::notice('Pedido ' . (($mg_order && isset($mg_order['increment_id'])) ? $mg_order['increment_id'] : $order['order_id']) . ' removido da fila de espera no tucanomg.');
+                $order = $this->request(sprintf('orders/%s', $order['order_id']), [], 'DELETE');
+                Log::notice('Pedido ' . (($mg_order && isset($mg_order['increment_id'])) ? $mg_order['increment_id'] : $order['order_id']) . ' removido da fila de espera no tucanomg.');
+            }
+        } catch (\Exception $e) {
+            if (($e->getCode() == 100 || strstr($e->getMessage(), 'order not exists') !== false) && isset($order['order_id']) && $order['order_id']) {
+                $order = $this->request(sprintf('orders/%s', $order['order_id']), [], 'DELETE');
+                Log::notice('Pedido ' . (($mg_order && isset($mg_order['increment_id'])) ? $mg_order['increment_id'] : $order['order_id']) . ' removido da fila de espera no tucanomg (não existe no magento).');
+            } else {
+                Log::warning('Ocorreu um problema ao tentar executar a fila no mangeto.', [
+                    'mg_order' => (isset($mg_order['increment_id']) ? $mg_order['increment_id'] : null),
+                    'order' => (isset($order['order_id']) ? $order['order_id'] : null)
+                ]);
+            }
         }
     }
 
