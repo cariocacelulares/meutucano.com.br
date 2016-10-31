@@ -23,7 +23,7 @@
                 <label for="titulo">Título</label>
                 <input ng-model="RelatorioProdutos.params.filter.titulo.value" placeholder="Título do produto" id="titulo" />
             </div>
-            <div class="col-md-2">
+            <div class="col-md-1">
                 <label for="sku">SKU</label>
                 <input ng-model="RelatorioProdutos.params.filter.sku.value" placeholder="Código do produto" type="number" id="sku" />
             </div>
@@ -39,7 +39,15 @@
                     <input class="big" ng-model="RelatorioProdutos.params.filter.estoque.value.to" placeholder="Até" type="number" />
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
+                <label for="estado">estado</label>
+                <select ng-model="RelatorioProdutos.params.filter.estado.value" id="estado">
+                    <option value="">Todos</option>
+                    <option value="0">Novo</option>
+                    <option value="1">Seminovo</option>
+                </select>
+            </div>
+            <div class="col-md-2">
                 <label for="created_at">Data de criação produto</label>
                 <div class="between-group">
                     <div class="date-picker">

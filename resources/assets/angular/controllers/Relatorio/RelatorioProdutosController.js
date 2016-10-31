@@ -84,6 +84,7 @@
                     {label: 'Título', name: 'titulo'},
                     {label: 'SKU', name: 'sku'},
                     {label: 'Estoque', name: 'estoque'},
+                    {label: 'Estado', name: 'estado'},
                     {label: 'Data de criação', name: 'created_at'}
                 ],
                 order: [],
@@ -116,6 +117,7 @@
                 titulo: 'Título',
                 sku: 'SKU',
                 estoque: 'Estoque',
+                estado: 'Estado',
                 created_at: 'Data de criação'
             };
 
@@ -137,6 +139,7 @@
                 sku: {operator: 'LIKE'},
                 titulo: {operator: 'LIKE'},
                 estoque: {operator: 'BETWEEN'},
+                estado: {operator: '='},
                 'produtos.created_at': {operator: 'BETWEEN'},
                 'pedido_produtos.imei': {operator: 'LIKE'},
                 'pedido_produtos.quantidade': {operator: 'BETWEEN'},

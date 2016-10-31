@@ -176,6 +176,11 @@ Route::group(['prefix' => '/api'], function() {
         Route::resource('pedidos', 'Pedido\PedidoController', ['except' => ['create', 'edit']]);
 
         /**
+         * Pedido Produto
+         */
+        Route::resource('pedido-produto', 'Pedido\PedidoProdutoController');
+
+        /**
          * Notas
          */
         Route::resource('notas', 'Pedido\NotaController', ['except' => ['create', 'edit']]);

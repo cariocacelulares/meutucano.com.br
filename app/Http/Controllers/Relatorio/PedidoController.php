@@ -124,6 +124,9 @@ class PedidoController extends Controller
                 $groupOrder = DB::raw('DAY(pedidos.created_at)');
             } elseif ($this->group == 'month') {
                 $groupOrder = DB::raw('MONTH(pedidos.created_at)');
+             } elseif ($this->group == 'produtos.estado') {
+                $groupOrder = $this->group;
+                $this->group = 'produtos.estado_description';
             } else {
                 $groupOrder = $this->group;
             }
@@ -150,7 +153,12 @@ class PedidoController extends Controller
                 if (strstr($this->group, '.')) {
                     $pieces = explode('.', $this->group);
                     $pieces[0] = str_replace(['clientes', 'cliente_enderecos', 'pedido_produtos'], ['cliente', 'endereco', 'produtos'], $pieces[0]);
-                    $clearedOrder['group'] = array_key_exists($pieces[1], $pedido[$pieces[0]]) ? $pedido[$pieces[0]][$pieces[1]] : null;
+
+                    if ($pieces[0] == 'produtos') {
+                        $clearedOrder['group'] = array_key_exists($pieces[1], $pedido['produtos'][0]['produto']) ? $pedido['produtos'][0]['produto'][$pieces[1]] : null;
+                    } else {
+                        $clearedOrder['group'] = array_key_exists($pieces[1], $pedido['produtos'][0]['produto']) ? $pedido['produtos'][0]['produto'][$pieces[1]] : null;
+                    }
                 } else if ($this->group == 'day') {
                     $clearedOrder['group'] = substr($pedido['created_at'], 0, 10);
                 } else if ($this->group == 'month') {
@@ -170,6 +178,8 @@ class PedidoController extends Controller
                     $field['name'] = 'pagamento_metodo_readable';
                 } else if ($field['name'] == 'frete_metodo') {
                     $field['name'] = 'frete_metodo_readable';
+                } else if ($field['name'] == 'produtos.estado') {
+                    $field['name'] = 'produtos.estado_description';
                 }
 
                 // se o campo existir, adiciona
@@ -187,8 +197,10 @@ class PedidoController extends Controller
                     if ($pieces[0] == 'produtos') {
                         // podem ter vários produtos
                         foreach ($this->model[$key]['produtos'] as $pedidoProduto) {
-                            // se for titulo, pega do produto e nao do pedido produto
+                            // se for titulo ou estado, pega do produto e nao do pedido produto
                             if ($pieces[1] == 'titulo') {
+                                $clearedOrder['produtos'][$pedidoProduto['id']][$field['label']] = $pedidoProduto['produto'][$pieces[1]];
+                            } else if ($pieces[1] == 'estado_description') {
                                 $clearedOrder['produtos'][$pedidoProduto['id']][$field['label']] = $pedidoProduto['produto'][$pieces[1]];
                             } else {
                                 $clearedOrder['produtos'][$pedidoProduto['id']][$field['label']] = $pedidoProduto[$pieces[1]];

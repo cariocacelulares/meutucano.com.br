@@ -265,7 +265,12 @@
             </tbody>
             <tbody>
                 <tr ng-if="PedidoDetalhe.pedido.produtos" ng-repeat="produto in PedidoDetalhe.pedido.produtos">
-                    <td class="text-center"><a ui-sref="app.produtos.form({sku: produto.produto_sku})" title="Visualizar produto {{ produto.produto.titulo }}">{{ produto.produto_sku }}</a></td>
+                    <td class="text-center">
+                        <i class="fa-refresh m-r-10" roles="admin|atendimento|faturamento|gestor" tooltips tooltip-template="Atualizar informações" ng-click="PedidoDetalhe.openOrderProductForm(produto)"></i>
+                        <a ui-sref="app.produtos.form({sku: produto.produto_sku})" title="Visualizar produto {{ produto.produto.titulo }}">
+                            {{ produto.produto_sku }}
+                        </a>
+                    </td>
                     <td class="text-left">
                         <b>{{ produto.produto.titulo }}</b><br>
                         <span ng-repeat="inspecao in produto.inspecoes" ng-class="{ 'label-success': inspecao.revisado_at }" class="label m-r-10">{{ inspecao.id }}</span>
@@ -285,7 +290,7 @@
                     <td>{{ PedidoDetalhe.pedido.frete_valor | currency }}</td>
                 </tr>
                 <tr ng-if="PedidoDetalhe.pedido.total" class="total">
-                    <td></td>
+                    <td><span roles="admin|atendimento|faturamento|gestor" ng-click="PedidoDetalhe.openOrderProductForm()" class="btn-info btn-xs"><i class="fa-plus">&nbsp;</i>Adicionar produto</span></td>
                     <td></td>
                     <td class="bold">TOTAL</td>
                     <td>{{ PedidoDetalhe.pedido.total | currency }}</td>

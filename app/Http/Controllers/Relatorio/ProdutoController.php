@@ -153,6 +153,10 @@ class ProdutoController extends Controller
 
             // pra cada campo selecionado
             foreach ($this->fields as $field) {
+                if ($field['name'] == 'estado') {
+                    $field['name'] = 'estado_description';
+                }
+
                 // se o campo existir, adiciona
                 if (array_key_exists($field['name'], $produto)) {
                     if ($field['name'] == 'pedidos.created_at' && is_string($produto['pedidos.created_at']) && \DateTime::createFromFormat('Y-m-d H:i:s', $produto['pedidos.created_at']) !== false) {
