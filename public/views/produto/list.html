@@ -29,6 +29,8 @@
                 {{ produto.estado_description }}
             </td>
             <td class="text-center">
+                <span ng-if="produto.attachedProducts[0]" tooltips tooltip-template="Pedidos pendentes" class="label">{{ produto.attachedProducts[0] }}</span>
+                <span ng-if="produto.attachedProducts[1]" tooltips tooltip-template="Pedidos pagos" class="label label-info">{{ produto.attachedProducts[1] }}</span>
                 {{ produto.estoque }}
             </td>
             <td class="text-center">

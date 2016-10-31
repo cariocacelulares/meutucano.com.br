@@ -19,7 +19,7 @@ if (!function_exists('logMessage')) {
             $exception->getFile(),
             $exception->getLine(),
             $exception->getMessage(),
-            $exception->getTraceAsString()
+            htmlentities($exception->getTraceAsString())
         );
     }
 }

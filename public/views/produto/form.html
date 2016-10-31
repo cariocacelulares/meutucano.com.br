@@ -38,6 +38,14 @@
                     <input type="number" ng-model="ProdutoForm.produto.estoque" id="estoque" placeholder="Qtd" required />
                 </div>
             </div>
+            <div ng-if="ProdutoForm.produto.attachedProducts[0] || ProdutoForm.produto.attachedProducts[1]" class="row">
+                <p>
+                    <span>Produtos reservados: </span>
+                    <span ng-if="ProdutoForm.produto.attachedProducts[0]"><b>{{ ProdutoForm.produto.attachedProducts[0] }}</b> pendente(s)</span>
+                    <span ng-if="ProdutoForm.produto.attachedProducts[0] && ProdutoForm.produto.attachedProducts[1]"> e </span>
+                    <span ng-if="ProdutoForm.produto.attachedProducts[1]"><b>{{ ProdutoForm.produto.attachedProducts[1] }}</b> pago(s)</span>.
+                </p>
+            </div>
         </tab>
         <tab ng-if="ProdutoForm.produto.estado == '1'" name="produtosRevisados" title="Itens Revisados">
             <div ng-if="ProdutoForm.produto.revisoes">
