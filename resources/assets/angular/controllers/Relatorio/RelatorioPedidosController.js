@@ -153,6 +153,7 @@
 
             vm.list.fields.produto = {
                 'produtos.titulo': 'Título',
+                'produtos.estado': 'Estado',
                 'pedido_produtos.produto_sku': 'SKU',
                 'pedido_produtos.imei': 'IMEI',
                 'pedido_produtos.quantidade': 'Quantidade',
@@ -175,7 +176,8 @@
                 'pedido_produtos.produto_sku': {operator: 'LIKE'},
                 'pedido_produtos.imei': {operator: 'LIKE'},
                 'pedido_produtos.quantidade': {operator: 'BETWEEN'},
-                'pedido_produtos.valor': {operator: 'BETWEEN'}
+                'pedido_produtos.valor': {operator: 'BETWEEN'},
+                'produtos.estado': {operator: '='}
             };
 
             vm.setFilters = {

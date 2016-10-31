@@ -162,6 +162,14 @@
                 </div>
             </div>
             <div class="col-md-2">
+                <label for="estado">estado</label>
+                <select ng-model="RelatorioPedidos.params.filter['produtos.estado'].value" id="estado">
+                    <option value="">Todos</option>
+                    <option value="0">Novo</option>
+                    <option value="1">Seminovo</option>
+                </select>
+            </div>
+            <div class="col-md-2">
                 <label for="valor">Valor do produto</label>
                 <div class="between-group">
                     <input class="big" ng-model="RelatorioPedidos.params.filter['pedido_produtos.valor'].value.from" placeholder="De" type="number" id="valor" />
@@ -185,6 +193,7 @@
                         <option ng-if="RelatorioPedidos.params.relation.cliente" value="clientes.nome">Cliente</option>
                         <option ng-if="RelatorioPedidos.params.relation.endereco" value="cliente_enderecos.cidade">Cidade</option>
                         <option ng-if="RelatorioPedidos.params.relation.endereco" value="cliente_enderecos.uf">Estado</option>
+                        <option ng-if="RelatorioPedidos.params.relation.produtos" value="produtos.estado">Estado do produto</option>
                     </select>
                 </div>
             </fieldset>
