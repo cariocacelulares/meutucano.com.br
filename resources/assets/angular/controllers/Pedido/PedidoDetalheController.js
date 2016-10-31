@@ -53,6 +53,26 @@
         vm.load();
 
         /**
+         * Abre formulario para atualizar ou inserir produtos no pedido
+         *
+         * @param  {Object} orderProduct produto do pedido
+         * @return {void}
+         */
+        vm.openOrderProductForm = function(orderProduct) {
+            ngDialog.open({
+                template: 'views/pedido/form_pedido_produto.html',
+                controller: 'PedidoProdutoFormController',
+                controllerAs: 'PedidoProdutoForm',
+                data: {
+                    pedidoProduto: orderProduct || {},
+                    pedido_id: vm.pedido.id
+                }
+            }).closePromise.then(function(data) {
+                if (data.value === true) vm.load();
+            });
+        };
+
+        /**
          * Mudar o status do pedido para segurado
          * @return {void}
          */
