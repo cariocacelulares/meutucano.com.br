@@ -25,6 +25,7 @@
                 height: 254,
             },
             options: {
+                exporting: { enabled: false },
                 tooltip: {
                     followPointer: true,
                     formatter: function () {

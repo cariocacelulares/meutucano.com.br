@@ -222,25 +222,28 @@
                             {
                                 title: 'Ranking',
                                 icon: 'fa-list-ol',
-                                sref: $state.href('app.gamification.ranking')
+                                sref: $state.href('app.gamification.ranking'),
+                                roles: ['admin|gestor|faturamento']
                             },
                             {
                                 title: 'Perfil',
                                 icon: 'fa-user',
-                                sref: $state.href('app.gamification.perfil')
+                                sref: $state.href('app.gamification.perfil'),
+                                roles: ['admin|gestor|faturamento']
                             },
                             {
                                 title: 'Tarefas',
                                 icon: 'fa-trophy',
-                                sref: $state.href('app.gamification.tarefas')
+                                sref: $state.href('app.gamification.tarefas'),
+                                roles: ['admin']
                             },
                             {
                                 title: 'Conquistas',
                                 icon: 'fa-heart',
-                                sref: $state.href('app.gamification.conquistas')
+                                sref: $state.href('app.gamification.conquistas'),
+                                roles: ['admin']
                             }
-                        ],
-                        roles: ['admin']
+                        ]
                     }
                 ];
             },
