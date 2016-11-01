@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Integracao;
 
+use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Integracao\Integracao;
 use App\Models\Cliente\Cliente;
@@ -7,7 +8,7 @@ use App\Models\Cliente\Endereco;
 use App\Models\Pedido\Pedido;
 use App\Models\Pedido\PedidoProduto;
 use App\Models\Produto\Produto;
-use Carbon\Carbon;
+use App\Events\OrderCancel;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
@@ -254,10 +255,13 @@ class MagentoController extends Controller implements Integracao
             $pedido->created_at = Carbon::createFromFormat('Y-m-d H:i:s', $order['created_at'])->subHours(3);
 
             $pedido->status = $this->parseStatus((isset($order['state'])) ? $order['state'] : ((isset($order['status'])) ? $order['status'] : null ));
+
             // Se o status do pedido for pendente, verifica se o mercado pago não rejeitou (salvo em call_for_authorize)
+            $fireEvent = false;
             if ($pedido->status == 0 && isset($order['status_history']) && isset($order['status_history'][0]) && isset($order['status_history'][0]['comment'])) {
                 if (strstr($order['status_history'][0]['comment'], 'Status: rejected') !== false && strstr($order['status_history'][0]['comment'], 'cc_rejected_call_for_authorize') === false) {
                     $pedido->status = 5;
+                    $fireEvent = true;
                 }
             }
 
@@ -269,6 +273,11 @@ class MagentoController extends Controller implements Integracao
 
             if ($pedido->save()) {
                 Log::info('Pedido importado ' . $order['increment_id']);
+
+                if ($fireEvent) {
+                    // Dispara o evento de cancelamento do pedido
+                    \Event::fire(new OrderCancel($pedido, getCurrentUserId()));
+                }
             } else {
                 Log::warning('Não foi possível importar o pedido ' . $order['increment_id']);
             }
