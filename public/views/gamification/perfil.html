@@ -60,6 +60,26 @@
         </div>
     </div>
 </div>
+<div ng-if="Perfil.conquistas.length" class="row m-t-20">
+    <div class="col-md-12">
+        <h2>Conquistas obtidas</h2>
+        <hr class="m-t-10" />
+    </div>
+    <div class="col-md-12">
+        <div ng-repeat="usuarioConquista in Perfil.conquistas" class="col-md-3 m-b-20">
+            <div class="panel panel-default">
+                <div class="panel-body text-center">
+                    <div class="clearfix m-b-15">
+                        <img ng-src="./{{ usuarioConquista.conquista.icone }}" width="150" class="circle" />
+                    </div>
+                    <span class="fz-16">{{ usuarioConquista.conquista.titulo }}</span>
+                    <hr class="m-t-5 m-b-5" />
+                    <small>{{ usuarioConquista.created_at_readable }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div ng-if="Perfil.proprio && Perfil.usuario.tarefas.length" class="row m-t-20">
     <div class="col-md-12">
         <h2>Tarefas realizadas</h2>
@@ -92,25 +112,5 @@
                 </tr>
             </tbody>
         </table>
-    </div>
-</div>
-<div ng-if="Perfil.conquistas.length" class="row m-t-20">
-    <div class="col-md-12">
-        <h2>Conquistas obtidas</h2>
-        <hr class="m-t-10" />
-    </div>
-    <div class="col-md-12">
-        <div ng-repeat="usuarioConquista in Perfil.conquistas" class="col-md-3 m-b-20">
-            <div class="panel panel-default">
-                <div class="panel-body text-center">
-                    <div class="clearfix m-b-15">
-                        <img ng-src="./{{ usuarioConquista.conquista.icone }}" width="150" class="circle" />
-                    </div>
-                    <span class="fz-16">{{ usuarioConquista.conquista.titulo }}</span>
-                    <hr class="m-t-5 m-b-5" />
-                    <small>{{ usuarioConquista.created_at_readable }}</small>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
