@@ -9,14 +9,30 @@
         var vm = this;
 
         vm.dados = {};
+        vm.meses = {};
+        vm.countdown = {};
 
-        vm.load = function() {
-            Gamification.ranking().then(function(response) {
+        var date = new Date();
+        vm.mes = (date.getMonth() + 1) + '-' + date.getFullYear();
+
+        vm.load = function(rankInfo) {
+            if (typeof rankInfo == 'undefined') {
+                rankInfo = false;
+            }
+
+            Gamification.ranking(vm.mes).then(function(response) {
                 vm.dados = response;
             });
+
+            if (rankInfo) {
+                Gamification.rankInfo().then(function(response) {
+                    vm.meses = response.list;
+                    vm.countdown = response.countdown;
+                });
+            }
         };
 
-        vm.load();
+        vm.load(true);
 
         vm.votar = function(candidato_id) {
             Voto.save({

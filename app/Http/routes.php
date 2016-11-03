@@ -20,6 +20,7 @@ Route::group(['prefix' => '/api'], function() {
 
         Route::get('perfil/{id?}', 'Gamification\GamificationController@perfil');
         Route::get('ranking', 'Gamification\GamificationController@ranking');
+        Route::get('rank-info', 'Gamification\GamificationController@rankInfo');
 
         Route::get('tarefas/list', 'Gamification\TarefaController@tableList');
         Route::resource('tarefas', 'Gamification\TarefaController');
