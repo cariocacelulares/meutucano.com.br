@@ -1,3 +1,29 @@
+.countdown {
+    position: relative;
+    height: 35px;
+    line-height: 35px;
+    width: 100%;
+    padding: 0;
+    margin-top: 3px;
+    border: 1px solid #e8e8e8;
+    background-color: #F4F4F4;
+
+    span {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        font-weight: bold;
+        color: #FFF;
+        text-shadow: 1px 1px 1px #4e4848;
+    }
+
+    .progress-bar {
+        float: left;
+        height: 100%;
+    }
+}
+
 .ranking {
     > .row {
         margin-top: 0 !important;
