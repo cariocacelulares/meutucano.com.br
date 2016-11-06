@@ -25,7 +25,12 @@ class TrocaController extends Controller
      */
     public function tableList() {
         $m = self::MODEL;
-        $list = $m::with('usuario')->orderBy('status', 'ASC')->orderBy('gamification_trocas.created_at', 'DESC');
+        $list = $m::with('usuario')
+            ->join('usuarios', 'usuarios.id', '=', 'gamification_trocas.usuario_id')
+            ->join('gamification_recompensas', 'gamification_recompensas.id', '=', 'gamification_trocas.recompensa_id')
+            ->orderBy('status', 'ASC')
+            ->orderBy('gamification_trocas.created_at', 'DESC');
+
         $list = $this->handleRequest($list);
 
         return $this->listResponse($list);

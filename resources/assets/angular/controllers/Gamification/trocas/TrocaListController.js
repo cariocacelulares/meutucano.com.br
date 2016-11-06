@@ -13,7 +13,10 @@
          * @type {Filter}
          */
         vm.filterList = Filter.init('gamification_trocas', vm, {
-            'gamification_trocas.titulo': 'LIKE'
+            'usuarios.name': 'LIKE',
+            'gamification_recompensas.titulo': 'LIKE',
+            'gamification_trocas.valor': '>=',
+            'gamification_trocas.status': '=',
         });
 
         /**
