@@ -1,0 +1,23 @@
+<th>
+    <input class="form-control" ng-model="SolicitacaoList.filter['usuarios.name']" placeholder="Nome do usuário" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <input class="form-control" ng-model="SolicitacaoList.filter['gamification_tarefas.titulo']" placeholder="Título da tarefa" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <input class="form-control" ng-model="SolicitacaoList.filter['gamification_solicitacoes.descricao']" placeholder="Descrição da solicitação" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <select ng-model="SolicitacaoList.filter['gamification_solicitacoes.status']" class="form-control">
+        <option value="">Tudo</option>
+        <option value="null">Pendente</option>
+        <option value="0">Rejeitada</option>
+        <option value="1">Aprovada</option>
+    </select>
+</th>
+<th></th>
+<th class="item-button">
+    <a title="Limpar filtros" class="btn-danger" ng-click="SolicitacaoList.filterList.clear()">
+        <i class="fa-eraser"></i>
+    </a>
+</th>

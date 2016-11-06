@@ -23,6 +23,10 @@ Route::group(['prefix' => '/api'], function() {
         Route::get('ranking', 'Gamification\GamificationController@ranking');
         Route::get('rank-info', 'Gamification\GamificationController@rankInfo');
 
+        Route::post('solicitacao/solicitar', 'Gamification\SolicitacaoController@solicitar');
+        Route::get('solicitacao/list', 'Gamification\SolicitacaoController@tableList');
+        Route::resource('solicitacao', 'Gamification\SolicitacaoController');
+
         Route::get('tarefas/list', 'Gamification\TarefaController@tableList');
         Route::resource('tarefas', 'Gamification\TarefaController');
 

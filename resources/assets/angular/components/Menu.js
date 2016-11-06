@@ -254,6 +254,12 @@
                                 icon: 'fa-retweet',
                                 sref: $state.href('app.gamification.trocas'),
                                 roles: ['admin']
+                            },
+                            {
+                                title: 'Solicitações',
+                                icon: 'fa-question',
+                                sref: $state.href('app.gamification.solicitacoes'),
+                                roles: ['admin']
                             }
                         ]
                     }

@@ -34,8 +34,6 @@
                 vm.perfil = perfil;
                 vm.loading = false;
             });
-
-            // #TODO: pegar infos do cara pra mostrar a grana vermelha e os itens destavados.. barra de rolagem na tabela
         };
 
         vm.load();

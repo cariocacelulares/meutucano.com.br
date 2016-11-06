@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .service('Tarefa', TarefaModel);
 
-        function TarefaModel(Rest) {
+        function TarefaModel(Rest, Restangular) {
             var rest = angular.copy(Rest);
             rest.baseUrl = 'gamification/tarefas';
 

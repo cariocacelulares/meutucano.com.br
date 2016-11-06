@@ -392,6 +392,12 @@
                     templateUrl: 'views/gamification/trocas/list.html',
                     controller: 'TrocaListController as TrocaList'
                 })
+
+                .state('app.gamification.solicitacoes', {
+                    url: '/solicitacoes',
+                    templateUrl: 'views/gamification/solicitacoes/list.html',
+                    controller: 'SolicitacaoListController as SolicitacaoList'
+                })
             ;
         });
 })();

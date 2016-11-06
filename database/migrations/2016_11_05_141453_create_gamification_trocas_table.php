@@ -22,8 +22,8 @@ class CreateGamificationTrocasTable extends Migration
         });
 
         Schema::table('gamification_trocas', function(Blueprint $table) {
-            $table->foreign('usuario_id', 'TrocasUsuario')->references('id')->on('usuarios')->onDelete('cascade');
-            $table->foreign('recompensa_id', 'TrocasRecompensa')->references('id')->on('gamification_recompensas');
+            $table->foreign('usuario_id', 'TrocasUsuariosUsuario')->references('id')->on('usuarios')->onDelete('cascade');
+            $table->foreign('recompensa_id', 'TrocasRecompensasRecompensa')->references('id')->on('gamification_recompensas');
         });
     }
 
@@ -36,8 +36,8 @@ class CreateGamificationTrocasTable extends Migration
     {
         Schema::table('gamification_trocas', function(Blueprint $table)
         {
-            $table->dropForeign('TrocasUsuario');
-            $table->dropForeign('TrocasRecompensa');
+            $table->dropForeign('TrocasUsuariosUsuario');
+            $table->dropForeign('TrocasRecompensasRecompensa');
         });
 
         Schema::dropIfExists('gamification_trocas');
