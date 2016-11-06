@@ -242,6 +242,18 @@
                                 icon: 'fa-heart',
                                 sref: $state.href('app.gamification.conquistas'),
                                 roles: ['admin']
+                            },
+                            {
+                                title: 'Recompensas',
+                                icon: 'fa-cubes',
+                                sref: $state.href('app.gamification.recompensas'),
+                                roles: ['admin']
+                            },
+                            {
+                                title: 'Trocas',
+                                icon: 'fa-retweet',
+                                sref: $state.href('app.gamification.trocas'),
+                                roles: ['admin']
                             }
                         ]
                     }

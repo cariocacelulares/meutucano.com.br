@@ -42,6 +42,19 @@ class GamificationController extends Controller
         return array_values($grafico);
     }
 
+    public function show($id = false)
+    {
+        if (!$id) {
+            $id = getCurrentUserId();
+        }
+
+        if ($data = Gamification::find($id)) {
+            return $this->showResponse($data);
+        }
+
+        return $this->notFoundResponse();
+    }
+
     private function totalVotos($usuario_id)
     {
         return (int) Voto

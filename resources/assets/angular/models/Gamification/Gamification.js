@@ -9,6 +9,10 @@
             var baseUrl = 'gamification';
 
             return {
+                get: function(id) {
+                    return Restangular.one(baseUrl, id || null).get();
+                },
+
                 perfil: function(usuario_id) {
                     return Restangular.one(baseUrl + '/perfil', usuario_id || null).customGET();
                 },

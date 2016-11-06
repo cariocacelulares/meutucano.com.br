@@ -1,0 +1,16 @@
+<th roles="admin">
+    <input class="form-control big" ng-model="TrocaList.filter['gamification_trocas.titulo']" placeholder="Título" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <input class="form-control big" ng-model="TrocaList.filter['gamification_trocas.valor']" placeholder="Valor" ng-model-options="{debounce:500}" type="number" min="0" />
+</th>
+<th>
+    <input class="form-control big" ng-model="TrocaList.filter['gamification_trocas.nivel']" placeholder="Nível" ng-model-options="{debounce:500}" type="number" min="0" />
+</th>
+<th></th>
+<th></th>
+<th class="item-button">
+    <a title="Limpar filtros" class="btn-danger" ng-click="TrocaList.filterList.clear()">
+        <i class="fa-eraser"></i>
+    </a>
+</th>

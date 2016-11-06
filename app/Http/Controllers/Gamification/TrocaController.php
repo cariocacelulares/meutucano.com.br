@@ -1,0 +1,67 @@
+<?php namespace App\Http\Controllers\Gamification;
+
+use App\Http\Controllers\Rest\RestControllerTrait;
+use App\Http\Controllers\Controller;
+use App\Models\Gamification\Troca;
+use App\Models\Gamification\Gamification;
+use Illuminate\Support\Facades\Input;
+
+/**
+ * Class TrocaController
+ * @package App\Http\Controllers\Gamification
+ */
+class TrocaController extends Controller
+{
+    use RestControllerTrait;
+
+    const MODEL = Troca::class;
+
+    protected $validationRules = [];
+
+    /**
+     * Lista conquistas para a tabela
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function tableList() {
+        $m = self::MODEL;
+        $list = $m::with('usuario')->orderBy('status', 'ASC')->orderBy('gamification_trocas.created_at', 'DESC');
+        $list = $this->handleRequest($list);
+
+        return $this->listResponse($list);
+    }
+
+    public function store()
+    {
+        $m = self::MODEL;
+        try {
+            $v = \Validator::make(Input::all(), $this->validationRules);
+
+            if ($v->fails()) {
+                throw new \Exception("ValidationException");
+            }
+
+            $recompensa = Input::get('recompensa');
+
+            $data = $m::create(array_merge(Input::all(), [
+                'usuario_id' => getCurrentUserId(),
+                'recompensa_id' => $recompensa['id'],
+                'valor' => $recompensa['valor']
+            ]));
+
+            $return = $this->createdResponse($data);
+
+            if ($data && $jogador = Gamification::where('usuario_id', '=', $data->usuario->id)->first()) {
+                $jogador->moedas = ($jogador->moedas - $recompensa['valor']);
+                $jogador->save();
+            }
+
+            return $return;
+        } catch(\Exception $ex) {
+            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+
+            \Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
+            return $this->clientErrorResponse($data);
+        }
+    }
+}

@@ -380,6 +380,18 @@
                     templateUrl: 'views/gamification/perfil.html',
                     controller: 'PerfilController as Perfil'
                 })
+
+                .state('app.gamification.recompensas', {
+                    url: '/recompensas',
+                    templateUrl: 'views/gamification/recompensas/list.html',
+                    controller: 'RecompensaListController as RecompensaList'
+                })
+
+                .state('app.gamification.trocas', {
+                    url: '/trocas',
+                    templateUrl: 'views/gamification/trocas/list.html',
+                    controller: 'TrocaListController as TrocaList'
+                })
             ;
         });
 })();
