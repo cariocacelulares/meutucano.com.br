@@ -567,7 +567,7 @@ class UploadController extends Controller
         foreach ($produtosNota as $sku => $itens) {
             foreach ($itens as $key => $item) {
                 if ($key !== 0 && $item === $itens[0]) {
-                    $produtosNota[$sku][0]['quantidade'] = (int)$itens[0]['quantidade'] + 1;
+                    $produtosNota[$sku][0]['quantidade'] = $produtosNota[$sku][0]['quantidade'] + (int)$itens[0]['quantidade'];
                     unset($produtosNota[$sku][$key]);
                 }
             }
