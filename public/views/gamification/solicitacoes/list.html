@@ -1,0 +1,35 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-question" title="Solicitacoes" description="Todas as solicitações realizadas."></page-title>
+</div>
+<table table-list="SolicitacaoList">
+    <thead>
+        <tr>
+            <th width="200">Usuário</th>
+            <th>Tarefa</th>
+            <th>Descrição</th>
+            <th class="text-center" width="120">Status</th>
+            <th class="text-center" width="120">Data</th>
+            <th width="120"></th>
+        </tr>
+        <tr class="table-filter" static-include="views/gamification/solicitacoes/list_filter.html"></tr>
+    </thead>
+    <tbody ng-if="SolicitacaoList.tableData.data && !SolicitacaoList.loading">
+        <tr ng-repeat="solicitacao in SolicitacaoList.tableData.data">
+            <td>{{ solicitacao.usuario.name }}</td>
+            <td>{{ solicitacao.tarefa.titulo }}</td>
+            <td>{{ solicitacao.descricao }}</td>
+            <td class="text-center">{{ solicitacao.status_readable }}</td>
+            <td class="text-center">{{ solicitacao.created_at }}</td>
+            <td class="text-center">
+                <div ng-if="!(solicitacao.status == 1 || solicitacao.status == 0)" class="btn-group" roles="admin">
+                    <a class="btn-success" ng-click="SolicitacaoList.aprove(solicitacao)">
+                        <i class="fa-check"></i>
+                    </a>
+                    <a class="btn-danger" ng-click="SolicitacaoList.reject(solicitacao)">
+                        <i class="fa-close"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>

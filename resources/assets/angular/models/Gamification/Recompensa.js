@@ -3,11 +3,11 @@
 
     angular
         .module('MeuTucano')
-        .service('Tarefa', TarefaModel);
+        .service('Recompensa', RecompensaModel);
 
-        function TarefaModel(Rest, Restangular) {
+        function RecompensaModel(Rest) {
             var rest = angular.copy(Rest);
-            rest.baseUrl = 'gamification/tarefas';
+            rest.baseUrl = 'gamification/recompensas';
 
             return rest;
         }

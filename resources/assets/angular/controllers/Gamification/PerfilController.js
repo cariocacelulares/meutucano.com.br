@@ -69,11 +69,24 @@
 
         vm.load();
 
-        vm.openForm = function(usuario) {
+        vm.openAvatarForm = function(usuario) {
             ngDialog.open({
                 template: 'views/gamification/avatar.html',
                 controller: 'AvatarFormController',
                 controllerAs: 'AvatarForm',
+                data: {
+                    usuario: usuario || {}
+                }
+            }).closePromise.then(function(data) {
+                if (data.value === true) vm.load();
+            });
+        };
+
+        vm.openTarefaForm = function(usuario) {
+            ngDialog.open({
+                template: 'views/gamification/form-tarefa.html',
+                controller: 'AdicionarTarefaFormController',
+                controllerAs: 'AdicionarTarefaForm',
                 data: {
                     usuario: usuario || {}
                 }
