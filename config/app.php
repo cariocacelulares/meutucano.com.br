@@ -59,6 +59,8 @@ return [
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Vinelab\Cdn\CdnServiceProvider::class,
+
+        Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
     ],
 
 
@@ -102,6 +104,8 @@ return [
         'Entrust'    => Zizaco\Entrust\EntrustFacade::class,
 
         'Excel'      => Maatwebsite\Excel\Facades\Excel::class,
+
+        'Sentry' => Sentry\SentryLaravel\SentryFacade::class,
     ],
 
 ];

@@ -25,6 +25,7 @@
             'highcharts-ng',
             'as.sortable',
             'ngSanitize',
-            'ui.select'
+            'ui.select',
+            'ngRaven'
         ]);
 })();

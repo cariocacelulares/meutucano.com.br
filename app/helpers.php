@@ -214,3 +214,27 @@ if (!function_exists('removeAcentos')) {
         return strtr($string, $map);
     }
 }
+
+/**
+ * Adiciona o usuario ao sentry
+ * @param array $credentials informacoes do usuario
+ * @param array  $tags        tags adicionais
+ */
+function setSentryCotextUser($credentials, $tags = []) {
+    if (app()->bound('sentry')) {
+        $sentry = app('sentry');
+
+        if (auth()->check()) {
+            $sentry->user_context($credentials);
+        } else {
+            $sentry->user_context([
+                'id' => 0,
+                'username' => 'deslogado'
+            ]);
+        }
+
+        $sentry->tags_context($tags);
+    }
+
+    return null;
+}
