@@ -286,7 +286,7 @@ class MagentoController extends Controller implements Integracao
                 $pedidoProduto = PedidoProduto::firstOrNew([
                     'pedido_id'   => $pedido->id,
                     'produto_sku' => $s_produto['sku'],
-                    'valor' => $s_produto['row_total'],
+                    'valor' => $s_produto['price'],
                     'quantidade'  => $s_produto['qty_ordered']
                 ]);
                 if ($pedidoProduto->save()) {
