@@ -26,15 +26,6 @@ class Authenticate
             }
         }
 
-        if (auth()->check()) {
-            $sentry = app('sentry');
-            $sentry->user_context([
-                'id' => JWTAuth::parseToken()->authenticate()->id,
-                'email' => JWTAuth::parseToken()->authenticate()->email,
-                'username' => JWTAuth::parseToken()->authenticate()->username
-            ]);
-        }
-
         return $next($request);
     }
 }
