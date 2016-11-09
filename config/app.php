@@ -14,7 +14,7 @@ return [
 
     'cipher'          => 'AES-256-CBC',
     'log'             => env('APP_LOG', 'daily'),
-    'log_max_files'   => env('APP_LOG_MAX_FILES', 90),
+    'log_max_files'   => env('APP_LOG_MAX_FILES', 30),
 
     'providers' => [
         Illuminate\Auth\AuthServiceProvider::class,
@@ -59,6 +59,8 @@ return [
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Vinelab\Cdn\CdnServiceProvider::class,
+
+        Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
     ],
 
 
@@ -102,6 +104,8 @@ return [
         'Entrust'    => Zizaco\Entrust\EntrustFacade::class,
 
         'Excel'      => Maatwebsite\Excel\Facades\Excel::class,
+
+        'Sentry' => Sentry\SentryLaravel\SentryFacade::class,
     ],
 
 ];

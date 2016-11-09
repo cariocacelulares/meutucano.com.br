@@ -57,6 +57,12 @@
                     $rootScope.authenticated = true;
                     $rootScope.currentUser = user;
 
+                    Raven.setUserContext({
+                        id: user.id,
+                        username: user.username,
+                        email: user.email
+                    });
+
                     if(toState.name === "login") {
                         event.preventDefault();
                         $state.go('app.dashboard');

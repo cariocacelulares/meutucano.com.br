@@ -24,7 +24,7 @@ elixir.extend('customSass', function() {
             .pipe(rename('app.min.css'))
             .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
             .pipe(cleanCss())
-            .pipe(sourcemaps.write())
+            .pipe(sourcemaps.write('./'))
             .pipe(gulp.dest('public/assets/css'))
             .pipe(notify('Sass compiled!'));
     });
@@ -36,6 +36,7 @@ elixir.extend('customSass', function() {
 elixir.extend('angularMinify', function() {
     var task = new elixir.Task('angularMinify', function() {
         return gulp.src("resources/assets/angular/**/*.js")
+            .pipe(sourcemaps.init())
             .pipe(ngmin().on('error', notify.onError(function(error) {
                 gulpUtil.log(error);
                 return error.message;
@@ -45,6 +46,7 @@ elixir.extend('angularMinify', function() {
                 gulpUtil.log(error);
                 return error.message;
             })))
+            .pipe(sourcemaps.write('./'))
             .pipe(gulp.dest('public/assets/js/'))
             .pipe(notify('JS compiled!'));
     });

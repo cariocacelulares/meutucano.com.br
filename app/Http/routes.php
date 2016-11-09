@@ -10,7 +10,7 @@ Route::get('pedidos/shopsystem/{taxvat}', 'Pedido\PedidoController@shopsystem');
 /**
  * API
  */
-Route::group(['prefix' => '/api'], function() {
+Route::group(['prefix' => '/api', 'middleware' => 'sentry'], function() {
     /**
      * Gamification
      */
