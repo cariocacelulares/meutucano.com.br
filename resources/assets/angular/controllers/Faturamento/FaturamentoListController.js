@@ -34,7 +34,8 @@
          */
         vm.filterList = Filter.init('faturamento', vm, {
             'pedidos.codigo_marketplace': 'LIKE',
-            'clientes.nome':              'LIKE'
+            'clientes.nome':              'LIKE',
+            'pedido_rastreios.rastreio':  'LIKE'
         });
 
         /**
