@@ -23,7 +23,8 @@
         "maatwebsite/excel": "~2.1.0",
         "dompdf/dompdf": "~0.6.1",
         "vinelab/cdn": "^1.4",
-        "sentry/sentry-laravel": "^0.4.1"
+        "sentry/sentry-laravel": "^0.4.1",
+        "jenssegers/mongodb": "^3.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
