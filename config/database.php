@@ -22,13 +22,13 @@ return [
 
         'mongodb' => [
             'driver'   => 'mongodb',
-            'host'     => env('DB_HOST', 'localhost'),
-            'port'     => env('DB_PORT', 27017),
-            'database' => env('DB_DATABASE', 'meutucano'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', 'root'),
+            'host'     => env('MONGODB_HOST', 'localhost'),
+            'port'     => env('MONGODB_PORT', 27017),
+            'database' => env('MONGODB_DATABASE', 'meutucano'),
+            'username' => env('MONGODB_USERNAME', 'root'),
+            'password' => env('MONGODB_PASSWORD', 'root'),
             'options' => [
-                'database' => 'meutucano' // sets the authentication database required by mongo 3
+                'database' => 'meutucano'
             ]
         ],
 

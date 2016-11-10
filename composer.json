@@ -42,7 +42,8 @@
         ],
         "psr-4": {
             "App\\": "app/",
-            "Tests\\": "tests/"
+            "Tests\\": "tests/",
+            "Bootstrap\\": "bootstrap/"
         },
         "files": [
             "app/helpers.php"

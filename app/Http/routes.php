@@ -3,10 +3,7 @@
 /**
  * Rota padrão para o Agnular
  */
-Route::get('/', function() {
-    App\Models\Log\Log::create(['tipo' => 'error', 'stack' => 'dsadasda']);
-    // return view('index');
-});
+Route::get('/', function() { return view('index'); });
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Route::get('pedidos/shopsystem/{taxvat}', 'Pedido\PedidoController@shopsystem');
 
