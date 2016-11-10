@@ -338,7 +338,7 @@ class MagentoController extends Controller implements Integracao
         } catch (\Exception $e) {
             if (($e->getCode() == 100 || strstr($e->getMessage(), 'order not exists') !== false) && isset($order['order_id']) && $order['order_id']) {
                 $order = $this->request(sprintf('orders/%s', $order['order_id']), [], 'DELETE');
-                Log::notice('Pedido ' . (($mg_order && isset($mg_order['increment_id'])) ? $mg_order['increment_id'] : $order['order_id']) . ' removido da fila de espera no tucanomg (não existe no magento).');
+                Log::notice('Pedido ' . ((isset($mg_order) && isset($mg_order['increment_id'])) ? $mg_order['increment_id'] : $order['order_id']) . ' removido da fila de espera no tucanomg (não existe no magento).');
             } else {
                 Log::warning('Ocorreu um problema ao tentar executar a fila no mangeto.', [
                     'mg_order' => (isset($mg_order['increment_id']) ? $mg_order['increment_id'] : null),
