@@ -21,7 +21,7 @@ try {
 
         $app->configureMonologUsing(function($monolog) use ($mongoClient, $db) {
             $mongoHandler = new Monolog\Handler\MongoDBHandler(
-                new $mongoClient('mongodb://' . env('MONGODB_HOST', 'localhost') . ':' . env('MONGODB_PORT', 27017)),
+                $mongoClient,
                 $db,
                 'logs'
             );

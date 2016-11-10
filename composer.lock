@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "822d69b8a917b973e62b96fae4878c57",
-    "content-hash": "79777f9887983179a431e137e1f038ab",
+    "hash": "8c1c30826272818c8c6f8fe5f845bc70",
+    "content-hash": "9788e90081640c851c45942e1c1a44ed",
     "packages": [
         {
             "name": "arcanedev/log-viewer",
@@ -17,7 +17,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ARCANEDEV/LogViewer/zipball/611b97c8d8564b33da7ae6cdcc3ea5f6a56bfd7d",
+                "url": "https://api.github.com/repos/ARCANEDEV/LogViewer/zipball/84e983c927717308a4e9e1af62108f4806f430cd",
                 "reference": "611b97c8d8564b33da7ae6cdcc3ea5f6a56bfd7d",
                 "shasum": ""
             },
