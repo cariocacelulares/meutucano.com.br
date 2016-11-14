@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('FaturamentoListController', FaturamentoListController);
 
-    function FaturamentoListController(toaster, Filter, Pedido, TableHeader, RastreioHelper, NotaHelper, PedidoHelper, ComentarioHelper) {
+    function FaturamentoListController(toaster, Filter, Pedido, TableHeader, RastreioHelper, NotaHelper, PedidoHelper, ComentarioHelper, $rootScope) {
         var vm = this;
 
         /**
@@ -34,7 +34,8 @@
          */
         vm.filterList = Filter.init('faturamento', vm, {
             'pedidos.codigo_marketplace': 'LIKE',
-            'clientes.nome':                       'LIKE'
+            'clientes.nome':              'LIKE',
+            'pedido_rastreios.rastreio':  'LIKE'
         });
 
         /**
@@ -57,6 +58,10 @@
             });
         };
         vm.load();
+
+        $rootScope.$on('upload', function() {
+            vm.load();
+        });
 
         /**
          * Avisa que a chave foi copiada

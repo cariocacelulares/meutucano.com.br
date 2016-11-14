@@ -127,6 +127,17 @@
     line-height: 1.4;
     background-color: transparent;
 
+    &.small {
+        thead th {
+            padding: 10px 5px;
+            font-size: 12px;
+        }
+
+        tbody td {
+            padding: 5px 12px;
+        }
+    }
+
     &.table-hover tbody tr {
         &:hover td,
         &.detailed td {
@@ -185,6 +196,15 @@
         border: 1px solid $color-master-lighter;
         border-top: none;
 
+        td.check-col {
+            padding: 0 10px 0 15px !important;
+
+            .checkbox label {
+                padding-right: 0;
+                margin-right: 0;
+            }
+        }
+
         td:last-child {
             border-right: 1px solid $color-master-lighter;
         }
@@ -196,15 +216,33 @@
         tr.segurado {
             cursor: not-allowed;
         }
+
+        tr.no-stock td {
+            background-color: #F0F0F0;
+        }
+
+        tr.destaque td {
+            text-align: center;
+            background-color: #EFEFEF;
+        }
     }
 
     thead th {
         padding: 14px 8px;
         text-align: left;
         color: $color-master;
+
+        &.check-col {
+            width: 50px;
+        }
     }
 
     [class*='btn-'] {
         margin: 0;
     }
+}
+
+#relatorio-resultado .table thead tr th:last-child {
+    padding-left: 8px!important;
+    padding-right: 8px!important;
 }

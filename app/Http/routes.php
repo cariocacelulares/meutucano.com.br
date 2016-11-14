@@ -5,12 +5,43 @@
  */
 Route::get('/', function() { return view('index'); });
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
-Route::get('clientes/shopsystem/{taxvat}', 'Cliente\ClienteController@shopsystem');
+Route::get('pedidos/shopsystem/{taxvat}', 'Pedido\PedidoController@shopsystem');
 
 /**
  * API
  */
-Route::group(['prefix' => '/api'], function() {
+Route::group(['prefix' => '/api', 'middleware' => 'sentry'], function() {
+    /**
+     * Gamification
+     */
+    Route::group(['prefix' => '/gamification'], function() {
+        Route::post('upload', 'Gamification\UploadController@upload');
+        Route::post('avatar/{gamification_id}', 'Gamification\GamificationController@avatar');
+
+        Route::get('', 'Gamification\GamificationController@show');
+        Route::get('perfil/{id?}', 'Gamification\GamificationController@perfil');
+        Route::get('ranking', 'Gamification\GamificationController@ranking');
+        Route::get('rank-info', 'Gamification\GamificationController@rankInfo');
+
+        Route::post('solicitacao/solicitar', 'Gamification\SolicitacaoController@solicitar');
+        Route::get('solicitacao/list', 'Gamification\SolicitacaoController@tableList');
+        Route::resource('solicitacao', 'Gamification\SolicitacaoController');
+
+        Route::get('tarefas/list', 'Gamification\TarefaController@tableList');
+        Route::resource('tarefas', 'Gamification\TarefaController');
+
+        Route::get('recompensas/list', 'Gamification\RecompensaController@tableList');
+        Route::resource('recompensas', 'Gamification\RecompensaController');
+
+        Route::get('trocas/list', 'Gamification\TrocaController@tableList');
+        Route::resource('trocas', 'Gamification\TrocaController');
+
+        Route::get('conquistas/list', 'Gamification\ConquistaController@tableList');
+        Route::resource('conquistas', 'Gamification\ConquistaController');
+
+        Route::resource('votos', 'Gamification\VotoController');
+    });
+
     /**
      * Auth
      */
@@ -57,6 +88,8 @@ Route::group(['prefix' => '/api'], function() {
             Route::get('rastreios/historico/{id}', 'Pedido\RastreioController@imagemHistorico');
             Route::put('rastreios/historico/{id}', 'Pedido\RastreioController@forceScreenshot');
             Route::get('rastreios/pi/{id}', 'Pedido\RastreioController@pi');
+            Route::get('rastreios/inspecao-tecnica/{id}', 'Pedido\RastreioController@getPedidoProdutoInspecao');
+            Route::get('rastreios/busca-seminovos/{id}', 'Pedido\RastreioController@existsSeminovos');
             Route::resource('rastreios', 'Pedido\RastreioController', ['except' => ['create', 'edit']]);
 
             /**
@@ -141,6 +174,11 @@ Route::group(['prefix' => '/api'], function() {
         /**
          * Pedidos
          */
+        Route::get('pedidos/cidades/{uf}', 'Pedido\PedidoController@cidades');
+        Route::get('pedidos/total-orders-status', 'Pedido\PedidoController@totalOrdersByStatus');
+        Route::get('pedidos/total-orders-date', 'Pedido\PedidoController@totalOrdersByDate');
+        Route::get('pedidos/total-orders/{mes?}/{ano?}', 'Pedido\PedidoController@totalOrders');
+
         Route::put('pedidos/status/{pedido_id}', 'Pedido\PedidoController@alterarStatus');
         Route::put('pedidos/prioridade/{pedido_id}', 'Pedido\PedidoController@prioridade');
         Route::put('pedidos/segurar/{pedido_id}', 'Pedido\PedidoController@segurar');
@@ -148,6 +186,11 @@ Route::group(['prefix' => '/api'], function() {
         Route::get('pedidos/faturamento', 'Pedido\PedidoController@faturamento');
         Route::get('pedidos/faturar/{pedido_id}', 'Pedido\PedidoController@faturar');
         Route::resource('pedidos', 'Pedido\PedidoController', ['except' => ['create', 'edit']]);
+
+        /**
+         * Pedido Produto
+         */
+        Route::resource('pedido-produto', 'Pedido\PedidoProdutoController');
 
         /**
          * Notas
@@ -179,6 +222,7 @@ Route::group(['prefix' => '/api'], function() {
         Route::get('produtos/generate-sku/{old_sku?}', 'Produto\ProdutoController@gerenateSku');
         Route::get('produtos/check-sku/{sku}', 'Produto\ProdutoController@checkSku');
         Route::get('produtos/list', 'Produto\ProdutoController@tableList');
+        Route::get('produtos/search/{term}', 'Produto\ProdutoController@search');
         Route::resource('produtos', 'Produto\ProdutoController');
 
         /**
@@ -197,5 +241,33 @@ Route::group(['prefix' => '/api'], function() {
          * Atributos
          */
         Route::get('atributos/linha/{linha_id}', 'Produto\Linha\AtributoController@fromLinha');
+
+        /**
+         * Inspeção Técnica
+         */
+        Route::post('inspecao_tecnica/verificar-reserva', 'Inspecao\InspecaoTecnicaController@verificarReserva');
+        Route::post('inspecao_tecnica/reserva', 'Inspecao\InspecaoTecnicaController@reservar');
+        Route::get('inspecao_tecnica/solicitadas', 'Inspecao\InspecaoTecnicaController@solicitadas');
+        Route::get('inspecao_tecnica/fila', 'Inspecao\InspecaoTecnicaController@fila');
+        Route::get('inspecao_tecnica/list', 'Inspecao\InspecaoTecnicaController@tableList');
+        Route::post('inspecao_tecnica/priority/{id}', 'Inspecao\InspecaoTecnicaController@changePriority');
+        Route::resource('inspecao_tecnica', 'Inspecao\InspecaoTecnicaController');
+
+        /**
+         * Sugestão
+         */
+        Route::get('sugestoes/list', 'Sugestao\SugestaoController@tableList');
+        Route::resource('sugestoes', 'Sugestao\SugestaoController');
+
+        /**
+         * Relatórios
+         */
+        // Pedidos genérico
+        Route::post('relatorios/pedido', 'Relatorio\PedidoController@run');
+        Route::get('relatorios/pedido/{return_type}', 'Relatorio\PedidoController@run');
+
+        // Produtos genérico
+        Route::post('relatorios/produto', 'Relatorio\ProdutoController@run');
+        Route::get('relatorios/produto/{return_type}', 'Relatorio\ProdutoController@run');
     });
 });

@@ -189,7 +189,7 @@
                                                 <i class="fa-edit"></i>&nbsp; Editar
                                             </a>
                                         </li>
-                                        <li ng-if="PedidoDetalhe.pedido.marketplace != 'MERCADOLIVRE'">
+                                        <li>
                                             <a ng-click="PedidoDetalhe.rastreioHelper.printEtiqueta(rastreio.id)">
                                                 <i class="fa-tag"></i>&nbsp; Etiqueta
                                             </a>
@@ -265,9 +265,19 @@
             </tbody>
             <tbody>
                 <tr ng-if="PedidoDetalhe.pedido.produtos" ng-repeat="produto in PedidoDetalhe.pedido.produtos">
-                    <td class="text-center"><a ui-sref="app.produtos.form({sku: produto.produto_sku})" title="Visualizar produto {{ produto.produto.titulo }}">{{ produto.produto_sku }}</a></td>
+                    <td class="text-center">
+                        <i class="fa-refresh m-r-10" roles="admin|atendimento|faturamento|gestor" tooltips tooltip-template="Atualizar informações" ng-click="PedidoDetalhe.openOrderProductForm(produto)"></i>
+                        <a ui-sref="app.produtos.form({sku: produto.produto_sku})" title="Visualizar produto {{ produto.produto.titulo }}">
+                            {{ produto.produto_sku }}
+                        </a>
+                    </td>
                     <td class="text-left">
                         <b>{{ produto.produto.titulo }}</b><br>
+                        <span ng-repeat="inspecao in produto.inspecoes" ng-class="{ 'label-success': inspecao.revisado_at }" class="label m-r-10">{{ inspecao.id }}</span>
+                        <a ng-if="!produto.inspecoes[0].revisado_at && produto.produto.estado == '1' && produto.inspecoes.length"
+                            ng-click="PedidoDetalhe.inspecaoTecnicaHelper.alterarPrioridade(produto.id, true)" class="btn-xs btn-primary">
+                                <i class="fa-arrow-{{ produto.inspecoes[0].priorizado ? 'down' : 'up' }}"></i>&nbsp; {{ produto.inspecoes[0].priorizado ? 'Remover prioridade da' : 'Priorizar' }} inspeção
+                        </a>
                         <small class="hint-text">{{ produto.imei }}</small>
                     </td>
                     <td class="text-center">{{ produto.quantidade }}</td>
@@ -280,7 +290,7 @@
                     <td>{{ PedidoDetalhe.pedido.frete_valor | currency }}</td>
                 </tr>
                 <tr ng-if="PedidoDetalhe.pedido.total" class="total">
-                    <td></td>
+                    <td><span roles="admin|atendimento|faturamento|gestor" ng-click="PedidoDetalhe.openOrderProductForm()" class="btn-info btn-xs"><i class="fa-plus">&nbsp;</i>Adicionar produto</span></td>
                     <td></td>
                     <td class="bold">TOTAL</td>
                     <td>{{ PedidoDetalhe.pedido.total | currency }}</td>

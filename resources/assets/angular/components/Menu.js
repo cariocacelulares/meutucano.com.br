@@ -129,6 +129,16 @@
                         title: 'Relatórios',
                         icon: 'fa-pie-chart',
                         sub: [
+                            {
+                                title: 'Pedidos',
+                                icon: 'fa-cubes',
+                                sref: $state.href('app.relatorios.pedidos')
+                            },
+                            {
+                                title: 'Produtos',
+                                icon: 'fa-dropbox',
+                                sref: $state.href('app.relatorios.produtos')
+                            },
                             {title: 'Caixa diário', icon: 'fa-money'},
                             {title: 'ICMS mensal', icon: 'fa-file-pdf-o', sref: $state.href('app.admin.icms')}
                         ],
@@ -146,6 +156,30 @@
                             {title: 'Template ML', icon: 'fa-clipboard', sref: $state.href('app.marketing.templateml')}
                         ],
                         roles: ['admin', 'marketing']
+                    },
+                    {
+                        title: 'Inspeção técnica',
+                        icon: 'fa-bug',
+                        sub: [
+                            {
+                                title: 'Inspeções Realizadas',
+                                icon: 'fa-bug',
+                                sref: $state.href('app.inspecao.realizada'),
+                                roles: ['admin', 'tecnico']
+                            },
+                            {
+                                title: 'Fila de Inspeção',
+                                icon: 'fa-cogs',
+                                sref: $state.href('app.inspecao.fila'),
+                                roles: ['admin', 'tecnico']
+                            },
+                            {
+                                title: 'Solicitar Inspeção',
+                                icon: 'fa-cogs',
+                                sref: $state.href('app.inspecao.solicitada'),
+                                roles: ['admin', 'atendimento', 'faturamento']
+                            }
+                        ]
                     },
                     {
                         title: 'Interno',
@@ -169,9 +203,66 @@
                                 title: 'Minhas senhas',
                                 icon: 'fa-key',
                                 sref: $state.href('app.interno.senhas.minhas')
+                            },
+                            {
+                                title: 'Sugestões',
+                                icon: 'fa-comments-o',
+                                sref: $state.href('app.interno.sugestoes.index'),
+                                roles: ['admin']
                             }
                         ]
                     },
+                    /**
+                     * Gamification
+                     */
+                    {
+                        title: 'Gamification',
+                        icon: 'fa-gamepad',
+                        sub: [
+                            {
+                                title: 'Ranking',
+                                icon: 'fa-list-ol',
+                                sref: $state.href('app.gamification.ranking'),
+                                roles: ['admin|gestor|faturamento']
+                            },
+                            {
+                                title: 'Perfil',
+                                icon: 'fa-user',
+                                sref: $state.href('app.gamification.perfil'),
+                                roles: ['admin|gestor|faturamento']
+                            },
+                            {
+                                title: 'Tarefas',
+                                icon: 'fa-trophy',
+                                sref: $state.href('app.gamification.tarefas'),
+                                roles: ['admin']
+                            },
+                            {
+                                title: 'Conquistas',
+                                icon: 'fa-heart',
+                                sref: $state.href('app.gamification.conquistas'),
+                                roles: ['admin']
+                            },
+                            {
+                                title: 'Recompensas',
+                                icon: 'fa-cubes',
+                                sref: $state.href('app.gamification.recompensas'),
+                                roles: ['admin']
+                            },
+                            {
+                                title: 'Trocas',
+                                icon: 'fa-retweet',
+                                sref: $state.href('app.gamification.trocas'),
+                                roles: ['admin']
+                            },
+                            {
+                                title: 'Solicitações',
+                                icon: 'fa-question',
+                                sref: $state.href('app.gamification.solicitacoes'),
+                                roles: ['admin']
+                            }
+                        ]
+                    }
                 ];
             },
             controllerAs: 'Menu'

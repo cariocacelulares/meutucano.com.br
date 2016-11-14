@@ -25,7 +25,9 @@
 .m-b-100 { margin-bottom: 100px !important }
 .m-r-100 { margin-right: 100px !important }
 .m-l-100 { margin-left: 100px !important }
-.m-t-3 { margin-top: 3px }
+.m-t-3 { margin-top: 3px !important }
+.b-l-1 { border-left: 1px solid $color-master-light }
+.b-r-1 { border-left: 1px solid $color-master-light }
 
 .ellipsis-100 { @include ellipsis(100px); }
 .ellipsis-120 { @include ellipsis(120px); }
@@ -71,6 +73,7 @@
 .text-gray { color: #ccc }
 .batida { background: $color-info url('../../assets/img/meta.png') no-repeat right bottom !important }
 .underline { text-decoration: underline }
+.text-normal { font-weight: normal !important }
 .text-bold { font-weight: 700 }
 .text-upper { text-transform: uppercase }
 .text-lower { text-transform: lowercase }
@@ -78,6 +81,22 @@
 .lh-25 { line-height: 25px }
 .d-rtl { direction: rtl }
 .d-ltr { direction: ltr }
+.fz-10 { font-size: 10px !important }
+.fz-12 { font-size: 12px !important }
+.fz-15 { font-size: 15px !important }
+.fz-20 { font-size: 20px !important }
+.fz-22 { font-size: 22px !important }
+.fz-25 { font-size: 25px !important }
+.fz-30 { font-size: 30px !important }
+.fz-35 { font-size: 35px !important }
+.fz-40 { font-size: 40px !important }
+.fz-45 { font-size: 45px !important }
+.fz-50 { font-size: 50px !important }
+.fz-55 { font-size: 55px !important }
+.fz-60 { font-size: 60px !important }
+.fz-65 { font-size: 65px !important }
+.fz-70 { font-size: 70px !important }
+.fz-75 { font-size: 75px !important }
 
 .text-hide {
     font: 0/0 a;

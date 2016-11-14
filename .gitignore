@@ -4,7 +4,7 @@
 /vendor
 /public/bower_components
 /.idea
-/storage
 /media
 /public/assets/css
-/public/assets/js/src
+/public/assets/js
+/public/images/gamification

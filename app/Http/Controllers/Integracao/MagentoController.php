@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Integracao;
 
+use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Integracao\Integracao;
 use App\Models\Cliente\Cliente;
@@ -7,7 +8,7 @@ use App\Models\Cliente\Endereco;
 use App\Models\Pedido\Pedido;
 use App\Models\Pedido\PedidoProduto;
 use App\Models\Produto\Produto;
-use Carbon\Carbon;
+use App\Events\OrderCancel;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
@@ -41,9 +42,14 @@ class MagentoController extends Controller implements Integracao
                     $this->api = new \SoapClient(
                         \Config::get('tucano.magento.api.host'),
                         [
+                            'stream_context' => stream_context_create([
+                                'http' => [
+                                    'user_agent' => 'PHPSoapClient'
+                                ]
+                            ]),
                             'trace' => true,
-                            'exceptions' => false,
-                            'connection_timeout' => 5,
+                            'exceptions' => true,
+                            'connection_timeout' => 20,
                             'cache_wsdl' => WSDL_CACHE_NONE
                         ]
                     );
@@ -131,7 +137,7 @@ class MagentoController extends Controller implements Integracao
      * @param  string $url
      * @param  array  $params
      * @param  string $method
-     * @return array
+     * @return array|bool
      */
     public function request($url = null, $params = [], $method = 'GET')
     {
@@ -245,9 +251,19 @@ class MagentoController extends Controller implements Integracao
             $pedido->codigo_api = $order['increment_id'];
             $pedido->marketplace = 'Site';
             $pedido->operacao = $operacao;
-            $pedido->total = $order['subtotal'];
-            $pedido->status = $this->parseStatus((isset($order['state'])) ? $order['state'] : ((isset($order['status'])) ? $order['status'] : null ));
+            $pedido->total = $order['grand_total'];
             $pedido->created_at = Carbon::createFromFormat('Y-m-d H:i:s', $order['created_at'])->subHours(3);
+
+            $pedido->status = $this->parseStatus((isset($order['state'])) ? $order['state'] : ((isset($order['status'])) ? $order['status'] : null ));
+
+            // Se o status do pedido for pendente, verifica se o mercado pago não rejeitou (salvo em call_for_authorize)
+            $fireEvent = false;
+            if ($pedido->status == 0 && isset($order['status_history']) && isset($order['status_history'][0]) && isset($order['status_history'][0]['comment'])) {
+                if (strstr($order['status_history'][0]['comment'], 'Status: rejected') !== false && strstr($order['status_history'][0]['comment'], 'cc_rejected_call_for_authorize') === false) {
+                    $pedido->status = 5;
+                    $fireEvent = true;
+                }
+            }
 
             if (in_array($pedido->status, [1,2,3])) {
                 $pedido->estimated_delivery  = $this->calcEstimatedDelivery($order['shipping_description'], $pedido->created_at);
@@ -257,6 +273,11 @@ class MagentoController extends Controller implements Integracao
 
             if ($pedido->save()) {
                 Log::info('Pedido importado ' . $order['increment_id']);
+
+                if ($fireEvent) {
+                    // Dispara o evento de cancelamento do pedido
+                    \Event::fire(new OrderCancel($pedido, getCurrentUserId()));
+                }
             } else {
                 Log::warning('Não foi possível importar o pedido ' . $order['increment_id']);
             }
@@ -265,7 +286,7 @@ class MagentoController extends Controller implements Integracao
                 $pedidoProduto = PedidoProduto::firstOrNew([
                     'pedido_id'   => $pedido->id,
                     'produto_sku' => $s_produto['sku'],
-                    'valor' => $s_produto['row_total'],
+                    'valor' => $s_produto['price'],
                     'quantidade'  => $s_produto['qty_ordered']
                 ]);
                 if ($pedidoProduto->save()) {
@@ -296,23 +317,33 @@ class MagentoController extends Controller implements Integracao
      */
     public function queue()
     {
-        $order = $this->request('orders');
-        if ($order && $this->api) {
-            $mg_order = $this->api->salesOrderInfo($this->session, $order['order_id']);
-            $mg_order = json_decode(json_encode($mg_order), true);
+        try {
+            $order = $this->request('orders');
+            if ($order && $this->api) {
+                $mg_order = $this->api->salesOrderInfo($this->session, $order['order_id']);
+                $mg_order = json_decode(json_encode($mg_order), true);
 
-            if (!isset($mg_order['customer_id'])) {
-                throw new \Exception("Pedido {$order['order_id']} não importado! O pedido não possui código do cliente.", 1);
-            } else {
-                $mg_customer = $this->api->customerCustomerInfo($this->session, $mg_order['customer_id']);
-                $mg_customer = json_decode(json_encode($mg_customer), true);
+                if (isset($mg_order['customer_id'])) {
+                    $mg_customer = $this->api->customerCustomerInfo($this->session, $mg_order['customer_id']);
+                    $mg_customer = json_decode(json_encode($mg_customer), true);
 
-                if ($mg_order['customer'] = $mg_customer) {
-                    if ($this->importPedido($mg_order)) {
-                        $order = $this->request(sprintf('orders/%s', $order['order_id']), [], 'DELETE');
-                        Log::notice('Pedido ' . $mg_order['increment_id'] . ' removido da fila de espera no tucanomg.');
+                    if ($mg_order['customer'] = $mg_customer) {
+                        $this->importPedido($mg_order);
                     }
                 }
+
+                $order = $this->request(sprintf('orders/%s', $order['order_id']), [], 'DELETE');
+                Log::notice('Pedido ' . (($mg_order && isset($mg_order['increment_id'])) ? $mg_order['increment_id'] : $order['order_id']) . ' removido da fila de espera no tucanomg.');
+            }
+        } catch (\Exception $e) {
+            if (($e->getCode() == 100 || strstr($e->getMessage(), 'order not exists') !== false) && isset($order['order_id']) && $order['order_id']) {
+                $order = $this->request(sprintf('orders/%s', $order['order_id']), [], 'DELETE');
+                Log::notice('Pedido ' . ((isset($mg_order) && isset($mg_order['increment_id'])) ? $mg_order['increment_id'] : $order['order_id']) . ' removido da fila de espera no tucanomg (não existe no magento).');
+            } else {
+                Log::warning('Ocorreu um problema ao tentar executar a fila no mangeto.', [
+                    'mg_order' => (isset($mg_order['increment_id']) ? $mg_order['increment_id'] : null),
+                    'order' => (isset($order['order_id']) ? $order['order_id'] : null)
+                ]);
             }
         }
     }
@@ -372,15 +403,18 @@ class MagentoController extends Controller implements Integracao
             $shipmentId = $request = $this->api->salesOrderShipmentCreate($this->session, $order->codigo_api);
 
             $rastreio = $order->rastreios->first();
-            $carrier = 'Correios - ' . $rastreio->servico;
+            if ($rastreio) {
+                $carrier = 'Correios - ' . $rastreio->servico;
 
-            $request = $this->api->salesOrderShipmentAddTrack(
-                $this->session,
-                $shipmentId, // increments do magento
-                'pedroteixeira_correios', // carrier code
-                $carrier,
-                $rastreio->rastreio
-            );
+                // rastreio
+                $request = $this->api->salesOrderShipmentAddTrack(
+                    $this->session,
+                    $shipmentId, // increments do magento
+                    'pedroteixeira_correios', // carrier code
+                    $carrier,
+                    $rastreio->rastreio
+                );
+            }
 
             $qty = [];
             foreach ($order->produtos as $produto) {
@@ -390,6 +424,7 @@ class MagentoController extends Controller implements Integracao
                 ];
             }
 
+            // fatura
             $request = $this->api->salesOrderInvoiceCreate(
                 $this->session,
                 $order->codigo_api, // increments do magento
@@ -444,6 +479,7 @@ class MagentoController extends Controller implements Integracao
                 );
 
                 if (is_soap_fault($stock)) {
+                    Log::critical('Não foi possível atualizar o estoque no magento', [$stock]);
                     throw new \Exception('Produto inexistente no magento', 2);
                 }
 

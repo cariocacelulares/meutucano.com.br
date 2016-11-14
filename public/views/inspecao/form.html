@@ -1,0 +1,29 @@
+<h1>Gerenciando inspeção técnica</h1>
+<form ng-submit="InspecaoTecnicaForm.save()" novalidate="novalidate" class="form-default">
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <label for="produto">Produto</label>
+            <ui-select ng-model="InspecaoTecnicaForm.inspecao.produto" theme="selectize" id="produto">
+                <ui-select-match placeholder="Selecione um produto">{{ $select.selected.titulo }}</ui-select-match>
+                <ui-select-choices repeat="produto in InspecaoTecnicaForm.produtos | propsFilter: {titulo: $select.search, sku: $select.search}"
+                    refresh="InspecaoTecnicaForm.search($select.search)" refresh-delay="300">
+                    <div ng-bind-html="produto.titulo | highlight: $select.search"></div>
+                    <small>SKU: <span ng-bind-html="''+produto.sku | highlight: $select.search"></span></small>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <label for="descricao">Descrição</label>
+            <textarea class="form-control" id="descricao" ng-model="InspecaoTecnicaForm.inspecao.descricao" placeholder="O que foi feito no aparelho?"></textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="pull-right">
+            <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
+            <a ng-if="InspecaoTecnicaForm.inspecao.id" confirm="InspecaoTecnicaForm.destroy()" class="btn-danger">Excluir</a>
+            <button busy="Salvando..." type="submit" class="btn btn-success">Salvar</button>
+        </div>
+    </div>
+</form>

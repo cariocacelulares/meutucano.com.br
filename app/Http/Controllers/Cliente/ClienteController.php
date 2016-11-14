@@ -111,32 +111,4 @@ class ClienteController extends Controller
             return $this->clientErrorResponse($data);
         }
     }
-
-    public function shopsystem($taxvat)
-    {
-        $m = self::MODEL;
-
-        $cliente = $m::where('taxvat', '=', $taxvat)->first();
-
-        $infoReturn = [
-            'taxvat'      => mb_strtolower(removeAcentos($taxvat)),
-            'nome'        => mb_strtolower(removeAcentos($cliente->nome)),
-            'email'       => mb_strtolower(removeAcentos($cliente->email)),
-            'cep'         => mb_strtolower(removeAcentos($cliente->enderecos()->first()->cep)),
-            'telefone'    => mb_strtolower(numbers($cliente->fone)),
-            'rua'         => mb_strtolower(removeAcentos($cliente->enderecos()->first()->rua)),
-            'numero'      => mb_strtolower(numbers($cliente->enderecos()->first()->numero)),
-            'bairro'      => mb_strtolower(removeAcentos($cliente->enderecos()->first()->bairro)),
-            'complemento' => mb_strtolower(removeAcentos($cliente->enderecos()->first()->complemento)),
-            'marketplace' => mb_strtolower(removeAcentos($cliente->pedidos()->orderBy('created_at', 'DESC')->first()->marketplace)),
-            'pedido'      => mb_strtolower(removeAcentos($cliente->pedidos()->orderBy('created_at', 'DESC')->first()->codigo_marketplace)),
-            'frete'       => mb_strtolower(removeAcentos($cliente->pedidos()->orderBy('created_at', 'DESC')->first()->frete_valor))
-        ];
-
-        if ($cliente) {
-            return $this->showResponse($infoReturn);
-        }
-
-        return $this->notFoundResponse();
-    }
 }

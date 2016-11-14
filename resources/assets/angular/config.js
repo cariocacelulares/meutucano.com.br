@@ -8,14 +8,21 @@
             envServiceProvider.config({
                 domains: {
                     development: ['tucano.app'],
-                    production:  ['192.168.2.170']
+                    production:  ['192.168.2.170'],
+                    aws:         ['www.meutucano.com.br', 'meutucano.com.br']
                 },
                 vars: {
                     development: {
-                        apiUrl: 'http://tucano.app/api'
+                        apiUrl:    'http://tucano.app/api',
+                        assetUrl : 'http://tucano.app/'
                     },
                     production: {
-                        apiUrl: 'http://192.168.2.170/meutucano/public/index.php/api'
+                        apiUrl:    'http://192.168.2.170/meutucano/public/index.php/api',
+                        assetUrl : 'http://192.168.2.170/meutucano/public/'
+                    },
+                    aws: {
+                        apiUrl:   'https://www.meutucano.com.br/index.php/api',
+                        assetUrl: 'https://meutucano.s3-sa-east-1.amazonaws.com/public/'
                     }
                 }
             });
@@ -40,13 +47,21 @@
         /**
          * Get user information before app starts
          */
-        .run(function($rootScope, $state) {
+        .run(function($anchorScroll, $rootScope, $state) {
+            $anchorScroll.yOffset = 70;
+
             $rootScope.$on('$stateChangeStart', function(event, toState) {
                 var user = JSON.parse(localStorage.getItem('user'));
 
                 if (user) {
                     $rootScope.authenticated = true;
                     $rootScope.currentUser = user;
+
+                    Raven.setUserContext({
+                        id: user.id,
+                        username: user.username,
+                        email: user.email
+                    });
 
                     if(toState.name === "login") {
                         event.preventDefault();
@@ -121,7 +136,7 @@
                 if (toState.data && toState.data.roles) {
                     var block = true;
                     angular.forEach(toState.data.roles, function(role) {
-                        if (_.find($rootScope.currentUser.roles, {name: role})) {
+                        if (typeof $rootScope.currentUser !== 'undefined' && _.find($rootScope.currentUser.roles, {name: role})) {
                             block = false;
                         }
                     });

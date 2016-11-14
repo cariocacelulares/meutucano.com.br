@@ -1,0 +1,32 @@
+<th>
+    <input class="form-control" ng-model="InspecaoFilaList.filter['inspecao_tecnica.id']" placeholder="Código" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <input class="form-control" ng-model="InspecaoFilaList.filter['usuarios.name']" placeholder="Nome do usuário" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <input class="form-control" ng-model="InspecaoFilaList.filter['pedidos.codigo_marketplace']" placeholder="Código do pedido" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <input class="form-control" ng-model="InspecaoFilaList.filter['produtos.titulo']" placeholder="Título do produto" ng-model-options="{debounce:500}" />
+</th>
+<th class="between-group">
+    <div class="date-picker">
+        <input class="form-control" ng-model="InspecaoFilaList.filter['inspecao_tecnica.created_at'].from" placeholder="De" ng-model-options="{debounce:500}" />
+        <div class="picker-wrap">
+            <date-picker ng-model="InspecaoFilaList.filter['inspecao_tecnica.created_at'].from" ng-model-options="{debounce:500}"></date-picker>
+        </div>
+    </div>
+    <span>/</span>
+    <div class="date-picker">
+        <input class="form-control" ng-model="InspecaoFilaList.filter['inspecao_tecnica.created_at'].to" placeholder="Até" ng-model-options="{debounce:500}" />
+        <div class="picker-wrap">
+            <date-picker ng-model="InspecaoFilaList.filter['inspecao_tecnica.created_at'].to" ng-model-options="{debounce:500}"></date-picker>
+        </div>
+    </div>
+</th>
+<th class="item-button">
+    <a title="Limpar filtros" class="btn-danger" ng-click="InspecaoFilaList.filterList.clear()">
+        <i class="fa-eraser"></i>
+    </a>
+</th>

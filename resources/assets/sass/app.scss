@@ -9,6 +9,7 @@
  */
 @import 'theme-pages/pages';
 @import 'theme-fix';
+@import 'ui-select-fix';
 
 /**
  * Padrões
@@ -45,3 +46,9 @@
 @import 'components/panels';
 @import 'components/buttons';
 @import 'components/tabs';
+@import 'components/upload';
+
+/**
+ * Gamification
+ */
+@import 'gamification/gamification'

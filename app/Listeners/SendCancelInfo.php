@@ -18,12 +18,18 @@ class SendCancelInfo
     public function handle(OrderCancel $event)
     {
         $pedido = $event->order;
+        $user_id = $event->user_id;
         \Log::debug('Listener SendCancelInfo ativado. pedido: ' . $pedido->id);
 
         if (strtolower($pedido->marketplace) == 'site') {
             with(new MagentoController())->cancelOrder($pedido);
         } else {
-            with(new SkyhubController())->cancelOrder($pedido);
+            if ($user_id === false) {
+                \Log::debug('Nenhuma informação de cancelamento foi enviada, pois não existe usuário logado!');
+            } else {
+                \Log::debug('Cancela na skyhub');
+                with(new SkyhubController())->cancelOrder($pedido);
+            }
         }
     }
 }

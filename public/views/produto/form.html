@@ -8,25 +8,51 @@
 </div>
 
 <form ng-submit="ProdutoForm.save()" novalidate="novalidate" class="form-default" id="formProduto">
-      <div class="row form-group">
-          <div class="col-md-8">
-              <label for="titulo">Título</label>
-              <input type="text" ng-model="ProdutoForm.produto.titulo" id="titulo" placeholder="Título do produto" required />
-          </div>
-          <div class="col-md-3 form-group">
-              <label for="sku">SKU</label>
-              <div class="input-group">
-                  <input ng-model="ProdutoForm.produto.sku" type="text" id="sku" placeholder="SKU do produto" required />
-                  <span class="input-group-btn">
-                      <a ng-click="ProdutoForm.generateSku()" class="btn btn-complete" title="Gerar novo SKU">
-                          <i class="fa-key"></i>
-                      </a>
-                  </span>
-              </div>
-          </div>
-          <div class="col-md-1 form-group">
-              <label for="estoque">Estoque</label>
-              <input type="number" ng-model="ProdutoForm.produto.estoque" id="estoque" placeholder="Qtd" required />
-          </div>
-      </div>
+    <tabs>
+        <tab name="infosProduto" title="Informações do produto">
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <label for="titulo">Título</label>
+                    <input type="text" ng-model="ProdutoForm.produto.titulo" id="titulo" placeholder="Título do produto" required />
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="estado">Estado</label>
+                    <select ng-model="ProdutoForm.produto.estado" name="estado" id="estado">
+                        <option value="0">Novo</option>
+                        <option value="1">Seminovo</option>
+                    </select>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="sku">SKU</label>
+                    <div class="input-group">
+                        <input ng-model="ProdutoForm.produto.sku" type="text" id="sku" placeholder="SKU do produto" required />
+                        <span class="input-group-btn">
+                            <a ng-click="ProdutoForm.generateSku()" class="btn btn-complete" title="Gerar novo SKU">
+                                <i class="fa-key"></i>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-1 form-group">
+                    <label for="estoque">Estoque</label>
+                    <input type="number" ng-model="ProdutoForm.produto.estoque" id="estoque" placeholder="Qtd" required />
+                </div>
+            </div>
+            <div ng-if="ProdutoForm.produto.attachedProducts[0] || ProdutoForm.produto.attachedProducts[1]" class="row">
+                <p>
+                    <span>Produtos reservados: </span>
+                    <span ng-if="ProdutoForm.produto.attachedProducts[0]"><b>{{ ProdutoForm.produto.attachedProducts[0] }}</b> pendente(s)</span>
+                    <span ng-if="ProdutoForm.produto.attachedProducts[0] && ProdutoForm.produto.attachedProducts[1]"> e </span>
+                    <span ng-if="ProdutoForm.produto.attachedProducts[1]"><b>{{ ProdutoForm.produto.attachedProducts[1] }}</b> pago(s)</span>.
+                </p>
+            </div>
+        </tab>
+        <tab ng-if="ProdutoForm.produto.estado == '1'" name="produtosRevisados" title="Itens Revisados">
+            <div ng-if="ProdutoForm.produto.revisoes">
+                <p class="m-b-30">Os códigos de inspeção abaixo já foram revisados e estão aguardando um pedido ({{ ProdutoForm.produto.revisoes.length }})</p>
+                <span ng-repeat="revisao in ProdutoForm.produto.revisoes" class="col-md-3 fz-15 m-b-10 text-center">{{ revisao.id }}</span>
+            </div>
+            <p ng-if="!ProdutoForm.produto.revisoes" class="text-center m-t-40">Não existe nenhum item revisado para este produto.</p>
+        </tab>
+    </tabs>
 </form>

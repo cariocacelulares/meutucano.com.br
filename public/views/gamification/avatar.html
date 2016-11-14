@@ -1,0 +1,29 @@
+<h1>Gerenciar avatar</h1>
+<form ng-submit="AvatarForm.save()" novalidate="novalidate" class="form-default">
+    <div class="row">
+        <a class="btn-default" ng-model="AvatarForm.imagem"
+            ngf-select ngf-pattern="'image/*'" ngf-accept="'image/*'"
+            ngf-max-size="1MB">
+            <span ng-if="!AvatarForm.usuario.imagem"><i class="fa-upload"></i>&nbsp; Selecione e recorte a imagem</span>
+            <span ng-if="AvatarForm.usuario.imagem"><i class="fa-undo"></i></span>
+        </a>
+    </div>
+    <div class="row">
+        <div ng-if="AvatarForm.imagem" ngf-drop ng-model="AvatarForm.imagem"
+             ngf-pattern="image/*" class="cropArea">
+            <img-crop image="AvatarForm.imagem | ngfDataUrl"
+                result-image="AvatarForm.usuario.gamification.avatar" ng-init="AvatarForm.usuario.gamification.avatar=''">
+            </img-crop>
+        </div>
+        <hr ng-if="AvatarForm.imagem" />
+        <div ng-if="AvatarForm.usuario.gamification.avatar" class="cropResult">
+            <img ng-src="{{ AvatarForm.usuario.gamification.avatar }}" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="pull-right">
+            <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
+            <button busy="Salvando..." type="submit" class="btn btn-success">Salvar</button>
+        </div>
+    </div>
+</form>

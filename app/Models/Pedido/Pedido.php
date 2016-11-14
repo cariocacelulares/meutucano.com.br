@@ -5,7 +5,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Cliente\Cliente;
 use App\Models\Cliente\Endereco;
+use App\Models\Inspecao\InspecaoTecnica;
 use App\Events\OrderCancel;
+use App\Events\OrderSeminovo;
 use App\Http\Controllers\Integracao\SkyhubController;
 
 /**
@@ -74,13 +76,24 @@ class Pedido extends \Eloquent
         // Salvar pedido (novo ou existente)
         static::saving(function($pedido) {
             $oldStatus = ($pedido->getOriginal('status') === null) ? null : (int)$pedido->getOriginal('status');
-            $newStatus = ($pedido->status === null) ? null : (int)$pedido->status;
+            $newStatus = (is_null($pedido->status)) ? null : (int)$pedido->status;
 
             // Se realmente ocorreu uma mudança de status e o pedido não veio do site
             if ($newStatus !== $oldStatus && strtolower($pedido->marketplace) != 'site') {
                 // Se o novo status for entregue, notifica a Skyhub
                 if ($newStatus === 3) {
                     with(new SkyhubController())->orderDelivered($pedido);
+                }
+            }
+
+            // Se o status foi alterado e o novo status for pago
+            if ($newStatus !== $oldStatus && $newStatus === 1) {
+                // pra cada produto do pedido
+                foreach ($pedido->produtos as $pedidoProduto) {
+                    // se o produto do pedido nao tiver inspecao tecnica nem imei, e for seminovo
+                    if (!$pedidoProduto->inspecao_tecnica && !$pedidoProduto->imei && $pedidoProduto->produto->estado == 1) {
+                        \Event::fire(new OrderSeminovo($pedidoProduto));
+                    }
                 }
             }
         });
@@ -95,11 +108,25 @@ class Pedido extends \Eloquent
                 // Se o status for cancelado
                 if ($newStatus === 5) {
                     // Dispara o evento de cancelamento do pedido
-                    \Event::fire(new OrderCancel($pedido));
+                    \Event::fire(new OrderCancel($pedido, getCurrentUserId()));
 
                     // Se o status era enviado, pago ou entregue
                     if (in_array($oldStatus, [1, 2, 3])) {
                         $pedido->reembolso = true;
+                    }
+
+                    // Se tiver alguma inspeção na fila, deleta ela
+                    foreach ($pedido->produtos as $pedidoProduto) {
+                        $inspecoes = InspecaoTecnica
+                            ::where('pedido_produtos_id', '=', $pedidoProduto->id)
+                            ->whereNull('revisado_at')
+                            ->get();
+
+                        if ($inspecoes) {
+                            foreach ($inspecoes as $inspecao) {
+                                $inspecao->delete();
+                            }
+                        }
                     }
                 }
             }

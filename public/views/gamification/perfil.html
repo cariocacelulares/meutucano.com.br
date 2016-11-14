@@ -1,0 +1,117 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-user" title="Perfil" description="Aqui estão todas as informações do usuário."></page-title>
+    <div ng-if="Perfil.proprio" class="col-md-6 button-bar">
+        <button ng-click="Perfil.openTarefaForm(Perfil.usuario)" class="btn-primary"><i class="fa-user-plus"></i>&nbsp; Adicionar tarefa</button>
+        <button ng-click="Perfil.openAvatarForm(Perfil.usuario)" class="btn-info"><i class="fa-refresh"></i>&nbsp; Alterar avatar</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <div ng-if="Perfil.usuario.gamification.avatar" class="avatar">
+                            <span class="nivel">{{ Perfil.usuario.gamification.nivel }}</span>
+                            <span class="avatar-container">
+                                <img ng-src="./{{ Perfil.usuario.gamification.avatar }}" width="250" alt="{{ Perfil.usuario.name }}" class="circle">
+                            </span>
+                            <span class="votos">
+                                <i class="fa-thumbs-o-up"></i>&nbsp;
+                                {{ Perfil.votos }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="row">
+                            <div class="col-md-12 p-t-15">
+                                <h1 class="fz-45">
+                                    {{ Perfil.usuario.name }}
+                                </h1>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3 class="text-ponto fz-45">
+                                    <i class="fa-star-o"></i>&nbsp;
+                                    {{ Perfil.usuario.gamification.experiencia }}
+                                </h3>
+                            </div>
+                            <div class="col-md-6">
+                                <h3 class="text-moeda fz-45">
+                                    <img src="./images/gamification/coin.svg" height="40" style="margin-top:-10px">&nbsp;
+                                    {{ Perfil.usuario.gamification.moedas }}
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <highchart id="perfilGrafico" config="Perfil.grafico"></highchart>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="progress" title="{{ Perfil.usuario.gamification.progresso }}% concluídos para o próximo nível">
+                            <div class="progress-bar progress-bar-primary" style="width:{{ Perfil.usuario.gamification.progresso }}%">
+                                <small class="pull-right m-r-10 text-white">{{ Perfil.usuario.gamification.progresso }}%</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div ng-if="Perfil.conquistas.length" class="row m-t-20">
+    <div class="col-md-12">
+        <h2>Conquistas obtidas</h2>
+        <hr class="m-t-10" />
+    </div>
+    <div class="col-md-12">
+        <div ng-repeat="usuarioConquista in Perfil.conquistas" class="col-md-3 m-b-20">
+            <div class="panel panel-default">
+                <div class="panel-body text-center">
+                    <div class="clearfix m-b-15">
+                        <img ng-src="./{{ usuarioConquista.conquista.icone }}" width="150" class="circle" />
+                    </div>
+                    <span class="fz-16">{{ usuarioConquista.conquista.titulo }}</span>
+                    <hr class="m-t-5 m-b-5" />
+                    <small>{{ usuarioConquista.created_at_readable }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div ng-if="Perfil.proprio && Perfil.usuario.tarefas.length" class="row m-t-20">
+    <div class="col-md-12">
+        <h2>Tarefas realizadas</h2>
+        <hr class="m-t-10" />
+        <table class="table info-style">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th width="160" class="text-center">Pontos</th>
+                    <th width="160" class="text-center">Moedas</th>
+                    <th width="160" class="text-center">Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="usuarioTarefa in Perfil.usuario.tarefas">
+                    <td>
+                        <span class="fz-20 p-l-10">{{ usuarioTarefa.tarefa.titulo }}</span>
+                    </td>
+                    <td class="text-center text-ponto">
+                        <i class="fa-star-o"></i>&nbsp;
+                        {{ usuarioTarefa.pontos }}
+                    </td>
+                    <td class="text-center text-moeda">
+                        <img src="./images/gamification/coin.svg" height="14" style="margin-top:-4px">&nbsp;
+                        {{ usuarioTarefa.moedas }}
+                    </td>
+                    <td>
+                        {{ usuarioTarefa.created_at_readable }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

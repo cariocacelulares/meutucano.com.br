@@ -192,6 +192,20 @@
                 })
 
                 /**
+                 * Sugestões
+                 */
+                .state('app.interno.sugestoes', {
+                    url: '/sugestoes',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.interno.sugestoes.index', {
+                    url: '/list',
+                    templateUrl: 'views/sugestoes/list.html',
+                    controller: 'SugestaoListController as SugestaoList'
+                })
+
+                /**
                  * Marketing
                  */
                 .state('app.marketing', {
@@ -275,6 +289,114 @@
                     url: '/{id}',
                     templateUrl: 'views/produto/marca/form.html',
                     controller: 'MarcaFormController as MarcaForm'
+                })
+
+                /**
+                 * Inspeção técnica
+                 */
+                .state('app.inspecao', {
+                    url: '/inspecao',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.inspecao.realizada', {
+                    url: '/realizada',
+                    templateUrl: 'views/inspecao/realizada/list.html',
+                    controller: 'InspecaoRealizadaListController as InspecaoRealizadaList',
+                    data: {
+                        roles: ['admin', 'tecnico']
+                    }
+                })
+
+                .state('app.inspecao.fila', {
+                    url: '/fila',
+                    templateUrl: 'views/inspecao/fila/list.html',
+                    controller: 'InspecaoFilaListController as InspecaoFilaList',
+                    data: {
+                        roles: ['admin', 'tecnico']
+                    }
+                })
+
+                .state('app.inspecao.solicitada', {
+                    url: '/solicitada',
+                    templateUrl: 'views/inspecao/solicitada/list.html',
+                    controller: 'InspecaoSolicitadaListController as InspecaoSolicitadaList',
+                    data: {
+                        roles: ['admin', 'gestor', 'tecnico', 'atendimento']
+                    }
+                })
+
+                /**
+                 * Relatórios
+                 */
+                .state('app.relatorios', {
+                    url: '/relatorios',
+                    templateUrl: 'views/layouts/default.html',
+                    data: {
+                        roles: ['admin']
+                    }
+                })
+
+                .state('app.relatorios.pedidos', {
+                    url: '/pedidos',
+                    templateUrl: 'views/relatorio/pedidos.html',
+                    controller: 'RelatorioPedidosController as RelatorioPedidos'
+                })
+
+                .state('app.relatorios.produtos', {
+                    url: '/produtos',
+                    templateUrl: 'views/relatorio/produtos.html',
+                    controller: 'RelatorioProdutosController as RelatorioProdutos'
+                })
+
+                /**
+                 * Gamification
+                 */
+                .state('app.gamification', {
+                    url: '/gamification',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.gamification.ranking', {
+                    url: '/ranking',
+                    templateUrl: 'views/gamification/ranking.html',
+                    controller: 'RankingController as Ranking'
+                })
+
+                .state('app.gamification.tarefas', {
+                    url: '/tarefas',
+                    templateUrl: 'views/gamification/tarefas/list.html',
+                    controller: 'TarefaListController as TarefaList'
+                })
+
+                .state('app.gamification.conquistas', {
+                    url: '/conquistas',
+                    templateUrl: 'views/gamification/conquistas/list.html',
+                    controller: 'ConquistaListController as ConquistaList'
+                })
+
+                .state('app.gamification.perfil', {
+                    url: '/perfil/?{id}',
+                    templateUrl: 'views/gamification/perfil.html',
+                    controller: 'PerfilController as Perfil'
+                })
+
+                .state('app.gamification.recompensas', {
+                    url: '/recompensas',
+                    templateUrl: 'views/gamification/recompensas/list.html',
+                    controller: 'RecompensaListController as RecompensaList'
+                })
+
+                .state('app.gamification.trocas', {
+                    url: '/trocas',
+                    templateUrl: 'views/gamification/trocas/list.html',
+                    controller: 'TrocaListController as TrocaList'
+                })
+
+                .state('app.gamification.solicitacoes', {
+                    url: '/solicitacoes',
+                    templateUrl: 'views/gamification/solicitacoes/list.html',
+                    controller: 'SolicitacaoListController as SolicitacaoList'
                 })
             ;
         });

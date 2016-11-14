@@ -1,0 +1,56 @@
+<h1>Gerenciando conquistas</h1>
+<form ng-submit="ConquistaForm.save()" novalidate="novalidate" class="form-default">
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <label for="titulo">Título</label>
+            <input ng-model="ConquistaForm.conquista.titulo" id="titulo" placeholder="Nome da situação" required />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 form-group">
+            <label for="tarefa">Tarefa</label>
+            <select name="tarefa" id="tarefa"
+                ng-model="ConquistaForm.conquista.tarefa_id"
+                ng-options="tarefa.id as tarefa.titulo for tarefa in ConquistaForm.tarefas">
+            </select>
+        </div>
+        <div class="col-md-2 form-group">
+            <label for="quantidade">Qtd</label>
+            <input ng-model="ConquistaForm.conquista.quantidade" id="quantidade" type="number" ng-minlength="0">
+        </div>
+        <div class="col-md-4 form-group">
+            <label for="regra">Tempo</label>
+            <select name="tempo" id="tempo"
+                ng-model="ConquistaForm.conquista.tempo"
+                ng-options="ConquistaForm.tempoOptions.indexOf(tempoOption) as tempoOption for tempoOption in ConquistaForm.tempoOptions">
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <a class="btn-default" ng-model="ConquistaForm.imagem"
+            ngf-select ngf-pattern="'image/*'" ngf-accept="'image/*'"
+            ngf-max-size="1MB">
+            <span ng-if="!ConquistaForm.conquista.imagem"><i class="fa-upload"></i>&nbsp; Selecione e recorte a imagem</span>
+            <span ng-if="ConquistaForm.conquista.imagem"><i class="fa-undo"></i></span>
+        </a>
+    </div>
+    <div class="row">
+        <div ng-if="ConquistaForm.imagem" ngf-drop ng-model="ConquistaForm.imagem"
+             ngf-pattern="image/*" class="cropArea">
+            <img-crop image="ConquistaForm.imagem | ngfDataUrl"
+                result-image="ConquistaForm.conquista.icone" ng-init="ConquistaForm.conquista.icone=''">
+            </img-crop>
+        </div>
+        <hr ng-if="ConquistaForm.imagem" />
+        <div ng-if="ConquistaForm.conquista.icone" class="cropResult">
+            <img ng-src="{{ ConquistaForm.conquista.icone }}" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="pull-right">
+            <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
+            <a ng-if="ConquistaForm.conquista.id" confirm="ConquistaForm.destroy()" class="btn-danger">Excluir</a>
+            <button busy="Salvando..." type="submit" class="btn btn-success">Salvar</button>
+        </div>
+    </div>
+</form>

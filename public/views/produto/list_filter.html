@@ -4,6 +4,13 @@
 <th>
     <input class="form-control big" ng-model="ProdutoList.filter['produtos.titulo']" placeholder="Título do produto" ng-model-options="{debounce:500}" />
 </th>
+<th>
+    <select ng-model="ProdutoList.filter['produtos.estado']" class="form-control">
+        <option value="">Todos</option>
+        <option value="0">Novo</option>
+        <option value="1">Seminovo</option>
+    </select>
+</th>
 <th class="between-group">
     <input class="form-control big" ng-model="ProdutoList.filter['produtos.estoque'].from" placeholder="De" ng-model-options="{debounce:500}" type="number" />
     <span>/</span>

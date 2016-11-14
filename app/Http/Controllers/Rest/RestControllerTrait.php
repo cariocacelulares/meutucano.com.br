@@ -47,10 +47,10 @@ trait RestControllerTrait
                 }
 
                 if ($filtro['operator'] == 'BETWEEN') {
-                    if ((!isset($filtro['value']['to']) || is_null($filtro['value']['to']) || empty($filtro['value']['to'])) && isset($filtro['value']['from'])) {
+                    if ((!isset($filtro['value']['to']) || (!$filtro['value']['to'] && $filtro['value']['to'] !== 0)) && isset($filtro['value']['from'])) {
                         $filtro['operator'] = '>=';
                         $filtro['value'] = $filtro['value']['from'];
-                    } elseif ((!isset($filtro['value']['from']) || is_null($filtro['value']['from']) || empty($filtro['value']['from'])) && isset($filtro['value']['to'])) {
+                    } elseif ((!isset($filtro['value']['from']) || (!$filtro['value']['from'] && $filtro['value']['from'] !== 0)) && isset($filtro['value']['to'])) {
                         $filtro['operator'] = '<=';
                         $filtro['value'] = $filtro['value']['to'];
                     }
@@ -120,7 +120,7 @@ trait RestControllerTrait
         try {
             $v = \Validator::make(Input::all(), $this->validationRules);
 
-            if($v->fails()) {
+            if ($v->fails()) {
                 throw new \Exception("ValidationException");
             }
             $data = $m::create(Input::all());

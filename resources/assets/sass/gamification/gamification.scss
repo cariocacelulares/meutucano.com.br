@@ -1,0 +1,66 @@
+@import 'utils';
+@import 'ranking';
+
+// Cores
+.text-moeda { color: #FFC003 !important }
+.bg-moeda { background-color: #FFC003 !important }
+.text-ponto { color: #FB2020 !important }
+.bg-ponto { background-color: #FB2020 !important }
+
+// Barra de progresso
+.panel-body {
+    .progress {
+        position: relative;
+        top: 12px;
+        left: -24px;
+        width: calc(100% + 48px);
+
+        .progress-bar {
+            float: left;
+        }
+
+        small {
+            font-size: 10px;
+            line-height: 12px;
+        }
+    }
+}
+
+// avatar
+.avatar {
+    position: relative;
+    display: inline-block;
+
+    .votos {
+        position: absolute;
+        right: 5px;
+        bottom: 5px;
+    }
+
+    .avatar-container {
+        position: relative;
+        float: left;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 2px solid #E2E2E2;
+        overflow: hidden;
+        z-index: 10;
+    }
+
+    .nivel {
+        position: absolute;
+        top: 8%;
+        right: 8%;
+        width: 30px;
+        height: 30px;
+        line-height: 28px;
+        border-radius: 50%;
+        border: 1px solid #E2E2E2;
+        background-color: #FFF;
+        font-size: 14px;
+        text-align: center;
+        overflow: hidden;
+        z-index: 15;
+    }
+}

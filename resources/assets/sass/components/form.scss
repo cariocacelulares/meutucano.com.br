@@ -58,7 +58,7 @@
         }
     }
 
-    .form-group {
+    .form-group:not(.no-validate) {
         &.has-success input {
             border-color: $color-success;
         }
@@ -111,6 +111,7 @@
 
     textarea {
         min-height: 100px;
+        line-height: 1.6;
     }
 
     fieldset {

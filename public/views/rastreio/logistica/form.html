@@ -8,7 +8,7 @@
         </div>
         <div class="col-md-6 form-group">
             <label for="motivo">Motivo</label>
-            <select ng-model="Logistica.logistica.motivo" id="motivo" class="form-control" required>
+            <select ng-model="Logistica.logistica.motivo" id="motivo" class="form-control" ng-change="Logistica.verifySeminovos()" required>
                 <option value="" disabled selected hidden>Motivo</option>
                 <option value="0">Defeito</option>
                 <option value="1">Arrependimento</option>
@@ -24,7 +24,7 @@
     <div class="row">
         <div class="col-md-6 form-group">
             <label for="acao">Ação realizada</label>
-            <select ng-model="Logistica.logistica.acao" id="acao" class="form-control">
+            <select ng-model="Logistica.logistica.acao" id="acao" class="form-control" ng-change="Logistica.verifySeminovos()">
                 <option value="" disabled selected hidden>Ação realizada</option>
                 <option value="0">Reenvio</option>
                 <option value="1">Cancelamento</option>
@@ -56,7 +56,50 @@
             <textarea class="form-control" id="observacoes" ng-model="Logistica.logistica.observacoes" placeholder="Observacões gerais"></textarea>
         </div>
     </div>
-
+    <div class="row">
+        <div ng-if="!Logistica.inspecoes && Logistica.existsSeminovos" class="col-md-12">
+            <a ng-click="Logistica.inspecaoTecnicaHelper.verificarInspecoes(Logistica.logistica.rastreio_id)" class="btn-complete full-width text-center"><i class="fa-bug"></i>&nbsp; Requisitar inspeções técnicas</a>
+        </div>
+        <div ng-if="Logistica.inspecoes.criar.length || Logistica.inspecoes.reservar.length" class="col-md-12">
+            <div class="form-group text-center">
+                <label>Inspeções técnicas</label>
+            </div>
+            <table class="table info-style small">
+                <thead>
+                    <tr>
+                        <th class="check-col"></th>
+                        <th class="text-left">Produto</th>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="inspecao in Logistica.inspecoes.reservar">
+                    <tr>
+                        <td class="check-col">
+                            <div class="form-group">
+                                <div class="checkbox check-success">
+                                    <input id="reservar{{ $index }}" type="checkbox" ng-model="inspecao.aplicar" ng-true-value="1">
+                                    <label for="reservar{{ $index }}" class="text-normal"></label>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-left p-l-0">{{ inspecao.titulo }}</td>
+                    </tr>
+                </tbody>
+                <tbody ng-repeat="inspecao in Logistica.inspecoes.criar">
+                    <tr>
+                        <td class="check-col">
+                            <div class="form-group">
+                                <div class="checkbox check-success">
+                                    <input id="reservar{{ $index }}" type="checkbox" ng-model="inspecao.aplicar" ng-true-value="1">
+                                    <label for="reservar{{ $index }}" class="text-normal"></label>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-left p-l-0">{{ inspecao.titulo }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
     <div class="row">
         <div class="pull-right">
             <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>

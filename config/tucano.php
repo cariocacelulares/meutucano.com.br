@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'email_send_enabled' => env('EMAIL_SEND_ENABLED', true),
     'report_email' => env('REPORT_EMAIL', 'dev@cariocacelulares.com.br'),
     /**
      * CEP Padrão de envio
@@ -71,6 +72,24 @@ return [
         '02/11',
         '15/11',
         '25/12'
+    ],
+
+    /**
+     * Meses do ano
+     */
+    'meses' => [
+        1 => 'Janeiro',
+        2 => 'Fevereiro',
+        3 => 'Março',
+        4 => 'Abril',
+        5 => 'Maio',
+        6 => 'Junho',
+        7 => 'Julho',
+        8 => 'Agosto',
+        9 => 'Setembro',
+        10 => 'Outubro',
+        11 => 'Novembro',
+        12 => 'Dezembro',
     ],
 
     /**
@@ -166,11 +185,11 @@ return [
     'magento' => [
         'enabled' => env('MAGENTO_ENABLED', true),
         'api' => [
-            'host' => env('MAGENTO_API_HOST', 'http://www.cariocacelulares.com.br/api/v2_soap/?wsdl'),
+            'host' => env('MAGENTO_API_HOST', 'https://www.cariocacelulares.com.br/api/v2_soap/?wsdl'),
             'user' => env('MAGENTO_API_USER', 'carioca'),
             'key'  => env('MAGENTO_API_KEY', '#@carioca2016')
         ],
-        'old_order' => 7
+        'old_order' => 4
     ],
 
     /**

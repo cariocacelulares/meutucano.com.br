@@ -6,7 +6,7 @@
     "type": "project",
     "require": {
         "php": ">= 5.5.9",
-        "laravel/framework": "^5.2",
+        "laravel/framework": "5.2.*",
         "tymon/jwt-auth": "0.5.*",
         "barryvdh/laravel-ide-helper": "^2.1",
         "stavarengo/php-sigep": "dev-carioca as 1.0.x-dev",
@@ -19,7 +19,11 @@
         "swiftmailer/swiftmailer": "^5.4",
         "venturecraft/revisionable": "1.*",
         "arcanedev/log-viewer": "4.0.x-dev",
-        "spatie/browsershot": "^1.5"
+        "spatie/browsershot": "^1.5",
+        "maatwebsite/excel": "~2.1.0",
+        "dompdf/dompdf": "~0.6.1",
+        "vinelab/cdn": "^1.4",
+        "sentry/sentry-laravel": "^0.4.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -75,10 +79,6 @@
         "generators": {
             "type": "vcs",
             "url": "https://github.com/jamisonvalenta/Laravel-4-Generators.git"
-        },
-        "framework": {
-            "type": "vcs",
-            "url": "https://github.com/diego3g/framework.git"
         },
         "php-sigep": {
             "type": "vcs",

@@ -44,7 +44,10 @@ class UploadController extends Controller
             $usuario_id = JWTAuth::parseToken()->authenticate()->id;
 
             $uploadCount = 0;
+            $errors = [];
             foreach ($arquivos as $nota) {
+                $erro = false;
+
                 /**
                  * Ambiente de testes
                  */
@@ -54,32 +57,54 @@ class UploadController extends Controller
 
                 // Arquivos XML
                 if ($extensao !== 'xml') {
-                    throw new \Exception('Certifique-se de enviar apenas arquivos XML.');
-                }
-
-                $nota->move(storage_path('app/public/nota'), $notaArquivo);
-                $xml = simplexml_load_file(storage_path('app/public/nota/' . $notaArquivo));
-
-                if (!isset($xml->NFe->infNFe)) {
-                    continue;
+                    $erro = true;
+                    $errors[] = ['chave' => $notaArquivo, 'message' => 'Formato de arquivo inválido!'];
                 } else {
-                    $this->nfe = $xml->NFe->infNFe;
+                    $nota->move(storage_path('app/public/nota'), $notaArquivo);
 
-                    if (isset($xml->protNFe)) {
-                        $this->protNfe = $xml->protNFe;
+                    try {
+                        $xml = simplexml_load_file(storage_path('app/public/nota/' . $notaArquivo));
+                    } catch (\Exception $e) {
+                        $erro = true;
+                        $errors[] = ['chave' => $notaArquivo, 'message' => 'XML inválido!'];
                     }
-                }
 
-                if ($this->uploadNota($notaArquivo, $usuario_id)) {
-                    $uploadCount++;
+                    if (!$erro) {
+                        if (!isset($xml->NFe->infNFe)) {
+                            $erro = true;
+                            $errors[] = ['chave' => $notaArquivo, 'message' => 'Nota não reconhecida!'];
+                        } else {
+                            $this->nfe = $xml->NFe->infNFe;
+
+                            if (isset($xml->protNFe)) {
+                                $this->protNfe = $xml->protNFe;
+                            } else {
+                                $erro = true;
+                                $errors[] = ['chave' => $notaArquivo, 'message' => 'Não foi possível identificar o protocolo da nota!'];
+                            }
+                        }
+                    }
+
+                    if (!$erro) {
+                        $upload = $this->uploadNota($notaArquivo, $usuario_id);
+                        if ($upload === true) {
+                            $uploadCount++;
+                        } else {
+                            $chave = $notaArquivo;
+                            $errors[] = ['chave' => $chave, 'message' => $upload];
+                        }
+                    }
                 }
             }
 
-            $data = ['msg' => sprintf('Foram importados %d arquivo(s) de %d enviado(s).', $uploadCount, count($arquivos))];
             Log::info(sprintf('Foram importados %d arquivo(s) de %d enviado(s).', $uploadCount, count($arquivos)));
-            return $this->createdResponse($data);
+            return $this->createdResponse([
+                'total' => count($arquivos),
+                'success' => $uploadCount,
+                'errors' => $errors
+            ]);
         } catch (\Exception $e) {
-            Log::alert(logMessage($e, 'Não foi possível fazer upload do arquivo'));
+            Log::alert(logMessage($e, 'Não foi possível fazer upload do(s) arquivo(s)'));
 
             $data = ['exception' => $e->getMessage()];
             return $this->clientErrorResponse($data);
@@ -126,16 +151,20 @@ class UploadController extends Controller
             $tipoOperacao = null;
             if (in_array($operacao, Config::get('tucano.notas.operacoes'))) {
                 $tipoOperacao = 'venda';
-            } else if (!in_array($operacao, Config::get('tucano.notas.devolucao'))) {
+            } else if (in_array($operacao, Config::get('tucano.notas.devolucao'))) {
                 $tipoOperacao = 'devolucao';
-            } else if (!in_array($operacao, Config::get('tucano.notas.estorno'))) {
+            } else if (in_array($operacao, Config::get('tucano.notas.estorno'))) {
                 $tipoOperacao = 'estorno';
             } else {
-                return false;
+                return 'Não foi possível identificar a operação da nota (CFOP)!';
             }
 
             // Chave
             $chave = $this->protNfe->infProt->chNFe;
+
+            // Abre um transaction no banco de dados
+            DB::beginTransaction();
+            Log::debug('Transaction - begin');
 
             // Pedido
             $pedido = $this->importPedido($chave, $cliente, $clienteEndereco, $operacao, $tipoOperacao);
@@ -145,17 +174,38 @@ class UploadController extends Controller
             $dataNota = $datetimeNota->format('Y-m-d');
 
             if (in_array($tipoOperacao, ['devolucao', 'estorno'])) {
-                return $this->importDevolucao($chave, $usuario_id, $notaArquivo, $tipoOperacao, $dataNota);
+                $return = $this->importDevolucao($chave, $usuario_id, $notaArquivo, $tipoOperacao, $dataNota);
             } else {
-                return $this->importVenda($chave, $pedido, $usuario_id, $dataNota, $notaArquivo, $produtos, $datetimeNota);
+                $return = $this->importVenda($chave, $pedido, $usuario_id, $dataNota, $notaArquivo, $produtos, $datetimeNota);
             }
-        } catch (\Exception $e) {
-            // Fecha a trasação e cancela as alterações
-            DB::rollBack();
-            Log::debug('Transaction - rollback');
 
-            Log::alert(logMessage($e, 'Não foi possível fazer upload do arquivo'));
-            return false;
+            // Fecha a transação e comita as alterações
+            DB::commit();
+            Log::debug('Transaction - commit');
+
+            return $return;
+        } catch (\Exception $e) {
+            if (strstr($e->getMessage(), 'No such file or directory') !== false) {
+                // Fecha a transação e comita as alterações
+                DB::commit();
+                Log::debug('Transaction - commit');
+
+                Log::warning(logMessage($e, 'Não foi possível enviar o e-mail ao cliente!'));
+
+                return 'A nota foi importada, mas não foi possível enviar o e-mail ao cliente!';
+            } else {
+                // Fecha a trasação e cancela as alterações
+                DB::rollBack();
+                Log::debug('Transaction - rollback');
+
+                Log::alert(logMessage($e, 'Não foi possível fazer upload do arquivo'));
+
+                if ($e->getCode() == 7) {
+                    return $e->getMessage();
+                } else {
+                    return 'Erro desconhecido!';
+                }
+            }
         }
     }
 
@@ -175,7 +225,7 @@ class UploadController extends Controller
             $ie = null;
         }
 
-        $cliente = Cliente::firstOrNew(['taxvat' => $taxvat]);
+        $cliente = Cliente::firstOrCreate(['taxvat' => $taxvat]);
 
         $cliente->taxvat = $taxvat;
         $cliente->tipo = $tipo;
@@ -265,7 +315,11 @@ class UploadController extends Controller
         }
 
         if ($pedido == null) {
-            $pedido = Pedido::withTrashed()->findOrNew((int)substr($chave, 25, 10));
+            $pedido = Pedido::withTrashed()->find((int)substr($chave, 25, 10));
+        }
+
+        if (!$pedido) {
+            throw new \Exception('O pedido não existe no tucano!', 7);
         }
 
         if (!in_array($tipoOperacao, ['devolucao', 'estorno'])) {
@@ -308,7 +362,7 @@ class UploadController extends Controller
         }
 
         if (!$notaRef) {
-            throw new \Exception('Não foi possível encontrar a nota de referência para a devolução: ' . $chave);
+            throw new \Exception('Não foi possível encontrar a nota de referência para a devolução', 7);
         }
 
         if (!$notaRef) {
@@ -337,7 +391,7 @@ class UploadController extends Controller
             Log::warning('Não foi possível importar a devolução da nota de venda: ' . $notaRef->id);
         }
 
-        return $devolucao;
+        return true;
     }
 
     /**
@@ -353,10 +407,6 @@ class UploadController extends Controller
      */
     private function importVenda($chave, $pedido, $usuario_id, $dataNota, $notaArquivo, $produtos, $datetimeNota)
     {
-        // Abre um transaction no banco de dados
-        DB::beginTransaction();
-        Log::debug('Transaction - begin');
-
         /**
          * Salva a nota
          */
@@ -428,6 +478,12 @@ class UploadController extends Controller
             /**
              * Salva o rastreio
              */
+
+            $pedidoRastreio = Rastreio::where('pedido_id', '!=', $pedido->id)->where('rastreio', '=', $rastreio)->first();
+            if ($pedidoRastreio) {
+                throw new \Exception('O código de rastreio já está sendo utilizado por outra.', 7);
+            }
+
             $pedidoRastreio = Rastreio::firstOrNew(['pedido_id' => $pedido->id, 'rastreio' => $rastreio]);
             $pedidoRastreio->pedido_id = $pedido->id;
             $pedidoRastreio->rastreio = $rastreio;
@@ -460,10 +516,6 @@ class UploadController extends Controller
             Log::warning('Não foi possível importar o imposto do pedido ' . $pedido->id);
         }
 
-        // Fecha a transação e comita as alterações
-        DB::commit();
-        Log::debug('Transaction - commit');
-
         /**
          * IMEI's
          */
@@ -474,6 +526,7 @@ class UploadController extends Controller
             $lastPos = $lastPos + strlen('PROD.:');
         }
 
+        // Separa os imeis por produto
         $produtoImei = [];
         foreach ($positions as $key => $pos) {
             $posFind = ' | ';
@@ -488,35 +541,143 @@ class UploadController extends Controller
             $produtoImei[$skuProduto] = $imeis;
         }
 
-        foreach ($produtos as $item) {
-            $produto = Produto::firstOrCreate([ 'sku' => (int)$item->prod->cProd ]);
+        // Organiza os imeis
+        foreach ($produtoImei as $sku => $imeis) {
+            $produtoImei[$sku] = explode(',', $imeis);
+            $produtoImei[$sku] = array_map(function($imei) {
+                return trim($imei);
+            }, $produtoImei[$sku]);
+        }
 
-            // Cria as informações do produto se ele nao existir
-            if ($produto->wasRecentlyCreated) {
-                $produto->sku = (int)$item->prod->cProd;
-                $produto->titulo = $item->prod->xProd;
-                $produto->ncm = $item->prod->NCM;
-                $produto->ean = $item->prod->cEAN;
+        // Organiza os produtos da nota
+        $produtosNota = [];
+        foreach ($produtos as $produto) {
+            $produtosNota[(int)$produto->prod->cProd][] = [
+                'sku' => (int) $produto->prod->cProd,
+                'titulo' => (string) $produto->prod->xProd,
+                'ncm' => (string) $produto->prod->NCM,
+                'ean' => (string) $produto->prod->cEAN,
+                'quantidade' => (float) $produto->prod->qCom,
+                'valor' => (string) $produto->prod->vUnCom,
+            ];
+        }
 
-                if ($produto->save()) {
-                    Log::info('Produto importado ' . $produto->id);
-                } else {
-                    Log::warning('Não foi possível importar o produto ' . $item->prod->cProd);
+        // Organiza as quantidades
+        // Se um item da nota for diferente da primeira, vai continuar separada
+        foreach ($produtosNota as $sku => $itens) {
+            foreach ($itens as $key => $item) {
+                if ($key !== 0 && $item === $itens[0]) {
+                    $produtosNota[$sku][0]['quantidade'] = $produtosNota[$sku][0]['quantidade'] + (int)$itens[0]['quantidade'];
+                    unset($produtosNota[$sku][$key]);
                 }
             }
 
-            $pedidoProduto = PedidoProduto::firstOrNew(['pedido_id' => $pedido->id, 'produto_sku' => $produto->sku]);
+            $produtosNota[$sku] = array_values($produtosNota[$sku]);
+        }
 
-            $pedidoProduto->pedido_id = $pedido->id;
-            $pedidoProduto->produto_sku = (int)$item->prod->cProd;
-            $pedidoProduto->valor = $item->prod->vUnCom;
-            $pedidoProduto->quantidade = $item->prod->qCom;
-            $pedidoProduto->imei = array_key_exists((int)$item->prod->cProd, $produtoImei) ? $produtoImei[(int)$item->prod->cProd] : '';
+        // Produtos que já estao no pedido
+        $produtosExistentesOriginal = PedidoProduto::where('pedido_id', '=', $pedido->id)->get();
 
-            if ($pedidoProduto->save()) {
-                Log::info('Pedido Produto importado ' . $item->prod->cProd . ' / ' . $pedido->id);
+        // Cadastra os pedidoProdutos
+        $cadastrados = [];
+        $utilizados = [];
+        foreach ($produtosNota as $sku => $itens) {
+            foreach ($itens as $key => $item) {
+                Log::debug('imeis', [$produtoImei]);
+                // Pega o produto por sku
+                $produto = Produto::where('sku', '=', $sku)->first();
+
+                // Pega o pedidoProduto
+                $pedidoProduto = PedidoProduto
+                    ::where('pedido_id', '=', $pedido->id)
+                    ->where('produto_sku', '=', $produto->sku)
+                    ->where('valor', '=', $item['valor'])
+                    ->whereNotIn('id', $utilizados)
+                    ->first();
+
+                // Se nao tiver pedidoProduto, cria um
+                if (!$pedidoProduto) {
+                    $pedidoProduto = PedidoProduto::create([
+                        'pedido_id' => $pedido->id,
+                        'produto_sku' => $produto->sku
+                    ]);
+                }
+
+                // Seta quantos já foram sincronizados com esse sku
+                $parsedValue = currencyNumbers($item['valor']);
+                $cadastrados[$sku][$parsedValue] = (isset($cadastrados[$sku][$parsedValue])) ? ($cadastrados[$sku][$parsedValue] + $item['quantidade']) : $item['quantidade'];
+
+                // Pega os imeis para essa quantidade e tira da lista de imeis disponiveis
+                $imeis = '';
+                if (isset($produtoImei[$sku]) && !empty($produtoImei[$sku])) {
+                    for ($i=0; $i < $item['quantidade']; $i++) {
+                        if (isset($produtoImei[$sku][$i])) {
+                            $imeis[] = $produtoImei[$sku][$i];
+                            unset($produtoImei[$sku][$i]);
+                            $produtoImei[$sku] = array_values($produtoImei[$sku]);
+                        }
+                    }
+                }
+                $imeis = ($imeis) ? implode(', ', $imeis) : null;
+
+                // Se acabou de ser criado, seta os valores
+                if ($pedidoProduto->wasRecentlyCreated) {
+                    $pedidoProduto->pedido_id = $pedido->id;
+                    $pedidoProduto->produto_sku = $sku;
+                    $pedidoProduto->valor = $item['valor'];
+                    $pedidoProduto->quantidade = $item['quantidade'];
+                } else if ($pedidoProduto->getOriginal('quantidade') < $item['quantidade']) {
+                    // Se o pedidoProduto já exisita e tinha menos qtd que na nota, atualiza a qtd
+                    $pedidoProduto->quantidade = $item['quantidade'];
+                }
+
+                $pedidoProduto->imei = $imeis;
+
+                if ($pedidoProduto->save()) {
+                    $utilizados[] = $pedidoProduto->id;
+                    Log::info('Pedido Produto importado ' . $sku . ' / ' . $pedido->id);
+                } else {
+                    Log::warning('Não foi possível importar o Pedido Produto ' . $sku . ' / ' . $pedido->id);
+                }
+            }
+        }
+
+        // Organiza os produtos existentes
+        $produtosExistentes = [];
+        foreach ($produtosExistentesOriginal as $pedidoProduto) {
+            if (!isset($produtosExistentes[$pedidoProduto->produto_sku])) {
+                $produtosExistentes[$pedidoProduto->produto_sku] = [];
+            }
+
+            $parsedValue = currencyNumbers($pedidoProduto->valor);
+            if (isset($produtosExistentes[$pedidoProduto->produto_sku][$parsedValue])) {
+                $produtosExistentes[$pedidoProduto->produto_sku][$parsedValue] = $produtosExistentes[$pedidoProduto->produto_sku][$parsedValue] + $pedidoProduto->quantidade;
             } else {
-                Log::warning('Não foi possível importar o Pedido Produto ' . $item->prod->cProd . ' / ' . $pedido->id);
+                $produtosExistentes[$pedidoProduto->produto_sku][$parsedValue] = $pedidoProduto->quantidade;
+            }
+        }
+
+        foreach ($cadastrados as $sku => $valores) {
+            foreach ($valores as $valor => $quantidade) {
+                if (isset($produtosExistentes[$sku][$valor])) {
+                    if ($produtosExistentes[$sku][$valor] > $quantidade) {
+                        throw new \Exception("O produto {$sku} deve ter no mínimo {$produtosExistentes[$sku][$valor]} quantidades. A nota possui apenas {$quantidade}.", 7);
+                    } else {
+                        unset($produtosExistentes[$sku][$valor]);
+
+                        if (isset($produtosExistentes[$sku]) && count($produtosExistentes[$sku]) < 1) {
+                            unset($produtosExistentes[$sku]);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!empty($produtosExistentes)) {
+            if (count($produtosExistentes) == 1) {
+                throw new \Exception('O produto ' . array_keys($produtosExistentes)[0] . ' está no pedido mas não está na nota!', 7);
+            } else {
+                throw new \Exception('Os produtos ' . implode(', ', array_keys($produtosExistentes)) . ' estão no pedido mas não estão na nota!', 7);
             }
         }
 
@@ -529,23 +690,27 @@ class UploadController extends Controller
             $nota_id = $nota->id;
             $arquivo = storage_path('app/public/' . date('His') . '.pdf');
 
-            $mail = Mail::send('emails.compra', [
-                'nome' => $this->nfe->dest->xNome,
-                'produtos' => $produtos,
-                'rastreio' => $rastreio
-            ], function($message) use ($nota_id, $email, $nome, $arquivo) {
-                with(new NotaController())->danfe($nota_id, 'F', $arquivo);
+            if (\Config::get('tucano.email_send_enabled')) {
+                $mail = Mail::send('emails.compra', [
+                    'nome' => $this->nfe->dest->xNome,
+                    'produtos' => $produtos,
+                    'rastreio' => $rastreio
+                ], function($message) use ($nota_id, $email, $nome, $arquivo) {
+                    with(new NotaController())->danfe($nota_id, 'F', $arquivo);
 
-                $message
-                    ->attach($arquivo, ['as' => 'nota.pdf', 'mime' => 'application/pdf'])
-                    ->to($email)
-                    ->subject('Obrigado por comprar na Carioca Celulares On-line');
-            });
+                    $message
+                        ->attach($arquivo, ['as' => 'nota.pdf', 'mime' => 'application/pdf'])
+                        ->to($email)
+                        ->subject('Obrigado por comprar na Carioca Celulares On-line');
+                });
 
-            if  ($mail) {
-                Log::debug('E-mail com a nota enviado para: ' . $email);
+                if  ($mail) {
+                    Log::debug('E-mail com a nota enviado para: ' . $email);
+                } else {
+                    Log::warning('Falha ao enviar e-mail com a nota para: ' . $email);
+                }
             } else {
-                Log::warning('Falha ao enviar e-mail com a nota para: ' . $email);
+                Log::debug("O e-mail não foi enviado para {$email} pois o envio está desativado (upload)!");
             }
 
             unlink($arquivo);

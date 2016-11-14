@@ -33,6 +33,7 @@
             <th class="text-center" width="110">Marketplace</th>
             <th class="text-center" width="130">Rastreio</th>
             <th>Cliente</th>
+            <th class="text-center" width="140">Preço</th>
             <th class="text-center" width="100">Entrega</th>
             <th class="text-center" width="100">Data</th>
             <th width="20"></th>
@@ -44,10 +45,10 @@
         <tr ng-repeat="pedido in FaturamentoList.tableData.data" ng-class="{ 'priorizado': pedido.priorizado, 'segurado': pedido.segurado }">
             <td class="text-center">
                 <i ng-if="pedido.segurado" tooltips tooltip-template="Pedido segurado" class="fa-lock"></i>
-                <span ng-if="!pedido.priorizado">
+                <span ng-if="!pedido.priorizado" clipboard text="pedido.codigo_marketplace">
                     {{ pedido.codigo_marketplace || 'Sem código' }}
                 </span>
-                <span ng-if="pedido.priorizado" tooltips tooltip-template="Pedido priorizado">
+                <span ng-if="pedido.priorizado" clipboard text="pedido.codigo_marketplace" tooltips tooltip-template="Pedido priorizado">
                     {{ pedido.codigo_marketplace || 'Sem código' }}
                 </span>
             </td>
@@ -57,9 +58,14 @@
                 <strong>{{ pedido.cliente.nome | uppercase }}</strong>
                 <br>
                 <small>
-                    <span clipboard supported="supported" text="pedido.cliente.fone | digits" title="Clique para copiar apenas os números">{{ pedido.cliente.fone }}</span> - CEP: <strong clipboard supported="supported" text="pedido.endereco.cep" title="Clique para copiar apenas os números">{{ pedido.endereco.cep_readable }}</strong> -
-                    {{ pedido.endereco.cidade }} / {{ pedido.endereco.uf }}
+                    <span clipboard text="pedido.cliente.taxvat | digits" title="Clique para copiar apenas os números">{{ pedido.cliente.taxvat_readable }}</span>
                 </small>
+            </td>
+            <td class="text-center">
+                <span ng-repeat="produto in pedido.produtos">
+                    <small><strong>{{ produto.produto_sku }}</strong>: {{ produto.quantidade }}x {{ produto.valor | currency }}</small>
+                    <span ng-repeat="inspecao in produto.inspecoes" ng-class="{ 'label-success': inspecao.revisado_at, 'm-r-10': !$last }" class="label">{{ inspecao.id }}</span>
+                </span><br>
             </td>
             <td class="text-center">{{ pedido.estimated_delivery }}</td>
             <td class="text-center">{{ pedido.created_at }}</td>

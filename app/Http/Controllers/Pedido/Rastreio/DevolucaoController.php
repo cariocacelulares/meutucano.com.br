@@ -6,6 +6,7 @@ use App\Models\Pedido\Rastreio;
 use App\Models\Pedido\Rastreio\Devolucao;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Pedido\Rastreio\RastreioTrait;
+use App\Http\Controllers\Inspecao\InspecaoTecnicaTrait;
 
 /**
  * Class DevolucaoController
@@ -13,7 +14,7 @@ use App\Http\Controllers\Pedido\Rastreio\RastreioTrait;
  */
 class DevolucaoController extends Controller
 {
-    use RestControllerTrait, RastreioTrait;
+    use RestControllerTrait, RastreioTrait, InspecaoTecnicaTrait;
 
     const MODEL = Devolucao::class;
 
@@ -72,6 +73,9 @@ class DevolucaoController extends Controller
             if($v->fails()) {
                 throw new \Exception("ValidationException");
             }
+
+            $this->aplicarDevolucao(Input::get(['inspecoes']));
+
             $data = $m::create(Input::except(['protocolo']));
 
             $rastreio = Rastreio::find(Input::get('rastreio_id'));
@@ -109,6 +113,8 @@ class DevolucaoController extends Controller
             if ($v->fails()) {
                 throw new \Exception("ValidationException");
             }
+
+            $this->aplicarDevolucao(Input::get(['inspecoes']));
 
             $data->fill(Input::except(['protocolo']));
             $data->save();

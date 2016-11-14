@@ -24,8 +24,8 @@
                 }
                 &:last-child {
                     text-align: right;
-                    padding-left: 0 !important;
-                    padding-right: 30px !important;
+                    padding-left: 0;
+                    padding-right: 30px;
                 }
                 /* .btn {
                     margin-top: -20px;
@@ -176,7 +176,7 @@
     margin-bottom: 0 !important;
 }
 
-// DataTable 
+// DataTable
 // --------------------------------------------------
 
 .table.dataTable.no-footer{
