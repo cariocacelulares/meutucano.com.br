@@ -37,11 +37,17 @@ try {
 
             $monolog->pushProcessor(new Monolog\Processor\WebProcessor($_SERVER));
             $monolog->pushProcessor(function ($record) {
-                $jwtAuth = Tymon\JWTAuth\Facades\JWTAuth::parseToken()->authenticate();
-                $record['extra']['user_id'] = $jwtAuth->id;
-                $record['extra']['email'] = $jwtAuth->email;
-                $record['extra']['username'] = $jwtAuth->username;
-                $record['extra']['user_ip'] = $_SERVER['REMOTE_ADDR'];
+                if (auth()->check()) {
+                    $jwtAuth = Tymon\JWTAuth\Facades\JWTAuth::parseToken()->authenticate();
+                    $record['extra']['user_id'] = $jwtAuth->id;
+                    $record['extra']['email'] = $jwtAuth->email;
+                    $record['extra']['username'] = $jwtAuth->username;
+                }
+
+                if (isset($_SERVER['REMOTE_ADDR'])) {
+                    $record['extra']['user_ip'] = $_SERVER['REMOTE_ADDR'];
+                }
+
                 return $record;
             });
         });
