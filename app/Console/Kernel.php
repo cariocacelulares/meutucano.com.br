@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
         Commands\Gamification\LerFila::class,
         Commands\Gamification\AdicionarTarefa::class,
         Commands\Gamification\AdicionarVoto::class,
+        Commands\Gamification\NovoMes::class,
     ];
 
     /**
@@ -52,5 +53,8 @@ class Kernel extends ConsoleKernel
          */
         $schedule->command('gamification:fila')
             ->everyMinute();
+
+        $schedule->command('gamification:mes')
+            ->monthlyOn(1, '05:00');
     }
 }
