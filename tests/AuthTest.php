@@ -1,38 +1,59 @@
 <?php namespace Tests;
 
 use App\Models\Usuario\Usuario;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use JWTAuth;
 
 class AuthTest extends TestCase
 {
-    /**
-     * Test if login is working
-     *
-     * @return void
-     */
-    public function test__it_should_return_token_when_aunthenticate()
-    {
-        $loginData = [
-            'name'     => 'Test User',
-            'username' => 'test',
-            'password' => 'test'
-        ];
+  use DatabaseMigrations;
 
-        Usuario::create($loginData);
+  public function setUp() {
+    parent::setUp();
 
-        $this->json('POST', '/api/authenticate', $loginData)->seeJsonStructure([
-            'token'
-        ]);
-    }
+    $this->userData = [
+      'name' => 'Test',
+      'username' => 'test',
+      'password' => 'test',
+    ];
 
-    /**
-     * Test if auth middleware is working and blocking non-auth requests
-     *
-     * @return void
-     */
-    public function test__it_should_block_requests_when_token_not_provided()
-    {
-        $this->json('GET', '/api/pedidos', [])->seeJson([
-            'error' => 'token_not_provided'
-        ]);
-    }
+    $this->userObject = Usuario::create($this->userData);
+
+    $this->userToken = JWTAuth::fromUser($this->userObject);
+  }
+
+  public function test__it_should_be_able_to_authenticate()
+  {
+    $this->json('POST', '/api/authenticate', $this->userData)
+      ->seeJsonStructure([
+      'token'
+    ]);
+  }
+
+  public function test__it_should_return_error_when_credentials_are_wrong()
+  {
+    $this->json('POST', '/api/authenticate', [
+      'username' => 'test',
+      'password' => 'test2'
+    ])->seeJson([
+      'error' => 'invalid_credentials'
+    ]);
+
+  }
+
+  public function test__it_should_not_be_able_to_use_api_when_unauthenticated()
+  {
+    $this->json('GET', '/api/pedidos', [])->seeJson([
+      'error' => 'token_not_provided'
+    ]);
+  }
+
+  public function test__it_should_be_able_to_return_user_information()
+  {
+    $this->json('/api/authenticate/user', [], [
+      'HTTP_Authorization' => 'Bearer ' . $this->userToken
+    ])->seeJson([
+      'user'
+    ]);
+  }
 }
