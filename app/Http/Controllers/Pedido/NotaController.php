@@ -23,25 +23,6 @@ class NotaController extends Controller
     protected $validationRules = [];
 
     /**
-     * Retorna notas faturadas pelo usuário atual
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function notasFaturamento()
-    {
-        $model = self::MODEL;
-
-        $user = JWTAuth::parseToken()->authenticate()->id;
-
-        $notas = $model::with(['pedido', 'pedido.cliente', 'pedido.rastreios'])
-            ->where('usuario_id', $user)
-            ->where('updated_at', '>=', date('Y-m-d'))
-            ->get();
-
-        return $this->listResponse($notas);
-    }
-
-    /**
      * Gera o XML da nota fiscal
      *
      * @param $id
