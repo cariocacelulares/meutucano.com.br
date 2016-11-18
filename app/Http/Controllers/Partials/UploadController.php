@@ -583,9 +583,12 @@ class UploadController extends Controller
         $utilizados = [];
         foreach ($produtosNota as $sku => $itens) {
             foreach ($itens as $key => $item) {
-                Log::debug('imeis', [$produtoImei]);
                 // Pega o produto por sku
                 $produto = Produto::where('sku', '=', $sku)->first();
+
+                if (!$produto) {
+                    throw new \Exception("O produto com SKU {$sku} não foi encontrado no tucano.", 7);
+                }
 
                 // Pega o pedidoProduto
                 $pedidoProduto = PedidoProduto
@@ -673,7 +676,19 @@ class UploadController extends Controller
             }
         }
 
+        // produtosExistentes são pedidoProduto do tucano
+        // cadastros são os que estão na nota
         if (!empty($produtosExistentes)) {
+            foreach ($produtosExistentes as $sku => $produtosExistente) {
+                if (isset($cadastrados[$sku])) {
+                    foreach ($produtosExistente as $valor => $qtd) {
+                        if (!isset($cadastrados[$sku][$valor])) {
+                            throw new \Exception("O valor do produto {$sku} é divergente!", 7);
+                        }
+                    }
+                }
+            }
+
             if (count($produtosExistentes) == 1) {
                 throw new \Exception('O produto ' . array_keys($produtosExistentes)[0] . ' está no pedido mas não está na nota!', 7);
             } else {
