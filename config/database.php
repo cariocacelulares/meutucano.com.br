@@ -20,6 +20,18 @@ return [
             'engine' => null,
         ],
 
+        'mongodb' => [
+            'driver'   => 'mongodb',
+            'host'     => env('MONGODB_HOST', 'localhost'),
+            'port'     => env('MONGODB_PORT', 27017),
+            'database' => env('MONGODB_DATABASE', 'meutucano'),
+            'username' => env('MONGODB_USERNAME', 'root'),
+            'password' => env('MONGODB_PASSWORD', 'root'),
+            'options' => [
+                'database' => 'meutucano'
+            ]
+        ],
+
     ],
 
     /*

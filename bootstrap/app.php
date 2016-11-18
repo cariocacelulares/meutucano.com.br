@@ -39,7 +39,15 @@ $app->singleton(
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
     App\Exceptions\Handler::class
+    // Illuminate\Foundation\Exceptions\Handler::class
 );
+
+/**
+ * Custom log com mongodb
+ * Se a conexão com o mongodb ou qualquer outra coisa falhar
+ * irá utilizar o padrão (arquivos)
+ */
+require_once('monolog-config.php');
 
 /*
 |--------------------------------------------------------------------------
