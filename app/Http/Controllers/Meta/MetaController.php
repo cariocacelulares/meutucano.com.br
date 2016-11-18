@@ -18,7 +18,7 @@ class MetaController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getAtual()
+    public function atual()
     {
         try {
             $ano = Input::get('ano', date('Y'));
