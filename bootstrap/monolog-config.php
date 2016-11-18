@@ -5,6 +5,7 @@ use Bootstrap\MongoFormatter;
 try {
     $mongoClient = false;
 
+    // Try to get any mongo client
     if (class_exists(\MongoClient::class)) {
         $mongoClient = '\MongoClient';
     } else if (class_exists(\Mongo::class)) {
@@ -13,28 +14,21 @@ try {
         $mongoClient = '\MongoDB\Client';
     }
 
+    // If found
     if ($mongoClient) {
         $db = env('MONGODB_DATABASE', 'meutucano');
-
         $mongoClient = new $mongoClient('mongodb://' . env('MONGODB_HOST', 'localhost') . ':' . env('MONGODB_PORT', 27017));
+
+        // Check if exists, if not an exception will be thrown
         $mongoClient->$db->logs->findOne();
 
+        // Finnaly set MongoDBHandler instead of file
         $app->configureMonologUsing(function($monolog) use ($mongoClient, $db) {
-            $mongoHandler = new Monolog\Handler\MongoDBHandler(
-                $mongoClient,
-                $db,
-                'logs'
-            );
-
-            $mongoHandler->setFormatter(
-                new MongoFormatter(
-                    'America/Sao_Paulo',
-                    'Y-m-d H:i:s'
-                )
-            );
-
+            $mongoHandler = new Monolog\Handler\MongoDBHandler($mongoClient, $db, 'logs');
+            $mongoHandler->setFormatter(new MongoFormatter('America/Sao_Paulo', 'Y-m-d H:i:s'));
             $monolog->pushHandler($mongoHandler);
 
+            // Extra fields
             $monolog->pushProcessor(new Monolog\Processor\WebProcessor($_SERVER));
             $monolog->pushProcessor(function ($record) {
                 if (auth()->check()) {
@@ -53,6 +47,6 @@ try {
         });
     }
 } catch (\Exception $e) {
-    // Não é possível utilizar Log:: para registrar o erro,
-    // pois o app ainda nao iniciou
+    // Cannot use Log:: here
+    // If an exception has been thrown, laravel will use default logger (file)
 }
