@@ -4,107 +4,170 @@
  * Usuario
  */
 $factory->define(\App\Models\Usuario\Usuario::class, function (Faker\Generator $faker) {
-    return [
-        'name'           => $faker->name,
-        'email'          => $faker->safeEmail,
-        'password'       => bcrypt(str_random(10)),
-        'remember_token' => str_random(10),
-    ];
+  return [
+    'name'           => $faker->name,
+    'email'          => $faker->safeEmail,
+    'username'       => $faker->userName,
+    'password'       => bcrypt(str_random(10)),
+    'remember_token' => str_random(10),
+  ];
+});
+
+/**
+ * Senha
+ */
+$factory->define(\App\Models\Usuario\Senha::class, function (Faker\Generator $faker) {
+  return [
+    'site'    => $faker->name,
+    'url'     => $faker->url,
+    'usuario' => $faker->userName,
+    'senha'   => str_random(10)
+  ];
 });
 
 /**
  * Cliente
  */
 $factory->define(\App\Models\Cliente\Cliente::class, function (Faker\Generator $faker) {
-    return [
-        'taxvat' => $faker->randomNumber(5) . $faker->randomNumber(6),
-        'tipo'   => 0,
-        'nome'   => $faker->name,
-        'fone'   => $faker->randomNumber(5) . $faker->randomNumber(5),
-        'email'  => $faker->email,
-    ];
+  return [
+    'taxvat' => $faker->randomNumber(5) . $faker->randomNumber(6),
+    'tipo'   => 0,
+    'nome'   => $faker->name,
+    'fone'   => $faker->randomNumber(5) . $faker->randomNumber(5),
+    'email'  => $faker->email,
+  ];
 });
 
 /**
  * Endereço
  */
 $factory->define(\App\Models\Cliente\Endereco::class, function (Faker\Generator $faker) {
-    return [
-        'cliente_id'   => 999,
-        'cep'          => $faker->randomNumber(8),
-        'rua'          => $faker->streetName,
-        'numero'       => $faker->buildingNumber,
-        'complemento'  => $faker->streetSuffix,
-        'bairro'       => 'Jardim américa',
-        'cidade'       => $faker->city,
-        'uf'           => 'SC',
-    ];
+  return [
+    'cep'          => $faker->randomNumber(8),
+    'rua'          => $faker->streetName,
+    'numero'       => $faker->buildingNumber,
+    'complemento'  => $faker->streetSuffix,
+    'bairro'       => 'Jardim américa',
+    'cidade'       => $faker->city,
+    'uf'           => 'SC',
+  ];
+});
+
+
+/**
+ * Inspeção
+ */
+$factory->define(\App\Models\Inspecao\InspecaoTecnica::class, function (Faker\Generator $faker) {
+  return [
+    'descricao'  => 'Nada',
+    'priorizado' => 0,
+    'reservado'  => 0,
+  ];
 });
 
 /**
  * Produto
  */
 $factory->define(\App\Models\Produto\Produto::class, function (Faker\Generator $faker) {
-    return [
-        'sku'    => $faker->unique()->numberBetween(0, 1000),
-        'titulo' => 'Smartphone ' . $faker->randomNumber(2),
-        'ean'    => $faker->isbn10,
-    ];
+  return [
+    'sku'    => $faker->unique()->numberBetween(0, 1000),
+    'titulo' => 'Smartphone ' . $faker->randomNumber(2),
+    'ean'    => $faker->isbn10,
+    'estado' => 0
+  ];
 });
 
 /**
  * Pedido
  */
 $factory->define(\App\Models\Pedido\Pedido::class, function (Faker\Generator $faker) {
-    return [
-        'cliente_id'          => 999,
-        'cliente_endereco_id' => 999,
-        'marketplace'         => $faker->randomElement(['B2W', 'CNOVA', 'MERCADOLIVRE', 'SITE', 'WALMART']),
-        'operacao'            => '6108',
-        'total'               => $faker->randomFloat(2, 800, 3000),
-    ];
+  return [
+    'frete_valor'         => $faker->randomFloat(2, 10, 40),
+    'frete_metodo'        => $faker->randomElement(['pac', 'sedex']),
+    'pagamento_metodo'    => 'boleto',
+    'marketplace'         => $faker->randomElement(['B2W', 'CNOVA', 'MERCADOLIVRE', 'SITE', 'WALMART']),
+    'operacao'            => '6108',
+    'total'               => $faker->randomFloat(2, 800, 3000),
+    'status'              => $faker->numberBetween(0, 5)
+  ];
 });
 
 /**
  * Rastreio
  */
 $factory->define(\App\Models\Pedido\Rastreio::class, function (Faker\Generator $faker) {
-    return [
-        'pedido_id'  => 999,
-        'data_envio' => $faker->dateTimeThisMonth->format('Y-m-d'),
-        'rastreio'   => 'PJ' . $faker->randomNumber(9) . 'BR',
-        'servico'    => 'PAC',
-        'valor'      => $faker->randomFloat(2, 10, 30),
-        'prazo'      => $faker->randomNumber(2),
-        'status'     => 0,
-    ];
+  return [
+    'data_envio' => $faker->dateTimeThisMonth->format('Y-m-d'),
+    'rastreio'   => 'PJ' . $faker->randomNumber(9) . 'BR',
+    'servico'    => 'PAC',
+    'valor'      => $faker->randomFloat(2, 10, 30),
+    'prazo'      => $faker->randomNumber(2),
+    'status'     => 0,
+  ];
 });
+
+$factory->define(\App\Models\Pedido\Rastreio\Devolucao::class, function (Faker\Generator $faker) {
+  return [
+    'motivo' => $faker->numberBetween(0, 7),
+    'acao'   => $faker->numberBetween(0, 1)
+  ];
+});
+
+$factory->define(\App\Models\Pedido\Rastreio\Logistica::class, function (Faker\Generator $faker) {
+  return [
+    'autorizacao'   => $faker->randomNumber(5) . $faker->randomNumber(6),
+    'motivo'        => $faker->numberBetween(0, 4),
+    'acao'          => $faker->numberBetween(0, 1),
+    'data_postagem' => $faker->dateTimeThisMonth->format('d/m/Y')
+  ];
+});
+
+
+$factory->define(\App\Models\Pedido\Rastreio\Pi::class, function (Faker\Generator $faker) {
+  return [
+    'codigo_pi'      => $faker->randomNumber(5) . $faker->randomNumber(5),
+    'motivo_status'  => $faker->numberBetween(0, 4),
+    'acao'           => $faker->numberBetween(0, 1),
+    'data_pagamento' => $faker->dateTimeThisMonth->format('d/m/Y'),
+    'valor_pago'     => $faker->randomFloat(2, 10, 20)
+  ];
+});
+
 
 /**
  * Nota
  */
 $factory->define(\App\Models\Pedido\Nota::class, function (Faker\Generator $faker) {
-    return [
-        'pedido_id'  => 999,
-        'usuario_id' => 1,
-        'data'       => $faker->dateTimeThisMonth->format('Y-m-d'),
-        'chave'      => str_random(44),
-        'arquivo'    => str_random(30) . '.xml',
-    ];
+  return [
+    'data'       => $faker->dateTimeThisMonth->format('Y-m-d'),
+    'chave'      => str_random(44),
+    'arquivo'    => str_random(30) . '.xml',
+  ];
+});
+
+/**
+ * Devolução
+ */
+$factory->define(\App\Models\Pedido\Nota\Devolucao::class, function (Faker\Generator $faker) {
+  return [
+    'data'    => $faker->dateTimeThisMonth->format('Y-m-d'),
+    'chave'   => str_random(44),
+    'arquivo' => str_random(30) . '.xml',
+    'tipo'    => $faker->numberBetween(0, 1)
+  ];
 });
 
 /**
  * Imposto
  */
 $factory->define(\App\Models\Pedido\Imposto::class, function (Faker\Generator $faker) {
-    return [
-        'pedido_id'         => 999,
-        'icms'              => $faker->randomFloat(2, 0, 50),
-        'pis'               => $faker->randomFloat(2, 0, 50),
-        'cofins'            => $faker->randomFloat(2, 0, 50),
-        'icms_destinatario' => $faker->randomFloat(2, 0, 50),
-        'icms_remetente'    => $faker->randomFloat(2, 0, 50),
-    ];
+  return [
+    'icms'              => $faker->randomFloat(2, 0, 50),
+    'pis'               => $faker->randomFloat(2, 0, 50),
+    'cofins'            => $faker->randomFloat(2, 0, 50),
+    'icms_destinatario' => $faker->randomFloat(2, 0, 50),
+    'icms_remetente'    => $faker->randomFloat(2, 0, 50),
+  ];
 });
 
 
@@ -112,23 +175,28 @@ $factory->define(\App\Models\Pedido\Imposto::class, function (Faker\Generator $f
  * PedidoProduto
  */
 $factory->define(\App\Models\Pedido\PedidoProduto::class, function (Faker\Generator $faker) {
-    return [
-        'pedido_id'   => 999,
-        'produto_sku' => 999,
-        'valor'       => $faker->randomFloat(2, 500, 3000),
-        'quantidade'  => $faker->randomNumber(1),
-    ];
+  return [
+    'valor'       => $faker->randomFloat(2, 500, 3000),
+    'quantidade'  => 1,
+  ];
 });
 
 /**
- * PedidoProduto
+ * Comentário
  */
-$factory->define(\App\Models\Usuario\Senha::class, function (Faker\Generator $faker) {
-    return [
-        'usuario_id'  => 1,
-        'site'        => str_random(),
-        'url'         => $faker->url,
-        'usuario'     => $faker->userName,
-        'senha'       => $faker->password,
-    ];
+$factory->define(\App\Models\Pedido\Comentario::class, function (Faker\Generator $faker) {
+  return [
+    'comentario' => $faker->text(200)
+  ];
+});
+
+/**
+ * Código faturamento
+ */
+$factory->define(\App\Models\FaturamentoCodigo::class, function (Faker\Generator $faker) {
+  return [
+    'servico' => $faker->unique()->numberBetween(0, 1),
+    'atual'   => '97255050',
+    'fim'     => '97256430'
+  ];
 });

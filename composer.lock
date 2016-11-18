@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c724b6651f764c37267f0058d3776148",
-    "content-hash": "d38266438331cbcfb88b2d269bfc43b7",
+    "hash": "660429a1d26ba7867b48128c3cb0c056",
+    "content-hash": "07fbe8174637c15879180b89f755c467",
     "packages": [
         {
             "name": "arcanedev/log-viewer",
@@ -4829,16 +4829,16 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "0.9.5",
+            "version": "0.9.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/padraic/mockery.git",
-                "reference": "4db079511a283e5aba1b3c2fb19037c645e70fc2"
+                "reference": "65d4ca18e15cb02eeb1e5336f884e46b9b905be0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/4db079511a283e5aba1b3c2fb19037c645e70fc2",
-                "reference": "4db079511a283e5aba1b3c2fb19037c645e70fc2",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/65d4ca18e15cb02eeb1e5336f884e46b9b905be0",
+                "reference": "65d4ca18e15cb02eeb1e5336f884e46b9b905be0",
                 "shasum": ""
             },
             "require": {
@@ -4890,7 +4890,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2016-05-22 21:52:33"
+            "time": "2016-09-30 12:09:40"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -5947,6 +5947,48 @@
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
             "time": "2016-10-24 18:41:13"
+        },
+        {
+            "name": "tightenco/mailthief",
+            "version": "v0.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tightenco/mailthief.git",
+                "reference": "a42277459092ae87f5ac11271f969625509f7f49"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tightenco/mailthief/zipball/a42277459092ae87f5ac11271f969625509f7f49",
+                "reference": "a42277459092ae87f5ac11271f969625509f7f49",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/mail": "^5.0",
+                "illuminate/view": "^5.0"
+            },
+            "require-dev": {
+                "laravel/framework": "^5.1",
+                "mockery/mockery": "^0.9.5",
+                "phpunit/phpunit": "^5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MailThief\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Adam Wathan",
+                    "email": "adam.wathan@gmail.com"
+                }
+            ],
+            "description": "A fake Mailer for Laravel applications that takes the pain out of testing mail.",
+            "time": "2016-10-12 22:32:47"
         },
         {
             "name": "way/generators",

@@ -32,18 +32,25 @@ class NotaController extends Controller
     {
         $model = self::MODEL;
 
+        //TODO: Separar devolução de nota comum, mantendo um método para
+        //imprimir mas dois métodos chamando
         if ($devolucao) {
             $nota = Devolucao::find($id);
         } else {
             $nota = $model::find($id);
         }
 
+        // Nota fiscal não existe
         if ($nota) {
-            $file_path = storage_path('app/public/nota/'. $nota->arquivo);
+            $file_path = storage_path('app/public/nota/' . $nota->arquivo);
 
-            if (file_exists($file_path)) {
-                return response()->make(file_get_contents($file_path), '200')->header('Content-Type', 'text/xml');
-            }
+            // Arquivo físico não existe
+            if (!file_exists($file_path))
+                return $this->notFoundResponse();
+
+            return response()
+                ->make(file_get_contents($file_path), '200')
+                ->header('Content-Type', 'text/xml');
         }
 
         return $this->notFoundResponse();
@@ -53,7 +60,7 @@ class NotaController extends Controller
      * Envia um e-mail ao cliente com a nota fiscal
      *
      * @param $id
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function email($id)
     {
@@ -108,7 +115,7 @@ class NotaController extends Controller
         $model = self::MODEL;
 
         if ($nota = $model::find($id)) {
-            $file_path = storage_path('app/public/nota/'. $nota->arquivo);
+            $file_path = storage_path('app/public/nota/' . $nota->arquivo);
 
             if (file_exists($file_path)) {
                 $xml = file_get_contents($file_path);
@@ -127,6 +134,8 @@ class NotaController extends Controller
 
                 $danfe->montaDANFE('P', 'A4', 'L');
                 $danfe->printDANFE($nomeDanfe, $retorno);
+
+                return $this->showResponse([]);
             }
         }
 

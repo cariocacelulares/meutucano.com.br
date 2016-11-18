@@ -1,35 +1,40 @@
 <?php namespace Tests;
 
-use App\Models\Usuario\Usuario;
+use App\Http\Controllers\Auth\AuthenticateController;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use App\Models\Usuario\Usuario;
 use JWTAuth;
 
 class AuthTest extends TestCase
 {
-  use DatabaseMigrations;
+  use DatabaseMigrations,
+    DatabaseTransactions,
+    CreateUsuario;
 
-  public function setUp() {
-    parent::setUp();
-
-    $this->userData = [
-      'name' => 'Test',
-      'username' => 'test',
-      'password' => 'test',
-    ];
-
-    $this->userObject = Usuario::create($this->userData);
-
-    $this->userToken = JWTAuth::fromUser($this->userObject);
-  }
-
+  /**
+   * Testa se o usuário pode logar no sistema
+   *
+   * @return void
+   */
   public function test__it_should_be_able_to_authenticate()
   {
-    $this->json('POST', '/api/authenticate', $this->userData)
-      ->seeJsonStructure([
+    $authData = ['username' => 'test', 'password' => 'test'];
+
+    $usuario = $this->createUsuario($authData);
+
+    $this->json('POST', '/api/authenticate', $authData)->seeJsonStructure([
       'token'
     ]);
+
+    $this->seeStatusCode(200);
   }
 
+  /**
+   * Testa se não é possível logar com usuário/senha errados
+   *
+   * @return void
+   */
   public function test__it_should_return_error_when_credentials_are_wrong()
   {
     $this->json('POST', '/api/authenticate', [
@@ -39,21 +44,18 @@ class AuthTest extends TestCase
       'error' => 'invalid_credentials'
     ]);
 
+    $this->seeStatusCode(401);
   }
 
+  /**
+   * Testa se não pode utilizar a API quando não está autenticado
+   *
+   * @return void
+   */
   public function test__it_should_not_be_able_to_use_api_when_unauthenticated()
   {
     $this->json('GET', '/api/pedidos', [])->seeJson([
       'error' => 'token_not_provided'
-    ]);
-  }
-
-  public function test__it_should_be_able_to_return_user_information()
-  {
-    $this->json('/api/authenticate/user', [], [
-      'HTTP_Authorization' => 'Bearer ' . $this->userToken
-    ])->seeJson([
-      'user'
     ]);
   }
 }

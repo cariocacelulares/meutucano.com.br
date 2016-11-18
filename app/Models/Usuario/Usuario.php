@@ -11,7 +11,8 @@ use App\Models\Gamification\Traits\GamificationTrait;
  */
 class Usuario extends Authenticatable
 {
-    use EntrustUserTrait, GamificationTrait;
+    use EntrustUserTrait,
+        GamificationTrait;
 
     /**
      * @var array
@@ -45,7 +46,8 @@ class Usuario extends Authenticatable
      *
      * @param string $pass
      */
-    public function setPasswordAttribute($pass){
+    public function setPasswordAttribute($pass)
+    {
         $this->attributes['password'] = bcrypt($pass);
     }
 

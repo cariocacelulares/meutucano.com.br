@@ -140,6 +140,14 @@ return [
     ],
 
     /**
+     * Marketplaces com protocolo obrigatório para cancelamento
+     */
+    'required_protocolo' => [
+        'b2w',
+        'cnova'
+    ],
+
+    /**
      * Configurações de contrato com correios
      */
     'correios' => [

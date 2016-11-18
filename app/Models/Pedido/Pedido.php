@@ -100,13 +100,14 @@ class Pedido extends \Eloquent
 
         // Atualizar pedido (existente)
         static::updating(function($pedido) {
-            $oldStatus = ($pedido->getOriginal('status') === null) ? null : (int)$pedido->getOriginal('status');
+            $oldStatus = ($pedido->getOriginal('status') === null) ? null : (int) $pedido->getOriginal('status');
             $newStatus = ($pedido->status === null) ? null : (int)$pedido->status;
 
             // Se realmente ocorreu uma mudança de status
             if ($newStatus !== $oldStatus) {
                 // Se o status for cancelado
                 if ($newStatus === 5) {
+
                     // Dispara o evento de cancelamento do pedido
                     \Event::fire(new OrderCancel($pedido, getCurrentUserId()));
 
@@ -116,17 +117,11 @@ class Pedido extends \Eloquent
                     }
 
                     // Se tiver alguma inspeção na fila, deleta ela
-                    foreach ($pedido->produtos as $pedidoProduto) {
+                    foreach ($pedido->produtos()->get() as $pedidoProduto) {
                         $inspecoes = InspecaoTecnica
                             ::where('pedido_produtos_id', '=', $pedidoProduto->id)
                             ->whereNull('revisado_at')
-                            ->get();
-
-                        if ($inspecoes) {
-                            foreach ($inspecoes as $inspecao) {
-                                $inspecao->delete();
-                            }
-                        }
+                            ->delete();
                     }
                 }
             }
