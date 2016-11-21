@@ -48,7 +48,8 @@ class InspecaoTecnicaTest extends TestCase
     $pedido = $this->createPedido(['status' => 1], $produto->sku);
 
     $inspecao = $inspecao->fresh();
-    $this->assertEquals($pedido->produtos()->first()->id, $inspecao->pedido_produtos_id);
+    $this->assertEquals($pedido->produtos()->first()->id,
+      $inspecao->pedido_produtos_id);
   }
 
   /**
@@ -61,7 +62,8 @@ class InspecaoTecnicaTest extends TestCase
     $produto = $this->createProdutoSeminovo();
     $pedido  = $this->createPedido(['status' => 1], $produto->sku);
 
-    $inspecao = InspecaoTecnica::where('pedido_produtos_id', '=', $pedido->produtos()->first()->id)
+    $inspecao = InspecaoTecnica::where('pedido_produtos_id', '=',
+      $pedido->produtos()->first()->id)
       ->count();
 
     $this->assertEquals(1, $inspecao);
@@ -81,7 +83,10 @@ class InspecaoTecnicaTest extends TestCase
     $pedido->status = 5;
     $pedido->save();
 
-    $inspecao = InspecaoTecnica::where('pedido_produtos_id', '=', $pedido->produtos()->first()->id)->first();
+    $inspecao = InspecaoTecnica::where('pedido_produtos_id', '=',
+      $pedido->produtos()->first()->id)
+      ->first();
+
     $this->assertEquals(0, $inspecao);
   }
 

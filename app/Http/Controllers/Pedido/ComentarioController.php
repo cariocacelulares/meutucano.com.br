@@ -21,15 +21,6 @@ class ComentarioController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function index()
-    {
-        $m = self::MODEL;
-        return $this->listResponse($m::take(20)->orderBy('created_at', 'desc')->get());
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
     public function commentsFromOrder($pedido_id)
     {
         $m = self::MODEL;
@@ -50,9 +41,9 @@ class ComentarioController extends Controller
                 throw new \Exception("ValidationException");
             }
 
-            $user = JWTAuth::parseToken()->authenticate()->id;
+            $user = getCurrentUserId();
 
-            $data = $m::create(array_merge(\Request::all(), array('usuario_id' => $user)));
+            $data = $m::create(array_merge(\Request::all(), ['usuario_id' => $user]));
             return $this->createdResponse($data);
         } catch(\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];

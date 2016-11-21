@@ -1,9 +1,12 @@
 <?php namespace Tests;
 
 use App\Models\Usuario\Usuario;
+use App\Models\Usuario\Role;
 
 trait CreateUsuario
 {
+
+  protected $user;
 
   /**
    * Cria um objeto de usuário
@@ -12,19 +15,17 @@ trait CreateUsuario
    */
   public function createUsuario($data = [])
   {
-    return factory(Usuario::class)->create($data);
-  }
+    if (!$this->user) {
+      $role = Role::firstOrCreate([
+        'name' => 'admin'
+      ]);
 
-  /**
-   * Cria um token de autenticação para o usuário
-   *
-   * @param  App\Models\Usuario\Usuario $usuario
-   * @return string
-   */
-  public function createUsuarioToken($usuario = null)
-  {
-    return JWTAuth::fromUser(
-      ($usuario) ?: $this->createUsuario()
-    );
+      $usuario = factory(Usuario::class)->create($data);
+      $usuario->roles()->save($role);
+
+      $this->user = $usuario;
+    }
+
+    return $this->user;
   }
 }

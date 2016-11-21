@@ -13,18 +13,18 @@ trait CreateNota
    *
    * @return App\Models\Pedido\Pedido
    */
-  public function createNota()
+  public function createNota($data = [])
   {
     \File::copy(
       storage_path('tests/nota/testNota.xml'),
       storage_path('app/public/nota/testNota.xml')
     );
 
-    return factory(Nota::class)->create([
+    return factory(Nota::class)->create(array_merge($data, [
       'pedido_id'  => $this->createPedido()->id,
       'usuario_id' => $this->createUsuario()->id,
       'arquivo'    => 'testNota.xml'
-    ]);
+    ]));
   }
 
   /**

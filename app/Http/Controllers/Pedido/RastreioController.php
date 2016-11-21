@@ -462,7 +462,14 @@ class RastreioController extends Controller
             $encomenda->setDestino($destino);
             $encomenda->setDimensao($dimensao);
             $encomenda->setEtiqueta($etiqueta);
-            $encomenda->setNotaNumero($rastreio->pedido->notas()->orderBy('created_at', 'DESC')->first()->numero);
+
+            $nota = $rastreio
+                ->pedido
+                ->notas()
+                ->orderBy('created_at', 'DESC')
+                ->first();
+
+            $encomenda->setNotaNumero($nota ? $nota->numero : 0);
             $encomenda->setLote(round($rastreio->pedido->total));
             $encomenda->setPeso(0.500 * (int) $rastreio->pedido->produtos->count());
 

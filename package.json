@@ -19,5 +19,26 @@
   "dependencies": {
     "bootstrap-sass": "^3.0.0",
     "laravel-elixir": "^4.0.0"
-  }
+  },
+  "name": "tucanov3",
+  "version": "1.0.0",
+  "main": "gulpfile.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cariocacelulares/meutucano.com.br.git"
+  },
+  "keywords": [],
+  "author": "Cleiton Souza <cleiton7souza@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cariocacelulares/meutucano.com.br/issues"
+  },
+  "homepage": "https://github.com/cariocacelulares/meutucano.com.br#readme",
+  "description": ""
 }

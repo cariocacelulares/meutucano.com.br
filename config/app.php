@@ -61,6 +61,8 @@ return [
         Vinelab\Cdn\CdnServiceProvider::class,
 
         Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
+
+        Jenssegers\Mongodb\MongodbServiceProvider::class,
     ],
 
 
@@ -105,7 +107,9 @@ return [
 
         'Excel'      => Maatwebsite\Excel\Facades\Excel::class,
 
-        'Sentry' => Sentry\SentryLaravel\SentryFacade::class,
+        'Sentry'     => Sentry\SentryLaravel\SentryFacade::class,
+
+        'Moloquent'  => Jenssegers\Mongodb\Eloquent\Model::class,
     ],
 
 ];
