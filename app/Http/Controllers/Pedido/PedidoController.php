@@ -135,7 +135,7 @@ class PedidoController extends Controller
         $m = self::MODEL;
 
         try {
-            $status = \Request::get('status');
+            $status = Input::get('status');
 
             if (!$status && $status !== 0) {
                 throw new \Exception('"status" parameter not found!', 1);
@@ -143,9 +143,16 @@ class PedidoController extends Controller
 
             $data = $m::find($pedido_id);
 
-            $protocolo = \Request::get('protocolo');
+            $protocolo = Input::get('protocolo');
             if ($protocolo) {
                 $data->protocolo = $protocolo;
+            }
+
+            $imagem = Input::file('imagem');
+            if ($imagem) {
+                $name = substr(str_slug($protocolo . '-' . $imagem->getClientOriginalName()), 0, 200) . '.' . $imagem->extension();
+                $imagem->move(storage_path('app/public/cancelamento'), $name);
+                $data->imagem_cancelamento = $name;
             }
 
             $data->status = $status;
@@ -536,5 +543,20 @@ class PedidoController extends Controller
             $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
+    }
+
+    public function imagemCancelamento($id)
+    {
+        $model = self::MODEL;
+
+        if ($pedido = $model::find($id)) {
+            $file_path = storage_path('app/public/cancelamento/' . $pedido->imagem_cancelamento);
+
+            if (file_exists($file_path)) {
+                return response()->make(file_get_contents($file_path), '200')->header('Content-Type', 'image/' . (pathinfo($file_path, PATHINFO_EXTENSION) ?: 'jpeg'));
+            }
+        }
+
+        return $this->notFoundResponse();
     }
 }

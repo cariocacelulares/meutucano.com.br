@@ -178,8 +178,9 @@ Route::group(['prefix' => '/api', 'middleware' => 'sentry'], function() {
         Route::get('pedidos/total-orders-status', 'Pedido\PedidoController@totalOrdersByStatus');
         Route::get('pedidos/total-orders-date', 'Pedido\PedidoController@totalOrdersByDate');
         Route::get('pedidos/total-orders/{mes?}/{ano?}', 'Pedido\PedidoController@totalOrders');
+        Route::get('pedidos/cancelamento/{id}', 'Pedido\PedidoController@imagemCancelamento');
 
-        Route::put('pedidos/status/{pedido_id}', 'Pedido\PedidoController@alterarStatus');
+        Route::post('pedidos/status/{pedido_id}', 'Pedido\PedidoController@alterarStatus');
         Route::put('pedidos/prioridade/{pedido_id}', 'Pedido\PedidoController@prioridade');
         Route::put('pedidos/segurar/{pedido_id}', 'Pedido\PedidoController@segurar');
         Route::get('pedidos/list', 'Pedido\PedidoController@tableList');

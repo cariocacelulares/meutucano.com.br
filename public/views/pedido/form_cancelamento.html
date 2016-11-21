@@ -1,9 +1,15 @@
 <h1>Cancelar pedido</h1>
-<form ng-submit="closeThisDialog(protocolo)" novalidate="novalidate" class="form-default">
+<form ng-submit="closeThisDialog(data)" novalidate="novalidate" class="form-default">
     <div class="row">
-        <div class="col-md-12 form-group">
-            <label for="protocolo">Protocolo de cancelamento</label>
-            <input ng-model="protocolo" id="protocolo" placeholder="Nº de protocolo" type="number" required />
+        <div class="col-md-{{ imagem_cancelamento ? '12' : '6' }} form-group">
+            <label for="data.protocolo">Protocolo de cancelamento</label>
+            <input ng-model="data.protocolo" id="data.protocolo" placeholder="Nº de protocolo" type="number" required />
+        </div>
+        <div ng-if="!data.imagem_cancelamento" class="col-md-6 form-group">
+            <label for="data.imagem" class="full-width">Imagem</label>
+            <div class="btn-default" ngf-select ng-model="data.imagem" id="imagem" ngf-pattern="'image/*'" ngf-accept="'image/*'">
+                <i class="fa fa-picture-o"></i>&nbsp; Tela de cancelamento
+            </div>
         </div>
     </div>
     <div class="row">

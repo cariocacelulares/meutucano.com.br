@@ -3,7 +3,7 @@
 
     angular
         .module('MeuTucano')
-        .service('PedidoHelper', function($state, ngDialog, SweetAlert, toaster, Pedido) {
+        .service('PedidoHelper', function($window, $httpParamSerializer, $state, envService, Upload, ngDialog, SweetAlert, toaster, Pedido) {
             var vm;
 
             return {
@@ -121,12 +121,19 @@
                         ngDialog.open({
                             template: 'views/pedido/form_cancelamento.html'
                         }).closePromise.then(function(data) {
-                            if (!isNaN(data.value) && data.value !== null) {
+                            data = data.value;
+                            if (!isNaN(data.protocolo) && data.protocolo !== null) {
                                 this.vm.loading = true;
 
-                                Pedido.status(pedido.id, {
-                                    'status': 5,
-                                    'protocolo': data.value
+                                Upload.upload({
+                                    url: envService.read('apiUrl') + '/pedidos/status/' + pedido.id,
+                                    method: 'POST',
+                                    headers: { Authorization: 'Bearer '+ localStorage.getItem('satellizer_token') },
+                                    data: {
+                                        'status': 5,
+                                        'protocolo': data.protocolo,
+                                        'imagem': data.imagem
+                                    }
                                 }).then(function(pedido) {
                                     toaster.pop('success', 'Sucesso!', 'Pedido cancelado com sucesso!');
                                     this.vm.loading = false;
@@ -139,9 +146,36 @@
                                         }
                                     }
                                 }.bind(this));
+
+                                /*Pedido.status(pedido.id, {
+                                    'status': 5,
+                                    'protocolo': data.protocolo,
+                                    'imagem': data.imagem
+                                }).then(function(pedido) {
+                                    toaster.pop('success', 'Sucesso!', 'Pedido cancelado com sucesso!');
+                                    this.vm.loading = false;
+
+                                    if (typeof this.vm != 'undefined' && pedido) {
+                                        if (typeof redirect !== 'undefined' && redirect) {
+                                            $state.go(redirect);
+                                        } else if (typeof updateVm !== 'undefined' && updateVm && typeof this.vm.load != 'undefined' ) {
+                                            this.vm.load();
+                                        }
+                                    }
+                                }.bind(this));*/
                             }
                         }.bind(this));
                     }
+                },
+
+                /**
+                 * Mostra a imagem do cancelamenot
+                 *
+                 * @param id do pedido
+                 */
+                printImage: function(id) {
+                    var auth = { token: localStorage.getItem('satellizer_token') };
+                    $window.open(envService.read('apiUrl') + '/pedidos/cancelamento/' + id + '?' + $httpParamSerializer(auth), 'historico');
                 }
             };
         });
