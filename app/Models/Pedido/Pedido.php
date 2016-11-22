@@ -42,6 +42,7 @@ class Pedido extends \Eloquent
         'estimated_delivery',
         'status',
         'protocolo',
+        'imagem_cancelamento',
         'segurado',
         'reembolso',
         'priorizado'

@@ -41,7 +41,8 @@ class Pi extends \Eloquent
      */
     protected $appends = [
         'status_description',
-        'protocolo'
+        'protocolo',
+        'motivo_description',
     ];
 
     /**
@@ -62,6 +63,21 @@ class Pi extends \Eloquent
     public function rastreio()
     {
         return $this->belongsTo(Rastreio::class);
+    }
+
+    /**
+     * Return description from motivo
+     *
+     * @return string
+     */
+    public function getMotivoDescriptionAttribute()
+    {
+        switch ($this->motivo_status) {
+            case '0': return 'Outro';
+            case '2': return 'Atraso';
+            case '3': return 'Extravio';
+            default: return 'Outro';
+        }
     }
 
     /**

@@ -54,14 +54,14 @@ class LogisticaController extends Controller
 
             $this->aplicarDevolucao(Input::get(['inspecoes']));
 
-            $data = $m::create(Input::except(['protocolo']));
+            $data = $m::create(Input::except(['protocolo', 'imagem']));
 
             if (Input::has('acao')) {
                 $rastreio = Rastreio::find(Input::get('rastreio_id'));
                 $rastreio->status = 5;
                 $rastreio->save();
 
-                $this->updateProtocolAndStatus($data, Input::get('protocolo'));
+                $this->updateProtocolAndStatus($data, Input::get('protocolo'), Input::file('imagem'));
             }
 
             return $this->createdResponse($data);

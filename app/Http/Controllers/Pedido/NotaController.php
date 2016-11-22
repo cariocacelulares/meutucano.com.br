@@ -114,8 +114,11 @@ class NotaController extends Controller
     {
         $model = self::MODEL;
 
-        if ($nota = $model::find($id)) {
-            $file_path = storage_path('app/public/nota/' . $nota->arquivo);
+        $nota = $model::find($id);
+        $nota = $nota ?: Devolucao::find($id);
+
+        if ($nota) {
+            $file_path = storage_path('app/public/nota/'. $nota->arquivo);
 
             if (file_exists($file_path)) {
                 $xml = file_get_contents($file_path);

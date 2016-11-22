@@ -33,6 +33,14 @@
             <input class="form-control" id="protocolo" ng-model="DevolucaoForm.devolucao.protocolo" placeholder="Protocolo de cancelamento" required />
         </div>
     </div>
+    <div ng-if="!DevolucaoForm.devolucao.imagem_cancelamento" class="row">
+        <div class="col-md-12 form-group">
+            <label for="imagem" class="full-width">Imagem</label>
+            <div class="btn-default" ngf-select ng-model="DevolucaoForm.devolucao.imagem" id="imagem" ngf-pattern="'image/*'" ngf-accept="'image/*'">
+                <i class="fa fa-picture-o"></i>&nbsp; Tela de cancelamento
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-12 form-group">
             <label for="observacoes">Observações</label>

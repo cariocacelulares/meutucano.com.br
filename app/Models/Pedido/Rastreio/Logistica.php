@@ -45,7 +45,8 @@ class Logistica extends \Eloquent
      * @var array
      */
     protected $appends = [
-        'protocolo'
+        'protocolo',
+        'imagem_cancelamento',
     ];
 
     /**
@@ -116,6 +117,24 @@ class Logistica extends \Eloquent
             if ($rastreio = Rastreio::find($this->rastreio_id)) {
                 if ($pedido = Pedido::find($rastreio->pedido_id)) {
                     return ($pedido) ? $pedido->protocolo : null;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Return protocolo from pedido
+     *
+     * @return string
+     */
+    public function getImagemCancelamentoAttribute()
+    {
+        if ((int)$this->acao === 1) {
+            if ($rastreio = Rastreio::find($this->rastreio_id)) {
+                if ($pedido = Pedido::find($rastreio->pedido_id)) {
+                    return ($pedido) ? $pedido->imagem_cancelamento : null;
                 }
             }
         }

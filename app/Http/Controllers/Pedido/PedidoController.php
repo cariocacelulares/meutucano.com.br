@@ -151,6 +151,13 @@ class PedidoController extends Controller
                 $pedido->protocolo = $protocolo;
             }
 
+            $imagem = Input::file('imagem');
+            if ($imagem) {
+                $name = substr(str_slug($protocolo . '-' . $imagem->getClientOriginalName()), 0, 200) . '.' . $imagem->extension();
+                $imagem->move(storage_path('app/public/cancelamento'), $name);
+                $pedido->imagem_cancelamento = $name;
+            }
+
             $pedido->status = $status;
             $pedido->save();
 
@@ -534,5 +541,20 @@ class PedidoController extends Controller
             $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
+    }
+
+    public function imagemCancelamento($id)
+    {
+        $model = self::MODEL;
+
+        if ($pedido = $model::find($id)) {
+            $file_path = storage_path('app/public/cancelamento/' . $pedido->imagem_cancelamento);
+
+            if (file_exists($file_path)) {
+                return response()->make(file_get_contents($file_path), '200')->header('Content-Type', 'image/' . (pathinfo($file_path, PATHINFO_EXTENSION) ?: 'jpeg'));
+            }
+        }
+
+        return $this->notFoundResponse();
     }
 }

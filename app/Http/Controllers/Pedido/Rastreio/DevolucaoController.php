@@ -78,13 +78,13 @@ class DevolucaoController extends Controller
 
             $this->aplicarDevolucao(Input::get(['inspecoes']));
 
-            $data = $m::create(Input::except(['protocolo']));
+            $data = $m::create(Input::except(['protocolo', 'imagem']));
 
             $rastreio = Rastreio::find(Input::get('rastreio_id'));
             $rastreio->status = 5;
             $rastreio->save();
 
-            $this->updateProtocolAndStatus($data, Input::get('protocolo'));
+            $this->updateProtocolAndStatus($data, Input::get('protocolo'), Input::file('imagem'));
 
             return $this->createdResponse($data);
         } catch(\Exception $ex) {
