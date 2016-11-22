@@ -145,7 +145,7 @@ class PedidoController extends Controller
             $pedido = $m::find($pedido_id);
 
             if (in_array($pedido->marketplace, \Config::get('tucano.required_protocolo')) && $status === 5 && !$protocolo) {
-                throw new \Exception("Protocolo obrigatório para cancelar pedidos nesse marketplace.", 1);
+                throw new \Exception('Protocolo obrigatório para cancelar pedidos nesse marketplace.', 422);
             }
 
             if ($protocolo) {
@@ -159,13 +159,19 @@ class PedidoController extends Controller
                 $data->imagem_cancelamento = $name;
             }
 
-            $data->status = $status;
-            $data->save();
+            $pedido->status = $status;
+            $pedido->save();
 
             return $this->showResponse($pedido);
-        } catch(\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+        } catch(\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao alterar status do pedido'));
+            $data = ['exception' => $exception->getMessage()];
+
+            if ($exception->getCode() == 422) {
+                return $this->clientErrorResponse($data);
+            } else {
+                return $this->clientErrorResponse($data);
+            }
         }
     }
 
