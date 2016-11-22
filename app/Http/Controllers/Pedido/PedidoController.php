@@ -135,17 +135,21 @@ class PedidoController extends Controller
         $m = self::MODEL;
 
         try {
-            $status = Input::get('status');
+            $status    = Input::get('status');
+            $protocolo = Input::get('protocolo');
 
             if (!$status && $status !== 0) {
-                throw new \Exception('"status" parameter not found!', 1);
+                throw new \Exception('Campo de status obrigatório', 1);
             }
 
-            $data = $m::find($pedido_id);
+            $pedido = $m::find($pedido_id);
 
-            $protocolo = Input::get('protocolo');
+            if (in_array($pedido->marketplace, \Config::get('tucano.required_protocolo')) && $status === 5 && !$protocolo) {
+                throw new \Exception('Protocolo obrigatório para cancelar pedidos nesse marketplace.', 422);
+            }
+
             if ($protocolo) {
-                $data->protocolo = $protocolo;
+                $pedido->protocolo = $protocolo;
             }
 
             $imagem = Input::file('imagem');
@@ -155,13 +159,19 @@ class PedidoController extends Controller
                 $data->imagem_cancelamento = $name;
             }
 
-            $data->status = $status;
-            $data->save();
+            $pedido->status = $status;
+            $pedido->save();
 
-            return $this->showResponse($data);
-        } catch(\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+            return $this->showResponse($pedido);
+        } catch(\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao alterar status do pedido'));
+            $data = ['exception' => $exception->getMessage()];
+
+            if ($exception->getCode() == 422) {
+                return $this->clientErrorResponse($data);
+            } else {
+                return $this->clientErrorResponse($data);
+            }
         }
     }
 
@@ -219,11 +229,6 @@ class PedidoController extends Controller
                 $dataPedido = Carbon::createFromFormat('d/m/Y H:i', $pedido->created_at)->format('d/m/Y');
                 $diasUteis = diasUteisPeriodo($dataPedido, date('d/m/Y'), true);
 
-                /*if (
-                    (strtolower($pedido->marketplace) == 'site' && $diasUteis > \Config::get('tucano.magento.old_order'))
-                    ||
-                    (strtolower($pedido->marketplace) != 'site' && $diasUteis > \Config::get('tucano.skyhub.old_order'))
-                    ) {*/
                 if (strtolower($pedido->marketplace) == 'site' && $diasUteis > \Config::get('tucano.magento.old_order')) {
                     $pedido->status = 5;
                     $pedido->save();

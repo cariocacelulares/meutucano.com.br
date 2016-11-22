@@ -1,75 +1,65 @@
 <?php
 
-use App\Models\Cliente;
-use App\Models\ClienteEndereco;
-use App\Models\Pedido;
-use App\Models\PedidoImposto;
-use App\Models\PedidoNota;
-use App\Models\PedidoProduto;
-use App\Models\PedidoRastreio;
-use App\Models\Produto;
+use App\Models\Cliente\Cliente;
+use App\Models\Cliente\Endereco;
+use App\Models\Pedido\Pedido;
+use App\Models\Pedido\Imposto;
+use App\Models\Pedido\Nota;
+use App\Models\Pedido\Nota\Devolucao as NotaDevolucao;
+use App\Models\Pedido\PedidoProduto;
+use App\Models\Pedido\Rastreio;
+use App\Models\Pedido\Rastreio\Devolucao;
+use App\Models\Pedido\Rastreio\Logistica;
+use App\Models\Pedido\Rastreio\Pi;
+
+use App\Models\Inspecao\InspecaoTecnica;
+
+use App\Models\Produto\Produto;
+use App\Models\Pedido\Comentario;
+
+use App\Models\Usuario\Usuario;
+use App\Models\Usuario\Senha;
+
+use Illuminate\Database\Eloquent\Model;
+
+use App\Models\FaturamentoCodigo;
 
 class TestSeeder extends \Illuminate\Database\Seeder {
 
-    /**
-     * Run seeder
-     */
-    public function run()
-    {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+  /**
+   * Run seeder
+   */
+  public function run()
+  {
+    DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        $cliente  = factory(Cliente::class)->create([
-            'id' => 999
-        ]);
-        $endereco = factory(ClienteEndereco::class)->make([
-            'id' => 999
-        ]);
-        $cliente->enderecos()->save($endereco);
+    factory(Usuario::class, 5)
+      ->create();
 
-        factory(Pedido::class)->create([
-            'id'                  => 999,
-            'cliente_id'          => $cliente->id,
-            'cliente_endereco_id' => $endereco->id,
-        ]);
+    factory(Senha::class, 10)
+      ->create([
+        'usuario_id' => Usuario::all()->random()->id
+      ]);
 
-        factory(Produto::class)->create([
-            'sku' => 999
-        ]);
+    factory(\App\Models\Pedido\Nota\Devolucao::class, 5)->create([
+      'usuario_id' => Usuario::first()->id,
+      'nota_id'    => Nota::all()->random()->id
+    ]);
 
-        foreach(range(1, 10) as $pedido_id) {
-            $cliente  = factory(Cliente::class)->create();
-            $endereco = factory(ClienteEndereco::class)->make();
-            $cliente->enderecos()->save($endereco);
+    factory(InspecaoTecnica::class, 5)->create([
+      'usuario_id' => Usuario::first()->id,
+      'pedido_produtos_id' => PedidoProduto::all()->random()->id,
+      'produto_sku' => Produto::all()->random()->sku,
+    ]);
 
-            factory(Pedido::class)->create([
-                'id'                  => $pedido_id,
-                'cliente_id'          => $cliente->id,
-                'cliente_endereco_id' => $endereco->id,
-            ]);
+    factory(FaturamentoCodigo::class)->create([
+      'servico' => 0
+    ]);
 
-            factory(PedidoNota::class)->create([
-                'pedido_id'  => $pedido_id,
-                'usuario_id' => 1,
-            ]);
+    factory(FaturamentoCodigo::class)->create([
+      'servico' => 1
+    ]);
 
-            factory(PedidoRastreio::class)->create([
-                'pedido_id' => $pedido_id,
-            ]);
-
-            factory(PedidoImposto::class)->create([
-                'pedido_id' => $pedido_id,
-            ]);
-
-            $produto = factory(Produto::class)->create([
-                'sku' => $pedido_id
-            ]);
-
-            factory(PedidoProduto::class)->create([
-                'pedido_id'   => $pedido_id,
-                'produto_sku' => $produto->sku
-            ]);
-        }
-
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-    }
+    DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+  }
 }

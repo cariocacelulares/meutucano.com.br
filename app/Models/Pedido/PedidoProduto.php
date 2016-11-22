@@ -38,11 +38,6 @@ class PedidoProduto extends \Eloquent
     /**
      * @var array
      */
-    // protected $with = ['produto'];
-
-    /**
-     * @var array
-     */
     protected $appends = ['total'];
 
     /**
@@ -57,8 +52,7 @@ class PedidoProduto extends \Eloquent
             $produto = $pedidoProduto->produto;
 
             if ($pedidoProduto->wasRecentlyCreated) {
-
-                if ((int)$pedido->status !== 5) {
+                if ((int) $pedido->status !== 5) {
                     \Event::fire(new ProductDispach($pedidoProduto->produto, $pedidoProduto->quantidade));
                 }
 

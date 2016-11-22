@@ -55,9 +55,6 @@ class UsuarioController extends Controller
 
             $data->fill(Input::except(['password', 'novasRoles', 'roles']));
 
-            if (Input::get('password'))
-                $data->password = bcrypt(Input::get('password'));
-
             if (Input::get('novasRoles')) {
                 $data->detachRoles();
                 foreach (Input::get('novasRoles') as $role) {
@@ -92,9 +89,6 @@ class UsuarioController extends Controller
             $data = new $m;
             $data->fill(Input::except(['password', 'novasRoles']));
             $data->save();
-
-            if (Input::get('password'))
-                $data->password = bcrypt(Input::get('password'));
 
             if (Input::get('novasRoles')) {
                 $data->detachRoles();
