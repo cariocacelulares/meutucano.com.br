@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 use App\Models\Gamification\Traits\GamificationTrait;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * Class Usuario
@@ -11,7 +12,7 @@ use App\Models\Gamification\Traits\GamificationTrait;
  */
 class Usuario extends Authenticatable
 {
-    use EntrustUserTrait, GamificationTrait;
+    use EntrustUserTrait, GamificationTrait, Notifiable;
 
     /**
      * @var array
