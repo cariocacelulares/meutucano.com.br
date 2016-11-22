@@ -1,13 +1,13 @@
-<?php namespace App\Http\Controllers\Sugestao;
+<?php namespace Modules\Sugestao\Http\Controllers;
 
-use App\Http\Controllers\Rest\RestControllerTrait;
-use App\Http\Controllers\Controller;
-use App\Models\Sugestao\Sugestao;
 use Illuminate\Support\Facades\Input;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Rest\RestControllerTrait;
+use Modules\Sugestao\Models\Sugestao;
 
 /**
  * Class SugestaoController
- * @package App\Http\Controllers\Sugestao
+ * @package Modules\Sugestao\Http\Controllers
  */
 class SugestaoController extends Controller
 {

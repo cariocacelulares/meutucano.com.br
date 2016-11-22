@@ -250,12 +250,6 @@ Route::group(['prefix' => '/api', 'middleware' => 'sentry'], function() {
         Route::resource('inspecao_tecnica', 'Inspecao\InspecaoTecnicaController');
 
         /**
-         * Sugestão
-         */
-        Route::get('sugestoes/list', 'Sugestao\SugestaoController@tableList');
-        Route::resource('sugestoes', 'Sugestao\SugestaoController');
-
-        /**
          * Relatórios
          */
         // Pedidos genérico

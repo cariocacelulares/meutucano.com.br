@@ -1,4 +1,4 @@
-<?php namespace App\Models\Sugestao;
+<?php namespace Modules\Sugestao\Models;
 
 use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
@@ -6,7 +6,7 @@ use App\Models\Usuario\Usuario;
 
 /**
  * Class Sugestao
- * @package App\Models\Sugestao
+ * @package Modules\Sugestao\Models
  */
 class Sugestao extends \Eloquent
 {
