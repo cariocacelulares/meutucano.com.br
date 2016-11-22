@@ -14,7 +14,9 @@ use App\Http\Controllers\Inspecao\InspecaoTecnicaTrait;
  */
 class DevolucaoController extends Controller
 {
-    use RestControllerTrait, RastreioTrait, InspecaoTecnicaTrait;
+    use RestControllerTrait,
+        RastreioTrait,
+        InspecaoTecnicaTrait;
 
     const MODEL = Devolucao::class;
 

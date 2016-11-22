@@ -23,25 +23,6 @@ class NotaController extends Controller
     protected $validationRules = [];
 
     /**
-     * Retorna notas faturadas pelo usuário atual
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function notasFaturamento()
-    {
-        $model = self::MODEL;
-
-        $user = JWTAuth::parseToken()->authenticate()->id;
-
-        $notas = $model::with(['pedido', 'pedido.cliente', 'pedido.rastreios'])
-            ->where('usuario_id', $user)
-            ->where('updated_at', '>=', date('Y-m-d'))
-            ->get();
-
-        return $this->listResponse($notas);
-    }
-
-    /**
      * Gera o XML da nota fiscal
      *
      * @param $id
@@ -51,18 +32,25 @@ class NotaController extends Controller
     {
         $model = self::MODEL;
 
+        //TODO: Separar devolução de nota comum, mantendo um método para
+        //imprimir mas dois métodos chamando
         if ($devolucao) {
             $nota = Devolucao::find($id);
         } else {
             $nota = $model::find($id);
         }
 
+        // Nota fiscal não existe
         if ($nota) {
-            $file_path = storage_path('app/public/nota/'. $nota->arquivo);
+            $file_path = storage_path('app/public/nota/' . $nota->arquivo);
 
-            if (file_exists($file_path)) {
-                return response()->make(file_get_contents($file_path), '200')->header('Content-Type', 'text/xml');
-            }
+            // Arquivo físico não existe
+            if (!file_exists($file_path))
+                return $this->notFoundResponse();
+
+            return response()
+                ->make(file_get_contents($file_path), '200')
+                ->header('Content-Type', 'text/xml');
         }
 
         return $this->notFoundResponse();
@@ -72,7 +60,7 @@ class NotaController extends Controller
      * Envia um e-mail ao cliente com a nota fiscal
      *
      * @param $id
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function email($id)
     {
@@ -149,6 +137,8 @@ class NotaController extends Controller
 
                 $danfe->montaDANFE('P', 'A4', 'L');
                 $danfe->printDANFE($nomeDanfe, $retorno);
+
+                return $this->showResponse([]);
             }
         }
 

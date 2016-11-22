@@ -18,7 +18,7 @@ class SumStock
         $pedido = $event->order;
         \Log::debug('Listener SumStock ativado. pedido: ' . $pedido->id);
 
-        foreach ($pedido->produtos as $pedidoProduto) {
+        foreach ($pedido->produtos()->get() as $pedidoProduto) {
             try {
                 $produto = $pedidoProduto->produto;
                 $oldEstoque = $produto->estoque;

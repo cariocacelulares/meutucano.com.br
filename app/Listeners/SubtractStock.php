@@ -14,6 +14,7 @@ class SubtractStock
      */
     public function handle(ProductDispach $event)
     {
+
         $produto = $event->produto;
         $quantidade = (int)$event->quantidade;
         \Log::debug('Listener SubtractStock ativado. produto: ' . $produto->sku);

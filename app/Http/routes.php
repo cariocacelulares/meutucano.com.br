@@ -60,7 +60,7 @@ Route::group(['prefix' => '/api', 'middleware' => 'sentry'], function() {
         ]);
 
         Route::get('notas/xml/{id}/{devolucao}', 'Pedido\NotaController@xml');
-        Route::get('notas/danfe/{id}', 'Pedido\NotaController@danfe');
+        Route::get('notas/danfe/{id}/{retorno?}', 'Pedido\NotaController@danfe');
         Route::post('notas/email/{id}', 'Pedido\NotaController@email');
 
         Route::get('rastreios/etiqueta/{id}', 'Pedido\RastreioController@etiqueta');
@@ -131,11 +131,6 @@ Route::group(['prefix' => '/api', 'middleware' => 'sentry'], function() {
              */
             Route::get('notas/faturamento', 'Pedido\NotaController@notasFaturamento');
             Route::get('notas/faturar/{pedido_id}', 'Pedido\NotaController@faturar');
-
-            /**
-             * Código de rastreio
-             */
-            Route::get('codigos/gerar/{servico}', 'Codigo\FaturamentoCodigoController@generateCode');
 
             /**
              * Listagem de notas por usuário
