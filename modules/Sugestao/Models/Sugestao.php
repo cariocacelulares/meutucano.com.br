@@ -51,7 +51,8 @@ class Sugestao extends \Eloquent
     /**
      * @return string
      */
-    public function getCreatedAtAttribute($created_at) {
+    public function getCreatedAtAttribute($created_at)
+    {
         if (!$created_at)
             return null;
 
@@ -61,7 +62,8 @@ class Sugestao extends \Eloquent
     /**
      * @return string
      */
-    public function getUpdatedAtAttribute($updated_at) {
+    public function getUpdatedAtAttribute($updated_at)
+    {
         if (!$updated_at)
             return null;
 
@@ -71,7 +73,8 @@ class Sugestao extends \Eloquent
     /**
      * @return string
      */
-    public function getStatusDescriptionAttribute() {
+    public function getStatusDescriptionAttribute()
+    {
         switch ($this->status) {
             case '1':
                 return 'Aceita';

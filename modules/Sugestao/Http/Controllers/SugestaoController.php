@@ -22,7 +22,8 @@ class SugestaoController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableList() {
+    public function tableList()
+    {
         $m = self::MODEL;
 
         $list = $m::with('usuario')->orderBy('sugestoes.created_at', 'DESC');
@@ -52,16 +53,16 @@ class SugestaoController extends Controller
             $v = \Validator::make(Input::all(), $this->validationRules);
 
             if ($v->fails()) {
-                throw new \Exception("ValidationException");
+                throw new \Exception('ValidationException');
             }
 
             $data = $m::create(array_merge(Input::all(), ['usuario_id' => getCurrentUserId()]));
 
             return $this->createdResponse($data);
-        } catch(\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+        } catch(\Exception $exception) {
+            $data = ['form_validations' => $v->errors(), 'exception' => $exception->getMessage()];
 
-            \Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
             return $this->clientErrorResponse($data);
         }
     }
@@ -95,10 +96,10 @@ class SugestaoController extends Controller
             $data->save();
 
             return $this->showResponse($data);
-        } catch(\Exception $ex) {
-            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
+        } catch(\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['form_validations' => $v->errors(), 'exception' => $exception->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }
