@@ -12,6 +12,16 @@ class RastreioPiTest extends TestCase
     DatabaseTransactions,
     CreateRastreio;
 
+  private $rastreio;
+
+  public function setUp()
+  {
+    parent::setUp();
+
+    if (!$this->rastreio)
+      $this->rastreio = $this->createRastreio();
+  }
+
   /**
    * Testa se é possível exibir a pi a partir do rastreio
    *
@@ -19,15 +29,15 @@ class RastreioPiTest extends TestCase
    */
   public function test__it_should_be_able_to_show_the_pi_from_rastreio()
   {
-    $rastreio = $this->createRastreio();
-
-    factory(Pi::class)->create([
-      'rastreio_id' => $rastreio->id
+    $pi = factory(Pi::class)->create([
+      'rastreio_id' => $this->rastreio->id
     ]);
 
-    $response = $this->json('GET', "/api/pis/{$rastreio->id}")
+    $response = $this->json('GET', "/api/pis/{$this->rastreio->id}")
       ->seeJsonStructure(['data'])
       ->seeStatusCode(200);
+
+    $pi->delete();
   }
 
   /**
@@ -39,7 +49,7 @@ class RastreioPiTest extends TestCase
   {
     factory(Pi::class)->create([
       'acao'        => null,
-      'rastreio_id' => $this->createRastreio()->id
+      'rastreio_id' => $this->rastreio->id
     ]);
 
     $this->json('GET', "/api/pis/pending")
@@ -54,14 +64,12 @@ class RastreioPiTest extends TestCase
    */
   public function test__it_should_be_able_to_create_pi()
   {
-    $rastreio = $this->createRastreio();
-
     $this->json('POST', "/api/pis", [
-      'rastreio_id' => $rastreio->id,
+      'rastreio_id' => $this->rastreio->id,
     ])->seeStatusCode(201);
 
     $this->seeInDatabase('pedido_rastreio_pis', [
-      'rastreio_id' => $rastreio->id,
+      'rastreio_id' => $this->rastreio->id,
     ]);
   }
 
@@ -72,16 +80,14 @@ class RastreioPiTest extends TestCase
    */
   public function test__it_should_change_rastreio_status_when_pi_is_created_with_valor_pago()
   {
-    $rastreio = $this->createRastreio();
-
     $this->json('POST', "/api/pis", [
       'valor_pago'  => 10,
-      'rastreio_id' => $rastreio->id,
+      'rastreio_id' => $this->rastreio->id,
     ]);
 
-    $rastreio = $rastreio->fresh();
+    $this->rastreio = $this->rastreio->fresh();
 
-    $this->assertEquals(8, $rastreio->status);
+    $this->assertEquals(8, $this->rastreio->status);
   }
 
   /**
@@ -91,15 +97,13 @@ class RastreioPiTest extends TestCase
    */
   public function test__it_should_change_rastreio_status_when_pi_is_created_without_valor_pago()
   {
-    $rastreio = $this->createRastreio();
-
     $this->json('POST', "/api/pis", [
-      'rastreio_id' => $rastreio->id,
+      'rastreio_id' => $this->rastreio->id,
     ]);
 
-    $rastreio = $rastreio->fresh();
+    $this->rastreio = $this->rastreio->fresh();
 
-    $this->assertEquals(7, $rastreio->status);
+    $this->assertEquals(7, $this->rastreio->status);
   }
 
   /**
@@ -111,13 +115,13 @@ class RastreioPiTest extends TestCase
   {
     $pedido = $this->createPedido();
 
-    $rastreio = $this->createRastreio([
+    $this->rastreio = $this->createRastreio([
       'pedido_id' => $pedido->id
     ]);
 
     $this->json('POST', "/api/pis", [
       'acao'        => 1,
-      'rastreio_id' => $rastreio->id,
+      'rastreio_id' => $this->rastreio->id,
       'protocolo'   => '123456',
     ]);
 

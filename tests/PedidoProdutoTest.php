@@ -62,9 +62,6 @@ class PedidoProdutoTest extends TestCase
     ]);
 
     $pedido = $this->createPedido([], $produto->sku);
-    $produto = $produto->fresh();
-
-    $this->assertEquals(9, $produto->estoque);
 
     $pedido->status = 5;
     $pedido->save();

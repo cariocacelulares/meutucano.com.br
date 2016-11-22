@@ -23,6 +23,8 @@
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="QUEUE_DRIVER" value="sync"/>
+        <env name="EMAIL_SEND_ENABLED" value="true"/>
         <env name="DB_DATABASE" value="tucanov3_testes"/>
+        <env name="TEST_RASTREIO" value="DN677968684BR"/>
     </php>
 </phpunit>

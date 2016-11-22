@@ -1,11 +1,11 @@
 <?php
 
-$faker = Faker\Factory::create('pt_BR');
+$faker = \Faker\Factory::create('pt_BR');
 
 /**
  * Usuario
  */
-$factory->define(\App\Models\Usuario\Usuario::class, function () use ($faker) {
+$factory->define(App\Models\Usuario\Usuario::class, function () use ($faker) {
   return [
     'name'           => $faker->name,
     'email'          => $faker->safeEmail,
@@ -18,7 +18,7 @@ $factory->define(\App\Models\Usuario\Usuario::class, function () use ($faker) {
 /**
  * Role
  */
-$factory->define(\App\Models\Usuario\Role::class, function () use ($faker) {
+$factory->define(App\Models\Usuario\Role::class, function () use ($faker) {
   return [
     'name' => $faker->word,
   ];
@@ -27,7 +27,7 @@ $factory->define(\App\Models\Usuario\Role::class, function () use ($faker) {
 /**
  * Senha
  */
-$factory->define(\App\Models\Usuario\Senha::class, function () use ($faker) {
+$factory->define(App\Models\Usuario\Senha::class, function () use ($faker) {
   return [
     'site'    => $faker->name,
     'url'     => $faker->url,
@@ -39,7 +39,7 @@ $factory->define(\App\Models\Usuario\Senha::class, function () use ($faker) {
 /**
  * Cliente
  */
-$factory->define(\App\Models\Cliente\Cliente::class, function () use ($faker) {
+$factory->define(App\Models\Cliente\Cliente::class, function () use ($faker) {
   return [
     'taxvat' => $faker->randomNumber(5) . $faker->randomNumber(6),
     'tipo'   => 0,
@@ -52,7 +52,7 @@ $factory->define(\App\Models\Cliente\Cliente::class, function () use ($faker) {
 /**
  * Endereço
  */
-$factory->define(\App\Models\Cliente\Endereco::class, function () use ($faker) {
+$factory->define(App\Models\Cliente\Endereco::class, function () use ($faker) {
   return [
     'cep'          => $faker->randomNumber(8),
     'rua'          => $faker->streetName,
@@ -68,7 +68,7 @@ $factory->define(\App\Models\Cliente\Endereco::class, function () use ($faker) {
 /**
  * Inspeção
  */
-$factory->define(\App\Models\Inspecao\InspecaoTecnica::class, function () use ($faker) {
+$factory->define(App\Models\Inspecao\InspecaoTecnica::class, function () use ($faker) {
   return [
     'descricao'  => 'Nada',
     'priorizado' => 0,
@@ -79,9 +79,9 @@ $factory->define(\App\Models\Inspecao\InspecaoTecnica::class, function () use ($
 /**
  * Produto
  */
-$factory->define(\App\Models\Produto\Produto::class, function () use ($faker) {
+$factory->define(App\Models\Produto\Produto::class, function () use ($faker) {
   return [
-    'sku'    => $faker->unique()->numberBetween(0, 1000),
+    'sku'    => $faker->unique()->numberBetween(0, 9999),
     'titulo' => 'Smartphone ' . $faker->randomNumber(2),
     'ean'    => $faker->isbn10,
     'estado' => 0
@@ -91,7 +91,7 @@ $factory->define(\App\Models\Produto\Produto::class, function () use ($faker) {
 /**
  * Pedido
  */
-$factory->define(\App\Models\Pedido\Pedido::class, function () use ($faker) {
+$factory->define(App\Models\Pedido\Pedido::class, function () use ($faker) {
   return [
     'frete_valor'         => $faker->randomFloat(2, 10, 40),
     'frete_metodo'        => $faker->randomElement(['pac', 'sedex']),
@@ -106,7 +106,7 @@ $factory->define(\App\Models\Pedido\Pedido::class, function () use ($faker) {
 /**
  * Rastreio
  */
-$factory->define(\App\Models\Pedido\Rastreio::class, function () use ($faker) {
+$factory->define(App\Models\Pedido\Rastreio::class, function () use ($faker) {
   return [
     'data_envio' => $faker->dateTimeThisMonth->format('Y-m-d'),
     'rastreio'   => 'PJ' . $faker->randomNumber(9) . 'BR',
@@ -117,14 +117,14 @@ $factory->define(\App\Models\Pedido\Rastreio::class, function () use ($faker) {
   ];
 });
 
-$factory->define(\App\Models\Pedido\Rastreio\Devolucao::class, function () use ($faker) {
+$factory->define(App\Models\Pedido\Rastreio\Devolucao::class, function () use ($faker) {
   return [
     'motivo' => $faker->numberBetween(0, 7),
     'acao'   => $faker->numberBetween(0, 1)
   ];
 });
 
-$factory->define(\App\Models\Pedido\Rastreio\Logistica::class, function () use ($faker) {
+$factory->define(App\Models\Pedido\Rastreio\Logistica::class, function () use ($faker) {
   return [
     'autorizacao'   => $faker->randomNumber(5) . $faker->randomNumber(6),
     'motivo'        => $faker->numberBetween(0, 4),
@@ -134,7 +134,7 @@ $factory->define(\App\Models\Pedido\Rastreio\Logistica::class, function () use (
 });
 
 
-$factory->define(\App\Models\Pedido\Rastreio\Pi::class, function () use ($faker) {
+$factory->define(App\Models\Pedido\Rastreio\Pi::class, function () use ($faker) {
   return [
     'codigo_pi'      => $faker->randomNumber(5) . $faker->randomNumber(5),
     'motivo_status'  => $faker->numberBetween(0, 4),
@@ -148,7 +148,7 @@ $factory->define(\App\Models\Pedido\Rastreio\Pi::class, function () use ($faker)
 /**
  * Nota
  */
-$factory->define(\App\Models\Pedido\Nota::class, function () use ($faker) {
+$factory->define(App\Models\Pedido\Nota::class, function () use ($faker) {
   return [
     'data'       => $faker->dateTimeThisMonth->format('Y-m-d'),
     'chave'      => str_random(44),
@@ -159,7 +159,7 @@ $factory->define(\App\Models\Pedido\Nota::class, function () use ($faker) {
 /**
  * Devolução
  */
-$factory->define(\App\Models\Pedido\Nota\Devolucao::class, function () use ($faker) {
+$factory->define(App\Models\Pedido\Nota\Devolucao::class, function () use ($faker) {
   return [
     'data'    => $faker->dateTimeThisMonth->format('Y-m-d'),
     'chave'   => str_random(44),
@@ -171,7 +171,7 @@ $factory->define(\App\Models\Pedido\Nota\Devolucao::class, function () use ($fak
 /**
  * Imposto
  */
-$factory->define(\App\Models\Pedido\Imposto::class, function () use ($faker) {
+$factory->define(App\Models\Pedido\Imposto::class, function () use ($faker) {
   return [
     'icms'              => $faker->randomFloat(2, 0, 50),
     'pis'               => $faker->randomFloat(2, 0, 50),
@@ -185,7 +185,7 @@ $factory->define(\App\Models\Pedido\Imposto::class, function () use ($faker) {
 /**
  * PedidoProduto
  */
-$factory->define(\App\Models\Pedido\PedidoProduto::class, function () use ($faker) {
+$factory->define(App\Models\Pedido\PedidoProduto::class, function () use ($faker) {
   return [
     'valor'       => $faker->randomFloat(2, 500, 3000),
     'quantidade'  => 1,
@@ -195,7 +195,7 @@ $factory->define(\App\Models\Pedido\PedidoProduto::class, function () use ($fake
 /**
  * Comentário
  */
-$factory->define(\App\Models\Pedido\Comentario::class, function () use ($faker) {
+$factory->define(App\Models\Pedido\Comentario::class, function () use ($faker) {
   return [
     'comentario' => $faker->text(200)
   ];
@@ -204,7 +204,7 @@ $factory->define(\App\Models\Pedido\Comentario::class, function () use ($faker) 
 /**
  * Código faturamento
  */
-$factory->define(\App\Models\FaturamentoCodigo::class, function () use ($faker) {
+$factory->define(App\Models\FaturamentoCodigo::class, function () use ($faker) {
   return [
     'servico' => $faker->unique()->numberBetween(0, 1),
     'atual'   => '97255050',

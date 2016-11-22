@@ -82,21 +82,23 @@ class NotaController extends Controller
                             ->to($email)
                             ->subject('Nota fiscal de compra na Carioca Celulares Online');
                     });
-                } else {
-                    Log::debug("O e-mail não foi enviado para {$email} pois o envio está desativado (nota)!");
-                }
 
-                unlink($arquivo);
+                    if (file_exists($arquivo))
+                        unlink($arquivo);
 
-                if  ($mail) {
-                    \Log::debug('E-mail de venda enviado para: ' . $email);
-                    return $this->showResponse(['send' => true]);
+                    if  ($mail) {
+                        \Log::debug('E-mail de venda enviado para: ' . $email);
+                        return $this->showResponse(['send' => true]);
+                    } else {
+                        \Log::warning('Falha ao enviar e-mail de venda para: ' . $email);
+                        return $this->showResponse(['send' => false]);
+                    }
                 } else {
-                    \Log::warning('Falha ao enviar e-mail de venda para: ' . $email);
+                    \Log::debug("O e-mail não foi enviado para {$email} pois o envio está desativado (nota)!");
                     return $this->showResponse(['send' => false]);
                 }
             } else {
-                Log::warning('Falha ao enviar e-mail de venda, email inválido');
+                \Log::warning('Falha ao enviar e-mail de venda, email inválido');
                 return $this->showResponse(['send' => false]);
             }
         }

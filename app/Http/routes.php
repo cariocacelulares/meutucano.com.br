@@ -50,7 +50,7 @@ Route::group(['prefix' => '/api', 'middleware' => 'sentry'], function() {
     Route::get('token', 'Auth\AuthenticateController@refreshToken');
 
     Route::group(['middleware' => 'jwt.auth'], function() {
-        Route::controller('metas', 'Meta\MetaController');
+        Route::get('metas/atual', 'Meta\MetaController@atual');
 
         Route::post('check-password/{user_id}', 'Usuario\UsuarioController@checkPassword');
 

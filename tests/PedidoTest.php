@@ -59,7 +59,7 @@ class PedidoTest extends TestCase
       'status'      => 0
     ]);
 
-    $this->json('PUT', "/api/pedidos/status/{$pedido->id}", [
+    $this->json('POST', "/api/pedidos/status/{$pedido->id}", [
       'status'    => 5
     ])->seeStatusCode(422);
   }
@@ -72,18 +72,16 @@ class PedidoTest extends TestCase
   public function test__it_should_be_able_to_cancel_without_protocolo_in_non_required_marketplaces()
   {
     $pedido = $this->createPedido([
-      'marketplace' => 'b2w',
+      'marketplace' => 'site',
       'status'      => 0
     ]);
 
-    $this->json('PUT', "/api/pedidos/status/{$pedido->id}", [
-      'status'    => 5,
-      'protocolo' => '123456'
+    $this->json('POST', "/api/pedidos/status/{$pedido->id}", [
+      'status'    => 5
     ])->seeStatusCode(200);
 
     $pedido = $pedido->fresh();
     $this->assertEquals(5, $pedido->status);
-    $this->assertEquals('123456', $pedido->protocolo);
   }
 
   /**
@@ -97,7 +95,7 @@ class PedidoTest extends TestCase
       'status' => 1
     ]);
 
-    $this->json('PUT', "/api/pedidos/status/{$pedido->id}", [
+    $this->json('POST', "/api/pedidos/status/{$pedido->id}", [
       'status'    => 5,
       'protocolo' => '123456'
     ])->seeStatusCode(200);
