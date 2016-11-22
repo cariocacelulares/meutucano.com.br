@@ -6,26 +6,20 @@ use App\Models\Usuario\Role;
 trait CreateUsuario
 {
 
-  protected $user;
-
   /**
    * Cria um objeto de usuário
    *
    * @return App\Models\Usuario\Usuario
    */
-  public function createUsuario($data = [])
+  public function createUsuario($data = [], $role = 'admin')
   {
-    if (!$this->user) {
-      $role = Role::firstOrCreate([
-        'name' => 'admin'
-      ]);
+    // $role = Role::firstOrCreate([
+    //   'name' => $role
+    // ]);
 
-      $usuario = factory(Usuario::class)->create($data);
-      $usuario->roles()->save($role);
+    $usuario = factory(Usuario::class)->create($data);
+    // $usuario->roles()->save($role);
 
-      $this->user = $usuario;
-    }
-
-    return $this->user;
+    return $usuario;
   }
 }

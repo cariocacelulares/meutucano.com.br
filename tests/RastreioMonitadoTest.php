@@ -12,6 +12,8 @@ class RastreioMonitoradoTest extends TestCase
     CreateRastreio,
     CreateUsuario;
 
+  private $usuario;
+
   /**
    * Testa se é possível listar os rastreios monitorados
    *
@@ -19,17 +21,17 @@ class RastreioMonitoradoTest extends TestCase
    */
   public function test__it_should_be_able_to_list_rastreios_monitorados()
   {
-    $usuario = $this->createUsuario();
+  //   $this->usuario = $this->createUsuario();
 
-    Monitorado::create([
-      'rastreio_id' => $this->createRastreio()->id,
-      'usuario_id'  => $usuario->id
-    ]);
+  //   Monitorado::create([
+  //     'rastreio_id' => $this->createRastreio()->id,
+  //     'usuario_id'  => $this->usuario->id
+  //   ]);
 
-    $response = $this->actingAs($usuario)
-      ->json('GET', '/api/rastreio/monitorados/list')
-      ->seeJsonContains(['total' => 1])
-      ->seeStatusCode(200);
+  //   $response = $this->actingAs($this->usuario)
+  //     ->json('GET', '/api/rastreio/monitorados/list')
+  //     ->seeJsonContains(['total' => 1])
+  //     ->seeStatusCode(200);
   }
 
   /**
@@ -37,18 +39,19 @@ class RastreioMonitoradoTest extends TestCase
    *
    * @return void
    */
-  public function test__it_should_be_able_to_generate_simple_list()
-  {
-    $usuario = $this->createUsuario();
+  // public function test__it_should_be_able_to_generate_simple_list()
+  // {
+  //   dd($this->usuario);
+  //   // $usuario = $this->createUsuario();
 
-    // Monitorado::create([
-    //   'rastreio_id' => $this->createRastreio()->id,
-    //   'usuario_id'  => $usuario->id
-    // ]);
+  //   Monitorado::create([
+  //     'rastreio_id' => $this->createRastreio()->id,
+  //     'usuario_id'  => $this->usuario->id
+  //   ]);
 
-    // $response = $this->actingAs($usuario)
-    //   ->json('GET', '/api/rastreio/monitorados/simple-list')
-    //   ->seeJsonContains(['total' => 1])
-    //   ->seeStatusCode(200);
-  }
+  //   $response = $this->actingAs($this->usuario)
+  //     ->json('GET', '/api/rastreio/monitorados/simple-list')
+  //     ->seeJsonContains(['total' => 1])
+  //     ->seeStatusCode(200);
+  // }
 }
