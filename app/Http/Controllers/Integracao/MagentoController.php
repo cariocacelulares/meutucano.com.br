@@ -479,8 +479,7 @@ class MagentoController extends Controller implements Integracao
                 );
 
                 if (is_soap_fault($stock)) {
-                    Log::critical('Não foi possível atualizar o estoque no magento', [$stock]);
-                    throw new \Exception('Produto inexistente no magento', 2);
+                    throw new \Exception('SOAP Fault ao tentar atualizar o stock no magento!', 1);
                 }
 
                 if ($stock) {
@@ -493,7 +492,7 @@ class MagentoController extends Controller implements Integracao
                 }
             }
         } catch (\Exception $e) {
-            if ($e->getCode() == 2) {
+            if (($e->getCode() == 101 || strstr(strtolower($e->getMessage()), 'product not exists') !== false) && isset($product->sku) && $product->sku) {
                 $remove = $this->request('products/' . $product->sku, [], 'DELETE');
                 Log::notice("Produto {$product->sku} removido da fila de espera no tucanomg");
             }

@@ -79,7 +79,7 @@ class Nota extends \Eloquent
      */
     public function getSerieAttribute()
     {
-        return (substr($this->pedido_id, -1)) ?: 1;
+        return (substr($this->chave, 34, 1)) ?: 1;
     }
 
     /**
