@@ -212,7 +212,7 @@ class SkyhubController extends Controller implements Integracao
     public function importPedido($order) {
         try {
             $clienteFone = null;
-            if (sizeof($order['customer']['phones'] > 0)) {
+            if (sizeof($order['customer']['phones']) > 0) {
                 $clienteFone = (sizeof($order['customer']['phones']) > 1)
                     ? $order['customer']['phones'][1]
                     : $order['customer']['phones'][0];
