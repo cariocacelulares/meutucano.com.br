@@ -490,11 +490,14 @@ class MagentoController extends Controller implements Integracao
                 } else {
                     Log::warning("Estoque do produto {$product->sku} não foi atualizado no magento.", (is_array($stock) ? $stock : [$stock]));
                 }
+            } else {
+                $remove = $this->request('products/' . $product->sku, [], 'DELETE');
+                Log::notice("Produto {$product->sku} removido da fila de espera no tucanomg (não existe no TUCANO)");
             }
         } catch (\Exception $e) {
             if (($e->getCode() == 101 || strstr(strtolower($e->getMessage()), 'product not exists') !== false) && isset($product->sku) && $product->sku) {
                 $remove = $this->request('products/' . $product->sku, [], 'DELETE');
-                Log::notice("Produto {$product->sku} removido da fila de espera no tucanomg");
+                Log::notice("Produto {$product->sku} removido da fila de espera no tucanomg (não existe no MAGENTO)");
             }
 
             Log::critical(logMessage($e, "Erro ao atualizar o estoque do produto {$product->sku} no magento."));
