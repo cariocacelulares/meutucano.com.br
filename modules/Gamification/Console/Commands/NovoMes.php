@@ -1,9 +1,9 @@
-<?php namespace App\Console\Commands\Gamification;
+<?php namespace Modules\Gamification\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\Gamification\Ranking;
-use App\Models\Gamification\Conquista;
-use App\Models\Gamification\UsuarioConquista;
+use Modules\Gamification\Models\Ranking;
+use Modules\Gamification\Models\Conquista;
+use Modules\Gamification\Models\UsuarioConquista;
 use App\Models\Usuario\Usuario;
 
 class NovoMes extends Command

@@ -26,8 +26,8 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         /* Gamification */
-        'App\Events\Gamification\TarefaRealizada' => [
-            'App\Listeners\Gamification\FilaAdicionar'
+        'Modules\Gamification\Events\TarefaRealizada' => [
+            'Modules\Gamification\Listeners\FilaAdicionar'
         ],
     ];
 

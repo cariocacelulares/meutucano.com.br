@@ -1,9 +1,9 @@
-<?php namespace App\Console\Commands\Gamification;
+<?php namespace Modules\Gamification\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\Gamification\Fila;
-use App\Models\Gamification\Tarefa;
-use App\Models\Gamification\UsuarioTarefa;
+use Modules\Gamification\Models\Fila;
+use Modules\Gamification\Models\Tarefa;
+use Modules\Gamification\Models\UsuarioTarefa;
 
 class LerFila extends Command
 {

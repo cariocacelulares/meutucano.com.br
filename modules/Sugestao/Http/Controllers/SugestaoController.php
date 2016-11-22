@@ -89,7 +89,7 @@ class SugestaoController extends Controller
             }
 
             if (Input::get('status') == 1) {
-                \Event::fire(new \App\Events\Gamification\TarefaRealizada('tenha-uma-sugestaocritica-aceita'));
+                \Event::fire(new \Modules\Gamification\Events\TarefaRealizada('tenha-uma-sugestaocritica-aceita'));
             }
 
             $data->fill(Input::all());

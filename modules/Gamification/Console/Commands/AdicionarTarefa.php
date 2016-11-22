@@ -1,7 +1,7 @@
-<?php namespace App\Console\Commands\Gamification;
+<?php namespace Modules\Gamification\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\Gamification\Tarefa;
+use Modules\Gamification\Models\Tarefa;
 use App\Models\Usuario\Usuario;
 use App\Events\Gamification\TarefaRealizada;
 

@@ -1,9 +1,9 @@
-<?php namespace App\Listeners\Gamification;
+<?php namespace Modules\Gamification\Listeners;
 
 use App\Events\Gamification\TarefaRealizada;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Models\Gamification\Fila;
+use Modules\Gamification\Models\Fila;
 
 class FilaAdicionar
 {

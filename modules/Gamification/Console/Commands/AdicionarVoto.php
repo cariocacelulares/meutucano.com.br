@@ -1,8 +1,8 @@
-<?php namespace App\Console\Commands\Gamification;
+<?php namespace Modules\Gamification\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Usuario\Usuario;
-use App\Models\Gamification\Voto;
+use Modules\Gamification\Models\Voto;
 
 class AdicionarVoto extends Command
 {

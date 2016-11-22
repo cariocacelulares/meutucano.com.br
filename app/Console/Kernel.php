@@ -19,10 +19,10 @@ class Kernel extends ConsoleKernel
         Commands\MagentoPedidos::class,
         Commands\MagentoProdutos::class,
         Commands\CancelOldOrders::class,
-        Commands\Gamification\LerFila::class,
-        Commands\Gamification\AdicionarTarefa::class,
-        Commands\Gamification\AdicionarVoto::class,
-        Commands\Gamification\NovoMes::class,
+        Modules\Gamification\Console\Commands\LerFila::class,
+        Modules\Gamification\Console\Commands\AdicionarTarefa::class,
+        Modules\Gamification\Console\Commands\AdicionarVoto::class,
+        Modules\Gamification\Console\Commands\NovoMes::class,
     ];
 
     /**

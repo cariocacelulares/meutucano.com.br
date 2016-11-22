@@ -1,7 +1,7 @@
-<?php namespace App\Events\Gamification;
+<?php namespace Modules\Gamification\Events;
 
 use Illuminate\Queue\SerializesModels;
-use App\Models\Gamification\Tarefa;
+use Modules\Gamification\Models\Tarefa;
 
 class TarefaRealizada extends \Event
 {

@@ -2,29 +2,29 @@
 
 Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api/gamification', 'namespace' => 'Modules\Gamification\Http\Controllers'], function()
 {
-    Route::post('upload', 'Gamification\UploadController@upload');
-    Route::post('avatar/{gamification_id}', 'Gamification\GamificationController@avatar');
+    Route::post('upload', 'UploadController@upload');
+    Route::post('avatar/{gamification_id}', 'GamificationController@avatar');
 
-    Route::get('', 'Gamification\GamificationController@show');
-    Route::get('perfil/{id?}', 'Gamification\GamificationController@perfil');
-    Route::get('ranking', 'Gamification\GamificationController@ranking');
-    Route::get('rank-info', 'Gamification\GamificationController@rankInfo');
+    Route::get('', 'GamificationController@show');
+    Route::get('perfil/{id?}', 'GamificationController@perfil');
+    Route::get('ranking', 'GamificationController@ranking');
+    Route::get('rank-info', 'GamificationController@rankInfo');
 
-    Route::post('solicitacao/solicitar', 'Gamification\SolicitacaoController@solicitar');
-    Route::get('solicitacao/list', 'Gamification\SolicitacaoController@tableList');
-    Route::resource('solicitacao', 'Gamification\SolicitacaoController');
+    Route::post('solicitacao/solicitar', 'SolicitacaoController@solicitar');
+    Route::get('solicitacao/list', 'SolicitacaoController@tableList');
+    Route::resource('solicitacao', 'SolicitacaoController');
 
-    Route::get('tarefas/list', 'Gamification\TarefaController@tableList');
-    Route::resource('tarefas', 'Gamification\TarefaController');
+    Route::get('tarefas/list', 'TarefaController@tableList');
+    Route::resource('tarefas', 'TarefaController');
 
-    Route::get('recompensas/list', 'Gamification\RecompensaController@tableList');
-    Route::resource('recompensas', 'Gamification\RecompensaController');
+    Route::get('recompensas/list', 'RecompensaController@tableList');
+    Route::resource('recompensas', 'RecompensaController');
 
-    Route::get('trocas/list', 'Gamification\TrocaController@tableList');
-    Route::resource('trocas', 'Gamification\TrocaController');
+    Route::get('trocas/list', 'TrocaController@tableList');
+    Route::resource('trocas', 'TrocaController');
 
-    Route::get('conquistas/list', 'Gamification\ConquistaController@tableList');
-    Route::resource('conquistas', 'Gamification\ConquistaController');
+    Route::get('conquistas/list', 'ConquistaController@tableList');
+    Route::resource('conquistas', 'ConquistaController');
 
-    Route::resource('votos', 'Gamification\VotoController');
+    Route::resource('votos', 'VotoController');
 });

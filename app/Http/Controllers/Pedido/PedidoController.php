@@ -258,7 +258,7 @@ class PedidoController extends Controller
 
             $pedido->save();
 
-            \Event::fire(new \App\Events\Gamification\TarefaRealizada('fature-um-pedido'));
+            \Event::fire(new \Modules\Gamification\Events\TarefaRealizada('fature-um-pedido'));
         }
     }
 
