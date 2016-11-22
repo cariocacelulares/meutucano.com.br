@@ -54,7 +54,7 @@
         ],
         "psr-4": {
             "App\\": "app/",
-            "Modules\\": "Modules/",
+            "Modules\\": "modules/",
             "Tests\\": "tests/",
             "Bootstrap\\": "bootstrap/"
         },
