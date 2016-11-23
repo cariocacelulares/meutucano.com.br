@@ -464,14 +464,18 @@ class MagentoController extends Controller implements Integracao
     {
         try {
             $product = $this->request('products');
+            $productSku = false;
 
-            if ($product && $product['product_sku'])
+            if ($product && $product['product_sku']) {
+                $productSku = $product['product_sku'];
                 $product = Produto::find($product['product_sku']);
+            }
 
             if ($product) {
+                $productSku = $product->sku;
                 $stock = $this->api->catalogInventoryStockItemUpdate(
                     $this->session,
-                    $product->sku,
+                    $productSku,
                     [
                         'qty' => $product->estoque,
                         'is_in_stock' => (($product->estoque > 0) ? 1 : 0)
@@ -483,25 +487,25 @@ class MagentoController extends Controller implements Integracao
                 }
 
                 if ($stock) {
-                    Log::notice('Estoque do produto ' . $product->sku . ' alterado para ' . $product->estoque . ' / em estoque: ' . (($product->estoque > 0) ? 'sim' : 'não') . ' no magento.');
+                    Log::notice('Estoque do produto ' . $productSku . ' alterado para ' . $product->estoque . ' / em estoque: ' . (($product->estoque > 0) ? 'sim' : 'não') . ' no magento.');
 
-                    $remove = $this->request('products/' . $product->sku, [], 'DELETE');
-                    Log::notice("Produto {$product->sku} removido da fila de espera no tucanomg");
+                    $remove = $this->request('products/' . $productSku, [], 'DELETE');
+                    Log::notice("Produto {$productSku} removido da fila de espera no tucanomg");
                 } else {
-                    Log::warning("Estoque do produto {$product->sku} não foi atualizado no magento.", (is_array($stock) ? $stock : [$stock]));
+                    Log::warning("Estoque do produto {$productSku} não foi atualizado no magento.", (is_array($stock) ? $stock : [$stock]));
                 }
             } else {
-                $remove = $this->request('products/' . $product->sku, [], 'DELETE');
-                Log::notice("Produto {$product->sku} removido da fila de espera no tucanomg (não existe no TUCANO)");
+                $remove = $this->request('products/' . $productSku, [], 'DELETE');
+                Log::notice("Produto {$productSku} removido da fila de espera no tucanomg (não existe no TUCANO)");
             }
         } catch (\Exception $e) {
             if (($e->getCode() == 101 || strstr(strtolower($e->getMessage()), 'product not exists') !== false) && isset($product->sku) && $product->sku) {
-                $remove = $this->request('products/' . $product->sku, [], 'DELETE');
-                Log::notice("Produto {$product->sku} removido da fila de espera no tucanomg (não existe no MAGENTO)");
+                $remove = $this->request('products/' . $product->productSku, [], 'DELETE');
+                Log::notice("Produto {$productSku} removido da fila de espera no tucanomg (não existe no MAGENTO)");
             }
 
-            Log::critical(logMessage($e, 'Erro ao atualizar o estoque do produto ' . ((is_object($product) && isset($product->sku)) ? $product->sku : '') . ' no magento.'));
-            reportError("Erro ao atualizar o estoque do produto {$product->sku} no magento." . $e->getMessage() . ' - ' . $e->getLine());
+            Log::critical(logMessage($e, "Erro ao atualizar o estoque do produto {$productSku} no magento."));
+            reportError("Erro ao atualizar o estoque do produto {$productSku} no magento." . $e->getMessage() . ' - ' . $e->getLine());
         }
     }
 
