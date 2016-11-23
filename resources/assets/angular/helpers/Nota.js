@@ -42,7 +42,8 @@
                  */
                 email: function(nota_id) {
                     Restangular.one('notas/email', nota_id).customPOST().then(function(response) {
-                        if (response.data.send === true) {
+                        if ((typeof response.data != 'undefined' && response.data === true) ||
+                            (typeof response.data.send != 'undefined' && response.data.send === true)) {
                             toaster.pop('success', 'Sucesso!', 'O e-mail foi enviado ao cliente');
                         } else {
                             toaster.pop('error', 'Falha!', 'Não foi possível enviar o e-mail ao cliente');
