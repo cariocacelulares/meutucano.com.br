@@ -19,10 +19,6 @@ class Kernel extends ConsoleKernel
         Commands\MagentoPedidos::class,
         Commands\MagentoProdutos::class,
         Commands\CancelOldOrders::class,
-        Modules\Gamification\Console\Commands\LerFila::class,
-        Modules\Gamification\Console\Commands\AdicionarTarefa::class,
-        Modules\Gamification\Console\Commands\AdicionarVoto::class,
-        Modules\Gamification\Console\Commands\NovoMes::class,
     ];
 
     /**
@@ -47,14 +43,5 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('pedidos:cancelold')
             ->daily();
-
-        /**
-         * Gamification
-         */
-        $schedule->command('gamification:fila')
-            ->everyMinute();
-
-        $schedule->command('gamification:mes')
-            ->monthlyOn(1, '05:00');
     }
 }

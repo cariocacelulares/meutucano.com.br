@@ -1,7 +1,8 @@
-<?php namespace App\Providers;
+<?php namespace Modules\Gamification\Providers;
 
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Modules\Gamification\Listeners\FilaAdicionar;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -11,19 +12,11 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\ProductStockChange' => [
-            'App\Listeners\SendProductToQueue',
-        ],
-        'App\Events\OrderCancel' => [
-            'App\Listeners\SumStock',
-            'App\Listeners\SendCancelInfo'
-        ],
-        'App\Events\ProductDispach' => [
-            'App\Listeners\SubtractStock'
-        ],
-        'App\Events\OrderSeminovo' => [
-            'App\Listeners\CheckInspecoes'
-        ],
+        //
+    ];
+
+    protected $subscribe = [
+        FilaAdicionar::class
     ];
 
     /**
@@ -34,6 +27,15 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
+    }
+
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
         //
     }
 }

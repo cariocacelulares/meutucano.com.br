@@ -1,8 +1,8 @@
-<?php
-
-namespace Modules\Gamification\Providers;
+<?php namespace Modules\Gamification\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Modules\Gamification\Providers\EventServiceProvider;
+use Modules\Gamification\Providers\ScheduleServiceProvider;
 
 class GamificationServiceProvider extends ServiceProvider
 {
@@ -32,7 +32,8 @@ class GamificationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        \App::register(EventServiceProvider::class);
+        \App::register(ScheduleServiceProvider::class);
     }
 
     /**
