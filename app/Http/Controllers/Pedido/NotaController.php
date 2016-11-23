@@ -78,39 +78,43 @@ class NotaController extends Controller
     {
         $model = self::MODEL;
 
-        if ($nota = $model::find($id)) {
-            $dataHora = date('His');
-            $arquivo = storage_path('app/public/' . $dataHora . '.pdf');
-            $email = $nota->pedido->cliente->email;
+        try {
+            if ($nota = $model::find($id)) {
+                $dataHora = date('His');
+                $arquivo = storage_path('app/public/' . $dataHora . '.pdf');
+                $email = $nota->pedido->cliente->email;
 
-            if ($email) {
-                if (\Config::get('tucano.email_send_enabled')) {
-                    $mail = Mail::send('emails.danfe', [], function($message) use ($id, $email, $arquivo) {
-                        with(new NotaController())->danfe($id, 'F', $arquivo);
+                if ($email) {
+                    if (\Config::get('tucano.email_send_enabled')) {
+                        $mail = Mail::send('emails.danfe', [], function($message) use ($id, $email, $arquivo) {
+                            with(new NotaController())->danfe($id, 'F', $arquivo);
 
-                        $message
-                            ->attach($arquivo, ['as' => 'nota.pdf', 'mime' => 'application/pdf'])
-                            ->from('vendas@cariocacelulares.com.br', 'Carioca Celulares Online')
-                            ->to($email)
-                            ->subject('Nota fiscal de compra na Carioca Celulares Online');
-                    });
+                            $message
+                                ->attach($arquivo, ['as' => 'nota.pdf', 'mime' => 'application/pdf'])
+                                ->from('vendas@cariocacelulares.com.br', 'Carioca Celulares Online')
+                                ->to($email)
+                                ->subject('Nota fiscal de compra na Carioca Celulares Online');
+                        });
+
+                        unlink($arquivo);
+                    } else {
+                        Log::debug("O e-mail não foi enviado para {$email} pois o envio está desativado (nota)!");
+                    }
+
+                    if  ($mail) {
+                        \Log::debug('E-mail de venda enviado para: ' . $email);
+                        return $this->showResponse(['send' => true]);
+                    } else {
+                        \Log::warning('Falha ao enviar e-mail de venda para: ' . $email);
+                        return $this->showResponse(['send' => false]);
+                    }
                 } else {
-                    Log::debug("O e-mail não foi enviado para {$email} pois o envio está desativado (nota)!");
-                }
-
-                unlink($arquivo);
-
-                if  ($mail) {
-                    \Log::debug('E-mail de venda enviado para: ' . $email);
-                    return $this->showResponse(['send' => true]);
-                } else {
-                    \Log::warning('Falha ao enviar e-mail de venda para: ' . $email);
+                    Log::warning('Falha ao enviar e-mail de venda, email inválido');
                     return $this->showResponse(['send' => false]);
                 }
-            } else {
-                Log::warning('Falha ao enviar e-mail de venda, email inválido');
-                return $this->showResponse(['send' => false]);
             }
+        } catch (\Exception $e) {
+            return $this->clientErrorResponse();
         }
 
         return $this->notFoundResponse();
