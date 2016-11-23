@@ -500,7 +500,7 @@ class MagentoController extends Controller implements Integracao
                 Log::notice("Produto {$product->sku} removido da fila de espera no tucanomg (não existe no MAGENTO)");
             }
 
-            Log::critical(logMessage($e, 'Erro ao atualizar o estoque do produto ' . (isset($product->sku)) ? $product->sku : '' . ' no magento.'));
+            Log::critical(logMessage($e, 'Erro ao atualizar o estoque do produto ' . ((is_object($product) && isset($product->sku)) ? $product->sku : '') . ' no magento.'));
             reportError("Erro ao atualizar o estoque do produto {$product->sku} no magento." . $e->getMessage() . ' - ' . $e->getLine());
         }
     }
