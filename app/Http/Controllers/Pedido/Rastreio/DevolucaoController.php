@@ -6,7 +6,7 @@ use App\Models\Pedido\Rastreio;
 use App\Models\Pedido\Rastreio\Devolucao;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Pedido\Rastreio\RastreioTrait;
-use App\Http\Controllers\Inspecao\InspecaoTecnicaTrait;
+use Modules\InspecaoTecnica\Http\Controllers\Traits\InspecaoTecnicaTrait;
 
 /**
  * Class DevolucaoController

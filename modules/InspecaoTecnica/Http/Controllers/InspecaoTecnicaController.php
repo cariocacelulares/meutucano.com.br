@@ -1,15 +1,15 @@
-<?php namespace App\Http\Controllers\Inspecao;
+<?php namespace Modules\InspecaoTecnica\Http\Controllers;
 
-use App\Http\Controllers\Rest\RestControllerTrait;
+use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Models\Produto\Produto;
 use App\Models\Pedido\PedidoProduto;
-use App\Models\Inspecao\InspecaoTecnica;
-use Illuminate\Support\Facades\Input;
+use Modules\InspecaoTecnica\Models\InspecaoTecnica;
 
 /**
  * Class InspecaoTecnicaController
- * @package App\Http\Controllers\Inspecao
+ * @package Modules\InspecaoTecnica\Http\Controllers
  */
 class InspecaoTecnicaController extends Controller
 {

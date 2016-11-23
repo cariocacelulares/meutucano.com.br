@@ -1,14 +1,14 @@
-<?php namespace App\Http\Controllers\Inspecao;
+<?php namespace Modules\InspecaoTecnica\Http\Controllers\Traits;
 
-use App\Http\Controllers\Rest\RestControllerTrait;
-use App\Http\Controllers\Controller;
-use App\Models\Inspecao\InspecaoTecnica;
-use App\Models\Pedido\PedidoProduto;
 use Illuminate\Support\Facades\Input;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Rest\RestControllerTrait;
+use App\Models\Pedido\PedidoProduto;
+use Modules\InspecaoTecnica\Models\InspecaoTecnica;
 
 /**
  * Class InspecaoTecnicaTrait
- * @package App\Http\Controllers\Inspecao
+ * @package Modules\InspecaoTecnica\Http\Controllers\Traits
  */
 trait InspecaoTecnicaTrait
 {

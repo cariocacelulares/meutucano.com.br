@@ -64,18 +64,6 @@ $factory->define(\App\Models\Cliente\Endereco::class, function () use ($faker) {
   ];
 });
 
-
-/**
- * Inspeção
- */
-$factory->define(\App\Models\Inspecao\InspecaoTecnica::class, function () use ($faker) {
-  return [
-    'descricao'  => 'Nada',
-    'priorizado' => 0,
-    'reservado'  => 0,
-  ];
-});
-
 /**
  * Produto
  */

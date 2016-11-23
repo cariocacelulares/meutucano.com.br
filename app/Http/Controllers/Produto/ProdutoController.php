@@ -6,7 +6,7 @@ use App\Models\Produto\Produto;
 use App\Models\Pedido\PedidoProduto;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
-use App\Models\Inspecao\InspecaoTecnica;
+use Modules\InspecaoTecnica\Models\InspecaoTecnica;
 
 /**
  * Class ProdutoController

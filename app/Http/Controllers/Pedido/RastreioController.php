@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Pedido\Rastreio;
 use App\Models\Pedido\Pedido;
 use App\Models\Pedido\PedidoProduto;
-use App\Models\Inspecao\InspecaoTecnica;
+use Modules\InspecaoTecnica\Models\InspecaoTecnica;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;

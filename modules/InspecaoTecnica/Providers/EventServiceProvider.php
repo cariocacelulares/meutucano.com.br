@@ -1,7 +1,8 @@
-<?php namespace App\Providers;
+<?php namespace Modules\InspecaoTecnica\Providers;
 
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Modules\InspecaoTecnica\Events\Handlers\CheckInspecoes;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -11,16 +12,11 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\ProductStockChange' => [
-            'App\Listeners\SendProductToQueue',
-        ],
-        'App\Events\OrderCancel' => [
-            'App\Listeners\SumStock',
-            'App\Listeners\SendCancelInfo'
-        ],
-        'App\Events\ProductDispach' => [
-            'App\Listeners\SubtractStock'
-        ],
+        //
+    ];
+
+    protected $subscribe = [
+       CheckInspecoes::class
     ];
 
     /**
@@ -31,5 +27,15 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
+    }
+
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
     }
 }

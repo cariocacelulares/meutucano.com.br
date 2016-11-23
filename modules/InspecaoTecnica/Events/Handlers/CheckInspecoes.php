@@ -1,19 +1,32 @@
-<?php namespace App\Listeners;
+<?php namespace Modules\InspecaoTecnica\Events\Handlers;
 
+use Illuminate\Events\Dispatcher;
 use App\Events\OrderSeminovo;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Models\Inspecao\InspecaoTecnica;
+use Modules\InspecaoTecnica\Models\InspecaoTecnica;
 
 class CheckInspecoes
 {
+    /**
+     * Set events that this will listen
+     *
+     * @param  Dispatcher $events
+     * @return void
+     */
+    public function subscribe(Dispatcher $events)
+    {
+        $events->listen(
+            OrderSeminovo::class,
+            '\Modules\InspecaoTecnica\Events\Handlers\CheckInspecoes@onOrderSeminovo'
+        );
+    }
+
     /**
      * Handle the event.
      *
      * @param  OrderSeminovo  $event
      * @return void
      */
-    public function handle(OrderSeminovo $event)
+    public function onOrderSeminovo(OrderSeminovo $event)
     {
         $pedidoProduto = $event->pedidoProduto;
         $produto = $pedidoProduto->produto;

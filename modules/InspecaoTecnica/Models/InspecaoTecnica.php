@@ -1,4 +1,4 @@
-<?php namespace App\Models\Inspecao;
+<?php namespace Modules\InspecaoTecnica\Models;
 
 use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
@@ -8,7 +8,7 @@ use App\Models\Pedido\PedidoProduto;
 
 /**
  * Class InspecaoTecnica
- * @package App\Models\Inspecao
+ * @package Modules\InspecaoTecnica\Models
  */
 class InspecaoTecnica extends \Eloquent
 {

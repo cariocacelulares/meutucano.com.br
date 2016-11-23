@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Cliente\Cliente;
 use App\Models\Cliente\Endereco;
-use App\Models\Inspecao\InspecaoTecnica;
+use Modules\InspecaoTecnica\Models\InspecaoTecnica;
 use App\Events\OrderCancel;
 use App\Events\OrderSeminovo;
 use App\Http\Controllers\Integracao\SkyhubController;

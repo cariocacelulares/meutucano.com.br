@@ -1,9 +1,10 @@
-<?php namespace Tests;
+<?php namespace Modules\InspecaoTecnica\Tests;
 
-use App\Models\Inspecao\InspecaoTecnica;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Modules\InspecaoTecnica\Models\InspecaoTecnica;
+use Tests\TestCase;
 
 class InspecaoTecnicaTest extends TestCase
 {

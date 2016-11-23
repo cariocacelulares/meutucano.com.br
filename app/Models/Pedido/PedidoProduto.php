@@ -4,7 +4,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Produto\Produto;
 use App\Events\OrderSeminovo;
 use App\Events\ProductDispach;
-use App\Models\Inspecao\InspecaoTecnica;
+use Modules\InspecaoTecnica\Models\InspecaoTecnica;
 
 /**
  * Class PedidoProduto
