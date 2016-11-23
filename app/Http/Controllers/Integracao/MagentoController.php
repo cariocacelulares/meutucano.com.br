@@ -500,7 +500,7 @@ class MagentoController extends Controller implements Integracao
             }
         } catch (\Exception $e) {
             if (($e->getCode() == 101 || strstr(strtolower($e->getMessage()), 'product not exists') !== false) && isset($product->sku) && $product->sku) {
-                $remove = $this->request('products/' . $product->productSku, [], 'DELETE');
+                $remove = $this->request('products/' . $productSku, [], 'DELETE');
                 Log::notice("Produto {$productSku} removido da fila de espera no tucanomg (não existe no MAGENTO)");
             }
 
