@@ -1,10 +1,10 @@
 <?php namespace Modules\Gamification\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Models\Usuario\Usuario;
 use Modules\Gamification\Models\Ranking;
 use Modules\Gamification\Models\Conquista;
 use Modules\Gamification\Models\UsuarioConquista;
-use App\Models\Usuario\Usuario;
 
 class NovoMes extends Command
 {

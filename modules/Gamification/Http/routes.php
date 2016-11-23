@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Module routes
+ */
 Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api/gamification', 'namespace' => 'Modules\Gamification\Http\Controllers'], function()
 {
     Route::post('upload', 'UploadController@upload');

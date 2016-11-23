@@ -1,9 +1,9 @@
 <?php namespace Modules\Gamification\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Gamification\Models\Tarefa;
 use App\Models\Usuario\Usuario;
 use App\Events\Gamification\TarefaRealizada;
+use Modules\Gamification\Models\Tarefa;
 
 class AdicionarTarefa extends Command
 {

@@ -1,6 +1,4 @@
-<?php
-
-namespace Modules\Gamification\Database\Seeders;
+<?php namespace Modules\Gamification\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +13,5 @@ class GamificationDatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-
-        // $this->call("OthersTableSeeder");
     }
 }

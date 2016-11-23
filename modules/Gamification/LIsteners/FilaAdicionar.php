@@ -1,14 +1,17 @@
 <?php namespace Modules\Gamification\Listeners;
 
-use Modules\Gamification\Events\TarefaRealizada;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Modules\Gamification\Models\Fila;
 use Illuminate\Events\Dispatcher;
+use Modules\Gamification\Models\Fila;
+use Modules\Gamification\Events\TarefaRealizada;
 
 class FilaAdicionar
 {
-
+    /**
+     * Set events that this will listen
+     *
+     * @param  Dispatcher $events
+     * @return void
+     */
     public function subscribe(Dispatcher $events)
     {
         $events->listen(
