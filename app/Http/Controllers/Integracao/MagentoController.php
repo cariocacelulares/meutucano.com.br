@@ -512,7 +512,7 @@ class MagentoController extends Controller implements Integracao
      * @param  string $message    mensagem adicional ao Log
      * @return void
      */
-    public function removeProductFromTucanomg($productSku $message = false)
+    public function removeProductFromTucanomg($productSku, $message = false)
     {
         if ($productSku) {
             $remove = $this->request('products/' . $productSku, [], 'DELETE');
