@@ -16,7 +16,7 @@ class FilaAdicionar
     {
         $events->listen(
             TarefaRealizada::class,
-            'Modules\Gamification\Listeners\FilaAdicionar@onTarefaRealizada'
+            '\Modules\Gamification\Listeners\FilaAdicionar@onTarefaRealizada'
         );
     }
 
