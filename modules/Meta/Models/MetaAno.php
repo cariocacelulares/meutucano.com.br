@@ -1,8 +1,8 @@
-<?php namespace App\Models\Meta;
+<?php namespace Modules\Meta\Models;
 
 /**
  * Class MetaAno
- * @package App\Models\Meta
+ * @package Modules\Meta\Models
  */
 class MetaAno extends \Eloquent
 {

@@ -1,13 +1,13 @@
-<?php namespace App\Http\Controllers\Meta;
+<?php namespace Modules\Meta\Http\Controllers;
 
-use App\Http\Controllers\Rest\RestResponseTrait;
-use App\Http\Controllers\Controller;
-use App\Models\Meta\MetaMes;
-use App\Models\Meta\MetaAno;
-use App\Models\Pedido\Pedido;
-use App\Models\Pedido\PedidoProduto;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Rest\RestResponseTrait;
+use App\Models\Pedido\Pedido;
+use App\Models\Pedido\PedidoProduto;
+use Modules\Meta\Models\MetaMes;
+use Modules\Meta\Models\MetaAno;
 
 class MetaController extends Controller
 {
