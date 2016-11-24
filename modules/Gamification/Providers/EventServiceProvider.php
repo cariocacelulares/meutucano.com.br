@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Modules\Gamification\Listeners\FilaAdicionar;
+use Modules\Gamification\Events\Handlers\FilaAdicionar;
 
 class EventServiceProvider extends ServiceProvider
 {

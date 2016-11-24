@@ -1,4 +1,4 @@
-<?php namespace Modules\Gamification\Listeners;
+<?php namespace Modules\Gamification\Events\Handlers;
 
 use Illuminate\Events\Dispatcher;
 use Modules\Gamification\Models\Fila;
@@ -16,7 +16,7 @@ class FilaAdicionar
     {
         $events->listen(
             TarefaRealizada::class,
-            '\Modules\Gamification\Listeners\FilaAdicionar@onTarefaRealizada'
+            '\Modules\Gamification\Events\Handlers\FilaAdicionar@onTarefaRealizada'
         );
     }
 
