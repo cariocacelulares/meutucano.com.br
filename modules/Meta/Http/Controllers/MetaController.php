@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestResponseTrait;
-use App\Models\Pedido\Pedido;
-use App\Models\Pedido\PedidoProduto;
+use Modules\Core\Models\Pedido\Pedido;
+use Modules\Core\Models\Pedido\PedidoProduto;
 use Modules\Meta\Models\MetaMes;
 use Modules\Meta\Models\MetaAno;
 

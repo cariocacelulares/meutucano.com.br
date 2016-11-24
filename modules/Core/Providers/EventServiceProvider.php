@@ -1,7 +1,9 @@
-<?php namespace App\Providers;
+<?php namespace Modules\Core\Providers;
 
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Modules\Core\Events\Handlers\SubtractStock;
+use Modules\Core\Events\Handlers\SumStock;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -11,12 +13,12 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'Modules\Core\Events\ProductStockChange' => [
-            'App\Listeners\SendProductToQueue',
-        ],
-        'Modules\Core\Events\OrderCancel' => [
-            'App\Listeners\SendCancelInfo'
-        ],
+        //
+    ];
+
+    protected $subscribe = [
+        SubtractStock::class,
+        SumStock::class,
     ];
 
     /**
@@ -27,5 +29,15 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
+    }
+
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
     }
 }

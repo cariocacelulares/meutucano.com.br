@@ -1,6 +1,6 @@
 <?php namespace App\Listeners;
 
-use App\Events\OrderCancel;
+use Modules\Core\Events\OrderCancel;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Pedido\Pedido;

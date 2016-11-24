@@ -1,6 +1,6 @@
 <?php namespace App\Listeners;
 
-use App\Events\ProductStockChange;
+use Modules\Core\Events\ProductStockChange;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Http\Controllers\Integracao\MagentoController;
