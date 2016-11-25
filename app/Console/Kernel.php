@@ -11,12 +11,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\RefreshMagentoStock::class,
         Commands\SkyhubPedido::class,
         Commands\SkyhubPedidos::class,
-        Commands\MagentoPedido::class,
-        Commands\MagentoPedidos::class,
-        Commands\MagentoProdutos::class,
     ];
 
     /**
@@ -28,12 +24,6 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('skyhub:pedidos')
-            ->everyMinute();
-
-        $schedule->command('magento:pedidos')
-            ->everyMinute();
-
-        $schedule->command('refresh:stock')
             ->everyMinute();
     }
 }

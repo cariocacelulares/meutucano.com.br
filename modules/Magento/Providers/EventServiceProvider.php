@@ -1,7 +1,9 @@
-<?php namespace App\Providers;
+<?php namespace Modules\Magento\Providers;
 
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Modules\Magento\Events\Handlers\SendCancelInfo;
+use Modules\Magento\Events\Handlers\SendProductToQueue;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -11,9 +13,12 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'Modules\Core\Events\ProductStockChange' => [
-            'App\Listeners\SendProductToQueue',
-        ]
+        //
+    ];
+
+    protected $subscribe = [
+        SendCancelInfo::class,
+        SendProductToQueue::class,
     ];
 
     /**
@@ -24,5 +29,15 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
+    }
+
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
     }
 }

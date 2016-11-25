@@ -1,0 +1,15 @@
+{
+    "name": "Magento",
+    "alias": "magento",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Magento\\Providers\\MagentoServiceProvider"
+    ],
+    "aliases":{},
+    "files": [
+        "start.php"
+    ]
+}

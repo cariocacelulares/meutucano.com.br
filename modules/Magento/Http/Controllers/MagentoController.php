@@ -1,22 +1,22 @@
-<?php namespace App\Http\Controllers\Integracao;
+<?php namespace Modules\Magento\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Integracao\Integracao;
-use App\Models\Cliente\Cliente;
-use App\Models\Cliente\Endereco;
-use App\Models\Pedido\Pedido;
-use App\Models\Pedido\PedidoProduto;
-use App\Models\Produto\Produto;
-use App\Events\OrderCancel;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
+use App\Http\Controllers\Controller;
+use Modules\Core\Models\Cliente\Cliente;
+use Modules\Core\Models\Cliente\Endereco;
+use Modules\Core\Models\Pedido\Pedido;
+use Modules\Core\Models\Pedido\PedidoProduto;
+use Modules\Core\Models\Produto\Produto;
+use Modules\Core\Events\OrderCancel;
 
 /**
  * Class MagentoController
- * @package App\Http\Controllers\Integracao
+ * @package Modules\Magento\Http\Controllers
  */
-class MagentoController extends Controller implements Integracao
+class MagentoController extends Controller
 {
     /**
      * @var SoapClient
@@ -37,10 +37,10 @@ class MagentoController extends Controller implements Integracao
     public function __construct($useSoap = true)
     {
         if ($useSoap) {
-            if (\Config::get('tucano.magento.enabled')) {
+            if (Config::get('magento.enabled')) {
                 try {
                     $this->api = new \SoapClient(
-                        \Config::get('tucano.magento.api.host'),
+                        Config::get('magento.api.host'),
                         [
                             'stream_context' => stream_context_create([
                                 'http' => [
@@ -59,8 +59,8 @@ class MagentoController extends Controller implements Integracao
                     }
 
                     $this->session = $this->api->login(
-                        \Config::get('tucano.magento.api.user'),
-                        \Config::get('tucano.magento.api.key')
+                        Config::get('magento.api.user'),
+                        Config::get('magento.api.key')
                     );
                     Log::debug('Requisição soap no magento realizada');
                 } catch (\Exception $e) {
