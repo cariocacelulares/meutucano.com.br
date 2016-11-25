@@ -56,11 +56,6 @@ Route::group(['prefix' => '/api', 'middleware' => 'sentry'], function() {
         Route::get('search', 'Partials\SearchController@search');
 
         /**
-         * Template ML
-         */
-        Route::get('templateml/gerar', 'Marketing\TemplatemlController@generateTemplate');
-
-        /**
          * Faturamento
          */
         Route::group(['middleware' => ['role:admin|faturamento']], function() {

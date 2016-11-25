@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers\Marketing;
+<?php namespace Modules\Marketing\Http\Controllers;
 
 use App\Http\Controllers\Rest\RestResponseTrait;
 use App\Http\Controllers\Controller;
