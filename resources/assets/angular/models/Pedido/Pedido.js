@@ -32,7 +32,7 @@
                 status: function(pedido_id, params) {
                     params = this.parseParams(params);
 
-                    return Restangular.one('pedidos/status', pedido_id).customPUT(params || {});
+                    return Restangular.one('pedidos/status', pedido_id).customPOST(params || {});
                 },
 
                 /**
