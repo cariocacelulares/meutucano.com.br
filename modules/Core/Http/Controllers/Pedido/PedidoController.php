@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;
 use App\Http\Controllers\Integracao\SkyhubController;
-use App\Http\Controllers\Integracao\MagentoController;
+use Modules\Magento\Http\Controllers\MagentoController;
 use Illuminate\Support\Facades\DB;
 
 /**

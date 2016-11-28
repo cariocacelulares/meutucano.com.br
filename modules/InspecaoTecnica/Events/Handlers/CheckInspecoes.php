@@ -1,7 +1,7 @@
 <?php namespace Modules\InspecaoTecnica\Events\Handlers;
 
 use Illuminate\Events\Dispatcher;
-use App\Events\OrderSeminovo;
+use Modules\Core\Events\OrderSeminovo;
 use Modules\InspecaoTecnica\Models\InspecaoTecnica;
 
 class CheckInspecoes

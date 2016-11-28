@@ -2,7 +2,7 @@
 
 use Modules\InspecaoTecnica\Models\InspecaoTecnica;
 use App\Models\Produto\Produto;
-use Tests\CreatePedido;
+use Modules\Core\Tests\CreatePedido;
 use Tests\CreateUsuario;
 
 trait CreateInspecao

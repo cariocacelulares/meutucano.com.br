@@ -2,7 +2,7 @@
 
 use Illuminate\Events\Dispatcher;
 use Modules\Core\Events\ProductStockChange;
-use App\Http\Controllers\Integracao\MagentoController;
+use Modules\Magento\Http\Controllers\MagentoController;
 
 class SendProductToQueue
 {
@@ -16,7 +16,7 @@ class SendProductToQueue
     {
         $events->listen(
             ProductStockChange::class,
-            '\Modules\Magento\Events\Handlers\SendCancelInfo@onProductStockChange'
+            '\Modules\Magento\Events\Handlers\SendProductToQueue@onProductStockChange'
         );
     }
 

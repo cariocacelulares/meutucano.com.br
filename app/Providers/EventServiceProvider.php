@@ -11,9 +11,7 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'Modules\Core\Events\ProductStockChange' => [
-            'App\Listeners\SendProductToQueue',
-        ]
+        //
     ];
 
     /**

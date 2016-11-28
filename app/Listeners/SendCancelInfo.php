@@ -4,7 +4,7 @@ use Modules\Core\Events\OrderCancel;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Pedido\Pedido;
-use App\Http\Controllers\Integracao\MagentoController;
+use Modules\Magento\Http\Controllers\MagentoController;
 use App\Http\Controllers\Integracao\SkyhubController;
 
 class SendCancelInfo

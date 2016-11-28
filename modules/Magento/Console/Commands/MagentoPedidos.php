@@ -1,7 +1,7 @@
 <?php namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Http\Controllers\Integracao\MagentoController;
+use Modules\Magento\Http\Controllers\MagentoController;
 
 class MagentoPedidos extends Command
 {
