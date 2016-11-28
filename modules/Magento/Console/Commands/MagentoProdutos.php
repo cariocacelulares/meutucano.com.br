@@ -1,4 +1,4 @@
-<?php namespace App\Console\Commands;
+<?php namespace Modules\Magento\Console\Commands;
 
 use Illuminate\Console\Command;
 use Modules\Magento\Http\Controllers\MagentoController;

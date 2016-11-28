@@ -1,7 +1,7 @@
-<?php namespace App\Console\Commands;
+<?php namespace Modules\Skyhub\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Http\Controllers\Integracao\SkyhubController;
+use Modules\Skyhub\Http\Controllers\SkyhubController;
 
 class SkyhubPedidos extends Command
 {

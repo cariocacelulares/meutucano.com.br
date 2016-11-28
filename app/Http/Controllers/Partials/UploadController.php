@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestResponseTrait;
-use App\Http\Controllers\Integracao\SkyhubController;
+use Modules\Skyhub\Http\Controllers\SkyhubController;
 use App\Http\Controllers\Pedido\NotaController;
 use App\Http\Controllers\Pedido\RastreioController;
 use App\Models\Cliente\Cliente;

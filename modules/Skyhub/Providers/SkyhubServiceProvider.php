@@ -1,8 +1,8 @@
-<?php namespace Modules\Magento\Providers;
+<?php namespace Modules\Skyhub\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-class MagentoServiceProvider extends ServiceProvider
+class SkyhubServiceProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
@@ -42,10 +42,10 @@ class MagentoServiceProvider extends ServiceProvider
     protected function registerConfig()
     {
         $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('magento.php'),
+            __DIR__.'/../Config/config.php' => config_path('skyhub.php'),
         ]);
         $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'magento'
+            __DIR__.'/../Config/config.php', 'skyhub'
         );
     }
 
@@ -56,7 +56,7 @@ class MagentoServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = base_path('resources/views/modules/magento');
+        $viewPath = base_path('resources/views/modules/skyhub');
 
         $sourcePath = __DIR__.'/../';
 
@@ -65,8 +65,8 @@ class MagentoServiceProvider extends ServiceProvider
         ]);
 
         $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/magento';
-        }, \Config::get('view.paths')), [$sourcePath]), 'magento');
+            return $path . '/modules/skyhub';
+        }, \Config::get('view.paths')), [$sourcePath]), 'skyhub');
     }
 
     /**
@@ -76,12 +76,12 @@ class MagentoServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = base_path('resources/lang/modules/magento');
+        $langPath = base_path('resources/lang/modules/skyhub');
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'magento');
+            $this->loadTranslationsFrom($langPath, 'skyhub');
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../', 'magento');
+            $this->loadTranslationsFrom(__DIR__ .'/../', 'skyhub');
         }
     }
 

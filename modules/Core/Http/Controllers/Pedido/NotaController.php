@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Integracao\SkyhubController;
+use Modules\Skyhub\Http\Controllers\SkyhubController;
 use Modules\Core\Models\Pedido\Nota;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Mail;

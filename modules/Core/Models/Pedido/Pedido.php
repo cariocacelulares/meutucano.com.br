@@ -8,7 +8,7 @@ use Modules\Core\Models\Cliente\Endereco;
 use Modules\InspecaoTecnica\Models\InspecaoTecnica;
 use Modules\Core\Events\OrderCancel;
 use Modules\Core\Events\OrderSeminovo;
-use App\Http\Controllers\Integracao\SkyhubController;
+use Modules\Skyhub\Http\Controllers\SkyhubController;
 
 /**
  * Class Pedido

@@ -1,23 +1,22 @@
-<?php namespace App\Http\Controllers\Integracao;
+<?php namespace Modules\Skyhub\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Integracao\Integracao;
-use App\Models\Cliente\Cliente;
-use App\Models\Cliente\Endereco;
-use App\Models\Pedido\Pedido;
-use App\Models\Pedido\PedidoProduto;
-use App\Models\Produto\Produto;
-use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Pedido\RastreioController;
+use GuzzleHttp\Client;
+use App\Http\Controllers\Controller;
+use Modules\Core\Models\Cliente\Cliente;
+use Modules\Core\Models\Cliente\Endereco;
+use Modules\Core\Models\Pedido\Pedido;
+use Modules\Core\Models\Pedido\PedidoProduto;
+use Modules\Core\Models\Produto\Produto;
+use Modules\Core\Http\Controllers\Pedido\RastreioController;
 
 /**
  * Class SkyhubController
- * @package App\Http\Controllers\Integracao
+ * @package Modules\Skyhub\Http\Controllers
  */
-class SkyhubController extends Controller implements Integracao
+class SkyhubController extends Controller
 {
     /**
      * Formata o ID do pedido no marketplace
@@ -176,17 +175,17 @@ class SkyhubController extends Controller implements Integracao
         try {
             Log::debug('Requisição skyhub para: ' . $url . ', method: ' . $method, $params);
 
-            if (!\Config::get('tucano.skyhub.enabled')) {
+            if (!\Config::get('skyhub.enabled')) {
                 Log::debug('Requisição bloqueada, a integração com o skyhub está desativada!');
                 return null;
             } else {
                 $client = new Client([
-                    'base_uri' => \Config::get('tucano.skyhub.api.url'),
+                    'base_uri' => \Config::get('skyhub.api.url'),
                     'headers' => [
                         "Accept"       => "application/json",
                         "Content-type" => "application/json; charset=utf-8",
-                        "X-User-Email" => \Config::get('tucano.skyhub.api.email'),
-                        "X-User-Token" => \Config::get('tucano.skyhub.api.token')
+                        "X-User-Email" => \Config::get('skyhub.api.email'),
+                        "X-User-Token" => \Config::get('skyhub.api.token')
                     ]
                 ]);
 

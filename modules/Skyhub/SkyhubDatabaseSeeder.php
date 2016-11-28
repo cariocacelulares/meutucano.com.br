@@ -1,9 +1,9 @@
-<?php namespace Modules\Magento\Database\Seeders;
+<?php namespace Modules\Skyhub\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class MagentoDatabaseSeeder extends Seeder
+class SkyhubDatabaseSeeder extends Seeder
 {
     /**
      * Run the database seeds.

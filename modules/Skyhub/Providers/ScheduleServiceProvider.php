@@ -1,11 +1,9 @@
-<?php namespace Modules\Magento\Providers;
+<?php namespace Modules\Skyhub\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
-use Modules\Magento\Console\Commands\RefreshMagentoStock;
-use Modules\Magento\Console\Commands\MagentoPedido;
-use Modules\Magento\Console\Commands\MagentoPedidos;
-use Modules\Magento\Console\Commands\MagentoProdutos;
+use Modules\Skyhub\Console\Commands\SkyhubPedido;
+use Modules\Skyhub\Console\Commands\SkyhubPedidos;
 
 class ScheduleServiceProvider extends ServiceProvider
 {
@@ -15,10 +13,8 @@ class ScheduleServiceProvider extends ServiceProvider
      * @var array
      */
     protected $commands = [
-        RefreshMagentoStock::class,
-        MagentoPedido::class,
-        MagentoPedidos::class,
-        MagentoProdutos::class,
+        SkyhubPedido::class,
+        SkyhubPedidos::class,
     ];
 
     /**
@@ -33,10 +29,7 @@ class ScheduleServiceProvider extends ServiceProvider
         $this->app->booted(function () {
             $schedule = $this->app->make(Schedule::class);
 
-            $schedule->command('magento:pedidos')
-                ->everyMinute();
-
-            $schedule->command('refresh:stock')
+            $schedule->command('skyhub:pedidos')
                 ->everyMinute();
         });
     }

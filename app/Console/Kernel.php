@@ -11,8 +11,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\SkyhubPedido::class,
-        Commands\SkyhubPedidos::class,
+        //
     ];
 
     /**
@@ -23,7 +22,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('skyhub:pedidos')
-            ->everyMinute();
+        //
     }
 }

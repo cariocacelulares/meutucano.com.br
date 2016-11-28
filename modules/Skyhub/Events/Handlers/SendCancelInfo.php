@@ -1,29 +1,38 @@
-<?php namespace App\Listeners;
+<?php namespace Modules\Skyhub\Events\Handlers;
 
+use Illuminate\Events\Dispatcher;
 use Modules\Core\Events\OrderCancel;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Models\Pedido\Pedido;
-use Modules\Magento\Http\Controllers\MagentoController;
 use App\Http\Controllers\Integracao\SkyhubController;
 
 class SendCancelInfo
 {
+    /**
+     * Set events that this will listen
+     *
+     * @param  Dispatcher $events
+     * @return void
+     */
+    public function subscribe(Dispatcher $events)
+    {
+        $events->listen(
+            OrderCancel::class,
+            '\Modules\Skyhub\Events\Handlers\SendCancelInfo@onOrderCancel'
+        );
+    }
+
     /**
      * Handle the event.
      *
      * @param  OrderCancel  $event
      * @return void
      */
-    public function handle(OrderCancel $event)
+    public function onOrderCancel(OrderCancel $event)
     {
         $pedido = $event->order;
         $user_id = $event->user_id;
-        \Log::debug('Listener SendCancelInfo ativado. pedido: ' . $pedido->id);
+        \Log::debug('Listener Skyhub\SendCancelInfo ativado. pedido: ' . $pedido->id);
 
-        if (strtolower($pedido->marketplace) == 'site') {
-            with(new MagentoController())->cancelOrder($pedido);
-        } else {
+        if (strtolower($pedido->marketplace) != 'site') {
             if ($user_id === false) {
                 \Log::debug('Nenhuma informação de cancelamento foi enviada, pois não existe usuário logado!');
             } else {
