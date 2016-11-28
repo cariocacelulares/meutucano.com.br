@@ -1,16 +1,16 @@
-<?php namespace App\Http\Controllers\Partials;
+<?php namespace Modules\Core\Http\Controllers\Partials;
 
+use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestResponseTrait;
 use App\Http\Controllers\Controller;
-use App\Models\Pedido\Pedido;
-use App\Models\Produto\Produto;
-use App\Models\Cliente\Cliente;
-use App\Models\Pedido\Rastreio;
-use Illuminate\Support\Facades\Input;
+use Modules\Core\Models\Pedido\Pedido;
+use Modules\Core\Models\Produto\Produto;
+use Modules\Core\Models\Cliente\Cliente;
+use Modules\Core\Models\Pedido\Rastreio;
 
 /**
  * Class SearchController
- * @package App\Http\Controllers\Partials
+ * @package Modules\Core\Http\Controllers\Partials
  */
 class SearchController extends Controller
 {

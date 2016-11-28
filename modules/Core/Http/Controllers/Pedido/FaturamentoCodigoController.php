@@ -1,10 +1,10 @@
-<?php namespace App\Http\Controllers\Codigo;
+<?php namespace Modules\Core\Http\Controllers\Pedido;
 
 use App\Http\Controllers\Rest\RestResponseTrait;
 use App\Http\Controllers\Controller;
-use App\Models\FaturamentoCodigo;
 use Illuminate\Support\Facades\Input;
 use PhpSigep\Model\Etiqueta;
+use Modules\Core\Models\Pedido\FaturamentoCodigo;
 
 class FaturamentoCodigoController extends Controller
 {

@@ -1,19 +1,19 @@
-<?php namespace App\Http\Controllers\Admin;
+<?php namespace Modules\Core\Http\Controllers\Relatorio;
 
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Requests;
-use App\Models\Pedido\Nota;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use NFePHP\Extras\Danfe;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use NFePHP\Extras\Danfe;
+use App\Http\Controllers\Rest\RestControllerTrait;
+use Modules\Core\Models\Pedido\Nota;
 
 /**
- * Class RelatorioController
- * @package App\Http\Controllers\Admin
+ * Class ICMSController
+ * @package Modules\Core\Http\Controllers\Relatorio
  */
-class RelatorioController extends Controller
+class ICMSController extends Controller
 {
     use RestControllerTrait;
 

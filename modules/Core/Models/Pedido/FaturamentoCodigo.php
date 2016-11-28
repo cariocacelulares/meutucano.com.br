@@ -1,8 +1,8 @@
-<?php namespace App\Models;
+<?php namespace Modules\Core\Models\Pedido;
 
 /**
  * Class FaturamentoCodigo
- * @package App\Models
+ * @package Modules\Core\Models\Pedido
  */
 class FaturamentoCodigo extends \Eloquent
 {

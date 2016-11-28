@@ -1,29 +1,29 @@
-<?php namespace App\Http\Controllers\Partials;
+<?php namespace Modules\Core\Http\Controllers\Partials;
 
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Rest\RestResponseTrait;
-use Modules\Skyhub\Http\Controllers\SkyhubController;
-use App\Http\Controllers\Pedido\NotaController;
-use App\Http\Controllers\Pedido\RastreioController;
-use App\Models\Cliente\Cliente;
-use App\Models\Cliente\Endereco;
-use App\Models\Pedido\Pedido;
-use App\Models\Pedido\Imposto;
-use App\Models\Pedido\Nota;
-use App\Models\Pedido\Nota\Devolucao;
-use App\Models\Pedido\Rastreio;
-use App\Models\Pedido\PedidoProduto;
-use App\Models\Produto\Produto;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Rest\RestResponseTrait;
+use Modules\Skyhub\Http\Controllers\SkyhubController;
+use Modules\Core\Http\Controllers\Pedido\NotaController;
+use Modules\Core\Http\Controllers\Pedido\RastreioController;
+use Modules\Core\Models\Cliente\Cliente;
+use Modules\Core\Models\Cliente\Endereco;
+use Modules\Core\Models\Pedido\Pedido;
+use Modules\Core\Models\Pedido\Imposto;
+use Modules\Core\Models\Pedido\Nota;
+use Modules\Core\Models\Pedido\Nota\Devolucao;
+use Modules\Core\Models\Pedido\Rastreio;
+use Modules\Core\Models\Pedido\PedidoProduto;
+use Modules\Core\Models\Produto\Produto;
 
 /**
  * Class UploadController
- * @package App\Http\Controllers\Partials
+ * @package Modules\Core\Http\Controllers\Partials
  */
 class UploadController extends Controller
 {

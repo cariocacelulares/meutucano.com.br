@@ -98,6 +98,11 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
             Route::get('faturamento', 'NotaController@notasFaturamento');
             Route::get('faturar/{pedido_id}', 'NotaController@faturar');
         });
+
+        /**
+         * Código de rastreio
+         */
+        Route::get('codigos/gerar/{servico}', 'Codigo\FaturamentoCodigoController@generateCode');
     });
 
     /**
@@ -162,4 +167,32 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
      * Endereço
      */
     Route::resource('enderecos', 'Cliente\EnderecoController', ['except' => ['create', 'edit']]);
+
+    /**
+     * Relatórios
+     */
+    Route::group(['middleware' => ['role:admin'], 'namespace' => 'Relatorio', 'prefix' => 'relatorios'], function() {
+        // ICMS
+        Route::get('icms', 'ICMSController@icms');
+
+        // Pedidos genérico
+        Route::post('pedido', 'PedidoController@run');
+        Route::get('pedido/{return_type}', 'PedidoController@run');
+
+        // Produtos genérico
+        Route::post('produto', 'ProdutoController@run');
+        Route::get('produto/{return_type}', 'ProdutoController@run');
+    });
+
+    /**
+     * Partials
+     */
+    Route::group(['namespace' => 'Partials'], function() {
+        Route::post('upload', [
+            'middleware' => ['role:admin|gestor|atendimento|faturamento'],
+            'uses' => 'UploadController@upload'
+        ]);
+
+        Route::get('search', 'SearchController@search');
+    });
 });
