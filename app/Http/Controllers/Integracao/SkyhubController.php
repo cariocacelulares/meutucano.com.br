@@ -429,14 +429,16 @@ class SkyhubController extends Controller implements Integracao
                 ];
             }
 
+            $rastreio = $order->rastreios->first();
+
             $jsonData = [
                 "shipment" => [
-                    "code"  => $order->rastreios->first()->rastreio,
+                    "code"  => ($rastreio && isset($rastreio->rastreio)) ? $rastreio->rastreio : null,
                     "items" => $jsonItens,
                     "track" => [
-                        "code"    => $order->rastreios->first()->rastreio,
+                        "code"    => ($rastreio && isset($rastreio->rastreio)) ? $rastreio->rastreio : null,
                         "carrier" => "CORREIOS",
-                        "method"  => $order->rastreios->first()->servico
+                        "method"  => ($rastreio && isset($rastreio->servico)) ? $rastreio->servico : null,
                     ]
                 ],
                 "invoice" => [
