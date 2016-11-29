@@ -10,6 +10,8 @@ use Modules\Skyhub\Http\Controllers\SkyhubController;
 use Modules\Magento\Http\Controllers\MagentoController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Modules\Sugestao\Models\Sugestao;
+use Nwidart\Modules\Facades\Module;
 
 /**
  * Class PedidoController
@@ -29,6 +31,9 @@ class PedidoController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function tableList() {
+        dd(hasModule('sugestao'));
+        dd(Sugestao::find(2));
+
         $m = self::MODEL;
 
         $list = $m::with(['cliente', 'endereco'])

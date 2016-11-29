@@ -4,11 +4,11 @@
     "description": "",
     "keywords": [],
     "active": 1,
-    "order": 0,
+    "order": 5,
     "providers": [
         "Modules\\Sugestao\\Providers\\SugestaoServiceProvider"
     ],
-    "aliases":{},
+    "aliases": [],
     "files": [
         "start.php"
     ]

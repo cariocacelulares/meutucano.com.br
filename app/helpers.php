@@ -214,3 +214,13 @@ if (!function_exists('removeAcentos')) {
         return strtr($string, $map);
     }
 }
+
+/**
+ * Check if module is active based in your config file
+ *
+ * @param  string  $module nome do modulo
+ * @return boolean         if module is active
+ */
+function hasModule($module) {
+    return !is_null(\Config::get(str_slug($module)));
+}
