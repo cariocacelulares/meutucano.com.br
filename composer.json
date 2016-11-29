@@ -34,7 +34,10 @@
         "xethron/migrations-generator": "dev-l5",
         "way/generators": "dev-feature/laravel-five-stable",
         "barryvdh/laravel-debugbar": "^2.2",
-        "tightenco/mailthief": "^0.3.2"
+        "tightenco/mailthief": "^0.3.2",
+        "php-vcr/php-vcr": "^1.3",
+        "php-vcr/phpunit-testlistener-vcr": "^1.1",
+        "mockery/mockery": "^0.9.6"
     },
     "autoload": {
         "classmap": [

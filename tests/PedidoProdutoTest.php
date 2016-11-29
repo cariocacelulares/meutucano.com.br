@@ -11,6 +11,15 @@ class PedidoProdutoTest extends TestCase
     DatabaseTransactions,
     CreatePedido;
 
+  public function setUp()
+  {
+    parent::setUp();
+
+    $this->produto = $this->createProduto([
+      'estoque' => 10
+    ]);
+  }
+
   /**
    * Testa se abaixa o estoque quando recebe um pedido novo
    *
@@ -18,18 +27,14 @@ class PedidoProdutoTest extends TestCase
    */
   public function test__it_should_substract_stock_when_order_created()
   {
-    $produto = $this->createProduto([
-      'estoque' => 10
-    ]);
+    $this->createPedido(['status' => 0], $this->produto->sku); // Pendente
+    $this->createPedido(['status' => 1], $this->produto->sku); // Pago
+    $this->createPedido(['status' => 2], $this->produto->sku); // Enviado
+    $this->createPedido(['status' => 3], $this->produto->sku); // Entregue
 
-    $this->createPedido(['status' => 0], $produto->sku); // Pendente
-    $this->createPedido(['status' => 1], $produto->sku); // Pago
-    $this->createPedido(['status' => 2], $produto->sku); // Enviado
-    $this->createPedido(['status' => 3], $produto->sku); // Entregue
+    $this->produto = $this->produto->fresh();
 
-    $produto = $produto->fresh();
-
-    $this->assertEquals(6, $produto->estoque);
+    $this->assertEquals(6, $this->produto->estoque);
   }
 
   /**
@@ -39,15 +44,11 @@ class PedidoProdutoTest extends TestCase
    */
   public function test__it_should_not_substract_stock_when_order_created_is_canceled()
   {
-    $produto = $this->createProduto([
-      'estoque' => 10
-    ]);
+    $this->createPedido(['status' => 5], $this->produto->sku);
 
-    $this->createPedido(['status' => 5], $produto->sku);
+    $this->produto = $this->produto->fresh();
 
-    $produto = $produto->fresh();
-
-    $this->assertEquals(10, $produto->estoque);
+    $this->assertEquals(10, $this->produto->estoque);
   }
 
   /**
@@ -57,16 +58,12 @@ class PedidoProdutoTest extends TestCase
    */
   public function test__it_should_sum_stock_when_order_canceled()
   {
-    $produto = $this->createProduto([
-      'estoque' => 10
-    ]);
-
-    $pedido = $this->createPedido([], $produto->sku);
+    $pedido = $this->createPedido([], $this->produto->sku);
 
     $pedido->status = 5;
     $pedido->save();
 
-    $produto = $produto->fresh();
-    $this->assertEquals(10, $produto->estoque);
+    $this->produto = $this->produto->fresh();
+    $this->assertEquals(10, $this->produto->estoque);
   }
 }

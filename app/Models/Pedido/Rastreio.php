@@ -66,8 +66,8 @@ class Rastreio extends \Eloquent
 
         // Salvar rastreio (novo ou existente)
         static::saving(function($rastreio) {
-            $oldStatus = ($rastreio->getOriginal('status') === null) ? null : (int)$rastreio->getOriginal('status');
-            $newStatus = ($rastreio->status === null) ? null : (int)$rastreio->status;
+            $oldStatus = ($rastreio->getOriginal('status') === null) ? null : (int) $rastreio->getOriginal('status');
+            $newStatus = ($rastreio->status === null) ? null : (int) $rastreio->status;
 
             if ($newStatus !== $oldStatus && in_array($newStatus, [3, 4, 5, 6])) {
                 with(new RastreioController())->screenshot($rastreio);
