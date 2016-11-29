@@ -156,7 +156,7 @@ class PedidoController extends Controller
             if ($imagem) {
                 $name = substr(str_slug($protocolo . '-' . $imagem->getClientOriginalName()), 0, 200) . '.' . $imagem->extension();
                 $imagem->move(storage_path('app/public/cancelamento'), $name);
-                $data->imagem_cancelamento = $name;
+                $pedido->imagem_cancelamento = $name;
             }
 
             $pedido->status = $status;

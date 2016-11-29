@@ -1,11 +1,11 @@
 <?php
 
-$faker = Faker\Factory::create('pt_BR');
+$faker = \Faker\Factory::create('pt_BR');
 
 /**
  * Usuario
  */
-$factory->define(\App\Models\Usuario\Usuario::class, function () use ($faker) {
+$factory->define(App\Models\Usuario\Usuario::class, function () use ($faker) {
   return [
     'name'           => $faker->name,
     'email'          => $faker->safeEmail,
@@ -18,7 +18,7 @@ $factory->define(\App\Models\Usuario\Usuario::class, function () use ($faker) {
 /**
  * Role
  */
-$factory->define(\App\Models\Usuario\Role::class, function () use ($faker) {
+$factory->define(App\Models\Usuario\Role::class, function () use ($faker) {
   return [
     'name' => $faker->word,
   ];
@@ -27,22 +27,11 @@ $factory->define(\App\Models\Usuario\Role::class, function () use ($faker) {
 /**
  * Senha
  */
-$factory->define(\App\Models\Usuario\Senha::class, function () use ($faker) {
+$factory->define(App\Models\Usuario\Senha::class, function () use ($faker) {
   return [
     'site'    => $faker->name,
     'url'     => $faker->url,
     'usuario' => $faker->userName,
     'senha'   => str_random(10)
-  ];
-});
-
-/**
- * Código faturamento
- */
-$factory->define(\App\Models\FaturamentoCodigo::class, function () use ($faker) {
-  return [
-    'servico' => $faker->unique()->numberBetween(0, 1),
-    'atual'   => '97255050',
-    'fim'     => '97256430'
   ];
 });

@@ -154,3 +154,14 @@ $factory->define(\Modules\Core\Models\Pedido\Comentario::class, function () use 
     'comentario' => $faker->text(200)
   ];
 });
+
+/**
+ * Código faturamento
+ */
+$factory->define(App\Models\FaturamentoCodigo::class, function () use ($faker) {
+  return [
+    'servico' => $faker->unique()->numberBetween(0, 1),
+    'atual'   => '97255050',
+    'fim'     => '97256430'
+  ];
+});
