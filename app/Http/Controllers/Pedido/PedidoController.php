@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Http\Controllers\Integracao\SkyhubController;
 use App\Http\Controllers\Integracao\MagentoController;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class PedidoController
@@ -229,7 +230,7 @@ class PedidoController extends Controller
                     $pedido->save();
                 }
             } catch (\Exception $e) {
-                \Log::error(logMessage($e, 'Não foi possível cancelar o pedido na Integração'));
+                Log::error(logMessage($e, 'Não foi possível cancelar o pedido na Integração'));
             }
         }
     }
@@ -242,6 +243,8 @@ class PedidoController extends Controller
      */
     public function faturar($pedido_id)
     {
+        Log::debug("Tentando faturar o pedido {$pedido_id}");
+
         if ($pedido = Pedido::find($pedido_id)) {
             $pedido->status = 2;
 
