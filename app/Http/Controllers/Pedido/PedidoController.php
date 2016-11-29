@@ -256,9 +256,9 @@ class PedidoController extends Controller
                 (new SkyhubController())->orderInvoice($pedido);
             }
 
-            $pedido->save();
-
-            \Event::fire(new \App\Events\Gamification\TarefaRealizada('fature-um-pedido'));
+            if ($pedido->save()) {
+                \Event::fire(new \App\Events\Gamification\TarefaRealizada('fature-um-pedido'));
+            }
         }
     }
 

@@ -22,6 +22,7 @@ use PhpSigep\Model\ServicoAdicional;
 use PhpSigep\Model\ServicoDePostagem;
 use PhpSigep\Pdf\CartaoDePostagem;
 use Sunra\PhpSimple\HtmlDomParser;
+use GuzzleHttp\Client;
 
 /**
  * Class RastreioController
@@ -243,23 +244,21 @@ class RastreioController extends Controller
             $servicoPostagem = 40010;
         }
 
-        $correios = sprintf(
+        $correiosUrl = sprintf(
             "http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx?nCdEmpresa=&sDsSenha=&sCepOrigem=%s&sCepDestino=%s&nVlPeso=1&nCdFormato=1&nVlComprimento=16&nVlAltura=10&nVlLargura=12&sCdMaoPropria=n&nVlValorDeclarado=100&sCdAvisoRecebimento=n&nCdServico=%s&nVlDiametro=0&StrRetorno=xml",
             Config::get('tucano.cep'),
             $cep,
             $servicoPostagem
         );
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $correios);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, 'POST');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        // curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        $string = curl_exec($ch);
-        $correios = simplexml_load_string($string);
+        $client   = new Client();
+        $response = $client->request('GET', $correiosUrl);
 
-        $prazoEntrega = (string) $correios->cServico->PrazoEntrega;
+        $correiosXml = simplexml_load_string(
+            $response->getBody()->getContents()
+        );
+
+        $prazoEntrega = (string) $correiosXml->cServico->PrazoEntrega;
 
         return $prazoEntrega;
     }
@@ -439,6 +438,7 @@ class RastreioController extends Controller
             $destino->setCep($rastreio->pedido->endereco->cep);
             $destino->setCidade($rastreio->pedido->endereco->cidade);
             $destino->setUf($rastreio->pedido->endereco->uf);
+            $destino->setNumeroNotaFiscal($rastreio->pedido->notas()->orderBy('created_at', 'DESC')->first()->numero);
 
             /**
              * Rastreio
@@ -463,15 +463,8 @@ class RastreioController extends Controller
             $encomenda->setDimensao($dimensao);
             $encomenda->setEtiqueta($etiqueta);
 
-            $nota = $rastreio
-                ->pedido
-                ->notas()
-                ->orderBy('created_at', 'DESC')
-                ->first();
-
-            $encomenda->setNotaNumero($nota ? $nota->numero : 0);
-            $encomenda->setLote(round($rastreio->pedido->total));
             $encomenda->setPeso(0.500 * (int) $rastreio->pedido->produtos->count());
+            $encomenda->setLote(round($rastreio->pedido->total));
 
             /**
              * Tipo frete
@@ -488,7 +481,7 @@ class RastreioController extends Controller
             $plp->setEncomendas([$encomenda]);
             $plp->setRemetente($remetente);
 
-            $pdf = new CartaoDePostagem($plp, '', public_path('assets/img/carioca.png'));
+            $pdf = new CartaoDePostagem($plp, '', public_path('assets/img/carioca-negativo.jpg'));
             $pdf->render();
         }
 

@@ -21,10 +21,12 @@ class MongoFormatter implements FormatterInterface
     public function format(array $record)
     {
         $fields = [
-            'message'  => (isset($record['message'])) ? $record['message'] : null,
-            'level'    => (isset($record['level_name'])) ? $record['level_name'] : null,
-            'channel'  => (isset($record['channel'])) ? $record['channel'] : null,
-            'datetime' => (isset($record['datetime'])) ? $record['datetime'] : null,
+            'context'       => (isset($record['context']))    ? $record['context']    : null,
+            'message'       => (isset($record['message']))    ? $record['message']    : null,
+            'level'         => (isset($record['level_name'])) ? $record['level_name'] : null,
+            'channel'       => (isset($record['channel']))    ? $record['channel']    : null,
+            'datetime'      => (isset($record['datetime']))   ? $record['datetime']   : null,
+            'extra'         => (isset($record['extra']))      ? $record['extra']      : [],
             'datetimeStamp' => null,
         ];
 
@@ -34,7 +36,7 @@ class MongoFormatter implements FormatterInterface
             $fields['datetime']      = $fields['datetime']->format($this->_format);
         }
 
-        return array_merge($fields, ((isset($record['extra'])) ? $record['extra'] : []));
+        return $fields;
     }
 
     /**

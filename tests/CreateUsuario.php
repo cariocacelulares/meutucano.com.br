@@ -11,14 +11,9 @@ trait CreateUsuario
    *
    * @return App\Models\Usuario\Usuario
    */
-  public function createUsuario($data = [], $role = 'admin')
+  public function createUsuario($data = [])
   {
-    // $role = Role::firstOrCreate([
-    //   'name' => $role
-    // ]);
-
     $usuario = factory(Usuario::class)->create($data);
-    // $usuario->roles()->save($role);
 
     return $usuario;
   }
