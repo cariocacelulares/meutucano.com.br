@@ -1,71 +1,56 @@
-<?php namespace Modules\Core\Http\Controllers\Pedido\Rastreio;
+<?php namespace Modules\Rastreio\Http\Controllers;
 
-use App\Http\Controllers\Rest\RestControllerTrait;
-use App\Http\Controllers\Controller;
-use Modules\Core\Models\Pedido\Rastreio;
-use Modules\Core\Models\Pedido\Rastreio\Devolucao;
 use Illuminate\Support\Facades\Input;
-use Modules\Core\Http\Controllers\Pedido\Rastreio\RastreioTrait;
-use Modules\InspecaoTecnica\Http\Controllers\Traits\InspecaoTecnicaTrait;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Rest\RestControllerTrait;
+use Modules\Rastreio\Http\Controllers\Traits\RastreioTrait;
+use Modules\Rastreio\Models\Rastreio;
+use Modules\Rastreio\Models\Pi;
 
 /**
- * Class DevolucaoController
- * @package Modules\Core\Http\Controllers\Pedido\Rastreio
+ * Class PiController
+ * @package Modules\Rastreio\Http\Controllers
  */
-class DevolucaoController extends Controller
+class PiController extends Controller
 {
-    use RestControllerTrait,
-        RastreioTrait,
-        InspecaoTecnicaTrait;
+    use RestControllerTrait, RastreioTrait;
 
-    const MODEL = Devolucao::class;
+    const MODEL = Pi::class;
 
     protected $validationRules = [];
 
     /**
-     * Retorna uma devolução com base no rastreio
+     * Retorna uma pi com base no rastreio
      *
      * @param  int $id
      * @return array
      */
     public function show($id)
     {
-        $m = self::MODEL;
-
-        if ($data = Rastreio::with(['pedido'])->where('id', '=', $id)->first()) {
-            if ($data->devolucao) {
-                $data = $m::with(['rastreio', 'rastreio.pedido'])->where('id', '=', $data->devolucao->id)->first();
-
-                if ($data) {
-                    return $this->showResponse($data);
-                }
-            }
-
-            return $this->showResponse([
-                'rastreio_id' => $data->id,
-                'rastreio' => $data
-            ]);
+        $m = Rastreio::class;
+        if ($data = $m::find($id)) {
+            return $this->showResponse($data->pi);
         }
 
         return $this->notFoundResponse();
     }
 
     /**
-     * Retorna as devoluções sem ação
+     * Retorna uma lista de PI's pendentes de ação
      *
-     * @return array
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function pending()
     {
         $m = self::MODEL;
 
         $lista = $m::with(['rastreio', 'rastreio.pedido', 'rastreio.pedido.cliente', 'rastreio.pedido.endereco'])
-            ->join('pedido_rastreios', 'pedido_rastreios.id', '=', 'pedido_rastreio_devolucoes.rastreio_id')
+            ->join('pedido_rastreios', 'pedido_rastreios.id', '=', 'pedido_rastreio_pis.rastreio_id')
             ->join('pedidos', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
             ->join('cliente_enderecos', 'cliente_enderecos.id', '=', 'pedidos.cliente_endereco_id')
-            ->whereNull('pedido_rastreio_devolucoes.acao')
-            ->orderBy('pedido_rastreio_devolucoes.created_at', 'DESC');
+            ->whereNull('pedido_rastreio_pis.status')
+            ->orderBy('pedido_rastreio_pis.created_at', 'DESC');
 
         $lista = $this->handleRequest($lista);
 
@@ -87,16 +72,18 @@ class DevolucaoController extends Controller
             if($v->fails()) {
                 throw new \Exception("ValidationException");
             }
-
-            $this->aplicarDevolucao(Input::get(['inspecoes']));
-
-            $data = $m::create(Input::except(['protocolo', 'imagem']));
+            $data = $m::create(Input::except(['protocolo']));
 
             $rastreio = Rastreio::find(Input::get('rastreio_id'));
-            $rastreio->status = 5;
+            if (Input::has('valor_pago')) {
+                $rastreio->status = 8;
+            } else {
+                $rastreio->status = 7;
+            }
+
             $rastreio->save();
 
-            $this->updateProtocolAndStatus($data, Input::get('protocolo'), Input::file('imagem'));
+            $this->updateProtocolAndStatus($data, Input::get('protocolo'));
 
             return $this->createdResponse($data);
         } catch(\Exception $ex) {
@@ -128,16 +115,22 @@ class DevolucaoController extends Controller
                 throw new \Exception("ValidationException");
             }
 
-            $this->aplicarDevolucao(Input::get(['inspecoes']));
-
             $data->fill(Input::except(['protocolo']));
             $data->save();
+
+            if (Input::has('valor_pago')) {
+                $data->rastreio->status = 8;
+            } else {
+                $data->rastreio->status = 7;
+            }
+
+            $data->rastreio->save();
 
             $this->updateProtocolAndStatus($data, Input::get('protocolo'));
 
             return $this->showResponse($data);
         } catch(\Exception $ex) {
-            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
+            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);

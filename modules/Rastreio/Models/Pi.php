@@ -1,13 +1,12 @@
-<?php namespace Modules\Core\Models\Pedido\Rastreio;
+<?php namespace Modules\Rastreio\Models;
 
 use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
-use Modules\Core\Models\Pedido\Rastreio;
 use Modules\Core\Models\Pedido\Pedido;
 
 /**
  * Class Pi
- * @package Modules\Core\Models\Pedido\Rastreio
+ * @package Modules\Rastreio\Models
  */
 class Pi extends \Eloquent
 {
@@ -87,7 +86,7 @@ class Pi extends \Eloquent
      */
     public function getStatusDescriptionAttribute()
     {
-        return ($this->motivo_status) ? \Config::get('tucano.status')[$this->motivo_status] : null;
+        return ($this->motivo_status) ? \Config::get('rastreio.status')[$this->motivo_status] : null;
     }
 
     /**

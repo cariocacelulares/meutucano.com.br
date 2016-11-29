@@ -18,6 +18,9 @@
         <testsuite name="Core">
             <directory>./modules/Core/Tests/</directory>
         </testsuite>
+        <testsuite name="Rastreio">
+            <directory>./modules/Rastreio/Tests/</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist>
@@ -25,7 +28,7 @@
         </whitelist>
     </filter>
     <php>
-        <env name="APP_ENV" value="test"/>
+        <env name="APP_ENV" value="testing"/>
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="QUEUE_DRIVER" value="sync"/>

@@ -1,13 +1,13 @@
-<?php namespace Modules\Core\Tests;
+<?php namespace Modules\Rastreio\Tests;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use MailThief\Testing\InteractsWithMail;
-use Modules\Core\Http\Controllers\Pedido\RastreioController;
+use Modules\Rastreio\Http\Controllers\RastreioController;
 
-class PedidoRastreioTest extends TestCase
+class RastreioTest extends TestCase
 {
   use WithoutMiddleware,
     DatabaseMigrations,

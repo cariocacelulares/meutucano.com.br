@@ -1,7 +1,7 @@
-<?php namespace Modules\Core\Console\Commands;
+<?php namespace Modules\Rastreio\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Http\Controllers\Pedido\RastreioController;
+use Modules\Rastreio\Http\Controllers\Pedido\RastreioController;
 
 class RefreshRastreios extends Command
 {

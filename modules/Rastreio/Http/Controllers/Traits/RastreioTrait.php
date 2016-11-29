@@ -1,11 +1,11 @@
-<?php namespace Modules\Core\Http\Controllers\Pedido\Rastreio;
+<?php namespace Modules\Rastreio\Http\Controllers\Traits;
 
-use Modules\Core\Models\Pedido\Rastreio;
 use Modules\Core\Models\Pedido\Pedido;
+use Modules\Rastreio\Models\Rastreio;
 
 /**
  * Class RastreioTrait
- * @package Modules\Core\Http\Controllers\Pedido\Rastreio
+ * @package Modules\Rastreio\Http\Controllers\Traits
  */
 trait RastreioTrait
 {

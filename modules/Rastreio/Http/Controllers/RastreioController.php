@@ -1,8 +1,8 @@
-<?php namespace Modules\Core\Http\Controllers\Pedido;
+<?php namespace Modules\Rastreio\Http\Controllers;
 
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
-use Modules\Core\Models\Pedido\Rastreio;
+use Modules\Rastreio\Models\Rastreio;
 use Modules\Core\Models\Pedido\Pedido;
 use Modules\Core\Models\Pedido\PedidoProduto;
 use Modules\InspecaoTecnica\Models\InspecaoTecnica;
@@ -25,7 +25,7 @@ use Sunra\PhpSimple\HtmlDomParser;
 
 /**
  * Class RastreioController
- * @package Modules\Core\Http\Controllers\Pedido
+ * @package Modules\Rastreio\Http\Controllers
  */
 class RastreioController extends Controller
 {

@@ -1,12 +1,12 @@
-<?php namespace Modules\Core\Tests;
+<?php namespace Modules\Rastreio\Tests;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Modules\Core\Models\Pedido\Rastreio\Devolucao;
+use Modules\Rastreio\Models\Devolucao;
 
-class RastreioDevolucaoTest extends TestCase
+class DevolucaoTest extends TestCase
 {
   use WithoutMiddleware,
     DatabaseMigrations,

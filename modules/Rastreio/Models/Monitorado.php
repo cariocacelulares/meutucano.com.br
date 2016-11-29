@@ -1,12 +1,11 @@
-<?php namespace Modules\Core\Models\Pedido\Rastreio;
+<?php namespace Modules\Rastreio\Models;
 
 use Venturecraft\Revisionable\RevisionableTrait;
-use Modules\Core\Models\Pedido\Rastreio;
 use App\Models\Usuario\Usuario;
 
 /**
  * Class Monitorado
- * @package Modules\Core\Models\Pedido\Rastreio
+ * @package Modules\Rastreio\Models
  */
 class Monitorado extends \Eloquent
 {

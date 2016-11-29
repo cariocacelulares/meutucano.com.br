@@ -1,8 +1,8 @@
-<?php namespace Modules\Core\Providers;
+<?php namespace Modules\Rastreio\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
-use Modules\Core\Console\Commands\CancelOldOrders;
+use Modules\Rastreio\Console\Commands\RefreshRastreios;
 
 class ScheduleServiceProvider extends ServiceProvider
 {
@@ -12,7 +12,7 @@ class ScheduleServiceProvider extends ServiceProvider
      * @var array
      */
     protected $commands = [
-        CancelOldOrders::class,
+        RefreshRastreios::class,
     ];
 
     /**
@@ -27,8 +27,8 @@ class ScheduleServiceProvider extends ServiceProvider
         $this->app->booted(function () {
             $schedule = $this->app->make(Schedule::class);
 
-            $schedule->command('pedidos:cancelold')
-                ->daily();
+            $schedule->command('refresh:rastreios')
+                ->twiceDaily(1, 12);
         });
     }
 

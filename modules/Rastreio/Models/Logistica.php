@@ -1,22 +1,18 @@
-<?php namespace Modules\Core\Models\Pedido\Rastreio;
+<?php namespace Modules\Rastreio\Models;
 
 use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
-use Modules\Core\Models\Pedido\Rastreio;
 use Modules\Core\Models\Pedido\Pedido;
 
 /**
- * Class Devolucao
- * @package Modules\Core\Models\Pedido\Rastreio
+ * Class Logistica
+ * @package Modules\Rastreio\Models
  */
-class Devolucao extends \Eloquent
+class Logistica extends \Eloquent
 {
     use RevisionableTrait;
 
-    /**
-     * @var string
-     */
-    protected $table = 'pedido_rastreio_devolucoes';
+    protected $table = 'pedido_rastreio_logisticas';
 
     /**
      * @var boolean
@@ -29,28 +25,27 @@ class Devolucao extends \Eloquent
     protected $fillable = [
         'rastreio_id',
         'usuario_id',
+        'autorizacao',
         'motivo',
         'acao',
-        'pago_cliente',
-        'observacoes'
-    ];
-
-    /**
-     * @var array
-     */
-    protected $appends = [
-        'motivo_description',
-        'protocolo',
-        'imagem_cancelamento',
+        'data_postagem',
+        'observacoes',
     ];
 
     /**
      * @var array
      */
     protected $casts = [
-        'motivo'       => 'string',
-        'acao'         => 'string',
-        'pago_cliente' => 'string',
+        'motivo' => 'string',
+        'acao'   => 'string',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $appends = [
+        'protocolo',
+        'imagem_cancelamento',
     ];
 
     /**
@@ -63,6 +58,7 @@ class Devolucao extends \Eloquent
         return $this->belongsTo(Rastreio::class);
     }
 
+
     /**
      * Rastreio Ref
      *
@@ -74,12 +70,19 @@ class Devolucao extends \Eloquent
     }
 
     /**
-     * Descrição do motivo
-     *
      * @return string
      */
-    protected function getMotivoDescriptionAttribute() {
-        return ($this->motivo >= 0) ? \Config::get('tucano.notas.devolucao_status')[$this->motivo] : null;
+    public function getDataPostagemAttribute($data_postagem) {
+        return ($data_postagem) ? Carbon::createFromFormat('Y-m-d', $data_postagem)->format('d/m/Y') : null;
+    }
+
+    /**
+     * @return string
+     */
+    public function setDataPostagemAttribute($data_postagem) {
+        if ($data_postagem) {
+            $this->attributes['data_postagem'] = Carbon::createFromFormat('d/m/Y', $data_postagem)->format('Y-m-d');
+        }
     }
 
     /**

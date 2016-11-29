@@ -1,16 +1,16 @@
-<?php namespace Modules\Core\Http\Controllers\Pedido\Rastreio;
+<?php namespace Modules\Rastreio\Http\Controllers;
 
-use App\Http\Controllers\Rest\RestControllerTrait;
-use App\Http\Controllers\Controller;
-use Modules\Core\Models\Pedido\Rastreio;
-use Modules\Core\Models\Pedido\Rastreio\Logistica;
 use Illuminate\Support\Facades\Input;
-use Modules\Core\Http\Controllers\Pedido\Rastreio\RastreioTrait;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Rest\RestControllerTrait;
+use Modules\Rastreio\Http\Controllers\Traits\RastreioTrait;
 use Modules\InspecaoTecnica\Http\Controllers\Traits\InspecaoTecnicaTrait;
+use Modules\Rastreio\Models\Rastreio;
+use Modules\Rastreio\Models\Logistica;
 
 /**
  * Class LogisticaController
- * @package Modules\Core\Http\Controllers\Pedido\Rastreio
+ * @package Modules\Rastreio\Http\Controllers
  */
 class LogisticaController extends Controller
 {

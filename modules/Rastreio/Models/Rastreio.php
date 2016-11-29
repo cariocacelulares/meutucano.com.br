@@ -1,17 +1,14 @@
-<?php namespace Modules\Core\Models\Pedido;
+<?php namespace Modules\Rastreio\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
-use Modules\Core\Models\Pedido\Rastreio\Pi;
-use Modules\Core\Models\Pedido\Rastreio\Devolucao;
-use Modules\Core\Models\Pedido\Rastreio\Logistica;
-use Modules\Core\Models\Pedido\Rastreio\Monitorado;
-use Modules\Core\Http\Controllers\Pedido\RastreioController;
+use Modules\Core\Models\Pedido\Pedido;
+use Modules\Rastreio\Http\Controllers\RastreioController;
 
 /**
  * Class Rastreio
- * @package Modules\Core\Models\Pedido
+ * @package Modules\Rastreio\Models
  */
 class Rastreio extends \Eloquent
 {
@@ -142,7 +139,7 @@ class Rastreio extends \Eloquent
      */
     public function getStatusDescriptionAttribute()
     {
-        return ($this->status > 0) ? \Config::get('tucano.status')[$this->status] : 'Pendente';
+        return ($this->status > 0) ? \Config::get('rastreio.status')[$this->status] : 'Pendente';
     }
 
     /**

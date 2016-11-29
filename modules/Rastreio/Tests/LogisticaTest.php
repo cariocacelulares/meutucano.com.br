@@ -1,12 +1,12 @@
-<?php namespace Modules\Core\Tests;
+<?php namespace Modules\Rastreio\Tests;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Modules\Core\Models\Pedido\Rastreio\Logistica;
+use Modules\Rastreio\Models\Logistica;
 
-class RastreioLogisticaTest extends TestCase
+class LogisticaTest extends TestCase
 {
   use WithoutMiddleware,
     DatabaseMigrations,

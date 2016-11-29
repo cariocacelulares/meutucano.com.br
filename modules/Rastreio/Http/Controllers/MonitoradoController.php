@@ -1,13 +1,13 @@
-<?php namespace Modules\Core\Http\Controllers\Pedido\Rastreio;
+<?php namespace Modules\Rastreio\Http\Controllers;
 
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
-use Modules\Core\Models\Pedido\Rastreio\Monitorado;
 use Illuminate\Support\Facades\Input;
+use Modules\Rastreio\Models\Rastreio;
 
 /**
  * Class MonitoradoController
- * @package Modules\Core\Http\Controllers\Pedido\Rastreio
+ * @package Modules\Rastreio\Http\Controllers
  */
 class MonitoradoController extends Controller
 {
