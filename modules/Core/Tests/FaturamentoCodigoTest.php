@@ -1,9 +1,10 @@
-<?php namespace Tests;
+<?php namespace Modules\Core\Tests;
 
-use App\Models\FaturamentoCodigo;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
+use Modules\Core\Models\Pedido\FaturamentoCodigo;
 
 class FaturamentoCodigoTest extends TestCase
 {
