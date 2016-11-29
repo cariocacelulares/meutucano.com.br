@@ -1,0 +1,15 @@
+{
+    "name": "Sugestao",
+    "alias": "sugestao",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 5,
+    "providers": [
+        "Modules\\Sugestao\\Providers\\SugestaoServiceProvider"
+    ],
+    "aliases": [],
+    "files": [
+        "start.php"
+    ]
+}

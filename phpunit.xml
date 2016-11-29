@@ -9,8 +9,17 @@
          processIsolation="false"
          stopOnFailure="true">
     <testsuites>
-        <testsuite name="Application Test Suite">
+        <testsuite name="app">
             <directory>./tests/</directory>
+        </testsuite>
+        <testsuite name="InspecaoTecnica">
+            <directory>./modules/InspecaoTecnica/Tests/</directory>
+        </testsuite>
+        <testsuite name="Core">
+            <directory>./modules/Core/Tests/</directory>
+        </testsuite>
+        <testsuite name="Rastreio">
+            <directory>./modules/Rastreio/Tests/</directory>
         </testsuite>
     </testsuites>
     <filter>

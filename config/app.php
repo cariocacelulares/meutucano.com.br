@@ -65,6 +65,8 @@ return [
         Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
 
         Jenssegers\Mongodb\MongodbServiceProvider::class,
+
+        Nwidart\Modules\LaravelModulesServiceProvider::class,
     ],
 
 
@@ -113,6 +115,8 @@ return [
         'Sentry'       => Sentry\SentryLaravel\SentryFacade::class,
 
         'Moloquent'    => Jenssegers\Mongodb\Eloquent\Model::class,
+
+        'Module' => Nwidart\Modules\Facades\Module::class,
     ],
 
 ];

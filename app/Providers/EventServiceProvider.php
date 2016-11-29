@@ -11,24 +11,7 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\ProductStockChange' => [
-            'App\Listeners\SendProductToQueue',
-        ],
-        'App\Events\OrderCancel' => [
-            'App\Listeners\SumStock',
-            'App\Listeners\SendCancelInfo'
-        ],
-        'App\Events\ProductDispach' => [
-            'App\Listeners\SubtractStock'
-        ],
-        'App\Events\OrderSeminovo' => [
-            'App\Listeners\CheckInspecoes'
-        ],
-
-        /* Gamification */
-        'App\Events\Gamification\TarefaRealizada' => [
-            'App\Listeners\Gamification\FilaAdicionar'
-        ],
+        //
     ];
 
     /**
@@ -39,6 +22,5 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
-        //
     }
 }

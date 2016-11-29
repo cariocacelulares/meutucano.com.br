@@ -4,18 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "hash": "e1e8967ff88e49f76f579775624925f3",
-    "content-hash": "e02001788e1596e9fdb4c4fb01c82faa",
-=======
-    "hash": "9d69c2b512a875c1751d383e0fc67e2c",
-    "content-hash": "b4785df6d0e711954908c3ad64fa74ab",
->>>>>>> master
-=======
-    "hash": "5c8e61d1f47b298895a921beb30823a9",
-    "content-hash": "33bd867933c9edac0dda7e5b59cbc2a9",
->>>>>>> v2/testes-unitarios
+    "hash": "571421f85137bb74ee5c5dc55ace42eb",
+    "content-hash": "e6e37973f15132acb0af2a0490c134ef",
     "packages": [
         {
             "name": "arcanedev/log-viewer",
@@ -141,38 +131,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-<<<<<<< HEAD
-<<<<<<< HEAD
-            "version": "3.19.31",
-=======
-            "version": "3.19.32",
->>>>>>> v2/testes-unitarios
+            "version": "3.19.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "4c3093e320c4a34e30327043d24099787b702665"
+                "reference": "8073e8ce3f5d1836ab5a27ce600b82dd12d68dd1"
             },
             "dist": {
                 "type": "zip",
-<<<<<<< HEAD
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/3b7777e4091f4bf4de1dee19cfdad87249facb0e",
-                "reference": "3b7777e4091f4bf4de1dee19cfdad87249facb0e",
-=======
-            "version": "3.19.32",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "4c3093e320c4a34e30327043d24099787b702665"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/4c3093e320c4a34e30327043d24099787b702665",
-                "reference": "4c3093e320c4a34e30327043d24099787b702665",
->>>>>>> master
-=======
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/4c3093e320c4a34e30327043d24099787b702665",
-                "reference": "4c3093e320c4a34e30327043d24099787b702665",
->>>>>>> v2/testes-unitarios
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/8073e8ce3f5d1836ab5a27ce600b82dd12d68dd1",
+                "reference": "8073e8ce3f5d1836ab5a27ce600b82dd12d68dd1",
                 "shasum": ""
             },
             "require": {
@@ -239,15 +207,7 @@
                 "s3",
                 "sdk"
             ],
-<<<<<<< HEAD
-<<<<<<< HEAD
-            "time": "2016-11-21 23:17:16"
-=======
-            "time": "2016-11-22 23:10:38"
->>>>>>> master
-=======
-            "time": "2016-11-22 23:10:38"
->>>>>>> v2/testes-unitarios
+            "time": "2016-11-29 19:33:30"
         },
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -1109,16 +1069,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.3.24",
+            "version": "v5.3.25",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "b603b7cf77ff083c2248f7baa23f3add34c3ff84"
+                "reference": "90791f6a9eceebb1731ff7191141083ebb127c31"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/b603b7cf77ff083c2248f7baa23f3add34c3ff84",
-                "reference": "b603b7cf77ff083c2248f7baa23f3add34c3ff84",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/90791f6a9eceebb1731ff7191141083ebb127c31",
+                "reference": "90791f6a9eceebb1731ff7191141083ebb127c31",
                 "shasum": ""
             },
             "require": {
@@ -1233,7 +1193,61 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2016-11-21 14:14:16"
+            "time": "2016-11-29 14:42:22"
+        },
+        {
+            "name": "laravelcollective/html",
+            "version": "v5.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/LaravelCollective/html.git",
+                "reference": "961ce141c16c6b085128f209496c26efd3e681ca"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/LaravelCollective/html/zipball/961ce141c16c6b085128f209496c26efd3e681ca",
+                "reference": "961ce141c16c6b085128f209496c26efd3e681ca",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/http": "5.3.*",
+                "illuminate/routing": "5.3.*",
+                "illuminate/session": "5.3.*",
+                "illuminate/support": "5.3.*",
+                "illuminate/view": "5.3.*",
+                "php": ">=5.6.4"
+            },
+            "require-dev": {
+                "illuminate/database": "5.3.*",
+                "mockery/mockery": "~0.9.4",
+                "phpunit/phpunit": "~5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Collective\\Html\\": "src/"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylorotwell@gmail.com"
+                },
+                {
+                    "name": "Adam Engebretson",
+                    "email": "adam@laravelcollective.com"
+                }
+            ],
+            "description": "HTML and Form Builders for the Laravel Framework",
+            "homepage": "http://laravelcollective.com",
+            "time": "2016-08-27 23:52:43"
         },
         {
             "name": "league/flysystem",
@@ -1911,6 +1925,60 @@
                 "php"
             ],
             "time": "2016-09-16 12:04:44"
+        },
+        {
+            "name": "nwidart/laravel-modules",
+            "version": "1.14.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nWidart/laravel-modules.git",
+                "reference": "2d05b9c5ac23cb800725ba760d9a323820603d9f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nWidart/laravel-modules/zipball/2d05b9c5ac23cb800725ba760d9a323820603d9f",
+                "reference": "2d05b9c5ac23cb800725ba760d9a323820603d9f",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "5.1.*|5.2.*|5.3.*",
+                "laravelcollective/html": "5.1.*|5.2.*|5.3.*",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^1.11",
+                "mockery/mockery": "~0.9",
+                "orchestra/testbench": "^3.1|^3.2|^3.3",
+                "phpro/grumphp": "^0.9.1",
+                "phpunit/phpunit": "~4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Nwidart\\Modules\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Widart",
+                    "email": "n.widart@gmail.com",
+                    "homepage": "https://nicolaswidart.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Laravel Module management",
+            "keywords": [
+                "laravel",
+                "module",
+                "modules",
+                "nwidart",
+                "rad"
+            ],
+            "time": "2016-10-19 09:27:32"
         },
         {
             "name": "paragonie/random_compat",

@@ -63,7 +63,7 @@ if (!function_exists('SomaDiasUteis')) {
      */
     function SomaDiasUteis($xDataInicial, $xSomarDias)
     {
-        $feriados = \Config::get('tucano.feriados');
+        $feriados = \Config::get('core.feriados');
 
         for ($j = 1; $j <= $xSomarDias; $j++) {
             $xDataInicial = Soma1dia($xDataInicial);
@@ -91,7 +91,7 @@ if (!function_exists('diasUteisPeriodo')) {
      */
     function diasUteisPeriodo($dataInicial, $dataFinal, $apenasPerido = false)
     {
-        $feriados = \Config::get('tucano.feriados');
+        $feriados = \Config::get('core.feriados');
 
         $inicio = DateTime::createFromFormat('d/m/Y', $dataInicial);
         $final  = DateTime::createFromFormat('d/m/Y', $dataFinal);
@@ -131,8 +131,8 @@ function reportError($error) {
     \Mail::send('emails.error', [
         'error' => $error
     ], function ($m) {
-        $m->from(\Config('tucano.report_email'), 'Meu Tucano');
-        $m->to(\Config('tucano.report_email'), 'DEV')->subject('Erro no sistema!');
+        $m->from(\Config('core.report_email'), 'Meu Tucano');
+        $m->to(\Config('core.report_email'), 'DEV')->subject('Erro no sistema!');
     });
 }
 
@@ -213,4 +213,14 @@ if (!function_exists('removeAcentos')) {
 
         return strtr($string, $map);
     }
+}
+
+/**
+ * Check if module is active based in your config file
+ *
+ * @param  string  $module nome do modulo
+ * @return boolean         if module is active
+ */
+function hasModule($module) {
+    return !is_null(\Config::get(str_slug($module)));
 }

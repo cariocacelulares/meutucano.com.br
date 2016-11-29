@@ -64,7 +64,7 @@
                         // Ajusta o tamanho máximo do gráfico
                         if (response.data.length > vm.chartOrders.xAxis.categories.length) {
                             for (var i = vm.chartOrders.xAxis.categories.length; i < response.data.length; i++) {
-                                vm.chartOrders.xAxis.categories.push(i);
+                                vm.chartOrders.xAxis.categories.push(i + 1);
                             }
                         }
 

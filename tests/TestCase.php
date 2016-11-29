@@ -1,46 +1,59 @@
 <?php namespace Tests;
 
 use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Support\Facades\Config;
 
 class TestCase extends \Illuminate\Foundation\Testing\TestCase
 {
+    /**
+    * @var string
+    */
+    protected $baseUrl = 'http://tucano.app';
 
-  /**
-   * @var string
-   */
-  protected $baseUrl = 'http://tucano.app';
+    /**
+    * Boostrap application
+    *
+    * @return \Illuminate\Foundation\Application
+    */
+    public function createApplication()
+    {
+        $app = require __DIR__.'/../bootstrap/app.php';
+        $app->make(Kernel::class)->bootstrap();
 
-  /**
-   * Boostrap application
-   *
-   * @return \Illuminate\Foundation\Application
-   */
-  public function createApplication()
-  {
-    $app = require __DIR__.'/../bootstrap/app.php';
-    $app->make(Kernel::class)->bootstrap();
+        $modulesPath = Config::get('modules.paths.modules');
+        if (is_dir($modulesPath)) {
+            foreach (scandir($modulesPath) as $dir) {
+                if (in_array($dir, ['.', '..']))
+                    continue;
 
-    return $app;
-  }
+                $dir = "{$modulesPath}/{$dir}/Database/factories";
+                if (is_dir($dir)) {
+                    $app->make(Factory::class)->load($dir);
+                }
+            }
+        }
 
-  /**
-   * Setup test case
-   *
-   * @return void
-   */
-  public function setUp()
-  {
-    parent::setUp();
-  }
+        return $app;
+    }
 
-  /**
-   * Teardown test case
-   *
-   * @return void
-   */
-  public function tearDown()
-  {
-    \Mockery::close();
-  }
+    /**
+    * Setup test case
+    *
+    * @return void
+    */
+    public function setUp()
+    {
+        parent::setUp();
+    }
+
+    /**
+    * Teardown test case
+    *
+    * @return void
+    */
+    public function tearDown()
+    {
+        \Mockery::close();
+    }
 }
-
