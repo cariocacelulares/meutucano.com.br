@@ -9,7 +9,7 @@
         "laravel/framework": "5.3.*",
         "tymon/jwt-auth": "0.5.*",
         "barryvdh/laravel-ide-helper": "^2.1",
-        "stavarengo/php-sigep": "dev-carioca as 1.0.x-dev",
+        "stavarengo/php-sigep": "dev-master",
         "stavarengo/php-sigep-fpdf": "dev-master",
         "itbz/fpdf": "^1.7",
         "nfephp-org/nfephp": "dev-carioca",
@@ -84,7 +84,7 @@
         },
         "php-sigep": {
             "type": "vcs",
-            "url": "https://github.com/diego3g/php-sigep.git"
+            "url": "https://github.com/cariocacelulares/php-sigep.git"
         },
         "nfephp": {
             "type": "vcs",

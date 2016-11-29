@@ -27,13 +27,13 @@
             </select>
         </div>
     </div>
-    <div class="row" ng-if="DevolucaoForm.devolucao.acao == 1 && DevolucaoForm.devolucao.rastreio.pedido.marketplace !== 'MERCADOLIVRE'"">
+    <div ng-if="DevolucaoForm.devolucao.acao == 1 && DevolucaoForm.devolucao.rastreio.pedido.marketplace !== 'MERCADOLIVRE'" class="row">
         <div class="col-md-12 form-group">
             <label for="protocolo">Protocolo</label>
             <input class="form-control" id="protocolo" ng-model="DevolucaoForm.devolucao.protocolo" placeholder="Protocolo de cancelamento" required />
         </div>
     </div>
-    <div ng-if="!DevolucaoForm.devolucao.imagem_cancelamento" class="row">
+    <div ng-if="DevolucaoForm.devolucao.acao == 1 && DevolucaoForm.devolucao.rastreio.pedido.marketplace !== 'MERCADOLIVRE'" class="row">
         <div class="col-md-12 form-group">
             <label for="imagem" class="full-width">Imagem</label>
             <div class="btn-default" ngf-select ng-model="DevolucaoForm.devolucao.imagem" id="imagem" ngf-pattern="'image/*'" ngf-accept="'image/*'">

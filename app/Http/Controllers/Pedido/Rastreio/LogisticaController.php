@@ -28,12 +28,22 @@ class LogisticaController extends Controller
      */
     public function show($id)
     {
-        $m = Rastreio::class;
-        if ($data = $m::find($id)) {
-            return $this->showResponse($data->logistica);
-        }
+        $m = self::MODEL;
 
-        return $this->notFoundResponse();
+        if ($data = Rastreio::with(['pedido'])->where('id', '=', $id)->first()) {
+            if ($data->logistica) {
+                $data = $m::with(['rastreio', 'rastreio.pedido'])->where('id', '=', $data->logistica->id)->first();
+
+                if ($data) {
+                    return $this->showResponse($data);
+                }
+            }
+
+            return $this->showResponse([
+                'rastreio_id' => $data->id,
+                'rastreio' => $data
+            ]);
+        }
     }
 
     /**
