@@ -141,7 +141,7 @@ class ProdutoController extends Controller
         foreach ($this->model as $key => $produto) {
             if (isset($produto['pedidos.status'])) {
                 $status = $produto['pedidos.status'];
-                $status = (is_null($status)) ? 'Desconhecido' : \Config::get('tucano.pedido_status')[$status];
+                $status = (is_null($status)) ? 'Desconhecido' : \Config::get('core.pedido_status')[$status];
                 $produto['pedidos.status'] = $status;
                 $this->model[$key]['pedidos.status'] = $status;
             }

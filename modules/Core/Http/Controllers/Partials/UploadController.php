@@ -149,11 +149,11 @@ class UploadController extends Controller
 
             // Tipo da operação
             $tipoOperacao = null;
-            if (in_array($operacao, Config::get('tucano.notas.operacoes'))) {
+            if (in_array($operacao, Config::get('core.notas.operacoes'))) {
                 $tipoOperacao = 'venda';
-            } else if (in_array($operacao, Config::get('tucano.notas.devolucao'))) {
+            } else if (in_array($operacao, Config::get('core.notas.devolucao'))) {
                 $tipoOperacao = 'devolucao';
-            } else if (in_array($operacao, Config::get('tucano.notas.estorno'))) {
+            } else if (in_array($operacao, Config::get('core.notas.estorno'))) {
                 $tipoOperacao = 'estorno';
             } else {
                 return 'Não foi possível identificar a operação da nota (CFOP)!';
@@ -705,7 +705,7 @@ class UploadController extends Controller
             $nota_id = $nota->id;
             $arquivo = storage_path('app/public/' . date('His') . '.pdf');
 
-            if (\Config::get('tucano.email_send_enabled')) {
+            if (\Config::get('core.email_send_enabled')) {
                 $mail = Mail::send('emails.compra', [
                     'nome' => $this->nfe->dest->xNome,
                     'produtos' => $produtos,

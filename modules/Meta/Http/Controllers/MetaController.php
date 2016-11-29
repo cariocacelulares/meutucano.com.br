@@ -38,7 +38,7 @@ class MetaController extends Controller
                 ->select(DB::raw(
                     'sum(pedido_produtos.valor * pedido_produtos.quantidade * IF (pedidos.total >= 0, 1, -1)) AS total'
                 ))
-                ->whereNotIn('clientes.taxvat', \Config::get('tucano.excluir_cnpj'))
+                ->whereNotIn('clientes.taxvat', \Config::get('core.excluir_cnpj'))
                 ->whereNull('pedidos.deleted_at')
                 ->where(DB::raw('MONTH(pedido_notas.data)'), '=', date('n'))
                 ->where(DB::raw('YEAR(pedido_notas.data)'), '=', date('Y'));
@@ -48,7 +48,7 @@ class MetaController extends Controller
              */
              $atualAno = Pedido::join('pedido_notas', 'pedido_notas.pedido_id', '=', 'pedidos.id')
                  ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
-                 ->whereNotIn('clientes.taxvat', \Config::get('tucano.excluir_cnpj'))
+                 ->whereNotIn('clientes.taxvat', \Config::get('core.excluir_cnpj'))
                  ->where(DB::raw('YEAR(pedido_notas.data)'), '=', date('Y'))->sum('total');
 
             $atualMesSmartphones = with(clone($mes))->where('produtos.ncm', '85171231')->first('total');

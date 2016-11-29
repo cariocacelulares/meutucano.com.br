@@ -8,5 +8,14 @@ return [
         'user' => env('MAGENTO_API_USER', 'carioca'),
         'key'  => env('MAGENTO_API_KEY', '#@carioca2016')
     ],
-    'old_order' => 4
+    'old_order' => 4,
+
+    /**
+     * Micro-serviços
+     */
+    'tucanomg' => [
+        'enabled' => env('TUCANOMG_ENABLED', true),
+        'host'  => 'http://servicos.cariocacelulares.com.br/tucanomg/public/',
+        'token' => '#@carioca2016servicetoken'
+    ]
 ];

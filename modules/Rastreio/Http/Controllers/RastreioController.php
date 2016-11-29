@@ -245,7 +245,7 @@ class RastreioController extends Controller
 
         $correios = sprintf(
             "http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx?nCdEmpresa=&sDsSenha=&sCepOrigem=%s&sCepDestino=%s&nVlPeso=1&nCdFormato=1&nVlComprimento=16&nVlAltura=10&nVlLargura=12&sCdMaoPropria=n&nVlValorDeclarado=100&sCdAvisoRecebimento=n&nCdServico=%s&nVlDiametro=0&StrRetorno=xml",
-            Config::get('tucano.cep'),
+            Config::get('core.cep'),
             $cep,
             $servicoPostagem
         );
@@ -389,7 +389,7 @@ class RastreioController extends Controller
     public function etiqueta($id)
     {
         if ($rastreio = Rastreio::find($id)) {
-            $accessData = new AccessData(Config::get('tucano.correios.accessData'));
+            $accessData = new AccessData(Config::get('rastreio.correios.accessData'));
 
             $config = new \PhpSigep\Config();
             $config->setAccessData($accessData);
@@ -406,15 +406,15 @@ class RastreioController extends Controller
              * Remetente
              */
             $remetente = new Remetente();
-            $remetente->setNome(Config::get('tucano.correios.remetente.nome'));
-            $remetente->setTelefone(Config::get('tucano.correios.remetente.telefone'));
-            $remetente->setLogradouro(Config::get('tucano.correios.remetente.rua'));
-            $remetente->setNumero(Config::get('tucano.correios.remetente.numero'));
-            $remetente->setComplemento(Config::get('tucano.correios.remetente.complemento'));
-            $remetente->setBairro(Config::get('tucano.correios.remetente.bairro'));
-            $remetente->setCep(Config::get('tucano.correios.remetente.cep'));
-            $remetente->setUf(Config::get('tucano.correios.remetente.uf'));
-            $remetente->setCidade(Config::get('tucano.correios.remetente.cidade'));
+            $remetente->setNome(Config::get('rastreio.correios.remetente.nome'));
+            $remetente->setTelefone(Config::get('rastreio.correios.remetente.telefone'));
+            $remetente->setLogradouro(Config::get('rastreio.correios.remetente.rua'));
+            $remetente->setNumero(Config::get('rastreio.correios.remetente.numero'));
+            $remetente->setComplemento(Config::get('rastreio.correios.remetente.complemento'));
+            $remetente->setBairro(Config::get('rastreio.correios.remetente.bairro'));
+            $remetente->setCep(Config::get('rastreio.correios.remetente.cep'));
+            $remetente->setUf(Config::get('rastreio.correios.remetente.uf'));
+            $remetente->setCidade(Config::get('rastreio.correios.remetente.cidade'));
 
             /**
              * Dimensões do produto

@@ -73,7 +73,7 @@ class NotaController extends Controller
                 $email = $nota->pedido->cliente->email;
 
                 if ($email) {
-                    if (\Config::get('tucano.email_send_enabled')) {
+                    if (\Config::get('core.email_send_enabled')) {
                         $mail = Mail::send('emails.danfe', [], function($message) use ($id, $email, $arquivo) {
                             with(new NotaController())->danfe($id, 'F', $arquivo);
 

@@ -147,16 +147,16 @@ class MagentoController extends Controller
         try {
             Log::debug('Requisição tucanomg para: ' . $url . ', method: ' . $method, $params);
 
-            if (!\Config::get('tucano.services.tucanomg.enabled')) {
+            if (!\Config::get('tucanomg.enabled')) {
                 Log::debug('Requisição bloqueada, a integração com o tucanomg está desativada!');
                 return null;
             } else {
                 $client = new \GuzzleHttp\Client([
-                    'base_uri' => \Config::get('tucano.services.tucanomg.host'),
+                    'base_uri' => \Config::get('tucanomg.host'),
                     'headers' => [
                         "Accept" => "application/json",
                         "Content-type"   => "application/json",
-                        "X-Access-Token" => \Config::get('tucano.services.tucanomg.token')
+                        "X-Access-Token" => \Config::get('tucanomg.token')
                     ]
                 ]);
 
@@ -200,7 +200,7 @@ class MagentoController extends Controller
             ]);
 
             $endereco = explode("\n", $order['shipping_address']['street']);
-            $uf = array_search($order['shipping_address']['region'], \Config::get('tucano.estados_uf'));
+            $uf = array_search($order['shipping_address']['region'], \Config::get('core.estados_uf'));
 
             $clienteEndereco->rua = (isset($endereco[0])) ? $endereco[0] : null;
             $clienteEndereco->numero = (isset($endereco[1])) ? $endereco[1] : null;
@@ -228,9 +228,9 @@ class MagentoController extends Controller
                 }
             }
 
-            $operacao = ($uf == \Config::get('tucano.uf'))
-                ? \Config::get('tucano.notas.venda_interna')
-                : \Config::get('tucano.notas.venda_externa');
+            $operacao = ($uf == \Config::get('core.uf'))
+                ? \Config::get('core.notas.venda_interna')
+                : \Config::get('core.notas.venda_externa');
 
             // Abre um transaction no banco de dados
             DB::beginTransaction();

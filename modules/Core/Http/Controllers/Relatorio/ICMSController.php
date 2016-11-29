@@ -33,9 +33,9 @@ class ICMSController extends Controller
         $relatorio[] = "\r\n";
         foreach ($notas as $nota) {
             $relatorio[] = $nota->pedido->operacao . ';';
-            $relatorio[] = ((in_array($nota->pedido->operacao, \Config::get('tucano.notas.operacoes'))) ? 'VENDA' : 'DEVOLUCAO') . ';';
+            $relatorio[] = ((in_array($nota->pedido->operacao, \Config::get('core.notas.operacoes'))) ? 'VENDA' : 'DEVOLUCAO') . ';';
             $relatorio[] = $nota->numero . ';';
-            $relatorio[] = \Config::get('tucano.uf'). ';';
+            $relatorio[] = \Config::get('core.uf'). ';';
             $relatorio[] = 'R$' . (count($nota->pedido->imposto) ? number_format($nota->pedido->imposto->icms_remetente, 2, ',', '.') : '0,00') . ';';
             $relatorio[] = $nota->pedido->endereco->uf . ';';
             $relatorio[] = 'R$' . (count($nota->pedido->imposto) ? number_format($nota->pedido->imposto->icms_destinatario, 2, ',', '.') : '0,00') . ';';

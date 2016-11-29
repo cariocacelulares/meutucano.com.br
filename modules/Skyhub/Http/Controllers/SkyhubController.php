@@ -270,9 +270,9 @@ class SkyhubController extends Controller
             }
 
             $marketplace = $this->parseMarketplaceName($order['code']);
-            $operacao    = ($order['shipping_address']['region'] == \Config::get('tucano.uf'))
-                ? \Config::get('tucano.notas.venda_interna')
-                : \Config::get('tucano.notas.venda_externa');
+            $operacao    = ($order['shipping_address']['region'] == \Config::get('core.uf'))
+                ? \Config::get('core.notas.venda_interna')
+                : \Config::get('core.notas.venda_externa');
 
             $codMarketplace = $this->parseMarketplaceId(
                 $marketplace,

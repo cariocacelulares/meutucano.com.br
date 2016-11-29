@@ -145,7 +145,7 @@ class PedidoController extends Controller
 
             $pedido = $m::find($pedido_id);
 
-            if (in_array($pedido->marketplace, \Config::get('tucano.required_protocolo')) && $status === 5 && !$protocolo) {
+            if (in_array($pedido->marketplace, \Config::get('core.required_protocolo')) && $status === 5 && !$protocolo) {
                 throw new \Exception('Protocolo obrigatório para cancelar pedidos nesse marketplace.', 422);
             }
 
@@ -230,7 +230,7 @@ class PedidoController extends Controller
                 $dataPedido = Carbon::createFromFormat('d/m/Y H:i', $pedido->created_at)->format('d/m/Y');
                 $diasUteis = diasUteisPeriodo($dataPedido, date('d/m/Y'), true);
 
-                if (strtolower($pedido->marketplace) == 'site' && $diasUteis > \Config::get('tucano.magento.old_order')) {
+                if (strtolower($pedido->marketplace) == 'site' && $diasUteis > \Config::get('magento.old_order')) {
                     $pedido->status = 5;
                     $pedido->save();
                 }
@@ -339,7 +339,7 @@ class PedidoController extends Controller
         /**
          * Status possíveis
          */
-        $status = \Config::get('tucano.pedido_status');
+        $status = \Config::get('core.pedido_status');
 
         /**
          * Prepara a lista para quando não existir preenche corretamente com 0
@@ -463,7 +463,7 @@ class PedidoController extends Controller
             }
         }
 
-        $mesesExtenso = Config::get('tucano.meses');
+        $mesesExtenso = Config::get('core.meses');
 
         $pedidos = [
             /*'ano' => [
@@ -522,7 +522,7 @@ class PedidoController extends Controller
         $list = [
             'mes' => $mes,
             'ano' => $ano,
-            'name' => Config::get('tucano.meses')[$mes],
+            'name' => Config::get('core.meses')[$mes],
             'data' => array_values($list)
         ];
 

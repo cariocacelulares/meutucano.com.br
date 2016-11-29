@@ -159,7 +159,7 @@ class GamificationController extends Controller
                 if ($data->mes == $mesAtual && $data->ano == $anoAtual) {
                     $list[$data->data] = 'Mês Atual';
                 } else {
-                    $list[$data->data] = str_pad(\Config('tucano.meses')[(int)$data->mes], 2, '0') . '/' . $data->ano;
+                    $list[$data->data] = str_pad(\Config('core.meses')[(int)$data->mes], 2, '0') . '/' . $data->ano;
                 }
             }
 
