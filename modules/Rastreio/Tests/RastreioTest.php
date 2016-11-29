@@ -27,7 +27,7 @@ class RastreioTest extends TestCase
    * Testa se é possível atualizar o status do rastreio pelos correios
    *
    * @return void
-   * @vcr rastreio.refresh.yml
+   * @vcr ../../modules/Rastreio/Tests/fixtures/rastreio.refresh.yml
    */
   public function test__it_should_be_able_to_refresh_status()
   {
@@ -43,7 +43,7 @@ class RastreioTest extends TestCase
    * Testa se gera uma imagem do rastreio ao chegar em um status final
    *
    * @return void
-   * @vcr rastreio.screenshot.yml
+   * @vcr ../../modules/Rastreio/Tests/fixtures/rastreio.screenshot.yml
    */
   public function test__it_should_be_able_to_generate_screenshot()
   {
@@ -62,7 +62,7 @@ class RastreioTest extends TestCase
    * Testa se é possível calcular o prazo de um rastreio
    *
    * @return void
-   * @vcr rastreio.deadline.yml
+   * @vcr ../../modules/Rastreio/Tests/fixtures/rastreio.deadline.yml
    */
   public function test__it_should_be_able_to_calculate_deadline()
   {
