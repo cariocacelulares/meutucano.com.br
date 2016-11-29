@@ -379,13 +379,13 @@ class MagentoController extends Controller
             if (!$order->codigo_api) {
                 Log::warning("Não foi possível cancelar o pedido {$order->id} no Magento, pois o pedido não possui codigo_api válido");
             } else {
-                if ($cancel = $this->api->salesOrderCancel($this->session, $order->codigo_api)) {
+                if ($this->api->salesOrderCancel($this->session, $order->codigo_api)) {
                     Log::notice("Pedido {$order->id} cancelado no magento.");
                 } else {
                     Log::warning("Não foi possível cancelar o pedido {$order->id} no Magento");
                 }
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Log::warning(logMessage($e, "Não foi possível cancelar o pedido {$order->id} no Magento"));
             reportError("Não foi possível cancelar o pedido {$order->id} no Magento" . $e->getMessage() . ' - ' . $e->getLine());
         }
@@ -464,14 +464,18 @@ class MagentoController extends Controller
     {
         try {
             $product = $this->request('products');
+            $productSku = false;
 
-            if ($product && $product['product_sku'])
+            if ($product && $product['product_sku']) {
+                $productSku = $product['product_sku'];
                 $product = Produto::find($product['product_sku']);
+            }
 
             if ($product) {
+                $productSku = $product->sku;
                 $stock = $this->api->catalogInventoryStockItemUpdate(
                     $this->session,
-                    $product->sku,
+                    $productSku,
                     [
                         'qty' => $product->estoque,
                         'is_in_stock' => (($product->estoque > 0) ? 1 : 0)
@@ -483,22 +487,37 @@ class MagentoController extends Controller
                 }
 
                 if ($stock) {
-                    Log::notice('Estoque do produto ' . $product->sku . ' alterado para ' . $product->estoque . ' / em estoque: ' . (($product->estoque > 0) ? 'sim' : 'não') . ' no magento.');
-
-                    $remove = $this->request('products/' . $product->sku, [], 'DELETE');
-                    Log::notice("Produto {$product->sku} removido da fila de espera no tucanomg");
+                    Log::notice('Estoque do produto ' . $productSku . ' alterado para ' . $product->estoque . ' / em estoque: ' . (($product->estoque > 0) ? 'sim' : 'não') . ' no magento.');
+                    $this->removeProductFromTucanomg($productSku);
                 } else {
-                    Log::warning("Estoque do produto {$product->sku} não foi atualizado no magento.", (is_array($stock) ? $stock : [$stock]));
+                    Log::warning("Estoque do produto {$productSku} não foi atualizado no magento.", (is_array($stock) ? $stock : [$stock]));
                 }
+            } else {
+                $this->removeProductFromTucanomg($productSku, 'não existe no TUCANO');
             }
         } catch (\Exception $e) {
-            if (($e->getCode() == 101 || strstr(strtolower($e->getMessage()), 'product not exists') !== false) && isset($product->sku) && $product->sku) {
-                $remove = $this->request('products/' . $product->sku, [], 'DELETE');
-                Log::notice("Produto {$product->sku} removido da fila de espera no tucanomg");
+            if ($e->getCode() == 101 || strstr(strtolower($e->getMessage()), 'product not exists') !== false) {
+                $this->removeProductFromTucanomg($productSku, 'não existe no MAGENTO');
             }
 
-            Log::critical(logMessage($e, "Erro ao atualizar o estoque do produto {$product->sku} no magento."));
-            reportError("Erro ao atualizar o estoque do produto {$product->sku} no magento." . $e->getMessage() . ' - ' . $e->getLine());
+            Log::critical(logMessage($e, "Erro ao atualizar o estoque do produto {$productSku} no magento."));
+            reportError("Erro ao atualizar o estoque do produto {$productSku} no magento." . $e->getMessage() . ' - ' . $e->getLine());
+        }
+    }
+
+    /**
+     * Remove produto do tucanomg
+     *
+     * @param  int  $productSku
+     * @param  string $message    mensagem adicional ao Log
+     * @return void
+     */
+    public function removeProductFromTucanomg($productSku, $message = false)
+    {
+        if ($productSku) {
+            $remove = $this->request('products/' . $productSku, [], 'DELETE');
+            $message = ($message) ? "({$message})" : '';
+            Log::notice("Produto {$productSku} removido da fila de espera no tucanomg {$message}");
         }
     }
 

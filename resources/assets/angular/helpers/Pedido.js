@@ -146,23 +146,6 @@
                                         }
                                     }
                                 }.bind(this));
-
-                                /*Pedido.status(pedido.id, {
-                                    'status': 5,
-                                    'protocolo': data.protocolo,
-                                    'imagem': data.imagem
-                                }).then(function(pedido) {
-                                    toaster.pop('success', 'Sucesso!', 'Pedido cancelado com sucesso!');
-                                    this.vm.loading = false;
-
-                                    if (typeof this.vm != 'undefined' && pedido) {
-                                        if (typeof redirect !== 'undefined' && redirect) {
-                                            $state.go(redirect);
-                                        } else if (typeof updateVm !== 'undefined' && updateVm && typeof this.vm.load != 'undefined' ) {
-                                            this.vm.load();
-                                        }
-                                    }
-                                }.bind(this));*/
                             }
                         }.bind(this));
                     }

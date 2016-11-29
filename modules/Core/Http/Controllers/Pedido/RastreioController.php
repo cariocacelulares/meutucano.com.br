@@ -439,6 +439,7 @@ class RastreioController extends Controller
             $destino->setCep($rastreio->pedido->endereco->cep);
             $destino->setCidade($rastreio->pedido->endereco->cidade);
             $destino->setUf($rastreio->pedido->endereco->uf);
+            $destino->setNumeroNotaFiscal($rastreio->pedido->notas()->orderBy('created_at', 'DESC')->first()->numero);
 
             /**
              * Rastreio
@@ -462,16 +463,8 @@ class RastreioController extends Controller
             $encomenda->setDestino($destino);
             $encomenda->setDimensao($dimensao);
             $encomenda->setEtiqueta($etiqueta);
-
-            $nota = $rastreio
-                ->pedido
-                ->notas()
-                ->orderBy('created_at', 'DESC')
-                ->first();
-
-            $encomenda->setNotaNumero($nota ? $nota->numero : 0);
-            $encomenda->setLote(round($rastreio->pedido->total));
             $encomenda->setPeso(0.500 * (int) $rastreio->pedido->produtos->count());
+            $encomenda->setLote(round($rastreio->pedido->total));
 
             /**
              * Tipo frete
@@ -488,7 +481,7 @@ class RastreioController extends Controller
             $plp->setEncomendas([$encomenda]);
             $plp->setRemetente($remetente);
 
-            $pdf = new CartaoDePostagem($plp, '', public_path('assets/img/carioca.png'));
+            $pdf = new CartaoDePostagem($plp, '', public_path('assets/img/carioca-negativo.jpg'));
             $pdf->render();
         }
 

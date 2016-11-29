@@ -43,7 +43,7 @@
             </div>
         </div>
     </div>
-    <div class="row" ng-if="Logistica.logistica.acao == 1 && Logistica.rastreio.pedido.marketplace !== 'MERCADOLIVRE'">
+    <div class="row" ng-if="Logistica.logistica.acao == 1 && Logistica.logistica.rastreio.pedido.marketplace !== 'MERCADOLIVRE'">
         <div class="col-md-{{ Logistica.logistica.imagem_cancelamento ? '12' : '6' }} form-group">
             <label for="protocolo">Protocolo</label>
             <input class="form-control" id="protocolo" ng-model="Logistica.logistica.protocolo" placeholder="Protocolo de cancelamento" />

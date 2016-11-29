@@ -222,6 +222,11 @@ class SkyhubController extends Controller
             $cliente = Cliente::firstOrNew(['taxvat' => $order['customer']['vat_number']]);
             $cliente->tipo  = (strlen($order['customer']['vat_number']) > 11) ? 1 : 0;
             $cliente->nome  = $order['customer']['name'];
+            $cliente->email = (isset($order['channel'])
+                                && strtolower($order['channel']) == 'mercadolivre'
+                                && $order['customer']['email'])
+                                    ? $order['customer']['email']
+                                    : null;
             $cliente->fone  = ($clienteFone)
                 ? '(' . substr($clienteFone, 0, 2) . ') ' . substr($clienteFone, 2, 4) . '-' . substr($clienteFone, 6)
                 : null;
@@ -423,14 +428,16 @@ class SkyhubController extends Controller
                 ];
             }
 
+            $rastreio = $order->rastreios->first();
+
             $jsonData = [
                 "shipment" => [
-                    "code"  => $order->rastreios->first()->rastreio,
+                    "code"  => ($rastreio && isset($rastreio->rastreio)) ? $rastreio->rastreio : null,
                     "items" => $jsonItens,
                     "track" => [
-                        "code"    => $order->rastreios->first()->rastreio,
+                        "code"    => ($rastreio && isset($rastreio->rastreio)) ? $rastreio->rastreio : null,
                         "carrier" => "CORREIOS",
-                        "method"  => $order->rastreios->first()->servico
+                        "method"  => ($rastreio && isset($rastreio->servico)) ? $rastreio->servico : null,
                     ]
                 ],
                 "invoice" => [

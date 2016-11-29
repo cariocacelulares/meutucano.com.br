@@ -5,12 +5,17 @@
         "This file is @generated automatically"
     ],
 <<<<<<< HEAD
+<<<<<<< HEAD
     "hash": "d2a60511be00a7417687f74a4bd53a1e",
     "content-hash": "c75d4801b36572a0c8c8f7349aed1e8d",
 =======
     "hash": "e1e8967ff88e49f76f579775624925f3",
     "content-hash": "e02001788e1596e9fdb4c4fb01c82faa",
 >>>>>>> v2/master
+=======
+    "hash": "9d69c2b512a875c1751d383e0fc67e2c",
+    "content-hash": "b4785df6d0e711954908c3ad64fa74ab",
+>>>>>>> master
     "packages": [
         {
             "name": "arcanedev/log-viewer",
