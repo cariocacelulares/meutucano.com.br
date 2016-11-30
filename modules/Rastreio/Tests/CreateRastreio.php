@@ -15,7 +15,7 @@ trait CreateRastreio
   public function createRastreio($data = [])
   {
     return factory(Rastreio::class)->create(array_merge([
-      'pedido_id' => $this->createPedido()->id,
+      'pedido_id' => $this->createOrder()->id,
       'rastreio'  => 'DN677968684BR',
       'servico'   => 'sedex'
     ], $data));

@@ -17,7 +17,7 @@ trait CreateInspecao
    */
   public function createInspecao($data = [])
   {
-    $pedido = $this->createPedido();
+    $pedido = $this->createOrder();
 
     return factory(InspecaoTecnica::class)->create(array_merge($data, [
       'usuario_id'         => $this->createUsuario()->id,

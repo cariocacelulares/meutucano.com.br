@@ -4,7 +4,6 @@ use Modules\Core\Models\Pedido\Pedido;
 use Modules\Core\Models\Pedido\Nota;
 use Modules\Core\Models\Pedido\PedidoProduto;
 use Modules\Core\Models\Produto\Produto;
-use Modules\Rastreio\Models;
 use Modules\Core\Models\Pedido\Imposto;
 use Modules\Core\Models\Usuario\Usuario;
 use Modules\Core\Models\Cliente\Cliente;
@@ -15,11 +14,11 @@ trait CreatePedido
   use CreateProduto;
 
   /**
-   * Cria um objeto de pedido
+   * Create one order
    *
    * @return Modules\Core\Models\Pedido\Pedido
    */
-  public function createPedido($data = [], $productSku = null)
+  public function createOrder($data = [], $productSku = null)
   {
     $cliente = factory(Cliente::class)->create();
     $endereco = factory(Endereco::class)->create([

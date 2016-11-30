@@ -21,7 +21,7 @@ class PedidoTest extends TestCase
    */
   public function test__it_should_be_able_to_change_priority()
   {
-    $pedido = $this->createPedido();
+    $pedido = $this->createOrder();
 
     $this->json('PUT', "/api/pedidos/prioridade/{$pedido->id}", [
         'priorizado' => 1
@@ -38,7 +38,7 @@ class PedidoTest extends TestCase
    */
   public function test__it_should_be_able_to_hold()
   {
-    $pedido = $this->createPedido();
+    $pedido = $this->createOrder();
 
     $this->json('PUT', "/api/pedidos/segurar/{$pedido->id}", [
       'segurar' => 1
@@ -55,7 +55,7 @@ class PedidoTest extends TestCase
    */
   public function test__it_should_not_be_able_to_cancel_without_protocolo_in_required_marketplaces()
   {
-    $pedido = $this->createPedido([
+    $pedido = $this->createOrder([
       'marketplace' => 'b2w',
       'status'      => 0
     ]);
@@ -72,7 +72,7 @@ class PedidoTest extends TestCase
    */
   public function test__it_should_be_able_to_cancel_without_protocolo_in_non_required_marketplaces()
   {
-    $pedido = $this->createPedido([
+    $pedido = $this->createOrder([
       'marketplace' => 'site',
       'status'      => 0
     ]);
@@ -92,7 +92,7 @@ class PedidoTest extends TestCase
    */
   public function test__it_should_mark_as_reembolso_when_canceled_after_paid()
   {
-    $pedido = $this->createPedido([
+    $pedido = $this->createOrder([
       'status' => 1
     ]);
 

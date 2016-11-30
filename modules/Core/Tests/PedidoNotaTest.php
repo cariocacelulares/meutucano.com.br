@@ -17,15 +17,13 @@ class PedidoNotaTest extends TestCase
   public function setUp()
   {
     parent::setUp();
-
-    $this->nota = $this->createNota();
+    $this->invoice = $this->createInvoice();
   }
 
   public function tearDown()
   {
     parent::tearDown();
-
-    $this->resetNota();
+    $this->resetInvoice();
   }
 
   /**
@@ -35,7 +33,7 @@ class PedidoNotaTest extends TestCase
    */
   public function test__it_should_be_able_to_generate_xml()
   {
-    $response = $this->json('GET', "/api/notas/xml/{$this->nota->id}/0")
+    $response = $this->json('GET', "/api/notas/xml/{$this->invoice->id}/0")
       ->seeStatusCode(200);
   }
 
@@ -46,7 +44,7 @@ class PedidoNotaTest extends TestCase
    */
   public function test__it_should_be_able_to_generate_danfe()
   {
-    $response = $this->json('GET', "/api/notas/danfe/{$this->nota->id}/S")
+    $response = $this->json('GET', "/api/notas/danfe/{$this->invoice->id}/S")
       ->seeStatusCode(200);
   }
 
@@ -57,10 +55,10 @@ class PedidoNotaTest extends TestCase
    */
   public function test__it_should_be_able_to_send_email_to_customer()
   {
-    $response = $this->json('POST', "/api/notas/email/{$this->nota->id}")
+    $response = $this->json('POST', "/api/notas/email/{$this->invoice->id}")
       ->seeStatusCode(200);
 
-    $this->seeMessageFor($this->nota->pedido->cliente->email);
+    $this->seeMessageFor($this->invoice->pedido->cliente->email);
     $this->assertEquals('application/pdf', $this->lastMessage()->attachments[0]['options']['mime']);
   }
 

@@ -10,11 +10,11 @@ trait CreateNota
     CreateUsuario;
 
   /**
-   * Cria um objeto de pedido
+   * Create one invoice and create invoice test file
    *
-   * @return Modules\Core\Models\Pedido\Pedido
+   * @return Modules\Core\Models\Pedido\Nota
    */
-  public function createNota($data = [])
+  public function createInvoice($data = [])
   {
     \File::copy(
       storage_path('tests/nota/testNota.xml'),
@@ -22,18 +22,18 @@ trait CreateNota
     );
 
     return factory(Nota::class)->create(array_merge($data, [
-      'pedido_id'  => $this->createPedido()->id,
+      'pedido_id'  => $this->createOrder()->id,
       'usuario_id' => $this->createUsuario()->id,
       'arquivo'    => 'testNota.xml'
     ]));
   }
 
   /**
-   * Deleta o arquivo de teste da nota
+   * Delete file from test invoice
    *
    * @return boolean
    */
-  public function resetNota()
+  public function resetInvoice()
   {
     return \File::delete(storage_path('app/public/nota/testNota.xml'));
   }

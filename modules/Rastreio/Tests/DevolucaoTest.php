@@ -94,7 +94,7 @@ class DevolucaoTest extends TestCase
    */
   public function test__it_should_add_protocolo_to_pedido_when_devolucao_is_create()
   {
-    $pedido = $this->createPedido();
+    $pedido = $this->createOrder();
 
     $rastreio = $this->createRastreio([
       'pedido_id' => $pedido->id

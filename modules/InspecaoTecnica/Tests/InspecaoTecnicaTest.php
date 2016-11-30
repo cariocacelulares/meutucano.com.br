@@ -46,7 +46,7 @@ class InspecaoTecnicaTest extends TestCase
       'revisado_at' => date('Y-m-d H:i:s'),
     ]);
 
-    $pedido = $this->createPedido(['status' => 1], $produto->sku);
+    $pedido = $this->createOrder(['status' => 1], $produto->sku);
 
     $inspecao = $inspecao->fresh();
     $this->assertEquals($pedido->produtos()->first()->id,
@@ -61,7 +61,7 @@ class InspecaoTecnicaTest extends TestCase
   public function test__it_should_be_able_to_create_new_inspection_to_new_pedidos()
   {
     $produto = $this->createProdutoSeminovo();
-    $pedido  = $this->createPedido(['status' => 1], $produto->sku);
+    $pedido  = $this->createOrder(['status' => 1], $produto->sku);
 
     $inspecao = InspecaoTecnica::where('pedido_produtos_id', '=',
       $pedido->produtos()->first()->id)
@@ -78,7 +78,7 @@ class InspecaoTecnicaTest extends TestCase
   public function test__it_should_delete_inspecao_when_pedido_canceled()
   {
     $produto = $this->createProdutoSeminovo();
-    $pedido  = $this->createPedido(['status' => 1], $produto->sku);
+    $pedido  = $this->createOrder(['status' => 1], $produto->sku);
 
     $pedido->fresh();
     $pedido->status = 5;

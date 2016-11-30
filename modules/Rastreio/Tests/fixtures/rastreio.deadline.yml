@@ -1,0 +1,26 @@
+
+-
+    request:
+        method: GET
+        url: 'http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx?nCdEmpresa=&sDsSenha=&sCepOrigem=89160314&sCepDestino=89160216&nVlPeso=1&nCdFormato=1&nVlComprimento=16&nVlAltura=10&nVlLargura=12&sCdMaoPropria=n&nVlValorDeclarado=100&sCdAvisoRecebimento=n&nCdServico=40010&nVlDiametro=0&StrRetorno=xml'
+        headers:
+            Host: ws.correios.com.br
+            Accept-Encoding: null
+            User-Agent: 'GuzzleHttp/6.2.1 curl/7.47.0 PHP/7.0.13-1+deb.sury.org~xenial+1'
+            Accept: null
+    response:
+        status:
+            http_version: '1.1'
+            code: '200'
+            message: OK
+        headers:
+            Cache-Control: private
+            Content-Length: '447'
+            Content-Type: 'text/xml; charset=iso-8859-1'
+            Expires: 'Wed, 30 Nov 2016 12:35:00 GMT'
+            Server: Microsoft-IIS/7.5
+            X-AspNet-Version: 4.0.30319
+            Set-Cookie: 'ASP.NET_SessionId=zpsj2aw2gh23kmdrrgtk3nkh; path=/; HttpOnly'
+            X-Powered-By: ASP.NET
+            Date: 'Wed, 30 Nov 2016 12:35:00 GMT'
+        body: "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n<Servicos><cServico><Codigo>40010</Codigo><Valor>17,95</Valor><PrazoEntrega>3</PrazoEntrega><ValorSemAdicionais>17,20</ValorSemAdicionais><ValorMaoPropria>0,00</ValorMaoPropria><ValorAvisoRecebimento>0,00</ValorAvisoRecebimento><ValorValorDeclarado>0,75</ValorValorDeclarado><EntregaDomiciliar>S</EntregaDomiciliar><EntregaSabado>N</EntregaSabado><Erro>0</Erro><MsgErro></MsgErro></cServico></Servicos>"

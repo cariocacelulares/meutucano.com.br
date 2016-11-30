@@ -21,6 +21,9 @@
         <testsuite name="Rastreio">
             <directory>./modules/Rastreio/Tests/</directory>
         </testsuite>
+        <testsuite name="Magento">
+            <directory>./modules/Magento/Tests/</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist>

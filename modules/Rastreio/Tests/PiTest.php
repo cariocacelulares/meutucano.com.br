@@ -114,7 +114,7 @@ class PiTest extends TestCase
    */
   public function test__it_should_add_protocolo_to_pedido_when_pi_is_create()
   {
-    $pedido = $this->createPedido();
+    $pedido = $this->createOrder();
 
     $this->rastreio = $this->createRastreio([
       'pedido_id' => $pedido->id
