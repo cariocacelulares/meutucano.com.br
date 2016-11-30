@@ -1,7 +1,7 @@
 <?php namespace Modules\InspecaoTecnica\Tests;
 
 use Modules\InspecaoTecnica\Models\InspecaoTecnica;
-use App\Models\Produto\Produto;
+use Modules\Core\Models\Produto\Produto;
 use Modules\Core\Tests\CreatePedido;
 use Tests\CreateUsuario;
 

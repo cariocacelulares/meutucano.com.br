@@ -4,7 +4,7 @@ use Modules\Core\Models\Pedido\Pedido;
 use Modules\Core\Models\Pedido\Nota;
 use Modules\Core\Models\Pedido\PedidoProduto;
 use Modules\Core\Models\Produto\Produto;
-use Modules\Core\Models\Pedido\Rastreio;
+use Modules\Rastreio\Models;
 use Modules\Core\Models\Pedido\Imposto;
 use Modules\Core\Models\Usuario\Usuario;
 use Modules\Core\Models\Cliente\Cliente;

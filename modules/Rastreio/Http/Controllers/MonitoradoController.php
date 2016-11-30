@@ -4,6 +4,7 @@ use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Modules\Rastreio\Models\Rastreio;
+use Modules\Rastreio\Models\Monitorado;
 
 /**
  * Class MonitoradoController

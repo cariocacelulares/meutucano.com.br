@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestControllerTrait;
-use App\Models\Produto\Produto;
+use Modules\Core\Models\Produto\Produto;
 use Modules\Core\Models\Pedido\PedidoProduto;
 use Modules\InspecaoTecnica\Models\InspecaoTecnica;
 

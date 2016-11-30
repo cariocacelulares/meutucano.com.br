@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Modules\Core\Models\Pedido\Pedido;
 use Modules\Core\Models\Produto\Produto;
 use Modules\Core\Models\Cliente\Cliente;
-use Modules\Core\Models\Pedido\Rastreio;
+use Modules\Rastreio\Models;
 
 /**
  * Class SearchController

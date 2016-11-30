@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Modules\Core\Models\Cliente\Cliente;
 use Modules\Core\Models\Cliente\Endereco;
+use Modules\Rastreio\Models\Rastreio;
 use Modules\InspecaoTecnica\Models\InspecaoTecnica;
 use Modules\Core\Events\OrderCancel;
 use Modules\Core\Events\OrderSeminovo;

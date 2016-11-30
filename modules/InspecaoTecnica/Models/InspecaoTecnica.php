@@ -3,8 +3,8 @@
 use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Usuario\Usuario;
-use App\Models\Produto\Produto;
-use App\Models\Pedido\PedidoProduto;
+use Modules\Core\Models\Produto\Produto;
+use Modules\Core\Models\Pedido\PedidoProduto;
 
 /**
  * Class InspecaoTecnica

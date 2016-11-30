@@ -10,7 +10,7 @@ trait CreateRastreio
   /**
    * Cria um objeto de rastreio
    *
-   * @return Modules\Core\Models\Pedido\Rastreio
+   * @return Modules\Rastreio\Models
    */
   public function createRastreio($data = [])
   {
