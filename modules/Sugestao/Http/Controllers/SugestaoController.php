@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use Modules\Sugestao\Models\Sugestao;
+use Modules\Sugestao\Http\Requests\SugestaoRequest as Request;
 
 /**
  * Class SugestaoController
@@ -46,8 +47,9 @@ class SugestaoController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function store()
+    public function store(Request $request)
     {
+        dd();
         $m = self::MODEL;
         try {
             $v = \Validator::make(Input::all(), $this->validationRules);
