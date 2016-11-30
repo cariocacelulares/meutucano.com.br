@@ -251,6 +251,7 @@ Route::group(['prefix' => '/api', 'middleware' => 'sentry'], function() {
         Route::get('inspecao_tecnica/solicitadas', 'Inspecao\InspecaoTecnicaController@solicitadas');
         Route::get('inspecao_tecnica/fila', 'Inspecao\InspecaoTecnicaController@fila');
         Route::get('inspecao_tecnica/list', 'Inspecao\InspecaoTecnicaController@tableList');
+        Route::get('inspecao_tecnica/get/{id}', 'Inspecao\InspecaoTecnicaController@showByPedidoProduto');
         Route::post('inspecao_tecnica/priority/{id}', 'Inspecao\InspecaoTecnicaController@changePriority');
         Route::resource('inspecao_tecnica', 'Inspecao\InspecaoTecnicaController');
 

@@ -107,10 +107,10 @@ class InspecaoTecnicaController extends Controller
                 throw new \Exception("ValidationException");
             }
 
-            $data = $m::create(array_merge(Input::all(), [
+            $data = $m::create(array_merge([
                 'usuario_id' => getCurrentUserId(),
                 'revisado_at' => date('Y-m-d H:i:s')
-            ]));
+            ], Input::all()));
 
             return $this->createdResponse($data);
         } catch(\Exception $ex) {
@@ -175,6 +175,24 @@ class InspecaoTecnicaController extends Controller
         }
 
         return $this->notFoundResponse();
+    }
+
+    /**
+     * Retorna uma inspecao
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function showByPedidoProduto($id)
+    {
+        $m = self::MODEL;
+        $data = $m::with('produto')->where('pedido_produtos_id', '=', $id)->first();
+
+        if ($data) {
+            return $this->showResponse($data);
+        }
+
+        return $this->showResponse([]);
     }
 
     /**
