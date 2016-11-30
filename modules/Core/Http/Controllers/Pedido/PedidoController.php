@@ -31,9 +31,6 @@ class PedidoController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function tableList() {
-        dd(hasModule('sugestao'));
-        dd(Sugestao::find(2));
-
         $m = self::MODEL;
 
         $list = $m::with(['cliente', 'endereco'])
