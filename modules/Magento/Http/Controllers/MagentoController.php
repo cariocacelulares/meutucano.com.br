@@ -379,6 +379,7 @@ class MagentoController extends Controller
             if (!$order->codigo_api) {
                 Log::warning("Não foi possível cancelar o pedido {$order->id} no Magento, pois o pedido não possui codigo_api válido");
             } else {
+
                 if ($this->api->salesOrderCancel($this->session, $order->codigo_api)) {
                     Log::notice("Pedido {$order->id} cancelado no magento.");
                 } else {
