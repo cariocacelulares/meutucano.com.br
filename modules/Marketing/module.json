@@ -6,10 +6,10 @@
     "active": 1,
     "order": 5,
     "providers": [
-        "Modules\\Marketing\\Providers\\MarketingServiceProvider"
+        "Marketing\\Providers\\MarketingServiceProvider"
     ],
     "aliases":{},
     "files": [
-        "start.php"
+        "bootstrap.php"
     ]
 }

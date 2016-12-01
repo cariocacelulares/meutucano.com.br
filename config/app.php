@@ -7,7 +7,7 @@ return [
     'url'             => env('APP_URL', 'http://localhost/dev/tucanov3'),
 
     'timezone'        => 'America/Sao_Paulo',
-    'locale'          => 'pt-br',
+    'locale'          => 'pt_BR',
     'fallback_locale' => 'en',
 
     'key'             => env('APP_KEY', 'carioquinha20161carioquinha20161'),

@@ -6,10 +6,10 @@
     "active": 1,
     "order": 5,
     "providers": [
-        "Modules\\Gamification\\Providers\\GamificationServiceProvider"
+        "Gamification\\Providers\\GamificationServiceProvider"
     ],
     "aliases":{},
     "files": [
-        "start.php"
+        "bootstrap.php"
     ]
 }

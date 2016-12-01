@@ -3,7 +3,7 @@
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
-use Modules\Gamification\Models\Traits\GamificationTrait;
+use Gamification\Models\Traits\GamificationTrait;
 use Illuminate\Notifications\Notifiable;
 
 /**

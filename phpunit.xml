@@ -13,16 +13,16 @@
             <directory>./tests/</directory>
         </testsuite>
         <testsuite name="InspecaoTecnica">
-            <directory>./modules/InspecaoTecnica/Tests/</directory>
+            <directory>./tests/InspecaoTecnica/</directory>
         </testsuite>
         <testsuite name="Core">
-            <directory>./modules/Core/Tests/</directory>
+            <directory>./tests/Core/</directory>
         </testsuite>
         <testsuite name="Rastreio">
-            <directory>./modules/Rastreio/Tests/</directory>
+            <directory>./tests/Rastreio/</directory>
         </testsuite>
         <testsuite name="Magento">
-            <directory>./modules/Magento/Tests/</directory>
+            <directory>./tests/Magento/</directory>
         </testsuite>
     </testsuites>
     <filter>

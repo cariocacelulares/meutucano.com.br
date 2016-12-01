@@ -6,10 +6,10 @@
     "active": 1,
     "order": 4,
     "providers": [
-        "Modules\\Meta\\Providers\\MetaServiceProvider"
+        "Meta\\Providers\\MetaServiceProvider"
     ],
     "aliases":{},
     "files": [
-        "start.php"
+        "bootstrap.php"
     ]
 }

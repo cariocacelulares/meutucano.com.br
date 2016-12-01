@@ -6,10 +6,10 @@
     "active": 1,
     "order": 1,
     "providers": [
-        "Modules\\Rastreio\\Providers\\RastreioServiceProvider"
+        "Rastreio\\Providers\\RastreioServiceProvider"
     ],
     "aliases":{},
     "files": [
-        "start.php"
+        "bootstrap.php"
     ]
 }

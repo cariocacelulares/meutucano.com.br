@@ -6,10 +6,10 @@
     "active": 1,
     "order": 3,
     "providers": [
-        "Modules\\Skyhub\\Providers\\SkyhubServiceProvider"
+        "Skyhub\\Providers\\SkyhubServiceProvider"
     ],
     "aliases":{},
     "files": [
-        "start.php"
+        "bootstrap.php"
     ]
 }

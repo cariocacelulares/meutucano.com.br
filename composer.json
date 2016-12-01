@@ -57,9 +57,17 @@
         ],
         "psr-4": {
             "App\\": "app/",
-            "Modules\\": "modules/",
             "Tests\\": "tests/",
-            "Bootstrap\\": "bootstrap/"
+            "Bootstrap\\": "bootstrap/",
+            "Core\\": "modules/Core/app",
+            "Gamification\\": "modules/Gamification/app",
+            "InspecaoTecnica\\": "modules/InspecaoTecnica/app",
+            "Magento\\": "modules/Magento/app",
+            "Marketing\\": "modules/Marketing/app",
+            "Meta\\": "modules/Meta/app",
+            "Rastreio\\": "modules/Rastreio/app",
+            "Skyhub\\": "modules/Skyhub/app",
+            "Sugestao\\": "modules/Sugestao/app"
         },
         "files": [
             "app/helpers.php"

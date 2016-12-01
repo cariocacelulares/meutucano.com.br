@@ -21,19 +21,6 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
         $app = require __DIR__.'/../bootstrap/app.php';
         $app->make(Kernel::class)->bootstrap();
 
-        $modulesPath = Config::get('modules.paths.modules');
-        if (is_dir($modulesPath)) {
-            foreach (scandir($modulesPath) as $dir) {
-                if (in_array($dir, ['.', '..']))
-                    continue;
-
-                $dir = "{$modulesPath}/{$dir}/Database/factories";
-                if (is_dir($dir)) {
-                    $app->make(Factory::class)->load($dir);
-                }
-            }
-        }
-
         return $app;
     }
 

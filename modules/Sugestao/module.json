@@ -6,10 +6,10 @@
     "active": 1,
     "order": 5,
     "providers": [
-        "Modules\\Sugestao\\Providers\\SugestaoServiceProvider"
+        "Sugestao\\Providers\\SugestaoServiceProvider"
     ],
     "aliases": [],
     "files": [
-        "start.php"
+        "bootstrap.php"
     ]
 }

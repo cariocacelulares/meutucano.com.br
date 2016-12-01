@@ -6,10 +6,10 @@
     "active": 1,
     "order": 3,
     "providers": [
-        "Modules\\Magento\\Providers\\MagentoServiceProvider"
+        "Magento\\Providers\\MagentoServiceProvider"
     ],
     "aliases":{},
     "files": [
-        "start.php"
+        "bootstrap.php"
     ]
 }
