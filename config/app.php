@@ -67,8 +67,6 @@ return [
         Jenssegers\Mongodb\MongodbServiceProvider::class,
 
         Nwidart\Modules\LaravelModulesServiceProvider::class,
-
-        Joselfonseca\LaravelApiTools\LaravelApiToolsServiceProvider::class,
     ],
 
 

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9917fa970d4a129b4ec19e5dc697c59f",
-    "content-hash": "985eab6f320d0d2ca978954d40a92965",
+    "hash": "571421f85137bb74ee5c5dc55ace42eb",
+    "content-hash": "e6e37973f15132acb0af2a0490c134ef",
     "packages": [
         {
             "name": "arcanedev/log-viewer",
@@ -1068,49 +1068,6 @@
             "time": "2015-12-05 17:17:57"
         },
         {
-            "name": "joselfonseca/laravel-api-tools",
-            "version": "1.2.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/joselfonseca/laravel-api-tools.git",
-                "reference": "1add62c0c80b4805eb8484c57495a2aba7fd2a17"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/joselfonseca/laravel-api-tools/zipball/1add62c0c80b4805eb8484c57495a2aba7fd2a17",
-                "reference": "1add62c0c80b4805eb8484c57495a2aba7fd2a17",
-                "shasum": ""
-            },
-            "require": {
-                "league/fractal": "0.12.*",
-                "php": ">=5.4.0",
-                "tymon/jwt-auth": "0.5.*"
-            },
-            "require-dev": {
-                "orchestra/testbench": "3.0.*",
-                "phpunit/phpunit": "4.2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [],
-                "psr-4": {
-                    "Joselfonseca\\LaravelApiTools\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jose Luis Fonseca",
-                    "email": "jose@ditecnologia.com"
-                }
-            ],
-            "description": "Some tools for Laravel API development, nothing really new, just wrapers and helper stuff",
-            "time": "2015-07-13 01:29:49"
-        },
-        {
             "name": "laravel/framework",
             "version": "v5.3.26",
             "source": {
@@ -1374,69 +1331,6 @@
                 "storage"
             ],
             "time": "2016-10-19 20:38:46"
-        },
-        {
-            "name": "league/fractal",
-            "version": "0.12.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thephpleague/fractal.git",
-                "reference": "0a51dcb6398dc2377d086210d0624996a1df8322"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/fractal/zipball/0a51dcb6398dc2377d086210d0624996a1df8322",
-                "reference": "0a51dcb6398dc2377d086210d0624996a1df8322",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4"
-            },
-            "require-dev": {
-                "illuminate/contracts": "~5.0",
-                "mockery/mockery": "~0.9",
-                "pagerfanta/pagerfanta": "~1.0.0",
-                "phpunit/phpunit": "~4.0",
-                "squizlabs/php_codesniffer": "~1.5",
-                "zendframework/zend-paginator": "~2.3"
-            },
-            "suggest": {
-                "illuminate/pagination": "The Illuminate Pagination component.",
-                "pagerfanta/pagerfanta": "Pagerfanta Paginator",
-                "zendframework/zend-paginator": "Zend Framework Paginator"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.13-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "League\\Fractal\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Phil Sturgeon",
-                    "email": "me@philsturgeon.uk",
-                    "homepage": "http://philsturgeon.uk/",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Handle the output of complex data structures ready for API output.",
-            "homepage": "http://fractal.thephpleague.com/",
-            "keywords": [
-                "api",
-                "json",
-                "league",
-                "rest"
-            ],
-            "time": "2015-03-19 15:16:43"
         },
         {
             "name": "maatwebsite/excel",
