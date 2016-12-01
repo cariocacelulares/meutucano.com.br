@@ -131,16 +131,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.19.33",
+            "version": "3.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "8073e8ce3f5d1836ab5a27ce600b82dd12d68dd1"
+                "reference": "8ba6e8b1a9dfd4af479c8615de8177a661b525d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/8073e8ce3f5d1836ab5a27ce600b82dd12d68dd1",
-                "reference": "8073e8ce3f5d1836ab5a27ce600b82dd12d68dd1",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/8ba6e8b1a9dfd4af479c8615de8177a661b525d6",
+                "reference": "8ba6e8b1a9dfd4af479c8615de8177a661b525d6",
                 "shasum": ""
             },
             "require": {
@@ -207,7 +207,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2016-11-29 19:33:30"
+            "time": "2016-11-30 19:09:47"
         },
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -1069,16 +1069,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.3.25",
+            "version": "v5.3.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "90791f6a9eceebb1731ff7191141083ebb127c31"
+                "reference": "609bcffd2ce2006925f8304e022288b3da5d23a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/90791f6a9eceebb1731ff7191141083ebb127c31",
-                "reference": "90791f6a9eceebb1731ff7191141083ebb127c31",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/609bcffd2ce2006925f8304e022288b3da5d23a4",
+                "reference": "609bcffd2ce2006925f8304e022288b3da5d23a4",
                 "shasum": ""
             },
             "require": {
@@ -1193,7 +1193,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2016-11-29 14:42:22"
+            "time": "2016-11-30 14:58:38"
         },
         {
             "name": "laravelcollective/html",
@@ -4788,16 +4788,16 @@
         },
         {
             "name": "doctrine/common",
-            "version": "v2.6.1",
+            "version": "v2.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/common.git",
-                "reference": "a579557bc689580c19fee4e27487a67fe60defc0"
+                "reference": "7bce00698899aa2c06fe7365c76e4d78ddb15fa3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/common/zipball/a579557bc689580c19fee4e27487a67fe60defc0",
-                "reference": "a579557bc689580c19fee4e27487a67fe60defc0",
+                "url": "https://api.github.com/repos/doctrine/common/zipball/7bce00698899aa2c06fe7365c76e4d78ddb15fa3",
+                "reference": "7bce00698899aa2c06fe7365c76e4d78ddb15fa3",
                 "shasum": ""
             },
             "require": {
@@ -4857,7 +4857,7 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2015-12-25 13:18:31"
+            "time": "2016-11-30 16:50:46"
         },
         {
             "name": "doctrine/dbal",
@@ -6601,16 +6601,16 @@
         },
         {
             "name": "tightenco/mailthief",
-            "version": "v0.3.2",
+            "version": "v0.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tightenco/mailthief.git",
-                "reference": "a42277459092ae87f5ac11271f969625509f7f49"
+                "reference": "9e073e4cf63fd9425eb85278352380faa83d72af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tightenco/mailthief/zipball/a42277459092ae87f5ac11271f969625509f7f49",
-                "reference": "a42277459092ae87f5ac11271f969625509f7f49",
+                "url": "https://api.github.com/repos/tightenco/mailthief/zipball/9e073e4cf63fd9425eb85278352380faa83d72af",
+                "reference": "9e073e4cf63fd9425eb85278352380faa83d72af",
                 "shasum": ""
             },
             "require": {
@@ -6639,7 +6639,7 @@
                 }
             ],
             "description": "A fake Mailer for Laravel applications that takes the pain out of testing mail.",
-            "time": "2016-10-12 22:32:47"
+            "time": "2016-11-30 16:49:35"
         },
         {
             "name": "way/generators",

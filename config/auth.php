@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'model' => App\Models\Usuario\Usuario::class,
+
     'defaults' => [
         'guard' => 'web',
         'passwords' => 'users',
