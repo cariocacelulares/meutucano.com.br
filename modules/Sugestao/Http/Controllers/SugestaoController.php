@@ -49,7 +49,6 @@ class SugestaoController extends Controller
      */
     public function store(Request $request)
     {
-        dd();
         $m = self::MODEL;
         try {
             $v = \Validator::make(Input::all(), $this->validationRules);

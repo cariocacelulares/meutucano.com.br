@@ -1,9 +1,12 @@
 <?php namespace Modules\Sugestao\Http\Requests;
 
-use Joselfonseca\LaravelApiTools\Http\Requests\ApiRequest as Request;
+use App\Http\Requests\JsonResponseTrait;
+use Illuminate\Foundation\Http\FormRequest;
 
-class SugestaoRequest extends Request
+class SugestaoRequest extends FormRequest
 {
+    use JsonResponseTrait;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -25,6 +28,18 @@ class SugestaoRequest extends Request
             'descricao' => 'required|min:5',
             'setor'     => 'required',
             'pessoa'    => 'required',
+        ];
+    }
+
+    /**
+     * Set custom names to the attributes from request.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'descricao' => 'descrição',
         ];
     }
 }
