@@ -131,16 +131,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.19.33",
+            "version": "3.20.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "8073e8ce3f5d1836ab5a27ce600b82dd12d68dd1"
+                "reference": "c83afe188b2f462840a5ab12d43f2e83f356f3f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/8073e8ce3f5d1836ab5a27ce600b82dd12d68dd1",
-                "reference": "8073e8ce3f5d1836ab5a27ce600b82dd12d68dd1",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/c83afe188b2f462840a5ab12d43f2e83f356f3f0",
+                "reference": "c83afe188b2f462840a5ab12d43f2e83f356f3f0",
                 "shasum": ""
             },
             "require": {
@@ -207,7 +207,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2016-11-29 19:33:30"
+            "time": "2016-12-01 19:25:12"
         },
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -548,32 +548,25 @@
         },
         {
             "name": "endroid/qrcode",
-            "version": "1.7.4",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/endroid/QrCode.git",
-                "reference": "ba35ed8f0686bc4ec82874752778ccb427261a41"
+                "reference": "32e3e148b148482f04101fc96d18d3281da72af7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/endroid/QrCode/zipball/ba35ed8f0686bc4ec82874752778ccb427261a41",
-                "reference": "ba35ed8f0686bc4ec82874752778ccb427261a41",
+                "url": "https://api.github.com/repos/endroid/QrCode/zipball/32e3e148b148482f04101fc96d18d3281da72af7",
+                "reference": "32e3e148b148482f04101fc96d18d3281da72af7",
                 "shasum": ""
             },
             "require": {
-                "ext-gd": "*",
-                "php": ">=5.3.0",
-                "symfony/options-resolver": "^2.3|^3.0"
+                "php": ">=5.3.0"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.x-dev"
-                }
-            },
             "autoload": {
-                "psr-4": {
-                    "Endroid\\QrCode\\": "src/"
+                "psr-0": {
+                    "Endroid": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -595,7 +588,7 @@
                 "qr",
                 "qrcode"
             ],
-            "time": "2016-07-26 09:39:07"
+            "time": "2013-04-13 12:49:51"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -3150,60 +3143,6 @@
             "time": "2016-07-30 09:10:37"
         },
         {
-            "name": "symfony/options-resolver",
-            "version": "v3.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/options-resolver.git",
-                "reference": "45940bcad6388b3b6058107eca67ced738d205bb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/45940bcad6388b3b6058107eca67ced738d205bb",
-                "reference": "45940bcad6388b3b6058107eca67ced738d205bb",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.5.9"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.2-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\OptionsResolver\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony OptionsResolver Component",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "config",
-                "configuration",
-                "options"
-            ],
-            "time": "2016-05-13 18:13:23"
-        },
-        {
             "name": "symfony/polyfill-mbstring",
             "version": "v1.3.0",
             "source": {
@@ -4544,16 +4483,16 @@
         },
         {
             "name": "doctrine/common",
-            "version": "v2.6.1",
+            "version": "v2.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/common.git",
-                "reference": "a579557bc689580c19fee4e27487a67fe60defc0"
+                "reference": "7bce00698899aa2c06fe7365c76e4d78ddb15fa3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/common/zipball/a579557bc689580c19fee4e27487a67fe60defc0",
-                "reference": "a579557bc689580c19fee4e27487a67fe60defc0",
+                "url": "https://api.github.com/repos/doctrine/common/zipball/7bce00698899aa2c06fe7365c76e4d78ddb15fa3",
+                "reference": "7bce00698899aa2c06fe7365c76e4d78ddb15fa3",
                 "shasum": ""
             },
             "require": {
@@ -4613,7 +4552,7 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2015-12-25 13:18:31"
+            "time": "2016-11-30 16:50:46"
         },
         {
             "name": "doctrine/dbal",
@@ -5467,16 +5406,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.8.29",
+            "version": "4.8.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "f19d481b468b76a7fb55eb2b772ed487e484891e"
+                "reference": "a534e04d0bd39c557c2881c341efd06fa6f1292a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f19d481b468b76a7fb55eb2b772ed487e484891e",
-                "reference": "f19d481b468b76a7fb55eb2b772ed487e484891e",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a534e04d0bd39c557c2881c341efd06fa6f1292a",
+                "reference": "a534e04d0bd39c557c2881c341efd06fa6f1292a",
                 "shasum": ""
             },
             "require": {
@@ -5535,7 +5474,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-11-20 10:35:28"
+            "time": "2016-12-01 17:05:48"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
