@@ -1,5 +1,6 @@
 <?php namespace Core\Observers;
 
+use Illuminate\Support\Facades\Event;
 use Core\Models\Pedido\Pedido;
 use Core\Events\OrderCanceled;
 use Core\Events\OrderCreated;
@@ -19,10 +20,16 @@ class PedidoObserver
      */
     public function saved(Pedido $order)
     {
-        \Event::fire(new OrderSaved($order));
+        Event::fire(new OrderSaved($order));
 
-        $oldStatus = ($order->getOriginal('status') === null) ? null : (int)$order->getOriginal('status');
         $newStatus = (is_null($order->status)) ? null : (int)$order->status;
+
+        $dirty = $order->getDirty();
+        if (isset($dirty['status'])) {
+            $oldStatus = ($dirty['status'] === null) ? null : (int)$dirty['status'];
+        } else {
+            $oldStatus = $newStatus;
+        }
 
         if ($newStatus !== $oldStatus) {
             switch ($newStatus) {
@@ -40,26 +47,6 @@ class PedidoObserver
                     break;
             }
         }
-
-        /*
-        // Se realmente ocorreu uma mudança de status e o pedido não veio do site
-        if ($newStatus !== $oldStatus && strtolower($order->marketplace) != 'site') {
-            // Se o novo status for entregue, notifica a Skyhub
-            if ($newStatus === 3) {
-                with(new SkyhubController())->orderDelivered($order);
-            }
-        }
-
-        // Se o status foi alterado e o novo status for pago
-        if ($newStatus !== $oldStatus && $newStatus === 1) {
-            // pra cada produto do pedido
-            foreach ($order->produtos as $orderProduto) {
-                // se o produto do pedido nao tiver inspecao tecnica nem imei, e for seminovo
-                if (!$orderProduto->inspecao_tecnica && !$orderProduto->imei && $orderProduto->produto->estado == 1) {
-                    \Event::fire(new OrderSeminovo($orderProduto));
-                }
-            }
-        }*/
     }
 
     /**

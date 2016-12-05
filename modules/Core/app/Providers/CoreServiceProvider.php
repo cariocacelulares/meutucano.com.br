@@ -1,8 +1,10 @@
 <?php namespace Core\Providers;
 
-use Core\Models\Pedido\Pedido;
-use Core\Observers\PedidoObserver;
 use Illuminate\Support\ServiceProvider;
+use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido\PedidoProduto;
+use Core\Observers\PedidoObserver;
+use Core\Observers\PedidoProdutoObserver;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -25,6 +27,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->registerViews();
 
         Pedido::observe(PedidoObserver::class);
+        PedidoProduto::observe(PedidoProdutoObserver::class);
     }
 
     /**
