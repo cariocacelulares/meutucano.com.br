@@ -57,7 +57,7 @@ class RelatorioController extends Controller
         }
 
         foreach ($devolucoes as $dev) {
-            $relatorio[] = ($dev->nota->pedido->endereco->uf == 'SC') ? '1202' : '2202' . ';';
+            $relatorio[] = (($dev->nota->pedido->endereco->uf == 'SC') ? '1202' : '2202') . ';';
             $relatorio[] = 'DEVOLUCAO;';
             $relatorio[] = $dev->nota->numero . ';';
             $relatorio[] = \Config::get('tucano.uf'). ';';
