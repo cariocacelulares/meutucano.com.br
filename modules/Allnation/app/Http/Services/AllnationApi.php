@@ -1,7 +1,6 @@
 <?php namespace Allnation\Http\Services;
 
 use GuzzleHttp\Client;
-use Allnation\
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -13,7 +12,7 @@ class AllnationApi
     /**
      * API Client
      *
-     * @var GuzzleHttp\Client
+     * @var \SoapClient
      */
     private $api;
 
@@ -67,7 +66,7 @@ class AllnationApi
 
             return $response;
         } catch (\Exception $e) {
-            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $args[1] . ', method: ' . $args[0]));
+            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $action));
             return null;
         }
     }
@@ -77,14 +76,14 @@ class AllnationApi
      *
      * @return array
      */
-    public function fetchProducts()
+    public function fetchProducts($lastRequestDatetime)
     {
         $response = $this->request('RetornarListaProdutos', [
-            'Data' => '2016-12-02 08:00:00'
+            'Data' => $lastRequestDatetime
         ]);
 
         $produtos = simplexml_load_string($response->RetornarListaProdutosResult->any)->NewDataSet;
 
-        return $produtos->Produtos;
+        return is_array($produtos->Produtos) ? $produtos->Produtos : [$produtos->Produtos];
     }
 }

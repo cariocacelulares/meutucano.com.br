@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'magento', 'namespace' => 'Magento\Http\Controllers'], function()
+Route::group(['middleware' => 'web', 'prefix' => 'api/magento', 'namespace' => 'Magento\Http\Controllers'], function()
 {
-    Route::get('/', 'MagentoController@index');
+    Route::get('/categories', 'MagentoController@fetchCategories');
 });

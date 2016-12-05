@@ -1,14 +1,13 @@
-<?php namespace Allnation\Models;
+<?php namespace Magento\Models;
 
-use Core\Models\Produto\Produto;
 use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
- * Class AllnationProduct
- * @package AllNation\Models\AllnationProduct
+ * Class MagentoCategory
+ * @package Magento\Models
  */
-class AllnationProduct extends Model
+class MagentoCategory extends Model
 {
     use RevisionableTrait;
 
@@ -21,8 +20,23 @@ class AllnationProduct extends Model
     * @var array
     */
     protected $fillable = [
+        'id',
         'produto_sku',
-        'allnation_id'
+        'title',
+        'category',
+        'brand',
+        'description',
+        'ean',
+        'ncm',
+        'warranty',
+        'weigth',
+        'cost',
+        'image',
+        'stock_from',
+        'width',
+        'height',
+        'length',
+        'origin'
     ];
 
     /**

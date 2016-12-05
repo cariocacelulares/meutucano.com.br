@@ -45,8 +45,12 @@
         overflow: hidden;
 
         > li {
-            height: 30px;
-            line-height: 30px;
+            line-height: 24px;
+
+            > ul {
+                margin: 0;
+                padding-bottom: 0;
+            }
         }
 
         &.ng-hide {

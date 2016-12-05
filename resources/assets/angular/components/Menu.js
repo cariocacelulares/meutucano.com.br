@@ -158,6 +158,35 @@
                         roles: ['admin', 'marketing']
                     },
                     {
+                        title: 'Integrações',
+                        icon: 'fa-cogs',
+                        sub: [
+                            {
+                                title: 'Allnation',
+                                icon: 'fa-adn',
+                                sub: [
+                                    {
+                                        title: 'Produtos',
+                                        icon: 'fa-dropbox',
+                                        sref: $state.href('app.allnation.products')
+                                    }
+                                ]
+                            },
+                            {
+                                title: 'Magento',
+                                icon: 'fa-maxcdn',
+                                sub: [
+                                    {
+                                        title: 'Categorias',
+                                        icon: 'fa-list',
+                                        sref: $state.href('app.magento.categories')
+                                    }
+                                ]
+                            }
+                        ],
+                        roles: ['admin']
+                    },
+                    {
                         title: 'Inspeção técnica',
                         icon: 'fa-bug',
                         sub: [

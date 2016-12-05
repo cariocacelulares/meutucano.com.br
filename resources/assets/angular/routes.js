@@ -398,6 +398,20 @@
                     templateUrl: 'views/gamification/solicitacoes/list.html',
                     controller: 'SolicitacaoListController as SolicitacaoList'
                 })
+
+                /**
+                 * Allnation
+                 */
+                .state('app.allnation', {
+                    url: '/allnation',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.allnation.products', {
+                    url: '/products',
+                    templateUrl: 'views/allnation/product/list.html',
+                    controller: 'AllnationProductListController as AllnationProductList'
+                })
             ;
         });
 })();

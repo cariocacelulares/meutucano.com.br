@@ -1,0 +1,46 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-cubes" title="Produtos" description="Todos os produtos da Allnation."></page-title>
+</div>
+<table table-list="AllnationProductList">
+    <thead>
+        <tr>
+            <th width="64"></th>
+            <th width="150" class="text-center">Código</th>
+            <th>Título</th>
+            <th width="160" class="text-center">Marca</th>
+            <th width="160" class="text-center">Estoque</th>
+            <th width="160" class="text-center">EAN</th>
+            <th width="75"></th>
+        </tr>
+        <tr class="table-filter" static-include="views/allnation/product/list_filter.html"></tr>
+    </thead>
+    <tbody ng-if="AllnationProductList.tableData.data && !AllnationProductList.loading">
+        <tr ng-repeat="product in AllnationProductList.tableData.data">
+            <td class="text-center">
+                <img src="{{ product.image }}" width="64" />
+            </td>
+            <td class="text-center">{{ product.id }}</td>
+            <td>
+                <strong>{{ product.title }}</strong>
+                <br/>
+                <small>
+                    {{ product.category }}
+                </small>
+            </td>
+            <td class="text-center">
+                {{ product.brand }}
+            </td>
+            <td class="text-center">
+                {{ product.stock_from }}
+            </td>
+            <td class="text-center">
+                {{ product.ean }}
+            </td>
+            <td class="text-center">
+                <a class="btn-info" ui-sref="app.allnation.product.form({id: product.id})">
+                    <i class="fa-plus"></i>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
