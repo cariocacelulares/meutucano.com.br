@@ -68,19 +68,6 @@ class Produto extends Model
     ];*/
 
     /**
-     * Fire update event
-     */
-    protected static function boot() {
-        parent::boot();
-
-        static::updating(function($produto) {
-            if ($produto->getOriginal('estoque') != $produto->estoque) {
-                \Event::fire(new ProductStockChange($produto->sku));
-            }
-        });
-    }
-
-    /**
      * Linha
      *
      * @return \Illuminate\Database\Eloquent\Relations\belongsTo

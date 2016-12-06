@@ -232,7 +232,7 @@ class PedidoController extends Controller
                 $dataPedido = Carbon::createFromFormat('d/m/Y H:i', $pedido->created_at)->format('d/m/Y');
                 $diasUteis = diasUteisPeriodo($dataPedido, date('d/m/Y'), true);
 
-                if (strtolower($pedido->marketplace) == 'site' && $diasUteis > \Config::get('magento.old_order')) {
+                if (strtolower($pedido->marketplace) == 'site' && $diasUteis > Config::get('magento.old_order')) {
                     $pedido->status = 5;
                     $pedido->save();
                 }

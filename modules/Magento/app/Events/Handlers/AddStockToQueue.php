@@ -1,10 +1,10 @@
 <?php namespace Magento\Events\Handlers;
 
-use Illuminate\Events\Dispatcher;
 use Core\Events\ProductStockChange;
-use Magento\Http\Controllers\MagentoController;
+use Illuminate\Events\Dispatcher;
+use Magento\Jobs\SendStockInfo;
 
-class SendProductToQueue
+class AddStockToQueue
 {
     /**
      * Set events that this will listen
@@ -16,7 +16,7 @@ class SendProductToQueue
     {
         $events->listen(
             ProductStockChange::class,
-            '\Magento\Events\Handlers\SendProductToQueue@onProductStockChange'
+            '\Magento\Events\Handlers\AddStockToQueue@onProductStockChange'
         );
     }
 
@@ -28,7 +28,7 @@ class SendProductToQueue
      */
     public function onProductStockChange(ProductStockChange $event)
     {
-        \Log::debug('Listener SendProductToQueue ativado produto: ' . $event->produto_sku);
-        with(new MagentoController(false))->sendProductToQueue($event->produto_sku);
+        \Log::debug('Handler AddStockToQueue acionado!', [$event->product]);
+        dispatch(with(new SendStockInfo($event->product))->onQueue('magentoStock'));
     }
 }

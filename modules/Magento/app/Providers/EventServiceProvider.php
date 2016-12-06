@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Magento\Events\Handlers\SendCancelInfo;
-use Magento\Events\Handlers\SendProductToQueue;
+use Magento\Events\Handlers\AddStockToQueue;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -18,7 +18,7 @@ class EventServiceProvider extends ServiceProvider
 
     protected $subscribe = [
         SendCancelInfo::class,
-        SendProductToQueue::class,
+        AddStockToQueue::class,
     ];
 
     /**

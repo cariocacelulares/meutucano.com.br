@@ -25,7 +25,7 @@ class PedidoObserver
         $dirty = $order->getDirty();
         if (isset($dirty['status'])) {
             $status = ((is_null($order->status)) ? null : (int)$order->status);
-            \Log::debug('wut', [$order->getOriginal('status'), $dirty['status'], $order->status]);
+
             switch ($status) {
                 case 1: // Pago
                     Event::fire(new OrderPaid($order));

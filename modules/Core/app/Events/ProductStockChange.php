@@ -7,16 +7,16 @@ class ProductStockChange extends \Event
 {
     use SerializesModels;
 
-    public $produto_sku;
+    public $product;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($produto_sku)
+    public function __construct($product)
     {
-        \Log::debug('Evento ProductStockChange disparado', [$produto_sku]);
-        $this->produto_sku = $produto_sku;
+        \Log::debug('Evento ProductStockChange disparado!', [$product]);
+        $this->product = $product;
     }
 }
