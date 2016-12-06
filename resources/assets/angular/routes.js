@@ -404,13 +404,27 @@
                  */
                 .state('app.allnation', {
                     url: '/allnation',
-                    templateUrl: 'views/layouts/default.html'
+                    templateUrl: 'views/layouts/default.html',
+                    data: {
+                        roles: ['admin']
+                    }
                 })
 
                 .state('app.allnation.products', {
                     url: '/products',
+                    templateUrl: 'views/layouts/default.html',
+                })
+
+                .state('app.allnation.products.index', {
+                    url: '/list',
                     templateUrl: 'views/allnation/product/list.html',
                     controller: 'AllnationProductListController as AllnationProductList'
+                })
+
+                .state('app.allnation.products.form', {
+                    url: '/{id}',
+                    templateUrl: 'views/allnation/product/form.html',
+                    controller: 'AllnationProductFormController as AllnationProductForm'
                 })
             ;
         });

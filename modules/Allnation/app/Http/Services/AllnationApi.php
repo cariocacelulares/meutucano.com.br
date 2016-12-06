@@ -84,6 +84,6 @@ class AllnationApi
 
         $produtos = simplexml_load_string($response->RetornarListaProdutosResult->any)->NewDataSet;
 
-        return is_array($produtos->Produtos) ? $produtos->Produtos : [$produtos->Produtos];
+        return $produtos->Produtos;
     }
 }

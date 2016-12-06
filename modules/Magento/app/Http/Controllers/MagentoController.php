@@ -1,16 +1,17 @@
 <?php namespace Magento\Http\Controllers;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Config;
-use App\Http\Controllers\Controller;
+use Core\Events\OrderCancel;
+use Core\Models\Pedido\Pedido;
+use Core\Models\Produto\Produto;
 use Core\Models\Cliente\Cliente;
 use Core\Models\Cliente\Endereco;
-use Core\Models\Pedido\Pedido;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Magento\Models\MagentoCategory;
+use App\Http\Controllers\Controller;
 use Core\Models\Pedido\PedidoProduto;
-use Core\Models\Produto\Produto;
-use Core\Events\OrderCancel;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Class MagentoController
@@ -580,10 +581,54 @@ class MagentoController extends Controller
     {
         try {
             $categories = $this->api->catalogCategoryTree($this->session);
+            MagentoCategory::truncate();
 
-            dd($categories);
+            $this->createCategories($categories);
         } catch (\Exception $e) {
-
+            Log::error(logMessage($e, 'Cannot fetch categories from magento'));
         }
+    }
+
+    /**
+     * Recursive creation of categories
+     *
+     * @param  Object $parentCategory
+     * @return void
+     */
+    private function createCategories($parentCategory)
+    {
+        MagentoCategory::create([
+            'id'                  => $parentCategory->category_id,
+            'magento_category_id' => ($parentCategory->parent_id) ?: null,
+            'name'                => $parentCategory->name
+        ]);
+
+        if (sizeof($sub = $parentCategory->children) >= 1) {
+            foreach ($sub as $subCategory) {
+                $this->createCategories($subCategory);
+            }
+        }
+    }
+
+    /**
+     * Create product in Magento
+     *
+     * @param  array  $data Product parameters
+     * @return boolean
+     */
+    public function createProduct(array $data)
+    {
+        $productId = 2;
+        $file = [
+            'content' =>
+                '/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAAXABcDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDLooor8XP4DCiiigAooooAKKKKAP/Z',
+            'mime' => 'image/jpeg'
+        ];
+
+        $result = $proxy->catalogProductAttributeMediaCreate(
+            $session,
+            $productId,
+            ['file' => $file, 'label' => 'Label', 'position' => '100', 'types' => ['thumbnail'], 'exclude' => 0]
+        );
     }
 }

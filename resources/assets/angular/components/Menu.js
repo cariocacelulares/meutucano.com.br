@@ -168,7 +168,7 @@
                                     {
                                         title: 'Produtos',
                                         icon: 'fa-dropbox',
-                                        sref: $state.href('app.allnation.products')
+                                        sref: $state.href('app.allnation.products.index')
                                     }
                                 ]
                             },

@@ -5,6 +5,7 @@ Route::group([
   'prefix'     => 'api/allnation',
   'namespace'  => 'Allnation\Http\Controllers'
 ], function() {
+    Route::get('products/import', 'AllnationProductController@fetchProducts');
     Route::get('products/list', 'AllnationProductController@tableList');
     Route::resource('products', 'AllnationProductController', [
         'except' => ['create', 'edit']

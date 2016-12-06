@@ -30,7 +30,7 @@ class AllnationProduct extends Model
         'ean',
         'ncm',
         'warranty',
-        'weigth',
+        'weight',
         'cost',
         'image',
         'stock_from',

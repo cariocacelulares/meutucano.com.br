@@ -1,7 +1,6 @@
 <?php namespace Magento\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
  * Class MagentoCategory
@@ -9,43 +8,27 @@ use Venturecraft\Revisionable\RevisionableTrait;
  */
 class MagentoCategory extends Model
 {
-    use RevisionableTrait;
-
-    /**
-    * @var boolean
-    */
-    protected $revisionCreationsEnabled = true;
-
     /**
     * @var array
     */
     protected $fillable = [
         'id',
-        'produto_sku',
-        'title',
-        'category',
-        'brand',
-        'description',
-        'ean',
-        'ncm',
-        'warranty',
-        'weigth',
-        'cost',
-        'image',
-        'stock_from',
-        'width',
-        'height',
-        'length',
-        'origin'
+        'magento_category_id',
+        'name',
     ];
 
     /**
-     * Produto
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\hasOne
+     * @var boolean
      */
-    public function produto()
+    public $timestamps = false;
+
+    /**
+     * Parent category
+     *
+     * @return BelongsTo
+     */
+    public function parent()
     {
-        return $this->hasOne(Produto::class);
+        return $this->belongsTo(MagentoCategory::class);
     }
 }

@@ -65,11 +65,11 @@ class AllnationProductController extends Controller
                         $product->SUBCATEGORIA
                     ])),
                     'brand'       => $product->FABRICANTE,
-                    'description' => trim($product->DESCRTEC),
+                    'description' => '<div>' . str_replace( "\n", '</div><div>', trim($product->DESCRTEC)) . '</div>',
                     'ean'         => $product->EAN,
                     'ncm'         => trim($product->NCM),
                     'warranty'    => $product->GARANTIA . ' meses',
-                    'weigth'      => ((float) $product->PESOKG),
+                    'weight'      => ((float) $product->PESOKG),
                     'cost'        => number_format((float) $product->PRECOREVENDA, 2, '.', ''),
                     'image'       => preg_replace('/[\=][0-9]{3}[\&]/', '=800&',
                         $product->URLFOTOPRODUTO),
