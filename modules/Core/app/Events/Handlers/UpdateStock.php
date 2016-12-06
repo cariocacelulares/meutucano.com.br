@@ -74,15 +74,15 @@ class UpdateStock
 
                 // Se a quantidade foi alterada, pega a diferença e retira ou adiciona ao estoque
                 if (isset($dirty['quantidade'])) {
-                    $this->updateStock($orderProduct->produto, ($orderProduct->quantidade - $dirty['quantidade']));
+                    $this->updateStock($orderProduct->produto, ($orderProduct->quantidade - $orderProduct->getOriginal('quantidade')));
                 }
 
                 // Se o produto foi alterado, altera o estoque do novo e do antigo
                 if (isset($dirty['product_sku'])) {
                     $this->updateStock($orderProduct->produto, $orderProduct->quantidade);
 
-                    if ($oldProduct = Produto::find($dirty['product_sku'])) {
-                        $this->updateStock($oldProduct, (isset($dirty['quantidade']) ? $dirty['quantidade'] : $orderProduct->quantidade));
+                    if ($oldProduct = Produto::find($orderProduct->getOriginal('product_sku'))) {
+                        $this->updateStock($oldProduct, ($orderProduct->getOriginal('quantidade') ? $orderProduct->getOriginal('quantidade') : $orderProduct->quantidade));
                     }
                 }
             }

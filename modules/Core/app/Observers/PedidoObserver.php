@@ -22,28 +22,22 @@ class PedidoObserver
     {
         Event::fire(new OrderSaved($order));
 
-        $newStatus = (is_null($order->status)) ? null : (int)$order->status;
-
         $dirty = $order->getDirty();
         if (isset($dirty['status'])) {
-            $oldStatus = ($dirty['status'] === null) ? null : (int)$dirty['status'];
-        } else {
-            $oldStatus = $newStatus;
-        }
-
-        if ($newStatus !== $oldStatus) {
-            switch ($newStatus) {
+            $status = ((is_null($order->status)) ? null : (int)$order->status);
+            \Log::debug('wut', [$order->getOriginal('status'), $dirty['status'], $order->status]);
+            switch ($status) {
                 case 1: // Pago
-                    \Event::fire(new OrderPaid($order));
+                    Event::fire(new OrderPaid($order));
                     break;
                 case 2: // Enviado
-                    \Event::fire(new OrderSent($order));
+                    Event::fire(new OrderSent($order));
                     break;
                 case 3: // Entregue
-                    \Event::fire(new OrderDelivered($order));
+                    Event::fire(new OrderDelivered($order));
                     break;
                 case 5: // Cancelado
-                    \Event::fire(new OrderCanceled($order));
+                    Event::fire(new OrderCanceled($order));
                     break;
             }
         }
