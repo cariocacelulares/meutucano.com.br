@@ -1,11 +1,12 @@
 <?php namespace Magento\Jobs;
 
-use Exception;
 use Core\Models\Produto\Produto;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Magento\Http\Controllers\MagentoController;
 
 class SendStockInfo implements ShouldQueue
 {
@@ -20,6 +21,7 @@ class SendStockInfo implements ShouldQueue
      */
     public function __construct(Produto $product)
     {
+        \Log::debug('Job SendStockInfo criado', [$product]);
         $this->product = $product;
     }
 
@@ -30,9 +32,8 @@ class SendStockInfo implements ShouldQueue
      */
     public function handle()
     {
-        \Log::debug('Job SendStockInfo executado');
-        # TODO: atualizar estoque do produto
-        // with(new MagentoController())->updateStock($this->product)
+        \Log::debug('Job SendStockInfo executado', [$this->product]);
+        with(new MagentoController())->updateStock($this->product);
     }
 
     /**
