@@ -21,7 +21,7 @@ class SendInvoiceInfo implements ShouldQueue
      */
     public function __construct(Pedido $order)
     {
-        \Log::debug('Job SendInvoiceInfo criado', [$order]);
+        \Log::debug('Job Magento\SendInvoiceInfo criado', [$order]);
         $this->order = $order;
     }
 
@@ -32,7 +32,7 @@ class SendInvoiceInfo implements ShouldQueue
      */
     public function handle()
     {
-        \Log::debug('Job SendInvoiceInfo executado', [$this->order]);
+        \Log::debug('Job Magento\SendInvoiceInfo executado', [$this->order]);
         with(new MagentoController())->orderInvoice($this->order);
     }
 
@@ -45,6 +45,6 @@ class SendInvoiceInfo implements ShouldQueue
     public function failed(Exception $exception)
     {
         # TODO: enviar notificacao
-        \Log::critical(logMessage($exception, 'Erro ao executar Job SendInvoiceInfo'), [$this->order]);
+        \Log::critical(logMessage($exception, 'Erro ao executar Job Magento\SendInvoiceInfo'), [$this->order]);
     }
 }

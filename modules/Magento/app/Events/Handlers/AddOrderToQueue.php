@@ -35,7 +35,7 @@ class AddOrderToQueue
      */
     public function onOrderCanceled(OrderCanceled $event)
     {
-        \Log::debug('Handler AddOrderToQueue@onOrderCanceled acionado!', [$event->order]);
+        \Log::debug('Handler Magento\AddOrderToQueue@onOrderCanceled acionado!', [$event->order]);
 
         $order = $event->order;
         if (strtolower($order->marketplace) == 'site') {
@@ -51,7 +51,7 @@ class AddOrderToQueue
      */
     public function onOrderSent(OrderSent $event)
     {
-        \Log::debug('Handler AddOrderToQueue@onOrderSent acionado!', [$event->order]);
+        \Log::debug('Handler Magento\AddOrderToQueue@onOrderSent acionado!', [$event->order]);
 
         $order = $event->order;
         if (strtolower($order->marketplace) == 'site') {

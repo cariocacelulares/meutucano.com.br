@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Skyhub\Events\Handlers\SendCancelInfo;
+use Skyhub\Events\Handlers\AddOrderToQueue;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -16,7 +16,7 @@ class EventServiceProvider extends ServiceProvider
     ];
 
     protected $subscribe = [
-        SendCancelInfo::class,
+        AddOrderToQueue::class,
     ];
 
     /**

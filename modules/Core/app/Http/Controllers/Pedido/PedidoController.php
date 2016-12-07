@@ -255,10 +255,6 @@ class PedidoController extends Controller
         if ($pedido = Pedido::find($pedido_id)) {
             $pedido->status = 2;
 
-            if (strtolower($pedido->marketplace) != 'site') {
-                (new SkyhubController())->orderInvoice($pedido);
-            }
-
             if ($pedido->save()) {
                 \Event::fire(new \App\Events\Gamification\TarefaRealizada('fature-um-pedido'));
             }

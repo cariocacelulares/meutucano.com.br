@@ -1,4 +1,4 @@
-<?php namespace Magento\Jobs;
+<?php namespace Skyhub\Jobs;
 
 use Core\Models\Pedido\Pedido;
 use Exception;
@@ -6,9 +6,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Magento\Http\Controllers\MagentoController;
+use Skyhub\Http\Controllers\SkyhubController;
 
-class SendCancelInfo implements ShouldQueue
+class SendDeliveredInfo implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
@@ -21,7 +21,7 @@ class SendCancelInfo implements ShouldQueue
      */
     public function __construct(Pedido $order)
     {
-        \Log::debug('Job Magento\SendCancelInfo criado', [$order]);
+        \Log::debug('Job Skyhub\SendDeliveredInfo criado', [$order]);
         $this->order = $order;
     }
 
@@ -32,8 +32,8 @@ class SendCancelInfo implements ShouldQueue
      */
     public function handle()
     {
-        \Log::debug('Job Magento\SendCancelInfo executado', [$this->order]);
-        with(new MagentoController())->cancelOrder($this->order);
+        \Log::debug('Job Skyhub\SendDeliveredInfo executado', [$this->order]);
+        with(new SkyhubController())->orderDelivered($this->order);
     }
 
     /**
@@ -45,6 +45,6 @@ class SendCancelInfo implements ShouldQueue
     public function failed(Exception $exception)
     {
         # TODO: enviar notificacao
-        \Log::critical(logMessage($exception, 'Erro ao executar Job Magento\SendCancelInfo'), [$this->order]);
+        \Log::critical(logMessage($exception, 'Erro ao executar Job Skyhub\SendDeliveredInfo'), [$this->order]);
     }
 }
