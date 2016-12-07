@@ -3,7 +3,7 @@
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class ProductStockChange extends \Event
+class ProductStockUpdated extends \Event
 {
     use SerializesModels;
 
@@ -16,7 +16,7 @@ class ProductStockChange extends \Event
      */
     public function __construct($product)
     {
-        \Log::debug('Evento ProductStockChange disparado!', [$product]);
+        \Log::debug('Evento ProductStockUpdated disparado!', [$product]);
         $this->product = $product;
     }
 }

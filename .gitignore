@@ -1,6 +1,6 @@
 .DS_Store
 .env
-clean.sh
+clear.sh
 /node_modules
 /vendor
 /public/bower_components

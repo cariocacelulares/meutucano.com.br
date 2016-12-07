@@ -30,7 +30,7 @@ class SendCancelInfo
     {
         $pedido = $event->order;
         $user_id = $event->user_id;
-        \Log::debug('Listener Magento\SendCancelInfo ativado. pedido: ' . $pedido->id);
+        \Log::debug('Listener Magento\SendCancelInfo ativado.' . [$pedido->id]);
 
         if (strtolower($pedido->marketplace) == 'site') {
             with(new MagentoController())->cancelOrder($pedido);

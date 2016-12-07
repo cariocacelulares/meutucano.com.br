@@ -4,7 +4,7 @@ use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Core\Models\Produto\Linha\Atributo;
-use Core\Events\ProductStockChange;
+use Core\Events\ProductStockUpdated;
 
 /**
  * Class Produto

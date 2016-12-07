@@ -1,6 +1,6 @@
 <?php namespace Magento\Events\Handlers;
 
-use Core\Events\ProductStockChange;
+use Core\Events\ProductStockUpdated;
 use Illuminate\Events\Dispatcher;
 use Magento\Jobs\SendStockInfo;
 
@@ -15,20 +15,20 @@ class AddStockToQueue
     public function subscribe(Dispatcher $events)
     {
         $events->listen(
-            ProductStockChange::class,
-            '\Magento\Events\Handlers\AddStockToQueue@onProductStockChange'
+            ProductStockUpdated::class,
+            '\Magento\Events\Handlers\AddStockToQueue@onProductStockUpdated'
         );
     }
 
     /**
      * Handle the event.
      *
-     * @param  ProductStockChange  $event
+     * @param  ProductStockUpdated  $event
      * @return void
      */
-    public function onProductStockChange(ProductStockChange $event)
+    public function onProductStockUpdated(ProductStockUpdated $event)
     {
         \Log::debug('Handler AddStockToQueue acionado!', [$event->product]);
-        dispatch(with(new SendStockInfo($event->product))->onQueue('magentoStock'));
+        dispatch(with(new SendStockInfo($event->product))->onQueue('high'));
     }
 }
