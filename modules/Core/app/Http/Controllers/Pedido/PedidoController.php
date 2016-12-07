@@ -255,9 +255,7 @@ class PedidoController extends Controller
         if ($pedido = Pedido::find($pedido_id)) {
             $pedido->status = 2;
 
-            if (strtolower($pedido->marketplace) == 'site') {
-                (new MagentoController())->orderInvoice($pedido);
-            } else {
+            if (strtolower($pedido->marketplace) != 'site') {
                 (new SkyhubController())->orderInvoice($pedido);
             }
 

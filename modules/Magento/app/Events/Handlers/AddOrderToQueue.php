@@ -1,8 +1,10 @@
 <?php namespace Magento\Events\Handlers;
 
 use Core\Events\OrderCanceled;
+use Core\Events\OrderSent;
 use Illuminate\Events\Dispatcher;
 use Magento\Jobs\SendCancelInfo;
+use Magento\Jobs\SendInvoiceInfo;
 
 class AddOrderToQueue
 {
@@ -18,6 +20,11 @@ class AddOrderToQueue
             OrderCanceled::class,
             '\Magento\Events\Handlers\AddOrderToQueue@onOrderCanceled'
         );
+
+        $events->listen(
+            OrderSent::class,
+            '\Magento\Events\Handlers\AddOrderToQueue@onOrderSent'
+        );
     }
 
     /**
@@ -28,11 +35,27 @@ class AddOrderToQueue
      */
     public function onOrderCanceled(OrderCanceled $event)
     {
-        \Log::debug('Handler AddOrderToQueue acionado!', [$event->order]);
+        \Log::debug('Handler AddOrderToQueue@onOrderCanceled acionado!', [$event->order]);
 
         $order = $event->order;
         if (strtolower($order->marketplace) == 'site') {
-            dispatch(with(new SendCancelInfo($order))->onQueue('high'));
+            dispatch(with(new SendCancelInfo($order))->onQueue('medium'));
+        }
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param  OrderSent  $event
+     * @return void
+     */
+    public function onOrderSent(OrderSent $event)
+    {
+        \Log::debug('Handler AddOrderToQueue@onOrderSent acionado!', [$event->order]);
+
+        $order = $event->order;
+        if (strtolower($order->marketplace) == 'site') {
+            dispatch(with(new SendInvoiceInfo($order))->onQueue('high'));
         }
     }
 }
