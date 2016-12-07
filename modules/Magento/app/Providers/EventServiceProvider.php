@@ -1,8 +1,8 @@
 <?php namespace Magento\Providers;
 
-use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Magento\Events\Handlers\SendCancelInfo;
+use Illuminate\Support\Facades\Event;
+use Magento\Events\Handlers\AddOrderToQueue;
 use Magento\Events\Handlers\AddStockToQueue;
 
 class EventServiceProvider extends ServiceProvider
@@ -17,7 +17,7 @@ class EventServiceProvider extends ServiceProvider
     ];
 
     protected $subscribe = [
-        SendCancelInfo::class,
+        AddOrderToQueue::class,
         AddStockToQueue::class,
     ];
 
