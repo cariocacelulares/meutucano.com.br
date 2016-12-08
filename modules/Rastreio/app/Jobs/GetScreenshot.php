@@ -33,7 +33,7 @@ class GetScreenshot implements ShouldQueue
     public function handle()
     {
         \Log::debug('Job Rastreio\GetScreenshot executado', [$this->rastreio]);
-        with(new RastreioController())->screenshot($rastreio);
+        with(new RastreioController())->forceScreenshot($this->rastreio);
     }
 
     /**

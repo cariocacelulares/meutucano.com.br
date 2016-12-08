@@ -214,12 +214,12 @@ class RastreioController extends Controller
     /**
      * Gera ou regera uma imagem do rastreio e salva
      *
-     * @param  int $rastreio_id
+     * @param  Rastreio $rastreio
      * @return void
      */
-    public function forceScreenshot($rastreio_id)
+    public function forceScreenshot($rastreio)
     {
-        if ($rastreio = Rastreio::find($rastreio_id)) {
+        if ($rastreio) {
             $rastreio = $this->screenshot($rastreio);
             $rastreio->save();
         } else {
