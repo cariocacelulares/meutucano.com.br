@@ -45,7 +45,7 @@ class AddOrderToQueue
         \Log::debug('Handler Skyhub\AddOrderToQueue@onOrderCanceled acionado!', [$event->order]);
 
         $order = $event->order;
-        if (strtolower($order->marketplace) != 'site' && getCurrentUserId()) {
+        if (strtolower($order->marketplace) != 'site') {
             dispatch(with(new SendCancelInfo($order))->onQueue('medium'));
         }
     }
