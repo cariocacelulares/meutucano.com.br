@@ -6,10 +6,6 @@ use Venturecraft\Revisionable\RevisionableTrait;
 use Core\Models\Cliente\Cliente;
 use Core\Models\Cliente\Endereco;
 use Rastreio\Models\Rastreio;
-use InspecaoTecnica\Models\InspecaoTecnica;
-use Core\Events\OrderCancel;
-use Core\Events\OrderSeminovo;
-use Skyhub\Http\Controllers\SkyhubController;
 
 /**
  * Class Pedido

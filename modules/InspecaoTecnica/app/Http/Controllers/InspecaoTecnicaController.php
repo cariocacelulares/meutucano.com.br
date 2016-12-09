@@ -1,5 +1,6 @@
 <?php namespace InspecaoTecnica\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestControllerTrait;
@@ -116,7 +117,7 @@ class InspecaoTecnicaController extends Controller
         } catch(\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
 
-            \Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
+            Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
             return $this->clientErrorResponse($data);
         }
     }
@@ -152,7 +153,7 @@ class InspecaoTecnicaController extends Controller
             $data->save();
             return $this->showResponse($data);
         } catch(\Exception $ex) {
-            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
+            Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
@@ -209,7 +210,7 @@ class InspecaoTecnicaController extends Controller
 
             return $this->showResponse($data);
         } catch (\Exception $e) {
-            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
+            Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
@@ -364,5 +365,64 @@ class InspecaoTecnicaController extends Controller
         }
 
         return $this->listResponse(['dados' => $retorno]);
+    }
+
+    /**
+     * Adicona um pedidoProduto em uma inspecao existente ou cria uma nova
+     *
+     * @param  PedidoProduto $orderProduct contem o produto que precisa ser inspecionado
+     * @return Object
+     */
+    public function attachInspecao(PedidoProduto $orderProduct)
+    {
+        $product = $orderProduct->produto;
+        $currentUser = getCurrentUserId();
+
+        // Checa se é seminovo
+        if ((int)$product->estado !== 1) {
+            return;
+        }
+
+        try {
+            $inspecaoDisponivel = InspecaoTecnica
+                ::where('inspecao_tecnica.produto_sku', '=', $product->sku)
+                ->whereNull('inspecao_tecnica.pedido_produtos_id')
+                ->whereNotNull('inspecao_tecnica.revisado_at')
+                ->where('reservado', '=', false)
+                ->orderBy('created_at', 'ASC')
+                ->first();
+
+            if ($inspecaoDisponivel) {
+                $inspecaoDisponivel->pedido_produtos_id = $orderProduct->id;
+                $inspecaoDisponivel->solicitante_id = $currentUser;
+                if ($inspecaoDisponivel->save()) {
+                    Log::notice('Inspecao tecnica adicionada ao pedido produto ' . $orderProduct->id, [$orderProduct, $inspecaoDisponivel]);
+                    return $this->listResponse([
+                        ['attach', $inspecaoDisponivel->id]
+                    ]);
+                } else {
+                    Log::warning('Erro ao tentar adicionar pedido produto na inspecao tecnica', [$orderProduct, $inspecaoDisponivel]);
+                    return $this->clientErrorResponse();
+                }
+            }
+
+            $inspecao = new InspecaoTecnica([
+                'produto_sku' => $product->sku,
+                'pedido_produtos_id' => $orderProduct->id,
+                'solicitante_id' => $currentUser,
+            ]);
+
+            if ($inspecao->save()) {
+                Log::notice('Inspecao tecnica adicioada na fila para o ' . $orderProduct->id, [$orderProduct, $inspecao]);
+                return $this->listResponse([
+                    ['add', $inspecao->id]
+                ]);
+            } else {
+                Log::warning('Erro ao tentar cria inspecao tecnica', [$orderProduct]);
+                return $this->clientErrorResponse();
+            }
+        } catch (\Exception $exception) {
+            Log::error(logMessage($exception, 'Erro ao tentar adicionar uma inspecao técnica!'), [$orderProduct]);
+        }
     }
 }
