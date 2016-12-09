@@ -30,6 +30,7 @@ class DeleteInspecaoTecnica
     public function onOrderCanceled(OrderCanceled $event)
     {
         $order = $event->order;
+        $order = $order->fresh();
         Log::debug('Handler DeleteInspecaoTecnica/onOrderCanceled acionado.', [$event]);
 
         // Cada produto do pedido

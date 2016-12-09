@@ -3,6 +3,7 @@
 use Core\Events\OrderPaid;
 use Core\Events\OrderProductCreated;
 use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido\PedidoProduto;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;
 use InspecaoTecnica\Http\Controllers\InspecaoTecnicaController;
@@ -41,9 +42,16 @@ class AttachInspecaoTecnica
     public function onOrderPaid(OrderPaid $event)
     {
         $order = $event->order;
-        Log::debug('Handler AttachInspecaoTecnica/onOrderPaid acionado.', [$event]);
+        $order = $order->fresh();
 
-        $this->attachInspecaoTecnica($order);
+        if (!$order->wasRecentlyCreated) {
+            Log::debug('Handler AttachInspecaoTecnica/onOrderPaid acionado.', [$event]);
+
+            // Cada produto do pedido
+            foreach ($order->produtos as $orderProduct) {
+                $this->attachInspecaoTecnica($orderProduct);
+            }
+        }
     }
 
     /**
@@ -55,26 +63,32 @@ class AttachInspecaoTecnica
     public function onOrderProductCreated(OrderProductCreated $event)
     {
         $orderProduct = $event->orderProduct;
-        Log::debug('Handler AttachInspecaoTecnica/onOrderProductCreated acionado.', [$event]);
+        $orderProduct = $orderProduct->fresh();
 
-        $this->attachInspecaoTecnica($orderProduct->pedido);
+        if ((int)$orderProduct->pedido->status === 1) {
+            Log::debug('Handler AttachInspecaoTecnica/onOrderProductCreated acionado.', [$event]);
+            $this->attachInspecaoTecnica($orderProduct);
+        }
     }
 
-    public function attachInspecaoTecnica(Pedido $order)
+    /**
+     * Relaciona uma inspecao tecnica com o pedido produto
+     *
+     * @param  PedidoProduto $orderProduct
+     * @return void
+     */
+    public function attachInspecaoTecnica(PedidoProduto $orderProduct)
     {
-        // Cada produto do pedido
-        foreach ($order->produtos as $orderProduct) {
-            $product = $orderProduct->produto;
+        $product = $orderProduct->produto;
 
-            // Se não for seminovo para
-            if ((int)$product->estado !== 1) {
-                return;
-            }
+        // Se não for seminovo para
+        if ((int)$product->estado !== 1) {
+            return;
+        }
 
-            for ($i=0; $i < $orderProduct->quantidade; $i++) {
-                Log::debug('Tentando relacionado pedido produto e inspecao tecnica.');
-                with(new InspecaoTecnicaController())->attachInspecao($orderProduct);
-            }
+        for ($i=0; $i < $orderProduct->quantidade; $i++) {
+            Log::debug('Tentando relacionar pedido produto e inspecao tecnica.');
+            with(new InspecaoTecnicaController())->attachInspecao($orderProduct);
         }
     }
 }
