@@ -99,15 +99,8 @@ class InspecaoTecnicaTest extends TestCase
     public function test__it_should_attach_inspection_when_order_product_quantity_inscreased()
     {
         $product      = $this->createProdutoSeminovo();
-        $order        = $this->createOrder([], $product->sku);
+        $order        = $this->createOrder(['status' => 1], $product->sku);
         $orderProduct = $order->produtos()->first();
-
-        for ($i=0; $i < $orderProduct->quantidade; $i++) {
-            $this->createInspecaoWithNoAssociation([
-                'produto_sku'        => $product->sku,
-                'pedido_produtos_id' => $orderProduct->id
-            ]);
-        }
 
         $orderProduct->quantidade = $orderProduct->quantidade + 1;
         $orderProduct->save();
@@ -157,7 +150,7 @@ class InspecaoTecnicaTest extends TestCase
         $orderProduct = $order->produtos()->first();
         $inspection   = $this->createInspecaoWithNoAssociation([
             'produto_sku' => $product->sku,
-            'pedido_produtos_id' => $orderProduct->id
+            'pedido_produtos_id' => $orderProduct->id,
         ]);
 
         $orderProduct->quantidade = $orderProduct->quantidade - 1;
