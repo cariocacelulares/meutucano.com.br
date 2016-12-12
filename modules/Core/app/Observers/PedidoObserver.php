@@ -52,31 +52,6 @@ class PedidoObserver
     public function updated(Pedido $order)
     {
         Event::fire(new OrderUpdated($order));
-        /*$oldStatus = ($order->getOriginal('status') === null) ? null : (int) $order->getOriginal('status');
-        $newStatus = ($order->status === null) ? null : (int)$order->status;
-
-        // Se realmente ocorreu uma mudança de status
-        if ($newStatus !== $oldStatus) {
-            // Se o status for cancelado
-            if ($newStatus === 5) {
-
-                // Dispara o evento de cancelamento do pedido
-                \Event::fire(new OrderCancel($order, getCurrentUserId()));
-
-                // Se o status era enviado, pago ou entregue
-                if (in_array($oldStatus, [1, 2, 3])) {
-                    $order->reembolso = true;
-                }
-
-                // Se tiver alguma inspeção na fila, deleta ela
-                foreach ($order->produtos()->get() as $orderProduto) {
-                    $inspecoes = InspecaoTecnica
-                        ::where('pedido_produtos_id', '=', $orderProduto->id)
-                        ->whereNull('revisado_at')
-                        ->delete();
-                }
-            }
-        }*/
     }
 
     /**

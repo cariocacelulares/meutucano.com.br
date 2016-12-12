@@ -376,6 +376,9 @@ class MagentoController extends Controller
     public function cancelOrder($order)
     {
         try {
+            if (!$this->api || $this->session)
+                throw new \Exception('Api ou sessão não iniciada', 1);
+
             if (!$order->codigo_api) {
                 Log::warning("Não foi possível cancelar o pedido {$order->id} no Magento, pois o pedido não possui codigo_api válido");
             } else {
@@ -401,6 +404,9 @@ class MagentoController extends Controller
     public function orderInvoice($order)
     {
         try {
+            if (!$this->api || $this->session)
+                throw new \Exception('Api ou sessão não iniciada', 1);
+
             $shipmentId = $request = $this->api->salesOrderShipmentCreate($this->session, $order->codigo_api);
 
             $rastreio = $order->rastreios->first();
@@ -467,6 +473,9 @@ class MagentoController extends Controller
             if (!$product || !$productSku = $product->sku) {
                 return $this->notFoundResponse();
             }
+
+            if (!$this->api || $this->session)
+                throw new \Exception('Api ou sessão não iniciada', 1);
 
             $stock = $this->api->catalogInventoryStockItemUpdate(
                 $this->session,

@@ -19,9 +19,11 @@ class FaturamentoCodigoTest extends TestCase
    */
   public function test__it_should_be_able_to_generate_code()
   {
-    factory(FaturamentoCodigo::class)->create([
-      'servico' => 0
-    ]);
+    if (!FaturamentoCodigo::where('servico', '=', 0)->first()) {
+      factory(FaturamentoCodigo::class)->create([
+        'servico' => 0
+      ]);
+    }
 
     $response = $this->json('GET', '/api/codigos/gerar/0')->seeJsonStructure([
       'data' => [

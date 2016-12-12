@@ -402,7 +402,7 @@ class InspecaoTecnicaController extends Controller
                     ]);
                 } else {
                     Log::warning('Erro ao tentar adicionar pedido produto na inspecao tecnica', [$orderProduct, $inspecaoDisponivel]);
-                    return $this->clientErrorResponse();
+                    return $this->clientErrorResponse('Erro ao tentar adicionar pedido produto na inspecao tecnica');
                 }
             }
 
@@ -419,10 +419,59 @@ class InspecaoTecnicaController extends Controller
                 ]);
             } else {
                 Log::warning('Erro ao tentar cria inspecao tecnica', [$orderProduct]);
-                return $this->clientErrorResponse();
             }
         } catch (\Exception $exception) {
             Log::error(logMessage($exception, 'Erro ao tentar adicionar uma inspecao técnica!'), [$orderProduct]);
         }
+
+        return $this->clientErrorResponse('Erro ao tentar adicionar/associar pedido produto na inspecao tecnica');
+    }
+
+    /**
+     * Desassocia ou exclui uma inspecao com o pedido produto
+     *
+     * @param  PedidoProduto $orderProduct
+     * @return void
+     */
+    public function detachInspecao(PedidoProduto $orderProduct, $onlyReviewed = false)
+    {
+        try {
+            if ($onlyReviewed) {
+                $inspection = InspecaoTecnica
+                    ::where('inspecao_tecnica.pedido_produtos_id', '=', $orderProduct->id)
+                    ->whereNotNull('revisado_at')
+                    ->orderBy('created_at', 'DESC')
+                    ->first();
+            } else {
+                $inspection = InspecaoTecnica
+                    ::where('inspecao_tecnica.pedido_produtos_id', '=', $orderProduct->id)
+                    ->orderBy('created_at', 'DESC')
+                    ->first();
+            }
+
+            if ($inspection) {
+                if ($inspection->revisado_at) {
+                    $inspection->pedido_produtos_id = null;
+                    if ($inspection->save()) {
+                        Log::notice('Inspeção desassociada com o pedido produto.', [$inspection]);
+                        return $this->listResponse([
+                            ['detach', $inspection->id]
+                        ]);
+                    } else {
+                        Log::warning('Erro ao tentar desassociar inspecao com o pedido produto.', [$inspection]);
+                    }
+                } else {
+                    $inspection->delete();
+                    Log::notice('Inspeção excluida para o pedido produto ' . (isset($orderProduct->id) ? $orderProduct->id : ''), [$inspection]);
+                    return $this->listResponse([
+                        ['delete']
+                    ]);
+                }
+            }
+        } catch (\Exception $exception) {
+            Log::error(logMessage($exception, 'Erro ao tentar excluir/desassociar uma inspecao técnica!'), [$orderProduct]);
+        }
+
+        return $this->clientErrorResponse('Erro ao tentar excluir/desassociar pedido produto e inspecao tecnica');
     }
 }

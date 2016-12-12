@@ -32,6 +32,8 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
     public function setUp()
     {
         parent::setUp();
+        \Artisan::call('migrate');
+        \Artisan::call('module:migrate');
     }
 
     /**
@@ -41,6 +43,7 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
     */
     public function tearDown()
     {
+        parent::tearDown();
         \Mockery::close();
     }
 }

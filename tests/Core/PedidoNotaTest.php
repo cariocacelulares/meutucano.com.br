@@ -22,8 +22,8 @@ class PedidoNotaTest extends TestCase
 
   public function tearDown()
   {
-    parent::tearDown();
     $this->resetInvoice();
+    parent::tearDown();
   }
 
   /**

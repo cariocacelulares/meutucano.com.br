@@ -37,7 +37,7 @@ class InspecaoTecnicaTest extends TestCase
     *
     * @return void
     */
-    public function test__it_should_be_able_to_allocate_inspection_to_new_pedidos()
+    public function test__it_should_be_able_to_attach_inspection_to_new_pedidos()
     {
         $produto = $this->createProdutoSeminovo();
 
@@ -96,16 +96,23 @@ class InspecaoTecnicaTest extends TestCase
      *
      * @return void
      */
-    public function test__it_should_allocate_inspection_when_order_product_quantity_inscreased()
+    public function test__it_should_attach_inspection_when_order_product_quantity_inscreased()
     {
         $product      = $this->createProdutoSeminovo();
         $order        = $this->createOrder([], $product->sku);
         $orderProduct = $order->produtos()->first();
 
+        for ($i=0; $i < $orderProduct->quantidade; $i++) {
+            $this->createInspecaoWithNoAssociation([
+                'produto_sku'        => $product->sku,
+                'pedido_produtos_id' => $orderProduct->id
+            ]);
+        }
+
         $orderProduct->quantidade = $orderProduct->quantidade + 1;
         $orderProduct->save();
 
-        $inspection = InspecaoTecnica::where('pedido_produtos_id', '=',$orderProduct->id)->count();
+        $inspection = InspecaoTecnica::where('pedido_produtos_id', '=', $orderProduct->id)->count();
 
         $this->assertEquals($orderProduct->quantidade, $inspection);
     }
@@ -115,15 +122,24 @@ class InspecaoTecnicaTest extends TestCase
      *
      * @return void
      */
-    public function test__it_should_allocate_inspection_when_order_product_quantity_inscreased_and_exists_an_inspection_without_order()
+    public function test__it_should_attach_inspection_when_order_product_quantity_inscreased_and_exists_an_inspection_without_order()
     {
-        $product      = $this->createProdutoSeminovo();
-        $inspection   = $this->createInspecaoWithNoAssociation([
-            'produto_sku' => $product->sku,
-            'revisado_at' => date('Y-m-d H:i:s'),
-        ]);
+        $product = $this->createProdutoSeminovo();
+
+        $inspection = InspecaoTecnica::where('produto_sku', '=', $product->sku)->first();
+        if (!$inspection) {
+            $inspection   = $this->createInspecaoWithNoAssociation([
+                'produto_sku' => $product->sku,
+                'revisado_at' => date('Y-m-d H:i:s'),
+            ]);
+        }
+
         $order        = $this->createOrder([], $product->sku);
         $orderProduct = $order->produtos()->first();
+
+        $orderProduct->quantidade = $orderProduct->quantidade + 1;
+        $orderProduct->save();
+
         $inspection   = $inspection->fresh();
 
         $this->assertEquals($orderProduct->id, $inspection->pedido_produtos_id);
@@ -139,7 +155,7 @@ class InspecaoTecnicaTest extends TestCase
         $product      = $this->createProdutoSeminovo();
         $order        = $this->createOrder([], $product->sku);
         $orderProduct = $order->produtos()->first();
-        $inspection   = $this->createInspecao([
+        $inspection   = $this->createInspecaoWithNoAssociation([
             'produto_sku' => $product->sku,
             'pedido_produtos_id' => $orderProduct->id
         ]);
@@ -162,7 +178,7 @@ class InspecaoTecnicaTest extends TestCase
         $product      = $this->createProdutoSeminovo();
         $order        = $this->createOrder([], $product->sku);
         $orderProduct = $order->produtos()->first();
-        $inspection   = $this->createInspecao([
+        $inspection   = $this->createInspecaoWithNoAssociation([
             'produto_sku' => $product->sku,
             'pedido_produtos_id' => $orderProduct->id,
             'revisado_at' => date('Y-m-d H:i:s'),
@@ -186,13 +202,12 @@ class InspecaoTecnicaTest extends TestCase
         $product      = $this->createProdutoSeminovo();
         $order        = $this->createOrder([], $product->sku);
         $orderProduct = $order->produtos()->first();
-        $inspection   = $this->createInspecao([
+        $inspection   = $this->createInspecaoWithNoAssociation([
             'produto_sku' => $product->sku,
             'pedido_produtos_id' => $orderProduct->id,
-            'revisado_at' => date('Y-m-d H:i:s'),
         ]);
 
-        $orderProduct->product = ($this->createProduto())->sku;
+        $orderProduct->produto_sku = ($this->createProduto())->sku;
         $orderProduct->save();
 
         $inspection = $inspection->fresh();
@@ -210,12 +225,13 @@ class InspecaoTecnicaTest extends TestCase
         $product      = $this->createProdutoSeminovo();
         $order        = $this->createOrder([], $product->sku);
         $orderProduct = $order->produtos()->first();
-        $inspection   = $this->createInspecao([
+        $inspection   = $this->createInspecaoWithNoAssociation([
             'produto_sku' => $product->sku,
             'pedido_produtos_id' => $orderProduct->id,
+            'revisado_at' => date('Y-m-d H:i:s'),
         ]);
 
-        $orderProduct->product = ($this->createProduto())->sku;
+        $orderProduct->produto_sku = ($this->createProduto())->sku;
         $orderProduct->save();
 
         $inspection = $inspection->fresh();
@@ -233,7 +249,7 @@ class InspecaoTecnicaTest extends TestCase
         $product      = $this->createProdutoSeminovo();
         $order        = $this->createOrder([], $product->sku);
         $orderProduct = $order->produtos()->first();
-        $inspection   = $this->createInspecao([
+        $inspection   = $this->createInspecaoWithNoAssociation([
             'produto_sku' => $product->sku,
             'pedido_produtos_id' => $orderProduct->id,
             'revisado_at' => date('Y-m-d H:i:s'),
@@ -255,7 +271,7 @@ class InspecaoTecnicaTest extends TestCase
         $product      = $this->createProdutoSeminovo();
         $order        = $this->createOrder([], $product->sku);
         $orderProduct = $order->produtos()->first();
-        $inspection   = $this->createInspecao([
+        $inspection   = $this->createInspecaoWithNoAssociation([
             'produto_sku' => $product->sku,
             'pedido_produtos_id' => $orderProduct->id,
         ]);
