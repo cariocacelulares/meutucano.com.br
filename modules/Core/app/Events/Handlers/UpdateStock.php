@@ -56,12 +56,12 @@ class UpdateStock
     /**
      * Handle the event.
      *
-     * @param  OrderOrderProductUpdated  $event
+     * @param  OrderProductUpdated  $event
      * @return void
      */
-    public function onOrderOrderProductUpdated(OrderOrderProductUpdated $event)
+    public function onOrderProductUpdated(OrderProductUpdated $event)
     {
-        Log::debug('Handler UpdateStock/onOrderOrderProductUpdated acionado!', [$event]);
+        Log::debug('Handler UpdateStock/onOrderProductUpdated acionado!', [$event]);
 
         try {
             $orderProduct = $event->orderProduct;

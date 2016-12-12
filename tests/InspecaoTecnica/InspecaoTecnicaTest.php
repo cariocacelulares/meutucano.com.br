@@ -90,4 +90,179 @@ class InspecaoTecnicaTest extends TestCase
 
         $this->assertEquals(0, $inspecao);
     }
+
+    /**
+     * Testa se quando aumenta a quantidade de um pedido produto, aloca uma nova inspecao tecnica
+     *
+     * @return void
+     */
+    public function test__it_should_allocate_inspection_when_order_product_quantity_inscreased()
+    {
+        $product      = $this->createProdutoSeminovo();
+        $order        = $this->createOrder([], $product->sku);
+        $orderProduct = $order->produtos()->first();
+
+        $orderProduct->quantidade = $orderProduct->quantidade + 1;
+        $orderProduct->save();
+
+        $inspection = InspecaoTecnica::where('pedido_produtos_id', '=',$orderProduct->id)->count();
+
+        $this->assertEquals($orderProduct->quantidade, $inspection);
+    }
+
+    /**
+     * Testa se quando aumenta a quantidade de um pedido produto, e existir uma inspecao sem pedido, relaciona esses dois
+     *
+     * @return void
+     */
+    public function test__it_should_allocate_inspection_when_order_product_quantity_inscreased_and_exists_an_inspection_without_order()
+    {
+        $product      = $this->createProdutoSeminovo();
+        $inspection   = $this->createInspecaoWithNoAssociation([
+            'produto_sku' => $product->sku,
+            'revisado_at' => date('Y-m-d H:i:s'),
+        ]);
+        $order        = $this->createOrder([], $product->sku);
+        $orderProduct = $order->produtos()->first();
+        $inspection   = $inspection->fresh();
+
+        $this->assertEquals($orderProduct->id, $inspection->pedido_produtos_id);
+    }
+
+    /**
+     * Testa se quando diminui a quantidade de um pedido produto, deleta uma inspecao nao revisada
+     *
+     * @return void
+     */
+    public function test__it_should_delete_non_reviewed_inspection_when_order_product_quantity_decreased()
+    {
+        $product      = $this->createProdutoSeminovo();
+        $order        = $this->createOrder([], $product->sku);
+        $orderProduct = $order->produtos()->first();
+        $inspection   = $this->createInspecao([
+            'produto_sku' => $product->sku,
+            'pedido_produtos_id' => $orderProduct->id
+        ]);
+
+        $orderProduct->quantidade = $orderProduct->quantidade - 1;
+        $orderProduct->save();
+
+        $inspection = $inspection->fresh();
+
+        $this->assertEquals(null, $inspection);
+    }
+
+    /**
+     * Testa se quando diminui a quantidade de um pedido produto, desassocia um pedido produto
+     *
+     * @return void
+     */
+    public function test__it_should_detach_reviewed_inspection_when_order_product_quantity_decreased()
+    {
+        $product      = $this->createProdutoSeminovo();
+        $order        = $this->createOrder([], $product->sku);
+        $orderProduct = $order->produtos()->first();
+        $inspection   = $this->createInspecao([
+            'produto_sku' => $product->sku,
+            'pedido_produtos_id' => $orderProduct->id,
+            'revisado_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        $orderProduct->quantidade = $orderProduct->quantidade - 1;
+        $orderProduct->save();
+
+        $inspection = $inspection->fresh();
+
+        $this->assertEquals(null, $inspection->pedido_produtos_id);
+    }
+
+    /**
+     * Testa se quando o produto de um pedido produto for alterado, e a inspecao nao foi revisada, exclui ela
+     *
+     * @return void
+     */
+    public function test__it_should_delete_non_reviewed_inspection_when_product_in_order_product_is_change()
+    {
+        $product      = $this->createProdutoSeminovo();
+        $order        = $this->createOrder([], $product->sku);
+        $orderProduct = $order->produtos()->first();
+        $inspection   = $this->createInspecao([
+            'produto_sku' => $product->sku,
+            'pedido_produtos_id' => $orderProduct->id,
+            'revisado_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        $orderProduct->product = ($this->createProduto())->sku;
+        $orderProduct->save();
+
+        $inspection = $inspection->fresh();
+
+        $this->assertEquals(null, $inspection);
+    }
+
+    /**
+     * Testa se quando o produto de um pedido produto for alterado, e a inspecao foi revisada, desassocia
+     *
+     * @return void
+     */
+    public function test__it_should_detach_reviewed_inspection_when_product_in_order_product_is_change()
+    {
+        $product      = $this->createProdutoSeminovo();
+        $order        = $this->createOrder([], $product->sku);
+        $orderProduct = $order->produtos()->first();
+        $inspection   = $this->createInspecao([
+            'produto_sku' => $product->sku,
+            'pedido_produtos_id' => $orderProduct->id,
+        ]);
+
+        $orderProduct->product = ($this->createProduto())->sku;
+        $orderProduct->save();
+
+        $inspection = $inspection->fresh();
+
+        $this->assertEquals(null, $inspection->pedido_produtos_id);
+    }
+
+    /**
+     * Testa se quando o pedido produto for excluido e tiver uma inspecao revisada, desassocia ela
+     *
+     * @return void
+     */
+    public function test__it_should_detach_reviewed_inspection_when_order_product_is_deleted()
+    {
+        $product      = $this->createProdutoSeminovo();
+        $order        = $this->createOrder([], $product->sku);
+        $orderProduct = $order->produtos()->first();
+        $inspection   = $this->createInspecao([
+            'produto_sku' => $product->sku,
+            'pedido_produtos_id' => $orderProduct->id,
+            'revisado_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        $orderProduct->delete();
+        $inspection = $inspection->fresh();
+
+        $this->assertEquals(null, $inspection->pedido_produtos_id);
+    }
+
+    /**
+     * Testa se quando o pedido produto for excluido e tiver uma inspecao nao revisada, exclui ela
+     *
+     * @return void
+     */
+    public function test__it_should_delete_non_reviewed_inspection_when_order_product_is_deleted()
+    {
+        $product      = $this->createProdutoSeminovo();
+        $order        = $this->createOrder([], $product->sku);
+        $orderProduct = $order->produtos()->first();
+        $inspection   = $this->createInspecao([
+            'produto_sku' => $product->sku,
+            'pedido_produtos_id' => $orderProduct->id,
+        ]);
+
+        $orderProduct->delete();
+        $inspection = $inspection->fresh();
+
+        $this->assertEquals(null, $inspection);
+    }
 }
