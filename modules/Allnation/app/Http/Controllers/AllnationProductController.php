@@ -6,6 +6,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Allnation\Models\AllnationProduct;
 use Allnation\Http\Services\AllnationApi;
+use Magento\Http\Controllers\MagentoController;
 use App\Http\Controllers\Rest\RestControllerTrait;
 
 /**
@@ -29,7 +30,7 @@ class AllnationProductController extends Controller
     {
         $m = self::MODEL;
 
-        $list = $m::query();
+        $list = $m::whereNull('produto_sku');
         $list = $this->handleRequest($list);
 
         return $this->listResponse($list);
@@ -81,5 +82,15 @@ class AllnationProductController extends Controller
                 ]);
             }
         }
+    }
+
+    /**
+     * Create product inside magento and tucano
+     *
+     * @return void
+     */
+    public function createProduct(Request $request)
+    {
+        with(new MagentoController())->createProduct($request->all());
     }
 }

@@ -10,14 +10,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestResponseTrait;
 use Skyhub\Http\Controllers\SkyhubController;
 use Core\Http\Controllers\Pedido\NotaController;
-use Core\Http\Controllers\Pedido\RastreioController;
+use Rastreio\Http\Controllers\RastreioController;
 use Core\Models\Cliente\Cliente;
 use Core\Models\Cliente\Endereco;
 use Core\Models\Pedido\Pedido;
 use Core\Models\Pedido\Imposto;
 use Core\Models\Pedido\Nota;
 use Core\Models\Pedido\Nota\Devolucao;
-use Rastreio\Models;
+use Rastreio\Models\Rastreio;
 use Core\Models\Pedido\PedidoProduto;
 use Core\Models\Produto\Produto;
 
@@ -611,7 +611,7 @@ class UploadController extends Controller
                 $cadastrados[$sku][$parsedValue] = (isset($cadastrados[$sku][$parsedValue])) ? ($cadastrados[$sku][$parsedValue] + $item['quantidade']) : $item['quantidade'];
 
                 // Pega os imeis para essa quantidade e tira da lista de imeis disponiveis
-                $imeis = '';
+                $imeis = [];
                 if (isset($produtoImei[$sku]) && !empty($produtoImei[$sku])) {
                     for ($i=0; $i < $item['quantidade']; $i++) {
                         if (isset($produtoImei[$sku][$i])) {

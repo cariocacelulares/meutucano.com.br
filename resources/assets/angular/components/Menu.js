@@ -171,17 +171,6 @@
                                         sref: $state.href('app.allnation.products.index')
                                     }
                                 ]
-                            },
-                            {
-                                title: 'Magento',
-                                icon: 'fa-maxcdn',
-                                sub: [
-                                    {
-                                        title: 'Categorias',
-                                        icon: 'fa-list',
-                                        sref: $state.href('app.magento.categories')
-                                    }
-                                ]
                             }
                         ],
                         roles: ['admin']

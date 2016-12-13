@@ -573,44 +573,6 @@ class MagentoController extends Controller
     }
 
     /**
-     * Fetch categories from Magento
-     *
-     * @return void
-     */
-    public function fetchCategories()
-    {
-        try {
-            $categories = $this->api->catalogCategoryTree($this->session);
-            MagentoCategory::truncate();
-
-            $this->createCategories($categories);
-        } catch (\Exception $e) {
-            Log::error(logMessage($e, 'Cannot fetch categories from magento'));
-        }
-    }
-
-    /**
-     * Recursive creation of categories
-     *
-     * @param  Object $parentCategory
-     * @return void
-     */
-    private function createCategories($parentCategory)
-    {
-        MagentoCategory::create([
-            'id'                  => $parentCategory->category_id,
-            'magento_category_id' => ($parentCategory->parent_id) ?: null,
-            'name'                => $parentCategory->name
-        ]);
-
-        if (sizeof($sub = $parentCategory->children) >= 1) {
-            foreach ($sub as $subCategory) {
-                $this->createCategories($subCategory);
-            }
-        }
-    }
-
-    /**
      * Create product in Magento
      *
      * @param  array  $data Product parameters
@@ -618,17 +580,78 @@ class MagentoController extends Controller
      */
     public function createProduct(array $data)
     {
-        $productId = 2;
-        $file = [
-            'content' =>
-                '/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAAXABcDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDLooor8XP4DCiiigAooooAKKKKAP/Z',
-            'mime' => 'image/jpeg'
-        ];
+        try {
+            $product = $this->api->catalogProductCreate($this->session, 'simple', 10, $data['sku'], [
+                'categories'            => [2],
+                'websites'              => [1],
+                'name'                  => $data['title'],
+                'description'           => $data['description'],
+                'short_description'     => $data['title'],
+                'weight'                => $data['weight'],
+                'status'                => '2',
+                'visibility'            => '4',
+                'price'                 => $data['cost'],
+                'tax_class_id'          => 0,
+                'additional_attributes' => [
+                    'single_data' => [
+                        [
+                            'key'   => 'ean',
+                            'value' => $data['ean']
+                        ],
+                        [
+                            'key'   => 'volume_altura',
+                            'value' => max($data['height'], 2),
+                        ],
+                        [
+                            'key'   => 'volume_largura',
+                            'value' => max($data['width'], 11),
+                        ],
+                        [
+                            'key'   => 'volume_comprimento',
+                            'value' => max($data['length'], 16),
+                        ],
+                        [
+                            'key'   => 'dimensoes_desc',
+                            'value' => implode(' x ', [
+                                round($data['height'], 1),
+                                round($data['width'], 1),
+                                round($data['length'], 1)]
+                            ) . 'cm'
+                        ],
+                        [
+                            'key'   => 'garantia',
+                            'value' => array_key_exists('warranty', $data) ? $data['warranty'] : ''
+                        ],
+                        [
+                            'key'   => 'subtitle',
+                            'value' => array_key_exists('subtitle', $data) ? $data['subtitle'] : ''
+                        ],
+                        [
+                            'key'   => 'cor',
+                            'value' => array_key_exists('cor', $data) ? $data['cor'] : ''
+                        ]
+                    ]
+                ]
+            ]);
 
-        $result = $proxy->catalogProductAttributeMediaCreate(
-            $session,
-            $productId,
-            ['file' => $file, 'label' => 'Label', 'position' => '100', 'types' => ['thumbnail'], 'exclude' => 0]
-        );
+            $images = explode("\n", $data['images']);
+
+            foreach ($images as $key => $imageUrl) {
+                $file = [
+                    'content' => base64_encode(file_get_contents($imageUrl)),
+                    'mime'    => 'image/jpeg'
+                ];
+
+                $result = $this->api->catalogProductAttributeMediaCreate($this->session, $product, [
+                    'file'     => $file,
+                    'label'    => $data['title'],
+                    'position' => $key,
+                    'types'    => ($key == 0) ? ['image', 'thumbnail', 'small_image', 'rotator_image'] : [],
+                    'exclude'  => 0
+                ]);
+            }
+        } catch (\Exception $e) {
+            dd($e);
+        }
     }
 }

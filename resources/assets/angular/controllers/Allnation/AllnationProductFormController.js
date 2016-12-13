@@ -24,7 +24,9 @@
          * @return {void}
          */
         vm.save = function() {
-
+            AllnationProduct.createProduct(vm.formData).then(function(response) {
+                console.log(response);
+            });
         };
     }
 })();

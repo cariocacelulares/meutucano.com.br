@@ -10,7 +10,9 @@
             rest.baseUrl = 'allnation/products';
 
             angular.extend(rest, {
-
+                createProduct: function(params) {
+                    return Restangular.one(this.baseUrl + '/create_product').customPOST(params || {});
+                }
             });
 
             return rest;
