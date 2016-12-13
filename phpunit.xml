@@ -24,6 +24,9 @@
         <testsuite name="Magento">
             <directory>./tests/Magento/</directory>
         </testsuite>
+        <testsuite name="Allnation">
+            <directory>./tests/Allnation/</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist>

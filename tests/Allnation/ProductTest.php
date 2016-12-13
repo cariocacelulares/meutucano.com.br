@@ -1,7 +1,7 @@
 <?php namespace Tests\Allnation;
 
 use VCR\VCR;
-use Tests\Testcase;
+use Tests\TestCase;
 use Allnation\Models\AllnationProduct;
 use Allnation\Http\Services\AllnationApi;
 use App\Http\Controllers\Auth\AuthenticateController;
