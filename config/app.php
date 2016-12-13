@@ -52,8 +52,7 @@ return [
 
         Barryvdh\Debugbar\ServiceProvider::class,
 
-        Way\Generators\GeneratorsServiceProvider::class,
-        Xethron\MigrationsGenerator\MigrationsGeneratorServiceProvider::class,
+        Laracasts\Generators\GeneratorsServiceProvider::class,
 
         Zizaco\Entrust\EntrustServiceProvider::class,
         Arcanedev\LogViewer\LogViewerServiceProvider::class,
