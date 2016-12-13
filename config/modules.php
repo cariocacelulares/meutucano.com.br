@@ -99,7 +99,7 @@ return [
             // 'lang'       => 'resources/lang',
             // 'views'      => 'resources/views',
             'config'        => 'config',
-            'test'          => 'tests',
+            // 'test'          => 'tests',
             'migration'     => 'database/migrations',
             'command'       => 'app/Console/Commands',
             'event'         => 'app/Events',

@@ -1,0 +1,105 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-mobile" title="Cadastro de produto" description="Cadastrar produto da Allnation no Tucano e no site"></page-title>
+    <div class="col-md-6 button-bar">
+        <a ng-click="AllnationProductForm.save()" title="Salvar produto" class="btn-success"><i class="fa-save"></i>&nbsp; Criar produto</a>
+        <a onclick="history.back()" title="Voltar para a página anterior" class="btn-default"><i class="fa-reply"></i>&nbsp; Voltar</a>
+    </div>
+</div>
+<form ng-submit="AllnationProductForm.save()" novalidate="novalidate" class="form-default" id="formProduto">
+    <h2>Características</h2>
+    <div class="row form-group">
+        <div class="col-md-2">
+            <img style="max-width: 100%;" ng-src="{{ AllnationProductForm.formData.image }}" />
+        </div>
+        <div class="col-md-10">
+            <div class="row">
+                <div class="col-md-9">
+                    <label for="title">Título</label>
+                    <input type="text" ng-model="AllnationProductForm.formData.title" id="title" placeholder="Título do produto" />
+                    <p class="hint-text m-t-10"><b>Original:</b> {{ ::AllnationProductForm.formData.title }}</p>
+                </div>
+                <div class="col-md-3">
+                    <label for="sku">SKU</label>
+                    <input type="text" ng-model="AllnationProductForm.formData.sku" id="sku" placeholder="SKU do produto" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="subtitle">Subtítulo</label>
+                    <input type="text" ng-model="AllnationProductForm.formData.subtitle" id="subtitle" placeholder="Subtítulo do produto" />
+                </div>
+                <div class="col-md-6">
+                    <label for="cor">Cor</label>
+                    <input type="text" ng-model="AllnationProductForm.formData.cor" id="cor" placeholder="Cor do produto" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-12">
+            <label for="images">Imagens</label>
+            <p class="hint-text">Adicione cada link em uma nova linha</p>
+            <textarea ng-model="AllnationProductForm.formData.images" id="images"></textarea>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-4">
+            <label for="brand">Marca</label>
+            <input type="text" ng-model="AllnationProductForm.formData.brand" id="brand" placeholder="Marca do produto" />
+        </div>
+        <div class="col-md-4">
+            <label for="ean">EAN</label>
+            <input type="text" ng-model="AllnationProductForm.formData.ean" id="ean" placeholder="EAN do produto" />
+        </div>
+        <div class="col-md-4">
+            <label for="ncm">NCM</label>
+            <input type="text" ng-model="AllnationProductForm.formData.ncm" id="ncm" placeholder="NCM do produto" readonly />
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-4">
+            <label for="cost">Preço de venda</label>
+            <input type="text" ng-model="AllnationProductForm.formData.cost" id="cost" placeholder="Preço" ui-money-mask />
+        </div>
+        <div class="col-md-3">
+            <label for="stock_from">Estoque de</label>
+            <select ng-model="AllnationProductForm.formData.stock_from" id="stock_from" readonly>
+                <option value="SC">Santa catarina</option>
+                <option value="ES">Espirito Santo</option>
+                <option value="RJ">Rio de Janeiro</option>
+            </select>
+        </div>
+        <div class="col-md-5">
+            <label for="origin">Origem</label>
+            <input type="text" ng-model="AllnationProductForm.formData.origin" id="origin" placeholder="Preço" readonly />
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-3">
+            <label for="warranty">Garantia</label>
+            <input type="text" ng-model="AllnationProductForm.formData.warranty" id="warranty" placeholder="Garantia do produto" />
+        </div>
+        <div class="col-md-3">
+            <label for="weight">Peso</label>
+            <input type="text" ng-model="AllnationProductForm.formData.weight" id="weight" placeholder="Peso" ui-number-mask="2" />
+        </div>
+        <div class="col-md-2">
+            <label for="height">Altura</label>
+            <input type="text" ng-model="AllnationProductForm.formData.height" id="height" placeholder="Altura" ui-number-mask="2" />
+        </div>
+        <div class="col-md-2">
+            <label for="width">Largura</label>
+            <input type="text" ng-model="AllnationProductForm.formData.width" id="width" placeholder="Largura" ui-number-mask="2" />
+        </div>
+        <div class="col-md-2">
+            <label for="length">Profundidade</label>
+            <input type="text" ng-model="AllnationProductForm.formData.length" id="length" placeholder="Profundidade" ui-number-mask="2" />
+        </div>
+    </div>
+    <h2 class="m-t-20">Descrição</h2>
+    <div class="row form-group">
+        <div class="col-md-12">
+            <text-angular ng-model="AllnationProductForm.formData.description"></text-angular>
+        </div>
+    </div>
+</form>

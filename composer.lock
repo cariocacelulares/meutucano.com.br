@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9942f4b4c47470c3e53078c23c4ae388",
+    "hash": "3e0622f69200bf5d5417de444ea93cfe",
     "content-hash": "9173b88abef47ddf9b9ae3287b8a407a",
     "packages": [
         {
@@ -131,16 +131,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.20.4",
+            "version": "3.20.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "4541d9e350644a5c70b298d42e526b65275fc804"
+                "reference": "5a05ae6851405587f0bdeedb67abfe997a079ac0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/4541d9e350644a5c70b298d42e526b65275fc804",
-                "reference": "4541d9e350644a5c70b298d42e526b65275fc804",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/5a05ae6851405587f0bdeedb67abfe997a079ac0",
+                "reference": "5a05ae6851405587f0bdeedb67abfe997a079ac0",
                 "shasum": ""
             },
             "require": {
@@ -207,7 +207,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2016-12-08 20:59:19"
+            "time": "2016-12-12 23:02:57"
         },
         {
             "name": "barryvdh/laravel-ide-helper",

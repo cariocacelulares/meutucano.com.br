@@ -10,14 +10,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestResponseTrait;
 use Skyhub\Http\Controllers\SkyhubController;
 use Core\Http\Controllers\Pedido\NotaController;
-use Core\Http\Controllers\Pedido\RastreioController;
+use Rastreio\Http\Controllers\RastreioController;
 use Core\Models\Cliente\Cliente;
 use Core\Models\Cliente\Endereco;
 use Core\Models\Pedido\Pedido;
 use Core\Models\Pedido\Imposto;
 use Core\Models\Pedido\Nota;
 use Core\Models\Pedido\Nota\Devolucao;
-use Rastreio\Models;
+use Rastreio\Models\Rastreio;
 use Core\Models\Pedido\PedidoProduto;
 use Core\Models\Produto\Produto;
 
@@ -166,9 +166,6 @@ class UploadController extends Controller
             DB::beginTransaction();
             Log::debug('Transaction - begin');
 
-            // Pedido
-            $pedido = $this->importPedido($chave, $cliente, $clienteEndereco, $operacao, $tipoOperacao);
-
             // Data
             $datetimeNota = \DateTime::createFromFormat('Y-m-d\TH:i:sP', $this->nfe->ide->dhEmi);
             $dataNota = $datetimeNota->format('Y-m-d');
@@ -176,6 +173,9 @@ class UploadController extends Controller
             if (in_array($tipoOperacao, ['devolucao', 'estorno'])) {
                 $return = $this->importDevolucao($chave, $usuario_id, $notaArquivo, $tipoOperacao, $dataNota);
             } else {
+                // Pedido
+                $pedido = $this->importPedido($chave, $cliente, $clienteEndereco, $operacao, $tipoOperacao);
+
                 $return = $this->importVenda($chave, $pedido, $usuario_id, $dataNota, $notaArquivo, $produtos, $datetimeNota);
             }
 
@@ -379,11 +379,11 @@ class UploadController extends Controller
 
         $devolucao = Devolucao::firstOrNew($params);
         $devolucao->usuario_id = $usuario_id;
-        $devolucao->nota_id = ($notaRef) ? $notaRef->id : null;
-        $devolucao->chave = $chave;
-        $devolucao->arquivo = $notaArquivo;
-        $devolucao->tipo = ($tipoOperacao == 'estorno') ? 1 : 0;
-        $devolucao->data = $dataNota;
+        $devolucao->nota_id    = ($notaRef) ? $notaRef->id : null;
+        $devolucao->chave      = $chave;
+        $devolucao->arquivo    = $notaArquivo;
+        $devolucao->tipo       = ($tipoOperacao == 'estorno') ? 1 : 0;
+        $devolucao->data       = $dataNota;
 
         if ($devolucao->save()) {
             Log::info('Devolução de nota importada ' . $devolucao->id);
@@ -611,7 +611,7 @@ class UploadController extends Controller
                 $cadastrados[$sku][$parsedValue] = (isset($cadastrados[$sku][$parsedValue])) ? ($cadastrados[$sku][$parsedValue] + $item['quantidade']) : $item['quantidade'];
 
                 // Pega os imeis para essa quantidade e tira da lista de imeis disponiveis
-                $imeis = '';
+                $imeis = [];
                 if (isset($produtoImei[$sku]) && !empty($produtoImei[$sku])) {
                     for ($i=0; $i < $item['quantidade']; $i++) {
                         if (isset($produtoImei[$sku][$i])) {

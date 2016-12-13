@@ -1,16 +1,17 @@
 <?php namespace Magento\Http\Controllers;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Config;
-use App\Http\Controllers\Controller;
+use Core\Events\OrderCancel;
+use Core\Models\Pedido\Pedido;
+use Core\Models\Produto\Produto;
 use Core\Models\Cliente\Cliente;
 use Core\Models\Cliente\Endereco;
-use Core\Models\Pedido\Pedido;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Magento\Models\MagentoCategory;
+use App\Http\Controllers\Controller;
 use Core\Models\Pedido\PedidoProduto;
-use Core\Models\Produto\Produto;
-use Core\Events\OrderCancel;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Class MagentoController
@@ -81,13 +82,13 @@ class MagentoController extends Controller
     public function parseStatus($status, $reverse = false)
     {
         $statusConvert = [
-            'new' => 0,
-            'pending' => 0,
+            'new'             => 0,
+            'pending'         => 0,
             'pending_payment' => 0,
-            'processing' => 1,
-            'complete' => 2,
-            'canceled' => 5,
-            'closed' => 5
+            'processing'      => 1,
+            'complete'        => 2,
+            'canceled'        => 5,
+            'closed'          => 5
         ];
 
         return (!$reverse) ? (isset($statusConvert[$status]) ? $statusConvert[$status] : 0) : array_search($status, $statusConvert);
@@ -183,6 +184,7 @@ class MagentoController extends Controller
         try {
             $taxvat = preg_replace('/\D/', '', $order['customer']['taxvat']);
 
+            // Customer
             $cliente = Cliente::firstOrNew(['taxvat' => $taxvat]);
             $cliente->tipo  = (strlen($taxvat) > 11) ? 1 : 0;
             $cliente->nome  = $order['customer']['firstname'] . ' ' . $order['customer']['lastname'];
@@ -194,6 +196,7 @@ class MagentoController extends Controller
                 Log::warning("Não foi possivel importar o cliente para o pedido " . $order['increment_id']);
             }
 
+            // Address
             $clienteEndereco = Endereco::firstOrNew([
                 'cliente_id' => $cliente->id,
                 'cep'        => $order['shipping_address']['postcode']
@@ -214,6 +217,7 @@ class MagentoController extends Controller
                 Log::warning("Não foi possível importar o endereço para o pedido " . $order['increment_id']);
             }
 
+            // Products
             foreach ($order['items'] as $s_produto) {
                 $produto = Produto::firstOrCreate(['sku' => $s_produto['sku']]);
 
@@ -232,7 +236,7 @@ class MagentoController extends Controller
                 ? \Config::get('core.notas.venda_interna')
                 : \Config::get('core.notas.venda_externa');
 
-            // Abre um transaction no banco de dados
+            // Order transaction
             DB::beginTransaction();
             Log::debug('Transaction - begin');
 
@@ -560,6 +564,89 @@ class MagentoController extends Controller
         } catch (\Exception $e) {
             Log::warning(logMessage($e, 'Erro ao sincronizar os produtos do magento para o tucano'));
             reportError('Erro ao sincronizar os produtos do magento para o tucano' . $e->getMessage() . ' - ' . $e->getLine());
+        }
+    }
+
+    /**
+     * Create product in Magento
+     *
+     * @param  array  $data Product parameters
+     * @return boolean
+     */
+    public function createProduct(array $data)
+    {
+        try {
+            $product = $this->api->catalogProductCreate($this->session, 'simple', 10, $data['sku'], [
+                'categories'            => [2],
+                'websites'              => [1],
+                'name'                  => $data['title'],
+                'description'           => $data['description'],
+                'short_description'     => $data['title'],
+                'weight'                => $data['weight'],
+                'status'                => '2',
+                'visibility'            => '4',
+                'price'                 => $data['cost'],
+                'tax_class_id'          => 0,
+                'additional_attributes' => [
+                    'single_data' => [
+                        [
+                            'key'   => 'ean',
+                            'value' => $data['ean']
+                        ],
+                        [
+                            'key'   => 'volume_altura',
+                            'value' => max($data['height'], 2),
+                        ],
+                        [
+                            'key'   => 'volume_largura',
+                            'value' => max($data['width'], 11),
+                        ],
+                        [
+                            'key'   => 'volume_comprimento',
+                            'value' => max($data['length'], 16),
+                        ],
+                        [
+                            'key'   => 'dimensoes_desc',
+                            'value' => implode(' x ', [
+                                round($data['height'], 1),
+                                round($data['width'], 1),
+                                round($data['length'], 1)]
+                            ) . 'cm'
+                        ],
+                        [
+                            'key'   => 'garantia',
+                            'value' => array_key_exists('warranty', $data) ? $data['warranty'] : ''
+                        ],
+                        [
+                            'key'   => 'subtitle',
+                            'value' => array_key_exists('subtitle', $data) ? $data['subtitle'] : ''
+                        ],
+                        [
+                            'key'   => 'cor',
+                            'value' => array_key_exists('cor', $data) ? $data['cor'] : ''
+                        ]
+                    ]
+                ]
+            ]);
+
+            $images = explode("\n", $data['images']);
+
+            foreach ($images as $key => $imageUrl) {
+                $file = [
+                    'content' => base64_encode(file_get_contents($imageUrl)),
+                    'mime'    => 'image/jpeg'
+                ];
+
+                $result = $this->api->catalogProductAttributeMediaCreate($this->session, $product, [
+                    'file'     => $file,
+                    'label'    => $data['title'],
+                    'position' => $key,
+                    'types'    => ($key == 0) ? ['image', 'thumbnail', 'small_image', 'rotator_image'] : [],
+                    'exclude'  => 0
+                ]);
+            }
+        } catch (\Exception $e) {
+            dd($e);
         }
     }
 }
