@@ -12,7 +12,7 @@ $factory->define(\Allnation\Models\AllnationProduct::class, function() use ($fak
         'ean'         => $faker->randomNumber(5) . $faker->randomNumber(6),
         'ncm'         => $faker->randomNumber(5) . $faker->randomNumber(5),
         'warranty'    => str_random(10),
-        'weigth'      => $faker->randomFloat(2, 0, 50),
+        'weight'      => $faker->randomFloat(2, 0, 50),
         'cost'        => $faker->randomFloat(2, 0, 50),
         'image'       => $faker->url,
         'stock_from'  => str_random(2),

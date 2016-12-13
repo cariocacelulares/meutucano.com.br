@@ -27,7 +27,7 @@ class CreateAllnationProductsTable extends Migration
             $table->string('ean', 20)->nullable();
             $table->string('ncm', 20)->nullable();
             $table->string('warranty', 20)->nullable();
-            $table->decimal('weigth', 10, 2)->nullable();
+            $table->decimal('weight', 10, 2)->nullable();
             $table->decimal('cost', 10, 2)->nullable();
             $table->string('image', 255)->nullable();
             $table->string('stock_from', 2)->nullable();
