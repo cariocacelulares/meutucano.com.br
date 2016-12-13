@@ -44,13 +44,13 @@
         "phpunit/phpunit": "~5.0",
         "symfony/css-selector": "3.1.*",
         "symfony/dom-crawler": "3.1.*",
-        "xethron/migrations-generator": "dev-l5",
         "way/generators": "dev-feature/laravel-five-stable",
         "barryvdh/laravel-debugbar": "^2.2",
         "tightenco/mailthief": "^0.3.2",
         "php-vcr/php-vcr": "dev-master",
         "php-vcr/phpunit-testlistener-vcr": "^1.1",
-        "mockery/mockery": "^0.9.6"
+        "mockery/mockery": "^0.9.6",
+        "laracasts/generators": "^1.1"
     },
     "autoload": {
         "classmap": [
@@ -104,10 +104,6 @@
         "secure-http": false
     },
     "repositories": {
-        "generators": {
-            "type": "vcs",
-            "url": "https://github.com/jamisonvalenta/Laravel-4-Generators.git"
-        },
         "php-sigep": {
             "type": "vcs",
             "url": "https://github.com/cariocacelulares/php-sigep.git"
