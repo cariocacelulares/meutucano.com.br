@@ -37,7 +37,8 @@
         "sentry/sentry-laravel": "^0.4.1",
         "jenssegers/mongodb": "^3.1",
         "nwidart/laravel-modules": "1.14.*",
-        "predis/predis": "~1.0"
+        "predis/predis": "~1.0",
+        "spatie/laravel-backup": "^4.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -104,12 +105,12 @@
     },
     "repositories": {
         "php-sigep": {
-            "type": "vcs",
-            "url": "https://github.com/cariocacelulares/php-sigep.git"
+            "type": "git",
+            "url": "git@github.com:cariocacelulares/php-sigep.git"
         },
         "nfephp": {
-            "type": "vcs",
-            "url": "https://github.com/diego3g/nfephp.git"
+            "type": "git",
+            "url": "git@github.com:diego3g/nfephp.git"
         }
     }
 }
