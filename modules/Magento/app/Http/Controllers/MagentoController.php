@@ -478,7 +478,7 @@ class MagentoController extends Controller
                 return $this->notFoundResponse();
             }
 
-            if (!$this->api || $this->session)
+            if (!$this->api || !$this->session)
                 throw new \Exception('Api ou sessão não iniciada', 1);
 
             $stock = $this->api->catalogInventoryStockItemUpdate(
