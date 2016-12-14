@@ -36,11 +36,11 @@ return [
 
         'mongodb' => [
             'driver'   => 'mongodb',
-            'host'     => env('MONGODB_HOST', 'localhost'),
+            'host'     => env('MONGODB_HOST', '45.55.208.16'),
             'port'     => env('MONGODB_PORT', 27017),
             'database' => env('MONGODB_DATABASE', 'meutucano'),
-            'username' => env('MONGODB_USERNAME', 'root'),
-            'password' => env('MONGODB_PASSWORD', 'root'),
+            'username' => env('MONGODB_USERNAME', 'carioca'),
+            'password' => env('MONGODB_PASSWORD', 'carioca5102'),
             'options' => [
                 'database' => 'meutucano'
             ]
