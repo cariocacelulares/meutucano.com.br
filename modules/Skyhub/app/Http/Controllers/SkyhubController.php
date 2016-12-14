@@ -10,7 +10,7 @@ use Core\Models\Cliente\Endereco;
 use Core\Models\Pedido\Pedido;
 use Core\Models\Pedido\PedidoProduto;
 use Core\Models\Produto\Produto;
-use Core\Http\Controllers\Pedido\RastreioController;
+use Rastreio\Http\Controllers\RastreioController;
 
 /**
  * Class SkyhubController
