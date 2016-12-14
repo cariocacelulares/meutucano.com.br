@@ -181,4 +181,14 @@ class Rastreio extends \Eloquent
     {
         return !!$this->monitoramentos()->where('usuario_id', '=', getCurrentUserId())->first();
     }
+
+    /**
+     * Retorna o cep do endereço do pedido
+     *
+     * @return int|string
+     */
+    public function getCep()
+    {
+        return $this->pedido->endereco->cep;
+    }
 }

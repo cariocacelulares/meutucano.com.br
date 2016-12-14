@@ -471,11 +471,6 @@ class UploadController extends Controller
             $dataEnvio = $dataEnvio->format('Y-m-d');
 
             /**
-             * Calcula prazo
-             */
-            $prazoEntrega = RastreioController::deadline($rastreio, $this->nfe->dest->enderDest->CEP);
-
-            /**
              * Salva o rastreio
              */
 
@@ -490,7 +485,7 @@ class UploadController extends Controller
             $pedidoRastreio->data_envio = $dataEnvio;
             $pedidoRastreio->servico = $metodoEnvio;
             $pedidoRastreio->valor = $freteTotal;
-            $pedidoRastreio->prazo = $prazoEntrega;
+            $pedidoRastreio->prazo = null;
 
             if ($pedidoRastreio->save()) {
                 Log::info('Rastreio importado ' . $pedidoRastreio->id);
