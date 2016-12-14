@@ -70,7 +70,8 @@ class AttachInspecaoTecnica
         $orderProduct = $event->orderProduct;
         $orderProduct = $orderProduct->fresh();
 
-        if ((int)$orderProduct->pedido->status === 1) {
+        // Apenas se o produto for pago, enviado ou entregue
+        if (in_array((int)$orderProduct->pedido->status, [1, 2, 3])) {
             Log::debug('Handler AttachInspecaoTecnica/onOrderProductCreated acionado.', [$event]);
             $this->attachInspecaoTecnica($orderProduct);
         }
@@ -88,9 +89,12 @@ class AttachInspecaoTecnica
         $qty          = $event->qty;
         $orderProduct = $orderProduct->fresh();
 
-        Log::debug('Handler AttachInspecaoTecnica/onOrderProductQtyIncreased acionado.', [$event]);
-        for ($i=0; $i < $qty; $i++) {
-            with(new InspecaoTecnicaController())->attachInspecao($orderProduct);
+        // Apenas se o produto for pago, enviado ou entregue
+        if (in_array((int)$orderProduct->pedido->status, [1, 2, 3])) {
+            Log::debug('Handler AttachInspecaoTecnica/onOrderProductQtyIncreased acionado.', [$event]);
+            for ($i=0; $i < $qty; $i++) {
+                with(new InspecaoTecnicaController())->attachInspecao($orderProduct);
+            }
         }
     }
 

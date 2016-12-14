@@ -46,9 +46,12 @@ class DetachInspecaoTecnica
         $qty          = $event->qty;
         $orderProduct = $orderProduct->fresh();
 
-        Log::debug('Handler DetachInspecaoTecnica/OrderProductQtyDecreased acionado.', [$event]);
-        for ($i=0; $i < $qty; $i++) {
-            with(new InspecaoTecnicaController())->detachInspecao($orderProduct);
+        // Apenas se o produto for pago, enviado ou entregue
+        if (in_array((int)$orderProduct->pedido->status, [1, 2, 3])) {
+            Log::debug('Handler DetachInspecaoTecnica/OrderProductQtyDecreased acionado.', [$event]);
+            for ($i=0; $i < $qty; $i++) {
+                with(new InspecaoTecnicaController())->detachInspecao($orderProduct);
+            }
         }
     }
 
@@ -63,8 +66,11 @@ class DetachInspecaoTecnica
         $orderProduct = $event->orderProduct;
         $orderProduct = $orderProduct->fresh();
 
-        Log::debug('Handler DetachInspecaoTecnica/OrderProductProductChanged acionado.', [$event]);
-        $this->detachInspecao($orderProduct);
+        // Apenas se o produto for pago, enviado ou entregue
+        if (in_array((int)$orderProduct->pedido->status, [1, 2, 3])) {
+            Log::debug('Handler DetachInspecaoTecnica/OrderProductProductChanged acionado.', [$event]);
+            $this->detachInspecao($orderProduct);
+        }
     }
 
     /**
@@ -78,8 +84,11 @@ class DetachInspecaoTecnica
         $orderProduct = $event->orderProduct;
         $orderProduct = $orderProduct->fresh();
 
-        Log::debug('Handler DetachInspecaoTecnica/OrderProductDeleting acionado.', [$event]);
-        $this->detachInspecao($orderProduct, true);
+        // Apenas se o produto for pago, enviado ou entregue
+        if (in_array((int)$orderProduct->pedido->status, [1, 2, 3])) {
+            Log::debug('Handler DetachInspecaoTecnica/OrderProductDeleting acionado.', [$event]);
+            $this->detachInspecao($orderProduct, true);
+        }
     }
 
     /**

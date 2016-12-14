@@ -127,7 +127,7 @@ class InspecaoTecnicaTest extends TestCase
             'revisado_at' => date('Y-m-d H:i:s'),
         ]);
 
-        $order        = $this->createOrder([], $product->sku);
+        $order        = $this->createOrder(['status' => 1], $product->sku);
         $orderProduct = $order->produtos()->first();
 
         $orderProduct->quantidade = $orderProduct->quantidade + 1;
@@ -146,12 +146,10 @@ class InspecaoTecnicaTest extends TestCase
     public function test__it_should_delete_non_reviewed_inspection_when_order_product_quantity_decreased()
     {
         $product      = $this->createProdutoSeminovo();
-        $order        = $this->createOrder([], $product->sku);
+        $order        = $this->createOrder(['status' => 1], $product->sku);
         $orderProduct = $order->produtos()->first();
-        $inspection   = $this->createInspecaoWithNoAssociation([
-            'produto_sku' => $product->sku,
-            'pedido_produtos_id' => $orderProduct->id,
-        ]);
+        $inspection   = InspecaoTecnica::where('pedido_produtos_id', '=', $orderProduct->id)->whereNull('revisado_at')
+                            ->first();
 
         $orderProduct->quantidade = $orderProduct->quantidade - 1;
         $orderProduct->save();
@@ -169,13 +167,13 @@ class InspecaoTecnicaTest extends TestCase
     public function test__it_should_detach_reviewed_inspection_when_order_product_quantity_decreased()
     {
         $product      = $this->createProdutoSeminovo();
-        $order        = $this->createOrder([], $product->sku);
+        $order        = $this->createOrder(['status' => 1], $product->sku);
         $orderProduct = $order->produtos()->first();
-        $inspection   = $this->createInspecaoWithNoAssociation([
-            'produto_sku' => $product->sku,
-            'pedido_produtos_id' => $orderProduct->id,
-            'revisado_at' => date('Y-m-d H:i:s'),
-        ]);
+        $inspection   = InspecaoTecnica::where('pedido_produtos_id', '=', $orderProduct->id)
+                            ->first();
+
+        $inspection->revisado_at = date('Y-m-d H:i:s');
+        $inspection->save();
 
         $orderProduct->quantidade = $orderProduct->quantidade - 1;
         $orderProduct->save();
@@ -193,12 +191,10 @@ class InspecaoTecnicaTest extends TestCase
     public function test__it_should_delete_non_reviewed_inspection_when_product_changed()
     {
         $product      = $this->createProdutoSeminovo();
-        $order        = $this->createOrder([], $product->sku);
+        $order        = $this->createOrder(['status' => 1], $product->sku);
         $orderProduct = $order->produtos()->first();
-        $inspection   = $this->createInspecaoWithNoAssociation([
-            'produto_sku' => $product->sku,
-            'pedido_produtos_id' => $orderProduct->id,
-        ]);
+        $inspection   = InspecaoTecnica::where('pedido_produtos_id', '=', $orderProduct->id)->whereNull('revisado_at')
+                            ->first();
 
         $orderProduct->produto_sku = ($this->createProduto())->sku;
         $orderProduct->save();
@@ -216,13 +212,13 @@ class InspecaoTecnicaTest extends TestCase
     public function test__it_should_detach_reviewed_inspection_when_product_changed()
     {
         $product      = $this->createProdutoSeminovo();
-        $order        = $this->createOrder([], $product->sku);
+        $order        = $this->createOrder(['status' => 1], $product->sku);
         $orderProduct = $order->produtos()->first();
-        $inspection   = $this->createInspecaoWithNoAssociation([
-            'produto_sku' => $product->sku,
-            'pedido_produtos_id' => $orderProduct->id,
-            'revisado_at' => date('Y-m-d H:i:s'),
-        ]);
+        $inspection   = InspecaoTecnica::where('pedido_produtos_id', '=', $orderProduct->id)
+                            ->first();
+
+        $inspection->revisado_at = date('Y-m-d H:i:s');
+        $inspection->save();
 
         $orderProduct->produto_sku = ($this->createProduto())->sku;
         $orderProduct->save();
@@ -240,13 +236,13 @@ class InspecaoTecnicaTest extends TestCase
     public function test__it_should_detach_reviewed_inspection_when_order_product_is_deleted()
     {
         $product      = $this->createProdutoSeminovo();
-        $order        = $this->createOrder([], $product->sku);
+        $order        = $this->createOrder(['status' => 1], $product->sku);
         $orderProduct = $order->produtos()->first();
-        $inspection   = $this->createInspecaoWithNoAssociation([
-            'produto_sku' => $product->sku,
-            'pedido_produtos_id' => $orderProduct->id,
-            'revisado_at' => date('Y-m-d H:i:s'),
-        ]);
+        $inspection   = InspecaoTecnica::where('pedido_produtos_id', '=', $orderProduct->id)
+                            ->first();
+
+        $inspection->revisado_at = date('Y-m-d H:i:s');
+        $inspection->save();
 
         $orderProduct->delete();
         $inspection = $inspection->fresh();
@@ -262,12 +258,10 @@ class InspecaoTecnicaTest extends TestCase
     public function test__it_should_delete_non_reviewed_inspection_when_order_product_is_deleted()
     {
         $product      = $this->createProdutoSeminovo();
-        $order        = $this->createOrder([], $product->sku);
+        $order        = $this->createOrder(['status' => 1], $product->sku);
         $orderProduct = $order->produtos()->first();
-        $inspection   = $this->createInspecaoWithNoAssociation([
-            'produto_sku' => $product->sku,
-            'pedido_produtos_id' => $orderProduct->id,
-        ]);
+        $inspection   = InspecaoTecnica::where('pedido_produtos_id', '=', $orderProduct->id)->whereNull('revisado_at')
+                            ->first();
 
         $orderProduct->delete();
         $inspection = $inspection->fresh();

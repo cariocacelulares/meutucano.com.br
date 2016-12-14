@@ -453,7 +453,7 @@ class InspecaoTecnicaController extends Controller
                 if ($inspection->revisado_at) {
                     $inspection->pedido_produtos_id = null;
                     if ($inspection->save()) {
-                        Log::notice('Inspeção desassociada com o pedido produto.', [$inspection]);
+                        Log::notice("Inspeção {$inspection->id} desassociada com o pedido produto.", [$inspection]);
                         return $this->listResponse([
                             ['detach', $inspection->id]
                         ]);
@@ -461,8 +461,9 @@ class InspecaoTecnicaController extends Controller
                         Log::warning('Erro ao tentar desassociar inspecao com o pedido produto.', [$inspection]);
                     }
                 } else {
+                    $id = $inspection->id;
                     $inspection->delete();
-                    Log::notice('Inspeção excluida para o pedido produto ' . (isset($orderProduct->id) ? $orderProduct->id : ''), [$inspection]);
+                    Log::notice("Inspeção {$id} excluida para o pedido produto " . (isset($orderProduct->id) ? $orderProduct->id : ''), [$inspection]);
                     return $this->listResponse([
                         ['delete']
                     ]);
