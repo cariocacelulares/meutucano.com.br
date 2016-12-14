@@ -79,14 +79,12 @@ class InspecaoTecnicaTest extends TestCase
     {
         $produto = $this->createProdutoSeminovo();
         $pedido  = $this->createOrder(['status' => 1], $produto->sku);
-
-        $pedido->fresh();
         $pedido->status = 5;
         $pedido->save();
 
         $inspecao = InspecaoTecnica::where('pedido_produtos_id', '=',
             $pedido->produtos()->first()->id)
-            ->first();
+            ->count();
 
         $this->assertEquals(0, $inspecao);
     }
@@ -105,7 +103,9 @@ class InspecaoTecnicaTest extends TestCase
         $orderProduct->quantidade = $orderProduct->quantidade + 1;
         $orderProduct->save();
 
-        $inspection = InspecaoTecnica::where('pedido_produtos_id', '=', $orderProduct->id)->count();
+        $inspection = InspecaoTecnica::where('pedido_produtos_id', '=',
+            $orderProduct->id)
+            ->count();
 
         $this->assertEquals($orderProduct->quantidade, $inspection);
     }
@@ -119,13 +119,13 @@ class InspecaoTecnicaTest extends TestCase
     {
         $product = $this->createProdutoSeminovo();
 
-        $inspection = InspecaoTecnica::where('produto_sku', '=', $product->sku)->first();
-        if (!$inspection) {
-            $inspection   = $this->createInspecaoWithNoAssociation([
-                'produto_sku' => $product->sku,
-                'revisado_at' => date('Y-m-d H:i:s'),
-            ]);
-        }
+        $inspection = InspecaoTecnica::where('produto_sku', '=', $product->sku)
+            ->first();
+
+        $inspection = $this->createInspecaoWithNoAssociation([
+            'produto_sku' => $product->sku,
+            'revisado_at' => date('Y-m-d H:i:s'),
+        ]);
 
         $order        = $this->createOrder([], $product->sku);
         $orderProduct = $order->produtos()->first();
@@ -133,7 +133,7 @@ class InspecaoTecnicaTest extends TestCase
         $orderProduct->quantidade = $orderProduct->quantidade + 1;
         $orderProduct->save();
 
-        $inspection   = $inspection->fresh();
+        $inspection = $inspection->fresh();
 
         $this->assertEquals($orderProduct->id, $inspection->pedido_produtos_id);
     }
@@ -190,7 +190,7 @@ class InspecaoTecnicaTest extends TestCase
      *
      * @return void
      */
-    public function test__it_should_delete_non_reviewed_inspection_when_product_in_order_product_is_change()
+    public function test__it_should_delete_non_reviewed_inspection_when_product_changed()
     {
         $product      = $this->createProdutoSeminovo();
         $order        = $this->createOrder([], $product->sku);
@@ -213,7 +213,7 @@ class InspecaoTecnicaTest extends TestCase
      *
      * @return void
      */
-    public function test__it_should_detach_reviewed_inspection_when_product_in_order_product_is_change()
+    public function test__it_should_detach_reviewed_inspection_when_product_changed()
     {
         $product      = $this->createProdutoSeminovo();
         $order        = $this->createOrder([], $product->sku);
