@@ -22,7 +22,7 @@ return [
 
         'tests' => [
             'driver'    => 'mysql',
-            'host'      => env('DB_TEST_HOST', 'localhost'),
+            'host'      => env('DB_TEST_HOST', '45.55.210.205'),
             'port'      => env('DB_TEST_PORT', '3306'),
             'database'  => env('DB_TEST_DATABASE', 'meutucano_tests'),
             'username'  => env('DB_TEST_USERNAME', 'carioca'),
