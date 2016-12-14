@@ -40,7 +40,6 @@
         <env name="QUEUE_DRIVER" value="redis" />
         <env name="EMAIL_SEND_ENABLED" value="true" />
         <env name="DB_CONNECTION" value="tests" />
-        <env name="DB_DATABASE" value="meutucano_tests" />
     </php>
     <listeners>
         <listener class="PHPUnit_Util_Log_VCR" file="vendor/php-vcr/phpunit-testlistener-vcr/PHPUnit/Util/Log/VCR.php" />

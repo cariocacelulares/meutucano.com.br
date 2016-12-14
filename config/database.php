@@ -22,11 +22,11 @@ return [
 
         'tests' => [
             'driver'    => 'mysql',
-            'host'      => env('DB_HOST', 'localhost'),
-            'port'      => env('DB_PORT', '3306'),
-            'database'  => env('DB_DATABASE', 'meutucano_tests'),
-            'username'  => env('DB_USERNAME', 'carioca'),
-            'password'  => env('DB_PASSWORD', '#@carioca2016'),
+            'host'      => env('DB_TEST_HOST', 'localhost'),
+            'port'      => env('DB_TEST_PORT', '3306'),
+            'database'  => env('DB_TEST_DATABASE', 'meutucano_tests'),
+            'username'  => env('DB_TEST_USERNAME', 'carioca'),
+            'password'  => env('DB_TEST_PASSWORD', '#@carioca2016'),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
