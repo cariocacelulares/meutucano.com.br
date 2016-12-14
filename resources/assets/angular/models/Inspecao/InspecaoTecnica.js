@@ -11,6 +11,16 @@
 
             angular.extend(rest, {
                 /**
+                 * Retorna uma inspecao pelo pedido produto
+                 *
+                 * @param  {int} pedido_produtos_id
+                 * @return {Object}
+                 */
+                getByPedidoProduto: function(pedido_produtos_id) {
+                    return Restangular.one(this.baseUrl + '/get', pedido_produtos_id).get();
+                },
+
+                /**
                  * Retorna as inspecoes não revisadas
                  *
                  * @param  {Object} params

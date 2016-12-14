@@ -99,9 +99,9 @@ class UploadController extends Controller
 
             Log::info(sprintf('Foram importados %d arquivo(s) de %d enviado(s).', $uploadCount, count($arquivos)));
             return $this->createdResponse([
-                'total' => count($arquivos),
+                'total'   => count($arquivos),
                 'success' => $uploadCount,
-                'errors' => $errors
+                'errors'  => $errors
             ]);
         } catch (\Exception $e) {
             Log::alert(logMessage($e, 'Não foi possível fazer upload do(s) arquivo(s)'));
@@ -145,7 +145,7 @@ class UploadController extends Controller
             }
 
             // Operação, CFOP
-            $operacao = (int)$produtos[0]->prod->CFOP;
+            $operacao = (int) $produtos[0]->prod->CFOP;
 
             // Tipo da operação
             $tipoOperacao = null;
@@ -175,7 +175,6 @@ class UploadController extends Controller
             } else {
                 // Pedido
                 $pedido = $this->importPedido($chave, $cliente, $clienteEndereco, $operacao, $tipoOperacao);
-
                 $return = $this->importVenda($chave, $pedido, $usuario_id, $dataNota, $notaArquivo, $produtos, $datetimeNota);
             }
 
