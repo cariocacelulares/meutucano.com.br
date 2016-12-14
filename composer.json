@@ -105,12 +105,12 @@
     },
     "repositories": {
         "php-sigep": {
-            "type": "vcs",
-            "url": "https://github.com/cariocacelulares/php-sigep.git"
+            "type": "git",
+            "url": "git@github.com:cariocacelulares/php-sigep.git"
         },
         "nfephp": {
-            "type": "vcs",
-            "url": "https://github.com/diego3g/nfephp.git"
+            "type": "git",
+            "url": "git@github.com:diego3g/nfephp.git"
         }
     }
 }

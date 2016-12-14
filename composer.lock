@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "76b06f9243e872ee406a45373074c039",
-    "content-hash": "594b6be8ed03ed7b25d01c0fb5c406d2",
+    "hash": "43aea49b1aabbeb5a205c93bf9ec2eaf",
+    "content-hash": "95ed2338674586423b05749947ca0f0c",
     "packages": [
         {
             "name": "arcanedev/log-viewer",
@@ -2867,14 +2867,8 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/cariocacelulares/php-sigep.git",
+                "url": "git@github.com:cariocacelulares/php-sigep.git",
                 "reference": "b3749c73940b50b5f3131b14c0d3663a3f9cd9fd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/cariocacelulares/php-sigep/zipball/b3749c73940b50b5f3131b14c0d3663a3f9cd9fd",
-                "reference": "b3749c73940b50b5f3131b14c0d3663a3f9cd9fd",
-                "shasum": ""
             },
             "require": {
                 "php": ">=5.4",
@@ -2906,9 +2900,6 @@
                 "correios",
                 "sigep"
             ],
-            "support": {
-                "source": "https://github.com/cariocacelulares/php-sigep/tree/master"
-            },
             "time": "2016-11-24 17:17:26"
         },
         {
