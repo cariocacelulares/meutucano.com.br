@@ -32,7 +32,7 @@ try {
             $monolog->pushProcessor(new Monolog\Processor\GitProcessor());
             $monolog->pushProcessor(new Monolog\Processor\WebProcessor());
             $monolog->pushProcessor(function ($record) {
-                if (auth()->check()) {
+                if (Tymon\JWTAuth\Facades\JWTAuth::getToken()) {
                     $jwtAuth = Tymon\JWTAuth\Facades\JWTAuth::parseToken()->authenticate();
                     $record['extra']['user_id'] = $jwtAuth->id;
                     $record['extra']['email'] = $jwtAuth->email;

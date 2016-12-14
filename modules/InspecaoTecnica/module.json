@@ -1,0 +1,15 @@
+{
+    "name": "InspecaoTecnica",
+    "alias": "inspecao_tecnica",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 2,
+    "providers": [
+        "InspecaoTecnica\\Providers\\InspecaoTecnicaServiceProvider"
+    ],
+    "aliases":{},
+    "files": [
+        "bootstrap.php"
+    ]
+}

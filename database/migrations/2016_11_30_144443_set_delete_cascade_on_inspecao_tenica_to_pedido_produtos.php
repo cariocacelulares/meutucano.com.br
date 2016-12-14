@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -19,10 +18,9 @@ class SetDeleteCascadeOnInspecaoTenicaToPedidoProdutos extends Migration
 
         Schema::table('inspecao_tecnica', function(Blueprint $table)
         {
-            $table->foreign('pedido_produtos_id', 'InspecaoTecnicaPedidoProdutos')->references('id')->on('pedido_produtos')->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->foreign('pedido_produtos_id', 'InspecaoTecnicaPedidoProdutos')->references('id')->on('pedido_produtos')->onUpdate('NO ACTION')->onDelete('CASCADE');
         });
     }
-
     /**
      * Reverse the migrations.
      *

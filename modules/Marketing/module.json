@@ -1,0 +1,15 @@
+{
+    "name": "Marketing",
+    "alias": "marketing",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 5,
+    "providers": [
+        "Marketing\\Providers\\MarketingServiceProvider"
+    ],
+    "aliases":{},
+    "files": [
+        "bootstrap.php"
+    ]
+}

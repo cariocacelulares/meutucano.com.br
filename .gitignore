@@ -1,5 +1,6 @@
 .DS_Store
 .env
+clear.sh
 /node_modules
 /vendor
 /public/bower_components
@@ -8,3 +9,4 @@
 /public/assets/css
 /public/assets/js
 /public/images/gamification
+

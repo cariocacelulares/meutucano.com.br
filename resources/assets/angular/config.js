@@ -150,5 +150,24 @@
                 return true;
             });
         })
+
+        /**
+         * Wysiwig editor config
+         *
+         * @param  {Array}  $provide
+         * @return {Object}
+         */
+        .config(function($provide) {
+            $provide.decorator('taOptions', ['taRegisterTool', '$delegate', function(taRegisterTool, taOptions) { // $delegate is the taOptions we are decorating
+                taOptions.toolbar = [
+                    ['h2', 'h3', 'p'],
+                    ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
+                    ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent'],
+                    ['html', 'insertLink']
+                ];
+
+                return taOptions;
+            }]);
+        })
     ;
 })();

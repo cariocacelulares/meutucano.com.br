@@ -11,18 +11,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\RefreshRastreios::class,
-        Commands\RefreshMagentoStock::class,
-        Commands\SkyhubPedido::class,
-        Commands\SkyhubPedidos::class,
-        Commands\MagentoPedido::class,
-        Commands\MagentoPedidos::class,
-        Commands\MagentoProdutos::class,
-        Commands\CancelOldOrders::class,
-        Commands\Gamification\LerFila::class,
-        Commands\Gamification\AdicionarTarefa::class,
-        Commands\Gamification\AdicionarVoto::class,
-        Commands\Gamification\NovoMes::class,
+        //
     ];
 
     /**
@@ -33,28 +22,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('refresh:rastreios')
-            ->twiceDaily(1, 12);
+        $schedule->command('backup:clean')
+            ->daily()
+            ->at('01:00');
 
-        $schedule->command('skyhub:pedidos')
-            ->everyMinute();
-
-        $schedule->command('magento:pedidos')
-            ->everyMinute();
-
-        $schedule->command('refresh:stock')
-            ->everyMinute();
-
-        $schedule->command('pedidos:cancelold')
-            ->daily();
-
-        /**
-         * Gamification
-         */
-        $schedule->command('gamification:fila')
-            ->everyMinute();
-
-        $schedule->command('gamification:mes')
-            ->monthlyOn(1, '05:00');
+        $schedule->command('backup:run')
+            ->hourly()
+            ->unlessBetween('0:00', '6:00');
     }
 }

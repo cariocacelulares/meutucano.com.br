@@ -1,34 +1,21 @@
 <?php namespace Tests;
 
-use App\Models\Role;
-use App\Models\Usuario;
 use Illuminate\Contracts\Console\Kernel;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Support\Facades\Config;
 
 class TestCase extends \Illuminate\Foundation\Testing\TestCase
 {
     /**
-     * The base URL to use while testing the application.
-     *
-     * @var string
-     */
-    protected $baseUrl = 'http://localhost';
+    * @var string
+    */
+    protected $baseUrl = 'http://tucano.app';
 
     /**
-     * @var Usuario
-     */
-    protected $authUser;
-
-    /**
-     * @var string
-     */
-    protected $userToken;
-
-    /**
-     * Creates the application.
-     *
-     * @return \Illuminate\Foundation\Application
-     */
+    * Boostrap application
+    *
+    * @return \Illuminate\Foundation\Application
+    */
     public function createApplication()
     {
         $app = require __DIR__.'/../bootstrap/app.php';
@@ -37,38 +24,24 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
         return $app;
     }
 
+    /**
+    * Setup test case
+    *
+    * @return void
+    */
     public function setUp()
     {
         parent::setUp();
-        \Artisan::call('migrate');
-        \Artisan::call('db:seed', ['--class' => 'TestSeeder']);
-        $this->setAuthUser();
-    }
-
-    public function tearDown()
-    {
-        \Artisan::call('migrate:reset');
-        parent::tearDown();
     }
 
     /**
-     * Define user and token based on factory
-     */
-    protected function setAuthUser()
+    * Teardown test case
+    *
+    * @return void
+    */
+    public function tearDown()
     {
-        if (!$this->authUser) {
-            $role = new Role(['name' => 'admin']);
-            $role->save();
-
-            $user = factory(Usuario::class)->create([
-                'id' => 1
-            ]);
-
-            $user->attachRole($role);
-
-            $this->authUser  = $user;
-            $this->userToken = JWTAuth::fromUser($user);
-        }
+        parent::tearDown();
+        \Mockery::close();
     }
 }
-

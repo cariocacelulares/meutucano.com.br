@@ -26,6 +26,7 @@
             'as.sortable',
             'ngSanitize',
             'ui.select',
-            'ngRaven'
+            'ngRaven',
+            'textAngular'
         ]);
 })();

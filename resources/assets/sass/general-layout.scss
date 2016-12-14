@@ -45,8 +45,12 @@
         overflow: hidden;
 
         > li {
-            height: 30px;
-            line-height: 30px;
+            line-height: 24px;
+
+            > ul {
+                margin: 0;
+                padding-bottom: 0;
+            }
         }
 
         &.ng-hide {
@@ -179,4 +183,13 @@
             border-color: #FFF !important;
         }
     }
+}
+
+// Wysiwyg toolbar
+.ta-toolbar {
+    background: #f5f5f5;
+    border: 0 !important;
+    margin: 0px;
+    padding: 15px !important;
+    display: block !important;
 }

@@ -5,43 +5,11 @@
  */
 Route::get('/', function() { return view('index'); });
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
-Route::get('pedidos/shopsystem/{taxvat}', 'Pedido\PedidoController@shopsystem');
 
 /**
  * API
  */
 Route::group(['prefix' => '/api', 'middleware' => 'sentry'], function() {
-    /**
-     * Gamification
-     */
-    Route::group(['prefix' => '/gamification'], function() {
-        Route::post('upload', 'Gamification\UploadController@upload');
-        Route::post('avatar/{gamification_id}', 'Gamification\GamificationController@avatar');
-
-        Route::get('', 'Gamification\GamificationController@show');
-        Route::get('perfil/{id?}', 'Gamification\GamificationController@perfil');
-        Route::get('ranking', 'Gamification\GamificationController@ranking');
-        Route::get('rank-info', 'Gamification\GamificationController@rankInfo');
-
-        Route::post('solicitacao/solicitar', 'Gamification\SolicitacaoController@solicitar');
-        Route::get('solicitacao/list', 'Gamification\SolicitacaoController@tableList');
-        Route::resource('solicitacao', 'Gamification\SolicitacaoController');
-
-        Route::get('tarefas/list', 'Gamification\TarefaController@tableList');
-        Route::resource('tarefas', 'Gamification\TarefaController');
-
-        Route::get('recompensas/list', 'Gamification\RecompensaController@tableList');
-        Route::resource('recompensas', 'Gamification\RecompensaController');
-
-        Route::get('trocas/list', 'Gamification\TrocaController@tableList');
-        Route::resource('trocas', 'Gamification\TrocaController');
-
-        Route::get('conquistas/list', 'Gamification\ConquistaController@tableList');
-        Route::resource('conquistas', 'Gamification\ConquistaController');
-
-        Route::resource('votos', 'Gamification\VotoController');
-    });
-
     /**
      * Auth
      */
@@ -50,125 +18,34 @@ Route::group(['prefix' => '/api', 'middleware' => 'sentry'], function() {
     Route::get('token', 'Auth\AuthenticateController@refreshToken');
 
     Route::group(['middleware' => 'jwt.auth'], function() {
-        Route::controller('metas', 'Meta\MetaController');
-
-        Route::post('check-password/{user_id}', 'Usuario\UsuarioController@checkPassword');
-
-        Route::post('upload', [
-            'middleware' => ['role:admin|gestor|atendimento|faturamento'],
-            'uses' => 'Partials\UploadController@upload'
-        ]);
-
-        Route::get('notas/xml/{id}/{devolucao}', 'Pedido\NotaController@xml');
-        Route::get('notas/danfe/{id}', 'Pedido\NotaController@danfe');
-        Route::post('notas/email/{id}', 'Pedido\NotaController@email');
-
-        Route::get('rastreios/etiqueta/{id}', 'Pedido\RastreioController@etiqueta');
-
-        Route::get('search', 'Partials\SearchController@search');
-        Route::get('senhas/minhas', 'Usuario\SenhaController@currentUserPassword');
-
         /**
-         * Template ML
+         * Usuario
          */
-        Route::get('templateml/gerar', 'Marketing\TemplatemlController@generateTemplate');
+        Route::group(['namespace' => 'Usuario'], function() {
+            Route::get('senhas/minhas', 'SenhaController@currentUserPassword');
 
-        /**
-         * Atendimento
-         */
-        Route::group(['middleware' => ['role:admin|atendimento']], function() {
+            Route::post('check-password/{user_id}', 'UsuarioController@checkPassword');
 
             /**
-             * Rastreios
+             * Administração
              */
-            Route::put('rastreios/refresh_all', 'Pedido\RastreioController@refreshAll');
-            Route::put('rastreios/refresh_status/{id}', 'Pedido\RastreioController@refreshStatus');
-            Route::put('rastreios/edit/{id}', 'Pedido\RastreioController@edit');
-            Route::get('rastreios/important', 'Pedido\RastreioController@important');
-            Route::get('rastreios/historico/{id}', 'Pedido\RastreioController@imagemHistorico');
-            Route::put('rastreios/historico/{id}', 'Pedido\RastreioController@forceScreenshot');
-            Route::get('rastreios/pi/{id}', 'Pedido\RastreioController@pi');
-            Route::get('rastreios/inspecao-tecnica/{id}', 'Pedido\RastreioController@getPedidoProdutoInspecao');
-            Route::get('rastreios/busca-seminovos/{id}', 'Pedido\RastreioController@existsSeminovos');
-            Route::resource('rastreios', 'Pedido\RastreioController', ['except' => ['create', 'edit']]);
+            Route::group(['middleware' => ['role:admin']], function() {
+                /**
+                 * Usuários
+                 */
+                Route::group(['prefix' => 'usuarios'], function() {
+                    Route::get('list', 'UsuarioController@tableList');
+                    Route::resource('', 'UsuarioController', ['except' => ['create', 'edit']]);
+                });
 
-            /**
-             * PI's
-             */
-            Route::put('pis/edit/{id}', 'Pedido\Rastreio\PiController@edit');
-            Route::get('pis/pending', 'Pedido\Rastreio\PiController@pending');
-            Route::resource('pis', 'Pedido\Rastreio\PiController', ['except' => ['create', 'edit']]);
-
-            /**
-             * Devoluções
-             */
-            Route::put('devolucoes/edit/{id}', 'Pedido\Rastreio\DevolucaoController@edit');
-            Route::get('devolucoes/pending', 'Pedido\Rastreio\DevolucaoController@pending');
-            Route::resource('devolucoes', 'Pedido\Rastreio\DevolucaoController', ['except' => ['create', 'edit']]);
-
-            /**
-             * Logística reversa
-             */
-            Route::put('logisticas/edit/{id}', 'Pedido\Rastreio\LogisticaController@edit');
-            Route::resource('logisticas', 'Pedido\Rastreio\LogisticaController', ['except' => ['create', 'edit']]);
-
-            /**
-             * Rastreios monitorados
-             */
-            Route::get('rastreio/monitorados/simple-list', 'Pedido\Rastreio\MonitoradoController@simpleList');
-            Route::get('rastreio/monitorados/list', 'Pedido\Rastreio\MonitoradoController@tableList');
-            Route::delete('rastreio/monitorados/parar/{rastreio_id}', 'Pedido\Rastreio\MonitoradoController@stop');
-            Route::resource('rastreio/monitorados', 'Pedido\Rastreio\MonitoradoController');
-        });
-
-        /**
-         * Faturamento
-         */
-        Route::group(['middleware' => ['role:admin|faturamento']], function() {
-
-            /**
-             * Listagem de notas por usuário
-             */
-            Route::get('notas/faturamento', 'Pedido\NotaController@notasFaturamento');
-            Route::get('notas/faturar/{pedido_id}', 'Pedido\NotaController@faturar');
-
-            /**
-             * Código de rastreio
-             */
-            Route::get('codigos/gerar/{servico}', 'Codigo\FaturamentoCodigoController@generateCode');
-
-            /**
-             * Listagem de notas por usuário
-             */
-            Route::get('notas/faturamento', 'Pedido\NotaController@notasFaturamento');
-
-            /**
-             * Código de rastreio
-             */
-            Route::get('codigos/gerar/{servico}', 'Codigo\FaturamentoCodigoController@generateCode');
-        });
-
-        /**
-         * Administração
-         */
-        Route::group(['middleware' => ['role:admin']], function() {
-
-            /**
-             * Usuários
-             */
-            Route::get('usuarios/list', 'Usuario\UsuarioController@tableList');
-            Route::resource('usuarios', 'Usuario\UsuarioController', ['except' => ['create', 'edit']]);
-
-            /**
-             * Senhas
-             */
-            Route::get('senhas/{id}', 'Usuario\SenhaController@userPassword');
-            Route::resource('senhas', 'Usuario\SenhaController', ['except' => ['create', 'edit']]);
-
-            /**
-             * Admin
-             */
-            Route::get('relatorios/icms', 'Admin\RelatorioController@icms');
+                /**
+                 * Senhas
+                 */
+                Route::group(['prefix' => 'senhas'], function() {
+                    Route::get('{id}', 'SenhaController@userPassword');
+                    Route::resource('', 'SenhaController', ['except' => ['create', 'edit']]);
+                });
+            });
         });
 
         /**

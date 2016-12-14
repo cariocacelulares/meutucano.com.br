@@ -3,7 +3,8 @@
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
-use App\Models\Gamification\Traits\GamificationTrait;
+use Gamification\Models\Traits\GamificationTrait;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * Class Usuario
@@ -11,12 +12,13 @@ use App\Models\Gamification\Traits\GamificationTrait;
  */
 class Usuario extends Authenticatable
 {
-    use EntrustUserTrait, GamificationTrait;
+    use EntrustUserTrait, GamificationTrait, Notifiable;
 
     /**
      * @var array
      */
     protected $fillable = [
+        'id',
         'name',
         'email',
         'username',
@@ -38,6 +40,16 @@ class Usuario extends Authenticatable
     protected $with = [
         'roles'
     ];
+
+    /**
+     * Atualiza o password com hash
+     *
+     * @param string $pass
+     */
+    public function setPasswordAttribute($pass)
+    {
+        $this->attributes['password'] = bcrypt($pass);
+    }
 
     /**
      * @return string
