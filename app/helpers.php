@@ -128,12 +128,14 @@ if (!function_exists('diasUteisPeriodo')) {
  * @return void
  */
 function reportError($error) {
-    \Mail::send('emails.error', [
-        'error' => $error
-    ], function ($m) {
-        $m->from(\Config('core.report_email'), 'Meu Tucano');
-        $m->to(\Config('core.report_email'), 'DEV')->subject('Erro no sistema!');
-    });
+    if (getenv('APP_ENV') !== 'testing') {
+        \Mail::send('emails.error', [
+            'error' => $error
+        ], function ($m) {
+            $m->from(\Config('core.report_email'), 'Meu Tucano');
+            $m->to(\Config('core.report_email'), 'DEV')->subject('Erro no sistema!');
+        });
+    }
 }
 
 /**
