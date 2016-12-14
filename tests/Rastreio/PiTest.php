@@ -1,15 +1,13 @@
 <?php namespace Tests\Rastreio;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Rastreio\Models\Pi;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class PiTest extends TestCase
 {
   use WithoutMiddleware,
-    DatabaseMigrations,
     DatabaseTransactions,
     CreateRastreio;
 

@@ -1,17 +1,15 @@
 <?php namespace Tests\Rastreio;
 
+use VCR\VCR;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use MailThief\Testing\InteractsWithMail;
 use Rastreio\Http\Controllers\RastreioController;
-use VCR\VCR;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class RastreioTest extends TestCase
 {
   use WithoutMiddleware,
-    DatabaseMigrations,
     DatabaseTransactions,
     InteractsWithMail,
     CreateRastreio;

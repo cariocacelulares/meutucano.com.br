@@ -5,14 +5,12 @@ use Tests\TestCase;
 use Allnation\Models\AllnationProduct;
 use Allnation\Http\Services\AllnationApi;
 use App\Http\Controllers\Auth\AuthenticateController;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Allnation\Http\Controllers\AllnationProductController;
 
 class ProductTest extends TestCase
 {
-    use DatabaseMigrations,
-        DatabaseTransactions;
+    use DatabaseTransactions;
 
     /**
      * Test if products can be imported from Allnation API

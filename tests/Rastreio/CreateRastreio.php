@@ -1,7 +1,7 @@
 <?php namespace Tests\Rastreio;
 
-use Rastreio\Models\Rastreio;
 use Tests\Core\CreatePedido;
+use Rastreio\Models\Rastreio;
 
 trait CreateRastreio
 {

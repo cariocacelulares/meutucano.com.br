@@ -35,7 +35,6 @@ $factory->define(\Core\Models\Cliente\Endereco::class, function () use ($faker) 
  */
 $factory->define(\Core\Models\Produto\Produto::class, function () use ($faker) {
   return [
-    'sku'    => $faker->unique()->numberBetween(0, 1000),
     'titulo' => 'Smartphone ' . $faker->randomNumber(2),
     'ean'    => $faker->isbn10,
     'estado' => 0

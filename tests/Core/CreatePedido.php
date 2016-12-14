@@ -1,13 +1,13 @@
 <?php namespace Tests\Core;
 
-use Core\Models\Pedido\Pedido;
 use Core\Models\Pedido\Nota;
-use Core\Models\Pedido\PedidoProduto;
-use Core\Models\Produto\Produto;
+use Core\Models\Pedido\Pedido;
 use Core\Models\Pedido\Imposto;
+use Core\Models\Produto\Produto;
 use Core\Models\Usuario\Usuario;
 use Core\Models\Cliente\Cliente;
 use Core\Models\Cliente\Endereco;
+use Core\Models\Pedido\PedidoProduto;
 
 trait CreatePedido
 {

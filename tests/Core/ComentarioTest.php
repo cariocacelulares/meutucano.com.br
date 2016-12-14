@@ -1,15 +1,13 @@
 <?php namespace Tests\Core;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Core\Models\Pedido\Comentario;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ComentarioTest extends TestCase
 {
   use WithoutMiddleware,
-    DatabaseMigrations,
     DatabaseTransactions,
     CreatePedido;
 

@@ -20,6 +20,20 @@ return [
             'engine'    => null,
         ],
 
+        'tests' => [
+            'driver'    => 'mysql',
+            'host'      => env('DB_HOST', 'localhost'),
+            'port'      => env('DB_PORT', '3306'),
+            'database'  => env('DB_DATABASE', 'meutucano_tests'),
+            'username'  => env('DB_USERNAME', 'carioca'),
+            'password'  => env('DB_PASSWORD', '#@carioca2016'),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+            'engine'    => null,
+        ],
+
         'mongodb' => [
             'driver'   => 'mongodb',
             'host'     => env('MONGODB_HOST', 'localhost'),

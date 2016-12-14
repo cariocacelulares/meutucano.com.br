@@ -3,13 +3,11 @@
 use Tests\TestCase;
 use InspecaoTecnica\Models\InspecaoTecnica;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class InspecaoTecnicaTest extends TestCase
 {
     use WithoutMiddleware,
-        DatabaseMigrations,
         DatabaseTransactions,
         CreateInspecao;
 

@@ -1,61 +1,59 @@
 <?php namespace Tests;
 
-use App\Http\Controllers\Auth\AuthenticateController;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Models\Usuario\Usuario;
 use JWTAuth;
+use App\Models\Usuario\Usuario;
+use App\Http\Controllers\Auth\AuthenticateController;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class AuthTest extends TestCase
 {
-  use DatabaseMigrations,
-    DatabaseTransactions,
-    CreateUsuario;
+  use DatabaseTransactions,
+      CreateUsuario;
 
-  /**
-   * Testa se o usuário pode logar no sistema
-   *
-   * @return void
-   */
-  public function test__it_should_be_able_to_authenticate()
-  {
-    $authData = ['username' => 'test', 'password' => 'test'];
+    /**
+    * Testa se o usuário pode logar no sistema
+    *
+    * @return void
+    */
+    public function test__it_should_be_able_to_authenticate()
+    {
+        $authData = ['username' => 'test', 'password' => 'test'];
 
-    $usuario = $this->createUsuario($authData);
+        $usuario = $this->createUsuario($authData);
 
-    $this->json('POST', '/api/authenticate', $authData)->seeJsonStructure([
-      'token'
-    ]);
+        $this->json('POST', '/api/authenticate', $authData)->seeJsonStructure([
+            'token'
+        ]);
 
-    $this->seeStatusCode(200);
-  }
+        $this->seeStatusCode(200);
+    }
 
-  /**
-   * Testa se não é possível logar com usuário/senha errados
-   *
-   * @return void
-   */
-  public function test__it_should_return_error_when_credentials_are_wrong()
-  {
-    $this->json('POST', '/api/authenticate', [
-      'username' => 'test',
-      'password' => 'test2'
-    ])->seeJson([
-      'error' => 'invalid_credentials'
-    ]);
+    /**
+    * Testa se não é possível logar com usuário/senha errados
+    *
+    * @return void
+    */
+    public function test__it_should_return_error_when_credentials_are_wrong()
+    {
+        $this->json('POST', '/api/authenticate', [
+            'username' => 'test',
+            'password' => 'test2'
+        ])->seeJson([
+            'error' => 'invalid_credentials'
+        ]);
 
-    $this->seeStatusCode(401);
-  }
+        $this->seeStatusCode(401);
+    }
 
-  /**
-   * Testa se não pode utilizar a API quando não está autenticado
-   *
-   * @return void
-   */
-  public function test__it_should_not_be_able_to_use_api_when_unauthenticated()
-  {
-    $this->json('GET', '/api/pedidos', [])->seeJson([
-      'error' => 'token_not_provided'
-    ]);
-  }
+    /**
+    * Testa se não pode utilizar a API quando não está autenticado
+    *
+    * @return void
+    */
+    public function test__it_should_not_be_able_to_use_api_when_unauthenticated()
+    {
+        $this->json('GET', '/api/pedidos', [])->seeJson([
+            'error' => 'token_not_provided'
+        ]);
+    }
 }

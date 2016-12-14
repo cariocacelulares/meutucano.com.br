@@ -5,15 +5,13 @@ use Tests\TestCase;
 use Core\Events\OrderCancel;
 use Tests\Core\CreatePedido;
 use Core\Models\Pedido\Pedido;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Magento\Http\Controllers\MagentoController;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class MagentoTest extends TestCase
 {
     use WithoutMiddleware,
-        DatabaseMigrations,
         DatabaseTransactions,
         CreatePedido;
 

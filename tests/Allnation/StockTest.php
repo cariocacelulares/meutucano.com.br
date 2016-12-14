@@ -1,16 +1,14 @@
 <?php namespace Tests\Allnation;
 
-use App\Http\Controllers\Auth\AuthenticateController;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Tests\CreateUsuario;
 use Tests\TestCase;
+use Tests\CreateUsuario;
+use App\Http\Controllers\Auth\AuthenticateController;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class StockTest extends TestCase
 {
-  use DatabaseMigrations,
-    DatabaseTransactions,
-    CreateUsuario;
+    use DatabaseTransactions,
+        CreateUsuario;
 
-
+    public function test__it() {}
 }

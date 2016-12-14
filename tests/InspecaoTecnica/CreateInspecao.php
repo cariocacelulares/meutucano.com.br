@@ -1,9 +1,9 @@
 <?php namespace Tests\InspecaoTecnica;
 
-use InspecaoTecnica\Models\InspecaoTecnica;
-use Core\Models\Produto\Produto;
-use Tests\Core\CreatePedido;
 use Tests\CreateUsuario;
+use Tests\Core\CreatePedido;
+use Core\Models\Produto\Produto;
+use InspecaoTecnica\Models\InspecaoTecnica;
 
 trait CreateInspecao
 {

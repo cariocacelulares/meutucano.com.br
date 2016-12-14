@@ -1,15 +1,13 @@
 <?php namespace Tests\Core;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Core\Models\Pedido\FaturamentoCodigo;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class FaturamentoCodigoTest extends TestCase
 {
   use WithoutMiddleware,
-    DatabaseMigrations,
     DatabaseTransactions;
 
   /**

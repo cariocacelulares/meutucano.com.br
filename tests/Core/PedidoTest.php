@@ -1,16 +1,14 @@
 <?php namespace Tests\Core;
 
 use Tests\TestCase;
-use Core\Http\Controllers\Pedido\PedidoController;
 use Core\Models\Pedido\Pedido;
+use Core\Http\Controllers\Pedido\PedidoController;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class PedidoTest extends TestCase
 {
   use WithoutMiddleware,
-    DatabaseMigrations,
     DatabaseTransactions,
     CreatePedido;
 
