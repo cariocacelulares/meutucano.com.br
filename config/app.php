@@ -39,33 +39,23 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
-
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-
         Barryvdh\Debugbar\ServiceProvider::class,
-
         Laracasts\Generators\GeneratorsServiceProvider::class,
-
         Zizaco\Entrust\EntrustServiceProvider::class,
         Arcanedev\LogViewer\LogViewerServiceProvider::class,
         Spatie\Browsershot\BrowsershotServiceProvider::class,
-
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Vinelab\Cdn\CdnServiceProvider::class,
-
         Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
-
         Jenssegers\Mongodb\MongodbServiceProvider::class,
-
         Nwidart\Modules\LaravelModulesServiceProvider::class,
+        Spatie\Backup\BackupServiceProvider::class,
     ],
 
 

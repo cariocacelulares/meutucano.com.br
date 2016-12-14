@@ -86,7 +86,7 @@ class NotaController extends Controller
 
                         unlink($arquivo);
                     } else {
-                        Log::debug("O e-mail não foi enviado para {$email} pois o envio está desativado (nota)!");
+                        \Log::debug("O e-mail não foi enviado para {$email} pois o envio está desativado (nota)!");
                     }
 
                     if  ($mail) {
