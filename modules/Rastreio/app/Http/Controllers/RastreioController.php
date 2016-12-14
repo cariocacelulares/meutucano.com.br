@@ -228,14 +228,49 @@ class RastreioController extends Controller
     }
 
     /**
+     * Set tracking deadline
+     *
+     * @param Rastreio $rastreio
+     * @return Object
+     */
+    public function setDeadline(Rastreio $rastreio)
+    {
+        try {
+            $deadline = $this->deadline($rastreio->rastreio, $rastreio->pedido->endereco->cep);
+
+            $rastreio->prazo = $deadline;
+
+            if ($rastreio->save()) {
+                \Log::notice('Prazo do rastreio foi atualizado!', [$rastreio]);
+                return $this->showResponse($rastreio);
+            } else {
+                throw new \Exception('Erro ao salvar o rastreio.', 1);
+            }
+        } catch (\Exception $exception) {
+            \Log::warning(logMessage($exception, 'Não foi possível inserir o prazo no rastreio'));
+            return $this->clientErrorResponse('Não foi possível inserir o prazo no rastreio', [$rastreio]);
+        }
+    }
+
+    /**
      * Retorna o prazo de entrega dos correios
      *
-     * @param $codigoRastreio
-     * @param $cep
-     * @return int
+     * @param  string $codigoRastreio   código ou letra do rastreio
+     * @param  string|null $cep         cep para calcular o prazo
+     * @return int                      prazo em dias
      */
-    public static function deadline($codigoRastreio, $cep)
+    public static function deadline($codigoRastreio, $cep = null)
     {
+        if (is_null($cep)) {
+            $rastreio = Rastreio::where('rastreio', '=', $codigoRastreio)->first();
+
+            if (!$rastreio) {
+                return null;
+            }
+
+            $cep = $rastreio->getCep();
+        }
+
         $tipoRastreio    = substr($codigoRastreio, 0, 1);
         $servicoPostagem = null;
         if ($tipoRastreio == 'P') {
