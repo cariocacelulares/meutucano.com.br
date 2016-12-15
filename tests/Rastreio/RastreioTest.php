@@ -29,12 +29,12 @@ class RastreioTest extends TestCase
    */
   public function test__it_should_be_able_to_refresh_status()
   {
-    // $this->json('PUT', "/api/rastreios/refresh_status/{$this->rastreio->id}")
-    //   ->seeStatusCode(200);
+    $this->json('PUT', "/api/rastreios/refresh_status/{$this->rastreio->id}")
+      ->seeStatusCode(200);
 
-    // $this->rastreio = $this->rastreio->fresh();
+    $this->rastreio = $this->rastreio->fresh();
 
-    // $this->assertEquals(4, $this->rastreio->status);
+    $this->assertEquals(4, $this->rastreio->status);
   }
 
   /**
