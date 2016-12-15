@@ -596,7 +596,8 @@ class UploadController extends Controller
                 if (!$pedidoProduto) {
                     $pedidoProduto = PedidoProduto::create([
                         'pedido_id' => $pedido->id,
-                        'produto_sku' => $produto->sku
+                        'produto_sku' => $produto->sku,
+                        'quantidade' => $item['quantidade']
                     ]);
                 }
 
