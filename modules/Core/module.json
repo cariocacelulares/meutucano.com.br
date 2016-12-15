@@ -8,8 +8,11 @@
     "providers": [
         "Core\\Providers\\CoreServiceProvider"
     ],
-    "aliases":{},
+    "aliases":{
+        "T": "Core\\Facades\\Config"
+    },
     "files": [
-        "bootstrap.php"
+        "bootstrap.php",
+        "app/helpers.php"
     ]
 }
