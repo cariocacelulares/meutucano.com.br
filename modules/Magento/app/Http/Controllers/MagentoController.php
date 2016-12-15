@@ -148,16 +148,16 @@ class MagentoController extends Controller
         try {
             Log::debug('Requisição tucanomg para: ' . $url . ', method: ' . $method, $params);
 
-            if (!\Config::get('tucanomg.enabled')) {
+            if (!\Config::get('magento.tucanomg.enabled')) {
                 Log::debug('Requisição bloqueada, a integração com o tucanomg está desativada!');
                 return null;
             } else {
                 $client = new \GuzzleHttp\Client([
-                    'base_uri' => \Config::get('tucanomg.host'),
+                    'base_uri' => \Config::get('magento.tucanomg.host'),
                     'headers' => [
-                        "Accept" => "application/json",
+                        "Accept"         => "application/json",
                         "Content-type"   => "application/json",
-                        "X-Access-Token" => \Config::get('tucanomg.token')
+                        "X-Access-Token" => \Config::get('magento.tucanomg.token')
                     ]
                 ]);
 
