@@ -53,7 +53,7 @@ class UsuarioController extends Controller
             if($v->fails())
                 throw new \Exception("ValidationException");
 
-            $data->fill(Input::except(['password', 'novasRoles', 'roles']));
+            $data->fill(Input::except(['novasRoles', 'roles']));
 
             if (Input::get('novasRoles')) {
                 $data->detachRoles();
@@ -87,7 +87,7 @@ class UsuarioController extends Controller
                 throw new \Exception("ValidationException");
 
             $data = new $m;
-            $data->fill(Input::except(['password', 'novasRoles']));
+            $data->fill(Input::except(['novasRoles']));
             $data->save();
 
             if (Input::get('novasRoles')) {

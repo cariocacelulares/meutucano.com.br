@@ -20,7 +20,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
             Route::put('historico/{id}', 'RastreioController@forceScreenshot');
         });
     });
-    Route::resource('rastreios', 'Pedido\RastreioController', ['except' => ['create', 'edit'], 'middleware' => 'role:admin|atendimento']);
+    Route::resource('rastreios', 'RastreioController', ['except' => ['create', 'edit'], 'middleware' => 'role:admin|atendimento']);
 
     /**
      * Atendimento

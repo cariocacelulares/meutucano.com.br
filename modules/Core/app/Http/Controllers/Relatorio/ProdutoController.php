@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestResponseTrait;
 use App\Http\Controllers\Controller;
 use Core\Models\Produto\Produto;
-use Core\Models\Relatorio\RelatorioTrait;
+use Core\Http\Controllers\Traits\RelatorioTrait;
 
 /**
  * Class ProdutoController
