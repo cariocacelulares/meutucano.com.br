@@ -431,7 +431,7 @@ class InspecaoTecnicaController extends Controller
             ]);
 
             if ($inspecao->save()) {
-                Log::notice('Inspecao tecnica adicioada na fila para o ' . $orderProduct->id, [$orderProduct, $inspecao]);
+                Log::notice('Inspecao tecnica adicioada na fila para o pedido produto ' . $orderProduct->id, [$orderProduct->toArray(), $inspecao->toArray()]);
                 return $this->listResponse([
                     ['add', $inspecao->id]
                 ]);

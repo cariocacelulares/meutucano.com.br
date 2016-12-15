@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('PedidoProdutoFormController', PedidoProdutoFormController);
 
-    function PedidoProdutoFormController($scope, toaster, PedidoProduto, Produto, InspecaoTecnica) {
+    function PedidoProdutoFormController($scope, toaster, PedidoProduto, Produto) {
         var vm = this;
 
        vm.produtos = [];
@@ -64,17 +64,7 @@
 
             PedidoProduto.save(vm.pedidoProduto, vm.pedidoProduto.id || null).then(function(response) {
                 toaster.pop('success', 'Sucesso!', 'Produto do pedido salvo com sucesso!');
-
-                if (response.produto.estado != 1 || !modificado) {
-                    $scope.closeThisDialog(true);
-                } else {
-                    InspecaoTecnica.getByPedidoProduto(response.id).then(function(data) {
-                        $scope.closeThisDialog({
-                            'pedidoProduto': response,
-                            'inspecao': data
-                        });
-                    });
-                }
+                $scope.closeThisDialog(true);
             });
         };
 

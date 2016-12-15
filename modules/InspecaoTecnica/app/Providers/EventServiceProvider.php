@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Event;
 use InspecaoTecnica\Events\Handlers\AttachInspecaoTecnica;
 use InspecaoTecnica\Events\Handlers\DeleteInspecaoTecnica;
 use InspecaoTecnica\Events\Handlers\DetachInspecaoTecnica;
+use InspecaoTecnica\Events\Handlers\UpdateInspecaoTecnica;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -20,6 +21,7 @@ class EventServiceProvider extends ServiceProvider
     protected $subscribe = [
        AttachInspecaoTecnica::class,
        DetachInspecaoTecnica::class,
+       UpdateInspecaoTecnica::class,
        DeleteInspecaoTecnica::class,
     ];
 
