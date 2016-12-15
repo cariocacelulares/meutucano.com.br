@@ -2,14 +2,13 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Models\Pedido\Nota;
-use App\Models\Pedido\Nota\Devolucao;
+use Core\Models\Pedido\Nota;
+use Core\Models\Pedido\Nota\Devolucao;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use NFePHP\Extras\Danfe;
 use App\Http\Controllers\Rest\RestControllerTrait;
-use Core\Models\Pedido\Nota;
 
 /**
  * Class ICMSController

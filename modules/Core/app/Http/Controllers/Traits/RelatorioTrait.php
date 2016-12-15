@@ -1,8 +1,8 @@
-<?php namespace Core\Http\Controllers\Relatorio;
+<?php namespace Core\Http\Controllers\Traits;
 
 /**
  * Trait RelatorioTrait
- * @package Core\Http\Controllers\Relatorio
+ * @package Core\Http\Controllers\Traits
  */
 trait RelatorioTrait
 {

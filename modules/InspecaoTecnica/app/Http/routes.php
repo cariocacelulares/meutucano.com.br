@@ -9,6 +9,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api/inspecao_
     Route::get('solicitadas', 'InspecaoTecnicaController@solicitadas');
     Route::get('fila', 'InspecaoTecnicaController@fila');
     Route::get('list', 'InspecaoTecnicaController@tableList');
+    Route::get('inspecao_tecnica/get/{id}', 'InspecaoTecnicaController@showByPedidoProduto');
 
     Route::resource('', 'InspecaoTecnicaController');
 });
