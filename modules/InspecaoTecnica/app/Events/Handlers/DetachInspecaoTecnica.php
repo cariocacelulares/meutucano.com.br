@@ -1,7 +1,6 @@
 <?php namespace InspecaoTecnica\Events\Handlers;
 
 use Core\Events\OrderProductDeleting;
-use Core\Events\OrderProductProductChanged;
 use Core\Events\OrderProductQtyDecreased;
 use Core\Models\Pedido\PedidoProduto;
 use Illuminate\Events\Dispatcher;
@@ -21,11 +20,6 @@ class DetachInspecaoTecnica
         $events->listen(
             OrderProductQtyDecreased::class,
             '\InspecaoTecnica\Events\Handlers\DetachInspecaoTecnica@onOrderProductQtyDecreased'
-        );
-
-        $events->listen(
-            OrderProductProductChanged::class,
-            '\InspecaoTecnica\Events\Handlers\DetachInspecaoTecnica@onOrderProductProductChanged'
         );
 
         $events->listen(
@@ -52,24 +46,6 @@ class DetachInspecaoTecnica
             for ($i=0; $i < $qty; $i++) {
                 with(new InspecaoTecnicaController())->detachInspecao($orderProduct);
             }
-        }
-    }
-
-    /**
-     * Handle the event.
-     *
-     * @param  OrderProductProductChanged  $event
-     * @return void
-     */
-    public function onOrderProductProductChanged(OrderProductProductChanged $event)
-    {
-        $orderProduct = $event->orderProduct;
-        $orderProduct = $orderProduct->fresh();
-
-        // Apenas se o produto for pago, enviado ou entregue
-        if (in_array((int)$orderProduct->pedido->status, [1, 2, 3])) {
-            Log::debug('Handler DetachInspecaoTecnica/OrderProductProductChanged acionado.', [$event]);
-            $this->detachInspecao($orderProduct);
         }
     }
 

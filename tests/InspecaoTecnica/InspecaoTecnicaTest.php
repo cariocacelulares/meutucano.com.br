@@ -194,7 +194,7 @@ class InspecaoTecnicaTest extends TestCase
         $inspection   = InspecaoTecnica::where('pedido_produtos_id', '=', $orderProduct->id)->whereNull('revisado_at')
                             ->first();
 
-        $orderProduct->produto_sku = ($this->createProduto())->sku;
+        $orderProduct->produto_sku = ($this->createProdutoSeminovo())->sku;
         $orderProduct->save();
 
         $inspection = $inspection->fresh();
@@ -218,12 +218,31 @@ class InspecaoTecnicaTest extends TestCase
         $inspection->revisado_at = date('Y-m-d H:i:s');
         $inspection->save();
 
-        $orderProduct->produto_sku = ($this->createProduto())->sku;
+        $orderProduct->produto_sku = ($this->createProdutoSeminovo())->sku;
         $orderProduct->save();
 
         $inspection = $inspection->fresh();
 
         $this->assertEquals(null, $inspection->pedido_produtos_id);
+    }
+
+    /**
+     * Testa se quando o produto de um pedido produto for alterado, aloca novas inspeções
+     *
+     * @return void
+     */
+    public function test__it_should_attach_inspection_when_product_changed()
+    {
+        $product      = $this->createProdutoSeminovo();
+        $order        = $this->createOrder(['status' => 1], $product->sku);
+        $orderProduct = $order->produtos()->first();
+
+        $orderProduct->produto_sku = ($this->createProdutoSeminovo())->sku;
+        $orderProduct->save();
+
+        $inspections = $orderProduct->inspecoes()->get();
+
+        $this->assertEquals($orderProduct->quantidade, $inspections->count());
     }
 
     /**
