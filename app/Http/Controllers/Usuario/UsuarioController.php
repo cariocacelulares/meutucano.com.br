@@ -42,6 +42,8 @@ class UsuarioController extends Controller
      */
     public function update($id)
     {
+
+        dd($id);
         $m = self::MODEL;
 
         if (!$data = $m::find($id))

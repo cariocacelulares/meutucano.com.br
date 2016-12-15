@@ -35,16 +35,16 @@ Route::group(['prefix' => '/api', 'middleware' => 'sentry'], function() {
                  */
                 Route::group(['prefix' => 'usuarios'], function() {
                     Route::get('list', 'UsuarioController@tableList');
-                    Route::resource('', 'UsuarioController', ['except' => ['create', 'edit']]);
                 });
+                Route::resource('usuarios', 'UsuarioController', ['except' => ['create', 'edit']]);
 
                 /**
                  * Senhas
                  */
                 Route::group(['prefix' => 'senhas'], function() {
                     Route::get('{id}', 'SenhaController@userPassword');
-                    Route::resource('', 'SenhaController', ['except' => ['create', 'edit']]);
                 });
+                Route::resource('senhas', 'SenhaController', ['except' => ['create', 'edit']]);
             });
         });
     });
