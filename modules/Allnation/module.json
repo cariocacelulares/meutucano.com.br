@@ -8,11 +8,8 @@
     "providers": [
         "Allnation\\Providers\\AllnationServiceProvider"
     ],
-    "aliases":{
-        "T": "Core\\Facades\\Config"
-    },
+    "aliases": {},
     "files": [
-        "bootstrap.php",
-        "app/helpers.php"
+        "bootstrap.php"
     ]
 }

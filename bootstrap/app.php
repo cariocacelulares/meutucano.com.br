@@ -47,7 +47,7 @@ $app->singleton(
  * Se a conexão com o mongodb ou qualquer outra coisa falhar
  * irá utilizar o padrão (arquivos)
  */
-require_once('monolog-config.php');
+// require_once('monolog-config.php');
 
 /*
 |--------------------------------------------------------------------------

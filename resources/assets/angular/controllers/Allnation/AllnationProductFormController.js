@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('AllnationProductFormController', AllnationProductFormController);
 
-    function AllnationProductFormController($stateParams, AllnationProduct) {
+    function AllnationProductFormController($stateParams, AllnationProduct, toaster, $state) {
         var vm = this;
 
         vm.load = function() {
@@ -25,7 +25,8 @@
          */
         vm.save = function() {
             AllnationProduct.createProduct(vm.formData).then(function(response) {
-                console.log(response);
+                toaster.pop('success', 'Produto cadastrado', 'O produto foi cadastrado no Tucano e no Magento');
+                $state.go('app.allnation.products.index');
             });
         };
     }

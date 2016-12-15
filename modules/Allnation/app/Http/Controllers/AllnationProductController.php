@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Core\Models\Produto\Produto;
 use Illuminate\Routing\Controller;
 use Allnation\Models\AllnationProduct;
 use Allnation\Http\Services\AllnationApi;
@@ -43,7 +44,7 @@ class AllnationProductController extends Controller
      */
     public function fetchProducts(AllnationApi $api)
     {
-        $lastDateTimeRequest = t('allnation.product.lastrequest');
+        $lastDateTimeRequest = t('allnation.product.lastrequest') ?: '2015-01-01 08:00:00';
 
         t('allnation.product.lastrequest',
             Carbon::now()->format('Y-m-d H:i:s'));
@@ -91,6 +92,23 @@ class AllnationProductController extends Controller
      */
     public function createProduct(Request $request)
     {
+        // Create produto on magento
         with(new MagentoController())->createProduct($request->all());
+
+        // Create product on tucano
+        if (!Produto::find($request->input('sku'))) {
+            Produto::create([
+                'sku'    => $request->input('sku'),
+                'titulo' => $request->input('title'),
+                'ncm'    => $request->input('ncm'),
+                'ean'    => $request->input('ean')
+            ]);
+        }
+
+        // Relaciona
+        AllnationProduct::find($request->input('id'))
+            ->update([
+                'produto_sku' => $request->input('sku')
+            ]);
     }
 }
