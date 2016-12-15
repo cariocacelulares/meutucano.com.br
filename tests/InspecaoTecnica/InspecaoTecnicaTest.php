@@ -194,7 +194,7 @@ class InspecaoTecnicaTest extends TestCase
         $inspection   = InspecaoTecnica::where('pedido_produtos_id', '=', $orderProduct->id)->whereNull('revisado_at')
                             ->first();
 
-        $orderProduct->produto_sku = ($this->createProduto())->sku;
+        $orderProduct->produto_sku = ($this->createProdutoSeminovo())->sku;
         $orderProduct->save();
 
         $inspection = $inspection->fresh();
@@ -218,7 +218,7 @@ class InspecaoTecnicaTest extends TestCase
         $inspection->revisado_at = date('Y-m-d H:i:s');
         $inspection->save();
 
-        $orderProduct->produto_sku = ($this->createProduto())->sku;
+        $orderProduct->produto_sku = ($this->createProdutoSeminovo())->sku;
         $orderProduct->save();
 
         $inspection = $inspection->fresh();
