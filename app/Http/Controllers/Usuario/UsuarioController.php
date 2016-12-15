@@ -44,14 +44,16 @@ class UsuarioController extends Controller
     {
         $m = self::MODEL;
 
-        if (!$data = $m::find($id))
+        if (!$data = $m::find($id)) {
             return $this->notFoundResponse();
+        }
 
         try {
             $v = \Validator::make(Input::all(), $this->validationRules);
 
-            if($v->fails())
+            if ($v->fails()) {
                 throw new \Exception("ValidationException");
+            }
 
             $data->fill(Input::except(['novasRoles', 'roles']));
 
@@ -66,7 +68,7 @@ class UsuarioController extends Controller
             $data->save();
 
             return $this->showResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
@@ -83,8 +85,9 @@ class UsuarioController extends Controller
         try {
             $v = \Validator::make(Input::all(), $this->validationRules);
 
-            if ($v->fails())
+            if ($v->fails()) {
                 throw new \Exception("ValidationException");
+            }
 
             $data = new $m;
             $data->fill(Input::except(['novasRoles']));
@@ -102,7 +105,7 @@ class UsuarioController extends Controller
             $data->save();
 
             return $this->createdResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }

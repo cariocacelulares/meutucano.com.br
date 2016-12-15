@@ -69,7 +69,7 @@ class PiController extends Controller
         try {
             $v = \Validator::make(Input::except(['protocolo']), $this->validationRules);
 
-            if($v->fails()) {
+            if ($v->fails()) {
                 throw new \Exception("ValidationException");
             }
             $data = $m::create(Input::except(['protocolo']));
@@ -86,7 +86,7 @@ class PiController extends Controller
             $this->updateProtocolAndStatus($data, Input::get('protocolo'));
 
             return $this->createdResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
@@ -129,7 +129,7 @@ class PiController extends Controller
             $this->updateProtocolAndStatus($data, Input::get('protocolo'));
 
             return $this->showResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             \Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];

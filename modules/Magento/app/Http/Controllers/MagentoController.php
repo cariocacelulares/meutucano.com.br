@@ -142,8 +142,9 @@ class MagentoController extends Controller
      */
     public function request($url = null, $params = [], $method = 'GET')
     {
-        if ($url === null)
+        if ($url === null) {
             return false;
+        }
 
         try {
             Log::debug('Requisição tucanomg para: ' . $url . ', method: ' . $method, $params);
@@ -180,7 +181,8 @@ class MagentoController extends Controller
      * @param  MagentoPedido $order
      * @return boolean
      */
-    public function importPedido($order) {
+    public function importPedido($order)
+    {
         try {
             $taxvat = preg_replace('/\D/', '', $order['customer']['taxvat']);
 
@@ -258,7 +260,7 @@ class MagentoController extends Controller
             $pedido->total = $order['grand_total'];
             $pedido->created_at = Carbon::createFromFormat('Y-m-d H:i:s', $order['created_at'])->subHours(3);
 
-            $pedido->status = $this->parseStatus((isset($order['state'])) ? $order['state'] : ((isset($order['status'])) ? $order['status'] : null ));
+            $pedido->status = $this->parseStatus((isset($order['state'])) ? $order['state'] : ((isset($order['status'])) ? $order['status'] : null));
 
             // Se o status do pedido for pendente, verifica se o mercado pago não rejeitou (salvo em call_for_authorize)
             $fireEvent = false;
@@ -380,13 +382,13 @@ class MagentoController extends Controller
     public function cancelOrder($order)
     {
         try {
-            if (!$this->api || $this->session)
+            if (!$this->api || $this->session) {
                 throw new \Exception('Api ou sessão não iniciada', 1);
+            }
 
             if (!$order->codigo_api) {
                 Log::warning("Não foi possível cancelar o pedido {$order->id} no Magento, pois o pedido não possui codigo_api válido");
             } else {
-
                 if ($this->api->salesOrderCancel($this->session, $order->codigo_api)) {
                     Log::notice("Pedido {$order->id} cancelado no magento.");
                 } else {
@@ -408,8 +410,9 @@ class MagentoController extends Controller
     public function orderInvoice($order)
     {
         try {
-            if (!$this->api || $this->session)
+            if (!$this->api || $this->session) {
                 throw new \Exception('Api ou sessão não iniciada', 1);
+            }
 
             $shipmentId = $request = $this->api->salesOrderShipmentCreate($this->session, $order->codigo_api);
 
@@ -478,8 +481,9 @@ class MagentoController extends Controller
                 return $this->notFoundResponse();
             }
 
-            if (!$this->api || !$this->session)
+            if (!$this->api || !$this->session) {
                 throw new \Exception('Api ou sessão não iniciada', 1);
+            }
 
             $stock = $this->api->catalogInventoryStockItemUpdate(
                 $this->session,
@@ -530,8 +534,9 @@ class MagentoController extends Controller
      */
     public function calcEstimatedDelivery($shippingDescription, $orderDate)
     {
-        if (!$shippingDescription)
+        if (!$shippingDescription) {
             return null;
+        }
 
         $estimate = (int)preg_replace('/\D/', '', $shippingDescription);
         $estimate = SomaDiasUteis(Carbon::createFromFormat('d/m/Y H:i', $orderDate)->format('d/m/Y'), $estimate);

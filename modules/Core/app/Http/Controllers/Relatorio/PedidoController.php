@@ -49,9 +49,9 @@ class PedidoController extends Controller
                         $this->model->join('pedido_produtos', 'pedido_produtos.pedido_id', '=', 'pedidos.id');
                         $this->model->join('produtos', 'produtos.sku', '=', 'pedido_produtos.produto_sku');
                         $this->model->with('produtos.produto');
-                    } else if ($rel == 'cliente') {
+                    } elseif ($rel == 'cliente') {
                         $this->model->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id');
-                    } else if ($rel ==  'endereco') {
+                    } elseif ($rel ==  'endereco') {
                         $this->model->join('cliente_enderecos', 'cliente_enderecos.id', '=', 'pedidos.cliente_endereco_id');
                     }
 
@@ -96,9 +96,9 @@ class PedidoController extends Controller
 
                             $this->model->whereBetween($field, [$config['value']['from'], $config['value']['to']]);
                         }
-                    } else if ($config['operator'] == 'IN') {
+                    } elseif ($config['operator'] == 'IN') {
                         $this->model->whereIn($field, array_keys($config['value']));
-                    } else if ($config['operator'] == 'LIKE') {
+                    } elseif ($config['operator'] == 'LIKE') {
                         $this->model->where($field, $config['operator'], "%{$config['value']}%");
                     } else {
                         // se for uma data no formato d/m/Y, converte pra Y-m-d
@@ -125,7 +125,7 @@ class PedidoController extends Controller
                 $groupOrder = DB::raw('DAY(pedidos.created_at)');
             } elseif ($this->group == 'month') {
                 $groupOrder = DB::raw('MONTH(pedidos.created_at)');
-             } elseif ($this->group == 'produtos.estado') {
+            } elseif ($this->group == 'produtos.estado') {
                 $groupOrder = $this->group;
                 $this->group = 'produtos.estado_description';
             } else {
@@ -160,9 +160,9 @@ class PedidoController extends Controller
                     } else {
                         $clearedOrder['group'] = array_key_exists($pieces[1], $pedido['produtos'][0]['produto']) ? $pedido['produtos'][0]['produto'][$pieces[1]] : null;
                     }
-                } else if ($this->group == 'day') {
+                } elseif ($this->group == 'day') {
                     $clearedOrder['group'] = substr($pedido['created_at'], 0, 10);
-                } else if ($this->group == 'month') {
+                } elseif ($this->group == 'month') {
                     $clearedOrder['group'] = Carbon::createFromFormat('d/m/Y H:i', $pedido['created_at'])->format('m/Y');
                 } else {
                     $clearedOrder['group'] = array_key_exists($this->group, $pedido) ? $pedido[$this->group] : null;
@@ -173,20 +173,20 @@ class PedidoController extends Controller
             foreach ($this->fields as $field) {
                 if ($field['name'] == 'status') {
                     $field['name'] = 'status_description';
-                } else if ($field['name'] == 'marketplace') {
+                } elseif ($field['name'] == 'marketplace') {
                     $field['name'] = 'marketplace_readable';
-                } else if ($field['name'] == 'pagamento_metodo') {
+                } elseif ($field['name'] == 'pagamento_metodo') {
                     $field['name'] = 'pagamento_metodo_readable';
-                } else if ($field['name'] == 'frete_metodo') {
+                } elseif ($field['name'] == 'frete_metodo') {
                     $field['name'] = 'frete_metodo_readable';
-                } else if ($field['name'] == 'produtos.estado') {
+                } elseif ($field['name'] == 'produtos.estado') {
                     $field['name'] = 'produtos.estado_description';
                 }
 
                 // se o campo existir, adiciona
                 if (array_key_exists($field['name'], $pedido)) {
                     $clearedOrder[$field['label']] = $pedido[$field['name']];
-                } else if (strstr($field['name'], '.')) {
+                } elseif (strstr($field['name'], '.')) {
                     $pieces = explode('.', $field['name']);
 
                     // o indice do array é produtos
@@ -201,7 +201,7 @@ class PedidoController extends Controller
                             // se for titulo ou estado, pega do produto e nao do pedido produto
                             if ($pieces[1] == 'titulo') {
                                 $clearedOrder['produtos'][$pedidoProduto['id']][$field['label']] = $pedidoProduto['produto'][$pieces[1]];
-                            } else if ($pieces[1] == 'estado_description') {
+                            } elseif ($pieces[1] == 'estado_description') {
                                 $clearedOrder['produtos'][$pedidoProduto['id']][$field['label']] = $pedidoProduto['produto'][$pieces[1]];
                             } else {
                                 $clearedOrder['produtos'][$pedidoProduto['id']][$field['label']] = $pedidoProduto[$pieces[1]];
@@ -257,7 +257,6 @@ class PedidoController extends Controller
             } else {
                 return $this->listResponse($this->list);
             }
-
         } catch (\Exception $e) {
             \Log::warning(logMessage($e, 'Erro ao tentar gerar relatório'));
             return $this->notFoundResponse();

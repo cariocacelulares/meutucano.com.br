@@ -31,7 +31,7 @@ class PedidoProdutoObserver
 
             if ($qty['new'] > $qty['old']) {
                 Event::fire(new OrderProductQtyIncreased($orderProduct, ($qty['new'] - $qty['old'])));
-            } else if (($qty['new'] < $qty['old'])) {
+            } elseif (($qty['new'] < $qty['old'])) {
                 Event::fire(new OrderProductQtyDecreased($orderProduct, ($qty['old'] - $qty['new'])));
             }
         }

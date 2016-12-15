@@ -30,7 +30,8 @@ class PedidoController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableList() {
+    public function tableList()
+    {
         $m = self::MODEL;
 
         $list = $m::with(['cliente', 'endereco'])
@@ -48,7 +49,8 @@ class PedidoController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function faturamento() {
+    public function faturamento()
+    {
         $m = self::MODEL;
 
         $list = $m::with([
@@ -58,7 +60,7 @@ class PedidoController extends Controller
                 'rastreios',
                 'produtos',
                 'produtos.produto',
-                'produtos.inspecoes' => function($query) {
+                'produtos.inspecoes' => function ($query) {
                     $query->orderBy('priorizado', 'DESC');
                     $query->orderBy('id', 'ASC');
                 },
@@ -97,7 +99,7 @@ class PedidoController extends Controller
             $pedido->save();
 
             return $this->showResponse($pedido);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
@@ -121,7 +123,7 @@ class PedidoController extends Controller
             $pedido->save();
 
             return $this->showResponse($pedido);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
@@ -134,7 +136,8 @@ class PedidoController extends Controller
      * @param  int $protocolo
      * @return Pedido
      */
-    public function alterarStatus($pedido_id) {
+    public function alterarStatus($pedido_id)
+    {
         $m = self::MODEL;
 
         try {
@@ -166,7 +169,7 @@ class PedidoController extends Controller
             $pedido->save();
 
             return $this->showResponse($pedido);
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao alterar status do pedido'));
             $data = ['exception' => $exception->getMessage()];
 
@@ -194,7 +197,7 @@ class PedidoController extends Controller
                 'rastreios',
                 'produtos',
                 'produtos.produto',
-                'produtos.inspecoes' => function($query) {
+                'produtos.inspecoes' => function ($query) {
                     $query->orderBy('priorizado', 'DESC');
                     $query->orderBy('id', 'ASC');
                 },
@@ -209,10 +212,11 @@ class PedidoController extends Controller
                 return $this->showResponse($data);
             }
         } catch (\Exception $e) {
-            if ($e->getPrevious())
+            if ($e->getPrevious()) {
                 throw $e->getPrevious();
-            else
+            } else {
                 throw $e;
+            }
         }
 
         return $this->notFoundResponse();
@@ -311,7 +315,7 @@ class PedidoController extends Controller
         $dia = date('d');
         $inicioMes = "{$ano}-{$mes}-01 00:00:00";
 
-       $pedidos = Pedido
+        $pedidos = Pedido
             ::selectRaw('status, marketplace, COUNT(*) as count')
             ->whereNotNull('status')
             ->where('status', '!=', 5)
@@ -416,7 +420,7 @@ class PedidoController extends Controller
                     'mes' => $data['mes'] - 1,
                     'count' => 0
                 ];
-            } else if (($data['mes'] - 1) == $mes[0]['mes']) {
+            } elseif (($data['mes'] - 1) == $mes[0]['mes']) {
                 $mes[] = $mes[0];
 
                 $mes[0] = [
@@ -426,7 +430,7 @@ class PedidoController extends Controller
             }
         }
 
-       $dia = Pedido
+        $dia = Pedido
             ::selectRaw('DAY(created_at) as dia, COUNT(*) as count')
             ->whereIn('status', [1,2,3])
             ->whereIn(DB::raw('DAY(created_at)'), [$data['dia'], $data['dia'] - 1])
@@ -449,7 +453,7 @@ class PedidoController extends Controller
                     'dia' => $data['dia'] - 1,
                     'count' => 0
                 ];
-            } else if (($data['dia'] - 1) == $dia[0]['dia']) {
+            } elseif (($data['dia'] - 1) == $dia[0]['dia']) {
                 $dia[] = $dia[0];
 
                 $dia[0] = [
@@ -486,7 +490,7 @@ class PedidoController extends Controller
      * @param  int $ano
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    function totalOrders($mes = null, $ano = null)
+    public function totalOrders($mes = null, $ano = null)
     {
         $atual = false;
 
@@ -499,7 +503,7 @@ class PedidoController extends Controller
             $ano = (int)date('Y');
         }
 
-       $pedidos = Pedido
+        $pedidos = Pedido
             ::selectRaw('DAY(created_at) AS dia, COUNT(*) as total')
             ->whereIn('status', [1,2,3])
             ->where(DB::raw('MONTH(created_at)'), '=', $mes)
@@ -543,7 +547,7 @@ class PedidoController extends Controller
 
             // arsort($list);
             return $this->listResponse($list);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }

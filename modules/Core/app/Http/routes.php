@@ -3,11 +3,11 @@
 // Extensão do chrome para o shopsystem
 Route::get('pedidos/shopsystem/{taxvat}', 'Core\Http\Controllers\Pedido\PedidoController@shopsystem');
 
-Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namespace' => 'Core\Http\Controllers'], function() {
+Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namespace' => 'Core\Http\Controllers'], function () {
     /**
      * Notas
      */
-    Route::group(['prefix' => 'notas', 'namespace' => 'Pedido'], function() {
+    Route::group(['prefix' => 'notas', 'namespace' => 'Pedido'], function () {
         Route::get('xml/{id}/{devolucao}', 'NotaController@xml');
         Route::get('danfe/{id}/{retorno?}', 'NotaController@danfe');
         Route::post('email/{id}', 'NotaController@email');
@@ -32,8 +32,8 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     /**
      * Faturamento
      */
-    Route::group(['middleware' => ['role:admin|faturamento']], function() {
-        Route::group(['prefix' => 'notas', 'namespace' => 'Pedido'], function() {
+    Route::group(['middleware' => ['role:admin|faturamento']], function () {
+        Route::group(['prefix' => 'notas', 'namespace' => 'Pedido'], function () {
             Route::get('faturamento', 'NotaController@notasFaturamento');
             Route::get('faturar/{pedido_id}', 'NotaController@faturar');
         });
@@ -47,7 +47,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     /**
      * Pedidos
      */
-    Route::group(['prefix' => 'pedidos', 'namespace' => 'Pedido'], function() {
+    Route::group(['prefix' => 'pedidos', 'namespace' => 'Pedido'], function () {
         Route::get('cidades/{uf}', 'PedidoController@cidades');
         Route::get('total-orders-status', 'PedidoController@totalOrdersByStatus');
         Route::get('total-orders-date', 'PedidoController@totalOrdersByDate');
@@ -67,7 +67,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     /**
      * Produtos
      */
-    Route::group(['prefix' => 'produtos', 'namespace' => 'Produto'], function() {
+    Route::group(['prefix' => 'produtos', 'namespace' => 'Produto'], function () {
         Route::get('generate-sku/{old_sku?}', 'ProdutoController@gerenateSku');
         Route::get('check-sku/{sku}', 'ProdutoController@checkSku');
         Route::get('list', 'ProdutoController@tableList');
@@ -95,7 +95,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     /**
      * Clientes
      */
-    Route::group(['prefix' => 'clientes', 'namespace' => 'Cliente'], function() {
+    Route::group(['prefix' => 'clientes', 'namespace' => 'Cliente'], function () {
         Route::get('detail/{cliente_id}', 'ClienteController@detail');
         Route::get('list', 'ClienteController@tableList');
         Route::put('email/{cliente_id}', 'ClienteController@changeEmail');
@@ -110,7 +110,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     /**
      * Relatórios
      */
-    Route::group(['middleware' => ['role:admin'], 'namespace' => 'Relatorio', 'prefix' => 'relatorios'], function() {
+    Route::group(['middleware' => ['role:admin'], 'namespace' => 'Relatorio', 'prefix' => 'relatorios'], function () {
         // ICMS
         Route::get('icms', 'ICMSController@icms');
 
@@ -126,7 +126,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     /**
      * Partials
      */
-    Route::group(['namespace' => 'Partials'], function() {
+    Route::group(['namespace' => 'Partials'], function () {
         Route::post('upload', [
             'middleware' => ['role:admin|gestor|atendimento|faturamento'],
             'uses' => 'UploadController@upload'

@@ -21,7 +21,8 @@ class MarcaController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableList() {
+    public function tableList()
+    {
         $m = self::MODEL;
 
         $list = $m::orderBy('marcas.created_at', 'DESC');

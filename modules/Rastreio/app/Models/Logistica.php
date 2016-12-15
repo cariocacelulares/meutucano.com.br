@@ -72,14 +72,16 @@ class Logistica extends \Eloquent
     /**
      * @return string
      */
-    public function getDataPostagemAttribute($data_postagem) {
+    public function getDataPostagemAttribute($data_postagem)
+    {
         return ($data_postagem) ? Carbon::createFromFormat('Y-m-d', $data_postagem)->format('d/m/Y') : null;
     }
 
     /**
      * @return string
      */
-    public function setDataPostagemAttribute($data_postagem) {
+    public function setDataPostagemAttribute($data_postagem)
+    {
         if ($data_postagem) {
             $this->attributes['data_postagem'] = Carbon::createFromFormat('d/m/Y', $data_postagem)->format('Y-m-d');
         }
@@ -88,9 +90,11 @@ class Logistica extends \Eloquent
     /**
      * @return string
      */
-    public function getCreatedAtAttribute($created_at) {
-        if (!$created_at)
+    public function getCreatedAtAttribute($created_at)
+    {
+        if (!$created_at) {
             return null;
+        }
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $created_at)->format('d/m/Y H:i');
     }
@@ -98,9 +102,11 @@ class Logistica extends \Eloquent
     /**
      * @return string
      */
-    public function getUpdatedAtAttribute($updated_at) {
-        if (!$updated_at)
+    public function getUpdatedAtAttribute($updated_at)
+    {
+        if (!$updated_at) {
             return null;
+        }
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
     }

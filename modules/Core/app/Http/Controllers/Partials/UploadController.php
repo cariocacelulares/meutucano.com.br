@@ -118,7 +118,8 @@ class UploadController extends Controller
      * @param  boolean|int $usuario  usuário que importou a nota
      * @return boolean
      */
-    private function uploadNota($notaArquivo, $usuario_id = false) {
+    private function uploadNota($notaArquivo, $usuario_id = false)
+    {
         try {
             if (!$usuario_id) {
                 $usuario_id = JWTAuth::parseToken()->authenticate()->id;
@@ -151,9 +152,9 @@ class UploadController extends Controller
             $tipoOperacao = null;
             if (in_array($operacao, Config::get('core.notas.operacoes'))) {
                 $tipoOperacao = 'venda';
-            } else if (in_array($operacao, Config::get('core.notas.devolucao'))) {
+            } elseif (in_array($operacao, Config::get('core.notas.devolucao'))) {
                 $tipoOperacao = 'devolucao';
-            } else if (in_array($operacao, Config::get('core.notas.estorno'))) {
+            } elseif (in_array($operacao, Config::get('core.notas.estorno'))) {
                 $tipoOperacao = 'estorno';
             } else {
                 return 'Não foi possível identificar a operação da nota (CFOP)!';
@@ -213,7 +214,8 @@ class UploadController extends Controller
      *
      * @return Cliente
      */
-    private function importCliente() {
+    private function importCliente()
+    {
         if ($this->nfe->dest->CNPJ) {
             $tipo = 1;
             $taxvat = $this->nfe->dest->CNPJ;
@@ -252,7 +254,8 @@ class UploadController extends Controller
      * @param  Cliente $cliente
      * @return Endereco
      */
-    private function importClienteEndereco($cliente) {
+    private function importClienteEndereco($cliente)
+    {
         $clienteEndereco = Endereco::firstOrCreate(['cliente_id' => $cliente->id, 'cep' => $this->nfe->dest->enderDest->CEP]);
 
         if ($clienteEndereco->wasRecentlyCreated) {
@@ -285,7 +288,8 @@ class UploadController extends Controller
      * @param  string $tipoOperacao    venda|devolucao|estorno
      * @return Pedido
      */
-    private function importPedido($chave, $cliente, $clienteEndereco, $operacao, $tipoOperacao) {
+    private function importPedido($chave, $cliente, $clienteEndereco, $operacao, $tipoOperacao)
+    {
         $pedido = null;
         $idMarketplace = null;
         $notaTotal = $this->nfe->total->ICMSTot->vNF;
@@ -462,7 +466,7 @@ class UploadController extends Controller
                 $dataEnvio = $datetimeNota->add(date_interval_create_from_date_string('+1 day'));
                 if ($dataEnvio->format('w') == '6') {
                     $dataEnvio = $dataEnvio->add(date_interval_create_from_date_string('+2 day'));
-                } else if ($dataEnvio->format('w') == '0') {
+                } elseif ($dataEnvio->format('w') == '0') {
                     $dataEnvio = $dataEnvio->add(date_interval_create_from_date_string('+1 day'));
                 }
             }
@@ -524,8 +528,9 @@ class UploadController extends Controller
         $produtoImei = [];
         foreach ($positions as $key => $pos) {
             $posFind = ' | ';
-            if ((sizeof($positions) - 1) == $key)
-            $posFind = '-';
+            if ((sizeof($positions) - 1) == $key) {
+                $posFind = '-';
+            }
 
             $lineProduto = substr($this->nfe->infAdic->infCpl, $pos, (stripos($this->nfe->infAdic->infCpl, $posFind, $pos) - $pos));
 
@@ -538,7 +543,7 @@ class UploadController extends Controller
         // Organiza os imeis
         foreach ($produtoImei as $sku => $imeis) {
             $produtoImei[$sku] = explode(',', $imeis);
-            $produtoImei[$sku] = array_map(function($imei) {
+            $produtoImei[$sku] = array_map(function ($imei) {
                 return trim($imei);
             }, $produtoImei[$sku]);
         }
@@ -624,7 +629,7 @@ class UploadController extends Controller
                     $pedidoProduto->produto_sku = $sku;
                     $pedidoProduto->valor = $item['valor'];
                     $pedidoProduto->quantidade = $item['quantidade'];
-                } else if ($pedidoProduto->getOriginal('quantidade') < $item['quantidade']) {
+                } elseif ($pedidoProduto->getOriginal('quantidade') < $item['quantidade']) {
                     // Se o pedidoProduto já exisita e tinha menos qtd que na nota, atualiza a qtd
                     $pedidoProduto->quantidade = $item['quantidade'];
                 }
@@ -705,7 +710,7 @@ class UploadController extends Controller
                     'nome' => $this->nfe->dest->xNome,
                     'produtos' => $produtos,
                     'rastreio' => $rastreio
-                ], function($message) use ($nota_id, $email, $nome, $arquivo) {
+                ], function ($message) use ($nota_id, $email, $nome, $arquivo) {
                     with(new NotaController())->danfe($nota_id, 'F', $arquivo);
 
                     $message
@@ -714,7 +719,7 @@ class UploadController extends Controller
                         ->subject('Obrigado por comprar na Carioca Celulares On-line');
                 });
 
-                if  ($mail) {
+                if ($mail) {
                     Log::debug('E-mail com a nota enviado para: ' . $email);
                 } else {
                     Log::warning('Falha ao enviar e-mail com a nota para: ' . $email);

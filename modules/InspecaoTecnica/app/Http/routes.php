@@ -1,8 +1,7 @@
 <?php
 
-Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namespace' => 'InspecaoTecnica\Http\Controllers'], function()
-{
-    Route::group(['prefix' => 'inspecao_tecnica'], function() {
+Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namespace' => 'InspecaoTecnica\Http\Controllers'], function () {
+    Route::group(['prefix' => 'inspecao_tecnica'], function () {
         Route::post('verificar-reserva', 'InspecaoTecnicaController@verificarReserva');
         Route::post('reserva', 'InspecaoTecnicaController@reservar');
         Route::post('priority/{id}', 'InspecaoTecnicaController@changePriority');

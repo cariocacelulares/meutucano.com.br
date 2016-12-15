@@ -90,9 +90,9 @@ class ProdutoController extends Controller
 
                             $this->model->whereBetween($field, [$config['value']['from'], $config['value']['to']]);
                         }
-                    } else if ($config['operator'] == 'IN') {
+                    } elseif ($config['operator'] == 'IN') {
                         $this->model->whereIn($field, array_keys($config['value']));
-                    } else if ($config['operator'] == 'LIKE') {
+                    } elseif ($config['operator'] == 'LIKE') {
                         $this->model->where($field, $config['operator'], "%{$config['value']}%");
                     } else {
                         // se for uma data no formato d/m/Y, converte pra Y-m-d
@@ -162,7 +162,7 @@ class ProdutoController extends Controller
                 if (array_key_exists($field['name'], $produto)) {
                     if ($field['name'] == 'pedidos.created_at' && is_string($produto['pedidos.created_at']) && \DateTime::createFromFormat('Y-m-d H:i:s', $produto['pedidos.created_at']) !== false) {
                         $clearedOrder[$field['label']] = Carbon::createFromFormat('Y-m-d H:i:s', $produto['pedidos.created_at'])->format('d/m/Y H:i');
-                    } else if ($field['name'] == 'pedidos.estimated_delivery' && is_string($produto['pedidos.estimated_delivery']) && \DateTime::createFromFormat('Y-m-d', $produto['pedidos.estimated_delivery']) !== false) {
+                    } elseif ($field['name'] == 'pedidos.estimated_delivery' && is_string($produto['pedidos.estimated_delivery']) && \DateTime::createFromFormat('Y-m-d', $produto['pedidos.estimated_delivery']) !== false) {
                         $clearedOrder[$field['label']] = Carbon::createFromFormat('Y-m-d', $produto['pedidos.estimated_delivery'])->format('d/m/Y');
                     } else {
                         $clearedOrder[$field['label']] = $produto[$field['name']];
@@ -214,7 +214,6 @@ class ProdutoController extends Controller
             } else {
                 return $this->listResponse($this->list);
             }
-
         } catch (\Exception $e) {
             \Log::warning(logMessage($e, 'Erro ao tentar gerar relatório'));
             return $this->notFoundResponse();

@@ -45,8 +45,9 @@ class NotaController extends Controller
             $file_path = storage_path('app/public/nota/' . $nota->arquivo);
 
             // Arquivo físico não existe
-            if (!file_exists($file_path))
+            if (!file_exists($file_path)) {
                 return $this->notFoundResponse();
+            }
 
             return response()
                 ->make(file_get_contents($file_path), '200')
@@ -74,7 +75,7 @@ class NotaController extends Controller
 
                 if ($email) {
                     if (\Config::get('core.email_send_enabled')) {
-                        $mail = Mail::send('emails.danfe', [], function($message) use ($id, $email, $arquivo) {
+                        $mail = Mail::send('emails.danfe', [], function ($message) use ($id, $email, $arquivo) {
                             with(new NotaController())->danfe($id, 'F', $arquivo);
 
                             $message
@@ -89,7 +90,7 @@ class NotaController extends Controller
                         \Log::debug("O e-mail não foi enviado para {$email} pois o envio está desativado (nota)!");
                     }
 
-                    if  ($mail) {
+                    if ($mail) {
                         \Log::debug('E-mail de venda enviado para: ' . $email);
                         return $this->showResponse(['send' => true]);
                     } else {

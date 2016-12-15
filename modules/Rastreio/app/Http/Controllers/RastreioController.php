@@ -83,11 +83,12 @@ class RastreioController extends Controller
             /**
              * Atualiza o rastreio
              */
-            if (Input::get('status') == 0)
+            if (Input::get('status') == 0) {
                 $this->refresh($data);
+            }
 
             return $this->showResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
 
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
@@ -157,7 +158,7 @@ class RastreioController extends Controller
                 $status = $rastreio->status;
             } elseif (strpos($ultimoEvento['detalhes'], 'por favor, entre em contato conosco clicando') !== false) {
                 $status = 3;
-            } elseif(strpos($ultimoEvento['acao'], 'fluxo postal') !== false) {
+            } elseif (strpos($ultimoEvento['acao'], 'fluxo postal') !== false) {
                 $status = 3;
             } elseif ((strpos($ultimoEvento['acao'], 'devolvido ao remetente') !== false) || strpos($ultimoEvento['acao'], 'devolução ao remetente') !== false) {
                 $status = 5;
@@ -322,8 +323,9 @@ class RastreioController extends Controller
                 $content = HtmlDomParser::file_get_html($correios);
                 if (sizeof($content->find('table tr')) > 1) {
                     foreach ($content->find('table tr') as $index => $row) {
-                        if ($row->find('td', 0)->plaintext == 'Data')
+                        if ($row->find('td', 0)->plaintext == 'Data') {
                             continue;
+                        }
 
                         if (sizeof($row->find('td')) > 1) {
                             $historico[$index]['data']  = mb_strtolower(utf8_encode($row->find('td', 0)->plaintext));
@@ -336,7 +338,6 @@ class RastreioController extends Controller
                     }
                 }
             } catch (\Exception $e) {
-
             }
 
             $detalhes[$key]['historico'] = $historico;

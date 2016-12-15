@@ -64,22 +64,24 @@ class Cliente extends \Eloquent
             for ($i = 0; $i < strlen($taxvat); $i++) {
                 $format[] = $taxvat[$i];
 
-                if (in_array($i, [1, 4]))
+                if (in_array($i, [1, 4])) {
                     $format[] = '.';
-                else if ($i == 6)
+                } elseif ($i == 6) {
                     $format[] = '/';
-                else if ($i == 11)
+                } elseif ($i == 11) {
                     $format[] = '-';
+                }
             }
         } else {
             // CPF
             for ($i = 0; $i < strlen($taxvat); $i++) {
                 $format[] = $taxvat[$i];
 
-                if (in_array($i, [2, 5]))
+                if (in_array($i, [2, 5])) {
                     $format[] = '.';
-                else if ($i == 8)
+                } elseif ($i == 8) {
                     $format[] = '-';
+                }
             }
         }
 
@@ -89,9 +91,11 @@ class Cliente extends \Eloquent
     /**
      * @return string
      */
-    public function getCreatedAtAttribute($created_at) {
-        if (!$created_at)
+    public function getCreatedAtAttribute($created_at)
+    {
+        if (!$created_at) {
             return null;
+        }
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $created_at)->format('d/m/Y H:i');
     }
@@ -99,9 +103,11 @@ class Cliente extends \Eloquent
     /**
      * @return string
      */
-    public function getUpdatedAtAttribute($updated_at) {
-        if (!$updated_at)
+    public function getUpdatedAtAttribute($updated_at)
+    {
+        if (!$updated_at) {
             return null;
+        }
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
     }

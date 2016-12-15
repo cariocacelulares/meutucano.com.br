@@ -169,8 +169,9 @@ class SkyhubController extends Controller
      */
     public function request($url = null, $params = [], $method = 'GET')
     {
-        if ($url === null)
+        if ($url === null) {
             return false;
+        }
 
         try {
             Log::debug('Requisição skyhub para: ' . $url . ', method: ' . $method, $params);
@@ -208,7 +209,8 @@ class SkyhubController extends Controller
      * @param  SkyhubPedido $order
      * @return boolean
      */
-    public function importPedido($order) {
+    public function importPedido($order)
+    {
         try {
             $clienteFone = null;
             if (sizeof($order['customer']['phones']) > 0) {
@@ -309,8 +311,9 @@ class SkyhubController extends Controller
             }
 
             foreach ($order['items'] as $s_produto) {
-                if (!(int) $s_produto['product_id'])
+                if (!(int) $s_produto['product_id']) {
                     continue;
+                }
 
                 $pedidoProduto = PedidoProduto::firstOrNew([
                     'pedido_id'   => $pedido->id,

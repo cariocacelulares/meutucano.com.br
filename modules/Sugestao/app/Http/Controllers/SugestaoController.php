@@ -60,7 +60,7 @@ class SugestaoController extends Controller
             $data = $m::create(array_merge(Input::all(), ['usuario_id' => getCurrentUserId()]));
 
             return $this->createdResponse($data);
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             $data = ['form_validations' => $v->errors(), 'exception' => $exception->getMessage()];
 
             \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
@@ -97,7 +97,7 @@ class SugestaoController extends Controller
             $data->save();
 
             return $this->showResponse($data);
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             $data = ['form_validations' => $v->errors(), 'exception' => $exception->getMessage()];

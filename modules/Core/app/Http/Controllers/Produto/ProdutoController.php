@@ -25,7 +25,8 @@ class ProdutoController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableList() {
+    public function tableList()
+    {
         $m = self::MODEL;
 
         $list = $m
@@ -143,7 +144,7 @@ class ProdutoController extends Controller
             $data->save();
 
             return $this->showResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
@@ -177,12 +178,12 @@ class ProdutoController extends Controller
         try {
             $v = \Validator::make(Input::all(), $this->validationRules);
 
-            if($v->fails()) {
+            if ($v->fails()) {
                 throw new \Exception("ValidationException");
             }
             $data = $m::create(Input::all());
             return $this->createdResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex));
@@ -229,7 +230,7 @@ class ProdutoController extends Controller
             }
 
             return $this->showResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }

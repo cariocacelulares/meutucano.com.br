@@ -1,13 +1,13 @@
 <?php
 
-Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namespace' => 'Rastreio\Http\Controllers'], function() {
+Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namespace' => 'Rastreio\Http\Controllers'], function () {
     /**
      * Rastreios
      */
-    Route::group(['prefix' => 'rastreios'], function() {
+    Route::group(['prefix' => 'rastreios'], function () {
         Route::get('etiqueta/{id}', 'RastreioController@etiqueta');
 
-        Route::group(['middleware' => 'role:admin|atendimento'], function() {
+        Route::group(['middleware' => 'role:admin|atendimento'], function () {
             Route::get('important', 'RastreioController@important');
             Route::get('historico/{id}', 'RastreioController@imagemHistorico');
             Route::get('pi/{id}', 'RastreioController@pi');
@@ -25,11 +25,11 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     /**
      * Atendimento
      */
-    Route::group(['middleware' => 'role:admin|atendimento'], function() {
+    Route::group(['middleware' => 'role:admin|atendimento'], function () {
         /**
          * PI's
          */
-        Route::group(['prefix' => 'pis'], function() {
+        Route::group(['prefix' => 'pis'], function () {
             Route::get('pending', 'PiController@pending');
             Route::put('edit/{id}', 'PiController@edit');
         });
@@ -38,7 +38,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
         /**
          * Devoluções
          */
-        Route::group(['prefix' => 'devolucoes'], function() {
+        Route::group(['prefix' => 'devolucoes'], function () {
             Route::get('pending', 'DevolucaoController@pending');
             Route::put('edit/{id}', 'DevolucaoController@edit');
         });
@@ -53,7 +53,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
         /**
          * Rastreios monitorados
          */
-        Route::group(['prefix' => 'rastreio/monitorados'], function() {
+        Route::group(['prefix' => 'rastreio/monitorados'], function () {
             Route::get('simple-list', 'MonitoradoController@simpleList');
             Route::get('list', 'MonitoradoController@tableList');
 

@@ -23,7 +23,8 @@ class ClienteController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableList() {
+    public function tableList()
+    {
         $m = self::MODEL;
 
         $list = $m::orderBy('clientes.created_at', 'DESC');
@@ -95,7 +96,8 @@ class ClienteController extends Controller
      * @param  int $cliente_id
      * @return  \Symfony\Component\HttpFoundation\Response
      */
-    public function changeEmail($cliente_id) {
+    public function changeEmail($cliente_id)
+    {
         $m = self::MODEL;
 
         try {
@@ -106,7 +108,7 @@ class ClienteController extends Controller
             $data->save();
 
             return $this->showResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }

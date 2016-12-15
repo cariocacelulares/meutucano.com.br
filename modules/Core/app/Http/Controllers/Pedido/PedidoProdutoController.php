@@ -63,7 +63,7 @@ class PedidoProdutoController extends Controller
             $data = $m::with('produto')->where('id', '=', $data->id)->first();
 
             return $this->showResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             \Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];

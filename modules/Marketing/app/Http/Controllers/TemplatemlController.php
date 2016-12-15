@@ -19,8 +19,9 @@ class TemplatemlController extends Controller
     {
         $url = Input::get('url');
 
-        if (!$url)
+        if (!$url) {
             return false;
+        }
 
         $dom = HtmlDomParser::file_get_html($url);
 

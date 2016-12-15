@@ -28,10 +28,11 @@ class UsuarioTarefa extends \Eloquent
         'updated_at_readable',
     ];
 
-    protected static function boot() {
+    protected static function boot()
+    {
         parent::boot();
 
-        static::creating(function($usuarioTarefa) {
+        static::creating(function ($usuarioTarefa) {
             // Cria / atualiza a tabela gamification
             if ($gamification = Gamification::where('usuario_id', '=', $usuarioTarefa->usuario_id)->first()) {
                 $gamification->experiencia = $gamification->experiencia + $usuarioTarefa->pontos;
@@ -89,7 +90,7 @@ class UsuarioTarefa extends \Eloquent
                         ->where('tarefa_id', '=', $usuarioTarefa->tarefa_id)
                         ->where('created_at', 'LIKE', "{$ano}-{$mes}-{$dia}%")
                         ->count();
-                } else if ($conquista->tempo == 1) {
+                } elseif ($conquista->tempo == 1) {
                     $hoje = Carbon::now();
                     $diaDaSemana = $hoje->dayOfWeek;
                     $primeiroDia = $hoje->subDays($diaDaSemana);
@@ -101,13 +102,13 @@ class UsuarioTarefa extends \Eloquent
                         ->where('created_at', '>=', "{$ano}-{$mes}-{$primeiroDia} 00:00:00")
                         ->where('created_at', '<=', "{$ano}-{$mes}-{$ultimoDia} 23:59:59")
                         ->count();
-                } else if ($conquista->tempo == 2) {
+                } elseif ($conquista->tempo == 2) {
                     $total = UsuarioTarefa
                         ::where('usuario_id', '=', $usuarioTarefa->usuario_id)
                         ->where('tarefa_id', '=', $usuarioTarefa->tarefa_id)
                         ->where('created_at', 'LIKE', "{$ano}-{$mes}-%")
                         ->count();
-                } else if ($conquista->tempo == 3) {
+                } elseif ($conquista->tempo == 3) {
                     $total = UsuarioTarefa
                         ::where('usuario_id', '=', $usuarioTarefa->usuario_id)
                         ->where('tarefa_id', '=', $usuarioTarefa->tarefa_id)
@@ -125,20 +126,20 @@ class UsuarioTarefa extends \Eloquent
                                 ->where('conquista_id', '=', $conquista->id)
                                 ->where('created_at', 'LIKE', "{$ano}-{$mes}-{$dia}%")
                                 ->count();
-                        } else if ($conquista->tempo == 1) {
+                        } elseif ($conquista->tempo == 1) {
                             $existentes = UsuarioConquista
                                 ::where('usuario_id', '=', $usuarioTarefa->usuario_id)
                                 ->where('conquista_id', '=', $conquista->id)
                                 ->where('created_at', '>=', "{$ano}-{$mes}-{$primeiroDia} 00:00:00")
                                 ->where('created_at', '<=', "{$ano}-{$mes}-{$ultimoDia} 23:59:59")
                                 ->count();
-                        } else if ($conquista->tempo == 2) {
+                        } elseif ($conquista->tempo == 2) {
                             $existentes = UsuarioConquista
                                 ::where('usuario_id', '=', $usuarioTarefa->usuario_id)
                                 ->where('conquista_id', '=', $conquista->id)
                                 ->where('created_at', 'LIKE', "{$ano}-{$mes}-%")
                                 ->count();
-                        } else if ($conquista->tempo == 3) {
+                        } elseif ($conquista->tempo == 3) {
                             $existentes = UsuarioConquista
                                 ::where('usuario_id', '=', $usuarioTarefa->usuario_id)
                                 ->where('conquista_id', '=', $conquista->id)
@@ -169,16 +170,18 @@ class UsuarioTarefa extends \Eloquent
 
     protected function getCreatedAtReadableAttribute()
     {
-        if (!$this->created_at)
+        if (!$this->created_at) {
             return null;
+        }
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y H:i');
     }
 
     protected function getUpdatedAtReadableAttribute()
     {
-        if (!$this->created_at)
+        if (!$this->created_at) {
             return null;
+        }
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y H:i');
     }

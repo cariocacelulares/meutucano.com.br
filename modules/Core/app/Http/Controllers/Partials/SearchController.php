@@ -61,10 +61,9 @@ class SearchController extends Controller
             ->get();
 
         $busca['clientes'] = Cliente
-            ::with(['enderecos' => function($query)
-                {
-                    $query->orderBy('created_at', 'DESC')->take(1);
-                }])
+            ::with(['enderecos' => function ($query) {
+                $query->orderBy('created_at', 'DESC')->take(1);
+            }])
             ->orWhere('taxvat', 'LIKE', '%' . $term . '%')
             ->orWhere('inscricao', 'LIKE', '%' . $term . '%')
             ->orWhere('nome', 'LIKE', '%' . $term . '%')

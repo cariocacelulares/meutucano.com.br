@@ -23,7 +23,8 @@ class TarefaController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableList() {
+    public function tableList()
+    {
         $m = self::MODEL;
         $list = $m::orderBy('gamification_tarefas.titulo', 'ASC');
         $list = $this->handleRequest($list);
@@ -43,7 +44,7 @@ class TarefaController extends Controller
         try {
             $v = \Validator::make(Input::all(), $this->validationRules);
 
-            if($v->fails()) {
+            if ($v->fails()) {
                 throw new \Exception("ValidationException");
             }
 
@@ -52,7 +53,7 @@ class TarefaController extends Controller
 
             $data = $m::create($data);
             return $this->createdResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
@@ -88,7 +89,7 @@ class TarefaController extends Controller
 
             $data->save();
             return $this->showResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             \Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];

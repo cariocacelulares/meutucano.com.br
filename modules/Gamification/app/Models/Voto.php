@@ -15,10 +15,11 @@ class Voto extends \Eloquent
         'candidato_id'
     ];
 
-    protected static function boot() {
+    protected static function boot()
+    {
         parent::boot();
 
-        static::creating(function($voto) {
+        static::creating(function ($voto) {
             // Ranking
             $ranking = Ranking
                 ::where('usuario_id', '=', $voto->candidato_id)

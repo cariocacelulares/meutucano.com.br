@@ -24,10 +24,11 @@ class Gamification extends \Eloquent
         'progresso',
     ];
 
-    protected static function boot() {
+    protected static function boot()
+    {
         parent::boot();
 
-        static::saving(function($gamification) {
+        static::saving(function ($gamification) {
             $nivel = \Config::get('gamification.nivel');
             $gamification->nivel = $nivel($gamification->experiencia);
 
@@ -63,10 +64,11 @@ class Gamification extends \Eloquent
 
     public function getAvatarAttribute($avatar)
     {
-        if ($avatar)
+        if ($avatar) {
             return $avatar;
-        else
+        } else {
             return 'images/gamification/default-profile.gif';
+        }
     }
 
     public function getProgressoAttribute()

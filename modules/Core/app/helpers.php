@@ -8,7 +8,8 @@ if (!function_exists('t')) {
      * @param  string $value
      * @return string
      */
-    function t($key, $value = null) {
+    function t($key, $value = null)
+    {
         if (isset($value)) {
             return \T::set($key, $value);
         }

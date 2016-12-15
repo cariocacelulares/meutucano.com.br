@@ -45,7 +45,7 @@ class ComentarioController extends Controller
 
             $data = $m::create(array_merge(\Request::all(), ['usuario_id' => $user]));
             return $this->createdResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }

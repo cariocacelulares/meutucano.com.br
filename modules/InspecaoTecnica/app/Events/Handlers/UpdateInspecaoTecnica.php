@@ -7,6 +7,7 @@ use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;
 use InspecaoTecnica\Http\Controllers\InspecaoTecnicaController;
 use InspecaoTecnica\Models\InspecaoTecnica;
+
 class UpdateInspecaoTecnica
 {
     /**
@@ -17,7 +18,6 @@ class UpdateInspecaoTecnica
      */
     public function subscribe(Dispatcher $events)
     {
-
         $events->listen(
             OrderProductProductChanged::class,
             '\InspecaoTecnica\Events\Handlers\UpdateInspecaoTecnica@onOrderProductProductChanged'
