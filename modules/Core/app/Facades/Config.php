@@ -29,7 +29,7 @@ class ConfigProvider
      */
     public function set($key, $value)
     {
-        return TConfig::findOrNew($key)->update(['value' => $value]);
+        return TConfig::updateOrCreate(['key' => $key], ['value' => $value]);
     }
 }
 
