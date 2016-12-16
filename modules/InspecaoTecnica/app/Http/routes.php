@@ -5,6 +5,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
         Route::post('verificar-reserva', 'InspecaoTecnicaController@verificarReserva');
         Route::post('reserva', 'InspecaoTecnicaController@reservar');
         Route::post('priority/{id}', 'InspecaoTecnicaController@changePriority');
+        Route::post('solicitar', 'InspecaoTecnicaController@solicitar');
 
         Route::get('solicitadas', 'InspecaoTecnicaController@solicitadas');
         Route::get('fila', 'InspecaoTecnicaController@fila');

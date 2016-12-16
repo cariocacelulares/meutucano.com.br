@@ -390,11 +390,30 @@ class InspecaoTecnicaController extends Controller
         return $this->listResponse(['dados' => $retorno]);
     }
 
+    public function solicitar()
+    {
+        $orderProducts = Input::get('orderProducts');
+
+        $return = [];
+
+        foreach ($orderProducts as $orderProduct) {
+            $qty = $orderProduct['quantidade'];
+            if ($orderProduct = PedidoProduto::find($orderProduct['pedido_produtos_id'])) {
+                for ($i=0; $i < $qty; $i++) {
+                    $return[] = $this->attachInspecao($orderProduct);
+                }
+            }
+        }
+
+        return $this->listResponse($return);
+    }
+
     /**
      * Adicona um pedidoProduto em uma inspecao existente ou cria uma nova
+     * ATENÇÃO: ESSE MÉTODO NÃO CONSIDERA QUANTIDADE, CONSIDERA APENAS UMA DE CADA VEZ!
      *
      * @param  PedidoProduto $orderProduct contem o produto que precisa ser inspecionado
-     * @return Object
+     * @return array|null
      */
     public function attachInspecao(PedidoProduto $orderProduct)
     {
@@ -403,7 +422,7 @@ class InspecaoTecnicaController extends Controller
 
         // Checa se é seminovo
         if ((int)$product->estado !== 1) {
-            return;
+            return null;
         }
 
         try {
@@ -420,12 +439,14 @@ class InspecaoTecnicaController extends Controller
                 $inspecaoDisponivel->solicitante_id = $currentUser;
                 if ($inspecaoDisponivel->save()) {
                     Log::notice('Inspecao tecnica adicionada ao pedido produto ' . $orderProduct->id, [$orderProduct, $inspecaoDisponivel]);
-                    return $this->listResponse([
-                        ['attach', $inspecaoDisponivel->id]
-                    ]);
+                    return [
+                        'attach',
+                        $inspecaoDisponivel->id,
+                        InspecaoTecnica::with('produto')->where('id', '=', $inspecaoDisponivel->id)->first()
+                    ];
                 } else {
                     Log::warning('Erro ao tentar adicionar pedido produto na inspecao tecnica', [$orderProduct, $inspecaoDisponivel]);
-                    return $this->clientErrorResponse('Erro ao tentar adicionar pedido produto na inspecao tecnica');
+                    return null;
                 }
             }
 
@@ -437,9 +458,11 @@ class InspecaoTecnicaController extends Controller
 
             if ($inspecao->save()) {
                 Log::notice('Inspecao tecnica adicioada na fila para o pedido produto ' . $orderProduct->id, [$orderProduct->toArray(), $inspecao->toArray()]);
-                return $this->listResponse([
-                    ['add', $inspecao->id]
-                ]);
+                return [
+                    'add',
+                    $inspecao->id,
+                    InspecaoTecnica::with('produto')->where('id', '=', $inspecao->id)->first()
+                ];
             } else {
                 Log::warning('Erro ao tentar cria inspecao tecnica', [$orderProduct]);
             }
@@ -447,7 +470,7 @@ class InspecaoTecnicaController extends Controller
             Log::error(logMessage($exception, 'Erro ao tentar adicionar uma inspecao técnica!'), [$orderProduct]);
         }
 
-        return $this->clientErrorResponse('Erro ao tentar adicionar/associar pedido produto na inspecao tecnica');
+        return null;
     }
 
     /**

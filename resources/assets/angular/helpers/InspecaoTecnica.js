@@ -74,10 +74,8 @@
                                 order: order || null
                             }
                         }).closePromise.then(function(data) {
-                            if (updateVm &&
-                                typeof this.vm != 'undefined' &&
-                                typeof this.vm.load != 'undefined' &&
-                                data.value === true) {
+                            if (typeof this.vm != 'undefined' &&
+                                typeof this.vm.load != 'undefined') {
                                 this.vm.load();
                             }
                         }.bind(this));
