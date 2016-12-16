@@ -448,17 +448,25 @@ class SkyhubController extends Controller
                 ]
             ];
 
-            $this->request(
+            $request = $this->request(
                 sprintf('/orders/%s/shipments', $order->codigo_api),
                 ['json' => $jsonData],
                 'POST'
             );
 
-            Log::notice("Dados de envio e nota fiscal atualizados do pedido {$order->id} / {$order->codigo_api} na Skyhub", $jsonData);
-        } catch (\Exception $e) {
-            Log::critical(logMessage($e, 'Pedido não faturado na Skyhub'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);
-            reportError('Pedido não faturado na Skyhub: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $order->id);
+            if ($request->getStatusCode() == 200) {
+                Log::notice("Dados de envio e nota fiscal atualizados do pedido {$order->id} / {$order->codigo_api} na Skyhub", $jsonData);
+                return true;
+            } else {
+                throw new \Exception('Erro ao tentar enviar dados de envio e rastreio para a Skyhub.', 1);
+            }
+        } catch (\Exception $exception) {
+            Log::critical(logMessage($exception, 'Pedido não faturado na Skyhub'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);
+            reportError('Pedido não faturado na Skyhub: ' . $exception->getMessage() . ' - ' . $exception->getLine() . ' - ' . $order->id);
+            return $exception;
         }
+
+        return new \Exception('Erro ao tentar enviar dados de envio e rastreio para a Skyhub.', 1);
     }
 
     /**
