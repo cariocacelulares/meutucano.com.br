@@ -5,12 +5,13 @@
         .module('MeuTucano')
         .controller('PedidoDetalheController', PedidoDetalheController);
 
-    function PedidoDetalheController($rootScope, $state, $stateParams, ngDialog, SweetAlert, toaster, Pedido, RastreioHelper, NotaHelper, ClienteEnderecoHelper, PedidoHelper, ClienteHelper, InspecaoTecnicaHelper, InspecaoTecnica, PedidoProduto) {
+    function PedidoDetalheController($rootScope, $state, $stateParams, ngDialog, SweetAlert, toaster, Pedido, RastreioHelper, NotaHelper, ClienteEnderecoHelper, PedidoHelper, ClienteHelper, InspecaoTecnicaHelper, PedidoProduto) {
         var vm = this;
 
-        vm.pedido_id  = $stateParams.id;
-        vm.pedido     = {};
-        vm.loading    = false;
+        vm.pedido_id   = $stateParams.id;
+        vm.pedido      = {};
+        vm.hasSeminovo = false;
+        vm.loading     = false;
 
         /**
          * @type {Object}
@@ -48,47 +49,17 @@
             Pedido.get(vm.pedido_id).then(function(pedido) {
                 vm.pedido  = pedido;
                 vm.loading = false;
+
+                for (var pedidoProduto in vm.pedido.produtos) {
+                    if (parseInt(vm.pedido.produtos[pedidoProduto].produto.estado) === 1) {
+                        vm.hasSeminovo = true;
+                        break;
+                    }
+                }
             });
         };
 
         vm.load();
-
-        /**
-         * Cria ou atualiza uma inspecao tecnica
-         *
-         * @param  {Object} params pedidoProduto e inspecao
-         * @return {void}
-         */
-        vm.updateInspecao = function(params) {
-            var pedidoProduto = params.pedidoProduto;
-            var inspecao = params.inspecao;
-
-            if (inspecao.revisado_at === null) {
-                // apenas altera o produto da inspecao
-                InspecaoTecnica.save({
-                    'produto_sku': pedidoProduto.produto.sku
-                }, inspecao.id).then(function() {
-                    toaster.pop('success', 'Inspecao tecnica alterada com sucesso!', '');
-                    vm.load();
-                });
-            } else {
-                // cria uma nova inspecao e exclui a antiga
-                InspecaoTecnica.save({
-                    produto_sku: pedidoProduto.produto.sku,
-                    pedido_produtos_id: pedidoProduto.id,
-                    revisado_at: null
-                }).then(function() {
-                    if (typeof inspecao.id != 'undefined' && inspecao.id) {
-                        InspecaoTecnica.save({
-                            pedido_produtos_id: null
-                        }, inspecao.id);
-                    }
-
-                    toaster.pop('success', 'Inspecao tecnica solicitada com sucesso!', '');
-                    vm.load();
-                });
-            }
-        };
 
         /**
          * Abre formulario para atualizar ou inserir produtos no pedido
@@ -108,26 +79,6 @@
             }).closePromise.then(function(data) {
                 if (data.value === true) {
                     vm.load();
-                } else if (typeof data.value.pedidoProduto != 'undefined' && typeof data.value.inspecao != 'undefined') {
-                    SweetAlert.swal({
-                        title: 'O novo produto precisa de uma inspeção técnica?',
-                        text: 'Se sim, seu produto será revisado e você será avisado!',
-                        type: 'warning',
-                        showCancelButton: true,
-                        cancelButtonText: 'Não',
-                        confirmButtonColor: '#10CFBD',
-                        confirmButtonText: 'Sim'
-                    }, function(isConfirm) {
-                        if (isConfirm) {
-                            vm.updateInspecao(data.value);
-                        } else {
-                            if (typeof data.value.inspecao.id != 'undefined' && data.value.inspecao.id) {
-                                InspecaoTecnica.delete(data.value.inspecao.id);
-                            }
-
-                            vm.load();
-                        }
-                    });
                 }
             });
         };

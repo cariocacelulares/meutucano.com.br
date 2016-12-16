@@ -8,6 +8,7 @@
     <thead>
         <tr>
             <th width="100">Cód.</th>
+            <th>Pedido</th>
             <th>Produto</th>
             <th class="text-center" width="100">Revisado</th>
             <th class="text-center" width="225">Data</th>
@@ -18,6 +19,9 @@
     <tbody ng-if="InspecaoSolicitadaList.tableData.data && !InspecaoSolicitadaList.loading">
         <tr ng-repeat="inspecao in InspecaoSolicitadaList.tableData.data">
             <td class="text-center">{{ inspecao.id }}</td>
+            <td>
+                <a ui-sref="app.pedidos.detalhe({id: inspecao.pedido_produto.pedido.id})">{{ inspecao.pedido_produto.pedido.codigo_marketplace || '-' }}</a>
+            </td>
             <td>
                 <a ui-sref="app.produtos.form({sku: inspecao.produto.sku})">{{ inspecao.produto.sku }}</a> {{ inspecao.produto.titulo || '-' }}
             </td>

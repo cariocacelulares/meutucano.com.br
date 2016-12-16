@@ -128,6 +128,10 @@
     background-color: transparent;
 
     &.small {
+        thead tr th:first-child {
+            padding-left: 0px !important;
+        }
+
         thead th {
             padding: 10px 5px;
             font-size: 12px;

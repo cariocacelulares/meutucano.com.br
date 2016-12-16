@@ -72,6 +72,16 @@
                  */
                 verificarReserva: function(params) {
                     return Restangular.all(this.baseUrl + '/verificar-reserva').post(params);
+                },
+
+                /**
+                 * Solicitar inspeções tecnicas
+                 *
+                 * @param  {array} params Um array com o pedido_produto_id e quantidade
+                 * @return {Object}
+                 */
+                solicitar: function(params) {
+                    return Restangular.all(this.baseUrl + '/solicitar').post({orderProducts: params});
                 }
             });
 
