@@ -192,13 +192,16 @@ class SkyhubController extends Controller
 
                 $r = $client->request($method, $url, $params);
 
+<<<<<<< Updated upstream
                 if ($r->getStatusCode() !== 200) {
                     throw new \Exception('API fora do ar', 1);
+=======
+                if (!in_array($r->getStatusCode(), [200, 201, 204])) {
+                    throw new \Exception("API fora do ar", 1);
+>>>>>>> Stashed changes
                 }
 
-                $response = json_decode($r->getBody(), true);
-
-                return ($response) ?: true;
+                return json_decode($r->getBody(), true);
             }
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', method: ' . $method));
