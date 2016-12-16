@@ -1,7 +1,6 @@
 <?php namespace Magento\Http\Controllers;
 
 use Carbon\Carbon;
-use Core\Events\OrderCancel;
 use Core\Models\Pedido\Pedido;
 use Core\Models\Produto\Produto;
 use Core\Models\Cliente\Cliente;
@@ -263,11 +262,11 @@ class MagentoController extends Controller
             $pedido->status = $this->parseStatus((isset($order['state'])) ? $order['state'] : ((isset($order['status'])) ? $order['status'] : null));
 
             // Se o status do pedido for pendente, verifica se o mercado pago não rejeitou (salvo em call_for_authorize)
-            $fireEvent = false;
+            $cancelOrder = false;
             if ($pedido->status == 0 && isset($order['status_history']) && isset($order['status_history'][0]) && isset($order['status_history'][0]['comment'])) {
                 if (strstr($order['status_history'][0]['comment'], 'Status: rejected') !== false && strstr($order['status_history'][0]['comment'], 'cc_rejected_call_for_authorize') === false) {
                     $pedido->status = 5;
-                    $fireEvent = true;
+                    $cancelOrder = true;
                 }
             }
 
@@ -280,9 +279,10 @@ class MagentoController extends Controller
             if ($pedido->save()) {
                 Log::info('Pedido importado ' . $order['increment_id']);
 
-                if ($fireEvent) {
-                    // Dispara o evento de cancelamento do pedido
-                    \Event::fire(new OrderCancel($pedido, getCurrentUserId()));
+                if ($cancelOrder) {
+                    $pedido->status = 5;
+                    $pedido->save();
+                    Log::notice('O pedido do site foi cancelado (pagamento rejeitado)', [$pedido->id, $order['status_history']]);
                 }
             } else {
                 Log::warning('Não foi possível importar o pedido ' . $order['increment_id']);
