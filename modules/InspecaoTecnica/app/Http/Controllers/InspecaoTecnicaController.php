@@ -81,8 +81,10 @@ class InspecaoTecnicaController extends Controller
         $m = self::MODEL;
 
         $list = $m
-            ::with('produto')
+            ::with(['produto', 'pedido_produto', 'pedido_produto.pedido'])
             ->leftJoin('produtos', 'produtos.sku', '=', 'inspecao_tecnica.produto_sku')
+            ->leftJoin('pedido_produtos', 'pedido_produtos.id', '=', 'inspecao_tecnica.pedido_produtos_id')
+            ->leftJoin('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
             ->where('solicitante_id', '=', getCurrentUserId())
             ->orderBy('priorizado', 'DESC')
             ->orderBy('created_at', 'DESC');

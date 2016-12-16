@@ -3,7 +3,7 @@
 
     angular
         .module('MeuTucano')
-        .service('InspecaoTecnicaHelper', function(toaster, Rastreio, InspecaoTecnica) {
+        .service('InspecaoTecnicaHelper', function(ngDialog, toaster, Rastreio, Pedido, InspecaoTecnica) {
             var vm;
 
             return {
@@ -60,6 +60,27 @@
                 existsSeminovos: function(rastreio_id) {
                     Rastreio.existsSeminovos(rastreio_id).then(function(response) {
                         this.vm.existsSeminovos = response.exists;
+                    }.bind(this));
+                },
+
+                requestInspection: function(order_id) {
+                    Pedido.get(order_id).then(function(order) {
+                        ngDialog.open({
+                            className: 'ngdialog-theme-default ngdialog-big',
+                            template: 'views/inspecao/solicitada/form-modal.html',
+                            controller: 'InspecaoSolicitarFormModalController',
+                            controllerAs: 'InspecaoSolicitarFormModal',
+                            data: {
+                                order: order || null
+                            }
+                        }).closePromise.then(function(data) {
+                            if (updateVm &&
+                                typeof this.vm != 'undefined' &&
+                                typeof this.vm.load != 'undefined' &&
+                                data.value === true) {
+                                this.vm.load();
+                            }
+                        }.bind(this));
                     }.bind(this));
                 }
             };
