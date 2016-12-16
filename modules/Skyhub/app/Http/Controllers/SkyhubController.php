@@ -192,6 +192,10 @@ class SkyhubController extends Controller
 
                 $r = $client->request($method, $url, $params);
 
+                if (!$r->isSuccessful()) {
+                    throw new \Exception("API fora do ar", 1);
+                }
+
                 return json_decode($r->getBody(), true);
             }
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
@@ -448,13 +452,13 @@ class SkyhubController extends Controller
                 ]
             ];
 
-            $request = $this->request(
+            $response = $this->request(
                 sprintf('/orders/%s/shipments', $order->codigo_api),
                 ['json' => $jsonData],
                 'POST'
             );
 
-            if ($request->getStatusCode() == 200) {
+            if ($response !== false) {
                 Log::notice("Dados de envio e nota fiscal atualizados do pedido {$order->id} / {$order->codigo_api} na Skyhub", $jsonData);
                 return true;
             } else {
