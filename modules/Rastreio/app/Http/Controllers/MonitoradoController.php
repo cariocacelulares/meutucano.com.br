@@ -23,7 +23,8 @@ class MonitoradoController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableList() {
+    public function tableList()
+    {
         $m = self::MODEL;
 
         $list = $m::with(['rastreio', 'rastreio.pedido', 'rastreio.pedido.cliente', 'rastreio.pedido.endereco'])
@@ -67,7 +68,7 @@ class MonitoradoController extends Controller
         try {
             $v = \Validator::make(Input::all(), $this->validationRules);
 
-            if($v->fails()) {
+            if ($v->fails()) {
                 throw new \Exception("ValidationException");
             }
 
@@ -82,7 +83,7 @@ class MonitoradoController extends Controller
             }
 
             return $this->createdResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => self::MODEL]);

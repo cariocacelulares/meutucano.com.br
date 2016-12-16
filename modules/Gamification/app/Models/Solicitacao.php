@@ -53,16 +53,18 @@ class Solicitacao extends \Eloquent
 
     protected function getCreatedAtReadableAttribute()
     {
-        if (!$this->created_at)
+        if (!$this->created_at) {
             return null;
+        }
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y H:i');
     }
 
     protected function getUpdatedAtReadableAttribute()
     {
-        if (!$this->created_at)
+        if (!$this->created_at) {
             return null;
+        }
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y H:i');
     }

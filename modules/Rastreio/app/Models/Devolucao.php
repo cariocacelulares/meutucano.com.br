@@ -77,16 +77,19 @@ class Devolucao extends \Eloquent
      *
      * @return string
      */
-    protected function getMotivoDescriptionAttribute() {
+    protected function getMotivoDescriptionAttribute()
+    {
         return ($this->motivo >= 0) ? \Config::get('core.notas.devolucao_status')[$this->motivo] : null;
     }
 
     /**
      * @return string
      */
-    public function getCreatedAtAttribute($created_at) {
-        if (!$created_at)
+    public function getCreatedAtAttribute($created_at)
+    {
+        if (!$created_at) {
             return null;
+        }
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $created_at)->format('d/m/Y H:i');
     }
@@ -94,9 +97,11 @@ class Devolucao extends \Eloquent
     /**
      * @return string
      */
-    public function getUpdatedAtAttribute($updated_at) {
-        if (!$updated_at)
+    public function getUpdatedAtAttribute($updated_at)
+    {
+        if (!$updated_at) {
             return null;
+        }
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
     }

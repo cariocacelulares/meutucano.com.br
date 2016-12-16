@@ -16,7 +16,8 @@ trait RastreioTrait
      * @param  int $protocol    numero de procolo
      * @return void
      */
-    public function updateProtocolAndStatus($obj, $protocol, $imagem = false) {
+    public function updateProtocolAndStatus($obj, $protocol, $imagem = false)
+    {
         if ((int)$obj->acao === 1) {
             if ($rastreio = Rastreio::find($obj->rastreio_id)) {
                 if ($pedido = Pedido::find($rastreio->pedido_id)) {
@@ -25,7 +26,7 @@ trait RastreioTrait
                         $pedido->status = 5;
 
                         $pedido->save();
-                    } else if ($protocol) {
+                    } elseif ($protocol) {
                         $pedido->protocolo = $protocol;
                         $pedido->status = 5;
 

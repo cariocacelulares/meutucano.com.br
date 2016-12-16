@@ -50,8 +50,8 @@ trait RelatorioTrait
      */
     private function getFile($return_type)
     {
-        $data = \Excel::create("relatorio-" . date('Y-m-d'), function($excel) {
-            $excel->sheet("relatorio-" . date('Y-m-d'), function($sheet) {
+        $data = \Excel::create("relatorio-" . date('Y-m-d'), function ($excel) {
+            $excel->sheet("relatorio-" . date('Y-m-d'), function ($sheet) {
                 if (!$this->group) {
                     foreach ($this->list as $key => $value) {
                         foreach ($value as $chave => $valor) {
@@ -62,7 +62,7 @@ trait RelatorioTrait
                                     }
                                 }
                                 unset($this->list[$key][$chave]);
-                            } else if ($valor === 0) {
+                            } elseif ($valor === 0) {
                                 $this->list[$key][$chave] = '0';
                             }
                         }
@@ -72,7 +72,7 @@ trait RelatorioTrait
                         foreach ($value as $chave => $valor) {
                             if (is_array($valor)) {
                                 $this->list[$key][$chave] = implode(',', $valor);
-                            } else if ($valor === 0) {
+                            } elseif ($valor === 0) {
                                 $this->list[$key][$chave] = '0';
                             }
                         }

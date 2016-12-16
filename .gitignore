@@ -9,4 +9,4 @@ clear.sh
 /public/assets/css
 /public/assets/js
 /public/images/gamification
-
+.php_cs.cache

@@ -58,7 +58,7 @@ class LogisticaController extends Controller
         try {
             $v = \Validator::make(Input::except(['protocolo']), $this->validationRules);
 
-            if($v->fails()) {
+            if ($v->fails()) {
                 throw new \Exception("ValidationException");
             }
 
@@ -75,7 +75,7 @@ class LogisticaController extends Controller
             }
 
             return $this->createdResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
@@ -112,7 +112,7 @@ class LogisticaController extends Controller
             $this->updateProtocolAndStatus($data, Input::get('protocolo'));
 
             return $this->showResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
 
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];

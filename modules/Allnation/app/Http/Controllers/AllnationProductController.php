@@ -56,7 +56,9 @@ class AllnationProductController extends Controller
                 $productId = ltrim($product->CODIGO, '0');
 
                 // Product already created
-                if (AllnationProduct::find($productId)) continue;
+                if (AllnationProduct::find($productId)) {
+                    continue;
+                }
 
                 AllnationProduct::create([
                     'id'          => $productId,
@@ -67,7 +69,7 @@ class AllnationProductController extends Controller
                         $product->SUBCATEGORIA
                     ])),
                     'brand'       => $product->FABRICANTE,
-                    'description' => '<div>' . str_replace( "\n", '</div><div>', trim($product->DESCRTEC)) . '</div>',
+                    'description' => '<div>' . str_replace("\n", '</div><div>', trim($product->DESCRTEC)) . '</div>',
                     'ean'         => $product->EAN,
                     'ncm'         => trim($product->NCM),
                     'warranty'    => $product->GARANTIA . ' meses',

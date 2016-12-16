@@ -23,7 +23,8 @@ class TrocaController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableList() {
+    public function tableList()
+    {
         $m = self::MODEL;
         $list = $m::with('usuario')
             ->join('usuarios', 'usuarios.id', '=', 'gamification_trocas.usuario_id')
@@ -62,7 +63,7 @@ class TrocaController extends Controller
             }
 
             return $return;
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => self::MODEL]);

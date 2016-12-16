@@ -25,7 +25,8 @@ class InspecaoTecnicaController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableList() {
+    public function tableList()
+    {
         $m = self::MODEL;
 
         $list = $m
@@ -48,7 +49,8 @@ class InspecaoTecnicaController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function fila() {
+    public function fila()
+    {
         $m = self::MODEL;
 
         $list = $m
@@ -59,8 +61,8 @@ class InspecaoTecnicaController extends Controller
             ->with(['produto', 'pedido_produto', 'pedido_produto.pedido', 'solicitante'])
             ->whereNotNull('inspecao_tecnica.produto_sku')
             ->whereNull('inspecao_tecnica.revisado_at')
-            ->where(function($query) {
-                    $query->whereNotNull('inspecao_tecnica.pedido_produtos_id')
+            ->where(function ($query) {
+                $query->whereNotNull('inspecao_tecnica.pedido_produtos_id')
                         ->orWhereNotNull('reservado');
             })
             ->orderBy('inspecao_tecnica.priorizado', 'DESC')
@@ -77,7 +79,8 @@ class InspecaoTecnicaController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function solicitadas() {
+    public function solicitadas()
+    {
         $m = self::MODEL;
 
         $list = $m
@@ -116,7 +119,7 @@ class InspecaoTecnicaController extends Controller
             ], Input::all()));
 
             return $this->createdResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
 
             Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
@@ -154,7 +157,7 @@ class InspecaoTecnicaController extends Controller
 
             $data->save();
             return $this->showResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];

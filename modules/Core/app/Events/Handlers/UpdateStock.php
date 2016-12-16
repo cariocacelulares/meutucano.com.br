@@ -48,7 +48,7 @@ class UpdateStock
 
         if (!$orderProduct) {
             Log::debug('PedidoProduto não encontrado!', [$orderProduct]);
-        } else if ((int)$order->status !== 5) {
+        } elseif ((int)$order->status !== 5) {
             $this->updateStock($orderProduct->produto, $orderProduct->quantidade);
         }
     }
@@ -69,7 +69,7 @@ class UpdateStock
 
             if (!$orderProduct) {
                 Log::debug('PedidoProduto não encontrado!', [$orderProduct]);
-            } else if ((int)$order->status != 5) {
+            } elseif ((int)$order->status != 5) {
                 $dirty = $orderProduct->getDirty();
 
                 // Se a quantidade foi alterada, pega a diferença e retira ou adiciona ao estoque
@@ -118,7 +118,7 @@ class UpdateStock
         }
     }
 
-    public function updateStock($product, int $qty, bool $sum = false)
+    public function updateStock($product, int $qty, bool $sum = null)
     {
         if (!$product) {
             return null;

@@ -1,7 +1,6 @@
 <?php
 
-Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namespace' => 'Marketing\Http\Controllers'], function()
-{
+Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namespace' => 'Marketing\Http\Controllers'], function () {
     /**
      * Template ML
      */

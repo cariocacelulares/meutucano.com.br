@@ -74,9 +74,9 @@ class AuthenticateController extends Controller
         }
         try {
             $token = JWTAuth::refresh($token);
-        } catch(TokenInvalidException $e) {
+        } catch (TokenInvalidException $e) {
             return response()->json(['token_invalid'], 400);
-        } catch(TokenExpiredException $e) {
+        } catch (TokenExpiredException $e) {
             return response()->json(['token_expired'], $e->getStatusCode());
         }
 

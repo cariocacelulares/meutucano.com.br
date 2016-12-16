@@ -84,7 +84,7 @@ class DevolucaoController extends Controller
         try {
             $v = \Validator::make(Input::except(['protocolo']), $this->validationRules);
 
-            if($v->fails()) {
+            if ($v->fails()) {
                 throw new \Exception("ValidationException");
             }
 
@@ -99,7 +99,7 @@ class DevolucaoController extends Controller
             $this->updateProtocolAndStatus($data, Input::get('protocolo'), Input::file('imagem'));
 
             return $this->createdResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
@@ -136,7 +136,7 @@ class DevolucaoController extends Controller
             $this->updateProtocolAndStatus($data, Input::get('protocolo'));
 
             return $this->showResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
 
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];

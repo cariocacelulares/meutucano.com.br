@@ -25,7 +25,8 @@ class LinhaController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableList() {
+    public function tableList()
+    {
         $m = self::MODEL;
 
         $list = $m::orderBy('linhas.created_at', 'DESC');
@@ -58,15 +59,17 @@ class LinhaController extends Controller
      * @param  array $attributes post array
      * @return void
      */
-    function removeAttributes($linha_id, $toRemove) {
+    public function removeAttributes($linha_id, $toRemove)
+    {
         try {
             if ($toRemove) {
                 if ($toRemove['opcoes']) {
                     foreach ($toRemove['opcoes'] as $opcao_id) {
                         $opcao = Opcao::find($opcao_id);
 
-                        if ($opcao)
+                        if ($opcao) {
                             $opcao->delete();
+                        }
                     }
                 }
 
@@ -98,15 +101,17 @@ class LinhaController extends Controller
      * @param  array $attributes  post array
      * @return void
      */
-    function attachAttributes($m, $attributes) {
+    public function attachAttributes($m, $attributes)
+    {
         try {
             if ($attributes) {
                 // Percorre todos os atributos e organiza em arrays diferentes
                 $toAdd  = ['simples' => [], 'opcoes' => []];
                 $toEdit = [];
                 foreach ($attributes as $attr) {
-                    if (!isset($attr['titulo']) || !trim($attr['titulo']))
+                    if (!isset($attr['titulo']) || !trim($attr['titulo'])) {
                         continue;
+                    }
 
                     $attr['linha_id'] = $m->id;
                     $tipo = ($attr['tipo'] == 1) ? 'opcoes' : 'simples';
@@ -147,8 +152,9 @@ class LinhaController extends Controller
                     $editAttr = Atributo::find($attr['id']);
 
                     if ($editAttr) {
-                        if (!$attr['opcoes'])
+                        if (!$attr['opcoes']) {
                             $attr['opcoes'] = null;
+                        }
 
                         $editAttr->fill($attr);
                         $editAttr->save();
@@ -235,7 +241,7 @@ class LinhaController extends Controller
             $this->attachAttributes($data, Input::get('atributos'));
 
             return $this->createdResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'));

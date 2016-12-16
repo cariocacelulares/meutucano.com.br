@@ -23,7 +23,7 @@ class AtributoController extends Controller
     {
         $m = self::MODEL;
 
-        $m = $m::where('linha_id',  $linha_id)->get();
+        $m = $m::where('linha_id', $linha_id)->get();
 
         return $this->listResponse($m);
     }
