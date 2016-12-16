@@ -35,7 +35,7 @@ class UpdateStock
     }
 
     /**
-     * Handle the event.
+     * Trigger stock updates on order product created
      *
      * @param  OrderProductCreated  $event
      * @return void
@@ -54,7 +54,7 @@ class UpdateStock
     }
 
     /**
-     * Handle the event.
+     * Trigger stock updates on order product updated
      *
      * @param  OrderProductUpdated  $event
      * @return void
@@ -93,7 +93,7 @@ class UpdateStock
     }
 
     /**
-     * Handle the event.
+     * Trigger stock updates when order canceled
      *
      * @param  OrderCanceled  $event
      * @return void
@@ -118,6 +118,14 @@ class UpdateStock
         }
     }
 
+    /**
+     * Update stock from product
+     *
+     * @param  Product $product
+     * @param  int    $qty
+     * @param  bool $sum
+     * @return void
+     */
     public function updateStock($product, int $qty, bool $sum = null)
     {
         if (!$product) {

@@ -382,7 +382,7 @@ class MagentoController extends Controller
     public function cancelOrder($order)
     {
         try {
-            if (!$this->api || $this->session) {
+            if (!$this->api || !$this->session) {
                 throw new \Exception('Api ou sessão não iniciada', 1);
             }
 
@@ -410,7 +410,7 @@ class MagentoController extends Controller
     public function orderInvoice($order)
     {
         try {
-            if (!$this->api || $this->session) {
+            if (!$this->api || !$this->session) {
                 throw new \Exception('Api ou sessão não iniciada', 1);
             }
 
