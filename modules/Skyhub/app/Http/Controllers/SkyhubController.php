@@ -192,9 +192,8 @@ class SkyhubController extends Controller
 
                 $r = $client->request($method, $url, $params);
 
-                Log::debug($r->getStatusCode());
                 if ($r->getStatusCode() !== 200) {
-                    throw new \Exception("API fora do ar", 1);
+                    throw new \Exception('API fora do ar', 1);
                 }
 
                 $response = json_decode($r->getBody(), true);
