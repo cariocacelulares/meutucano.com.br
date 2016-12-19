@@ -198,11 +198,26 @@ class SkyhubController extends Controller
 
                 return json_decode($r->getBody(), true);
             }
-        } catch (Guzzle\Http\Exception\BadResponseException $e) {
-            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', method: ' . $method));
+        } catch (Guzzle\Http\Exception\BadResponseException $exception) {
+            if (strstr($exception->getMessage(), 'CANCELED -> CANCELED') !== false
+                || strstr($exception->getMessage(), 'SHIPPED -> SHIPPED') !== false) {
+                    return null;
+            }
+
+            Log::warning(logMessage(
+                $exception,
+                'Não foi possível fazer a requisição para: ' . $url . ', method: ' . $method
+            ));
             return false;
-        } catch (\Exception $e) {
-            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', method: ' . $method));
+        } catch (\Exception $exception) {
+            if (strstr($exception->getMessage(), 'CANCELED -> CANCELED') !== false
+                || strstr($exception->getMessage(), 'SHIPPED -> SHIPPED') !== false) {
+                    return null;
+            }
+
+            Log::warning(
+                logMessage($exception, 'Não foi possível fazer a requisição para: ' . $url . ', method: ' . $method)
+            );
             return false;
         }
     }
@@ -404,7 +419,8 @@ class SkyhubController extends Controller
     {
         try {
             if (!$order->codigo_api) {
-                Log::warning("Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub, pois o pedido não possui codigo_api válido.");
+                Log::warning("Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub,
+                    pois o pedido não possui codigo_api válido.");
             } else {
                 $this->request(
                     sprintf('/orders/%s/cancel', $order->codigo_api),
@@ -414,8 +430,11 @@ class SkyhubController extends Controller
                 Log::notice("Pedido {$order->id} / {$order->skyhub} cancelado na Skyhub.");
             }
         } catch (Exception $e) {
-            Log::warning(logMessage($e, "Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub"));
-            reportError("Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub" . $e->getMessage() . ' - ' . $e->getLine());
+            Log::warning(
+                logMessage($e, "Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub")
+            );
+            reportError("Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub" .
+                $e->getMessage() . ' - ' . $e->getLine());
         }
     }
 
@@ -491,8 +510,13 @@ class SkyhubController extends Controller
                 Log::notice("Pedido {$pedido->codigo_api} alterado para enviado na skyhub.");
             }
         } catch (\Exception $e) {
-            Log::critical(logMessage($e, 'Não foi possível alterar o status do pedido na Skyhub'), ['id' => $pedido->id, 'codigo_api' => $pedido->codigo_api]);
-            reportError('Não foi possível alterar o status do pedido na Skyhub: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $pedido->id);
+            Log::critical(logMessage(
+                $e,
+                'Não foi possível alterar o status do pedido na Skyhub'),
+                ['id' => $pedido->id, 'codigo_api' => $pedido->codigo_api]
+            );
+            reportError('Não foi possível alterar o status do pedido na Skyhub: ' .
+                $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $pedido->id);
         }
     }
 
