@@ -198,26 +198,15 @@ class SkyhubController extends Controller
 
                 return json_decode($r->getBody(), true);
             }
-        } catch (Guzzle\Http\Exception\BadResponseException $exception) {
-            if (strstr($exception->getMessage(), 'CANCELED -> CANCELED') !== false
-                || strstr($exception->getMessage(), 'SHIPPED -> SHIPPED') !== false) {
-                    return null;
-            }
-
-            Log::warning(logMessage(
-                $exception,
-                'Não foi possível fazer a requisição para: ' . $url . ', method: ' . $method
-            ));
-            return false;
         } catch (\Exception $exception) {
             if (strstr($exception->getMessage(), 'CANCELED -> CANCELED') !== false
                 || strstr($exception->getMessage(), 'SHIPPED -> SHIPPED') !== false) {
                     return null;
             }
 
-            Log::warning(
-                logMessage($exception, 'Não foi possível fazer a requisição para: ' . $url . ', method: ' . $method)
-            );
+            Log::warning(logMessage(
+                $exception, 'Não foi possível fazer a requisição para: ' . $url . ', method: ' . $method
+            ));
             return false;
         }
     }
@@ -261,13 +250,13 @@ class SkyhubController extends Controller
                 'cliente_id' => $cliente->id,
                 'cep'        => $order['shipping_address']['postcode']
             ]);
-            $clienteEndereco->cep = $order['shipping_address']['postcode'];
-            $clienteEndereco->rua = $order['shipping_address']['street'];
-            $clienteEndereco->numero = $order['shipping_address']['number'];
+            $clienteEndereco->cep         = $order['shipping_address']['postcode'];
+            $clienteEndereco->rua         = $order['shipping_address']['street'];
+            $clienteEndereco->numero      = $order['shipping_address']['number'];
             $clienteEndereco->complemento = $order['shipping_address']['detail'];
-            $clienteEndereco->bairro = $order['shipping_address']['neighborhood'];
-            $clienteEndereco->cidade = $order['shipping_address']['city'];
-            $clienteEndereco->uf = $order['shipping_address']['region'];
+            $clienteEndereco->bairro      = $order['shipping_address']['neighborhood'];
+            $clienteEndereco->cidade      = $order['shipping_address']['city'];
+            $clienteEndereco->uf          = $order['shipping_address']['region'];
             if ($clienteEndereco->save()) {
                 Log::info("Endereço {$clienteEndereco->id} importado para o pedido " . $order['code']);
             } else {
@@ -310,19 +299,20 @@ class SkyhubController extends Controller
                 'codigo_marketplace'  => $codMarketplace
             ]);
 
-            $pedido->cliente_id = $cliente->id;
+            $pedido->cliente_id          = $cliente->id;
             $pedido->cliente_endereco_id = $clienteEndereco->id;
-            $pedido->codigo_api = isset($order['code']) ? $order['code'] : null;
-            $pedido->frete_valor = isset($order['shipping_cost']) ? $order['shipping_cost'] : null;
-            $pedido->frete_metodo = $this->parseShippingMethod(isset($order['shipping_method']) ? $order['shipping_method'] : null);
-            $pedido->pagamento_metodo = $this->parsePaymentMethod(isset($order['payments']) ? $order['payments'] : null);
-            $pedido->codigo_marketplace = $codMarketplace;
-            $pedido->marketplace = $marketplace;
-            $pedido->operacao = $operacao;
-            $pedido->total = $order['total_ordered'];
+            $pedido->codigo_api          = isset($order['code']) ? $order['code'] : null;
+            $pedido->frete_valor         = isset($order['shipping_cost']) ? $order['shipping_cost'] : null;
+            $pedido->frete_metodo        = $this->parseShippingMethod(isset($order['shipping_method']) ? $order['shipping_method'] : null);
+            $pedido->pagamento_metodo    = $this->parsePaymentMethod(isset($order['payments']) ? $order['payments'] : null);
+            $pedido->codigo_marketplace  = $codMarketplace;
+            $pedido->marketplace         = $marketplace;
+            $pedido->operacao            = $operacao;
+            $pedido->total               = $order['total_ordered'];
             $pedido->estimated_delivery  = $this->parseEstimatedDelivery($order['estimated_delivery'], $pedido->frete_metodo, $clienteEndereco->cep);
-            $pedido->status = $this->parseStatus(isset($order['status']['type']) ? $order['status']['type'] : null);
-            $pedido->created_at = substr($order['placed_at'], 0, 10) . ' ' . substr($order['placed_at'], 11, 8);
+            $pedido->status              = $this->parseStatus(isset($order['status']['type']) ? $order['status']['type'] : null);
+            $pedido->created_at          = substr($order['placed_at'], 0, 10) . ' ' . substr($order['placed_at'], 11, 8);
+
             if ($pedido->save()) {
                 Log::info('Pedido importado ' . $order['code']);
             } else {

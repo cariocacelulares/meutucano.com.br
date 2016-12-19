@@ -34,41 +34,39 @@ class MagentoController extends Controller
      *
      * @return void
      */
-    public function __construct($useSoap = true)
+    public function __construct()
     {
-        if ($useSoap) {
-            if (Config::get('magento.enabled')) {
-                try {
-                    $this->api = new \SoapClient(
-                        Config::get('magento.api.host'),
-                        [
-                            'stream_context' => stream_context_create([
-                                'http' => [
-                                    'user_agent' => 'PHPSoapClient'
-                                ]
-                            ]),
-                            'trace' => true,
-                            'exceptions' => true,
-                            'connection_timeout' => 20,
-                            'cache_wsdl' => WSDL_CACHE_NONE
-                        ]
-                    );
+        if (Config::get('magento.enabled')) {
+            try {
+                $this->api = new \SoapClient(
+                    Config::get('magento.api.host'),
+                    [
+                        'stream_context' => stream_context_create([
+                            'http' => [
+                                'user_agent' => 'PHPSoapClient'
+                            ]
+                        ]),
+                        'trace' => true,
+                        'exceptions' => true,
+                        'connection_timeout' => 20,
+                        'cache_wsdl' => WSDL_CACHE_NONE
+                    ]
+                );
 
-                    if (is_soap_fault($this->api)) {
-                        throw new \Exception('Falha ao tentar fazer conexão soap no magento', 1);
-                    }
-
-                    $this->session = $this->api->login(
-                        Config::get('magento.api.user'),
-                        Config::get('magento.api.key')
-                    );
-                    Log::debug('Requisição soap no magento realizada');
-                } catch (\Exception $e) {
-                    Log::debug('Falha ao tentar fazer conexão soap no magento: ' . $e->getMessage());
+                if (is_soap_fault($this->api)) {
+                    throw new \Exception('Falha ao tentar fazer conexão soap no magento', 1);
                 }
-            } else {
-                Log::debug('Requisição soap no magento foi bloqueada, a integração com o magento está desativada!');
+
+                $this->session = $this->api->login(
+                    Config::get('magento.api.user'),
+                    Config::get('magento.api.key')
+                );
+                Log::debug('Requisição soap no magento realizada');
+            } catch (\Exception $e) {
+                Log::debug('Falha ao tentar fazer conexão soap no magento: ' . $e->getMessage());
             }
+        } else {
+            Log::debug('Requisição soap no magento foi bloqueada, a integração com o magento está desativada!');
         }
     }
 
@@ -165,9 +163,6 @@ class MagentoController extends Controller
 
                 return json_decode($r->getBody(), true);
             }
-        } catch (Guzzle\Http\Exception\BadResponseException $e) {
-            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', com o method: ' . $method));
-            return false;
         } catch (\Exception $e) {
             Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', com o method: ' . $method));
             return false;
@@ -206,12 +201,12 @@ class MagentoController extends Controller
             $endereco = explode("\n", $order['shipping_address']['street']);
             $uf = array_search($order['shipping_address']['region'], \Config::get('core.estados_uf'));
 
-            $clienteEndereco->rua = (isset($endereco[0])) ? $endereco[0] : null;
-            $clienteEndereco->numero = (isset($endereco[1])) ? $endereco[1] : null;
-            $clienteEndereco->bairro = (isset($endereco[2])) ? $endereco[2] : null;
+            $clienteEndereco->rua         = (isset($endereco[0])) ? $endereco[0] : null;
+            $clienteEndereco->numero      = (isset($endereco[1])) ? $endereco[1] : null;
+            $clienteEndereco->bairro      = (isset($endereco[2])) ? $endereco[2] : null;
             $clienteEndereco->complemento = (isset($endereco[3])) ? $endereco[3] : null;
-            $clienteEndereco->cidade = $order['shipping_address']['city'];
-            $clienteEndereco->uf = $uf;
+            $clienteEndereco->cidade      = $order['shipping_address']['city'];
+            $clienteEndereco->uf          = $uf;
             if ($clienteEndereco->save()) {
                 Log::info("Endereço {$clienteEndereco->id} importado para o pedido " . $order['increment_id']);
             } else {
@@ -247,17 +242,17 @@ class MagentoController extends Controller
                 'codigo_marketplace'  => $order['increment_id']
             ]);
 
-            $pedido->cliente_id = $cliente->id;
+            $pedido->cliente_id          = $cliente->id;
             $pedido->cliente_endereco_id = $clienteEndereco->id;
-            $pedido->frete_valor = $order['shipping_amount'];
-            $pedido->frete_metodo = $this->parseShippingMethod($order['shipping_description']);
-            $pedido->pagamento_metodo = $this->parsePaymentMethod($order['payment']['method']);
+            $pedido->frete_valor         = $order['shipping_amount'];
+            $pedido->frete_metodo        = $this->parseShippingMethod($order['shipping_description']);
+            $pedido->pagamento_metodo    = $this->parsePaymentMethod($order['payment']['method']);
             $pedido->codigo_marketplace  = $order['increment_id'];
-            $pedido->codigo_api = $order['increment_id'];
-            $pedido->marketplace = 'Site';
-            $pedido->operacao = $operacao;
-            $pedido->total = $order['grand_total'];
-            $pedido->created_at = Carbon::createFromFormat('Y-m-d H:i:s', $order['created_at'])->subHours(3);
+            $pedido->codigo_api          = $order['increment_id'];
+            $pedido->marketplace         = 'Site';
+            $pedido->operacao            = $operacao;
+            $pedido->total               = $order['grand_total'];
+            $pedido->created_at          = Carbon::createFromFormat('Y-m-d H:i:s', $order['created_at'])->subHours(3);
 
             $pedido->status = $this->parseStatus((isset($order['state'])) ? $order['state'] : ((isset($order['status'])) ? $order['status'] : null));
 
@@ -414,10 +409,12 @@ class MagentoController extends Controller
                 throw new \Exception('Api ou sessão não iniciada', 1);
             }
 
-            $shipmentId = $request = $this->api->salesOrderShipmentCreate($this->session, $order->codigo_api);
+            $request = $this->api->salesOrderShipmentCreate($this->session, $order->codigo_api);
+            $shipmentId = $request;
+            Log::debug('$request', [$request]);
 
             $rastreio = $order->rastreios->first();
-            if ($rastreio) {
+            if ($rastreio && $rastreio->rastreio) {
                 $carrier = 'Correios - ' . $rastreio->servico;
 
                 // rastreio
@@ -650,8 +647,8 @@ class MagentoController extends Controller
                     'exclude'  => 0
                 ]);
             }
-        } catch (\Exception $e) {
-            dd($e);
+        } catch (\Exception $exception) {
+            Log::error(logMessage($exception, 'Não foi possível criar o produto no magento!'));
         }
     }
 }
