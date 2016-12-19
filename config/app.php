@@ -56,6 +56,7 @@ return [
         Jenssegers\Mongodb\MongodbServiceProvider::class,
         Nwidart\Modules\LaravelModulesServiceProvider::class,
         Spatie\Backup\BackupServiceProvider::class,
+        Spatie\FailedJobMonitor\FailedJobMonitorServiceProvider::class,
     ],
 
 
