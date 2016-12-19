@@ -16,6 +16,11 @@ try {
 
     // If found
     if ($mongoClient) {
+        try {
+            (new Dotenv\Dotenv(__DIR__.'/../'))->load();
+        } catch (\Exception $exception) {
+        }
+
         $db = env('MONGODB_DATABASE', 'meutucano');
         $mongoClient = new $mongoClient(
             'mongodb://' .
