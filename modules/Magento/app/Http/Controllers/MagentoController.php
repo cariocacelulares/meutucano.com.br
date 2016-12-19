@@ -409,6 +409,24 @@ class MagentoController extends Controller
                 throw new \Exception('Api ou sessão não iniciada', 1);
             }
 
+            $qty = [];
+            foreach ($order->produtos as $produto) {
+                $qty[] = [
+                    'order_item_id' => $produto->produto->sku,
+                    'qty' => $produto->quantidade
+                ];
+            }
+
+            // fatura
+            $request = $this->api->salesOrderInvoiceCreate(
+                $this->session,
+                $order->codigo_api, // increments do magento
+                $qty
+            );
+
+            Log::notice("Dados de nota atualizados do pedido {$order->id} / {$order->codigo_api} no Magento", [$request]);
+
+            // rastreio
             $shipmentId = $this->api->salesOrderShipmentCreate($this->session, $order->codigo_api);
 
             $rastreio = $order->rastreios->first();
@@ -425,22 +443,7 @@ class MagentoController extends Controller
                 );
             }
 
-            $qty = [];
-            foreach ($order->produtos as $produto) {
-                $qty[] = [
-                    'order_item_id' => $produto->produto->sku,
-                    'qty' => $produto->quantidade
-                ];
-            }
-
-            // fatura
-            $request = $this->api->salesOrderInvoiceCreate(
-                $this->session,
-                $order->codigo_api, // increments do magento
-                $qty
-            );
-
-            Log::notice("Dados de envio e nota fiscal atualizados do pedido {$order->id} / {$order->codigo_api} no Magento", [$shipmentId]);
+            Log::notice("Dados de envio atualizados do pedido {$order->id} / {$order->codigo_api} no Magento", [$shipmentId]);
         } catch (\Exception $e) {
             Log::critical(logMessage($e, 'Pedido não faturado no Magento'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);
             reportError('Pedido não faturado no Magento ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $order->id);
