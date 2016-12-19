@@ -409,9 +409,7 @@ class MagentoController extends Controller
                 throw new \Exception('Api ou sessão não iniciada', 1);
             }
 
-            $request = $this->api->salesOrderShipmentCreate($this->session, $order->codigo_api);
-            $shipmentId = $request;
-            Log::debug('$request', [$request]);
+            $shipmentId = $this->api->salesOrderShipmentCreate($this->session, $order->codigo_api);
 
             $rastreio = $order->rastreios->first();
             if ($rastreio && $rastreio->rastreio) {
@@ -444,10 +442,6 @@ class MagentoController extends Controller
 
             Log::notice("Dados de envio e nota fiscal atualizados do pedido {$order->id} / {$order->codigo_api} no Magento", [$shipmentId]);
         } catch (\Exception $e) {
-            if (isset($request)) {
-                Log::debug('$request', [$request]);
-            }
-
             Log::critical(logMessage($e, 'Pedido não faturado no Magento'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);
             reportError('Pedido não faturado no Magento ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $order->id);
         }
