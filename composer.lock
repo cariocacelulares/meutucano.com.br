@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d592378259cd779390902694a1181238",
-    "content-hash": "f900f734eb10c9bbbb5a51ab79512e39",
+    "hash": "afb0631be2021d01a7105ce11088729d",
+    "content-hash": "593c8827f7482c9cf3e3066dee675bfc",
     "packages": [
         {
             "name": "arcanedev/log-viewer",
@@ -72,16 +72,16 @@
         },
         {
             "name": "arcanedev/support",
-            "version": "3.19.0",
+            "version": "3.20.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ARCANEDEV/Support.git",
-                "reference": "6055b41702532a60c63cbc10451085cb7457dfdd"
+                "reference": "af3535cb2499599d05b99c7e7707501344a43915"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ARCANEDEV/Support/zipball/6055b41702532a60c63cbc10451085cb7457dfdd",
-                "reference": "6055b41702532a60c63cbc10451085cb7457dfdd",
+                "url": "https://api.github.com/repos/ARCANEDEV/Support/zipball/af3535cb2499599d05b99c7e7707501344a43915",
+                "reference": "af3535cb2499599d05b99c7e7707501344a43915",
                 "shasum": ""
             },
             "require": {
@@ -127,7 +127,7 @@
                 "laravel",
                 "support"
             ],
-            "time": "2016-12-07 20:04:32"
+            "time": "2016-12-18 19:50:26"
         },
         {
             "name": "aws/aws-sdk-php",
@@ -2862,6 +2862,64 @@
                 "spatie"
             ],
             "time": "2016-12-11 07:43:22"
+        },
+        {
+            "name": "spatie/laravel-failed-job-monitor",
+            "version": "2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-failed-job-monitor.git",
+                "reference": "f8311c64ad6041004d58f3d1da175235fb5a826f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-failed-job-monitor/zipball/f8311c64ad6041004d58f3d1da175235fb5a826f",
+                "reference": "f8311c64ad6041004d58f3d1da175235fb5a826f",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/notifications": "~5.3.8",
+                "illuminate/queue": "~5.3.8",
+                "php": "^7.0"
+            },
+            "require-dev": {
+                "laravel/framework": "~5.3.8",
+                "orchestra/testbench": "~3.3.1",
+                "phpunit/phpunit": "^5.5.4"
+            },
+            "suggest": {
+                "guzzlehttp/guzzle": "Allows notifications to be sent via Slack"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\FailedJobMonitor\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Get notified when a queued job fails",
+            "homepage": "https://github.com/spatie/laravel-failed-job-monitor",
+            "keywords": [
+                "job",
+                "laravel-failed-job-monitor",
+                "monitor",
+                "notify",
+                "queue",
+                "slack",
+                "spatie"
+            ],
+            "time": "2016-11-07 21:11:43"
         },
         {
             "name": "stavarengo/php-sigep",
