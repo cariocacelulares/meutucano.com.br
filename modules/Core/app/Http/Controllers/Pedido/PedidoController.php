@@ -276,25 +276,21 @@ class PedidoController extends Controller
         $m = self::MODEL;
 
         try {
-            $pedido = $m::where('codigo_marketplace', '=', $codigo_pedido)->first();
-
-            $infoReturn = [
-                'taxvat'      => $pedido->cliente->taxvat,
-                'nome'        => mb_strtolower(removeAcentos($pedido->cliente->nome)),
-                'email'       => removeAcentos($pedido->cliente->email),
-                'cep'         => removeAcentos($pedido->endereco->cep),
-                'telefone'    => numbers($pedido->cliente->fone),
-                'rua'         => removeAcentos($pedido->endereco->rua),
-                'numero'      => numbers($pedido->endereco->numero),
-                'bairro'      => removeAcentos($pedido->endereco->bairro),
-                'complemento' => removeAcentos($pedido->endereco->complemento),
-                'marketplace' => mb_strtolower($pedido->marketplace),
-                'pedido'      => $codigo_pedido,
-                'frete'       => $pedido->frete_valor
-            ];
-
-            if ($pedido) {
-                return $this->showResponse($infoReturn);
+            if ($pedido = $m::where('codigo_marketplace', '=', $codigo_pedido)->first()) {
+                return $this->showResponse([
+                    'taxvat'      => $pedido->cliente->taxvat,
+                    'nome'        => mb_strtolower(removeAcentos($pedido->cliente->nome)),
+                    'email'       => removeAcentos($pedido->cliente->email),
+                    'cep'         => removeAcentos($pedido->endereco->cep),
+                    'telefone'    => numbers($pedido->cliente->fone),
+                    'rua'         => removeAcentos($pedido->endereco->rua),
+                    'numero'      => numbers($pedido->endereco->numero),
+                    'bairro'      => removeAcentos($pedido->endereco->bairro),
+                    'complemento' => removeAcentos($pedido->endereco->complemento),
+                    'marketplace' => mb_strtolower($pedido->marketplace),
+                    'pedido'      => $codigo_pedido,
+                    'frete'       => $pedido->frete_valor
+                ]);
             }
         } catch (\Exception $e) {
             \Log::warning(logMessage($e, 'Não foi possível obter os dados do pedido para o shopsystem!'));

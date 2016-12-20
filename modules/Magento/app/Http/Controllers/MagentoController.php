@@ -71,6 +71,23 @@ class MagentoController extends Controller
     }
 
     /**
+     * Checa se tem acesso a api do magento
+     *
+     * @return void
+     */
+    public function checkApi()
+    {
+        if (env('APP_ENV') === 'testing')
+            return false;
+
+        if (!$this->api || !$this->session) {
+            throw new \Exception('Api/sessão não iniciada ou inválida', 1);
+        }
+
+        return true;
+    }
+
+    /**
      * Retorna o status conforme o state do Magento
      *
      * @param  string $status
@@ -376,11 +393,11 @@ class MagentoController extends Controller
      */
     public function cancelOrder($order)
     {
-        try {
-            if (!$this->api || !$this->session) {
-                throw new \Exception('Api ou sessão não iniciada', 1);
-            }
+        if (!$this->checkApi()) {
+            return null;
+        }
 
+        try {
             if (!$order->codigo_api) {
                 Log::warning("Não foi possível cancelar o pedido {$order->id} no Magento, pois o pedido não possui codigo_api válido");
             } else {
@@ -404,50 +421,90 @@ class MagentoController extends Controller
      */
     public function orderInvoice($order)
     {
+        if (!$this->checkApi()) {
+            return null;
+        }
+
+        $qty = [];
+        foreach ($order->produtos as $produto) {
+            $qty[] = [
+                'order_item_id' => $produto->produto->sku,
+                'qty' => $produto->quantidade
+            ];
+        }
+
+        $invoice = $this->createInvoice($order, $qty);
+        $shipment = $this->createShipment($order);
+
+        return ($invoice || $shipment);
+    }
+
+    /**
+     * Cria uma fatura no magento
+     *
+     * @param  Pedido $order
+     * @param  array $qty    quantidade e sku dos produtos
+     * @return boolean|null
+     */
+    protected function createInvoice(Pedido $order, $qty)
+    {
         try {
-            if (!$this->api || !$this->session) {
-                throw new \Exception('Api ou sessão não iniciada', 1);
-            }
-
-            $qty = [];
-            foreach ($order->produtos as $produto) {
-                $qty[] = [
-                    'order_item_id' => $produto->produto->sku,
-                    'qty' => $produto->quantidade
-                ];
-            }
-
-            // fatura
             $request = $this->api->salesOrderInvoiceCreate(
                 $this->session,
-                $order->codigo_api, // increments do magento
+                $order->codigo_api,
                 $qty
             );
 
-            Log::notice("Dados de nota atualizados do pedido {$order->id} / {$order->codigo_api} no Magento", [$request]);
+            if ($request) {
+                Log::notice("Dados de nota atualizados do pedido {$order->id} / {$order->codigo_api} no Magento", [$request]);
+                return true;
+            }
+        } catch (\Exception $e) {
+            Log::critical(logMessage($e, 'Pedido não faturado no Magento (nota)'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);
+            reportError('Pedido não faturado no Magento (nota) ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $order->id);
+            return false;
+        }
 
-            // rastreio
-            $shipmentId = $this->api->salesOrderShipmentCreate($this->session, $order->codigo_api);
+        return null;
+    }
 
+    /**
+     * Cria um rastreio no Magento
+     *
+     * @param  Pedido $order
+     * @return boolean|null
+     */
+    protected function createShipment(Pedido $order)
+    {
+        try {
+            $shipmentId = $this->api->salesOrderShipmentCreate(
+                $this->session,
+                $order->codigo_api
+            );
+
+            $request = null;
             $rastreio = $order->rastreios->first();
-            if ($rastreio && $rastreio->rastreio) {
-                $carrier = 'Correios - ' . $rastreio->servico;
-
-                // rastreio
+            if ($shipmentId && $rastreio && $rastreio->rastreio) {
                 $request = $this->api->salesOrderShipmentAddTrack(
                     $this->session,
-                    $shipmentId, // increments do magento
-                    'pedroteixeira_correios', // carrier code
-                    $carrier,
+                    $shipmentId,
+                    'pedroteixeira_correios',
+                    'Correios - ' . $rastreio->servico,
                     $rastreio->rastreio
                 );
             }
 
-            Log::notice("Dados de envio atualizados do pedido {$order->id} / {$order->codigo_api} no Magento", [$shipmentId]);
+            if ($shipmentId) {
+                Log::notice("Dados de envio atualizados do pedido {$order->id} / {$order->codigo_api} no Magento", [$shipmentId, $request]);
+                return true;
+            }
         } catch (\Exception $e) {
-            Log::critical(logMessage($e, 'Pedido não faturado no Magento'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);
-            reportError('Pedido não faturado no Magento ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $order->id);
+            Log::critical(logMessage($e, 'Pedido não faturado no Magento (rastreio)'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);
+            reportError('Pedido não faturado no Magento (rastreio) ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $order->id);
+            return false;
         }
+
+        return null;
     }
 
     /**
@@ -474,13 +531,13 @@ class MagentoController extends Controller
      */
     public function updateStock(Produto $product)
     {
+        if (!$this->checkApi()) {
+            return null;
+        }
+
         try {
             if (!$product || !$productSku = $product->sku) {
                 return $this->notFoundResponse();
-            }
-
-            if (!$this->api || !$this->session) {
-                throw new \Exception('Api ou sessão não iniciada', 1);
             }
 
             $stock = $this->api->catalogInventoryStockItemUpdate(
