@@ -234,7 +234,8 @@ class SkyhubController extends Controller
             $cliente->nome  = $order['customer']['name'];
             $cliente->email = (isset($order['channel'])
                                 && strtolower($order['channel']) == 'mercadolivre'
-                                && $order['customer']['email'])
+                                && $order['customer']['email']
+                                && strstr($order['customer']['email'], 'mail.mercadolivre.com') === false)
                                     ? $order['customer']['email']
                                     : null;
             $cliente->fone  = ($clienteFone)
