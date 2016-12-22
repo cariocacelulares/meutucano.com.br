@@ -14,7 +14,7 @@
             <i class="fa-tag"></i>&nbsp; Etiqueta
         </a>
         <a ng-if="NotaUpload.retorno[0].pedido.can_invoice" class="btn-primary"
-            ng-click="NotaUpload.pedidoHelper.faturar(NotaUpload.retorno[0].pedido.id)">
+            ng-click="NotaUpload.faturar(NotaUpload.retorno[0].pedido.id)">
             <i class="fa-check"></i>&nbsp; Faturar
         </a>
     </div>

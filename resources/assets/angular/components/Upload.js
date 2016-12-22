@@ -70,6 +70,12 @@
                                         };
 
                                         vm.load();
+
+                                        vm.faturar = function(id) {
+                                            $scope.closeThisDialog(true);
+                                            vm.pedidoHelper.faturar(id);
+                                            $state.go($state.current, {}, {reload: true});
+                                        }
                                     }
                                 })
                             }
