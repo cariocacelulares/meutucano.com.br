@@ -3,26 +3,11 @@
         <i class="fa-upload"></i>&nbsp; Upload
     </button>
 
-    <div ng-if="Upload.loading || Upload.errors.length || Upload.statusAberto" id="upload-wrapper">
+    <div ng-if="Upload.loading || Upload.statusAberto" id="upload-wrapper">
         <i class="fa-caret-up"></i>
-        <span class="title">{{ Upload.loading ? 'Importando notas' : 'Resultado da importação'}}</span>
+        <span class="title">Importando notas</span>
         <div class="progress">
             <div ng-if="Upload.loading" class="progress-bar-indeterminate progress-bar-complete"></div>
-        </div>
-        <div ng-if="!Upload.loading" class="feedback">
-            <div ng-if="Upload.resposta.success == Upload.resposta.total" class="list-item upload-success">
-                <small ng-if="Upload.resposta.success == 1"><i class="fa-check"></i>&nbsp; Nota importada com sucesso!</small>
-                <small ng-if="Upload.resposta.success != 1"><i class="fa-check"></i>&nbsp; {{ Upload.resposta.success }} notas foram importadas!</small>
-            </div>
-            <div ng-if="Upload.resposta.success != Upload.resposta.total" class="list-item upload-warning">
-                <small ng-if="Upload.resposta.total == 1"><i class="fa-exclamation-circle"></i>&nbsp; Erro ao importar a nota!</small>
-                <small ng-if="Upload.resposta.total != 1"><i class="fa-exclamation-circle"></i>&nbsp; {{ Upload.resposta.success }}  de  {{ Upload.resposta.total }} notas foram importadas!</small>
-            </div>
-            <div ng-repeat="error in Upload.resposta.errors" class="list-item upload-error">
-                <i ng-click="Upload.removeError(error)" class="fa-close"></i>
-                <p ng-if="error.chave" class="ellipsis bold"><i class="fa-exclamation-triangle"></i>&nbsp; <span clipboard supported="supported" text="error.chave">{{ error.chave }}</span></p>
-                <small ng-if="error.message">{{ error.message }}</small>
-            </div>
         </div>
     </div>
 </div>

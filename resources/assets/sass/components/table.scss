@@ -128,8 +128,10 @@
     background-color: transparent;
 
     &.small {
-        thead tr th:first-child {
-            padding-left: 0px !important;
+        &:not(.first-col-normal) {
+            thead tr th:first-child {
+                padding-left: 0px !important;
+            }
         }
 
         thead th {
