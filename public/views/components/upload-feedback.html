@@ -36,9 +36,8 @@
         <table class="table info-style small first-col-normal">
             <thead>
                 <tr>
-                    <th class="text-center">Arquivo</th>
-                    <th class="text-left">Erro / Aviso</th>
-                    <th class="text-center" style="min-width:120px">Pedido</th>
+                    <th class="text-center" style="padding-left:5px!important">Arquivo</th>
+                    <th class="text-left" style="min-width:120px">Pedido / Mensagem</th>
                     <th class="text-left">Cliente</th>
                     <th class="text-left" width="120"></th>
                 </tr>
@@ -51,8 +50,7 @@
                         </span>
                     </td>
                     <td ng-if="retorno.error && !retorno.pedido.id" colspan="50" class="text-left p-l-0">{{ retorno.message }}</td>
-                    <td ng-if="retorno.error && retorno.pedido.id" class="text-left p-l-0">{{ retorno.message }}</td>
-                    <td ng-if="!retorno.error && retorno.pedido.id" class="text-center" colspan="{{ (retorno.error && retorno.pedido.id) ? '1' : '2' }}">
+                    <td ng-if="!retorno.error && retorno.pedido.id" class="text-center">
                         <a ui-sref="app.pedidos.detalhe({id: retorno.pedido.id})" target="_blank">
                             {{ retorno.pedido.codigo_marketplace || retorno.pedido.id }}
                         </a>
