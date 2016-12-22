@@ -2,7 +2,6 @@
 
 use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
-use Core\Models\Pedido\Pedido;
 use App\Models\Usuario\Usuario;
 use Core\Models\Pedido\Nota;
 
@@ -20,7 +19,6 @@ class Devolucao extends \Eloquent
      * @var array
      */
     protected $fillable = [
-        'pedido_id',
         'nota_id',
         'chave',
         'arquivo',
@@ -32,20 +30,8 @@ class Devolucao extends \Eloquent
      * @var array
      */
     protected $appends = [
-        'numero',
-        'serie',
         'tipo_readable'
     ];
-
-    /**
-     * Pedido
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
-     */
-    public function pedido()
-    {
-        return $this->belongsTo(Pedido::class);
-    }
 
     /**
      * Nota
@@ -55,26 +41,6 @@ class Devolucao extends \Eloquent
     public function nota()
     {
         return $this->belongsTo(Nota::class);
-    }
-
-    /**
-     * Return numero attribute
-     *
-     * @return string
-     */
-    public function getNumeroAttribute()
-    {
-        return (int) (substr($this->chave, 25, 9)) ?: $this->pedido_id;
-    }
-
-    /**
-     * Return serie attribute
-     *
-     * @return string
-     */
-    public function getSerieAttribute()
-    {
-        return (substr($this->pedido_id, -1)) ?: 1;
     }
 
     /**
