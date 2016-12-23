@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Core\Models\Pedido\Pedido;
+use Sofa\Eloquence\Eloquence;
 
 /**
  * Class Cliente
@@ -9,6 +10,8 @@ use Core\Models\Pedido\Pedido;
  */
 class Cliente extends \Eloquent
 {
+    use Eloquence;
+
     /**
      * @var array
      */

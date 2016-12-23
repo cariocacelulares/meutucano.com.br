@@ -17,16 +17,34 @@ class SearchController extends Controller
     use RestResponseTrait;
 
     /**
-     * Busca pedidos no sistema
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * Organiza as categorias passadas como string para ArrayAccess
+     * 
+     * @param  string $categories
+     * @return array
      */
-    public function search()
+    private function parseCategories($categories)
     {
-        $term = Input::get('term');
-        $busca = [];
+        $return = [];
+        $categories = explode(',', $categories);
 
-        $busca['pedidos'] = Pedido
+        foreach ($categories as $category) {
+            if ($category) {
+                $return[] = $category;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * Busca comum de pedido, sem eloquence
+     *
+     * @param  string $term
+     * @return Object
+     */
+    private function orders($term)
+    {
+        return Pedido
             ::with([
                 'rastreios',
                 'rastreios.pi',
@@ -35,43 +53,154 @@ class SearchController extends Controller
                 'cliente',
                 'notas'
             ])
-            ->leftJoin('pedido_notas', 'pedidos.id', '=', 'pedido_notas.pedido_id')
-            ->leftJoin('pedido_rastreios', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
+            ->leftJoin('pedido_notas',        'pedidos.id',          '=', 'pedido_notas.pedido_id')
+            ->leftJoin('pedido_rastreios',    'pedidos.id',          '=', 'pedido_rastreios.pedido_id')
             ->leftJoin('pedido_rastreio_pis', 'pedido_rastreios.id', '=', 'pedido_rastreio_pis.rastreio_id')
-            ->orWhere('pedidos.id', '=', numbers($term))
-            ->orWhere('pedidos.codigo_marketplace', 'LIKE', '%' . $term . '%')
-            ->orWhere('pedidos.codigo_api', 'LIKE', '%' . $term . '%')
-            ->orWhere('pedido_rastreios.rastreio', 'LIKE', '%' . $term . '%')
-            ->orWhere('pedido_notas.chave', 'LIKE', '%' . $term . '%')
-            ->orWhere('pedido_rastreio_pis.codigo_pi', 'LIKE', '%' . $term . '%')
+            ->orWhere('pedidos.id',                    '=',    numbers($term))
+            ->orWhere('pedidos.codigo_marketplace',    'LIKE', "&{$term}&")
+            ->orWhere('pedidos.codigo_api',            'LIKE', "&{$term}&")
+            ->orWhere('pedido_rastreios.rastreio',     'LIKE', "&{$term}&")
+            ->orWhere('pedido_notas.chave',            'LIKE', "&{$term}&")
+            ->orWhere('pedido_rastreio_pis.codigo_pi', 'LIKE', "&{$term}&")
             ->groupBy('pedidos.id')
-            ->orderBy('pedidos.created_at', 'DESC')
-            ->get([
-                'pedidos.*'
-            ]);
+            ->orderBy('pedidos.created_at', 'DESC');
+    }
 
-        $busca['produtos'] = Produto
-            ::where('sku', 'LIKE', '%' . $term . '%')
-            ->orWhere('titulo', 'LIKE', '%' . $term . '%')
-            ->orWhere('ncm', 'LIKE', '%' . $term . '%')
-            ->orWhere('ean', 'LIKE', '%' . $term . '%')
-            ->orWhere('referencia', 'LIKE', '%' . $term . '%')
-            ->groupBy('sku')
-            ->orderBy('titulo', 'ASC')
-            ->get();
-
-        $busca['clientes'] = Cliente
+    /**
+     * Busca comum de cliente, sem eloquence
+     *
+     * @param  string $term
+     * @return Object
+     */
+    private function customers($term)
+    {
+        return Cliente
             ::with(['enderecos' => function ($query) {
                 $query->orderBy('created_at', 'DESC')->take(1);
             }])
-            ->orWhere('taxvat', 'LIKE', '%' . $term . '%')
-            ->orWhere('inscricao', 'LIKE', '%' . $term . '%')
-            ->orWhere('nome', 'LIKE', '%' . $term . '%')
-            ->orWhere('fone', 'LIKE', '%' . $term . '%')
-            ->orWhere('email', 'LIKE', '%' . $term . '%')
+            ->orWhere('taxvat',    'LIKE', "&{$term}&")
+            ->orWhere('inscricao', 'LIKE', "&{$term}&")
+            ->orWhere('nome',      'LIKE', "&{$term}&")
+            ->orWhere('fone',      'LIKE', "&{$term}&")
+            ->orWhere('email',     'LIKE', "&{$term}&")
             ->groupBy('id')
-            ->orderBy('nome', 'ASC')
-            ->get();
+            ->orderBy('nome', 'ASC');
+    }
+
+    /**
+     * Busca comum de produto, sem eloquence
+     *
+     * @param  string $term
+     * @return Object
+     */
+    private function products($term)
+    {
+        return Produto
+            ::where('sku',          'LIKE', "&{$term}&")
+            ->orWhere('titulo',     'LIKE', "&{$term}&")
+            ->orWhere('ncm',        'LIKE', "&{$term}&")
+            ->orWhere('ean',        'LIKE', "&{$term}&")
+            ->orWhere('referencia', 'LIKE', "&{$term}&")
+            ->groupBy('sku')
+            ->orderBy('titulo', 'ASC');
+    }
+
+    /**
+     * Organiza os termos separando por espaço
+     *
+     * @param  string $term     termo pesquisado
+     * @return array|string     termo organizado com wildcards
+     */
+    private function wildcard($term)
+    {
+        $return = [];
+        $parts = explode(' ', $term);
+
+        foreach ($parts as $key => $part) {
+            if ($key === 0) {
+                $return[] = "{$part}*";
+            } elseif ($key === (count($parts) - 1)) {
+                $return[] = "*{$part}";
+            } else {
+                $return[] = "*{$part}*";
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * Busca pedidos, produtos e clientes no sistema
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function search()
+    {
+        $limit      = Input::get('limit')  ?: 9;
+        $offset     = Input::get('offset') ?: 0;
+        $term       = trim(Input::get('term'));
+        $termArray  = (strstr($term, ' ')) ? $this->wildcard($term) : $term;
+        $busca      = [
+            'pedidos'  => [],
+            'clientes' => [],
+            'produtos' => [],
+            'offset'   => 0,
+        ];
+
+        try {
+            $categories = $this->parseCategories(Input::get('categories'));
+
+            if (!$categories || empty($categories)) {
+                return $this->listResponse($busca);
+            }
+
+            if (in_array('pedidos', $categories)) {
+                $busca['pedidos'] = $this->orders($term)
+                    ->offset($offset)
+                    ->limit($limit)
+                    ->get([
+                        'pedidos.*'
+                    ]);
+            }
+
+            if (in_array('clientes', $categories)) {
+                $busca['clientes'] = Cliente
+                    ::with(['enderecos' => function ($query) {
+                        $query->orderBy('created_at', 'DESC')->take(1);
+                    }])
+                    ->search($termArray, [
+                        'nome'      => 100,
+                        'taxvat'    => 75,
+                        'email'     => 50,
+                        'inscricao' => 25,
+                    ])
+                    ->groupBy('id')
+                    ->orderBy('nome', 'ASC')
+                    ->offset($offset)
+                    ->limit($limit)
+                    ->get();
+            }
+
+            if (in_array('produtos', $categories)) {
+                $busca['clientes'] = Produto
+                    ::search($termArray, [
+                        'sku'        => 125,
+                        'titulo'     => 100,
+                        'ncm'        => 75,
+                        'ean'        => 50,
+                        'referencia' => 25,
+                    ])
+                    ->groupBy('sku')
+                    ->orderBy('titulo', 'ASC')
+                    ->offset($offset)
+                    ->limit($limit)
+                    ->get();
+            }
+
+            $busca['offset'] = $offset;
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Ocorreu um erro ao tentar realizar um busca.'));
+        }
 
         return $this->listResponse($busca);
     }

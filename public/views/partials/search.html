@@ -11,6 +11,20 @@
                 <div class="form-group">
                     <input ng-close="Search.close()" type="text" ng-model="Search.term" ng-model-options="{debounce: 1000}" ng-change="Search.load()" id="searchInput" class="no-border overlay-search bg-transparent" placeholder="Buscar..." autocomplete="off" ng-minlength="2" required>
                 </div>
+                <div class="categories">
+                    <a ng-click="Search.toggleCategory('pedidos')" ng-class="{ 'active': Search.categories.pedidos }" class="btn-default m-b-20">
+                        <i class="fa-cubes"></i>
+                        <span>Pedidos</span>
+                    </a>
+                    <a ng-click="Search.toggleCategory('clientes')" ng-class="{ 'active': Search.categories.clientes }" class="btn-default">
+                        <i class="fa-user"></i>
+                        <span>Clientes</span>
+                    </a>
+                    <a ng-click="Search.toggleCategory('produtos')" ng-class="{ 'active': Search.categories.produtos }" class="btn-default">
+                        <i class="fa-mobile"></i>
+                        <span>Produtos</span>
+                    </a>
+                </div>
             </form>
         </div>
         <div  ng-if="Search.loading" class="container-fluid">
@@ -19,7 +33,10 @@
             </div>
         </div>
         <div class="container-fluid">
-            <div class="row">
+            <div ng-if="Search.noResults === true" class="row">
+                <p class="text-center fz-16">Nenhum resultado foi encontrado :\</p>
+            </div>
+            <div ng-if="Search.categories.pedidos" class="row">
                 <div ng-repeat="pedido in Search.data.pedidos" class="col-md-4 m-b-20">
                     <div class="panel-info">
                         <div class="panel-heading">
@@ -68,7 +85,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div ng-if="Search.categories.clientes" class="row">
                 <div ng-repeat="cliente in Search.data.clientes" class="col-md-4 m-b-20">
                     <div class="panel-complete">
                         <div class="panel-heading">
@@ -103,7 +120,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div ng-if="Search.categories.produtos" class="row">
                 <div ng-repeat="produto in Search.data.produtos" class="col-md-4 m-b-20">
                     <div class="panel-primary">
                         <div class="panel-heading">
@@ -132,6 +149,11 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div ng-if="!Search.loading && Search.hasMore" class="container-fluid text-center">
+            <a ng-click="Search.more()" class="btn-info m-b-20">
+                <i class="fa-plus"></i>&nbsp; Carregar mais
+            </a>
         </div>
     </div>
 </div>

@@ -5,6 +5,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Core\Models\Produto\Linha\Atributo;
 use Core\Events\ProductStockUpdated;
+use Sofa\Eloquence\Eloquence;
 
 /**
  * Class Produto
@@ -12,7 +13,7 @@ use Core\Events\ProductStockUpdated;
  */
 class Produto extends Model
 {
-    use RevisionableTrait;
+    use RevisionableTrait, Eloquence;
 
     /**
      * @var boolean
