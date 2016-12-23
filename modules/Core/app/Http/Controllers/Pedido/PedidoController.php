@@ -236,9 +236,12 @@ class PedidoController extends Controller
                 $dataPedido = Carbon::createFromFormat('d/m/Y H:i', $pedido->created_at)->format('d/m/Y');
                 $diasUteis = diasUteisPeriodo($dataPedido, date('d/m/Y'), true);
 
-                if (strtolower($pedido->marketplace) == 'site' && $diasUteis > Config::get('magento.old_order')) {
-                    $pedido->status = 5;
-                    $pedido->save();
+                if (strtolower($pedido->marketplace) == 'site') {
+                    if (($pedido->pagamento_metodo == 'boleto' && $diasUteis > Config::get('magento.old_order.boleto'))
+                        || ($pedido->pagamento_metodo == 'credito' && $diasUteis > Config::get('magento.old_order.credito'))) {
+                        $pedido->status = 5;
+                        $pedido->save();
+                    }
                 }
             } catch (\Exception $e) {
                 Log::error(logMessage($e, 'Não foi possível cancelar o pedido na Integração'));
