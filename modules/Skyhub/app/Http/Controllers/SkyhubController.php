@@ -531,6 +531,14 @@ class SkyhubController extends Controller
         return Carbon::createFromFormat('d/m/Y', $prazo)->format('Y-m-d');
     }
 
+    /**
+     * Formata a estimativa de entrega ou calcula eio_fallocate
+     * 
+     * @param  string $estimatedDelivery
+     * @param  string $freteMetodo
+     * @param  string $cep
+     * @return string
+     */
     public function parseEstimatedDelivery($estimatedDelivery, $freteMetodo, $cep)
     {
         $data = $estimatedDelivery;
