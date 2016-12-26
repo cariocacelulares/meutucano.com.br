@@ -9,7 +9,7 @@
         <div class="container-fluid">
             <form id="search" novalidate>
                 <div class="form-group">
-                    <input ng-close="Search.close()" type="text" ng-model="Search.term" ng-model-options="{debounce: 1000}" ng-change="Search.load()" id="searchInput" class="no-border overlay-search bg-transparent" placeholder="Buscar..." autocomplete="off" ng-minlength="2" required>
+                    <input ng-close="Search.close()" type="text" ng-model="Search.term" ng-model-options="{debounce: 1000}" ng-change="Search.search()" id="searchInput" class="no-border overlay-search bg-transparent" placeholder="Buscar..." autocomplete="off" ng-minlength="2" required>
                 </div>
                 <div class="categories">
                     <a ng-click="Search.toggleCategory('pedidos')" ng-class="{ 'active': Search.categories.pedidos }" class="btn-default m-b-20">

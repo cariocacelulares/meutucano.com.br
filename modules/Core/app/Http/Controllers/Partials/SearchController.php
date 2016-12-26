@@ -18,7 +18,7 @@ class SearchController extends Controller
 
     /**
      * Organiza as categorias passadas como string para ArrayAccess
-     * 
+     *
      * @param  string $categories
      * @return array
      */
@@ -165,9 +165,7 @@ class SearchController extends Controller
 
             if (in_array('clientes', $categories)) {
                 $busca['clientes'] = Cliente
-                    ::with(['enderecos' => function ($query) {
-                        $query->orderBy('created_at', 'DESC')->take(1);
-                    }])
+                    ::with('enderecos')
                     ->search($termArray, [
                         'nome'      => 100,
                         'taxvat'    => 75,
@@ -182,7 +180,7 @@ class SearchController extends Controller
             }
 
             if (in_array('produtos', $categories)) {
-                $busca['clientes'] = Produto
+                $busca['produtos'] = Produto
                     ::search($termArray, [
                         'sku'        => 125,
                         'titulo'     => 100,

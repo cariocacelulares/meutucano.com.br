@@ -27,34 +27,42 @@
          */
         vm.pedidoHelper = PedidoHelper;
 
-        vm.noResults = false;
-        vm.term      = null;
-        vm.prevTerm  = null;
-        vm.loading   = false;
-        vm.hasMore   = false;
-        vm.nLoads    = 0;
+        vm.noResults      = false;
+        vm.term           = null;
+        vm.prevTerm       = null;
+        vm.loading        = false;
+        vm.hasMore        = false;
+        vm.nSearch        = 0;
+        vm.categories     = {};
+        vm.prevCategories = {};
+        vm.data           = {};
 
-        vm.categories = {
-            pedidos : true,
-            clientes: false,
-            produtos: false
-        };
-        vm.prevCategories = vm.categories;
+        vm.load = function() {
+            var lsCategories = localStorage.getItem('search.categories');
+            vm.categories = (lsCategories) ? JSON.parse(lsCategories) : {
+                pedidos : true,
+                clientes: false,
+                produtos: false
+            };
+            vm.prevCategories = vm.categories;
 
-        vm.data = {
-            pedidos  : [],
-            produtos : [],
-            clientes : []
-        };
+            vm.data = {
+                pedidos  : [],
+                produtos : [],
+                clientes : []
+            };
+        }
+
+        vm.load();
 
         /**
          * Ativa/desativa categorias
-         * @param  {string} category 
+         * @param  {string} category
          * @return {void}
          */
         vm.toggleCategory = function(category) {
             vm.categories[category] = ! vm.categories[category];
-            vm.load();
+            vm.search();
         }
 
         /**
@@ -75,21 +83,14 @@
          */
         vm.checkUpdates = function() {
             if (vm.term !== vm.prevTerm) {
-                vm.nLoads = 0;
+                vm.nSearch = 0;
             }
             vm.prevTerm = vm.term;
 
-            vm.checkUpdates = function() {
-                if (vm.term !== vm.prevTerm) {
-                    vm.nLoads = 0;
-                }
-                vm.prevTerm = vm.term;
-
-                if (vm.categories !== vm.prevCategories) {
-                    vm.nLoads = 0;
-                }
-                vm.prevCategories = vm.categories;
+            if (vm.categories !== vm.prevCategories) {
+                vm.nSearch = 0;
             }
+            vm.prevCategories = vm.categories;
         };
 
         /**
@@ -97,7 +98,7 @@
          * @param  {bool} more
          * @return {void}
          */
-        vm.load = function(more) {
+        vm.search = function(more) {
             more = (typeof more === 'undefined' || !more) ? false : true;
 
             if (typeof vm.term !== 'undefined' && vm.term && vm.term.length > 2) {
@@ -111,6 +112,7 @@
                     };
                 }
 
+                localStorage.setItem('search.categories', JSON.stringify(vm.categories));
                 var categories = '';
                 for (var key in vm.categories) {
                     if (vm.categories[key]) {
@@ -123,7 +125,7 @@
                 Restangular.one('search').get({
                     categories: categories,
                     term      : vm.term,
-                    offset    : vm.nLoads * limit
+                    offset    : vm.nSearch * limit
                  }).then(function(data) {
                     vm.loading = false;
                     vm.hasMore = true;
@@ -158,8 +160,8 @@
          * @return {void}
          */
         vm.more = function() {
-            vm.nLoads++;
-            vm.load(true);
+            vm.nSearch++;
+            vm.search(true);
         };
 
         /**
@@ -170,7 +172,8 @@
             $rootScope.$broadcast('closeSearch');
             vm.term     = null;
             vm.prevTerm = null;
-            vm.nLoads   = 0;
+            vm.nSearch  = 0;
+            vm.data     = {};
         };
     }
 })();
