@@ -57,6 +57,7 @@ return [
         Nwidart\Modules\LaravelModulesServiceProvider::class,
         Spatie\Backup\BackupServiceProvider::class,
         Spatie\FailedJobMonitor\FailedJobMonitorServiceProvider::class,
+        Sofa\Eloquence\ServiceProvider::class
     ],
 
 

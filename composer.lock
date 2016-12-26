@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "afb0631be2021d01a7105ce11088729d",
-    "content-hash": "593c8827f7482c9cf3e3066dee675bfc",
+    "hash": "4ebf3b583caa885dad7029de10543d11",
+    "content-hash": "fa92465b91e02617ff6eaf8597cb37e1",
     "packages": [
         {
             "name": "arcanedev/log-viewer",
@@ -131,16 +131,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.20.10",
+            "version": "3.20.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "68dcc63ec43d3e1d4fdf51e97f70f062009af6a6"
+                "reference": "39d122b903813da2f53312fd3146acaa83a6d9f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/68dcc63ec43d3e1d4fdf51e97f70f062009af6a6",
-                "reference": "68dcc63ec43d3e1d4fdf51e97f70f062009af6a6",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/39d122b903813da2f53312fd3146acaa83a6d9f6",
+                "reference": "39d122b903813da2f53312fd3146acaa83a6d9f6",
                 "shasum": ""
             },
             "require": {
@@ -207,7 +207,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2016-12-22 01:03:54"
+            "time": "2016-12-22 20:47:16"
         },
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -2643,6 +2643,108 @@
             "time": "2016-09-30 07:13:57"
         },
         {
+            "name": "sofa/eloquence",
+            "version": "v5.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jarektkaczyk/eloquence.git",
+                "reference": "b19ee7a40a66d9d6655af9869060456b508ed5e5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jarektkaczyk/eloquence/zipball/b19ee7a40a66d9d6655af9869060456b508ed5e5",
+                "reference": "b19ee7a40a66d9d6655af9869060456b508ed5e5",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "5.3.*",
+                "php": ">=5.6.4",
+                "sofa/hookable": "5.3.*"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.4",
+                "phpunit/phpunit": "4.5.0",
+                "squizlabs/php_codesniffer": "2.3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sofa\\Eloquence\\": "src"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jarek Tkaczyk",
+                    "email": "jarek@softonsofa.com",
+                    "homepage": "http://softonsofa.com/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Flexible Searchable, Mappable, Metable, Validation and more extensions for Laravel Eloquent ORM.",
+            "keywords": [
+                "eloquent",
+                "laravel",
+                "mappable",
+                "metable",
+                "mutable",
+                "searchable"
+            ],
+            "time": "2016-09-01 15:44:48"
+        },
+        {
+            "name": "sofa/hookable",
+            "version": "V5.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jarektkaczyk/hookable.git",
+                "reference": "a6f0753f3e404287700c8418c30adf0f4f226c65"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jarektkaczyk/hookable/zipball/a6f0753f3e404287700c8418c30adf0f4f226c65",
+                "reference": "a6f0753f3e404287700c8418c30adf0f4f226c65",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "5.3.*",
+                "php": ">=5.6.4"
+            },
+            "require-dev": {
+                "crysalead/kahlan": "~1.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sofa\\Hookable\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jarek Tkaczyk",
+                    "email": "jarek@softonsofa.com",
+                    "homepage": "http://softonsofa.com/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Laravel Eloquent hooks system.",
+            "keywords": [
+                "eloquent",
+                "laravel"
+            ],
+            "time": "2016-08-26 13:37:29"
+        },
+        {
             "name": "soundasleep/html2text",
             "version": "0.3.4",
             "source": {
@@ -5073,16 +5175,16 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "0.9.6",
+            "version": "0.9.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/padraic/mockery.git",
-                "reference": "65d4ca18e15cb02eeb1e5336f884e46b9b905be0"
+                "reference": "4de7969f4664da3cef1ccd83866c9f59378c3371"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/65d4ca18e15cb02eeb1e5336f884e46b9b905be0",
-                "reference": "65d4ca18e15cb02eeb1e5336f884e46b9b905be0",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/4de7969f4664da3cef1ccd83866c9f59378c3371",
+                "reference": "4de7969f4664da3cef1ccd83866c9f59378c3371",
                 "shasum": ""
             },
             "require": {
@@ -5134,7 +5236,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2016-09-30 12:09:40"
+            "time": "2016-12-19 14:50:55"
         },
         {
             "name": "myclabs/deep-copy",
@@ -5184,12 +5286,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-vcr/php-vcr.git",
-                "reference": "89b51ee6eaa1970e9a9f84f54337927e51ba6b39"
+                "reference": "3ef8ab7e3b6549a044d2d37ad95749174bafbdab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-vcr/php-vcr/zipball/89b51ee6eaa1970e9a9f84f54337927e51ba6b39",
-                "reference": "89b51ee6eaa1970e9a9f84f54337927e51ba6b39",
+                "url": "https://api.github.com/repos/php-vcr/php-vcr/zipball/3ef8ab7e3b6549a044d2d37ad95749174bafbdab",
+                "reference": "3ef8ab7e3b6549a044d2d37ad95749174bafbdab",
                 "shasum": ""
             },
             "require": {
@@ -5227,7 +5329,7 @@
                 }
             ],
             "description": "Record your test suite's HTTP interactions and replay them during future test runs for fast, deterministic, accurate tests.",
-            "time": "2016-12-09 17:55:24"
+            "time": "2016-12-23 13:28:14"
         },
         {
             "name": "php-vcr/phpunit-testlistener-vcr",
