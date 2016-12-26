@@ -81,7 +81,6 @@ class ProdutoController extends Controller
         $data = $m::find($id);
 
         $pedidoProdutos = PedidoProduto
-            // ::select('pedidos.status', 'pedidos.codigo_marketplace', 'pedidos.marketplace', 'quantidade', 'valor')
             ::with('pedido')
             ->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
             ->where('produto_sku', '=', $data->sku)
