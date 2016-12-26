@@ -81,17 +81,31 @@ class ProdutoController extends Controller
         $data = $m::find($id);
 
         $pedidoProdutos = PedidoProduto
-             ::select('pedidos.status', DB::raw('COUNT(*) as count'))
+            ::with('pedido')
             ->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
             ->where('produto_sku', '=', $data->sku)
             ->whereIn('pedidos.status', [0,1])
-            ->groupBy('pedidos.status')
+            ->orderBy('pedidos.status', 'ASC')
             ->get()
             ->toArray();
 
         $attachedProducts = [];
         foreach ($pedidoProdutos as $pedidoProduto) {
-            $attachedProducts[$pedidoProduto['status']] = $pedidoProduto['count'];
+            if (!isset($attachedProducts[$pedidoProduto['status']])) {
+                $attachedProducts[$pedidoProduto['status']] = 1;
+            } else {
+                $attachedProducts[$pedidoProduto['status']]++;
+            }
+
+            $attachedProducts['data'][] = [
+                'id'                 => $pedidoProduto['pedido']['id'],
+                'status'             => $pedidoProduto['pedido']['status'],
+                'status_description' => $pedidoProduto['pedido']['status_description'],
+                'codigo_marketplace' => $pedidoProduto['pedido']['codigo_marketplace'],
+                'marketplace'        => $pedidoProduto['pedido']['marketplace'],
+                'quantidade'         => $pedidoProduto['quantidade'],
+                'valor'              => $pedidoProduto['valor'],
+            ];
         }
 
         $data->attachedProducts = $attachedProducts;
@@ -103,7 +117,7 @@ class ProdutoController extends Controller
                 ->whereNotNull('revisado_at')
                 ->get(['id']);
 
-            $data->revisoes = $revisoes ?: false;
+            $data->revisoes = $revisoes ?: [];
 
             return $this->showResponse($data);
         }

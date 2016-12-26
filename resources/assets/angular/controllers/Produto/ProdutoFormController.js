@@ -5,28 +5,30 @@
         .module('MeuTucano')
         .controller('ProdutoFormController', ProdutoFormController);
 
-    function ProdutoFormController($state, $stateParams, SweetAlert, toaster, TabsHelper, Produto, Linha, Marca, Atributo) {
-        var vm = this;
+    function ProdutoFormController($state, $stateParams, SweetAlert, toaster, TabsHelper, PedidoHelper, Produto, Linha, Marca, Atributo) {
+        var vm       = this;
         var original = {
             linha_id: null,
-            attrs: null
+            attrs   : null
         };
 
         vm.produto = {
-            sku: $stateParams.sku || null,
+            sku    : $stateParams.sku || null,
             unidade: 'un',
-            ativo: '1',
-            estado: '0'
+            ativo  : '1',
+            estado : '0'
         };
 
         vm.sku = {
             original: vm.produto.sku,
-            gerado: false
+            gerado  : false
         };
 
-        vm.tabsHelper = TabsHelper;
         vm.linhas = {};
         vm.marcas = {};
+
+        vm.tabsHelper   = TabsHelper;
+        vm.pedidoHelper = PedidoHelper;
 
         vm.load = function() {
             vm.loading = true;

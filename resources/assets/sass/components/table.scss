@@ -159,6 +159,29 @@
         }
     }
 
+    &.table-scroll {
+        thead,
+        tbody,
+        tr {
+            display:table;
+            width:100%;
+            table-layout:fixed;
+        }
+
+        tbody {
+            display: block;
+            overflow-y: overlay;
+        }
+    }
+
+    &.no-padding {
+        thead tr th,
+        tbody tr td {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+    }
+
     .loading,
     .loading * {
         text-align: center !important;
