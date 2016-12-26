@@ -17,7 +17,7 @@ class SearchController extends Controller
     use RestResponseTrait;
 
     /**
-     * Organiza as categorias passadas como string para ArrayAccess
+     * Organiza as categorias passadas como string para array
      *
      * @param  string $categories
      * @return array
