@@ -8,6 +8,8 @@
     function FaturamentoListController(toaster, Filter, Pedido, TableHeader, RastreioHelper, NotaHelper, PedidoHelper, ComentarioHelper, $rootScope) {
         var vm = this;
 
+        vm.tableData = [];
+
         /**
          * @type {Object}
          */
@@ -38,6 +40,10 @@
             'pedido_rastreios.rastreio':  'LIKE'
         });
 
+        vm.roundFloat = function(number) {
+            return parseFloat(parseFloat(number).toFixed(2));
+        }
+
         /**
          * Cabeçalho da tabela
          * @type {TableHeader}
@@ -53,10 +59,31 @@
                 page:     vm.tableHeader.pagination.page,
                 per_page: vm.tableHeader.pagination.per_page
             }).then(function(response) {
-                vm.tableData = response;
+                var total = 0;
+                vm.tableData.data = [];
+                for (var k in response.data) {
+                    total = 0;
+                    response.data[k].desconto = false;
+
+                    for (var i in response.data[k].produtos) {
+                        total =+ response.data[k].produtos[i].total * response.data[k].produtos[i].quantidade;
+                    }
+
+                    total = parseFloat(parseFloat(total).toFixed(2));
+                    response.data[k].total = vm.roundFloat(response.data[k].total);
+                    response.data[k].frete_valor = vm.roundFloat(response.data[k].frete_valor);
+
+                    if (vm.roundFloat(response.data[k].total - response.data[k].frete_valor) != total) {
+                        response.data[k].desconto = Math.round(100 - ((vm.roundFloat(response.data[k].total - response.data[k].frete_valor) * 100) / total));
+                    }
+
+                    vm.tableData.data.push(response.data[k]);
+                }
+
                 vm.loading   = false;
             });
         };
+
         vm.load();
 
         $rootScope.$on('upload', function() {
