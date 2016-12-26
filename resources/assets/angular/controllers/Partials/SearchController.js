@@ -174,6 +174,7 @@
             vm.prevTerm = null;
             vm.nSearch  = 0;
             vm.data     = {};
+            vm.hasMore  = false;
         };
     }
 })();
