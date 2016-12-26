@@ -39,7 +39,7 @@
                 </div>
             </div>
         </tab>
-        <tab ng-if="ProdutoForm.produto.estado == '1'" name="produtosRevisados" title="Itens Revisados">
+        <tab ng-if="ProdutoForm.produto.revisoes.length" name="produtosRevisados" title="Itens Revisados">
             <div ng-if="ProdutoForm.produto.revisoes">
                 <p class="m-b-30">Os códigos de inspeção abaixo já foram revisados e estão aguardando um pedido ({{ ProdutoForm.produto.revisoes.length }})</p>
                 <span ng-repeat="revisao in ProdutoForm.produto.revisoes" class="col-md-3 fz-15 m-b-10 text-center">{{ revisao.id }}</span>

@@ -118,7 +118,7 @@ class ProdutoController extends Controller
                 ->whereNotNull('revisado_at')
                 ->get(['id']);
 
-            $data->revisoes = $revisoes ?: false;
+            $data->revisoes = $revisoes ?: [];
 
             return $this->showResponse($data);
         }
