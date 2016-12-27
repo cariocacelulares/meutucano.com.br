@@ -59,33 +59,7 @@
                 page:     vm.tableHeader.pagination.page,
                 per_page: vm.tableHeader.pagination.per_page
             }).then(function(response) {
-                var total     = 0;
-                var tableData = {};
-                tableData     = response;
-                var rows      = [];
-
-                for (var k in response.data) {
-                    total = 0;
-                    response.data[k].desconto = false;
-
-                    for (var i in response.data[k].produtos) {
-                        total =+ response.data[k].produtos[i].total;
-                    }
-
-                    total = parseFloat(parseFloat(total).toFixed(2));
-                    response.data[k].total = vm.roundFloat(response.data[k].total);
-                    response.data[k].frete_valor = vm.roundFloat(response.data[k].frete_valor);
-
-                    if (vm.roundFloat(response.data[k].total - response.data[k].frete_valor) != total) {
-                        response.data[k].desconto = Math.round(100 - ((vm.roundFloat(response.data[k].total - response.data[k].frete_valor) * 100) / total));
-                    }
-
-                    rows.push(response.data[k]);
-                }
-
-                vm.tableData      = tableData;
-                vm.tableData.data = rows;
-
+                vm.tableData = response;
                 vm.loading   = false;
             });
         };

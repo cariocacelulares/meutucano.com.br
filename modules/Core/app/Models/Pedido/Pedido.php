@@ -55,7 +55,8 @@ class Pedido extends \Eloquent
         'can_hold',
         'can_cancel',
         'pagamento_metodo_readable',
-        'frete_metodo_readable'
+        'frete_metodo_readable',
+        'desconto'
     ];
 
     /**
@@ -265,6 +266,26 @@ class Pedido extends \Eloquent
         }
 
         return false;
+    }
+
+    /**
+     * Return order discount
+     *
+     * @return string
+     */
+    protected function getDescontoAttribute()
+    {
+        $frete = ($this->frete_valor) ?: 0;
+        $total = 0;
+        foreach ($this->produtos as $produto) {
+            $total += $produto->total;
+        }
+
+        if (($this->total - $frete) != $total) {
+            return round(100 - ((($this->total - $frete) * 100) / $total));
+        }
+
+        return null;
     }
 
     /**

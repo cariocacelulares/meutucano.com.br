@@ -299,6 +299,12 @@
                     <td class="text-center">{{ produto.quantidade }}</td>
                     <td class="text-center">{{ produto.valor | currency }}</td>
                 </tr>
+                <tr ng-if="PedidoDetalhe.pedido.desconto != null" class="total">
+                    <td></td>
+                    <td></td>
+                    <td class="bold">Desconto</td>
+                    <td>{{ PedidoDetalhe.pedido.desconto }}%</td>
+                </tr>
                 <tr ng-if="PedidoDetalhe.pedido.frete_valor != null" class="total">
                     <td></td>
                     <td></td>
