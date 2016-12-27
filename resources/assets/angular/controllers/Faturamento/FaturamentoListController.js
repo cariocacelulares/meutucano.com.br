@@ -60,6 +60,7 @@
                 per_page: vm.tableHeader.pagination.per_page
             }).then(function(response) {
                 var total = 0;
+                vm.tableData = response;
                 vm.tableData.data = [];
                 for (var k in response.data) {
                     total = 0;
