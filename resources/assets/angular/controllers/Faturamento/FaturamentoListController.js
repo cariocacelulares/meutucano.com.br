@@ -60,14 +60,14 @@
                 per_page: vm.tableHeader.pagination.per_page
             }).then(function(response) {
                 var total = 0;
-                vm.tableData = response;
+                // vm.tableData = response;
                 vm.tableData.data = [];
                 for (var k in response.data) {
                     total = 0;
                     response.data[k].desconto = false;
 
                     for (var i in response.data[k].produtos) {
-                        total =+ response.data[k].produtos[i].total * response.data[k].produtos[i].quantidade;
+                        total =+ response.data[k].produtos[i].total;
                     }
 
                     total = parseFloat(parseFloat(total).toFixed(2));
