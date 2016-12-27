@@ -18,8 +18,6 @@ class LogisticaController extends Controller
 
     const MODEL = Logistica::class;
 
-    protected $validationRules = [];
-
     /**
      * Retorna uma pi com base no rastreio
      *
@@ -55,13 +53,8 @@ class LogisticaController extends Controller
     public function store()
     {
         $m = self::MODEL;
+
         try {
-            $v = \Validator::make(Input::except(['protocolo']), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $this->aplicarDevolucao(Input::get(['inspecoes']));
 
             $data = $m::create(Input::except(['protocolo', 'imagem']));
@@ -76,7 +69,7 @@ class LogisticaController extends Controller
 
             return $this->createdResponse($data);
         } catch (\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
             return $this->clientErrorResponse($data);
@@ -98,12 +91,6 @@ class LogisticaController extends Controller
         }
 
         try {
-            $v = \Validator::make(Input::except(['protocolo']), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $this->aplicarDevolucao(Input::get(['inspecoes']));
 
             $data->fill(Input::except(['protocolo']));
@@ -115,7 +102,7 @@ class LogisticaController extends Controller
         } catch (\Exception $ex) {
             \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
 
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }

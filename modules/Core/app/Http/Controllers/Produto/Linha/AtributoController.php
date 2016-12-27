@@ -13,9 +13,7 @@ class AtributoController extends Controller
     use RestControllerTrait;
 
     const MODEL = Atributo::class;
-
-    protected $validationRules = [];
-
+    
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */

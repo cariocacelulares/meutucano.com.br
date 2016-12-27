@@ -17,8 +17,6 @@ class PiController extends Controller
 
     const MODEL = Pi::class;
 
-    protected $validationRules = [];
-
     /**
      * Retorna uma pi com base no rastreio
      *
@@ -66,12 +64,8 @@ class PiController extends Controller
     public function store()
     {
         $m = self::MODEL;
-        try {
-            $v = \Validator::make(Input::except(['protocolo']), $this->validationRules);
 
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
+        try {
             $data = $m::create(Input::except(['protocolo']));
 
             $rastreio = Rastreio::find(Input::get('rastreio_id'));
@@ -87,7 +81,7 @@ class PiController extends Controller
 
             return $this->createdResponse($data);
         } catch (\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
             return $this->clientErrorResponse($data);
@@ -109,12 +103,6 @@ class PiController extends Controller
         }
 
         try {
-            $v = \Validator::make(Input::except(['protocolo']), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $data->fill(Input::except(['protocolo']));
             $data->save();
 
@@ -132,7 +120,7 @@ class PiController extends Controller
         } catch (\Exception $ex) {
             \Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }

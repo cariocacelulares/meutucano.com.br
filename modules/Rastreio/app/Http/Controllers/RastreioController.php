@@ -34,8 +34,6 @@ class RastreioController extends Controller
 
     const MODEL = Rastreio::class;
 
-    protected $validationRules = [];
-
     /**
      * Retorna os rastreios importantes
      *
@@ -71,12 +69,6 @@ class RastreioController extends Controller
         }
 
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $data->fill(Input::all());
             $data->save();
 
@@ -91,7 +83,7 @@ class RastreioController extends Controller
         } catch (\Exception $ex) {
             \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
 
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }

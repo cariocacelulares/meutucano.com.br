@@ -8,6 +8,7 @@
 </div>
 
 <form ng-submit="ProdutoForm.save()" novalidate="novalidate" class="form-default" id="formProduto">
+    <validation errors="ProdutoForm.validationErrors"></validation>
     <tabs>
         <tab name="infosProduto" title="Informações do produto">
             <div class="row form-group">
@@ -25,7 +26,7 @@
                 <div class="col-md-3 form-group">
                     <label for="sku">SKU</label>
                     <div class="input-group">
-                        <input ng-model="ProdutoForm.produto.sku" type="text" id="sku" placeholder="SKU do produto" required />
+                        <input ng-model="ProdutoForm.produto.sku" type="number" id="sku" placeholder="SKU do produto" required />
                         <span class="input-group-btn">
                             <a ng-click="ProdutoForm.generateSku()" class="btn btn-complete" title="Gerar novo SKU">
                                 <i class="fa-key"></i>

@@ -15,8 +15,6 @@ class PedidoProdutoController extends Controller
 
     const MODEL = PedidoProduto::class;
 
-    protected $validationRules = [];
-
     /**
      * Retorna um único recurso
      *
@@ -51,12 +49,6 @@ class PedidoProdutoController extends Controller
         }
 
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $data->fill(Input::all());
             $data->save();
 
@@ -66,7 +58,7 @@ class PedidoProdutoController extends Controller
         } catch (\Exception $ex) {
             \Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }

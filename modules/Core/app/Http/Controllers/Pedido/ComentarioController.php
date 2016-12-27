@@ -3,8 +3,8 @@
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
 use Core\Models\Pedido\Comentario;
-use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Core\Http\Requests\ComentarioRequest as Request;
 
 /**
  * Class ComentarioController
@@ -15,8 +15,6 @@ class ComentarioController extends Controller
     use RestControllerTrait;
 
     const MODEL = Comentario::class;
-
-    protected $validationRules = [];
 
     /**
      * @return \Symfony\Component\HttpFoundation\Response
@@ -34,19 +32,14 @@ class ComentarioController extends Controller
     public function store(Request $request)
     {
         $m = self::MODEL;
+
         try {
-            $v = \Validator::make($request->all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $user = getCurrentUserId();
-
             $data = $m::create(array_merge(\Request::all(), ['usuario_id' => $user]));
+
             return $this->createdResponse($data);
         } catch (\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }

@@ -18,8 +18,6 @@ class LinhaController extends Controller
 
     const MODEL = Linha::class;
 
-    protected $validationRules = [];
-
     /**
      * Lista linhas para a tabela
      *
@@ -202,12 +200,6 @@ class LinhaController extends Controller
         }
 
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $data->fill(Input::except(['atributos', 'removidos']));
             $data->save();
             $this->removeAttributes($data->id, Input::get('removidos'));
@@ -215,7 +207,7 @@ class LinhaController extends Controller
 
             return $this->showResponse($data);
         } catch (\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
             return $this->clientErrorResponse($data);
@@ -229,20 +221,15 @@ class LinhaController extends Controller
     public function store()
     {
         $m = self::MODEL;
+
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $data = $m::create(Input::except(['atributos', 'removidos']));
             $this->removeAttributes($data->id, Input::get('removidos'));
             $this->attachAttributes($data, Input::get('atributos'));
 
             return $this->createdResponse($data);
         } catch (\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
             return $this->clientErrorResponse($data);

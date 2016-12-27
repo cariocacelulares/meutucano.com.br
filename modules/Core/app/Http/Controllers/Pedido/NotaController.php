@@ -20,8 +20,6 @@ class NotaController extends Controller
 
     const MODEL = Nota::class;
 
-    protected $validationRules = [];
-
     /**
      * Gera o XML da nota fiscal
      *

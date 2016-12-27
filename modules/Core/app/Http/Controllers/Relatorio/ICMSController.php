@@ -18,8 +18,6 @@ class ICMSController extends Controller
 {
     use RestControllerTrait;
 
-    protected $validationRules = [];
-
     /**
      * Return relatório ICMS
      */

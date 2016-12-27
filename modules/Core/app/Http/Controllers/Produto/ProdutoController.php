@@ -7,6 +7,7 @@ use Core\Models\Pedido\PedidoProduto;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
 use InspecaoTecnica\Models\InspecaoTecnica;
+use Core\Http\Requests\ProdutoRequest as Request;
 
 /**
  * Class ProdutoController
@@ -17,8 +18,6 @@ class ProdutoController extends Controller
     use RestControllerTrait;
 
     const MODEL = Produto::class;
-
-    protected $validationRules = [];
 
     /**
      * Lista produtos para a tabela
@@ -186,22 +185,18 @@ class ProdutoController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function store()
+    public function store(Request $request)
     {
         $m = self::MODEL;
+
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
             $data = $m::create(Input::all());
-            return $this->createdResponse($data);
-        } catch (\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
 
-            \Log::error(logMessage($ex));
-            return $this->clientErrorResponse($data);
+            return $this->createdResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception));
+
+            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
         }
     }
 
@@ -218,12 +213,6 @@ class ProdutoController extends Controller
         }
 
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $data->fill(Input::except(['atributos']));
             $data->save();
 
@@ -245,7 +234,7 @@ class ProdutoController extends Controller
 
             return $this->showResponse($data);
         } catch (\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }

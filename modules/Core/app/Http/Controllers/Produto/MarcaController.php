@@ -14,8 +14,6 @@ class MarcaController extends Controller
 
     const MODEL = Marca::class;
 
-    protected $validationRules = [];
-
     /**
      * Lista marcas para a tabela
      *

@@ -18,8 +18,6 @@ class InspecaoTecnicaController extends Controller
 
     const MODEL = InspecaoTecnica::class;
 
-    protected $validationRules = [];
-
     /**
      * Lista inspecoes para a tabela
      *
@@ -106,13 +104,8 @@ class InspecaoTecnicaController extends Controller
     public function store()
     {
         $m = self::MODEL;
+
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $data = $m::create(array_merge([
                 'usuario_id' => getCurrentUserId(),
                 'revisado_at' => date('Y-m-d H:i:s')
@@ -120,7 +113,7 @@ class InspecaoTecnicaController extends Controller
 
             return $this->createdResponse($data);
         } catch (\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
 
             Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
             return $this->clientErrorResponse($data);
@@ -142,12 +135,6 @@ class InspecaoTecnicaController extends Controller
         }
 
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $data->fill(Input::all());
 
             if (!$data->usuario_id && $data->getOriginal('priorizado') == $data->priorizado) {
@@ -160,7 +147,7 @@ class InspecaoTecnicaController extends Controller
         } catch (\Exception $ex) {
             Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }
@@ -220,12 +207,6 @@ class InspecaoTecnicaController extends Controller
         }
 
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             foreach ($data as $inspecao) {
                 $inspecao->priorizado = !((int) $inspecao->priorizado);
                 $inspecao->save();
@@ -234,7 +215,7 @@ class InspecaoTecnicaController extends Controller
             return $this->showResponse($data);
         } catch (\Exception $e) {
             Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }

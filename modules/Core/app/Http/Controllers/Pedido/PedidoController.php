@@ -23,8 +23,6 @@ class PedidoController extends Controller
 
     const MODEL = Pedido::class;
 
-    protected $validationRules = [];
-
     /**
      * Lista pedidos para a tabela
      *

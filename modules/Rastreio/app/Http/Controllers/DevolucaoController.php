@@ -20,8 +20,6 @@ class DevolucaoController extends Controller
 
     const MODEL = Devolucao::class;
 
-    protected $validationRules = [];
-
     /**
      * Retorna uma devolução com base no rastreio
      *
@@ -81,13 +79,8 @@ class DevolucaoController extends Controller
     public function store()
     {
         $m = self::MODEL;
+
         try {
-            $v = \Validator::make(Input::except(['protocolo']), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $this->aplicarDevolucao(Input::get(['inspecoes']));
 
             $data = $m::create(Input::except(['protocolo', 'imagem']));
@@ -100,7 +93,7 @@ class DevolucaoController extends Controller
 
             return $this->createdResponse($data);
         } catch (\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
             return $this->clientErrorResponse($data);
@@ -122,12 +115,6 @@ class DevolucaoController extends Controller
         }
 
         try {
-            $v = \Validator::make(Input::except(['protocolo']), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $this->aplicarDevolucao(Input::get(['inspecoes']));
 
             $data->fill(Input::except(['protocolo']));
@@ -139,7 +126,7 @@ class DevolucaoController extends Controller
         } catch (\Exception $ex) {
             \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
 
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }

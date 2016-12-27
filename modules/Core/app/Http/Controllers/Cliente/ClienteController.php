@@ -16,8 +16,6 @@ class ClienteController extends Controller
 
     const MODEL = Cliente::class;
 
-    protected $validationRules = [];
-
     /**
      * Lista pedidos para a tabela
      *
@@ -63,12 +61,6 @@ class ClienteController extends Controller
         }
 
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $data->fill(Input::except('enderecos'));
             $data->save();
 
@@ -85,7 +77,7 @@ class ClienteController extends Controller
 
             return $this->showResponse($data);
         } catch (\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }

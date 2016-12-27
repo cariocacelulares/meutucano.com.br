@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-md-4 form-group">
             <label for="setor">Setor</label>
-            <select ng-model="SugestaoForm.sugestao.setor" id="motivo" class="form-control">
+            <select ng-model="SugestaoForm.sugestao.setor" id="motivo" class="form-control" required>
                 <option value="" disabled selected hidden>Selecione</option>
                 <option value="Todos / Nenhum">Todos / Nenhum</option>
                 <option value="Administrativo">Administrativo</option>
@@ -23,7 +23,7 @@
         </div>
         <div class="col-md-4 form-group">
             <label for="pessoa">Pessoa</label>
-            <select ng-model="SugestaoForm.sugestao.pessoa" id="motivo" class="form-control">
+            <select ng-model="SugestaoForm.sugestao.pessoa" id="motivo" class="form-control" required>
                 <option value="" disabled selected hidden>Selecione</option>
                 <option value="Todos / Nenhum">Todos / Nenhum</option>
                 <option ng-repeat="pessoa in SugestaoForm.pessoas.data" value="{{ pessoa.name }}">{{ pessoa.name }}</option>

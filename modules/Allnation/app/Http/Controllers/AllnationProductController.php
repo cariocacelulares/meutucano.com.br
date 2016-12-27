@@ -20,8 +20,6 @@ class AllnationProductController extends Controller
 
     const MODEL = AllnationProduct::class;
 
-    protected $validationRules = [];
-
     /**
      * List allnation products for table
      *

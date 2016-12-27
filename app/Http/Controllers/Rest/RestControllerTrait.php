@@ -117,18 +117,15 @@ trait RestControllerTrait
     public function store()
     {
         $m = self::MODEL;
-        try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
 
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
+        try {
             $data = $m::create(Input::all());
+
             return $this->createdResponse($data);
         } catch (\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
-
+            $data = ['exception' => $ex->getMessage()];
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
+
             return $this->clientErrorResponse($data);
         }
     }
@@ -148,19 +145,14 @@ trait RestControllerTrait
         }
 
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $data->fill(Input::all());
             $data->save();
+
             return $this->showResponse($data);
         } catch (\Exception $ex) {
             \Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
+            $data = ['exception' => $ex->getMessage()];
 
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }
