@@ -281,7 +281,7 @@ class Pedido extends \Eloquent
             $total += $produto->total;
         }
 
-        if (($this->total - $frete) != $total) {
+        if ($total > 0 && ($this->total - $frete) != $total) {
             return round(100 - ((($this->total - $frete) * 100) / $total));
         }
 
