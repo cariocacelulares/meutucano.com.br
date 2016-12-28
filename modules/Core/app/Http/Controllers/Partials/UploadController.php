@@ -372,7 +372,7 @@ class UploadController extends Controller
             $pedido->cliente_endereco_id = $clienteEndereco->id;
             $pedido->marketplace = $marketplace;
             $pedido->operacao = $operacao;
-            $pedido->total = $notaTotal;
+            $pedido->total = $notaTotal + $pedido->frete_valor;
             $pedido->deleted_at = null;
 
             if ($pedido->save()) {

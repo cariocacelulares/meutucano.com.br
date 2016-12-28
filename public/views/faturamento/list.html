@@ -64,7 +64,8 @@
             <td class="text-center">
                 <p ng-if="pedido.desconto" class="m-b-0">Desconto: <strong>{{ pedido.desconto }}%</strong></p>
                 <span ng-repeat="produto in pedido.produtos">
-                    <small><strong>{{ produto.produto_sku }}</strong>: {{ produto.quantidade }}x {{ produto.valor | currency }}</small>
+                    <small ng-if="!pedido.desconto"><strong>{{ produto.produto_sku }}</strong>: {{ produto.quantidade }}x {{ produto.valor | currency }}</small>
+                    <small ng-if="pedido.desconto" tooltips tooltip-template="Desconto: {{ (produto.valor - (produto.valor - ((produto.valor * pedido.desconto) / 100))) | currency }}"><strong>{{ produto.produto_sku }}</strong>: {{ produto.quantidade }}x {{ produto.valor | currency }}</small>
                     <span ng-repeat="inspecao in produto.inspecoes" ng-class="{ 'label-success': inspecao.revisado_at, 'm-r-10': !$last }" class="label">{{ inspecao.id }}</span>
                 </span><br>
             </td>

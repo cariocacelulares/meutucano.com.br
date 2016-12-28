@@ -275,14 +275,16 @@ class Pedido extends \Eloquent
      */
     protected function getDescontoAttribute()
     {
-        $frete = ($this->frete_valor) ?: 0;
-        $total = 0;
-        foreach ($this->produtos as $produto) {
-            $total += $produto->total;
-        }
+        if (strtolower($this->marketplace) === 'b2w') {
+            $frete = ($this->frete_valor) ?: 0;
+            $total = 0;
+            foreach ($this->produtos as $produto) {
+                $total += $produto->total;
+            }
 
-        if ($total > 0 && ($this->total - $frete) != $total) {
-            return round(100 - ((($this->total - $frete) * 100) / $total));
+            if ($total > 0 && ($this->total - $frete) != $total) {
+                return round(100 - ((($this->total - $frete) * 100) / $total));
+            }
         }
 
         return null;
