@@ -48,10 +48,10 @@ trait RestControllerTrait
 
                 if ($filtro['operator'] == 'BETWEEN') {
                     if ((!isset($filtro['value']['to']) || (!$filtro['value']['to'] && $filtro['value']['to'] !== 0)) && isset($filtro['value']['from'])) {
-                        $filtro['operator'] = '> =';
+                        $filtro['operator'] = '>=';
                         $filtro['value']    = $filtro['value']['from'];
                     } elseif ((!isset($filtro['value']['from']) || (!$filtro['value']['from'] && $filtro['value']['from'] !== 0)) && isset($filtro['value']['to'])) {
-                        $filtro['operator'] = '< =';
+                        $filtro['operator'] = '<=';
                         $filtro['value']    = $filtro['value']['to'];
                     }
                 }
