@@ -2,6 +2,7 @@
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
+use Rastreio\Console\Commands\RefreshRastreio;
 use Rastreio\Console\Commands\RefreshRastreios;
 
 class ScheduleServiceProvider extends ServiceProvider
@@ -12,6 +13,7 @@ class ScheduleServiceProvider extends ServiceProvider
      * @var array
      */
     protected $commands = [
+        RefreshRastreio::class,
         RefreshRastreios::class,
     ];
 
