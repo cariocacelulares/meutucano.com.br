@@ -156,6 +156,11 @@ class RastreioController extends Controller
     public function refresh($rastreio)
     {
         try {
+            if (!$rastreio->prazo) {
+                $this->setDeadline($rastreio);
+                $rastreio = $rastreio->fresh();
+            }
+
             $ultimoEvento = $this->lastStatus($rastreio->rastreio);
 
             $prazoEntrega = date('d/m/Y', strtotime($rastreio->data_envio));
