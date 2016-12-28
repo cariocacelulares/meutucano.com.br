@@ -39,6 +39,7 @@ class LogisticaTest extends TestCase
     $rastreio = $this->createRastreio();
 
     $this->json('POST', "/api/logisticas", [
+      'autorizacao' => '45456464564',
       'motivo'      => 1,
       'rastreio_id' => $rastreio->id,
     ])->seeStatusCode(201);
@@ -58,11 +59,12 @@ class LogisticaTest extends TestCase
   {
     $rastreio = $this->createRastreio();
 
-    $this->json('POST', "/api/logisticas", [
+    $this->json('POST', '/api/logisticas', [
+      'autorizacao' => '45456464564',
       'motivo'      => 1,
       'acao'        => 1,
       'rastreio_id' => $rastreio->id,
-    ]);
+    ])->seeStatusCode(201);
 
     $rastreio = $rastreio->fresh();
 
@@ -87,7 +89,8 @@ class LogisticaTest extends TestCase
       'acao'        => 1,
       'rastreio_id' => $rastreio->id,
       'protocolo'   => '123456',
-    ]);
+      'autorizacao' => '45456464564',
+    ])->seeStatusCode(201);
 
     $pedido = $pedido->fresh();
 

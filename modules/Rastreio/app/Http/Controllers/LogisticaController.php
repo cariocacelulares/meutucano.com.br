@@ -7,6 +7,7 @@ use Rastreio\Http\Controllers\Traits\RastreioTrait;
 use InspecaoTecnica\Http\Controllers\Traits\InspecaoTecnicaTrait;
 use Rastreio\Models\Rastreio;
 use Rastreio\Models\Logistica;
+use Rastreio\Http\Requests\LogisticaRequest as Request;
 
 /**
  * Class LogisticaController
@@ -50,29 +51,26 @@ class LogisticaController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function store()
+    public function store(Request $request)
     {
-        $m = self::MODEL;
-
         try {
             $this->aplicarDevolucao(Input::get(['inspecoes']));
 
-            $data = $m::create(Input::except(['protocolo', 'imagem']));
+            $logistica = (self::MODEL)::create(Input::except(['protocolo', 'imagem']));
 
             if (Input::has('acao')) {
                 $rastreio = Rastreio::find(Input::get('rastreio_id'));
                 $rastreio->status = 5;
                 $rastreio->save();
 
-                $this->updateProtocolAndStatus($data, Input::get('protocolo'), Input::file('imagem'));
+                $this->updateProtocolAndStatus($logistica, Input::get('protocolo'), Input::file('imagem'));
             }
 
-            return $this->createdResponse($data);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
+            return $this->createdResponse($logistica);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
-            \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
         }
     }
 
@@ -82,28 +80,26 @@ class LogisticaController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function update($id)
+    public function update($id, Request $request)
     {
-        $m = self::MODEL;
-
-        if (!$data = $m::find($id)) {
-            return $this->notFoundResponse();
-        }
-
         try {
             $this->aplicarDevolucao(Input::get(['inspecoes']));
 
-            $data->fill(Input::except(['protocolo']));
-            $data->save();
+            $logistica = (self::MODEL)::findOrFail($id);
+            $logistica->fill(Input::except(['protocolo']));
+            $logistica->save();
 
-            $this->updateProtocolAndStatus($data, Input::get('protocolo'));
+            $this->updateProtocolAndStatus($logistica, Input::get('protocolo'));
 
-            return $this->showResponse($data);
-        } catch (\Exception $ex) {
-            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
+            return $this->showResponse($logistica);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse([
+                'exception' => strstr(get_class($exception), 'ModelNotFoundException')
+                    ? 'Recurso nao encontrado'
+                    : $exception->getMessage()
+            ]);
         }
     }
 }
