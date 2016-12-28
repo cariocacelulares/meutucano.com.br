@@ -297,11 +297,7 @@
                         <small class="hint-text">{{ produto.imei }}</small>
                     </td>
                     <td class="text-center">{{ produto.quantidade }}</td>
-                    <td ng-if="!PedidoDetalhe.pedido.desconto" class="text-center">{{ produto.valor | currency }}</td>
-                    <td ng-if="PedidoDetalhe.pedido.desconto" class="text-center">
-                        <strike>{{ produto.valor | currency }}</strike><br/>
-                        {{ (produto.valor - ((produto.valor * PedidoDetalhe.pedido.desconto) / 100)) | currency }}
-                    </td>
+                    <td class="text-center">{{ produto.valor | currency }}</td>
                 </tr>
                 <tr ng-if="PedidoDetalhe.pedido.desconto != null" class="total">
                     <td></td>
