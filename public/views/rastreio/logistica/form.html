@@ -22,25 +22,13 @@
     <hr>
     <div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i>&nbsp; Incluir as informações abaixo apenas quando o cliente enviar a mercadoria.</div>
     <div class="row">
-        <div class="col-md-6 form-group">
+        <div class="col-md-12 form-group">
             <label for="acao">Ação realizada</label>
             <select ng-model="Logistica.logistica.acao" id="acao" class="form-control" ng-change="Logistica.verifySeminovos()">
                 <option value="" disabled selected hidden>Ação realizada</option>
                 <option value="0">Reenvio</option>
                 <option value="1">Cancelamento</option>
             </select>
-        </div>
-        <div class="col-md-6 form-group">
-            <label for="motivo">Data de postagem</label>
-            <div class="date-picker">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                    <input class="form-control" id="data" ng-model="Logistica.logistica.data_postagem" placeholder="Data de postagem" ui-date-mask />
-                    <div class="picker-wrap">
-                        <date-picker ng-model="Logistica.logistica.data_postagem"></date-picker>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
     <div class="row" ng-if="Logistica.logistica.acao == 1 && Logistica.logistica.rastreio.pedido.marketplace !== 'MERCADOLIVRE'">

@@ -24,8 +24,7 @@ $factory->define(\Rastreio\Models\Logistica::class, function () use ($faker) {
   return [
     'autorizacao'   => $faker->randomNumber(5) . $faker->randomNumber(6),
     'motivo'        => $faker->numberBetween(0, 4),
-    'acao'          => $faker->numberBetween(0, 1),
-    'data_postagem' => $faker->dateTimeThisMonth->format('d/m/Y')
+    'acao'          => $faker->numberBetween(0, 1)
   ];
 });
 

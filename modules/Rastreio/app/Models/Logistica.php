@@ -28,7 +28,6 @@ class Logistica extends \Eloquent
         'autorizacao',
         'motivo',
         'acao',
-        'data_postagem',
         'observacoes',
     ];
 
@@ -67,24 +66,6 @@ class Logistica extends \Eloquent
     public function rastreioRef()
     {
         return $this->hasOne(PedidoRastreio::class, 'rastreio_ref_id');
-    }
-
-    /**
-     * @return string
-     */
-    public function getDataPostagemAttribute($data_postagem)
-    {
-        return ($data_postagem) ? Carbon::createFromFormat('Y-m-d', $data_postagem)->format('d/m/Y') : null;
-    }
-
-    /**
-     * @return string
-     */
-    public function setDataPostagemAttribute($data_postagem)
-    {
-        if ($data_postagem) {
-            $this->attributes['data_postagem'] = Carbon::createFromFormat('d/m/Y', $data_postagem)->format('Y-m-d');
-        }
     }
 
     /**
