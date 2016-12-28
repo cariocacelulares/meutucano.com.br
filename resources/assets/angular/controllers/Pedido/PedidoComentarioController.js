@@ -5,12 +5,13 @@
         .module('MeuTucano')
         .controller('PedidoComentarioController', PedidoComentarioController);
 
-    function PedidoComentarioController($rootScope, $stateParams, $scope, Restangular, toaster, ngDialog, Comentario) {
+    function PedidoComentarioController($rootScope, $stateParams, $scope, Restangular, toaster, ngDialog, Comentario, ValidationErrors) {
         var vm = this;
 
-        vm.comentarios = [];
-        vm.pedido_id = (typeof $scope.ngDialogData !== 'undefined' ? $scope.ngDialogData.pedido_id : null) || $stateParams.id;
-        vm.loading = false;
+        vm.comentarios      = [];
+        vm.pedido_id        = (typeof $scope.ngDialogData !== 'undefined' ? $scope.ngDialogData.pedido_id : null) || $stateParams.id;
+        vm.loading          = false;
+        vm.validationErrors = [];
 
         /**
          * Load comentarios
@@ -30,19 +31,25 @@
          * Save comentario
          */
         vm.save = function() {
-            vm.loading = true;
+            vm.loading          = true;
+            vm.validationErrors = [];
 
             Comentario.save({
                 'pedido_id':  vm.pedido_id,
                 'comentario': vm.comentario
-            }).then(function() {
-                vm.loading = false;
-                vm.comentario = null;
-                vm.formComentario.$setPristine();
+            }).then(
+                function() {
+                    vm.loading = false;
+                    vm.comentario = null;
+                    vm.formComentario.$setPristine();
 
-                vm.load();
-                toaster.pop('success', 'Sucesso!', 'Comentário cadastrado com sucesso!');
-            });
+                    vm.load();
+                    toaster.pop('success', 'Sucesso!', 'Comentário cadastrado com sucesso!');
+                },
+                function(error) {
+                    vm.validationErrors = ValidationErrors.handle(error);
+                }
+            );
         };
 
         /**

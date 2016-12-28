@@ -16,8 +16,6 @@ class MonitoradoController extends Controller
 
     const MODEL = Monitorado::class;
 
-    protected $validationRules = [];
-
     /**
      * Lista rastreios monitorados
      *
@@ -65,13 +63,8 @@ class MonitoradoController extends Controller
     public function store()
     {
         $m = self::MODEL;
+
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $rastreio_id = Input::get('rastreio_id');
             $usuario_id = getCurrentUserId();
 
@@ -84,7 +77,7 @@ class MonitoradoController extends Controller
 
             return $this->createdResponse($data);
         } catch (\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
             return $this->clientErrorResponse($data);

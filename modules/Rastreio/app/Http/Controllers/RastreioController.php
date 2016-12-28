@@ -23,6 +23,7 @@ use PhpSigep\Model\ServicoDePostagem;
 use PhpSigep\Pdf\CartaoDePostagem;
 use Sunra\PhpSimple\HtmlDomParser;
 use GuzzleHttp\Client;
+use Rastreio\Http\Requests\RastreioRequest as Request;
 
 /**
  * Class RastreioController
@@ -33,8 +34,6 @@ class RastreioController extends Controller
     use RestControllerTrait;
 
     const MODEL = Rastreio::class;
-
-    protected $validationRules = [];
 
     /**
      * Retorna os rastreios importantes
@@ -57,42 +56,53 @@ class RastreioController extends Controller
     }
 
     /**
+     * Cria novo recurso
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function store(Request $request)
+    {
+        try {
+            $data = (self::MODEL)::create(Input::all());
+
+            return $this->createdResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
+        }
+    }
+
+    /**
      * Altera informações do rastreio
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function update($id)
+    public function update($id, Request $request)
     {
-        $m = self::MODEL;
-
-        if (!$data = $m::find($id)) {
-            return $this->notFoundResponse();
-        }
-
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
-            $data->fill(Input::all());
-            $data->save();
+            $rastreio = (self::MODEL)::findOrFail($id);
+            $rastreio->fill(Input::all());
+            $rastreio->save();
 
             /**
              * Atualiza o rastreio
              */
             if (Input::get('status') == 0) {
-                $this->refresh($data);
+                $this->refresh($rastreio);
             }
 
-            return $this->showResponse($data);
-        } catch (\Exception $ex) {
-            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
+            return $this->showResponse($rastreio);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse([
+                'exception' => strstr(get_class($exception), 'ModelNotFoundException')
+                    ? 'Recurso nao encontrado'
+                    : $exception->getMessage()
+            ]);
         }
     }
 
@@ -111,9 +121,9 @@ class RastreioController extends Controller
             foreach ($rastreios as $rastreio) {
                 $this->refresh($rastreio);
             }
-        } catch (\Exception $ex) {
-            Log::warning(logMessage($e, 'Erro ao atualizar os rastreios'));
-            reportError('Erro ao atualizar os rastreios ' . $e->getMessage() . ' - ' . $e->getLine());
+        } catch (\Exception $exception) {
+            Log::warning(logMessage($exception, 'Erro ao atualizar os rastreios'));
+            reportError('Erro ao atualizar os rastreios ' . $exception->getMessage() . ' - ' . $exception->getLine());
         }
     }
 
@@ -132,9 +142,8 @@ class RastreioController extends Controller
             $rastreio = $this->refresh($rastreio);
 
             return $this->showResponse($rastreio);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+        } catch (\Exception $exception) {
+            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
         }
     }
 

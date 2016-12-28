@@ -16,8 +16,6 @@ class TrocaController extends Controller
 
     const MODEL = Troca::class;
 
-    protected $validationRules = [];
-
     /**
      * Lista conquistas para a tabela
      *
@@ -40,13 +38,8 @@ class TrocaController extends Controller
     public function store()
     {
         $m = self::MODEL;
+
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $recompensa = Input::get('recompensa');
 
             $data = $m::create(array_merge(Input::all(), [
@@ -64,7 +57,7 @@ class TrocaController extends Controller
 
             return $return;
         } catch (\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
             return $this->clientErrorResponse($data);

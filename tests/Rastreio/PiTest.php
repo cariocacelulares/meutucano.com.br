@@ -63,8 +63,10 @@ class PiTest extends TestCase
    */
   public function test__it_should_be_able_to_create_pi()
   {
-    $this->json('POST', "/api/pis", [
-      'rastreio_id' => $this->rastreio->id,
+    $this->json('POST', '/api/pis', [
+      'rastreio_id'   => $this->rastreio->id,
+      'motivo_status' => 0,
+      'codigo_pi'     => '123456',
     ])->seeStatusCode(201);
 
     $this->seeInDatabase('pedido_rastreio_pis', [
@@ -79,9 +81,11 @@ class PiTest extends TestCase
    */
   public function test__it_should_change_rastreio_status_when_pi_is_created_with_valor_pago()
   {
-    $this->json('POST', "/api/pis", [
-      'valor_pago'  => 10,
-      'rastreio_id' => $this->rastreio->id,
+    $this->json('POST', '/api/pis', [
+      'valor_pago'    => 10,
+      'rastreio_id'   => $this->rastreio->id,
+      'motivo_status' => 0,
+      'codigo_pi'     => '123456',
     ]);
 
     $this->rastreio = $this->rastreio->fresh();
@@ -96,8 +100,10 @@ class PiTest extends TestCase
    */
   public function test__it_should_change_rastreio_status_when_pi_is_created_without_valor_pago()
   {
-    $this->json('POST', "/api/pis", [
-      'rastreio_id' => $this->rastreio->id,
+    $this->json('POST', '/api/pis', [
+      'rastreio_id'   => $this->rastreio->id,
+      'motivo_status' => 0,
+      'codigo_pi'     => '123456',
     ]);
 
     $this->rastreio = $this->rastreio->fresh();
@@ -118,10 +124,12 @@ class PiTest extends TestCase
       'pedido_id' => $pedido->id
     ]);
 
-    $this->json('POST', "/api/pis", [
-      'acao'        => 1,
-      'rastreio_id' => $this->rastreio->id,
-      'protocolo'   => '123456',
+    $this->json('POST', '/api/pis', [
+      'acao'          => 1,
+      'rastreio_id'   => $this->rastreio->id,
+      'protocolo'     => '123456',
+      'motivo_status' => 0,
+      'codigo_pi'     => '123456',
     ]);
 
     $pedido = $pedido->fresh();

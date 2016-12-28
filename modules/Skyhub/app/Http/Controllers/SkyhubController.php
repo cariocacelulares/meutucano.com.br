@@ -438,6 +438,7 @@ class SkyhubController extends Controller
     public function orderInvoice($order)
     {
         try {
+            $jsonItens = [];
             foreach ($order->produtos as $produto) {
                 $jsonItens[] = [
                     "sku" => $produto->produto->sku,
@@ -446,6 +447,7 @@ class SkyhubController extends Controller
             }
 
             $rastreio = $order->rastreios->first();
+            $nota     = $order->notas()->orderBy('created_at', 'DESC')->first();
 
             $jsonData = [
                 "shipment" => [
@@ -458,7 +460,7 @@ class SkyhubController extends Controller
                     ]
                 ],
                 "invoice" => [
-                    "key" => $order->notas()->orderBy('created_at', 'DESC')->first()->chave
+                    "key" => $nota ? $nota->chave : null
                 ]
             ];
 
@@ -533,7 +535,7 @@ class SkyhubController extends Controller
 
     /**
      * Formata a estimativa de entrega ou calcula eio_fallocate
-     * 
+     *
      * @param  string $estimatedDelivery
      * @param  string $freteMetodo
      * @param  string $cep

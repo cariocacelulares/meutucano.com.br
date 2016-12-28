@@ -72,16 +72,16 @@
         },
         {
             "name": "arcanedev/support",
-            "version": "3.20.3",
+            "version": "3.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ARCANEDEV/Support.git",
-                "reference": "beada0dc4e00dbdeea11a5ce24be0d9056202ea5"
+                "reference": "f16f53708d8130bdddea12497c2c096ccf96aee6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ARCANEDEV/Support/zipball/beada0dc4e00dbdeea11a5ce24be0d9056202ea5",
-                "reference": "beada0dc4e00dbdeea11a5ce24be0d9056202ea5",
+                "url": "https://api.github.com/repos/ARCANEDEV/Support/zipball/f16f53708d8130bdddea12497c2c096ccf96aee6",
+                "reference": "f16f53708d8130bdddea12497c2c096ccf96aee6",
                 "shasum": ""
             },
             "require": {
@@ -127,7 +127,7 @@
                 "laravel",
                 "support"
             ],
-            "time": "2016-12-19 18:56:46"
+            "time": "2016-12-27 19:48:43"
         },
         {
             "name": "aws/aws-sdk-php",

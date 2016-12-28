@@ -17,8 +17,6 @@ class SolicitacaoController extends Controller
 
     const MODEL = Solicitacao::class;
 
-    protected $validationRules = [];
-
     public function tableList()
     {
         $list = Solicitacao::with('usuario')
@@ -71,12 +69,6 @@ class SolicitacaoController extends Controller
         }
 
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $data->fill(Input::all());
 
             $aprovado = false;
@@ -101,7 +93,7 @@ class SolicitacaoController extends Controller
         } catch (\Exception $ex) {
             \Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }

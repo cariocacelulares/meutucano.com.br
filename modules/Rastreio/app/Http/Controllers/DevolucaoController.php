@@ -7,6 +7,7 @@ use Rastreio\Http\Controllers\Traits\RastreioTrait;
 use InspecaoTecnica\Http\Controllers\Traits\InspecaoTecnicaTrait;
 use Rastreio\Models\Rastreio;
 use Rastreio\Models\Devolucao;
+use Rastreio\Http\Requests\DevolucaoRequest as Request;
 
 /**
  * Class DevolucaoController
@@ -19,8 +20,6 @@ class DevolucaoController extends Controller
         InspecaoTecnicaTrait;
 
     const MODEL = Devolucao::class;
-
-    protected $validationRules = [];
 
     /**
      * Retorna uma devolução com base no rastreio
@@ -78,32 +77,24 @@ class DevolucaoController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function store()
+    public function store(Request $request)
     {
-        $m = self::MODEL;
         try {
-            $v = \Validator::make(Input::except(['protocolo']), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $this->aplicarDevolucao(Input::get(['inspecoes']));
 
-            $data = $m::create(Input::except(['protocolo', 'imagem']));
+            $devolucao = (self::MODEL)::create(Input::except(['protocolo', 'imagem']));
 
             $rastreio = Rastreio::find(Input::get('rastreio_id'));
             $rastreio->status = 5;
             $rastreio->save();
 
-            $this->updateProtocolAndStatus($data, Input::get('protocolo'), Input::file('imagem'));
+            $this->updateProtocolAndStatus($devolucao, Input::get('protocolo'), Input::file('imagem'));
 
-            return $this->createdResponse($data);
-        } catch (\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            return $this->createdResponse($devolucao);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
-            \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
         }
     }
 
@@ -113,34 +104,26 @@ class DevolucaoController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function update($id)
+    public function update($id, Request $request)
     {
-        $m = self::MODEL;
-
-        if (!$data = $m::find($id)) {
-            return $this->notFoundResponse();
-        }
-
         try {
-            $v = \Validator::make(Input::except(['protocolo']), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $this->aplicarDevolucao(Input::get(['inspecoes']));
 
-            $data->fill(Input::except(['protocolo']));
-            $data->save();
+            $devolucao = (self::MODEL)::findOrFail($id);
+            $devolucao->fill(Input::except(['protocolo']));
+            $devolucao->save();
 
-            $this->updateProtocolAndStatus($data, Input::get('protocolo'));
+            $this->updateProtocolAndStatus($devolucao, Input::get('protocolo'));
 
-            return $this->showResponse($data);
-        } catch (\Exception $ex) {
-            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
+            return $this->showResponse($devolucao);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse([
+                'exception' => strstr(get_class($exception), 'ModelNotFoundException')
+                    ? 'Recurso nao encontrado'
+                    : $exception->getMessage()
+            ]);
         }
     }
 }

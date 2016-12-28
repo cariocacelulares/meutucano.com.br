@@ -1,10 +1,11 @@
 <h1>Devolução</h1>
 <div class="alert alert-info m-b-10"><i class="fa fa-info"></i>&nbsp; O rastreio assumirá o status de "Devolvido".</div>
+<validation errors="DevolucaoForm.validationErrors"></validation>
 <form ng-submit="DevolucaoForm.save()" novalidate="novalidate" class="form-default">
     <div class="row">
         <div class="col-md-12 form-group">
             <label for="motivo">Motivo</label>
-            <select ng-model="DevolucaoForm.devolucao.motivo" id="motivo" class="form-control" ng-change="DevolucaoForm.verifySeminovos()" required>
+            <select ng-model="DevolucaoForm.devolucao.motivo" id="motivo" class="form-control" required>
                 <option value="" disabled selected hidden>Motivo</option>
                 <option value="0">Endereço insuficiente</option>
                 <option value="1">Não procurado (Retirada)</option>
@@ -20,7 +21,7 @@
     <div class="row">
         <div class="col-md-12 form-group">
             <label for="acao">Ação realizada</label>
-            <select ng-model="DevolucaoForm.devolucao.acao" id="acao" class="form-control" ng-change="DevolucaoForm.verifySeminovos()">
+            <select ng-model="DevolucaoForm.devolucao.acao" id="acao" class="form-control">
                 <option value="">Ação realizada</option>
                 <option value="0">Reenvio</option>
                 <option value="1">Cancelamento</option>

@@ -65,7 +65,7 @@ class UpdateStock
 
         try {
             $orderProduct = $event->orderProduct;
-            $order = $orderProduct->pedido;
+            $order        = $orderProduct->pedido;
 
             if (!$orderProduct) {
                 Log::debug('PedidoProduto não encontrado!', [$orderProduct]);
@@ -104,6 +104,7 @@ class UpdateStock
 
         try {
             $order = $event->order;
+            $order = $order->fresh();
 
             if (!$order) {
                 Log::debug('Pedido não encontrado!', [$order]);

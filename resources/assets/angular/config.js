@@ -8,20 +8,20 @@
             envServiceProvider.config({
                 domains: {
                     development: ['tucano.app'],
-                    production:  ['192.168.2.170'],
-                    aws:         ['www.meutucano.com.br', 'meutucano.com.br']
+                    production : ['192.168.2.170'],
+                    aws        : ['www.meutucano.com.br', 'meutucano.com.br']
                 },
                 vars: {
                     development: {
-                        apiUrl:    'http://tucano.app/api',
+                        apiUrl   : 'http://tucano.app/api',
                         assetUrl : 'http://tucano.app/'
                     },
                     production: {
-                        apiUrl:    'http://192.168.2.170/meutucano/public/index.php/api',
+                        apiUrl   : 'http://192.168.2.170/meutucano/public/index.php/api',
                         assetUrl : 'http://192.168.2.170/meutucano/public/'
                     },
                     aws: {
-                        apiUrl:   'https://www.meutucano.com.br/index.php/api',
+                        apiUrl  : 'https://www.meutucano.com.br/index.php/api',
                         assetUrl: 'https://meutucano.s3-sa-east-1.amazonaws.com/public/'
                     }
                 }
@@ -63,11 +63,11 @@
                         email: user.email
                     });
 
-                    if(toState.name === "login") {
+                    if(toState.name === 'login') {
                         event.preventDefault();
                         $state.go('app.dashboard');
                     }
-                } else if (!user && toState.name !== "login") {
+                } else if (!user && toState.name !== 'login') {
                     event.preventDefault();
                     $state.go('login');
                 }
@@ -84,7 +84,7 @@
                 return response.data;
             });
 
-            RestangularProvider.setDefaultHeaders({Authorization: 'Bearer '+ localStorage.getItem("satellizer_token")});
+            RestangularProvider.setDefaultHeaders({Authorization: 'Bearer '+ localStorage.getItem('satellizer_token')});
         })
 
         /**
@@ -94,7 +94,7 @@
             Restangular.setErrorInterceptor(function(response, deferred, responseHandler) {
                 if (response.status === 401) { // Atualiza token expirado
                     $http.get(envService.read('apiUrl') + '/token', {
-                        headers: {Authorization: 'Bearer '+ localStorage.getItem("satellizer_token")}
+                        headers: {Authorization: 'Bearer '+ localStorage.getItem('satellizer_token')}
                     }).error(function() {
                         localStorage.removeItem('user');
                         $state.go('login');
@@ -104,6 +104,8 @@
                     });
 
                     return false;
+                } else if (response.data.status == 'ValidationFail') { // Erros de Validação
+                    toaster.pop('warning', 'Erro de validação', 'Um ou mais campos não foram preenchidos corretamente.');
                 } else if ([400].indexOf(response.status) >= 0) { // Redireciona ao login caso token seja inválido
                     localStorage.removeItem('user');
                     $state.go('login');
@@ -125,7 +127,7 @@
          * Handle errors in http requests
          */
         .config(function($httpProvider) {
-            $httpProvider.interceptors.push("ToasterInterceptor");
+            $httpProvider.interceptors.push('ToasterInterceptor');
         })
 
         /**

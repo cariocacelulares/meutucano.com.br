@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('ProdutoFormController', ProdutoFormController);
 
-    function ProdutoFormController($state, $stateParams, SweetAlert, toaster, TabsHelper, PedidoHelper, Produto, Linha, Marca, Atributo) {
+    function ProdutoFormController($state, $stateParams, SweetAlert, toaster, TabsHelper, PedidoHelper, Produto, Linha, Marca, Atributo, ValidationErrors) {
         var vm       = this;
         var original = {
             linha_id: null,
@@ -27,8 +27,9 @@
         vm.linhas = {};
         vm.marcas = {};
 
-        vm.tabsHelper   = TabsHelper;
-        vm.pedidoHelper = PedidoHelper;
+        vm.validationErrors = [];
+        vm.tabsHelper       = TabsHelper;
+        vm.pedidoHelper     = PedidoHelper;
 
         vm.load = function() {
             vm.loading = true;
@@ -193,10 +194,16 @@
          */
         vm.save = function() {
             function save() {
-                Produto.save(vm.produto, ((vm.sku.gerado) ? vm.produto.sku : vm.sku.original)).then(function() {
-                    toaster.pop('success', 'Sucesso!', 'Produto salvo com sucesso!');
-                    $state.go('app.produtos.index');
-                });
+                vm.validationErrors = [];
+                Produto.save(vm.produto, ((vm.sku.gerado) ? vm.produto.sku : vm.sku.original)).then(
+                    function() {
+                        toaster.pop('success', 'Sucesso!', 'Produto salvo com sucesso!');
+                        $state.go('app.produtos.index');
+                    },
+                    function(error) {
+                        vm.validationErrors = ValidationErrors.handle(error);
+                    }
+                );
             }
 
             if (vm.sku.gerado || vm.sku.original == vm.produto.sku) {

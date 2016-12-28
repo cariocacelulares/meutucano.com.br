@@ -14,8 +14,6 @@ class RecompensaController extends Controller
 
     const MODEL = Recompensa::class;
 
-    protected $validationRules = [];
-
     /**
      * Lista recompensas para a tabela
      *

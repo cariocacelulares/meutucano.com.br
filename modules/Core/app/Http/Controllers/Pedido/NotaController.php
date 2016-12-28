@@ -20,8 +20,6 @@ class NotaController extends Controller
 
     const MODEL = Nota::class;
 
-    protected $validationRules = [];
-
     /**
      * Gera o XML da nota fiscal
      *
@@ -103,7 +101,7 @@ class NotaController extends Controller
                 }
             }
         } catch (\Exception $e) {
-            Log::warning('Falha ao tentar enviar um e-mail de venda', [$id]);
+            \Log::warning('Falha ao tentar enviar um e-mail de venda', [$id]);
             return $this->clientErrorResponse();
         }
 

@@ -1,4 +1,5 @@
 <h1>Logística reversa</h1>
+<validation errors="Logistica.validationErrors"></validation>
 <div class="alert alert-info m-b-10"><i class="fa fa-info"></i>&nbsp; O rastreio assumirá o status de "Devolvido" caso receber ação.</div>
 <form ng-submit="Logistica.save()" novalidate="novalidate" class="form-default">
     <div class="row">
@@ -8,7 +9,7 @@
         </div>
         <div class="col-md-6 form-group">
             <label for="motivo">Motivo</label>
-            <select ng-model="Logistica.logistica.motivo" id="motivo" class="form-control" ng-change="Logistica.verifySeminovos()" required>
+            <select ng-model="Logistica.logistica.motivo" id="motivo" class="form-control" required>
                 <option value="" disabled selected hidden>Motivo</option>
                 <option value="0">Defeito</option>
                 <option value="1">Arrependimento</option>
@@ -22,25 +23,13 @@
     <hr>
     <div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i>&nbsp; Incluir as informações abaixo apenas quando o cliente enviar a mercadoria.</div>
     <div class="row">
-        <div class="col-md-6 form-group">
+        <div class="col-md-12 form-group">
             <label for="acao">Ação realizada</label>
             <select ng-model="Logistica.logistica.acao" id="acao" class="form-control" ng-change="Logistica.verifySeminovos()">
                 <option value="" disabled selected hidden>Ação realizada</option>
                 <option value="0">Reenvio</option>
                 <option value="1">Cancelamento</option>
             </select>
-        </div>
-        <div class="col-md-6 form-group">
-            <label for="motivo">Data de postagem</label>
-            <div class="date-picker">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                    <input class="form-control" id="data" ng-model="Logistica.logistica.data_postagem" placeholder="Data de postagem" ui-date-mask />
-                    <div class="picker-wrap">
-                        <date-picker ng-model="Logistica.logistica.data_postagem"></date-picker>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
     <div class="row" ng-if="Logistica.logistica.acao == 1 && Logistica.logistica.rastreio.pedido.marketplace !== 'MERCADOLIVRE'">
