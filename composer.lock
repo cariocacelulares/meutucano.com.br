@@ -72,26 +72,26 @@
         },
         {
             "name": "arcanedev/support",
-            "version": "3.21.0",
+            "version": "3.21.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ARCANEDEV/Support.git",
-                "reference": "f16f53708d8130bdddea12497c2c096ccf96aee6"
+                "reference": "a9daddf937429ee12e09e919dc80ed059061b252"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ARCANEDEV/Support/zipball/f16f53708d8130bdddea12497c2c096ccf96aee6",
-                "reference": "f16f53708d8130bdddea12497c2c096ccf96aee6",
+                "url": "https://api.github.com/repos/ARCANEDEV/Support/zipball/a9daddf937429ee12e09e919dc80ed059061b252",
+                "reference": "a9daddf937429ee12e09e919dc80ed059061b252",
                 "shasum": ""
             },
             "require": {
                 "illuminate/filesystem": "~5.0",
                 "illuminate/support": "~5.0",
-                "php": ">=5.6"
+                "php": ">=5.6.4"
             },
             "require-dev": {
-                "phpunit/phpcov": "~2.0|~3.0",
-                "phpunit/phpunit": "~4.0|~5.0"
+                "phpunit/phpcov": "~3.0",
+                "phpunit/phpunit": "~5.0"
             },
             "type": "library",
             "extra": {
@@ -127,7 +127,7 @@
                 "laravel",
                 "support"
             ],
-            "time": "2016-12-27 19:48:43"
+            "time": "2016-12-28 17:13:24"
         },
         {
             "name": "aws/aws-sdk-php",
@@ -2796,16 +2796,16 @@
         },
         {
             "name": "spatie/browsershot",
-            "version": "1.5.3",
+            "version": "1.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/browsershot.git",
-                "reference": "89e56aa785783de45ea93556be5d5e0c085f7430"
+                "reference": "d2b450f3c1e9cd37b724f69bfcb103c4bd4dc678"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/browsershot/zipball/89e56aa785783de45ea93556be5d5e0c085f7430",
-                "reference": "89e56aa785783de45ea93556be5d5e0c085f7430",
+                "url": "https://api.github.com/repos/spatie/browsershot/zipball/d2b450f3c1e9cd37b724f69bfcb103c4bd4dc678",
+                "reference": "d2b450f3c1e9cd37b724f69bfcb103c4bd4dc678",
                 "shasum": ""
             },
             "require": {
@@ -2846,7 +2846,7 @@
                 "screenshot",
                 "webpage"
             ],
-            "time": "2016-11-12 19:18:54"
+            "time": "2016-12-28 18:25:29"
         },
         {
             "name": "spatie/db-dumper",
