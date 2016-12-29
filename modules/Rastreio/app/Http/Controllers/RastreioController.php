@@ -122,7 +122,7 @@ class RastreioController extends Controller
                 $this->refresh($rastreio);
             }
 
-            $rastreiosML = $model::where('status', '=', 2)->get();
+            $rastreiosML = $model::where('status', '=', 2)->where('marketplace', '=', 'MERCADOLIVRE')->get();
 
             foreach ($rastreiosML as $rastreio) {
                 $this->refresh($rastreio);
