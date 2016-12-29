@@ -128,7 +128,7 @@ class RastreioController extends Controller
                 $this->refresh($rastreio);
             }
         } catch (\Exception $exception) {
-            Log::warning(logMessage($exception, 'Erro ao atualizar os rastreios'));
+            \Log::warning(logMessage($exception, 'Erro ao atualizar os rastreios'));
             reportError('Erro ao atualizar os rastreios ' . $exception->getMessage() . ' - ' . $exception->getLine());
         }
     }
