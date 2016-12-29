@@ -121,6 +121,12 @@ class RastreioController extends Controller
             foreach ($rastreios as $rastreio) {
                 $this->refresh($rastreio);
             }
+
+            $rastreiosML = $model::where('status', '=', 2)->get();
+
+            foreach ($rastreiosML as $rastreio) {
+                $this->refresh($rastreio);
+            }
         } catch (\Exception $exception) {
             Log::warning(logMessage($exception, 'Erro ao atualizar os rastreios'));
             reportError('Erro ao atualizar os rastreios ' . $exception->getMessage() . ' - ' . $exception->getLine());
