@@ -19,7 +19,7 @@ class GetScreenshot implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Rastreio $rastreio)
+    public function __construct($rastreio)
     {
         \Log::debug('Job Rastreio\GetScreenshot criado', [$rastreio]);
         $this->rastreio = $rastreio;
@@ -33,7 +33,12 @@ class GetScreenshot implements ShouldQueue
     public function handle()
     {
         \Log::debug('Job Rastreio\GetScreenshot executado', [$this->rastreio]);
-        with(new RastreioController())->forceScreenshot($this->rastreio);
+
+        try {
+            with(new RastreioController())->forceScreenshot($this->rastreio);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Não foi possível fazer o screenshot do rastreio.'));            
+        }
     }
 
     /**
