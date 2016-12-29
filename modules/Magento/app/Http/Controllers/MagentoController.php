@@ -254,9 +254,8 @@ class MagentoController extends Controller
             Log::debug('Transaction - begin');
 
             $pedido = Pedido::firstOrNew([
-                'cliente_id' => $cliente->id,
-                'cliente_endereco_id' => $clienteEndereco->id,
-                'codigo_marketplace'  => $order['increment_id']
+                'cliente_id'         => $cliente->id,
+                'codigo_marketplace' => $order['increment_id']
             ]);
 
             $pedido->cliente_id          = $cliente->id;
