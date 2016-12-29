@@ -28,6 +28,10 @@ trait RastreioTrait
                     'status' => 5
                 ]);
 
+            if (!!$query) {
+                \Log::notice("Pedido {$id} cancelado diretamente no banco por meio do RastreioTrait.");
+            }
+
             return !!$query;
         } catch (\Exception $e) {
         }
