@@ -441,6 +441,8 @@ class UploadController extends Controller
      */
     private function importVenda($chave, $pedido, $usuario_id, $dataNota, $notaArquivo, $produtos, $datetimeNota)
     {
+        $reenvio = strstr($this->nfe->infAdic->infCpl, 'REENVIO') ? true : false;
+
         /**
          * Salva a nota
          */
@@ -676,54 +678,57 @@ class UploadController extends Controller
             }
         }
 
-        // Organiza os produtos existentes
-        $produtosExistentes = [];
-        foreach ($produtosExistentesOriginal as $pedidoProduto) {
-            if (!isset($produtosExistentes[$pedidoProduto->produto_sku])) {
-                $produtosExistentes[$pedidoProduto->produto_sku] = [];
-            }
+        // Faz validação de quantidade, sku e valor dos produtos se não foi reenvio.
+        if (!$reenvio) {
+            // Organiza os produtos existentes
+            $produtosExistentes = [];
+            foreach ($produtosExistentesOriginal as $pedidoProduto) {
+                if (!isset($produtosExistentes[$pedidoProduto->produto_sku])) {
+                    $produtosExistentes[$pedidoProduto->produto_sku] = [];
+                }
 
-            $parsedValue = currencyNumbers($pedidoProduto->valor);
-            if (isset($produtosExistentes[$pedidoProduto->produto_sku][$parsedValue])) {
-                $produtosExistentes[$pedidoProduto->produto_sku][$parsedValue] = $produtosExistentes[$pedidoProduto->produto_sku][$parsedValue] + $pedidoProduto->quantidade;
-            } else {
-                $produtosExistentes[$pedidoProduto->produto_sku][$parsedValue] = $pedidoProduto->quantidade;
-            }
-        }
-
-        foreach ($cadastrados as $sku => $valores) {
-            foreach ($valores as $valor => $quantidade) {
-                if (isset($produtosExistentes[$sku][$valor])) {
-                    if ($produtosExistentes[$sku][$valor] > $quantidade) {
-                        throw new \Exception("O produto {$sku} deve ter no mínimo {$produtosExistentes[$sku][$valor]} quantidades. A nota possui apenas {$quantidade}.", 7);
-                    } else {
-                        unset($produtosExistentes[$sku][$valor]);
-
-                        if (isset($produtosExistentes[$sku]) && count($produtosExistentes[$sku]) < 1) {
-                            unset($produtosExistentes[$sku]);
-                        }
-                    }
+                $parsedValue = currencyNumbers($pedidoProduto->valor);
+                if (isset($produtosExistentes[$pedidoProduto->produto_sku][$parsedValue])) {
+                    $produtosExistentes[$pedidoProduto->produto_sku][$parsedValue] = $produtosExistentes[$pedidoProduto->produto_sku][$parsedValue] + $pedidoProduto->quantidade;
+                } else {
+                    $produtosExistentes[$pedidoProduto->produto_sku][$parsedValue] = $pedidoProduto->quantidade;
                 }
             }
-        }
 
-        // produtosExistentes são pedidoProduto do tucano
-        // cadastros são os que estão na nota
-        if (!empty($produtosExistentes)) {
-            foreach ($produtosExistentes as $sku => $produtosExistente) {
-                if (isset($cadastrados[$sku])) {
-                    foreach ($produtosExistente as $valor => $qtd) {
-                        if (!isset($cadastrados[$sku][$valor])) {
-                            throw new \Exception("O valor do produto {$sku} é divergente!", 7);
+            foreach ($cadastrados as $sku => $valores) {
+                foreach ($valores as $valor => $quantidade) {
+                    if (isset($produtosExistentes[$sku][$valor])) {
+                        if ($produtosExistentes[$sku][$valor] > $quantidade) {
+                            throw new \Exception("O produto {$sku} deve ter no mínimo {$produtosExistentes[$sku][$valor]} quantidades. A nota possui apenas {$quantidade}.", 7);
+                        } else {
+                            unset($produtosExistentes[$sku][$valor]);
+
+                            if (isset($produtosExistentes[$sku]) && count($produtosExistentes[$sku]) < 1) {
+                                unset($produtosExistentes[$sku]);
+                            }
                         }
                     }
                 }
             }
 
-            if (count($produtosExistentes) == 1) {
-                throw new \Exception('O produto ' . array_keys($produtosExistentes)[0] . ' está no pedido mas não está na nota!', 7);
-            } else {
-                throw new \Exception('Os produtos ' . implode(', ', array_keys($produtosExistentes)) . ' estão no pedido mas não estão na nota!', 7);
+            // produtosExistentes são pedidoProduto do tucano
+            // cadastros são os que estão na nota
+            if (!empty($produtosExistentes)) {
+                foreach ($produtosExistentes as $sku => $produtosExistente) {
+                    if (isset($cadastrados[$sku])) {
+                        foreach ($produtosExistente as $valor => $qtd) {
+                            if (!isset($cadastrados[$sku][$valor])) {
+                                throw new \Exception("O valor do produto {$sku} é divergente!", 7);
+                            }
+                        }
+                    }
+                }
+
+                if (count($produtosExistentes) == 1) {
+                    throw new \Exception('O produto ' . array_keys($produtosExistentes)[0] . ' está no pedido mas não está na nota!', 7);
+                } else {
+                    throw new \Exception('Os produtos ' . implode(', ', array_keys($produtosExistentes)) . ' estão no pedido mas não estão na nota!', 7);
+                }
             }
         }
 

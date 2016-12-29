@@ -1,7 +1,7 @@
 <h1>Importação de notas</h1>
 <div ng-if="NotaUpload.total == 1 && NotaUpload.success == 1" class="row">
     <div class="col-md-12 text-center">
-        <p class="alert alert-success fz-14"><i class="fa-info-circle"></i>&nbsp; A nota do pedido <a ui-sref="app.pedidos.detalhe({id: retorno.pedido.id})" target="_blank">{{ NotaUpload.retorno[0].pedido.codigo_marketplace || NotaUpload.retorno[0].pedido.id }}</a> foi importada com sucesso!</p>
+        <p class="alert alert-success fz-14"><i class="fa-info-circle"></i>&nbsp; A nota do pedido <a ui-sref="app.pedidos.detalhe({id: NotaUpload.retorno[0].pedido.id})" target="_blank">{{ NotaUpload.retorno[0].pedido.codigo_marketplace || NotaUpload.retorno[0].pedido.id }}</a> foi importada com sucesso!</p>
         <p class="fz-14"><b>Cliente</b>: {{ NotaUpload.retorno[0].pedido.cliente }}</p>
     </div>
     <div class="col-md-12 text-center m-t-15">
