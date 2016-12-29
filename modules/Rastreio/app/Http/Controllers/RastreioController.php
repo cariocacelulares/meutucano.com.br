@@ -116,15 +116,19 @@ class RastreioController extends Controller
         try {
             $model = self::MODEL;
 
-            $rastreios = $model::whereNotIn('status', [2, 3, 4, 5, 7, 8])->get();
+            $rastreiosML = $model
+                ::join('pedidos', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
+                ->where('pedido_rastreios.status', '=', 2)
+                ->where('pedidos.marketplace', '=', 'MERCADOLIVRE')
+                ->get();
 
-            foreach ($rastreios as $rastreio) {
+            foreach ($rastreiosML as $rastreio) {
                 $this->refresh($rastreio);
             }
 
-            $rastreiosML = $model::where('status', '=', 2)->where('marketplace', '=', 'MERCADOLIVRE')->get();
+            $rastreios = $model::whereNotIn('status', [2, 3, 4, 5, 7, 8])->get();
 
-            foreach ($rastreiosML as $rastreio) {
+            foreach ($rastreios as $rastreio) {
                 $this->refresh($rastreio);
             }
         } catch (\Exception $exception) {
