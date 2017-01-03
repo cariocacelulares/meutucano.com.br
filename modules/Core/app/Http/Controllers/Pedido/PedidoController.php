@@ -427,6 +427,20 @@ class PedidoController extends Controller
             }
         }
 
+        if ($mes[1]['mes'] === 0) {
+           $mes[1]['count'] = Pedido
+                ::selectRaw('MONTH(created_at) as mes, COUNT(*) as count')
+                ->whereIn('status', [1,2,3])
+                ->where(DB::raw('MONTH(created_at)'), '=', 12)
+                ->where(DB::raw('YEAR(created_at)'), '=', ($data['ano'] - 1))
+                ->groupBy(DB::raw('MONTH(created_at)'))
+                ->orderBy(DB::raw('MONTH(created_at)'), 'DESC')
+                ->get()->toArray();
+
+            $mes[1]['count'] = $mes[1]['count'][0]['count'];
+            $mes[1]['mes'] = 12;
+        }
+
         $dia = Pedido
             ::selectRaw('DAY(created_at) as dia, COUNT(*) as count')
             ->whereIn('status', [1,2,3])
@@ -468,11 +482,11 @@ class PedidoController extends Controller
                 'ultimo' => [$ano[1]['ano'], $ano[1]['count']],
             ],*/
             'mes' => [
-                'atual' => [$mesesExtenso[(int)$mes[0]['mes']], $mes[0]['count']],
+                'atual'  => [$mesesExtenso[(int)$mes[0]['mes']], $mes[0]['count']],
                 'ultimo' => [$mesesExtenso[(int)$mes[1]['mes']], $mes[1]['count']],
             ],
             'dia' => [
-                'atual' => [$dia[0]['dia'], $dia[0]['count']],
+                'atual'  => [$dia[0]['dia'], $dia[0]['count']],
                 'ultimo' => [$dia[1]['dia'], $dia[1]['count']],
             ]
         ];
