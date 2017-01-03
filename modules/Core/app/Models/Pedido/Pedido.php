@@ -60,12 +60,12 @@ class Pedido extends \Eloquent
     ];
 
     /**
-     * @var [type]
+     * @var array
      */
     protected $casts = [
         'status' => 'string'
     ];
-
+    
     /**
      * Nota fiscal
      *

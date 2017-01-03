@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Sugestao\Models\Sugestao;
 use Nwidart\Modules\Facades\Module;
+use Core\Transformers\PedidoTransformer;
 
 /**
  * Class PedidoController
@@ -39,7 +40,7 @@ class PedidoController extends Controller
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse($list);
+        return $this->listResponse(PedidoTransformer::list($list));
     }
 
     /**
