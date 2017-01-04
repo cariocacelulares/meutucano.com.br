@@ -208,7 +208,7 @@ class PedidoController extends Controller
                 ->find($id);
 
             if ($data) {
-                return $this->showResponse($data);
+                return $this->showResponse(PedidoTransformer::show($data));
             }
         } catch (\Exception $e) {
             if ($e->getPrevious()) {
