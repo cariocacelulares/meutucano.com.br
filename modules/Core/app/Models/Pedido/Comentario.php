@@ -23,14 +23,6 @@ class Comentario extends \Eloquent
     /**
      * @var array
      */
-    protected $appends = [
-        'created_at_diff_readable',
-        'created_at_readable',
-    ];
-
-    /**
-     * @var array
-     */
     protected $with = [
         'usuario',
     ];
@@ -53,26 +45,5 @@ class Comentario extends \Eloquent
     public function usuario()
     {
         return $this->belongsTo(Usuario::class);
-    }
-
-    /**
-     * Return readable created_at
-     *
-     * @return string
-     */
-    protected function getCreatedAtReadableAttribute()
-    {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y H:i');
-    }
-
-    /**
-     * Return readable created_at diff
-     *
-     * @return string
-     */
-    protected function getCreatedAtDiffReadableAttribute()
-    {
-        Carbon::setLocale(config('app.locale'));
-        return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->diffForHumans();
     }
 }

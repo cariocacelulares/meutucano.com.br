@@ -1,19 +1,68 @@
 <?php namespace Core\Transformers;
 
-use Core\Transformers\Traits\TransformerTrait;
+use Rastreio\Transformers\Parsers\RastreioParser;
+use Rastreio\Transformers\Parsers\PiParser;
+use Rastreio\Transformers\Parsers\DevolucaoParser;
+use Core\Transformers\Parsers\OrderParser;
+use Core\Transformers\Parsers\ClientParser;
+use Core\Transformers\Parsers\AddressParser;
 
 /**
- * Class PedidoTransformer
+ * Class OrderTransformer
  * @package Core\Transformers
  */
-class PedidoTransformer
+class OrderTransformer
 {
-    use TransformerTrait;
+    public static function faturamento($orders)
+    {
+        $pagination  = $orders->toArray();
+        $transformed = [];
+
+        foreach ($orders as $order) {
+            $produtos = [];
+            foreach ($order->produtos as $orderProduct) {
+                $produtos[] = [
+                    'id'          => $orderProduct->id,
+                    'produto_sku' => $orderProduct->produto_sku,
+                    'quantidade'  => $orderProduct->quantidade,
+                    'valor'       => $orderProduct->valor,
+                    'produto'     => [
+                        'sku'    => $orderProduct->produto->sku,
+                        'titulo' => $orderProduct->produto->titulo,
+                    ],
+                    'inspecoes'   => $orderProduct->inspecoes,
+                ];
+            }
+
+            $transformed[] = [
+                'id'                   => $order['id'],
+                'codigo_marketplace'   => $order['codigo_marketplace'],
+                'marketplace'          => $order['marketplace'],
+                'marketplace_readable' => OrderParser::getMarketplaceReadable($order['marketplace']),
+                'segurado'             => $order['segurado'],
+                'priorizado'           => $order['priorizado'],
+                'desconto'             => OrderParser::getDesconto($order),
+                'estimated_delivery'   => $order['estimated_delivery'],
+                'created_at'           => dateConvert($order['created_at']),
+                'comentarios'          => $order['comentarios'],
+                'notas'                => $order['notas'],
+                'rastreios'            => $order['rastreios'],
+                'cliente'              => [
+                    'nome'            => $order['cliente']['nome'],
+                    'taxvat'          => $order['cliente']['taxvat'],
+                    'taxvat_readable' => ClientParser::getTaxvatReadable($order['cliente']['taxvat'], $order['cliente']['tipo']),
+                ],
+                'produtos'             => $produtos,
+            ];
+        }
+
+        $pagination['data'] = $transformed;
+
+        return $pagination;
+    }
 
     public static function list($orders)
     {
-        $obj = new PedidoTransformer;
-
         $pagination  = $orders->toArray();
         $transformed = [];
 
@@ -21,24 +70,24 @@ class PedidoTransformer
             $transformed[] = [
                 'id'                   => $order['id'],
                 'codigo_marketplace'   => $order['codigo_marketplace'],
-                'marketplace_readable' => $obj->getMarketplaceReadable($order['marketplace']),
+                'marketplace_readable' => OrderParser::getMarketplaceReadable($order['marketplace']),
+                'status'             => $order['status'],
+                'total'              => $order['total'],
+                'created_at'         => dateConvert($order['created_at']),
+                'status_description' => OrderParser::getStatusDescription($order['status']),
+                'reembolso'          => $order['reembolso'],
+                'segurado'           => $order['segurado'],
+                'protocolo'          => $order['protocolo'],
                 'cliente'              => [
                     'nome' => $order['cliente']['nome'],
                     'fone' => $order['cliente']['fone'],
                 ],
                 'endereco'             => [
                     'cep'          => $order['endereco']['cep'],
-                    'cep_readable' => $obj->getCepReadable($order['endereco']['cep']),
+                    'cep_readable' => AddressParser::getCepReadable($order['endereco']['cep']),
                     'cidade'       => $order['endereco']['cidade'],
                     'uf'           => $order['endereco']['uf'],
                 ],
-                'status'             => $order['status'],
-                'total'              => $order['total'],
-                'created_at'         => $obj->dateConvert($order['created_at']),
-                'status_description' => $obj->getStatusDescription($order['status']),
-                'reembolso'          => $order['reembolso'],
-                'segurado'           => $order['segurado'],
-                'protocolo'          => $order['protocolo'],
             ];
         }
 
@@ -53,19 +102,19 @@ class PedidoTransformer
         foreach ($order->rastreios as $rastreio) {
             $devolucao = (!$rastreio->devolucao) ? null : [
                 'id'         => $rastreio->devolucao->id,
-                'data'       => $rastreio->devolucao->data,
-                'created_at' => $rastreio->devolucao->created_at,
+                'data'       => dateConvert($rastreio->devolucao->data, 'Y-m-d'),
+                'created_at' => dateConvert($rastreio->devolucao->created_at),
             ];
 
             $logistica = (!$rastreio->logistica) ? null : [
-                'created_at' => $rastreio->logistica->created_at,
+                'created_at' => dateConvert($rastreio->logistica->created_at),
             ];
 
             $pi = (!$rastreio->pi) ? null : [
-                'created_at'         => $rastreio->pi->created_at,
+                'created_at'         => dateConvert($rastreio->pi->created_at),
                 'codigo_pi'          => $rastreio->pi->codigo_pi,
                 'motivo'             => $rastreio->pi->motivo,
-                'motivo_description' => $rastreio->pi->motivo_description,
+                'motivo_description' => PiParser::getMotivoDescription($rastreio->pi->motivo),
             ];
 
             $rastreios[] = [
@@ -75,8 +124,8 @@ class PedidoTransformer
                 'imagem_historico'    => $rastreio->imagem_historico,
                 'monitorado'          => $rastreio->monitorado,
                 'status'              => $rastreio->status,
-                'status_description'  => $rastreio->status_description,
-                'data_envio_readable' => $rastreio->data_envio_readable,
+                'status_description'  => RastreioParser::getStatusDescription($rastreio->status),
+                'data_envio_readable' => dateConvert($rastreio->data_envio, 'Y-m-d'),
                 'prazo'               => $rastreio->prazo,
                 'devolucao'           => $devolucao,
                 'logistica'           => $logistica,
@@ -106,7 +155,7 @@ class PedidoTransformer
             foreach ($produto->inspecoes as $inspecao) {
                 $inspecoes[] = [
                     'id'          => $inspecao->id,
-                    'revisado_at' => $inspecao->revisado_at,
+                    'revisado_at' => dateConvert($inspecao->revisado_at),
                     'priorizado'  => $inspecao->priorizado,
                 ];
             }
@@ -133,17 +182,17 @@ class PedidoTransformer
             'reembolso'                 => $order->reembolso,
             'protocolo'                 => $order->protocolo,
             'status'                    => $order->status,
-            'status_description'        => $order->status_description,
-            'can_prioritize'            => $order->can_prioritize,
-            'can_hold'                  => $order->can_hold,
-            'can_cancel'                => $order->can_cancel,
-            'marketplace_readable'      => $order->marketplace_readable,
-            'frete_metodo_readable'     => $order->frete_metodo_readable,
+            'status_description'        => OrderParser::getStatusDescription($order->status),
+            'can_prioritize'            => OrderParser::getCanPrioritize($order->status),
+            'can_hold'                  => OrderParser::getCanHold($order->status),
+            'can_cancel'                => OrderParser::getCanCancel($order->status),
+            'marketplace_readable'      => OrderParser::getMarketplaceReadable($order->marketplace),
+            'frete_metodo_readable'     => OrderParser::getFreteMetodoReadable($order->frete_metodo),
             'frete_valor'               => $order->frete_valor,
             'total'                     => $order->total,
-            'pagamento_metodo_readable' => $order->pagamento_metodo_readable,
-            'created_at'                => $order->created_at,
-            'desconto'                  => $order->desconto,
+            'pagamento_metodo_readable' => OrderParser::getPagamentoMetodoReadable($order->pagamento_metodo),
+            'created_at'                => dateConvert($order->created_at),
+            'desconto'                  => OrderParser::getDesconto($order),
 
             'endereco'                  => [
                 'id'           => $order->endereco->id,
@@ -153,7 +202,7 @@ class PedidoTransformer
                 'cidade'       => $order->endereco->cidade,
                 'uf'           => $order->endereco->uf,
                 'cep'          => $order->endereco->cep,
-                'cep_readable' => $order->endereco->cep_readable,
+                'cep_readable' => AddressParser::getCepReadable($order->endereco->cep),
                 'complemento'  => $order->endereco->complemento,
             ],
 
@@ -163,126 +212,12 @@ class PedidoTransformer
                 'fone'            => $order->cliente->fone,
                 'email'           => $order->cliente->email,
                 'taxvat'          => $order->cliente->taxvat,
-                'taxvat_readable' => $order->cliente->taxvat_readable,
+                'taxvat_readable' => ClientParser::getTaxvatReadable($order->cliente->taxvat, $order->cliente->tipo),
             ],
 
             'rastreios'                 => $rastreios,
             'notas'                     => $notas,
             'produtos'                  => $produtos,
         ];
-    }
-
-    protected function getStatusDescription($status)
-    {
-        if (!isset(\Config::get('core.pedido_status')[$status])) {
-            return 'Desconhecido';
-        } else {
-            return \Config::get('core.pedido_status')[$status];
-        }
-    }
-
-    protected function getMarketplaceReadable($marketplace)
-    {
-        switch ($marketplace) {
-            case 'WALMART':
-                return 'Walmart';
-            case 'MERCADOLIVRE':
-                return 'Mercado Livre';
-            default:
-                return $marketplace;
-        }
-    }
-
-    protected function getPagamentoMetodoReadable($pagamento_metodo)
-    {
-        $metodo = strtolower($pagamento_metodo);
-
-        if (!$metodo) {
-            return null;
-        }
-
-        switch ($metodo) {
-            case 'credito':
-                $metodo = 'cartão de crédito';
-                break;
-            case 'debito':
-                $metodo = 'cartão de débito';
-                break;
-            case 'boleto':
-                $metodo = 'boleto';
-                break;
-            default:
-                $metodo = 'outro meio';
-                break;
-        }
-
-        return 'Pagamento via ' . $metodo;
-    }
-
-    protected function getFreteMetodoReadable($frete_metodo)
-    {
-        $metodo = strtolower($frete_metodo);
-
-        if (!$metodo) {
-            return null;
-        }
-
-        switch ($metodo) {
-            case 'pac':
-                $metodo = 'PAC';
-                break;
-            case 'sedex':
-                $metodo = 'SEDEX';
-                break;
-            default:
-                $metodo = 'outro meio';
-                break;
-        }
-
-        return 'Envio via ' . $metodo;
-    }
-
-    protected function getCanHold($status)
-    {
-        if (in_array($status, [0,1])) {
-            return true;
-        }
-
-        return false;
-    }
-
-    protected function getCanPrioritize($status)
-    {
-        if (in_array($status, [0,1])) {
-            return true;
-        }
-
-        return false;
-    }
-
-    protected function getCanCancel($status)
-    {
-        if (in_array($status, [0,1])) {
-            return true;
-        }
-
-        return false;
-    }
-
-    protected function getDesconto($order)
-    {
-        if (strtolower($order->marketplace) === 'b2w') {
-            $frete = ($order->frete_valor) ?: 0;
-            $total = 0;
-            foreach ($order->produtos as $produto) {
-                $total += $produto->total;
-            }
-
-            if ($total > 0 && ($order->total - $frete) != $total) {
-                return round(100 - ((($order->total - $frete) * 100) / $total));
-            }
-        }
-
-        return null;
     }
 }

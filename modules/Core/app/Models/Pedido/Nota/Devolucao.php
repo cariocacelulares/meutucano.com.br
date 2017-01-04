@@ -52,38 +52,4 @@ class Devolucao extends \Eloquent
     {
         return ($this->tipo == 1) ? 'Estorno' : 'Devolução';
     }
-
-    /**
-     * Return readable created_at
-     *
-     * @return string
-     */
-    protected function getDataAttribute($data)
-    {
-        return Carbon::createFromFormat('Y-m-d', $data)->format('d/m/Y');
-    }
-
-    /**
-     * @return string
-     */
-    public function getCreatedAtAttribute($created_at)
-    {
-        if (!$created_at) {
-            return null;
-        }
-
-        return Carbon::createFromFormat('Y-m-d H:i:s', $created_at)->format('d/m/Y H:i');
-    }
-
-    /**
-     * @return string
-     */
-    public function getUpdatedAtAttribute($updated_at)
-    {
-        if (!$updated_at) {
-            return null;
-        }
-
-        return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
-    }
 }

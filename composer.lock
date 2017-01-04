@@ -131,16 +131,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.20.12",
+            "version": "3.20.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "8725e67cb77b057b55596b4468ce9a1a95c5fe96"
+                "reference": "343c6c96468de5087ae5e7df4ccee2668857a5aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/8725e67cb77b057b55596b4468ce9a1a95c5fe96",
-                "reference": "8725e67cb77b057b55596b4468ce9a1a95c5fe96",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/343c6c96468de5087ae5e7df4ccee2668857a5aa",
+                "reference": "343c6c96468de5087ae5e7df4ccee2668857a5aa",
                 "shasum": ""
             },
             "require": {
@@ -207,7 +207,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2016-12-30 00:41:36"
+            "time": "2017-01-04 18:20:17"
         },
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -4878,16 +4878,16 @@
         },
         {
             "name": "beberlei/assert",
-            "version": "v2.6.8",
+            "version": "v2.6.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/beberlei/assert.git",
-                "reference": "848c8f0bde97b48d1e159075e20a6667583f3978"
+                "reference": "dc75095761b03afb09fb61913a178fc60274b1bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/beberlei/assert/zipball/848c8f0bde97b48d1e159075e20a6667583f3978",
-                "reference": "848c8f0bde97b48d1e159075e20a6667583f3978",
+                "url": "https://api.github.com/repos/beberlei/assert/zipball/dc75095761b03afb09fb61913a178fc60274b1bf",
+                "reference": "dc75095761b03afb09fb61913a178fc60274b1bf",
                 "shasum": ""
             },
             "require": {
@@ -4929,7 +4929,7 @@
                 "assertion",
                 "validation"
             ],
-            "time": "2016-12-05 11:33:17"
+            "time": "2017-01-04 18:24:33"
         },
         {
             "name": "doctrine/instantiator",

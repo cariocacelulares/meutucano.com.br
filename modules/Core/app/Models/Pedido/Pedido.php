@@ -45,19 +45,6 @@ class Pedido extends \Eloquent
         'priorizado'
     ];
 
-    /*
-    protected $appends = [
-        'marketplace_readable',
-        'status_description',
-        'can_prioritize',
-        'can_hold',
-        'can_cancel',
-        'pagamento_metodo_readable',
-        'frete_metodo_readable',
-        'desconto'
-    ];
-    */
-
     /**
      * @var array
      */

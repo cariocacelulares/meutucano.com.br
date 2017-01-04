@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Sugestao\Models\Sugestao;
 use Nwidart\Modules\Facades\Module;
-use Core\Transformers\PedidoTransformer;
+use Core\Transformers\OrderTransformer;
 
 /**
  * Class PedidoController
@@ -40,7 +40,7 @@ class PedidoController extends Controller
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse(PedidoTransformer::list($list));
+        return $this->listResponse(OrderTransformer::list($list));
     }
 
     /**
@@ -77,7 +77,7 @@ class PedidoController extends Controller
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse($list);
+        return $this->listResponse(OrderTransformer::faturamento($list));
     }
 
     /**
@@ -208,7 +208,7 @@ class PedidoController extends Controller
                 ->find($id);
 
             if ($data) {
-                return $this->showResponse(PedidoTransformer::show($data));
+                return $this->showResponse(OrderTransformer::show($data));
             }
         } catch (\Exception $e) {
             if ($e->getPrevious()) {

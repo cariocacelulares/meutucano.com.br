@@ -239,3 +239,22 @@ if (!function_exists('hasModule')) {
         return !is_null(\Config::get(str_slug($module)));
     }
 }
+
+if (!function_exists('dateConvert')) {
+    /**
+     * Coverts a date format with Carbon
+     * 
+     * @param  string $date date to convert
+     * @param  string $from from format
+     * @param  string $to   to format
+     * @return string       formated date
+     */
+    function dateConvert($date = null, $from = 'Y-m-d H:i:s', $to = 'd/m/Y')
+    {
+      if (!$date) {
+          return null;
+      }
+
+      return \Carbon\Carbon::createFromFormat($from, $date)->format($to);
+    }
+}
