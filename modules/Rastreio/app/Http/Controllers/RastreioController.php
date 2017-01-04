@@ -525,7 +525,7 @@ class RastreioController extends Controller
             $encomenda->setDimensao($dimensao);
             $encomenda->setEtiqueta($etiqueta);
             $encomenda->setPeso(0.500 * (int) $rastreio->pedido->produtos->count());
-            $encomenda->setLote(round($rastreio->pedido->total));
+            $encomenda->setLote(round($rastreio->pedido->total - $rastreio->pedido->frete_valor));
 
 
             /**
