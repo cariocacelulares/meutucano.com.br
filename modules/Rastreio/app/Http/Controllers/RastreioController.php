@@ -245,8 +245,9 @@ class RastreioController extends Controller
     public function forceScreenshot($rastreio)
     {
         if ($rastreio) {
-            $rastreio = $this->screenshot($rastreio);
-            $rastreio->save();
+            if ($rastreio = $this->screenshot($rastreio)) {
+                $rastreio->save();
+            }
         } else {
             \Log::error('Não foi possível gerar um screenshot: rastreio inválido');
         }
