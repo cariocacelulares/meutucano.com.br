@@ -8,6 +8,7 @@ use InspecaoTecnica\Http\Controllers\Traits\InspecaoTecnicaTrait;
 use Rastreio\Models\Rastreio;
 use Rastreio\Models\Devolucao;
 use Rastreio\Http\Requests\DevolucaoRequest as Request;
+use Rastreio\Transformers\DevolucaoTransformer;
 
 /**
  * Class DevolucaoController
@@ -68,7 +69,7 @@ class DevolucaoController extends Controller
 
         $lista = $this->handleRequest($lista);
 
-        return $this->listResponse($lista);
+        return $this->listResponse(DevolucaoTransformer::pending($lista));
     }
 
     /**

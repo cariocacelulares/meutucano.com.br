@@ -24,6 +24,7 @@ use PhpSigep\Pdf\CartaoDePostagem;
 use Sunra\PhpSimple\HtmlDomParser;
 use GuzzleHttp\Client;
 use Rastreio\Http\Requests\RastreioRequest as Request;
+use Rastreio\Transformers\RastreioTransformer;
 
 /**
  * Class RastreioController
@@ -52,7 +53,7 @@ class RastreioController extends Controller
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse($list);
+        return $this->listResponse(RastreioTransformer::important($list));
     }
 
     /**

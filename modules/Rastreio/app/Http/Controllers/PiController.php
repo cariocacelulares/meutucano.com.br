@@ -7,6 +7,7 @@ use Rastreio\Http\Controllers\Traits\RastreioTrait;
 use Rastreio\Models\Rastreio;
 use Rastreio\Models\Pi;
 use Rastreio\Http\Requests\PiRequest as Request;
+use Rastreio\Transformers\PiTransformer;
 
 /**
  * Class PiController
@@ -43,7 +44,7 @@ class PiController extends Controller
     {
         $m = self::MODEL;
 
-        $lista = $m::with(['rastreio', 'rastreio.pedido', 'rastreio.pedido.cliente', 'rastreio.pedido.endereco'])
+        $list = $m::with(['rastreio', 'rastreio.pedido', 'rastreio.pedido.cliente', 'rastreio.pedido.endereco'])
             ->join('pedido_rastreios', 'pedido_rastreios.id', '=', 'pedido_rastreio_pis.rastreio_id')
             ->join('pedidos', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
@@ -51,9 +52,9 @@ class PiController extends Controller
             ->whereNull('pedido_rastreio_pis.status')
             ->orderBy('pedido_rastreio_pis.created_at', 'DESC');
 
-        $lista = $this->handleRequest($lista);
+        $list = $this->handleRequest($list);
 
-        return $this->listResponse($lista);
+        return $this->listResponse(PiTransformer::pending($list));
     }
 
     /**

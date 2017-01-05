@@ -27,7 +27,7 @@ class RastreioParser
 
     public static function getPrazoDate($data_envio, $prazo)
     {
-        return SomaDiasUteis(dateConvert($data_envio, 'Y-m-d'), $prazo);
+        return SomaDiasUteis(dateConvert($data_envio, 'Y-m-d', 'd/m/Y'), $prazo);
     }
 
     public static function getRastreioUrl($rastreio)
@@ -35,9 +35,9 @@ class RastreioParser
         return "http://websro.correios.com.br/sro_bin/txect01$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS={$rastreio}";
     }
 
-    public static function getMonitorado($order)
+    public static function getMonitorado($rastreio)
     {
-        return !!$order->monitoramentos()->where('usuario_id', '=', getCurrentUserId())->first();
+        return !!$rastreio->monitoramentos()->where('usuario_id', '=', getCurrentUserId())->first();
     }
 
     public static function getProtocolo($obj)
