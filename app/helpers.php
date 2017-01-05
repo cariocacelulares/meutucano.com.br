@@ -243,13 +243,13 @@ if (!function_exists('hasModule')) {
 if (!function_exists('dateConvert')) {
     /**
      * Coverts a date format with Carbon
-     * 
+     *
      * @param  string $date date to convert
      * @param  string $from from format
      * @param  string $to   to format
      * @return string       formated date
      */
-    function dateConvert($date = null, $from = 'Y-m-d H:i:s', $to = 'd/m/Y')
+    function dateConvert($date = null, $from = 'Y-m-d H:i:s', $to = 'd/m/Y H:i:s')
     {
       if (!$date) {
           return null;

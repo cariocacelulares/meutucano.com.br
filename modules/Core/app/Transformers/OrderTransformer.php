@@ -42,7 +42,7 @@ class OrderTransformer
                 'segurado'             => $order['segurado'],
                 'priorizado'           => $order['priorizado'],
                 'desconto'             => OrderParser::getDesconto($order),
-                'estimated_delivery'   => $order['estimated_delivery'],
+                'estimated_delivery'   => dateConvert($order['estimated_delivery'], 'Y-m-d', 'd/m/Y'),
                 'created_at'           => dateConvert($order['created_at']),
                 'comentarios'          => $order['comentarios'],
                 'notas'                => $order['notas'],
@@ -102,7 +102,7 @@ class OrderTransformer
         foreach ($order->rastreios as $rastreio) {
             $devolucao = (!$rastreio->devolucao) ? null : [
                 'id'         => $rastreio->devolucao->id,
-                'data'       => dateConvert($rastreio->devolucao->data, 'Y-m-d'),
+                'data'       => dateConvert($rastreio->devolucao->data, 'Y-m-d', 'd/m/Y'),
                 'created_at' => dateConvert($rastreio->devolucao->created_at),
             ];
 
@@ -125,7 +125,7 @@ class OrderTransformer
                 'monitorado'          => $rastreio->monitorado,
                 'status'              => $rastreio->status,
                 'status_description'  => RastreioParser::getStatusDescription($rastreio->status),
-                'data_envio_readable' => dateConvert($rastreio->data_envio, 'Y-m-d'),
+                'data_envio_readable' => dateConvert($rastreio->data_envio, 'Y-m-d', 'd/m/Y'),
                 'prazo'               => $rastreio->prazo,
                 'devolucao'           => $devolucao,
                 'logistica'           => $logistica,
