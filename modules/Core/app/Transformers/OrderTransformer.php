@@ -137,7 +137,7 @@ class OrderTransformer
         foreach ($order->notas as $nota) {
             $devolucao = (!$nota->devolucao) ? null : [
                 'id'   => $nota->devolucao->id,
-                'data' => $nota->devolucao->data,
+                'data' => dateConvert($nota->devolucao->data, 'Y-m-d', 'd/m/Y'),
             ];
 
             $notas[] = [

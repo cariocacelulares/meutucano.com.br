@@ -249,7 +249,7 @@ if (!function_exists('dateConvert')) {
      * @param  string $to   to format
      * @return string       formated date
      */
-    function dateConvert($date = null, $from = 'Y-m-d H:i:s', $to = 'd/m/Y H:i:s')
+    function dateConvert($date = null, $from = 'Y-m-d H:i:s', $to = 'd/m/Y H:i')
     {
       if (!$date) {
           return null;

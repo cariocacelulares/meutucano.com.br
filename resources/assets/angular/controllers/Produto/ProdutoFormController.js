@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('ProdutoFormController', ProdutoFormController);
 
-    function ProdutoFormController($state, $stateParams, SweetAlert, toaster, TabsHelper, PedidoHelper, Produto, Linha, Marca, Atributo, ValidationErrors) {
+    function ProdutoFormController($state, $stateParams, SweetAlert, toaster, TabsHelper, PedidoHelper, Produto, /*Linha, Marca, Atributo, */ValidationErrors) {
         var vm       = this;
         var original = {
             linha_id: null,
@@ -24,8 +24,8 @@
             gerado  : false
         };
 
-        vm.linhas = {};
-        vm.marcas = {};
+        /*vm.linhas = {};
+        vm.marcas = {};*/
 
         vm.validationErrors = [];
         vm.tabsHelper       = TabsHelper;
@@ -46,7 +46,7 @@
                 if (vm.produto.estado === null)
                     vm.produto.estado = '0';
 
-                if (vm.produto.linha_id)
+                /*if (vm.produto.linha_id)
                     original.linha_id = vm.produto.linha_id;
 
                 if (vm.produto.linha_id && vm.produto.atributos) {
@@ -54,13 +54,13 @@
                 }
 
                 if (vm.produto.linha_id)
-                    vm.loadAtributos();
+                    vm.loadAtributos();*/
 
                 vm.loading = false;
             });
         };
 
-        vm.loadLinhas = function() {
+        /*vm.loadLinhas = function() {
             vm.loading = true;
 
             Linha.getList().then(function(linhas) {
@@ -100,18 +100,18 @@
 
                 vm.produto.atributos = atributos;
             });
-        };
+        };*/
 
         if (vm.produto.sku)
             vm.load();
 
-        vm.loadLinhas();
-        vm.loadMarcas();
+        /*vm.loadLinhas();
+        vm.loadMarcas();*/
 
         /*
          * Recarrega os atributos e seta o ncm padrão ao alterar
          */
-        vm.linhaChange = function() {
+        /*vm.linhaChange = function() {
             vm.produto.linha_id = vm.produto.linha.id;
 
             Linha.get(vm.produto.linha_id).then(function(linha) {
@@ -136,14 +136,14 @@
             });
 
             vm.loadAtributos();
-        };
+        };*/
 
         /*
          * Recarrega os atributos e seta o ncm padrão ao alterar
          */
-        vm.marcaChange = function() {
+        /*vm.marcaChange = function() {
             vm.produto.marca_id = vm.produto.marca.id;
-        };
+        };*/
 
         /*
          * Retona um novo SKU para o produto

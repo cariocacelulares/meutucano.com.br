@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Core\Models\Cliente\Cliente;
 use Core\Models\Cliente\Endereco;
 use Illuminate\Support\Facades\Input;
+use Core\Transformers\ClientTransformer;
 
 /**
  * Class ClienteController
@@ -23,13 +24,10 @@ class ClienteController extends Controller
      */
     public function tableList()
     {
-        $m = self::MODEL;
-
-        $list = $m::orderBy('clientes.created_at', 'DESC');
-
+        $list = (self::MODEL)::orderBy('clientes.created_at', 'DESC');
         $list = $this->handleRequest($list);
 
-        return $this->listResponse($list);
+        return $this->listResponse(ClientTransformer::list($list));
     }
 
     /**
@@ -42,7 +40,7 @@ class ClienteController extends Controller
         $data = $m::with(['pedidos', 'enderecos'])->find($id);
 
         if ($data) {
-            return $this->showResponse($data);
+            return $this->showResponse(ClientTransformer::show($data));
         }
 
         return $this->notFoundResponse();
