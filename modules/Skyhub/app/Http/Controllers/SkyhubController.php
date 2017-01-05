@@ -449,18 +449,32 @@ class SkyhubController extends Controller
             $rastreio = $order->rastreios->first();
             $nota     = $order->notas()->orderBy('created_at', 'DESC')->first();
 
-            $jsonData = [
-                "shipment" => [
-                    "code"  => ($rastreio && isset($rastreio->rastreio)) ? $rastreio->rastreio : null,
-                    "items" => $jsonItens,
-                    "track" => [
-                        "code"    => ($rastreio && isset($rastreio->rastreio)) ? $rastreio->rastreio : null,
-                        "carrier" => "CORREIOS",
-                        "method"  => ($rastreio && isset($rastreio->servico)) ? $rastreio->servico : null,
+            if ($rastreio) {
+                $shipment = [
+                    'code'  => $rastreio->rastreio,
+                    'items' => $jsonItens,
+                    'track' => [
+                        'code'    => $rastreio->rastreio,
+                        'carrier' => 'CORREIOS',
+                        'method'  => $rastreio->servico,
                     ]
-                ],
-                "invoice" => [
-                    "key" => $nota ? $nota->chave : null
+                ];
+            } else {
+                $shipment = [
+                    'code'  => $nota->numero,
+                    'items' => $jsonItens,
+                    'track' => [
+                        'code'    => $nota->numero,
+                        'carrier' => 'TRANSPORTADORA',
+                        'method'  => 'normal',
+                    ]
+                ];
+            }
+
+            $jsonData = [
+                'shipment' => $shipment,
+                'invoice' => [
+                    'key' => $nota ? $nota->chave : null
                 ]
             ];
 
