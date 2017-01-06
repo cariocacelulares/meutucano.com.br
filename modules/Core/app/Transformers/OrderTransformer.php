@@ -51,6 +51,7 @@ class OrderTransformer
                 'comentarios'          => $order['comentarios'],
                 'notas'                => $order['notas'],
                 'rastreios'            => $order['rastreios'],
+                'frete_metodo'         => $order['frete_metodo'],
                 'cliente'              => [
                     'nome'            => $order['cliente']['nome'],
                     'taxvat'          => $order['cliente']['taxvat'],

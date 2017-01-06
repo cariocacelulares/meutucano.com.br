@@ -12,6 +12,14 @@
     </select>
 </th>
 <th>
+    <select ng-model="FaturamentoList.filter['pedidos.frete_metodo']" class="form-control">
+        <option value="">Todos</option>
+        <option value="PAC">PAC</option>
+        <option value="SEDEX">SEDEX</option>
+    </select>
+</th>
+</th>
+<th>
     <input class="form-control big" ng-model="FaturamentoList.filter['clientes.nome']" placeholder="Nome do cliente" ng-model-options="{debounce:500}" />
 </th>
 <th>
