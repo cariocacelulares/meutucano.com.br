@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Rastreio\Models\Rastreio;
 use Rastreio\Models\Monitorado;
+use Rastreio\Transformers\RastreioTransformer;
 
 /**
  * Class MonitoradoController
@@ -37,7 +38,7 @@ class MonitoradoController extends Controller
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse($list);
+        return $this->listResponse(RastreioTransformer::monitorado($list));
     }
 
     public function simpleList()

@@ -1,10 +1,11 @@
 <?php namespace Core\Http\Controllers\Pedido;
 
-use App\Http\Controllers\Rest\RestControllerTrait;
-use App\Http\Controllers\Controller;
-use Core\Models\Pedido\Comentario;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Core\Models\Pedido\Comentario;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Rest\RestControllerTrait;
 use Core\Http\Requests\ComentarioRequest as Request;
+use Core\Transformers\CommentTransformer;
 
 /**
  * Class ComentarioController
@@ -21,8 +22,12 @@ class ComentarioController extends Controller
      */
     public function commentsFromOrder($pedido_id)
     {
-        $m = self::MODEL;
-        return $this->listResponse($m::where('pedido_id', $pedido_id)->orderBy('created_at', 'desc')->get());
+        $data = (self::MODEL)
+            ::where('pedido_id', $pedido_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return $this->listResponse(CommentTransformer::list($data));
     }
 
     /**

@@ -24,6 +24,7 @@ use PhpSigep\Pdf\CartaoDePostagem;
 use Sunra\PhpSimple\HtmlDomParser;
 use GuzzleHttp\Client;
 use Rastreio\Http\Requests\RastreioRequest as Request;
+use Rastreio\Transformers\RastreioTransformer;
 
 /**
  * Class RastreioController
@@ -52,7 +53,7 @@ class RastreioController extends Controller
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse($list);
+        return $this->listResponse(RastreioTransformer::important($list));
     }
 
     /**
@@ -245,8 +246,9 @@ class RastreioController extends Controller
     public function forceScreenshot($rastreio)
     {
         if ($rastreio) {
-            $rastreio = $this->screenshot($rastreio);
-            $rastreio->save();
+            if ($rastreio = $this->screenshot($rastreio)) {
+                $rastreio->save();
+            }
         } else {
             \Log::error('Não foi possível gerar um screenshot: rastreio inválido');
         }
@@ -500,8 +502,6 @@ class RastreioController extends Controller
             $destino->setUf($rastreio->pedido->endereco->uf);
             $destino->setNumeroNotaFiscal($rastreio->pedido->notas()->orderBy('created_at', 'DESC')->first()->numero);
 
-
-
             /**
              * Rastreio
              */
@@ -527,7 +527,6 @@ class RastreioController extends Controller
             $encomenda->setPeso(0.500 * (int) $rastreio->pedido->produtos->count());
             $encomenda->setLote(round($rastreio->pedido->total - $rastreio->pedido->frete_valor));
 
-
             /**
              * Tipo frete
              */
@@ -542,7 +541,6 @@ class RastreioController extends Controller
 
             $plp->setEncomendas([$encomenda]);
             $plp->setRemetente($remetente);
-
 
             $pdf = new CartaoDePostagem($plp, '', public_path('assets/img/carioca-negativo.jpg'));
 

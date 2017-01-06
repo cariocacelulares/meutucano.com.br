@@ -143,15 +143,17 @@ function reportError($error)
     }
 }
 
-/**
- * Retorna apenas os digitos de uma string
- *
- * @param  string $string
- * @return string
- */
-function numbers($string)
-{
-    return preg_replace('/\D/', '', $string);
+if (!function_exists('numbers')) {
+    /**
+     * Retorna apenas os digitos de uma string
+     *
+     * @param  string $string
+     * @return string
+     */
+    function numbers($string)
+    {
+        return preg_replace('/\D/', '', $string);
+    }
 }
 
 /**
@@ -225,13 +227,34 @@ if (!function_exists('removeAcentos')) {
     }
 }
 
-/**
- * Check if module is active based in your config file
- *
- * @param  string  $module nome do modulo
- * @return boolean         if module is active
- */
-function hasModule($module)
-{
-    return !is_null(\Config::get(str_slug($module)));
+if (!function_exists('hasModule')) {
+    /**
+     * Check if module is active based in your config file
+     *
+     * @param  string  $module nome do modulo
+     * @return boolean         if module is active
+     */
+    function hasModule($module)
+    {
+        return !is_null(\Config::get(str_slug($module)));
+    }
+}
+
+if (!function_exists('dateConvert')) {
+    /**
+     * Coverts a date format with Carbon
+     *
+     * @param  string $date date to convert
+     * @param  string $from from format
+     * @param  string $to   to format
+     * @return string       formated date
+     */
+    function dateConvert($date = null, $from = 'Y-m-d H:i:s', $to = 'd/m/Y H:i')
+    {
+      if (!$date) {
+          return null;
+      }
+
+      return \Carbon\Carbon::createFromFormat($from, $date)->format($to);
+    }
 }

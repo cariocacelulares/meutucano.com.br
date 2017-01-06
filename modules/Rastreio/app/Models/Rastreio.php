@@ -39,18 +39,6 @@ class Rastreio extends \Eloquent
     /**
      * @var array
      */
-    protected $appends = [
-        'status_description',
-        'tipo_description',
-        'data_envio_readable',
-        'prazo_date',
-        'rastreio_url',
-        'monitorado',
-    ];
-
-    /**
-     * @var [type]
-     */
     protected $casts = [
         'status' => 'string'
     ];
@@ -113,73 +101,6 @@ class Rastreio extends \Eloquent
     public function rastreioRef()
     {
         return $this->belongsTo(Rastreio::class);
-    }
-
-    /**
-     * Return description from status
-     *
-     * @return string
-     */
-    public function getStatusDescriptionAttribute()
-    {
-        return ($this->status > 0) ? \Config::get('rastreio.status')[$this->status] : 'Pendente';
-    }
-
-    /**
-     * Return description from tipo
-     *
-     * @return string
-     */
-    public function getTipoDescriptionAttribute()
-    {
-        switch ($this->tipo) {
-            case 1:
-                return 'Devolução';
-            case 2:
-                return 'Reenvio por extravio';
-            case 3:
-                return 'Logística reversa';
-            default:
-                return 'Padrão';
-        }
-    }
-
-    /**
-     * Return readable CEP
-     *
-     * @return string
-     */
-    public function getDataEnvioReadableAttribute()
-    {
-        return Carbon::createFromFormat('Y-m-d', $this->data_envio)->format('d/m/Y');
-    }
-
-    /**
-     * Retorna o prazo em formato de data
-     *
-     * @return string
-     */
-    public function getPrazoDateAttribute()
-    {
-        return \SomaDiasUteis($this->getDataEnvioReadableAttribute(), $this->prazo);
-    }
-
-    /**
-     * Retorna a URL para rastreio
-     *
-     * @return string
-     */
-    public function getRastreioUrlAttribute()
-    {
-        return sprintf(
-            'http://websro.correios.com.br/sro_bin/txect01$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS=%s',
-            $this->rastreio
-        );
-    }
-
-    public function getMonitoradoAttribute()
-    {
-        return !!$this->monitoramentos()->where('usuario_id', '=', getCurrentUserId())->first();
     }
 
     /**

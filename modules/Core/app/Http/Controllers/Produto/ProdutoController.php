@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
 use InspecaoTecnica\Models\InspecaoTecnica;
 use Core\Http\Requests\ProdutoRequest as Request;
+use Core\Transformers\ProductTransformer;
+use Core\Transformers\Parsers\ProductParser;
+use Core\Transformers\Parsers\OrderParser;
 
 /**
  * Class ProdutoController
@@ -42,7 +45,7 @@ class ProdutoController extends Controller
         }
 
         $reservados = PedidoProduto
-             ::select('pedido_produtos.produto_sku', 'pedidos.status', DB::raw('COUNT(*) as count'))
+            ::select('pedido_produtos.produto_sku', 'pedidos.status', DB::raw('COUNT(*) as count'))
             ->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
             ->with(['pedido'])
             ->whereIn('pedido_produtos.produto_sku', $ids)
@@ -65,7 +68,7 @@ class ProdutoController extends Controller
             ];
         }
 
-        return $this->listResponse($list);
+        return $this->listResponse(ProductTransformer::list($list));
     }
 
     /**
@@ -76,8 +79,7 @@ class ProdutoController extends Controller
      */
     public function show($id)
     {
-        $m = self::MODEL;
-        $data = $m::find($id);
+        $data = (self::MODEL)::find($id);
 
         $pedidoProdutos = PedidoProduto
             ::with('pedido')
@@ -99,7 +101,7 @@ class ProdutoController extends Controller
             $attachedProducts['data'][] = [
                 'id'                 => $pedidoProduto['pedido']['id'],
                 'status'             => $pedidoProduto['pedido']['status'],
-                'status_description' => $pedidoProduto['pedido']['status_description'],
+                'status_description' => OrderParser::getStatusDescription($pedidoProduto['pedido']['status']),
                 'codigo_marketplace' => $pedidoProduto['pedido']['codigo_marketplace'],
                 'marketplace'        => $pedidoProduto['pedido']['marketplace'],
                 'quantidade'         => $pedidoProduto['quantidade'],
@@ -118,7 +120,7 @@ class ProdutoController extends Controller
 
             $data->revisoes = $revisoes ?: [];
 
-            return $this->showResponse($data);
+            return $this->showResponse(ProductTransformer::show($data));
         }
 
         return $this->notFoundResponse();
