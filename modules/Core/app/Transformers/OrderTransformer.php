@@ -89,7 +89,7 @@ class OrderTransformer
                 ];
 
                 $pi = (!$rastreio->pi) ? null : [
-                    'id'         => dateConvert($rastreio->pi->id),
+                    'id'         => $rastreio->pi->id,
                     'created_at' => dateConvert($rastreio->pi->created_at),
                 ];
 
@@ -186,8 +186,8 @@ class OrderTransformer
             $pi = (!$rastreio->pi) ? null : [
                 'created_at'         => dateConvert($rastreio->pi->created_at),
                 'codigo_pi'          => $rastreio->pi->codigo_pi,
-                'motivo'             => $rastreio->pi->motivo,
-                'motivo_description' => PiParser::getMotivoDescription($rastreio->pi->motivo),
+                'motivo'             => $rastreio->pi->motivo_status,
+                'motivo_description' => PiParser::getMotivoDescription($rastreio->pi->motivo_status),
             ];
 
             $rastreios[] = [
