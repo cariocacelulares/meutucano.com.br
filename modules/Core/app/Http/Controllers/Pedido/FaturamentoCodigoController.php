@@ -31,7 +31,7 @@ class FaturamentoCodigoController extends Controller
             $codigo->atual = ($codigo->atual + 1);
             $codigo->save();
 
-            $servico = ($servico == 0) ? 'PE' : 'DW';
+            $servico = ($servico == 0) ? 'PN' : 'DW';
 
             $etiqueta = new Etiqueta();
             $etiqueta->setEtiquetaSemDv($servico . $codigo->atual);
