@@ -70,6 +70,66 @@ class OrderTransformer
      * @param  object $orders
      * @return array
      */
+    public static function search($orders)
+    {
+        $transformed = [];
+
+        foreach ($orders as $order) {
+            $rastreios = [];
+            foreach ($order['rastreios'] as $rastreio) {
+                $devolucao = (!$rastreio->devolucao) ? null : [
+                    'id'         => $rastreio->devolucao->id,
+                    'data'       => dateConvert($rastreio->devolucao->data, 'Y-m-d', 'd/m/Y'),
+                    'created_at' => dateConvert($rastreio->devolucao->created_at),
+                ];
+
+                $logistica = (!$rastreio->logistica) ? null : [
+                    'id'         => $rastreio->logistica->id,
+                    'created_at' => dateConvert($rastreio->logistica->created_at),
+                ];
+
+                $pi = (!$rastreio->pi) ? null : [
+                    'id'         => dateConvert($rastreio->pi->id),
+                    'created_at' => dateConvert($rastreio->pi->created_at),
+                ];
+
+                $rastreios[] = [
+                    'id'                 => $rastreio->id,
+                    'rastreio_url'       => $rastreio->rastreio_url,
+                    'rastreio'           => $rastreio->rastreio,
+                    'status'             => $rastreio->status,
+                    'status_description' => RastreioParser::getStatusDescription($rastreio->status),
+                    'created_at'         => dateConvert($rastreio->created_at),
+                    'devolucao'          => $devolucao,
+                    'logistica'          => $logistica,
+                    'pi'                 => $pi,
+                ];
+            }
+
+            $transformed[] = [
+                'id'                   => $order->id,
+                'codigo_api'           => $order->codigo_api,
+                'codigo_marketplace'   => $order->codigo_marketplace,
+                'marketplace_readable' => OrderParser::getMarketplaceReadable($order->marketplace),
+                'status'               => $order->status,
+                'status_description'   => OrderParser::getStatusDescription($order->status),
+                'reembolso'            => $order->reembolso,
+                'segurado'             => $order->segurado,
+                'protocolo'            => $order->protocolo,
+                'rastreios'            => $rastreios,
+                'cliente'              => [
+                    'nome' => $order->cliente->nome,
+                ],
+            ];
+        }
+
+        return $transformed;
+    }
+
+    /**
+     * @param  object $orders
+     * @return array
+     */
     public static function list($orders)
     {
         $pagination  = $orders->toArray();

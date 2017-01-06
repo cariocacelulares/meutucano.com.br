@@ -7,6 +7,9 @@ use Core\Models\Pedido\Pedido;
 use Core\Models\Produto\Produto;
 use Core\Models\Cliente\Cliente;
 use Rastreio\Models;
+use Core\Transformers\ClientTransformer;
+use Core\Transformers\OrderTransformer;
+use Core\Transformers\ProductTransformer;
 
 /**
  * Class SearchController
@@ -161,6 +164,8 @@ class SearchController extends Controller
                     ->get([
                         'pedidos.*'
                     ]);
+
+                $busca['pedidos'] = OrderTransformer::search($busca['pedidos']);
             }
 
             if (in_array('clientes', $categories)) {
@@ -177,6 +182,8 @@ class SearchController extends Controller
                     ->offset($offset)
                     ->limit($limit)
                     ->get();
+
+                $busca['clientes'] = ClientTransformer::search($busca['clientes']);
             }
 
             if (in_array('produtos', $categories)) {
@@ -193,6 +200,8 @@ class SearchController extends Controller
                     ->offset($offset)
                     ->limit($limit)
                     ->get();
+
+                $busca['produtos'] = ProductTransformer::search($busca['produtos']);
             }
 
             $busca['offset'] = $offset;

@@ -12,6 +12,29 @@ class ProductTransformer
      * @param  object $products
      * @return array
      */
+    public static function search($products)
+    {
+        $transformed = [];
+
+        foreach ($products as $product) {
+            $transformed[] = [
+                'sku'                => $product['sku'],
+                'titulo'             => $product['titulo'],
+                'estoque'            => $product['estoque'],
+                'estado'             => $product['estado'],
+                'estado_description' => ProductParser::getEstadoDescription($product['estado']),
+                'ean'                => $product['ean'],
+                'referencia'         => $product['referencia'],
+            ];
+        }
+
+        return $transformed;
+    }
+
+    /**
+     * @param  object $products
+     * @return array
+     */
     public static function list($products)
     {
         $pagination  = $products->toArray();

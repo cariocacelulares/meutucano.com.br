@@ -40,14 +40,6 @@ class Logistica extends \Eloquent
     ];
 
     /**
-     * @var array
-     */
-    protected $appends = [
-        'protocolo',
-        'imagem_cancelamento',
-    ];
-
-    /**
      * Rastreio
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

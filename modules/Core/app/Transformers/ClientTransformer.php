@@ -14,6 +14,37 @@ class ClientTransformer
      * @param  object $clients
      * @return array
      */
+    public static function search($clients)
+    {
+        $transformed = [];
+        foreach ($clients as $client) {
+            $lastEndereco = (!$client->enderecos) ? [] : [
+                'cep'          => $client->enderecos[0]['cep'],
+                'cep_readable' => AddressParser::getCepReadable($client->enderecos[0]['cep']),
+                'cidade'       => $client->enderecos[0]['cidade'],
+                'uf'           => $client->enderecos[0]['uf'],
+            ];
+
+            $transformed[] = [
+                'id'              => $client['id'],
+                'nome'            => $client['nome'],
+                'fone'            => $client['fone'],
+                'email'           => $client['email'],
+                'inscricao'       => $client['inscricao'],
+                'taxvat'          => $client['taxvat'],
+                'taxvat_readable' => ClientParser::getTaxvatReadable($client['taxvat'], $client['tipo']),
+                'created_at'      => dateConvert($client['created_at']),
+                'endereco'        => $lastEndereco,
+            ];
+        }
+
+        return $transformed;
+    }
+
+    /**
+     * @param  object $clients
+     * @return array
+     */
     public static function list($clients)
     {
         $pagination  = $clients->toArray();
