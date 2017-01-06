@@ -136,6 +136,7 @@ class OrderTransformer
                 'rastreio'            => $rastreio->rastreio,
                 'imagem_historico'    => $rastreio->imagem_historico,
                 'monitorado'          => RastreioParser::getMonitorado($rastreio),
+                'rastreio_url'        => RastreioParser::getRastreioUrl($rastreio->rastreio),
                 'status'              => $rastreio->status,
                 'status_description'  => RastreioParser::getStatusDescription($rastreio->status),
                 'data_envio_readable' => dateConvert($rastreio->data_envio, 'Y-m-d', 'd/m/Y'),
