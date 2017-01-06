@@ -8,7 +8,7 @@ class AddressParser
 {
     /**
      * Beautify postal code string
-     * 
+     *
      * @param  string $cep
      * @return string
      */
@@ -19,7 +19,7 @@ class AddressParser
        } elseif (strlen($cep) == 7) {
            $cep = '0' . $cep;
 
-           return $this->getCepReadableAttribute();
+           return AddressParser::getCepReadableAttribute($cep);
        }
     }
 }
