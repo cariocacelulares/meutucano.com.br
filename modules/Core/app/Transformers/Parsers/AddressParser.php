@@ -19,7 +19,7 @@ class AddressParser
        } elseif (strlen($cep) == 7) {
            $cep = '0' . $cep;
 
-           return AddressParser::getCepReadableAttribute($cep);
+           return AddressParser::getCepReadable($cep);
        }
     }
 }
