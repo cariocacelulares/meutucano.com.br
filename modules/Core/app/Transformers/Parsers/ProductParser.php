@@ -6,6 +6,12 @@
  */
 class ProductParser
 {
+    /**
+     * Transforme product state code to string
+     *
+     * @param  int|string $estado
+     * @return string
+     */
     public static function getEstadoDescription($estado)
     {
        switch ($estado) {

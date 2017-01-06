@@ -10,6 +10,10 @@ use Core\Transformers\Parsers\OrderParser;
  */
 class ClientTransformer
 {
+    /**
+     * @param  object $clients
+     * @return array
+     */
     public static function list($clients)
     {
         $pagination  = $clients->toArray();
@@ -40,6 +44,10 @@ class ClientTransformer
         return $pagination;
     }
 
+    /**
+     * @param  object $client
+     * @return array
+     */
     public static function show($client)
     {
         $enderecos = [];

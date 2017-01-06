@@ -6,6 +6,12 @@
  */
 class OrderParser
 {
+    /**
+     * Transform order status code to string
+     *
+     * @param  int|string $status
+     * @return string
+     */
     public static function getStatusDescription($status)
     {
         if (!isset(\Config::get('core.pedido_status')[$status])) {
@@ -15,6 +21,12 @@ class OrderParser
         }
     }
 
+    /**
+     * Transform marketplace raw to beauty string :)
+     *
+     * @param  string $marketplace
+     * @return string
+     */
     public static function getMarketplaceReadable($marketplace)
     {
         switch ($marketplace) {
@@ -27,6 +39,12 @@ class OrderParser
         }
     }
 
+    /**
+     * Transforme payment method raw to beauty string
+     *
+     * @param  string $pagamento_metodo
+     * @return string
+     */
     public static function getPagamentoMetodoReadable($pagamento_metodo)
     {
         $metodo = strtolower($pagamento_metodo);
@@ -53,6 +71,12 @@ class OrderParser
         return 'Pagamento via ' . $metodo;
     }
 
+    /**
+     * Transform shipment method war to beauty string
+     *
+     * @param  string $frete_metodo
+     * @return string
+     */
     public static function getFreteMetodoReadable($frete_metodo)
     {
         $metodo = strtolower($frete_metodo);
@@ -76,6 +100,12 @@ class OrderParser
         return 'Envio via ' . $metodo;
     }
 
+    /**
+     * Define if a order can be holded
+     *
+     * @param  int|string $status
+     * @return boolean
+     */
     public static function getCanHold($status)
     {
         if (in_array($status, [0,1])) {
@@ -85,6 +115,12 @@ class OrderParser
         return false;
     }
 
+    /**
+     * Defide if a order can be prioritized
+     *
+     * @param  int|string $status
+     * @return boolean
+     */
     public static function getCanPrioritize($status)
     {
         if (in_array($status, [0,1])) {
@@ -94,6 +130,12 @@ class OrderParser
         return false;
     }
 
+    /**
+     * Define if a order can be canceled
+     *
+     * @param  int|string $status
+     * @return boolean
+     */
     public static function getCanCancel($status)
     {
         if (in_array($status, [0,1])) {
@@ -103,6 +145,12 @@ class OrderParser
         return false;
     }
 
+    /**
+     * Calculate discount percent based in order products: 100 - ((total - shipping) * 100 / totalProducts)
+     *
+     * @param  Pedido $order
+     * @return null|int        
+     */
     public static function getDesconto($order)
     {
         if (strtolower($order->marketplace) === 'b2w') {

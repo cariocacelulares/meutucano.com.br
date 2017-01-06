@@ -8,6 +8,10 @@ use Core\Transformers\Parsers\CommentParser;
  */
 class CommentTransformer
 {
+    /**
+     * @param  object $orders
+     * @return array
+     */
     public static function list($orders)
     {
         $data = [];

@@ -6,8 +6,15 @@
  */
 class ClientParser
 {
-   public static function getTaxvatReadable($taxvat, $tipo)
-   {
+    /**
+     * Beautify taxvat string
+     * 
+     * @param  string $taxvat
+     * @param  int|string $tipo
+     * @return string
+     */
+    public static function getTaxvatReadable($taxvat, $tipo)
+    {
        $taxvat = preg_replace('/\D/', '', $taxvat);
        $format = [];
 
@@ -38,5 +45,5 @@ class ClientParser
        }
 
        return implode('', $format);
-   }
+    }
 }

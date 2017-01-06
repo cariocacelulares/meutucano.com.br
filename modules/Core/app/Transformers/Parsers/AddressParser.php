@@ -6,8 +6,14 @@
  */
 class AddressParser
 {
-   public static function getCepReadable($cep)
-   {
+    /**
+     * Beautify postal code string
+     * 
+     * @param  string $cep
+     * @return string
+     */
+    public static function getCepReadable($cep)
+    {
        if (strlen($cep) == 8) {
            return substr($cep, 0, 5) . '-' . substr($cep, -3);
        } elseif (strlen($cep) == 7) {
@@ -15,5 +21,5 @@ class AddressParser
 
            return $this->getCepReadableAttribute();
        }
-   }
+    }
 }

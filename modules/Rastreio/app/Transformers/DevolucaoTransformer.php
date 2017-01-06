@@ -12,6 +12,10 @@ use Rastreio\Transformers\Parsers\DevolucaoParser;
  */
 class DevolucaoTransformer
 {
+    /**
+     * @param  object $devolucoes
+     * @return array
+     */
     public static function pending($devolucoes)
     {
         $pagination  = $devolucoes->toArray();

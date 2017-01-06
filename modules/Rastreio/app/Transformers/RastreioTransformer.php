@@ -11,6 +11,10 @@ use Rastreio\Transformers\Parsers\RastreioParser;
  */
 class RastreioTransformer
 {
+    /**
+     * @param  object $rastreios
+     * @return array
+     */
     public static function important($rastreios)
     {
         $pagination  = $rastreios->toArray();
@@ -52,6 +56,10 @@ class RastreioTransformer
         return $pagination;
     }
 
+    /**
+     * @param  object $monitorados
+     * @return array
+     */
     public static function monitorado($monitorados)
     {
         $pagination  = $monitorados->toArray();

@@ -13,6 +13,10 @@ use Core\Transformers\Parsers\AddressParser;
  */
 class OrderTransformer
 {
+    /**
+     * @param  object $orders
+     * @return array
+     */
     public static function faturamento($orders)
     {
         $pagination  = $orders->toArray();
@@ -61,6 +65,10 @@ class OrderTransformer
         return $pagination;
     }
 
+    /**
+     * @param  object $orders
+     * @return array
+     */
     public static function list($orders)
     {
         $pagination  = $orders->toArray();
@@ -95,7 +103,11 @@ class OrderTransformer
 
         return $pagination;
     }
-
+    
+    /**
+     * @param  object $order
+     * @return array
+     */
     public static function show($order)
     {
         $rastreios = [];

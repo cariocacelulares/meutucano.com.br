@@ -8,6 +8,10 @@ use Core\Transformers\Parsers\ProductParser;
  */
 class ProductTransformer
 {
+    /**
+     * @param  object $products
+     * @return array
+     */
     public static function list($products)
     {
         $pagination  = $products->toArray();
@@ -31,6 +35,10 @@ class ProductTransformer
         return $pagination;
     }
 
+    /**
+     * @param  object $product
+     * @return array
+     */
     public static function show($product)
     {
         return [

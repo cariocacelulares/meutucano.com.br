@@ -12,6 +12,10 @@ use Rastreio\Transformers\Parsers\PiParser;
  */
 class PiTransformer
 {
+    /**
+     * @param  object $pis
+     * @return array
+     */
     public static function pending($pis)
     {
         $pagination  = $pis->toArray();
