@@ -25,6 +25,7 @@ use Sunra\PhpSimple\HtmlDomParser;
 use GuzzleHttp\Client;
 use Rastreio\Http\Requests\RastreioRequest as Request;
 use Rastreio\Transformers\RastreioTransformer;
+use Rastreio\Transformers\Parsers\RastreioParser;
 
 /**
  * Class RastreioController
@@ -222,7 +223,7 @@ class RastreioController extends Controller
         try {
             $browsershot = new \Spatie\Browsershot\Browsershot();
             $browsershot
-                ->setURL($rastreio->rastreio_url)
+                ->setURL(RastreioParser::getRastreioUrl($rastreio))
                 ->setWidth(1024)
                 ->setHeight(1024)
                 ->setTimeout(5000)
@@ -230,9 +231,11 @@ class RastreioController extends Controller
 
             $rastreio->imagem_historico = $rastreio->rastreio . '.jpg';
             \Log::info('Screenshot salva com sucesso: ' . $rastreio->imagem_historico);
+            
             return $rastreio;
         } catch (\Exception $e) {
             \Log::error(logMessage($e, 'Não foi possível salvar a imagem do rastreio'));
+
             return false;
         }
     }
@@ -245,7 +248,7 @@ class RastreioController extends Controller
      */
     public function forceScreenshot($rastreio)
     {
-        if ($rastreio) {
+        if ($rastreio && $rastreio->rastreio) {
             if ($rastreio = $this->screenshot($rastreio)) {
                 $rastreio->save();
             }
