@@ -103,7 +103,7 @@ class OrderTransformer
 
         return $pagination;
     }
-    
+
     /**
      * @param  object $order
      * @return array
@@ -154,7 +154,7 @@ class OrderTransformer
 
             $notas[] = [
                 'id'        => $nota->id,
-                'data'      => $nota->data,
+                'data'      => dateConvert($nota->data, 'Y-m-d', 'd/m/Y'),
                 'numero'    => $nota->numero,
                 'serie'     => $nota->serie,
                 'devolucao' => $devolucao,
