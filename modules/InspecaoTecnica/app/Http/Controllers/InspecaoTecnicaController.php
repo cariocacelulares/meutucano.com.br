@@ -7,6 +7,7 @@ use App\Http\Controllers\Rest\RestControllerTrait;
 use Core\Models\Produto\Produto;
 use Core\Models\Pedido\PedidoProduto;
 use InspecaoTecnica\Models\InspecaoTecnica;
+use InspecaoTecnica\Transformers\InspecaoTecnicaTransformer;
 
 /**
  * Class InspecaoTecnicaController
@@ -39,7 +40,7 @@ class InspecaoTecnicaController extends Controller
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse($list);
+        return $this->listResponse(InspecaoTecnicaTransformer::list($list));
     }
 
     /**
@@ -69,7 +70,7 @@ class InspecaoTecnicaController extends Controller
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse($list);
+        return $this->listResponse(InspecaoTecnicaTransformer::fila($list));
     }
 
     /**
@@ -92,7 +93,7 @@ class InspecaoTecnicaController extends Controller
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse($list);
+        return $this->listResponse(InspecaoTecnicaTransformer::solicitadas($list));
     }
 
     /**
