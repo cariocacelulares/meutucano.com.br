@@ -52,6 +52,10 @@ class OrderTransformer
                 'notas'                => $order['notas'],
                 'rastreios'            => $order['rastreios'],
                 'frete_metodo'         => $order['frete_metodo'],
+                'endereco'             => [
+                    'id' => $order['endereco']['id'],
+                    'uf' => $order['endereco']['uf'],
+                ],
                 'cliente'              => [
                     'nome'            => $order['cliente']['nome'],
                     'taxvat'          => $order['cliente']['taxvat'],

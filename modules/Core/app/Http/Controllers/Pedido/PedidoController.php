@@ -66,6 +66,7 @@ class PedidoController extends Controller
                 'comentarios'
             ])
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
+            ->join('cliente_enderecos', 'cliente_enderecos.id', '=', 'pedidos.cliente_endereco_id')
             ->leftJoin('pedido_rastreios', 'pedido_rastreios.pedido_id', '=', 'pedidos.id')
             ->leftJoin('pedido_produtos', 'pedido_produtos.pedido_id', '=', 'pedidos.id')
             ->leftJoin('pedido_notas', 'pedido_notas.pedido_id', '=', 'pedidos.id')
