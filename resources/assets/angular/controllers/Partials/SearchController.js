@@ -62,7 +62,10 @@
          */
         vm.toggleCategory = function(category) {
             vm.categories[category] = ! vm.categories[category];
-            vm.search();
+
+            if (vm.categories.pedidos || vm.categories.clientes || vm.categories.produtos) {
+                vm.search();
+            }
         }
 
         /**
@@ -99,6 +102,10 @@
          * @return {void}
          */
         vm.search = function(more) {
+            if (!vm.categories.pedidos && !vm.categories.clientes && !vm.categories.produtos) {
+                return;
+            }
+
             more = (typeof more === 'undefined' || !more) ? false : true;
 
             if (typeof vm.term !== 'undefined' && vm.term && vm.term.length > 2) {

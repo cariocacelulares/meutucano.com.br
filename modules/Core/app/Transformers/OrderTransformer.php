@@ -95,7 +95,7 @@ class OrderTransformer
 
                 $rastreios[] = [
                     'id'                 => $rastreio->id,
-                    'rastreio_url'       => $rastreio->rastreio_url,
+                    'rastreio_url'       => RastreioParser::getRastreioUrl($rastreio->rastreio),
                     'rastreio'           => $rastreio->rastreio,
                     'status'             => $rastreio->status,
                     'status_description' => RastreioParser::getStatusDescription($rastreio->status),
