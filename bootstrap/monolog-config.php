@@ -30,7 +30,9 @@ try {
             '@' .
             env('MONGODB_HOST', '45.55.208.16') .
             ':' .
-            env('MONGODB_PORT', 27017)
+            env('MONGODB_PORT', 27017) .
+            '/' .
+            env('MONGODB_DATABASE', 'meutucano')
         );
 
         // Check if exists, if not an exception will be thrown
