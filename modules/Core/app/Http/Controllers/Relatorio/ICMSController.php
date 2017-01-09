@@ -25,12 +25,12 @@ class ICMSController extends Controller
     {
         $notas = Nota::with(['pedido', 'pedido.imposto', 'pedido.endereco', 'pedido.produtos', 'pedido.produtos.produto'])
             ->where(DB::raw('MONTH(pedido_notas.data)'), '=', date("m", strtotime("-1 month")))
-            ->where(DB::raw('YEAR(pedido_notas.data)'), '=', date('Y'))
+            ->where(DB::raw('YEAR(pedido_notas.data)'), '=', date("Y", strtotime("-1 month")))
             ->get();
 
         $devolucoes = Devolucao::with(['nota', 'nota.pedido', 'nota.pedido.imposto', 'nota.pedido.endereco', 'nota.pedido.produtos', 'nota.pedido.produtos.produto'])
             ->where(DB::raw('MONTH(pedido_nota_devolucoes.data)'), '=', date("m", strtotime("-1 month")))
-            ->where(DB::raw('YEAR(pedido_nota_devolucoes.data)'), '=', date('Y'))
+            ->where(DB::raw('YEAR(pedido_nota_devolucoes.data)'), '=', date("Y", strtotime("-1 month")))
             ->get();
 
         $relatorio[] = 'OPERACAO;TIPO;NUMERO;UFREM;ICMSREM;UFDEST;ICMSDEST;TOTAL;SEMINOVO';
