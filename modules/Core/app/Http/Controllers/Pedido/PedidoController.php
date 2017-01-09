@@ -232,7 +232,7 @@ class PedidoController extends Controller
 
         foreach ($pedidos as $pedido) {
             try {
-                $dataPedido = Carbon::createFromFormat('d/m/Y H:i', $pedido->created_at)->format('d/m/Y');
+                $dataPedido = Carbon::createFromFormat('Y-m-d H:i:s', $pedido->created_at)->format('d/m/Y');
                 $diasUteis = diasUteisPeriodo($dataPedido, date('d/m/Y'), true);
 
                 if (strtolower($pedido->marketplace) == 'site') {

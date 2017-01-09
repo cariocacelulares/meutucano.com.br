@@ -583,7 +583,7 @@ class MagentoController extends Controller
      * Calcula a estimativa de entrega do pedido
      *
      * @param  string $shippingDescription string do magento com a previsão em dias
-     * @param  string $orderDate           data que o pedido foi realizado no formato d/m/Y H:i
+     * @param  string $orderDate           data que o pedido foi realizado
      * @return string                      data estimada no formato Y-m-d
      */
     public function calcEstimatedDelivery($shippingDescription, $orderDate)
@@ -593,7 +593,7 @@ class MagentoController extends Controller
         }
 
         $estimate = (int)preg_replace('/\D/', '', $shippingDescription);
-        $estimate = SomaDiasUteis(Carbon::createFromFormat('d/m/Y H:i', $orderDate)->format('d/m/Y'), $estimate);
+        $estimate = SomaDiasUteis(Carbon::createFromFormat('Y-m-d H:i:s', $orderDate)->format('d/m/Y'), $estimate);
 
         return Carbon::createFromFormat('d/m/Y', $estimate)->format('Y-m-d');
     }

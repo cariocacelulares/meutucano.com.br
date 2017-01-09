@@ -200,7 +200,7 @@ class RastreioController extends Controller
             }
 
             if ($rastreio->status == 0 && ($rastreio->status != $status)) {
-                $rastreio->data_envio = Carbon::createFromFormat('d/m/Y H:i', $this->firstStatus($rastreio->rastreio)['data'])->format('Y-m-d');
+                $rastreio->data_envio = Carbon::createFromFormat('Y-m-d H:i:s', $this->firstStatus($rastreio->rastreio)['data'])->format('Y-m-d');
             }
 
             $rastreio->status = $status;
@@ -231,7 +231,7 @@ class RastreioController extends Controller
 
             $rastreio->imagem_historico = $rastreio->rastreio . '.jpg';
             \Log::info('Screenshot salva com sucesso: ' . $rastreio->imagem_historico);
-            
+
             return $rastreio;
         } catch (\Exception $e) {
             \Log::error(logMessage($e, 'Não foi possível salvar a imagem do rastreio'));
