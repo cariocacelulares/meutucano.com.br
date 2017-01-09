@@ -24,7 +24,7 @@ class RastreioTransformer
             $transformed[] = [
                 'id'                  => $rastreio['id'],
                 'prazo'               => $rastreio['prazo'],
-                'rastreio_url'        => $rastreio['rastreio_url'],
+                'rastreio_url'        => RastreioParser::getRastreioUrl($rastreio['rastreio']),
                 'rastreio'            => $rastreio['rastreio'],
                 'status'              => $rastreio['status'],
                 'status_description'  => RastreioParser::getStatusDescription($rastreio['status']),
@@ -71,7 +71,7 @@ class RastreioTransformer
                 'rastreio_id' => $monitorado['rastreio_id'],
                 'rastreio'    => [
                     'prazo'               => $monitorado['rastreio']['prazo'],
-                    'rastreio_url'        => $monitorado['rastreio']['rastreio_url'],
+                    'rastreio_url'        => RastreioParser::getRastreioUrl($monitorado['rastreio']['rastreio']),
                     'rastreio'            => $monitorado['rastreio']['rastreio'],
                     'status'              => $monitorado['rastreio']['status'],
                     'status_description'  => RastreioParser::getStatusDescription($monitorado['rastreio']['status']),

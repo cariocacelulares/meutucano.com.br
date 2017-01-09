@@ -31,7 +31,7 @@ class PiTransformer
                 'status_description' => PiParser::getMotivoDescription($pi['motivo_status']),
                 'rastreio'           => [
                     'id'           => $pi['rastreio']['id'],
-                    'rastreio_url' => $pi['rastreio']['rastreio_url'],
+                    'rastreio_url' => RastreioParser::getRastreioUrl($pi['rastreio']['rastreio']),
                     'rastreio'     => $pi['rastreio']['rastreio'],
                     'pedido'       => [
                         'id'                 => $pi['rastreio']['pedido']['id'],

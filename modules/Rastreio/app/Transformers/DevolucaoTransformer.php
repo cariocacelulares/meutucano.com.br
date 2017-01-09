@@ -30,7 +30,7 @@ class DevolucaoTransformer
                 'motivo_description' => DevolucaoParser::getMotivoDescription($devolucao['motivo']),
                 'rastreio'           => [
                     'id'           => $devolucao['rastreio']['id'],
-                    'rastreio_url' => $devolucao['rastreio']['rastreio_url'],
+                    'rastreio_url' => RastreioParser::getRastreioUrl($devolucao['rastreio']['rastreio']),
                     'rastreio'     => $devolucao['rastreio']['rastreio'],
                     'pedido'       => [
                         'id'                 => $devolucao['rastreio']['pedido']['id'],
