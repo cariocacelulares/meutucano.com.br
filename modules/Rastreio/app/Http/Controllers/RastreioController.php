@@ -223,7 +223,7 @@ class RastreioController extends Controller
         try {
             $browsershot = new \Spatie\Browsershot\Browsershot();
             $browsershot
-                ->setURL(RastreioParser::getRastreioUrl($rastreio))
+                ->setURL(RastreioParser::getRastreioUrl($rastreio->rastreio))
                 ->setWidth(1024)
                 ->setHeight(1024)
                 ->setTimeout(5000)
