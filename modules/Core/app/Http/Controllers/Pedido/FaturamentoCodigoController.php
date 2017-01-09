@@ -16,7 +16,7 @@ class FaturamentoCodigoController extends Controller
      * @param $servico
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function generateCode($servico)
+    public function generateCode($servico, $raw = false)
     {
         $codigo = FaturamentoCodigo::find($servico);
 
@@ -39,6 +39,6 @@ class FaturamentoCodigoController extends Controller
             $response['codigo'] = $etiqueta->getEtiquetaComDv() . 'BR';
         }
 
-        return $this->showResponse($response);
+        return (!$raw) ? $this->showResponse($response) : ($response['codigo'] ?: null);
     }
 }

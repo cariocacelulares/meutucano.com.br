@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use Rastreio\Events\Handlers\AddRastreioToQueue;
+use Rastreio\Events\Handlers\AttachRastreio;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -17,6 +18,7 @@ class EventServiceProvider extends ServiceProvider
 
     protected $subscribe = [
         AddRastreioToQueue::class,
+        AttachRastreio::class,
     ];
 
     /**
