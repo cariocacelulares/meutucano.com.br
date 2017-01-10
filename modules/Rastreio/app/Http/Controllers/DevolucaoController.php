@@ -37,7 +37,7 @@ class DevolucaoController extends Controller
                 $data = $m::with(['rastreio', 'rastreio.pedido'])->where('id', '=', $data->devolucao->id)->first();
 
                 if ($data) {
-                    return $this->showResponse($data);
+                    return $this->showResponse(DevolucaoTransformer::show($data));
                 }
             }
 
@@ -67,7 +67,7 @@ class DevolucaoController extends Controller
             ->whereNull('pedido_rastreio_devolucoes.acao')
             ->orderBy('pedido_rastreio_devolucoes.created_at', 'DESC');
 
-        $lista = $this->handleRequest($lista);
+        $lista = $this->handleRequest($lista, ['pedido_rastreio_devolucoes.*']);
 
         return $this->listResponse(DevolucaoTransformer::pending($lista));
     }

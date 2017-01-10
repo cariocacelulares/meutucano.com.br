@@ -31,7 +31,7 @@ trait RestControllerTrait
      * @param  EloquentBuilder $m
      * @return array
      */
-    protected function handleRequest($m)
+    protected function handleRequest($m, $fields = ['*'])
     {
         /**
          * Filter
@@ -76,6 +76,11 @@ trait RestControllerTrait
                         $filtro['operator'],
                         Carbon::createFromFormat('d/m/Y', $filtro['value'])->format('Y-m-d')
                     );
+                } else if ($filtro['operator'] == 'IN') {
+                    $m = $m->whereIn(
+                        $filtro['column'],
+                        $filtro['value']
+                    );
                 } else {
                     $m = $m->where(
                         $filtro['column'],
@@ -91,7 +96,7 @@ trait RestControllerTrait
          */
         return $m->paginate(
             Input::get('per_page', 20),
-            Input::get('fields') ? json_decode(Input::get('fields'), true) : ['*']
+            Input::get('fields') ? json_decode(Input::get('fields'), true) : $fields
         );
     }
 

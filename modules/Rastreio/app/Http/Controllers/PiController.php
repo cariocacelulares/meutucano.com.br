@@ -29,7 +29,9 @@ class PiController extends Controller
     {
         $m = Rastreio::class;
         if ($data = $m::find($id)) {
-            return $this->showResponse($data->pi);
+            return $this->showResponse(
+                $data->pi ? PiTransformer::show($data->pi) : $data->pi
+            );
         }
 
         return $this->notFoundResponse();
@@ -52,7 +54,7 @@ class PiController extends Controller
             ->whereNull('pedido_rastreio_pis.status')
             ->orderBy('pedido_rastreio_pis.created_at', 'DESC');
 
-        $list = $this->handleRequest($list);
+        $list = $this->handleRequest($list, ['pedido_rastreio_pis.*']);
 
         return $this->listResponse(PiTransformer::pending($list));
     }
