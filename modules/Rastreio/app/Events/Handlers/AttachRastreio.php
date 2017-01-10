@@ -38,17 +38,17 @@ class AttachRastreio
             Log::debug('Handler AttachRastreio/onOrderPaid acionado!', [$event]);
 
             // 0 - PAC / 1 - SEDEX
-            $servicos = (strtolower($order->frete_metodo) == 'sedex') ? 1 : 0;
-            $codigo = with(new FaturamentoCodigoController)->generateCode($servico);
+            $servico = (strtolower($order->frete_metodo) == 'sedex') ? 1 : 0;
+            $codigo  = with(new FaturamentoCodigoController)->generateCode($servico, true);
 
             $rastreio = Rastreio::create([
-                'rastreio' => $codigo,
-                'pedido_id' => $order->id,
+                'rastreio'   => $codigo,
+                'pedido_id'  => $order->id,
                 'data_envio' => date('Y-m-d'),
-                'servico' => $order->frete_metodo,
-                'valor' => $order->frete_valor,
-                'prazo' => null,
-                'status' => 0,
+                'servico'    => $order->frete_metodo,
+                'valor'      => $order->frete_valor,
+                'prazo'      => null,
+                'status'     => 0,
             ]);
 
             with(new RastreioController)->setDeadline($rastreio);

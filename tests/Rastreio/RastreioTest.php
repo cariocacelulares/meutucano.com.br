@@ -6,6 +6,7 @@ use MailThief\Testing\InteractsWithMail;
 use Rastreio\Http\Controllers\RastreioController;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\Core\CreatePedido;
 
 class RastreioTest extends TestCase
 {
@@ -71,10 +72,25 @@ class RastreioTest extends TestCase
 
     public function test__it_should_attach_rastreio_to_new_paid_order()
     {
+        $pedido = $this->createPedido([
+            'status' => 1
+        ]);
+
+        // $pedido->rastreio
     }
 
     public function test__it_should_attach_rastreio_on_order_paid()
     {
+        $pedido = $this->createPedido([
+            'status' => 0
+        ]);
+
+        $pedido->status = 1;
+        $pedido->save();
+
+        $pedido = $pedido->fresh();
+
+        // $pedido->rastreio
     }
 
     public function test__it_should_attach_rastreio_with_correct_shipment_service()
