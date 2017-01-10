@@ -53,9 +53,17 @@
         vm.load = function() {
             vm.loading = true;
 
+            var parsedFilter = vm.filterList.parse();
+            for (var k in parsedFilter) {
+                if (parsedFilter[k].value.indexOf(',') >= 0) {
+                    parsedFilter[k].value = parsedFilter[k].value.split(',');
+                    parsedFilter[k].operator = 'IN';
+                }
+            }
+
             Pedido.faturamento({
+                filter:   parsedFilter,
                 fields:   ['pedidos.*'],
-                filter:   vm.filterList.parse(),
                 page:     vm.tableHeader.pagination.page,
                 per_page: vm.tableHeader.pagination.per_page
             }).then(function(response) {

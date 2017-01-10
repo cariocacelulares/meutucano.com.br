@@ -76,6 +76,11 @@ trait RestControllerTrait
                         $filtro['operator'],
                         Carbon::createFromFormat('d/m/Y', $filtro['value'])->format('Y-m-d')
                     );
+                } else if ($filtro['operator'] == 'IN') {
+                    $m = $m->whereIn(
+                        $filtro['column'],
+                        $filtro['value']
+                    );
                 } else {
                     $m = $m->where(
                         $filtro['column'],
