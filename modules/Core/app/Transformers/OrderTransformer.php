@@ -263,6 +263,7 @@ class OrderTransformer
             'can_prioritize'            => OrderParser::getCanPrioritize($order->status),
             'can_hold'                  => OrderParser::getCanHold($order->status),
             'can_cancel'                => OrderParser::getCanCancel($order->status),
+            'marketplace'               => $order->marketplace,
             'marketplace_readable'      => OrderParser::getMarketplaceReadable($order->marketplace),
             'frete_metodo_readable'     => OrderParser::getFreteMetodoReadable($order->frete_metodo),
             'frete_valor'               => $order->frete_valor,

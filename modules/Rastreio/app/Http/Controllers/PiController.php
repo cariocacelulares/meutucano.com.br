@@ -54,7 +54,7 @@ class PiController extends Controller
             ->whereNull('pedido_rastreio_pis.status')
             ->orderBy('pedido_rastreio_pis.created_at', 'DESC');
 
-        $list = $this->handleRequest($list);
+        $list = $this->handleRequest($list, ['pedido_rastreio_pis.*']);
 
         return $this->listResponse(PiTransformer::pending($list));
     }

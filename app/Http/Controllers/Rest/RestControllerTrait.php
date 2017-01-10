@@ -31,7 +31,7 @@ trait RestControllerTrait
      * @param  EloquentBuilder $m
      * @return array
      */
-    protected function handleRequest($m)
+    protected function handleRequest($m, $fields = ['*'])
     {
         /**
          * Filter
@@ -96,7 +96,7 @@ trait RestControllerTrait
          */
         return $m->paginate(
             Input::get('per_page', 20),
-            Input::get('fields') ? json_decode(Input::get('fields'), true) : ['*']
+            Input::get('fields') ? json_decode(Input::get('fields'), true) : $fields
         );
     }
 
