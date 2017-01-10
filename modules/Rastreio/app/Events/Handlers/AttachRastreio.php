@@ -3,10 +3,9 @@
 use Core\Events\OrderPaid;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;
-use Rastreio\Events\RastreioSaved;
-use Rastreio\Jobs\GetScreenshot;
-use Rastreio\Jobs\SetDeadline;
 use Rastreio\Models\Rastreio;
+use Rastreio\Http\Controllers\RastreioController;
+use Core\Http\Controllers\Pedido\FaturamentoCodigoController;
 
 class AttachRastreio
 {
@@ -34,7 +33,7 @@ class AttachRastreio
     {
         $order = $event->order;
 
-        if (!$order->rastreios && strtolower($order->marketplace) != 'mercadolivre') {
+        if ($order->rastreios->count() < 1 && strtolower($order->marketplace) != 'mercadolivre') {
             Log::debug('Handler AttachRastreio/onOrderPaid acionado!', [$event]);
 
             // 0 - PAC / 1 - SEDEX

@@ -18,7 +18,7 @@ class FaturamentoCodigoController extends Controller
      */
     public function generateCode($servico, $raw = false)
     {
-        $codigo = FaturamentoCodigo::find($servico);
+        $codigo = FaturamentoCodigo::findOrFail($servico);
 
         $response = [];
         if (($codigo->atual + 1) > $codigo->fim) {
