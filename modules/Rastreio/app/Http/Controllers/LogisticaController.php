@@ -8,6 +8,7 @@ use InspecaoTecnica\Http\Controllers\Traits\InspecaoTecnicaTrait;
 use Rastreio\Models\Rastreio;
 use Rastreio\Models\Logistica;
 use Rastreio\Http\Requests\LogisticaRequest as Request;
+use Rastreio\Transformers\LogisticaTransformer;
 
 /**
  * Class LogisticaController
@@ -34,13 +35,13 @@ class LogisticaController extends Controller
                 $data = $m::with(['rastreio', 'rastreio.pedido'])->where('id', '=', $data->logistica->id)->first();
 
                 if ($data) {
-                    return $this->showResponse($data);
+                    return $this->showResponse(LogisticaTransformer::show($data));
                 }
             }
 
             return $this->showResponse([
                 'rastreio_id' => $data->id,
-                'rastreio' => $data
+                'rastreio'    => $data
             ]);
         }
     }

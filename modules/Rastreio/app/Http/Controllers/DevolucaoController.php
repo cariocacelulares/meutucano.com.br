@@ -37,7 +37,7 @@ class DevolucaoController extends Controller
                 $data = $m::with(['rastreio', 'rastreio.pedido'])->where('id', '=', $data->devolucao->id)->first();
 
                 if ($data) {
-                    return $this->showResponse($data);
+                    return $this->showResponse(DevolucaoTransformer::show($data));
                 }
             }
 

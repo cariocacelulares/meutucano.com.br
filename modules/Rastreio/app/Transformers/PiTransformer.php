@@ -13,6 +13,30 @@ use Rastreio\Transformers\Parsers\PiParser;
 class PiTransformer
 {
     /**
+     * @param  object $pi
+     * @return array
+     */
+    public static function show($pi)
+    {
+        return [
+            'id'                  => $pi->id,
+            'rastreio_id'         => $pi->rastreio_id,
+            'codigo_pi'           => $pi->codigo_pi,
+            'motivo_status'       => $pi->motivo_status,
+            'status'              => $pi->status,
+            'data_pagamento'      => $pi->data_pagamento,
+            'valor_pago'          => $pi->valor_pago,
+            'acao'                => $pi->acao,
+            'pago_cliente'        => $pi->pago_cliente,
+            'observacoes'         => $pi->observacoes,
+            'pago_cliente'        => $pi->pago_cliente,
+            'acao'                => $pi->acao,
+            'protocolo'           => RastreioParser::getProtocolo($pi),
+            'imagem_cancelamento' => RastreioParser::getImagemCancelamento($pi),
+        ];
+    }
+
+    /**
      * @param  object $pis
      * @return array
      */

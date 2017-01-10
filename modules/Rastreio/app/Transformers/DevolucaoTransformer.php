@@ -13,6 +13,24 @@ use Rastreio\Transformers\Parsers\DevolucaoParser;
 class DevolucaoTransformer
 {
     /**
+     * @param  object $devolucao
+     * @return array
+     */
+    public static function show($devolucao)
+    {
+        return [
+            'id'                  => $devolucao->id,
+            'rastreio_id'         => $devolucao->rastreio_id,
+            'pago_cliente'        => $devolucao->pago_cliente,
+            'motivo'              => $devolucao->motivo,
+            'acao'                => $devolucao->acao,
+            'observacoes'         => $devolucao->observacoes,
+            'protocolo'           => RastreioParser::getProtocolo($devolucao),
+            'imagem_cancelamento' => RastreioParser::getImagemCancelamento($devolucao),
+        ];
+    }
+
+    /**
      * @param  object $devolucoes
      * @return array
      */

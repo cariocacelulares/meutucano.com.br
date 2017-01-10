@@ -29,7 +29,7 @@ class PiController extends Controller
     {
         $m = Rastreio::class;
         if ($data = $m::find($id)) {
-            return $this->showResponse($data->pi);
+            return $this->showResponse(PiTransformer::show($data->pi));
         }
 
         return $this->notFoundResponse();
