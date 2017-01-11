@@ -221,6 +221,12 @@ class ProdutoController extends Controller
         }
     }
 
+    /**
+     * Retorna a lista de produtos e sua quantidade nos pedidos
+     *
+     * @param  string $return_type tipo de retorno
+     * @return Response|void
+     */
     public function retiradaEstoque($return_type = 'array')
     {
         try {
@@ -232,6 +238,7 @@ class ProdutoController extends Controller
 
             $filters = Input::all();
 
+            // limpa os filtros nulos
             foreach ($filters as $name => $filter) {
                 if (is_array($filters[$name])) {
                     foreach ($filters[$name] as $key => $value) {
