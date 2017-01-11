@@ -37,21 +37,23 @@ class AttachRastreio
         if ($order->rastreios->count() < 1 && strtolower($order->marketplace) != 'mercadolivre') {
             Log::debug('Handler AttachRastreio/onOrderPaid acionado!', [$event]);
 
-            // 0 - PAC / 1 - SEDEX
-            $servico = (strtolower($order->frete_metodo) == 'sedex') ? 1 : 0;
-            $codigo  = with(new FaturamentoCodigoController)->generateCode($servico, true);
+            $servico = \Config::get('rastreio.servico.' . strtolower($order->frete_metodo))
+                ?: \Config::get('rastreio.servico.pac');
+            $codigo  = with(new FaturamentoCodigoController)->rawTrakingCode($servico);
 
-            $rastreio = Rastreio::create([
-                'rastreio'   => $codigo,
-                'pedido_id'  => $order->id,
-                'data_envio' => date('Y-m-d'),
-                'servico'    => $order->frete_metodo,
-                'valor'      => $order->frete_valor,
-                'prazo'      => null,
-                'status'     => 0,
-            ]);
+            if ($codigo) {
+                $rastreio = Rastreio::create([
+                    'rastreio'   => $codigo,
+                    'pedido_id'  => $order->id,
+                    'data_envio' => date('Y-m-d'),
+                    'servico'    => $order->frete_metodo,
+                    'valor'      => $order->frete_valor,
+                    'prazo'      => null,
+                    'status'     => 0,
+                ]);
 
-            dispatch(with(new SetDeadline($rastreio))->onQueue('medium'));
+                dispatch(with(new SetDeadline($rastreio))->onQueue('medium'));
+            }
         }
     }
 }

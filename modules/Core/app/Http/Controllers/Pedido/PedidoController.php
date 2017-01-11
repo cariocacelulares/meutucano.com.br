@@ -281,10 +281,7 @@ class PedidoController extends Controller
         try {
             if ($pedido = $m::where('codigo_marketplace', '=', $codigo_pedido)->first()) {
                 $rastreio = $pedido->rastreios()->orderBy('created_at', 'DESC')->first();
-
-                if ($rastreio) {
-                    $rastreio = $rastreio->rastreio;
-                }
+                $codigo   = ($rastreio) ? $rastreio->rastreio : null;
 
                 return $this->showResponse([
                     'taxvat'      => $pedido->cliente->taxvat,
@@ -299,7 +296,7 @@ class PedidoController extends Controller
                     'marketplace' => mb_strtolower($pedido->marketplace),
                     'pedido'      => $codigo_pedido,
                     'frete'       => $pedido->frete_valor,
-                    'rastreio'    => $rastreio
+                    'rastreio'    => $codigo
                 ]);
             }
         } catch (\Exception $e) {

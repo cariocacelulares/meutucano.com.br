@@ -41,7 +41,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
         /**
          * Código de rastreio
          */
-        Route::get('codigos/gerar/{servico}', 'Pedido\FaturamentoCodigoController@generateCode');
+        Route::get('codigos/gerar/{servico}', 'Pedido\FaturamentoCodigoController@getTrakingCode');
     });
 
     /**

@@ -69,6 +69,10 @@ class RastreioTest extends TestCase
         $this->assertGreaterThanOrEqual(1, $deadline);
     }
 
+    /**
+     * Testa se um novo rastreio é criado quando um pedido é criado como pago
+     * @return void
+     */
     public function test__it_should_attach_rastreio_to_new_paid_order()
     {
         $pedido = $this->createOrder([
@@ -80,6 +84,10 @@ class RastreioTest extends TestCase
         ]);
     }
 
+    /**
+     * Testa se um novo rastreio é criado quando um pedido muda o status para pago
+     * @return void
+     */
     public function test__it_should_attach_rastreio_on_order_paid()
     {
         $pedido = $this->createOrder([
@@ -96,6 +104,10 @@ class RastreioTest extends TestCase
         ]);
     }
 
+    /**
+     * Testa se o rastreio criado quando um pedido é criado como pago possui o serviço correto
+     * @return void
+     */
     public function test__it_should_attach_rastreio_with_correct_shipment_service()
     {
         $pedido = $this->createOrder([

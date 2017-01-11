@@ -11,29 +11,23 @@ trait CreateFaturamentoCodigo
     */
     public function createFaturamentoCodigo($data = [])
     {
-    return factory(FaturamentoCodigo::class)->create($data);
+        return factory(FaturamentoCodigo::class)->create($data);
     }
 
     /**
-    * Gera os dois tipos de codigo de FaturamentoCodigo
+    * Gera os dois tipos de codigo de FaturamentoCodigo caso não existam
+    *
     * @return void
     */
     public function generateFaturamentoCodigo()
     {
-        $create = [
-            0 => !FaturamentoCodigo::find(0),
-            1 => !FaturamentoCodigo::find(1),
-        ];
-
-        \Log::alert('faturamento', $create);
-
-        if ($create[0]) {
+        if (!FaturamentoCodigo::find(0)) {
             $this->createFaturamentoCodigo([
                 'servico' => 0,
             ]);
         }
 
-        if ($create[1]) {
+        if (!FaturamentoCodigo::find(1)) {
             $this->createFaturamentoCodigo([
                 'servico' => 1,
             ]);

@@ -2,6 +2,19 @@
 
 return [
     'name' => 'Rastreio',
+
+    'servico' => [
+        0       => 'pac',
+        1       => 'sedex',
+        'pac'   => 0,
+        'sedex' => 1,
+    ],
+
+    'codigo' => [
+        'sedex' => 'DW',
+        'pac'   => 'PN',
+    ],
+
     'status' => [
         0 => 'Pendente',
         1 => 'Normal',
