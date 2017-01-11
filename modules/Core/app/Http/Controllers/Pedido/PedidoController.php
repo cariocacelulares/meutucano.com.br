@@ -280,6 +280,12 @@ class PedidoController extends Controller
 
         try {
             if ($pedido = $m::where('codigo_marketplace', '=', $codigo_pedido)->first()) {
+                $rastreio = $pedido->rastreios()->orderBy('created_at', 'DESC')->first();
+
+                if ($rastreio) {
+                    $rastreio = $rastreio->rastreio;
+                }
+
                 return $this->showResponse([
                     'taxvat'      => $pedido->cliente->taxvat,
                     'nome'        => mb_strtolower(removeAcentos($pedido->cliente->nome)),
@@ -292,7 +298,8 @@ class PedidoController extends Controller
                     'complemento' => removeAcentos($pedido->endereco->complemento),
                     'marketplace' => mb_strtolower($pedido->marketplace),
                     'pedido'      => $codigo_pedido,
-                    'frete'       => $pedido->frete_valor
+                    'frete'       => $pedido->frete_valor,
+                    'rastreio'    => $rastreio
                 ]);
             }
         } catch (\Exception $e) {
