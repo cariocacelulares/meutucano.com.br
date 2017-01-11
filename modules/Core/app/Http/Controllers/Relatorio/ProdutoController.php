@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestResponseTrait;
 use App\Http\Controllers\Controller;
 use Core\Models\Produto\Produto;
+use Core\Models\Pedido\PedidoProduto;
 use Core\Http\Controllers\Traits\RelatorioTrait;
 
 /**
@@ -218,5 +219,35 @@ class ProdutoController extends Controller
             \Log::warning(logMessage($e, 'Erro ao tentar gerar relatório'));
             return $this->notFoundResponse();
         }
+    }
+
+    public function retiradaEstoque($return_type = 'array')
+    {
+        $model = PedidoProduto
+            ::join('produtos', 'produtos.sku', '=', 'pedido_produtos.produto_sku')
+            ->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
+            ->where('pedidos.status', '=', 1)
+            ->groupBy('produto_sku')
+            ->orderBy(DB::raw('quantidade'), 'DESC');
+
+        $model = $model->get(['produtos.sku', 'produtos.titulo', DB::raw('SUM(pedido_produtos.quantidade) as quantidade')]);
+
+        dd($model->toArray());
+        /*try {
+            // Inicializa os pedidos
+            $this->model = Produto::where(DB::raw('1'), '=', '1');
+            $this->list = [];
+
+            $this->prepare();
+
+            if (in_array($return_type, ['xls', 'pdf'])) {
+                return $this->getFile($return_type);
+            } else {
+                return $this->listResponse($this->list);
+            }
+        } catch (\Exception $e) {
+            \Log::warning(logMessage($e, 'Erro ao tentar gerar relatório'));
+            return $this->notFoundResponse();
+        }*/
     }
 }

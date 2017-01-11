@@ -121,6 +121,10 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
         // Produtos genérico
         Route::post('produto', 'ProdutoController@run');
         Route::get('produto/{return_type}', 'ProdutoController@run');
+
+        // Produtos genérico
+        Route::post('retirada-estoque', 'ProdutoController@retiradaEstoque');
+        Route::get('retirada-estoque/{return_type}', 'ProdutoController@retiradaEstoque');
     });
 
     /**
