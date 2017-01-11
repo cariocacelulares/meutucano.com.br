@@ -9,7 +9,6 @@
         var vm = this;
 
         vm.result = false;
-        vm.labels = [];
         vm.totalResults = 0;
 
         // Colhe os parametros e gera o resultado
@@ -19,19 +18,22 @@
                     token: localStorage.getItem('satellizer_token')
                 };
 
-                $window.open(envService.read('apiUrl') + '/relatorios/retirada-estoque/' + tipo + '?params=' + JSON.stringify(vm.filter) + '&' + $httpParamSerializer(auth), 'relatorio-retirada-estoque');
+                $window.open(
+                    envService.read('apiUrl')
+                        + '/relatorios/retirada-estoque/'
+                        + tipo
+                        + '?params='
+                        + JSON.stringify(vm.filter)
+                        + '&'
+                        + $httpParamSerializer(auth),
+                    'relatorio-retirada-estoque'
+                );
             } else {
                 vm.result = false;
-                vm.labels = [];
                 Restangular.one('relatorios/retirada-estoque', tipo || null).customPOST(vm.filter).then(function(response) {
-                    vm.result = Restangular.copy(response, vm.result);
-                    vm.result = angular.copy(response, vm.result);
-
-                    vm.totalResults = vm.result.length;
-                    vm.totalResults = vm.totalResults + ((vm.totalResults == 1) ? ' registro encontrado' : ' registros encontrados');
-                    for (var key in vm.result[0]) {
-                        vm.labels.push(key);
-                    }
+                    vm.result       = Restangular.copy(response, vm.result);
+                    vm.result       = angular.copy(response, vm.result);
+                    vm.totalResults = vm.result.length + ((vm.result.length == 1) ? ' registro encontrado' : ' registros encontrados');
 
                     $location.hash('relatorio-resultado');
                     $anchorScroll();
@@ -42,7 +44,6 @@
         // valores padrão
         vm.defaults = function() {
             vm.result = false;
-            vm.labels = [];
             vm.filter = {
                 'estado'             : '',
                 'pedidos.marketplace': [],
