@@ -8,35 +8,39 @@ use Core\Models\Usuario\Usuario;
 use Core\Models\Cliente\Cliente;
 use Core\Models\Cliente\Endereco;
 use Core\Models\Pedido\PedidoProduto;
+use Tests\Core\CreateFaturamentoCodigo;
 
 trait CreatePedido
 {
-  use CreateProduto;
+    use CreateProduto,
+        CreateFaturamentoCodigo;
 
-  /**
-   * Create one order
-   *
-   * @return Core\Models\Pedido\Pedido
-   */
-  public function createOrder($data = [], $productSku = null)
-  {
-    $cliente = factory(Cliente::class)->create();
-    $endereco = factory(Endereco::class)->create([
-      'cliente_id' => $cliente->id
-    ]);
+    /**
+    * Create one order
+    *
+    * @return Core\Models\Pedido\Pedido
+    */
+    public function createOrder($data = [], $productSku = null)
+    {
+        $this->generateFaturamentoCodigo();
 
-    $pedido = factory(Pedido::class)->create(array_merge($data, [
-      'cliente_id'          => $cliente->id,
-      'cliente_endereco_id' => $endereco->id
-    ]));
+        $cliente = factory(Cliente::class)->create();
+        $endereco = factory(Endereco::class)->create([
+            'cliente_id' => $cliente->id
+        ]);
 
-    factory(PedidoProduto::class)->create([
-      'pedido_id'   => $pedido->id,
-      'produto_sku' => ($productSku)
-        ? Produto::find($productSku)->sku
-        : $this->createProduto()->sku
-    ]);
+        $pedido = factory(Pedido::class)->create(array_merge($data, [
+            'cliente_id'          => $cliente->id,
+            'cliente_endereco_id' => $endereco->id
+        ]));
 
-    return $pedido;
-  }
+        factory(PedidoProduto::class)->create([
+            'pedido_id'   => $pedido->id,
+            'produto_sku' => ($productSku)
+                ? Produto::find($productSku)->sku
+                : $this->createProduto()->sku
+        ]);
+
+        return $pedido;
+    }
 }

@@ -23,7 +23,7 @@
                     </div>
                     <div class="row" ng-if="PedidoDetalhe.pedido.codigo_marketplace">
                         <p class="pull-left">Código</p>
-                        <p class="pull-right bold">{{ PedidoDetalhe.pedido.codigo_marketplace }}</p>
+                        <p class="pull-right bold" clipboard text="PedidoDetalhe.pedido.codigo_marketplace">{{ PedidoDetalhe.pedido.codigo_marketplace }}</p>
                     </div>
                     <div class="row">
                         <p class="pull-left">Marketplace</p>
@@ -236,7 +236,10 @@
                                 <p class="clear">
                                     <span class="label label-{{ PedidoDetalhe.parseRastreioStatusClass(rastreio) }}">{{ rastreio.status_description }}</span>
                                     <br>
-                                    <small class="hint-text">Enviado {{ rastreio.data_envio_readable }}. Prazo de {{ rastreio.prazo }} dia(s)</small>
+                                    <small class="hint-text">
+                                        <span ng-if="PedidoDetalhe.pedido.status > 1">Enviado {{ rastreio.data_envio_readable }}.</span>
+                                         Prazo de {{ rastreio.prazo }} dia(s)
+                                     </small>
                                 </p>
                                 <div ng-if="rastreio.devolucao" class="alert alert-info m-t-10">
                                     <small><i class="fa-undo"></i>&nbsp; Devolução em {{ rastreio.devolucao.created_at }}</small>
