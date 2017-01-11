@@ -46,7 +46,7 @@
             vm.filter = {
                 'estado'             : '',
                 'pedidos.marketplace': [],
-                'pedidos.status'     : []
+                'pedidos.status'     : [1]
             };
 
             vm.list = {};

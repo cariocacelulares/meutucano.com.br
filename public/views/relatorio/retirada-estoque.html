@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-md-2">
                 <label for="estado">Estado do produto</label>
-                <select ng-model="RetiradaEstoque.params.filter.estado.value" id="estado">
+                <select ng-model="RetiradaEstoque.filter.estado" id="estado">
                     <option value="">Todos</option>
                     <option value="0">Novo</option>
                     <option value="1">Seminovo</option>
@@ -17,7 +17,7 @@
             <div class="col-md-2">
                 <label for="marketplace">Marketplace</label>
                 <select ng-model="RetiradaEstoque.setFilters['pedidos.marketplace']" id="marketplace" ng-change="RetiradaEstoque.addFilter('pedidos.marketplace')">
-                    <option value="">Selecione</option>
+                    <option value="">Todos</option>
                     <option ng-repeat="(key, marketplace) in RetiradaEstoque.list['pedidos.marketplace']" value="{{ key }}">{{ marketplace }}</option>
                 </select>
             </div>
@@ -30,7 +30,7 @@
             <div class="col-md-2">
                 <label for="status">Status do pedido</label>
                 <select ng-model="RetiradaEstoque.setFilters['pedidos.status']" id="status"  ng-change="RetiradaEstoque.addFilter('pedidos.status')">
-                    <option value="">Selecione</option>
+                    <option value="">Todos</option>
                     <option ng-repeat="(key, status) in RetiradaEstoque.list['pedidos.status']" value="{{ key }}">{{ status }}</option>
                 </select>
             </div>

@@ -223,31 +223,57 @@ class ProdutoController extends Controller
 
     public function retiradaEstoque($return_type = 'array')
     {
-        $model = PedidoProduto
-            ::join('produtos', 'produtos.sku', '=', 'pedido_produtos.produto_sku')
-            ->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
-            ->where('pedidos.status', '=', 1)
-            ->groupBy('produto_sku')
-            ->orderBy(DB::raw('quantidade'), 'DESC');
+        try {
+            $model = PedidoProduto
+                ::join('produtos', 'produtos.sku', '=', 'pedido_produtos.produto_sku')
+                ->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
+                ->groupBy('produto_sku')
+                ->orderBy(DB::raw('quantidade'), 'DESC');
 
-        $model = $model->get(['produtos.sku', 'produtos.titulo', DB::raw('SUM(pedido_produtos.quantidade) as quantidade')]);
+            $filters = Input::all();
 
-        dd($model->toArray());
-        /*try {
-            // Inicializa os pedidos
-            $this->model = Produto::where(DB::raw('1'), '=', '1');
+            foreach ($filters as $name => $filter) {
+                if (is_array($filters[$name])) {
+                    foreach ($filters[$name] as $key => $value) {
+                        if (!$filters[$name][$key]) {
+                            unset($filters[$name][$key]);
+                        }
+                    }
+                }
+            }
+
+            if ($filters['estado']) {
+                $estado = $model->where('produtos.estado', '=', $filters['estado']);
+            }
+
+            if ($filters['pedidos.marketplace']) {
+                $estado = $model->whereIn('pedidos.marketplace', $filters['pedidos.marketplace']);
+            }
+
+            if ($filters['pedidos.status']) {
+                $estado = $model->whereIn('pedidos.status', $filters['pedidos.status']);
+            }
+
+            $model = $model->get(['produtos.sku', 'produtos.titulo', DB::raw('SUM(pedido_produtos.quantidade) as quantidade')]);
+
             $this->list = [];
-
-            $this->prepare();
+            foreach ($model as $item) {
+                $this->list[] = [
+                    'sku'        => $item->sku,
+                    'titulo'     => $item->titulo,
+                    'quantidade' => $item->quantidade,
+                ];
+            }
 
             if (in_array($return_type, ['xls', 'pdf'])) {
                 return $this->getFile($return_type);
             } else {
                 return $this->listResponse($this->list);
             }
-        } catch (\Exception $e) {
-            \Log::warning(logMessage($e, 'Erro ao tentar gerar relatório'));
+        } catch (\Exception $exception) {
+            \Log::warning(logMessage($exception, 'Erro ao tentar gerar relatório'));
+
             return $this->notFoundResponse();
-        }*/
+        }
     }
 }
