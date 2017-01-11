@@ -4,6 +4,7 @@ use Core\Events\OrderPaid;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;
 use Rastreio\Models\Rastreio;
+use Rastreio\Jobs\SetDeadline;
 use Rastreio\Http\Controllers\RastreioController;
 use Core\Http\Controllers\Pedido\FaturamentoCodigoController;
 
@@ -50,7 +51,7 @@ class AttachRastreio
                 'status'     => 0,
             ]);
 
-            with(new RastreioController)->setDeadline($rastreio);
+            dispatch(with(new SetDeadline($rastreio))->onQueue('medium'));
         }
     }
 }

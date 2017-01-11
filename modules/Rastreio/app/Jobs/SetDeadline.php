@@ -12,6 +12,10 @@ class SetDeadline implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * Objeto rastreio
+     * @var Rastreio
+     */
     protected $rastreio;
 
     /**
