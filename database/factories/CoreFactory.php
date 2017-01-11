@@ -118,6 +118,7 @@ $factory->define(\Core\Models\Pedido\Comentario::class, function () use ($faker)
 $factory->define(Core\Models\Pedido\FaturamentoCodigo::class, function () use ($faker) {
   return [
     'servico' => $faker->unique()->numberBetween(0, 1),
+    'prefix'  => str_random(2),
     'atual'   => '97255050',
     'fim'     => '97256430'
   ];

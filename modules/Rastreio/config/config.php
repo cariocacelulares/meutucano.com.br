@@ -10,11 +10,6 @@ return [
         'sedex' => 1,
     ],
 
-    'codigo' => [
-        'sedex' => 'DW',
-        'pac'   => 'PN',
-    ],
-
     'status' => [
         0 => 'Pendente',
         1 => 'Normal',

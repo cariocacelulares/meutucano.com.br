@@ -26,12 +26,8 @@ class FaturamentoCodigoController extends Controller
             $faturamentoCodigo->atual = ($faturamentoCodigo->atual + 1);
             $faturamentoCodigo->save();
 
-            $servico = (isset(\Config::get('rastreio.servico')[$servico]))
-                ? \Config::get('rastreio.servico')[$servico]
-                : \Config::get('rastreio.codigo.pac');
-
             $etiqueta = new Etiqueta();
-            $etiqueta->setEtiquetaSemDv($servico . $faturamentoCodigo->atual);
+            $etiqueta->setEtiquetaSemDv($faturamentoCodigo->prefix . $faturamentoCodigo->atual);
 
             return $etiqueta->getEtiquetaComDv() . 'BR';
         } else {
