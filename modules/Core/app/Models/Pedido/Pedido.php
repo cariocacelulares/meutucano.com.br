@@ -121,4 +121,68 @@ class Pedido extends \Eloquent
     {
         return $this->hasMany(Comentario::class)->orderBy('created_at');
     }
+
+    /**
+     * Define if a order can be holded
+     *
+     * @return boolean
+     */
+    public function getCanHold()
+    {
+        if (in_array($this->status, [0,1])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Defide if a order can be prioritized
+     *
+     * @return boolean
+     */
+    public function getCanPrioritize()
+    {
+        if (in_array($this->status, [0,1])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Define if a order can be canceled
+     *
+     * @return boolean
+     */
+    public function getCanCancel()
+    {
+        if (in_array($this->status, [0,1])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Calculate discount percent based in order products: 100 - ((total - shipping) * 100 / totalProducts)
+     *
+     * @return null|int
+     */
+    public function getDesconto()
+    {
+        if (strtolower($this->marketplace) === 'b2w') {
+            $frete = ($this->frete_valor) ?: 0;
+            $total = 0;
+            foreach ($this->produtos as $produto) {
+                $total += $produto->total;
+            }
+
+            if ($total > 0 && ($this->total - $frete) != $total) {
+                return round(100 - ((($this->total - $frete) * 100) / $total));
+            }
+        }
+
+        return null;
+    }
 }
