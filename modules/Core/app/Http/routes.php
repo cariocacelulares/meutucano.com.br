@@ -41,7 +41,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
         /**
          * Código de rastreio
          */
-        Route::get('codigos/gerar/{servico}', 'Pedido\FaturamentoCodigoController@generateCode');
+        Route::get('codigos/gerar/{servico}', 'Pedido\FaturamentoCodigoController@getTrakingCode');
     });
 
     /**
@@ -121,6 +121,10 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
         // Produtos genérico
         Route::post('produto', 'ProdutoController@run');
         Route::get('produto/{return_type}', 'ProdutoController@run');
+
+        // Produtos genérico
+        Route::post('retirada-estoque', 'ProdutoController@retiradaEstoque');
+        Route::get('retirada-estoque/{return_type}', 'ProdutoController@retiradaEstoque');
     });
 
     /**

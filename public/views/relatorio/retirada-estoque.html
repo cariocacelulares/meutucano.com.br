@@ -1,0 +1,86 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-cart-arrow-down" title="Relatório de retirada de estoque" description="Relatório dos produtos necessários para o faturamento."></page-title>
+</div>
+
+<form ng-submit="RetiradaEstoque.gerar()" class="form-default" id="formProduto">
+    <fieldset class="form-group no-validate">
+        <legend>Filtros</legend>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="estado">Estado do produto</label>
+                <select ng-model="RetiradaEstoque.filter.estado" id="estado">
+                    <option value="">Todos</option>
+                    <option value="0">Novo</option>
+                    <option value="1">Seminovo</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="marketplace">Marketplace</label>
+                <select ng-model="RetiradaEstoque.setFilters['pedidos.marketplace']" id="marketplace" ng-change="RetiradaEstoque.addFilter('pedidos.marketplace')">
+                    <option value="">Todos</option>
+                    <option ng-repeat="(key, marketplace) in RetiradaEstoque.list['pedidos.marketplace']" value="{{ key }}">{{ marketplace }}</option>
+                </select>
+            </div>
+            <div class="col-md-3 p-t-25">
+                <div ng-repeat="value in RetiradaEstoque.filter['pedidos.marketplace'] track by $index" ng-if="value" class="btn-group p-t-5 m-r-10 m-b-10" role="group">
+                    <a class="btn-default btn-sm fz-10">{{ value }}</a>
+                    <a ng-click="RetiradaEstoque.removeFilter('pedidos.marketplace', $index)" class="btn-default btn-sm fz-10"><i class="fa-close"></i></a>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <label for="status">Status do pedido</label>
+                <select ng-model="RetiradaEstoque.setFilters['pedidos.status']" id="status"  ng-change="RetiradaEstoque.addFilter('pedidos.status')">
+                    <option value="">Todos</option>
+                    <option ng-repeat="(key, status) in RetiradaEstoque.list['pedidos.status']" value="{{ key }}">{{ status }}</option>
+                </select>
+            </div>
+            <div class="col-md-3 p-t-25">
+                <div ng-repeat="(key, field) in RetiradaEstoque.filter['pedidos.status'] track by $index" ng-if="field" class="btn-group p-t-5 m-r-10 m-b-10" role="group">
+                    <a class="btn-default btn-sm fz-10">{{ RetiradaEstoque.list['pedidos.status'][field] }}</a>
+                    <a ng-click="RetiradaEstoque.removeFilter('pedidos.status', $index)" class="btn-default btn-sm fz-10"><i class="fa-close"></i></a>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <div class="row">
+        <div class="col-md-12">
+            <button type="submit" busy="Gerando..." class="btn-success pull-right m-l-10"><i class="fa-play"></i>&nbsp; Gerar</button>
+            <a ng-click="RetiradaEstoque.limpar()" class="btn-danger pull-right"><i class="fa-eraser"></i>&nbsp; Limpar</a>
+        </div>
+    </div>
+</form>
+<hr />
+<div ng-if="RetiradaEstoque.result" class="row m-b-15">
+    <div class="col-md-6">
+        <span>{{ RetiradaEstoque.totalResults }}</span>
+    </div>
+    <div class="col-md-6">
+        <!-- <a ng-click="RetiradaEstoque.gerar('pdf')" class="btn-complete pull-right m-l-10">
+            PDF&nbsp; <i class="fa-file-pdf-o"></i>
+        </a> -->
+        <a ng-click="RetiradaEstoque.gerar('xls')" class="btn-complete pull-right">
+            XLS&nbsp; <i class="fa-file-excel-o"></i>
+        </a>
+    </div>
+</div>
+<div id="relatorio-resultado">
+    <table class="table info-style">
+        <thead>
+            <tr>
+                <th class="text-center">SKU</th>
+                <th class="text-center">Título</th>
+                <th class="text-center">Quantidade</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="campos in RetiradaEstoque.result">
+                <td ng-repeat="(key, campo) in campos" class="text-center">
+                    <span ng-if="key != 'produtos'">{{ campo }}</span>
+                    <span ng-if="RetiradaEstoque.params.relation.produtos && key == 'produtos'" ng-repeat="produto in campo track by $index">
+                        <span ng-repeat="atributo in produto">{{ atributo }}<span ng-hide="$last">, </span><br ng-if="$last"/></span>
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

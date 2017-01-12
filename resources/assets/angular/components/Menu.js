@@ -139,6 +139,11 @@
                                 icon: 'fa-dropbox',
                                 sref: $state.href('app.relatorios.produtos')
                             },
+                            {
+                                title: 'Retirada de estoque',
+                                icon: 'fa-cart-arrow-down',
+                                sref: $state.href('app.relatorios.retirada-estoque')
+                            },
                             {title: 'Caixa diário', icon: 'fa-money'},
                             {title: 'ICMS mensal', icon: 'fa-file-pdf-o', sref: $state.href('app.admin.icms')}
                         ],

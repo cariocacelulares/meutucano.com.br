@@ -55,7 +55,10 @@
             </td>
             <td class="text-center">{{ pedido.marketplace_readable }}</td>
             <td class="text-center">{{ pedido.endereco.uf }}</td>
-            <td class="text-center">{{ pedido.frete_metodo }}</td>
+            <td class="text-center">
+                {{ pedido.frete_metodo }}
+                <span ng-repeat="rastreio in pedido.rastreios" clipboard text="rastreio.rastreio">{{ rastreio.rastreio }}</span>
+            </td>
             <td>
                 <strong>{{ pedido.cliente.nome | uppercase }}</strong>
                 <br>
