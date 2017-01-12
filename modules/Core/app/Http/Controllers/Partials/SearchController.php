@@ -142,7 +142,7 @@ class SearchController extends Controller
         $limit      = Input::get('limit')  ?: 9;
         $offset     = Input::get('offset') ?: 0;
         $term       = trim(Input::get('term'));
-        $termArray  = (strstr($term, ' ')) ? $this->wildcard($term) : $term;
+        // $termArray  = (strstr($term, ' ')) ? $this->wildcard($term) : $term;
         $busca      = [
             'pedidos'  => [],
             'clientes' => [],
@@ -169,14 +169,16 @@ class SearchController extends Controller
             }
 
             if (in_array('clientes', $categories)) {
-                $busca['clientes'] = Cliente
+                /*$busca['clientes'] = Cliente
                     ::with('enderecos')
                     ->search($termArray, [
                         'nome'      => 100,
                         'taxvat'    => 75,
                         'email'     => 50,
                         'inscricao' => 25,
-                    ])
+                    ])*/
+                $busca['clientes'] = $this->customers($term)
+                    ->with('enderecos')
                     ->groupBy('id')
                     ->orderBy('nome', 'ASC')
                     ->offset($offset)
@@ -187,14 +189,15 @@ class SearchController extends Controller
             }
 
             if (in_array('produtos', $categories)) {
-                $busca['produtos'] = Produto
+                /*$busca['produtos'] = Produto
                     ::search($termArray, [
                         'sku'        => 125,
                         'titulo'     => 100,
                         'ncm'        => 75,
                         'ean'        => 50,
                         'referencia' => 25,
-                    ])
+                    ])*/
+                $busca['produtos'] = $this->products($term)
                     ->groupBy('sku')
                     ->orderBy('titulo', 'ASC')
                     ->offset($offset)
