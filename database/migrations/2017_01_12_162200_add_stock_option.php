@@ -17,10 +17,10 @@ class AddStockOption extends Migration
      */
     public function up()
     {
-        $priority = DB::table('stock')
+        $priority = DB::table('stocks')
             ->max('priority');
 
-        DB::table('stock')->insert([
+        DB::table('stocks')->insert([
             'slug'     => 'allnation',
             'title'    => 'CD Allnation',
             'priority' => ((int) $priority + 1)
@@ -34,7 +34,7 @@ class AddStockOption extends Migration
      */
     public function down()
     {
-        DB::table('stock')
+        DB::table('stocks')
             ->where('slug', '=', 'allnation')
             ->delete();
     }

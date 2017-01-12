@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Core\Models\Produto\Linha\Atributo;
 use Core\Events\ProductStockUpdated;
 use Sofa\Eloquence\Eloquence;
+use Core\Models\Produto\ProductStock;
 
 /**
  * Class Produto
@@ -51,6 +52,35 @@ class Produto extends Model
         'estado'          => 'string',
         'controle_serial' => 'boolean',
     ];
+
+    /**
+     * ProductStock
+     * @return ProductStock
+     */
+    public function product_stocks()
+    {
+        return $this->hasMany(ProductStock::class, 'produto_sku', 'sku');
+    }
+
+    /**
+     * Return the sum of included stocks
+     * @return int
+     */
+    public function getStock()
+    {
+        $stock = 0;
+
+        $product_stocks = $this->product_stocks()
+                ->join('stocks', 'stocks.id', 'product_stocks.stock_id')
+                ->where('stocks.include', '=', true)
+                ->get();
+
+        foreach ($product_stocks as $product_stock) {
+            $stock += $product_stock->quantity;
+        }
+
+        return $stock;
+    }
 
     /**
      * @var array

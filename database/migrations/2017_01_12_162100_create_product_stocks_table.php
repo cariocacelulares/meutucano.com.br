@@ -33,7 +33,7 @@ class CreateProductStocksTable extends Migration
             $table
                 ->foreign('stock_id', 'StockStockId')
                 ->references('id')
-                ->on('stock')
+                ->on('stocks')
                 ->onDelete('CASCADE')
                 ->onUpdate('CASCADE');
         });

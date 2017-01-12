@@ -28,7 +28,7 @@ class AlterStockQuantityTable extends Migration
             ];
         }
 
-        DB::table('product_stock')->insert($values);
+        DB::table('product_stocks')->insert($values);
 
         Schema::table('produtos', function ($table) {
             $table->dropColumn(['estoque']);

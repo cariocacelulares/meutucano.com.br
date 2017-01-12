@@ -22,6 +22,11 @@ class ProductStock extends Model
     protected $revisionCreationsEnabled = true;
 
     /**
+     * @var boolean
+     */
+    public $timestamps = false;
+
+    /**
      * @var array
      */
     protected $fillable = [
@@ -31,28 +36,20 @@ class ProductStock extends Model
     ];
 
     /**
-     * @var boolean
-     */
-    public $timestamps = false;
-
-    /**
      * Product
-     *
      * @return Product
      */
     public function product()
     {
-        return $this->belongsTo(Produto::class)
+        return $this->belongsTo(Produto::class, 'produto_sku', 'sku');
     }
 
     /**
      * Stock
-     *
      * @return Stock
      */
     public function stock()
     {
         return $this->belongsTo(Stock::class);
     }
-
 }
