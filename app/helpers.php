@@ -7,7 +7,8 @@ if (!function_exists('logMessage')) {
      * @param $data
      * @return int
      */
-    function logMessage($exception, $message = 'Erro'){
+    function logMessage($exception, $message = 'Erro')
+    {
         return sprintf("%s
             Arquivo: %s
             Linha: %s
@@ -16,9 +17,9 @@ if (!function_exists('logMessage')) {
             %s
         ",
             $message,
-            $exception->getFile(),
-            $exception->getLine(),
-            $exception->getMessage(),
+            $exception ? $exception->getFile() : '',
+            $exception ? $exception->getLine() : '',
+            $exception ? $exception->getMessage() : '',
             htmlentities($exception->getTraceAsString())
         );
     }
@@ -31,10 +32,11 @@ if (!function_exists('dataToTimestamp')) {
      * @param $data
      * @return int
      */
-    function dataToTimestamp($data){
-        $ano = substr($data, 6,4);
-        $mes = substr($data, 3,2);
-        $dia = substr($data, 0,2);
+    function dataToTimestamp($data)
+    {
+        $ano = substr($data, 6, 4);
+        $mes = substr($data, 3, 2);
+        $dia = substr($data, 0, 2);
         return mktime(0, 0, 0, $mes, $dia, $ano);
     }
 }
@@ -46,7 +48,8 @@ if (!function_exists('Soma1dia')) {
      * @param $data
      * @return bool|string
      */
-    function Soma1dia($data){
+    function Soma1dia($data)
+    {
         $datetime = DateTime::createFromFormat('d/m/Y', $data);
         date_add($datetime, date_interval_create_from_date_string('1 days'));
         return date_format($datetime, 'd/m/Y');
@@ -103,13 +106,14 @@ if (!function_exists('diasUteisPeriodo')) {
         foreach ($period as $datePeriod) {
             if (in_array($datePeriod->format('d/m'), $feriados)) {
                 $diasTotal--;
-            } else if (in_array($datePeriod->format('w'), ['0', '6'])) {
+            } elseif (in_array($datePeriod->format('w'), ['0', '6'])) {
                 $diasTotal--;
-            } else if ($apenasPerido == false) {
-                if (array_key_exists($datePeriod->format('n'), $diasMes))
+            } elseif ($apenasPerido == false) {
+                if (array_key_exists($datePeriod->format('n'), $diasMes)) {
                     $diasMes[$datePeriod->format('n')]++;
-                else
+                } else {
                     $diasMes[$datePeriod->format('n')] = 1;
+                }
             }
         }
 
@@ -127,23 +131,29 @@ if (!function_exists('diasUteisPeriodo')) {
  * @param  string $error a mensagem completa de erro
  * @return void
  */
-function reportError($error) {
-    \Mail::send('emails.error', [
-        'error' => $error
-    ], function ($m) {
-        $m->from(\Config('core.report_email'), 'Meu Tucano');
-        $m->to(\Config('core.report_email'), 'DEV')->subject('Erro no sistema!');
-    });
+function reportError($error)
+{
+    if (getenv('APP_ENV') !== 'testing') {
+        \Mail::send('emails.error', [
+            'error' => $error
+        ], function ($m) {
+            $m->from(\Config('core.report_email'), 'Meu Tucano');
+            $m->to(\Config('core.report_email'), 'DEV')->subject('Erro no sistema!');
+        });
+    }
 }
 
-/**
- * Retorna apenas os digitos de uma string
- *
- * @param  string $string
- * @return string
- */
-function numbers($string) {
-    return preg_replace('/\D/', '', $string);
+if (!function_exists('numbers')) {
+    /**
+     * Retorna apenas os digitos de uma string
+     *
+     * @param  string $string
+     * @return string
+     */
+    function numbers($string)
+    {
+        return preg_replace('/\D/', '', $string);
+    }
 }
 
 /**
@@ -152,7 +162,8 @@ function numbers($string) {
  * @param  string $string
  * @return string
  */
-function currencyNumbers($string) {
+function currencyNumbers($string)
+{
     $dot = strpos($string, '.');
     $decimals = str_pad(substr($string, ($dot + 1), 2), 2, '0');
     return (int) (substr($string, 0, $dot) . $decimals);
@@ -181,7 +192,8 @@ if (!function_exists('removeAcentos')) {
      *
      * @return int
      */
-    function removeAcentos($string) {
+    function removeAcentos($string)
+    {
         $map = array(
             'á' => 'a',
             'à' => 'a',
@@ -215,12 +227,34 @@ if (!function_exists('removeAcentos')) {
     }
 }
 
-/**
- * Check if module is active based in your config file
- *
- * @param  string  $module nome do modulo
- * @return boolean         if module is active
- */
-function hasModule($module) {
-    return !is_null(\Config::get(str_slug($module)));
+if (!function_exists('hasModule')) {
+    /**
+     * Check if module is active based in your config file
+     *
+     * @param  string  $module nome do modulo
+     * @return boolean         if module is active
+     */
+    function hasModule($module)
+    {
+        return !is_null(\Config::get(str_slug($module)));
+    }
+}
+
+if (!function_exists('dateConvert')) {
+    /**
+     * Coverts a date format with Carbon
+     *
+     * @param  string $date date to convert
+     * @param  string $from from format
+     * @param  string $to   to format
+     * @return string       formated date
+     */
+    function dateConvert($date = null, $from = 'Y-m-d H:i:s', $to = 'd/m/Y H:i')
+    {
+      if (!$date) {
+          return null;
+      }
+
+      return \Carbon\Carbon::createFromFormat($from, $date)->format($to);
+    }
 }

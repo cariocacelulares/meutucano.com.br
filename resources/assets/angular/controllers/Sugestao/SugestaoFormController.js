@@ -5,11 +5,12 @@
         .module('MeuTucano')
         .controller('SugestaoFormController', SugestaoFormController);
 
-    function SugestaoFormController($scope, toaster, Sugestao, Usuario) {
+    function SugestaoFormController($scope, toaster, Sugestao, Usuario, ValidationErrors) {
         var vm = this;
 
-        vm.pessoas = {};
-        vm.sugestao = {};
+        vm.pessoas          = {};
+        vm.sugestao         = {};
+        vm.validationErrors = [];
 
         vm.load = function() {
             Usuario.getList().then(function(response) {
@@ -25,10 +26,17 @@
          * @return {void}
          */
         vm.save = function() {
-            Sugestao.save(vm.sugestao).then(function() {
-                toaster.pop('success', 'Sucesso!', 'Sugestão / crítica enviada com sucesso!');
-                $scope.closeThisDialog(true);
-            });
+            vm.validationErrors = [];
+
+            Sugestao.save(vm.sugestao).then(
+                function() {
+                    toaster.pop('success', 'Sucesso!', 'Sugestão / crítica enviada com sucesso!');
+                    $scope.closeThisDialog(true);
+                },
+                function(error) {
+                    vm.validationErrors = ValidationErrors.handle(error);
+                }
+            );
         };
     }
 })();

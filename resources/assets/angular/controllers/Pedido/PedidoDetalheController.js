@@ -5,12 +5,13 @@
         .module('MeuTucano')
         .controller('PedidoDetalheController', PedidoDetalheController);
 
-    function PedidoDetalheController($rootScope, $state, $stateParams, ngDialog, SweetAlert, toaster, Pedido, RastreioHelper, NotaHelper, ClienteEnderecoHelper, PedidoHelper, ClienteHelper, InspecaoTecnicaHelper) {
+    function PedidoDetalheController($rootScope, $state, $stateParams, ngDialog, SweetAlert, toaster, Pedido, RastreioHelper, NotaHelper, ClienteEnderecoHelper, PedidoHelper, ClienteHelper, InspecaoTecnicaHelper, PedidoProduto) {
         var vm = this;
 
-        vm.pedido_id  = $stateParams.id;
-        vm.pedido     = {};
-        vm.loading    = false;
+        vm.pedido_id   = $stateParams.id;
+        vm.pedido      = {};
+        vm.hasSeminovo = false;
+        vm.loading     = false;
 
         /**
          * @type {Object}
@@ -48,8 +49,16 @@
             Pedido.get(vm.pedido_id).then(function(pedido) {
                 vm.pedido  = pedido;
                 vm.loading = false;
+
+                for (var pedidoProduto in vm.pedido.produtos) {
+                    if (parseInt(vm.pedido.produtos[pedidoProduto].produto.estado) === 1) {
+                        vm.hasSeminovo = true;
+                        break;
+                    }
+                }
             });
         };
+
         vm.load();
 
         /**
@@ -68,7 +77,9 @@
                     pedido_id: vm.pedido.id
                 }
             }).closePromise.then(function(data) {
-                if (data.value === true) vm.load();
+                if (data.value === true) {
+                    vm.load();
+                }
             });
         };
 

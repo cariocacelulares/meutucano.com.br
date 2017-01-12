@@ -8,7 +8,10 @@ return [
         'user' => env('MAGENTO_API_USER', 'carioca'),
         'key'  => env('MAGENTO_API_KEY', '#@carioca2016')
     ],
-    'old_order' => 4,
+    'old_order' => [
+        'boleto'  => 5,
+        'credito' => 2
+    ],
 
     /**
      * Micro-serviços

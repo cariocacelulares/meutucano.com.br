@@ -1,12 +1,12 @@
 <?php namespace App\Http\Controllers\Auth;
 
+use JWTAuth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use JWTAuth;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Class AuthenticateController
@@ -15,7 +15,7 @@ use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 class AuthenticateController extends Controller
 {
     /**
-     * Autentica usuário
+     * User authentication
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -38,7 +38,7 @@ class AuthenticateController extends Controller
     }
 
     /**
-     * Retorna o usuário autenticado
+     * Return authenticated user
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -60,7 +60,7 @@ class AuthenticateController extends Controller
     }
 
     /**
-     * Atualiza o token do JWT
+     * Refresh JWT token
      *
      * @return mixed
      * @throws AccessDeniedHttpException
@@ -74,9 +74,9 @@ class AuthenticateController extends Controller
         }
         try {
             $token = JWTAuth::refresh($token);
-        } catch(TokenInvalidException $e) {
+        } catch (TokenInvalidException $e) {
             return response()->json(['token_invalid'], 400);
-        } catch(TokenExpiredException $e) {
+        } catch (TokenExpiredException $e) {
             return response()->json(['token_expired'], $e->getStatusCode());
         }
 

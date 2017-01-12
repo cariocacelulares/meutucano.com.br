@@ -16,14 +16,13 @@ class TarefaController extends Controller
 
     const MODEL = Tarefa::class;
 
-    protected $validationRules = [];
-
     /**
      * Lista tarefas para a tabela
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableList() {
+    public function tableList()
+    {
         $m = self::MODEL;
         $list = $m::orderBy('gamification_tarefas.titulo', 'ASC');
         $list = $this->handleRequest($list);
@@ -40,20 +39,15 @@ class TarefaController extends Controller
     public function store()
     {
         $m = self::MODEL;
+
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $data = Input::all();
             $data['slug'] = $this->generateSlug('slug', Input::get('titulo'));
 
             $data = $m::create($data);
             return $this->createdResponse($data);
-        } catch(\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+        } catch (\Exception $ex) {
+            $data = ['exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
             return $this->clientErrorResponse($data);
@@ -75,12 +69,6 @@ class TarefaController extends Controller
         }
 
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $data->fill(Input::all());
             if ($data->getOriginal('titulo') !== $data->titulo) {
                 $data->slug = $this->generateSlug('slug', $data->titulo);
@@ -88,10 +76,10 @@ class TarefaController extends Controller
 
             $data->save();
             return $this->showResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             \Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }

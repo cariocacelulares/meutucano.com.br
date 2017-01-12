@@ -1,15 +1,13 @@
 <?php namespace Tests\Rastreio;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Rastreio\Models\Logistica;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class LogisticaTest extends TestCase
 {
   use WithoutMiddleware,
-    DatabaseMigrations,
     DatabaseTransactions,
     CreateRastreio;
 
@@ -41,6 +39,7 @@ class LogisticaTest extends TestCase
     $rastreio = $this->createRastreio();
 
     $this->json('POST', "/api/logisticas", [
+      'autorizacao' => '45456464564',
       'motivo'      => 1,
       'rastreio_id' => $rastreio->id,
     ])->seeStatusCode(201);
@@ -60,11 +59,12 @@ class LogisticaTest extends TestCase
   {
     $rastreio = $this->createRastreio();
 
-    $this->json('POST', "/api/logisticas", [
+    $this->json('POST', '/api/logisticas', [
+      'autorizacao' => '45456464564',
       'motivo'      => 1,
       'acao'        => 1,
       'rastreio_id' => $rastreio->id,
-    ]);
+    ])->seeStatusCode(201);
 
     $rastreio = $rastreio->fresh();
 
@@ -89,7 +89,8 @@ class LogisticaTest extends TestCase
       'acao'        => 1,
       'rastreio_id' => $rastreio->id,
       'protocolo'   => '123456',
-    ]);
+      'autorizacao' => '45456464564',
+    ])->seeStatusCode(201);
 
     $pedido = $pedido->fresh();
 

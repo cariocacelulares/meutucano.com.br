@@ -2,7 +2,7 @@
 
 use Illuminate\Console\Command;
 use App\Models\Usuario\Usuario;
-use App\Events\Gamification\TarefaRealizada;
+use Gamification\Events\TarefaRealizada;
 use Gamification\Models\Tarefa;
 
 class AdicionarTarefa extends Command

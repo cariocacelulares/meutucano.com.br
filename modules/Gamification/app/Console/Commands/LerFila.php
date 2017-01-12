@@ -30,7 +30,7 @@ class LerFila extends Command
     {
         try {
             $ativo = (bool) \Config::get('gamification.ativo');
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $ativo = false;
         }
 

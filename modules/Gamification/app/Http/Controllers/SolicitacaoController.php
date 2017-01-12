@@ -17,9 +17,8 @@ class SolicitacaoController extends Controller
 
     const MODEL = Solicitacao::class;
 
-    protected $validationRules = [];
-
-    public function tableList() {
+    public function tableList()
+    {
         $list = Solicitacao::with('usuario')
             ->join('usuarios', 'usuarios.id', '=', 'gamification_solicitacoes.usuario_id')
             ->join('gamification_tarefas', 'gamification_tarefas.id', '=', 'gamification_solicitacoes.tarefa_id')
@@ -53,7 +52,7 @@ class SolicitacaoController extends Controller
             ]));
 
             return $this->createdResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => 'Solicitacao']);
@@ -70,12 +69,6 @@ class SolicitacaoController extends Controller
         }
 
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $data->fill(Input::all());
 
             $aprovado = false;
@@ -97,10 +90,10 @@ class SolicitacaoController extends Controller
             }
 
             return $return;
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             \Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }

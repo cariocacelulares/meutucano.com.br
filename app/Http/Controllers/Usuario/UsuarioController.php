@@ -17,8 +17,6 @@ class UsuarioController extends Controller
 
     const MODEL = Usuario::class;
 
-    protected $validationRules = [];
-
     /**
      * Lista pedidos para a tabela
      *
@@ -44,16 +42,12 @@ class UsuarioController extends Controller
     {
         $m = self::MODEL;
 
-        if (!$data = $m::find($id))
+        if (!$data = $m::find($id)) {
             return $this->notFoundResponse();
+        }
 
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if($v->fails())
-                throw new \Exception("ValidationException");
-
-            $data->fill(Input::except(['password', 'novasRoles', 'roles']));
+            $data->fill(Input::except(['novasRoles', 'roles']));
 
             if (Input::get('novasRoles')) {
                 $data->detachRoles();
@@ -66,8 +60,8 @@ class UsuarioController extends Controller
             $data->save();
 
             return $this->showResponse($data);
-        } catch(\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+        } catch (\Exception $ex) {
+            $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }
@@ -81,13 +75,8 @@ class UsuarioController extends Controller
     {
         $m = self::MODEL;
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails())
-                throw new \Exception("ValidationException");
-
             $data = new $m;
-            $data->fill(Input::except(['password', 'novasRoles']));
+            $data->fill(Input::except(['novasRoles']));
             $data->save();
 
             if (Input::get('novasRoles')) {
@@ -102,8 +91,8 @@ class UsuarioController extends Controller
             $data->save();
 
             return $this->createdResponse($data);
-        } catch(\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+        } catch (\Exception $ex) {
+            $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }

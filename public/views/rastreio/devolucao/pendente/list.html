@@ -15,10 +15,9 @@
     </thead>
     <tbody ng-if="DevolucaoList.tableData.data.length && !DevolucaoList.loading">
         <tr ng-repeat="devolucao in DevolucaoList.tableData.data">
-            <td class="text-center">
-                <strong class="fs-11" ng-bind="devolucao.rastreio.pedido.marketplace"></strong>
-                <br>
-                <small ng-bind="devolucao.rastreio.pedido_id"></small>
+            <td class="text-center fs-11">
+                <strong>{{ devolucao.rastreio.pedido.marketplace }}</strong><br>
+                {{ devolucao.rastreio.pedido.codigo_marketplace || 'Sem código' }}
             </td>
             <td>
                 <strong ng-bind="devolucao.rastreio.pedido.cliente.nome"></strong>
@@ -32,7 +31,7 @@
             <td class="text-center">
                 <a ng-bind="devolucao.rastreio.rastreio" title="Rastrear código" target="_blank" ng-href="http://websro.correios.com.br/sro_bin/txect01$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS={{ devolucao.rastreio.rastreio }}"></a>
             </td>
-            <td ng-bind="devolucao.motivo_description"></td>
+            <td ng-bind="devolucao.motivo_description" title="{{ devolucao.motivo }}"></td>
             <td class="text-center">
                 <button class="btn-info" ng-click="DevolucaoList.rastreioHelper.devolucao(devolucao.rastreio_id, true)">
                     <i class="fa-pencil"></i>

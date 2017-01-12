@@ -14,14 +14,13 @@ class MarcaController extends Controller
 
     const MODEL = Marca::class;
 
-    protected $validationRules = [];
-
     /**
      * Lista marcas para a tabela
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableList() {
+    public function tableList()
+    {
         $m = self::MODEL;
 
         $list = $m::orderBy('marcas.created_at', 'DESC');

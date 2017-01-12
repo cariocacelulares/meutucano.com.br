@@ -2,14 +2,12 @@
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use MailThief\Testing\InteractsWithMail;
 
 class PedidoNotaTest extends TestCase
 {
   use WithoutMiddleware,
-    DatabaseMigrations,
     DatabaseTransactions,
     InteractsWithMail,
     CreateNota;
@@ -22,8 +20,8 @@ class PedidoNotaTest extends TestCase
 
   public function tearDown()
   {
-    parent::tearDown();
     $this->resetInvoice();
+    parent::tearDown();
   }
 
   /**

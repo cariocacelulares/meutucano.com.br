@@ -7,6 +7,8 @@ use Rastreio\Http\Controllers\Traits\RastreioTrait;
 use InspecaoTecnica\Http\Controllers\Traits\InspecaoTecnicaTrait;
 use Rastreio\Models\Rastreio;
 use Rastreio\Models\Logistica;
+use Rastreio\Http\Requests\LogisticaRequest as Request;
+use Rastreio\Transformers\LogisticaTransformer;
 
 /**
  * Class LogisticaController
@@ -17,8 +19,6 @@ class LogisticaController extends Controller
     use RestControllerTrait, RastreioTrait, InspecaoTecnicaTrait;
 
     const MODEL = Logistica::class;
-
-    protected $validationRules = [];
 
     /**
      * Retorna uma pi com base no rastreio
@@ -35,13 +35,13 @@ class LogisticaController extends Controller
                 $data = $m::with(['rastreio', 'rastreio.pedido'])->where('id', '=', $data->logistica->id)->first();
 
                 if ($data) {
-                    return $this->showResponse($data);
+                    return $this->showResponse(LogisticaTransformer::show($data));
                 }
             }
 
             return $this->showResponse([
                 'rastreio_id' => $data->id,
-                'rastreio' => $data
+                'rastreio'    => $data
             ]);
         }
     }
@@ -52,34 +52,26 @@ class LogisticaController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function store()
+    public function store(Request $request)
     {
-        $m = self::MODEL;
         try {
-            $v = \Validator::make(Input::except(['protocolo']), $this->validationRules);
-
-            if($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $this->aplicarDevolucao(Input::get(['inspecoes']));
 
-            $data = $m::create(Input::except(['protocolo', 'imagem']));
+            $logistica = (self::MODEL)::create(Input::except(['protocolo', 'imagem']));
 
             if (Input::has('acao')) {
                 $rastreio = Rastreio::find(Input::get('rastreio_id'));
                 $rastreio->status = 5;
                 $rastreio->save();
 
-                $this->updateProtocolAndStatus($data, Input::get('protocolo'), Input::file('imagem'));
+                $this->updateProtocolAndStatus($logistica, Input::get('protocolo'), Input::file('imagem'));
             }
 
-            return $this->createdResponse($data);
-        } catch(\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            return $this->createdResponse($logistica);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
-            \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
         }
     }
 
@@ -89,34 +81,26 @@ class LogisticaController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function update($id)
+    public function update($id, Request $request)
     {
-        $m = self::MODEL;
-
-        if (!$data = $m::find($id)) {
-            return $this->notFoundResponse();
-        }
-
         try {
-            $v = \Validator::make(Input::except(['protocolo']), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $this->aplicarDevolucao(Input::get(['inspecoes']));
 
-            $data->fill(Input::except(['protocolo']));
-            $data->save();
+            $logistica = (self::MODEL)::findOrFail($id);
+            $logistica->fill(Input::except(['protocolo']));
+            $logistica->save();
 
-            $this->updateProtocolAndStatus($data, Input::get('protocolo'));
+            $this->updateProtocolAndStatus($logistica, Input::get('protocolo'));
 
-            return $this->showResponse($data);
-        } catch(\Exception $ex) {
-            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
+            return $this->showResponse($logistica);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse([
+                'exception' => strstr(get_class($exception), 'ModelNotFoundException')
+                    ? 'Recurso nao encontrado'
+                    : $exception->getMessage()
+            ]);
         }
     }
 }

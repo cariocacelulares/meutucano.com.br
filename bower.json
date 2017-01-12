@@ -47,10 +47,9 @@
     "angular-ui-select": "^0.19.4",
     "lodash": "^4.16.4",
     "raven-js": "^3.8.0",
-    "textAngular": "^1.5.16"
-  },
-  "resolutions": {
-    "angular": "~1.5"
+    "textAngular": "^1.5.16",
+    "angular": "~1.5",
+    "angular-animate": "~1.5"
   },
   "overrides": {
     "lodash": {

@@ -5,25 +5,12 @@
         .module('MeuTucano')
         .component('upload', {
             templateUrl: 'views/components/upload.html',
-            controller: function($rootScope, $timeout, toaster, envService, Upload) {
+            controller: function($rootScope, $timeout, toaster, envService, ngDialog, Upload) {
                 var vm = this;
 
                 vm.loading = false;
-                vm.errors = [];
                 vm.resposta = null;
                 vm.statusAberto = false;
-
-                vm.removeError = function(error) {
-                    for (var i = vm.errors.length - 1; i >= 0; i--){
-                        if (vm.errors[i].chave == error.chave){
-                            vm.errors.splice(i, 1);
-                        }
-                    }
-
-                    if (!vm.errors.length) {
-                        vm.statusAberto = false;
-                    }
-                };
 
                 /**
                  * Upload notas
@@ -45,14 +32,52 @@
                         }).success(function(response) {
                             vm.loading = false;
                             vm.resposta = response.data;
-                            vm.errors = vm.resposta.errors;
                             $rootScope.$broadcast('upload');
                             $rootScope.$broadcast('stop-loading');
+                            vm.statusAberto = false;
 
-                            if (!vm.errors.length && vm.resposta.success == vm.resposta.total) {
-                                $timeout(function() {
-                                    vm.statusAberto = false;
-                                }.bind(vm), 3000);
+                            if (vm.resposta.total && vm.resposta.retorno.length) {
+                                ngDialog.open({
+                                    template: 'views/components/upload-feedback.html',
+                                    className: (vm.resposta.total > 1) ? 'ngdialog-theme-default ngdialog-extra-big' : 'ngdialog-theme-default',
+                                    data: {
+                                        retorno: vm.resposta.retorno,
+                                        success: vm.resposta.success,
+                                        total  : vm.resposta.total
+                                    },
+                                    controllerAs: 'NotaUpload',
+                                    controller: function($scope, $state, NotaHelper, RastreioHelper, PedidoHelper) {
+                                        var vm = this;
+
+                                        vm.notaHelper     = NotaHelper;
+                                        vm.rastreioHelper = RastreioHelper;
+                                        vm.pedidoHelper   = PedidoHelper;
+                                        vm.retorno        = $scope.ngDialogData.retorno;
+                                        vm.success        = $scope.ngDialogData.success;
+                                        vm.total          = $scope.ngDialogData.total;
+
+                                        vm.load = function() {
+                                            var ordered = [];
+                                            for (var key in vm.retorno) {
+                                                if (vm.retorno[key].error) {
+                                                    ordered.unshift(vm.retorno[key]);
+                                                } else {
+                                                    ordered.push(vm.retorno[key]);
+                                                }
+                                            }
+
+                                            vm.retorno = ordered;
+                                        };
+
+                                        vm.load();
+
+                                        vm.faturar = function(id) {
+                                            $scope.closeThisDialog(true);
+                                            vm.pedidoHelper.faturar(id);
+                                            $state.go($state.current, {}, {reload: true});
+                                        }
+                                    }
+                                })
                             }
                         }).error(function() {
                             toaster.pop('error', "Erro no upload!", "Erro ao enviar arquivos, tente novamente!");

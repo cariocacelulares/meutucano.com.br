@@ -35,7 +35,6 @@ $factory->define(\Core\Models\Cliente\Endereco::class, function () use ($faker) 
  */
 $factory->define(\Core\Models\Produto\Produto::class, function () use ($faker) {
   return [
-    'sku'    => $faker->unique()->numberBetween(0, 1000),
     'titulo' => 'Smartphone ' . $faker->randomNumber(2),
     'ean'    => $faker->isbn10,
     'estado' => 0
@@ -119,6 +118,7 @@ $factory->define(\Core\Models\Pedido\Comentario::class, function () use ($faker)
 $factory->define(Core\Models\Pedido\FaturamentoCodigo::class, function () use ($faker) {
   return [
     'servico' => $faker->unique()->numberBetween(0, 1),
+    'prefix'  => str_random(2),
     'atual'   => '97255050',
     'fim'     => '97256430'
   ];

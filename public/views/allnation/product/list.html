@@ -17,7 +17,7 @@
     <tbody ng-if="AllnationProductList.tableData.data && !AllnationProductList.loading">
         <tr ng-repeat="product in AllnationProductList.tableData.data">
             <td class="text-center">
-                <img src="{{ product.image }}" width="64" />
+                <img ng-src="{{ product.image }}" width="64" />
             </td>
             <td class="text-center">{{ product.id }}</td>
             <td>

@@ -35,9 +35,6 @@ class ScheduleServiceProvider extends ServiceProvider
 
             $schedule->command('magento:pedidos')
                 ->everyMinute();
-
-            $schedule->command('refresh:stock')
-                ->everyMinute();
         });
     }
 

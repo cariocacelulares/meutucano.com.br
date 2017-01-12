@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Core\Models\Pedido\Pedido;
+use Sofa\Eloquence\Eloquence;
 
 /**
  * Class Cliente
@@ -9,6 +10,8 @@ use Core\Models\Pedido\Pedido;
  */
 class Cliente extends \Eloquent
 {
+    use Eloquence;
+
     /**
      * @var array
      */
@@ -19,13 +22,6 @@ class Cliente extends \Eloquent
         'fone',
         'email',
         'inscricao',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $appends = [
-        'taxvat_readable'
     ];
 
     /**
@@ -46,63 +42,5 @@ class Cliente extends \Eloquent
     public function enderecos()
     {
         return $this->hasMany(Endereco::class);
-    }
-
-    /**
-     * Return readable taxvat_readable
-     *
-     * @return string
-     */
-    protected function getTaxvatReadableAttribute()
-    {
-        $taxvat = $this->taxvat;
-        $taxvat = preg_replace('/\D/', '', $taxvat);
-        $format = [];
-
-        if ((int)$this->tipo === 1) {
-            // CNPJ
-            for ($i = 0; $i < strlen($taxvat); $i++) {
-                $format[] = $taxvat[$i];
-
-                if (in_array($i, [1, 4]))
-                    $format[] = '.';
-                else if ($i == 6)
-                    $format[] = '/';
-                else if ($i == 11)
-                    $format[] = '-';
-            }
-        } else {
-            // CPF
-            for ($i = 0; $i < strlen($taxvat); $i++) {
-                $format[] = $taxvat[$i];
-
-                if (in_array($i, [2, 5]))
-                    $format[] = '.';
-                else if ($i == 8)
-                    $format[] = '-';
-            }
-        }
-
-        return implode('', $format);
-    }
-
-    /**
-     * @return string
-     */
-    public function getCreatedAtAttribute($created_at) {
-        if (!$created_at)
-            return null;
-
-        return Carbon::createFromFormat('Y-m-d H:i:s', $created_at)->format('d/m/Y H:i');
-    }
-
-    /**
-     * @return string
-     */
-    public function getUpdatedAtAttribute($updated_at) {
-        if (!$updated_at)
-            return null;
-
-        return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
     }
 }

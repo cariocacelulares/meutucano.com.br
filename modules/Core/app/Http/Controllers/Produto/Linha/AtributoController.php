@@ -13,9 +13,7 @@ class AtributoController extends Controller
     use RestControllerTrait;
 
     const MODEL = Atributo::class;
-
-    protected $validationRules = [];
-
+    
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -23,7 +21,7 @@ class AtributoController extends Controller
     {
         $m = self::MODEL;
 
-        $m = $m::where('linha_id',  $linha_id)->get();
+        $m = $m::where('linha_id', $linha_id)->get();
 
         return $this->listResponse($m);
     }

@@ -15,6 +15,7 @@
         } else {
             vm.pedidoProduto = {};
         }
+        vm.original = vm.pedidoProduto;
 
         if (typeof $scope.ngDialogData.pedido_id != 'undefined') {
             vm.pedidoProduto.pedido_id = angular.copy($scope.ngDialogData.pedido_id);
@@ -56,7 +57,12 @@
                 vm.pedidoProduto.produto_sku = vm.pedidoProduto.produto.sku;
             }
 
-            PedidoProduto.save(vm.pedidoProduto, vm.pedidoProduto.id || null).then(function() {
+            var modificado = (vm.original.produto_sku != vm.pedidoProduto.produto_sku && typeof vm.original.id != 'undefined');
+            if (modificado) {
+                vm.pedidoProduto.imei = null;
+            }
+
+            PedidoProduto.save(vm.pedidoProduto, vm.pedidoProduto.id || null).then(function(response) {
                 toaster.pop('success', 'Sucesso!', 'Produto do pedido salvo com sucesso!');
                 $scope.closeThisDialog(true);
             });

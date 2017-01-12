@@ -5,28 +5,31 @@
         .module('MeuTucano')
         .controller('ProdutoFormController', ProdutoFormController);
 
-    function ProdutoFormController($state, $stateParams, SweetAlert, toaster, TabsHelper, Produto, Linha, Marca, Atributo) {
-        var vm = this;
+    function ProdutoFormController($state, $stateParams, SweetAlert, toaster, TabsHelper, PedidoHelper, Produto, /*Linha, Marca, Atributo, */ValidationErrors) {
+        var vm       = this;
         var original = {
             linha_id: null,
-            attrs: null
+            attrs   : null
         };
 
         vm.produto = {
-            sku: $stateParams.sku || null,
+            sku    : $stateParams.sku || null,
             unidade: 'un',
-            ativo: '1',
-            estado: '0'
+            ativo  : '1',
+            estado : '0'
         };
 
         vm.sku = {
             original: vm.produto.sku,
-            gerado: false
+            gerado  : false
         };
 
-        vm.tabsHelper = TabsHelper;
-        vm.linhas = {};
-        vm.marcas = {};
+        /*vm.linhas = {};
+        vm.marcas = {};*/
+
+        vm.validationErrors = [];
+        vm.tabsHelper       = TabsHelper;
+        vm.pedidoHelper     = PedidoHelper;
 
         vm.load = function() {
             vm.loading = true;
@@ -43,7 +46,7 @@
                 if (vm.produto.estado === null)
                     vm.produto.estado = '0';
 
-                if (vm.produto.linha_id)
+                /*if (vm.produto.linha_id)
                     original.linha_id = vm.produto.linha_id;
 
                 if (vm.produto.linha_id && vm.produto.atributos) {
@@ -51,13 +54,13 @@
                 }
 
                 if (vm.produto.linha_id)
-                    vm.loadAtributos();
+                    vm.loadAtributos();*/
 
                 vm.loading = false;
             });
         };
 
-        vm.loadLinhas = function() {
+        /*vm.loadLinhas = function() {
             vm.loading = true;
 
             Linha.getList().then(function(linhas) {
@@ -97,18 +100,18 @@
 
                 vm.produto.atributos = atributos;
             });
-        };
+        };*/
 
         if (vm.produto.sku)
             vm.load();
 
-        vm.loadLinhas();
-        vm.loadMarcas();
+        /*vm.loadLinhas();
+        vm.loadMarcas();*/
 
         /*
          * Recarrega os atributos e seta o ncm padrão ao alterar
          */
-        vm.linhaChange = function() {
+        /*vm.linhaChange = function() {
             vm.produto.linha_id = vm.produto.linha.id;
 
             Linha.get(vm.produto.linha_id).then(function(linha) {
@@ -133,14 +136,14 @@
             });
 
             vm.loadAtributos();
-        };
+        };*/
 
         /*
          * Recarrega os atributos e seta o ncm padrão ao alterar
          */
-        vm.marcaChange = function() {
+        /*vm.marcaChange = function() {
             vm.produto.marca_id = vm.produto.marca.id;
-        };
+        };*/
 
         /*
          * Retona um novo SKU para o produto
@@ -191,10 +194,16 @@
          */
         vm.save = function() {
             function save() {
-                Produto.save(vm.produto, ((vm.sku.gerado) ? vm.produto.sku : vm.sku.original)).then(function() {
-                    toaster.pop('success', 'Sucesso!', 'Produto salvo com sucesso!');
-                    $state.go('app.produtos.index');
-                });
+                vm.validationErrors = [];
+                Produto.save(vm.produto, ((vm.sku.gerado) ? vm.produto.sku : vm.sku.original)).then(
+                    function() {
+                        toaster.pop('success', 'Sucesso!', 'Produto salvo com sucesso!');
+                        $state.go('app.produtos.index');
+                    },
+                    function(error) {
+                        vm.validationErrors = ValidationErrors.handle(error);
+                    }
+                );
             }
 
             if (vm.sku.gerado || vm.sku.original == vm.produto.sku) {

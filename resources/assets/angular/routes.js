@@ -349,6 +349,12 @@
                     controller: 'RelatorioProdutosController as RelatorioProdutos'
                 })
 
+                .state('app.relatorios.retirada-estoque', {
+                    url: '/retirada-estoque',
+                    templateUrl: 'views/relatorio/retirada-estoque.html',
+                    controller: 'RelatorioRetiradaEstoqueController as RetiradaEstoque'
+                })
+
                 /**
                  * Gamification
                  */

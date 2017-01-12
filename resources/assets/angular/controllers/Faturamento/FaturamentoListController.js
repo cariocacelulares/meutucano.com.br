@@ -8,6 +8,8 @@
     function FaturamentoListController(toaster, Filter, Pedido, TableHeader, RastreioHelper, NotaHelper, PedidoHelper, ComentarioHelper, $rootScope) {
         var vm = this;
 
+        vm.tableData = [];
+
         /**
          * @type {Object}
          */
@@ -38,6 +40,10 @@
             'pedido_rastreios.rastreio':  'LIKE'
         });
 
+        vm.roundFloat = function(number) {
+            return parseFloat(parseFloat(number).toFixed(2));
+        }
+
         /**
          * Cabeçalho da tabela
          * @type {TableHeader}
@@ -47,9 +53,17 @@
         vm.load = function() {
             vm.loading = true;
 
+            var parsedFilter = vm.filterList.parse();
+            for (var k in parsedFilter) {
+                if (parsedFilter[k].value.indexOf(',') >= 0) {
+                    parsedFilter[k].value = parsedFilter[k].value.split(',');
+                    parsedFilter[k].operator = 'IN';
+                }
+            }
+
             Pedido.faturamento({
+                filter:   parsedFilter,
                 fields:   ['pedidos.*'],
-                filter:   vm.filterList.parse(),
                 page:     vm.tableHeader.pagination.page,
                 per_page: vm.tableHeader.pagination.per_page
             }).then(function(response) {
@@ -57,6 +71,7 @@
                 vm.loading   = false;
             });
         };
+
         vm.load();
 
         $rootScope.$on('upload', function() {

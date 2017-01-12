@@ -1,16 +1,14 @@
 <?php namespace Tests\Core;
 
 use Tests\TestCase;
-use Core\Http\Controllers\Pedido\PedidoController;
 use Core\Models\Pedido\Pedido;
+use Core\Http\Controllers\Pedido\PedidoController;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class PedidoTest extends TestCase
 {
   use WithoutMiddleware,
-    DatabaseMigrations,
     DatabaseTransactions,
     CreatePedido;
 
@@ -103,5 +101,37 @@ class PedidoTest extends TestCase
 
     $pedido = $pedido->fresh();
     $this->assertEquals(1, $pedido->reembolso);
+  }
+
+  /**
+   * Testa a rota utilizada pela extensao do chrome no shopsystem
+   * 
+   * @return void
+   */
+  public function test__it_slould_receive_order_info_in_chorme_app_request()
+  {
+    $order = $this->createOrder([
+      'status' => 1,
+      'codigo_marketplace' => 123456789
+    ]);
+
+    $response = $this->json('GET', "/pedidos/shopsystem/{$order->codigo_marketplace}")
+        ->seeStatusCode(200)
+        ->seeJsonStructure([
+            'data' => [
+                'taxvat',
+                'nome',
+                'email',
+                'cep',
+                'telefone',
+                'rua',
+                'numero',
+                'bairro',
+                'complemento',
+                'marketplace',
+                'pedido',
+                'frete'
+            ]
+        ]);
   }
 }

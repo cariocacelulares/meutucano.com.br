@@ -6,6 +6,8 @@ use App\Http\Controllers\Rest\RestControllerTrait;
 use Rastreio\Http\Controllers\Traits\RastreioTrait;
 use Rastreio\Models\Rastreio;
 use Rastreio\Models\Pi;
+use Rastreio\Http\Requests\PiRequest as Request;
+use Rastreio\Transformers\PiTransformer;
 
 /**
  * Class PiController
@@ -17,8 +19,6 @@ class PiController extends Controller
 
     const MODEL = Pi::class;
 
-    protected $validationRules = [];
-
     /**
      * Retorna uma pi com base no rastreio
      *
@@ -29,7 +29,9 @@ class PiController extends Controller
     {
         $m = Rastreio::class;
         if ($data = $m::find($id)) {
-            return $this->showResponse($data->pi);
+            return $this->showResponse(
+                $data->pi ? PiTransformer::show($data->pi) : $data->pi
+            );
         }
 
         return $this->notFoundResponse();
@@ -44,7 +46,7 @@ class PiController extends Controller
     {
         $m = self::MODEL;
 
-        $lista = $m::with(['rastreio', 'rastreio.pedido', 'rastreio.pedido.cliente', 'rastreio.pedido.endereco'])
+        $list = $m::with(['rastreio', 'rastreio.pedido', 'rastreio.pedido.cliente', 'rastreio.pedido.endereco'])
             ->join('pedido_rastreios', 'pedido_rastreios.id', '=', 'pedido_rastreio_pis.rastreio_id')
             ->join('pedidos', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
@@ -52,9 +54,9 @@ class PiController extends Controller
             ->whereNull('pedido_rastreio_pis.status')
             ->orderBy('pedido_rastreio_pis.created_at', 'DESC');
 
-        $lista = $this->handleRequest($lista);
+        $list = $this->handleRequest($list, ['pedido_rastreio_pis.*']);
 
-        return $this->listResponse($lista);
+        return $this->listResponse(PiTransformer::pending($list));
     }
 
     /**
@@ -63,16 +65,10 @@ class PiController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function store()
+    public function store(Request $request)
     {
-        $m = self::MODEL;
         try {
-            $v = \Validator::make(Input::except(['protocolo']), $this->validationRules);
-
-            if($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-            $data = $m::create(Input::except(['protocolo']));
+            $pi = (self::MODEL)::create(Input::except(['protocolo']));
 
             $rastreio = Rastreio::find(Input::get('rastreio_id'));
             if (Input::has('valor_pago')) {
@@ -83,14 +79,13 @@ class PiController extends Controller
 
             $rastreio->save();
 
-            $this->updateProtocolAndStatus($data, Input::get('protocolo'));
+            $this->updateProtocolAndStatus($pi, Input::get('protocolo'));
 
-            return $this->createdResponse($data);
-        } catch(\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            return $this->createdResponse($pi);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
-            \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
         }
     }
 
@@ -100,40 +95,32 @@ class PiController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function update($id)
+    public function update($id, Request $request)
     {
-        $m = self::MODEL;
-
-        if (!$data = $m::find($id)) {
-            return $this->notFoundResponse();
-        }
-
         try {
-            $v = \Validator::make(Input::except(['protocolo']), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
-            $data->fill(Input::except(['protocolo']));
-            $data->save();
+            $pi = (self::MODEL)::findOrFail($id);
+            $pi->fill(Input::except(['protocolo']));
+            $pi->save();
 
             if (Input::has('valor_pago')) {
-                $data->rastreio->status = 8;
+                $pi->rastreio->status = 8;
             } else {
-                $data->rastreio->status = 7;
+                $pi->rastreio->status = 7;
             }
 
-            $data->rastreio->save();
+            $pi->rastreio->save();
 
-            $this->updateProtocolAndStatus($data, Input::get('protocolo'));
+            $this->updateProtocolAndStatus($pi, Input::get('protocolo'));
 
-            return $this->showResponse($data);
-        } catch(\Exception $ex) {
-            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
+            return $this->showResponse($pi);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse([
+                'exception' => strstr(get_class($exception), 'ModelNotFoundException')
+                    ? 'Recurso nao encontrado'
+                    : $exception->getMessage()
+            ]);
         }
     }
 }

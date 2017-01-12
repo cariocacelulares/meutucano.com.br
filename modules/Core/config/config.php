@@ -49,7 +49,7 @@ return [
      */
     'notas' => [
         'operacoes' => [5102, 5405, 6102, 6108, 6910],
-        'devolucao' => [1202, 2202],
+        'devolucao' => [1202, 2202, 1411],
         'estorno' => [1949, 2949],
 
         'venda_interna' => 5102,

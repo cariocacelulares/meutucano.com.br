@@ -42,7 +42,7 @@ class AllnationApi
             }
 
             return true;
-        }  catch (\Exception $e) {
+        } catch (\Exception $e) {
             Log::warning(logMessage($e, 'Não foi possível conectar à API da Allnation'));
             return false;
         }
@@ -56,7 +56,7 @@ class AllnationApi
      */
     private function request($action, $params = [])
     {
-        Log::debug('Requisição allnation para: ' . $action , $params);
+        Log::debug('Requisição allnation para: ' . $action, $params);
 
         try {
             $response = $this->api->{$action}(array_merge([

@@ -1,7 +1,6 @@
 <?php namespace Magento\Http\Controllers;
 
 use Carbon\Carbon;
-use Core\Events\OrderCancel;
 use Core\Models\Pedido\Pedido;
 use Core\Models\Produto\Produto;
 use Core\Models\Cliente\Cliente;
@@ -35,42 +34,57 @@ class MagentoController extends Controller
      *
      * @return void
      */
-    public function __construct($useSoap = true)
+    public function __construct()
     {
-        if ($useSoap) {
-            if (Config::get('magento.enabled')) {
-                try {
-                    $this->api = new \SoapClient(
-                        Config::get('magento.api.host'),
-                        [
-                            'stream_context' => stream_context_create([
-                                'http' => [
-                                    'user_agent' => 'PHPSoapClient'
-                                ]
-                            ]),
-                            'trace' => true,
-                            'exceptions' => true,
-                            'connection_timeout' => 20,
-                            'cache_wsdl' => WSDL_CACHE_NONE
-                        ]
-                    );
+        if (Config::get('magento.enabled')) {
+            try {
+                $this->api = new \SoapClient(
+                    Config::get('magento.api.host'),
+                    [
+                        'stream_context' => stream_context_create([
+                            'http' => [
+                                'user_agent' => 'PHPSoapClient'
+                            ]
+                        ]),
+                        'trace' => true,
+                        'exceptions' => true,
+                        'connection_timeout' => 20,
+                        'cache_wsdl' => WSDL_CACHE_NONE
+                    ]
+                );
 
-                    if (is_soap_fault($this->api)) {
-                        throw new \Exception('Falha ao tentar fazer conexão soap no magento', 1);
-                    }
-
-                    $this->session = $this->api->login(
-                        Config::get('magento.api.user'),
-                        Config::get('magento.api.key')
-                    );
-                    Log::debug('Requisição soap no magento realizada');
-                } catch (\Exception $e) {
-                    Log::debug('Falha ao tentar fazer conexão soap no magento: ' . $e->getMessage());
+                if (is_soap_fault($this->api)) {
+                    throw new \Exception('Falha ao tentar fazer conexão soap no magento', 1);
                 }
-            } else {
-                Log::debug('Requisição soap no magento foi bloqueada, a integração com o magento está desativada!');
+
+                $this->session = $this->api->login(
+                    Config::get('magento.api.user'),
+                    Config::get('magento.api.key')
+                );
+                Log::debug('Requisição soap no magento realizada');
+            } catch (\Exception $e) {
+                Log::debug('Falha ao tentar fazer conexão soap no magento: ' . $e->getMessage());
             }
+        } else {
+            Log::debug('Requisição soap no magento foi bloqueada, a integração com o magento está desativada!');
         }
+    }
+
+    /**
+     * Checa se tem acesso a api do magento
+     *
+     * @return void
+     */
+    public function checkApi()
+    {
+        if (env('APP_ENV') === 'testing')
+            return false;
+
+        if (!$this->api || !$this->session) {
+            throw new \Exception('Api/sessão não iniciada ou inválida', 1);
+        }
+
+        return true;
     }
 
     /**
@@ -142,22 +156,23 @@ class MagentoController extends Controller
      */
     public function request($url = null, $params = [], $method = 'GET')
     {
-        if ($url === null)
+        if ($url === null) {
             return false;
+        }
 
         try {
             Log::debug('Requisição tucanomg para: ' . $url . ', method: ' . $method, $params);
 
-            if (!\Config::get('tucanomg.enabled')) {
+            if (!\Config::get('magento.tucanomg.enabled')) {
                 Log::debug('Requisição bloqueada, a integração com o tucanomg está desativada!');
                 return null;
             } else {
                 $client = new \GuzzleHttp\Client([
-                    'base_uri' => \Config::get('tucanomg.host'),
+                    'base_uri' => \Config::get('magento.tucanomg.host'),
                     'headers' => [
-                        "Accept" => "application/json",
+                        "Accept"         => "application/json",
                         "Content-type"   => "application/json",
-                        "X-Access-Token" => \Config::get('tucanomg.token')
+                        "X-Access-Token" => \Config::get('magento.tucanomg.token')
                     ]
                 ]);
 
@@ -165,9 +180,6 @@ class MagentoController extends Controller
 
                 return json_decode($r->getBody(), true);
             }
-        } catch (Guzzle\Http\Exception\BadResponseException $e) {
-            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', com o method: ' . $method));
-            return false;
         } catch (\Exception $e) {
             Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', com o method: ' . $method));
             return false;
@@ -180,7 +192,8 @@ class MagentoController extends Controller
      * @param  MagentoPedido $order
      * @return boolean
      */
-    public function importPedido($order) {
+    public function importPedido($order)
+    {
         try {
             $taxvat = preg_replace('/\D/', '', $order['customer']['taxvat']);
 
@@ -205,12 +218,12 @@ class MagentoController extends Controller
             $endereco = explode("\n", $order['shipping_address']['street']);
             $uf = array_search($order['shipping_address']['region'], \Config::get('core.estados_uf'));
 
-            $clienteEndereco->rua = (isset($endereco[0])) ? $endereco[0] : null;
-            $clienteEndereco->numero = (isset($endereco[1])) ? $endereco[1] : null;
-            $clienteEndereco->bairro = (isset($endereco[2])) ? $endereco[2] : null;
+            $clienteEndereco->rua         = (isset($endereco[0])) ? $endereco[0] : null;
+            $clienteEndereco->numero      = (isset($endereco[1])) ? $endereco[1] : null;
+            $clienteEndereco->bairro      = (isset($endereco[2])) ? $endereco[2] : null;
             $clienteEndereco->complemento = (isset($endereco[3])) ? $endereco[3] : null;
-            $clienteEndereco->cidade = $order['shipping_address']['city'];
-            $clienteEndereco->uf = $uf;
+            $clienteEndereco->cidade      = $order['shipping_address']['city'];
+            $clienteEndereco->uf          = $uf;
             if ($clienteEndereco->save()) {
                 Log::info("Endereço {$clienteEndereco->id} importado para o pedido " . $order['increment_id']);
             } else {
@@ -241,31 +254,30 @@ class MagentoController extends Controller
             Log::debug('Transaction - begin');
 
             $pedido = Pedido::firstOrNew([
-                'cliente_id' => $cliente->id,
-                'cliente_endereco_id' => $clienteEndereco->id,
-                'codigo_marketplace'  => $order['increment_id']
+                'cliente_id'         => $cliente->id,
+                'codigo_marketplace' => $order['increment_id']
             ]);
 
-            $pedido->cliente_id = $cliente->id;
+            $pedido->cliente_id          = $cliente->id;
             $pedido->cliente_endereco_id = $clienteEndereco->id;
-            $pedido->frete_valor = $order['shipping_amount'];
-            $pedido->frete_metodo = $this->parseShippingMethod($order['shipping_description']);
-            $pedido->pagamento_metodo = $this->parsePaymentMethod($order['payment']['method']);
+            $pedido->frete_valor         = $order['shipping_amount'];
+            $pedido->frete_metodo        = $this->parseShippingMethod($order['shipping_description']);
+            $pedido->pagamento_metodo    = $this->parsePaymentMethod($order['payment']['method']);
             $pedido->codigo_marketplace  = $order['increment_id'];
-            $pedido->codigo_api = $order['increment_id'];
-            $pedido->marketplace = 'Site';
-            $pedido->operacao = $operacao;
-            $pedido->total = $order['grand_total'];
-            $pedido->created_at = Carbon::createFromFormat('Y-m-d H:i:s', $order['created_at'])->subHours(3);
+            $pedido->codigo_api          = $order['increment_id'];
+            $pedido->marketplace         = 'Site';
+            $pedido->operacao            = $operacao;
+            $pedido->total               = $order['grand_total'];
+            $pedido->created_at          = Carbon::createFromFormat('Y-m-d H:i:s', $order['created_at'])->subHours(3);
 
-            $pedido->status = $this->parseStatus((isset($order['state'])) ? $order['state'] : ((isset($order['status'])) ? $order['status'] : null ));
+            $pedido->status = $this->parseStatus((isset($order['state'])) ? $order['state'] : ((isset($order['status'])) ? $order['status'] : null));
 
             // Se o status do pedido for pendente, verifica se o mercado pago não rejeitou (salvo em call_for_authorize)
-            $fireEvent = false;
+            $cancelOrder = false;
             if ($pedido->status == 0 && isset($order['status_history']) && isset($order['status_history'][0]) && isset($order['status_history'][0]['comment'])) {
                 if (strstr($order['status_history'][0]['comment'], 'Status: rejected') !== false && strstr($order['status_history'][0]['comment'], 'cc_rejected_call_for_authorize') === false) {
                     $pedido->status = 5;
-                    $fireEvent = true;
+                    $cancelOrder = true;
                 }
             }
 
@@ -278,9 +290,10 @@ class MagentoController extends Controller
             if ($pedido->save()) {
                 Log::info('Pedido importado ' . $order['increment_id']);
 
-                if ($fireEvent) {
-                    // Dispara o evento de cancelamento do pedido
-                    \Event::fire(new OrderCancel($pedido, getCurrentUserId()));
+                if ($cancelOrder) {
+                    $pedido->status = 5;
+                    $pedido->save();
+                    Log::notice('O pedido do site foi cancelado (pagamento rejeitado)', [$pedido->id, $order['status_history']]);
                 }
             } else {
                 Log::warning('Não foi possível importar o pedido ' . $order['increment_id']);
@@ -379,11 +392,14 @@ class MagentoController extends Controller
      */
     public function cancelOrder($order)
     {
+        if (!$this->checkApi()) {
+            return null;
+        }
+
         try {
             if (!$order->codigo_api) {
                 Log::warning("Não foi possível cancelar o pedido {$order->id} no Magento, pois o pedido não possui codigo_api válido");
             } else {
-
                 if ($this->api->salesOrderCancel($this->session, $order->codigo_api)) {
                     Log::notice("Pedido {$order->id} cancelado no magento.");
                 } else {
@@ -404,43 +420,90 @@ class MagentoController extends Controller
      */
     public function orderInvoice($order)
     {
+        if (!$this->checkApi()) {
+            return null;
+        }
+
+        $qty = [];
+        foreach ($order->produtos as $produto) {
+            $qty[] = [
+                'order_item_id' => $produto->produto->sku,
+                'qty' => $produto->quantidade
+            ];
+        }
+
+        $invoice = $this->createInvoice($order, $qty);
+        $shipment = $this->createShipment($order);
+
+        return ($invoice || $shipment);
+    }
+
+    /**
+     * Cria uma fatura no magento
+     *
+     * @param  Pedido $order
+     * @param  array $qty    quantidade e sku dos produtos
+     * @return boolean|null
+     */
+    protected function createInvoice(Pedido $order, $qty)
+    {
         try {
-            $shipmentId = $request = $this->api->salesOrderShipmentCreate($this->session, $order->codigo_api);
+            $request = $this->api->salesOrderInvoiceCreate(
+                $this->session,
+                $order->codigo_api,
+                $qty
+            );
 
+            if ($request) {
+                Log::notice("Dados de nota atualizados do pedido {$order->id} / {$order->codigo_api} no Magento", [$request]);
+                return true;
+            }
+        } catch (\Exception $e) {
+            Log::critical(logMessage($e, 'Pedido não faturado no Magento (nota)'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);
+            reportError('Pedido não faturado no Magento (nota) ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $order->id);
+            return false;
+        }
+
+        return null;
+    }
+
+    /**
+     * Cria um rastreio no Magento
+     *
+     * @param  Pedido $order
+     * @return boolean|null
+     */
+    protected function createShipment(Pedido $order)
+    {
+        try {
+            $shipmentId = $this->api->salesOrderShipmentCreate(
+                $this->session,
+                $order->codigo_api
+            );
+
+            $request = null;
             $rastreio = $order->rastreios->first();
-            if ($rastreio) {
-                $carrier = 'Correios - ' . $rastreio->servico;
-
-                // rastreio
+            if ($shipmentId && $rastreio && $rastreio->rastreio) {
                 $request = $this->api->salesOrderShipmentAddTrack(
                     $this->session,
-                    $shipmentId, // increments do magento
-                    'pedroteixeira_correios', // carrier code
-                    $carrier,
+                    $shipmentId,
+                    'pedroteixeira_correios',
+                    'Correios - ' . $rastreio->servico,
                     $rastreio->rastreio
                 );
             }
 
-            $qty = [];
-            foreach ($order->produtos as $produto) {
-                $qty[] = [
-                    'order_item_id' => $produto->produto->sku,
-                    'qty' => $produto->quantidade
-                ];
+            if ($shipmentId) {
+                Log::notice("Dados de envio atualizados do pedido {$order->id} / {$order->codigo_api} no Magento", [$shipmentId, $request]);
+                return true;
             }
-
-            // fatura
-            $request = $this->api->salesOrderInvoiceCreate(
-                $this->session,
-                $order->codigo_api, // increments do magento
-                $qty
-            );
-
-            Log::notice("Dados de envio e nota fiscal atualizados do pedido {$order->id} / {$order->codigo_api} no Magento", [$shipmentId]);
         } catch (\Exception $e) {
-            Log::critical(logMessage($e, 'Pedido não faturado no Magento'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);
-            reportError('Pedido não faturado no Magento ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $order->id);
+            Log::critical(logMessage($e, 'Pedido não faturado no Magento (rastreio)'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);
+            reportError('Pedido não faturado no Magento (rastreio) ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $order->id);
+            return false;
         }
+
+        return null;
     }
 
     /**
@@ -465,46 +528,36 @@ class MagentoController extends Controller
      *
      * @return void
      */
-    public function updateStock()
+    public function updateStock(Produto $product)
     {
-        try {
-            $product = $this->request('products');
-            $productSku = false;
+        if (!$this->checkApi()) {
+            return null;
+        }
 
-            if ($product && $product['product_sku']) {
-                $productSku = $product['product_sku'];
-                $product = Produto::find($product['product_sku']);
+        try {
+            if (!$product || !$productSku = $product->sku) {
+                return $this->notFoundResponse();
             }
 
-            if ($product) {
-                $productSku = $product->sku;
-                $stock = $this->api->catalogInventoryStockItemUpdate(
-                    $this->session,
-                    $productSku,
-                    [
-                        'qty' => $product->estoque,
-                        'is_in_stock' => (($product->estoque > 0) ? 1 : 0)
-                    ]
-                );
+            $stock = $this->api->catalogInventoryStockItemUpdate(
+                $this->session,
+                $productSku,
+                [
+                    'qty' => $product->estoque,
+                    'is_in_stock' => (($product->estoque > 0) ? 1 : 0)
+                ]
+            );
 
-                if (is_soap_fault($stock)) {
-                    throw new \Exception('SOAP Fault ao tentar atualizar o stock no magento!', 1);
-                }
+            if (is_soap_fault($stock)) {
+                throw new \Exception('SOAP Fault ao tentar atualizar o stock no magento!', 1);
+            }
 
-                if ($stock) {
-                    Log::notice('Estoque do produto ' . $productSku . ' alterado para ' . $product->estoque . ' / em estoque: ' . (($product->estoque > 0) ? 'sim' : 'não') . ' no magento.');
-                    $this->removeProductFromTucanomg($productSku);
-                } else {
-                    Log::warning("Estoque do produto {$productSku} não foi atualizado no magento.", (is_array($stock) ? $stock : [$stock]));
-                }
+            if ($stock) {
+                Log::notice('Estoque do produto ' . $productSku . ' alterado para ' . $product->estoque . ' / em estoque: ' . (($product->estoque > 0) ? 'sim' : 'não') . ' no magento.');
             } else {
-                $this->removeProductFromTucanomg($productSku, 'não existe no TUCANO');
+                Log::warning("Estoque do produto {$productSku} não foi atualizado no magento.", (is_array($stock) ? $stock : [$stock]));
             }
         } catch (\Exception $e) {
-            if ($e->getCode() == 101 || strstr(strtolower($e->getMessage()), 'product not exists') !== false) {
-                $this->removeProductFromTucanomg($productSku, 'não existe no MAGENTO');
-            }
-
             Log::critical(logMessage($e, "Erro ao atualizar o estoque do produto {$productSku} no magento."));
             reportError("Erro ao atualizar o estoque do produto {$productSku} no magento." . $e->getMessage() . ' - ' . $e->getLine());
         }
@@ -530,16 +583,17 @@ class MagentoController extends Controller
      * Calcula a estimativa de entrega do pedido
      *
      * @param  string $shippingDescription string do magento com a previsão em dias
-     * @param  string $orderDate           data que o pedido foi realizado no formato d/m/Y H:i
+     * @param  string $orderDate           data que o pedido foi realizado
      * @return string                      data estimada no formato Y-m-d
      */
     public function calcEstimatedDelivery($shippingDescription, $orderDate)
     {
-        if (!$shippingDescription)
+        if (!$shippingDescription) {
             return null;
+        }
 
         $estimate = (int)preg_replace('/\D/', '', $shippingDescription);
-        $estimate = SomaDiasUteis(Carbon::createFromFormat('d/m/Y H:i', $orderDate)->format('d/m/Y'), $estimate);
+        $estimate = SomaDiasUteis(Carbon::createFromFormat('Y-m-d H:i:s', $orderDate)->format('d/m/Y'), $estimate);
 
         return Carbon::createFromFormat('d/m/Y', $estimate)->format('Y-m-d');
     }
@@ -650,8 +704,8 @@ class MagentoController extends Controller
                     'exclude'  => 0
                 ]);
             }
-        } catch (\Exception $e) {
-            dd($e);
+        } catch (\Exception $exception) {
+            Log::error(logMessage($exception, 'Não foi possível criar o produto no magento!'));
         }
     }
 }

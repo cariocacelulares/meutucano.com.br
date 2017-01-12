@@ -15,8 +15,6 @@ class VotoController extends Controller
 
     const MODEL = Voto::class;
 
-    protected $validationRules = [];
-
     /**
      * Cria novo recurso
      *
@@ -26,13 +24,8 @@ class VotoController extends Controller
     public function store()
     {
         $m = self::MODEL;
+
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $eleitor_id = getCurrentUserId();
 
             if ($eleitor_id == Input::get('candidato_id')) {
@@ -56,8 +49,8 @@ class VotoController extends Controller
                     return $this->createdResponse($data);
                 }
             }
-        } catch(\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+        } catch (\Exception $ex) {
+            $data = ['exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
             return $this->clientErrorResponse($data);

@@ -1,8 +1,8 @@
 <?php namespace App\Http\Controllers\Rest;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Carbon\Carbon;
 
 /**
  * Class RestControllerTrait
@@ -31,7 +31,7 @@ trait RestControllerTrait
      * @param  EloquentBuilder $m
      * @return array
      */
-    protected function handleRequest($m)
+    protected function handleRequest($m, $fields = ['*'])
     {
         /**
          * Filter
@@ -49,10 +49,10 @@ trait RestControllerTrait
                 if ($filtro['operator'] == 'BETWEEN') {
                     if ((!isset($filtro['value']['to']) || (!$filtro['value']['to'] && $filtro['value']['to'] !== 0)) && isset($filtro['value']['from'])) {
                         $filtro['operator'] = '>=';
-                        $filtro['value'] = $filtro['value']['from'];
+                        $filtro['value']    = $filtro['value']['from'];
                     } elseif ((!isset($filtro['value']['from']) || (!$filtro['value']['from'] && $filtro['value']['from'] !== 0)) && isset($filtro['value']['to'])) {
                         $filtro['operator'] = '<=';
-                        $filtro['value'] = $filtro['value']['to'];
+                        $filtro['value']    = $filtro['value']['to'];
                     }
                 }
 
@@ -76,6 +76,11 @@ trait RestControllerTrait
                         $filtro['operator'],
                         Carbon::createFromFormat('d/m/Y', $filtro['value'])->format('Y-m-d')
                     );
+                } else if ($filtro['operator'] == 'IN') {
+                    $m = $m->whereIn(
+                        $filtro['column'],
+                        $filtro['value']
+                    );
                 } else {
                     $m = $m->where(
                         $filtro['column'],
@@ -89,7 +94,10 @@ trait RestControllerTrait
         /**
          * Pagination
          */
-        return $m->paginate(Input::get('per_page', 20), Input::get('fields') ? json_decode(Input::get('fields'), true) : ['*']);
+        return $m->paginate(
+            Input::get('per_page', 20),
+            Input::get('fields') ? json_decode(Input::get('fields'), true) : $fields
+        );
     }
 
     /**
@@ -100,12 +108,17 @@ trait RestControllerTrait
      */
     public function show($id)
     {
-        $m = self::MODEL;
-        if ($data = $m::find($id)) {
-            return $this->showResponse($data);
-        }
+        try {
+            return $this->showResponse((self::MODEL)::findOrFail($id));
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao obter recurso'), ['model' => self::MODEL]);
 
-        return $this->notFoundResponse();
+            return $this->clientErrorResponse([
+                'exception' => strstr(get_class($exception), 'ModelNotFoundException')
+                    ? 'Recurso nao encontrado'
+                    : $exception->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -116,20 +129,14 @@ trait RestControllerTrait
      */
     public function store()
     {
-        $m = self::MODEL;
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
+            $data = (self::MODEL)::create(Input::all());
 
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-            $data = $m::create(Input::all());
             return $this->createdResponse($data);
-        } catch(\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
-            \Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
         }
     }
 
@@ -141,27 +148,20 @@ trait RestControllerTrait
      */
     public function update($id)
     {
-        $m = self::MODEL;
-
-        if (!$data = $m::find($id)) {
-            return $this->notFoundResponse();
-        }
-
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
+            $data = (self::MODEL)::findOrFail($id);
             $data->fill(Input::all());
             $data->save();
-            return $this->showResponse($data);
-        } catch(\Exception $ex) {
-            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+            return $this->showResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => strstr(get_class($exception), 'ModelNotFoundException')
+                    ? 'Recurso nao encontrado'
+                    : $exception->getMessage()
+            ]);
         }
     }
 
@@ -173,12 +173,19 @@ trait RestControllerTrait
      */
     public function destroy($id)
     {
-        $m = self::MODEL;
-        if (!$data = $m::find($id)) {
-            return $this->notFoundResponse();
-        }
-        $data->delete();
+        try {
+            $data = (self::MODEL)::findOrFail($id);
+            $data->delete();
 
-        return $this->deletedResponse();
+            return $this->deletedResponse();
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao excluir recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => strstr(get_class($exception), 'ModelNotFoundException')
+                    ? 'Recurso nao encontrado'
+                    : $exception->getMessage()
+            ]);
+        }
     }
 }

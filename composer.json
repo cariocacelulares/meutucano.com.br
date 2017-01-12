@@ -36,20 +36,23 @@
         "vinelab/cdn": "^1.4",
         "sentry/sentry-laravel": "^0.4.1",
         "jenssegers/mongodb": "^3.1",
-        "nwidart/laravel-modules": "1.14.*"
+        "nwidart/laravel-modules": "1.14.*",
+        "predis/predis": "~1.0",
+        "spatie/laravel-backup": "^4.3",
+        "spatie/laravel-failed-job-monitor": "^2.1",
+        "sofa/eloquence": "~5.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "phpunit/phpunit": "~5.0",
         "symfony/css-selector": "3.1.*",
         "symfony/dom-crawler": "3.1.*",
-        "xethron/migrations-generator": "dev-l5",
-        "way/generators": "dev-feature/laravel-five-stable",
         "barryvdh/laravel-debugbar": "^2.2",
         "tightenco/mailthief": "^0.3.2",
         "php-vcr/php-vcr": "dev-master",
         "php-vcr/phpunit-testlistener-vcr": "^1.1",
-        "mockery/mockery": "^0.9.6"
+        "mockery/mockery": "^0.9.6",
+        "laracasts/generators": "^1.1"
     },
     "autoload": {
         "classmap": [
@@ -103,17 +106,13 @@
         "secure-http": false
     },
     "repositories": {
-        "generators": {
-            "type": "vcs",
-            "url": "https://github.com/jamisonvalenta/Laravel-4-Generators.git"
-        },
         "php-sigep": {
-            "type": "vcs",
-            "url": "https://github.com/cariocacelulares/php-sigep.git"
+            "type": "git",
+            "url": "git@github.com:cariocacelulares/php-sigep.git"
         },
         "nfephp": {
-            "type": "vcs",
-            "url": "https://github.com/diego3g/nfephp.git"
+            "type": "git",
+            "url": "git@github.com:diego3g/nfephp.git"
         }
     }
 }

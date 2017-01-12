@@ -8,6 +8,7 @@
 </div>
 
 <form ng-submit="ProdutoForm.save()" novalidate="novalidate" class="form-default" id="formProduto">
+    <validation errors="ProdutoForm.validationErrors"></validation>
     <tabs>
         <tab name="infosProduto" title="Informações do produto">
             <div class="row form-group">
@@ -25,7 +26,7 @@
                 <div class="col-md-3 form-group">
                     <label for="sku">SKU</label>
                     <div class="input-group">
-                        <input ng-model="ProdutoForm.produto.sku" type="text" id="sku" placeholder="SKU do produto" required />
+                        <input ng-model="ProdutoForm.produto.sku" type="number" id="sku" placeholder="SKU do produto" required />
                         <span class="input-group-btn">
                             <a ng-click="ProdutoForm.generateSku()" class="btn btn-complete" title="Gerar novo SKU">
                                 <i class="fa-key"></i>
@@ -38,21 +39,57 @@
                     <input type="number" ng-model="ProdutoForm.produto.estoque" id="estoque" placeholder="Qtd" required />
                 </div>
             </div>
-            <div ng-if="ProdutoForm.produto.attachedProducts[0] || ProdutoForm.produto.attachedProducts[1]" class="row">
-                <p>
-                    <span>Produtos reservados: </span>
-                    <span ng-if="ProdutoForm.produto.attachedProducts[0]"><b>{{ ProdutoForm.produto.attachedProducts[0] }}</b> pendente(s)</span>
-                    <span ng-if="ProdutoForm.produto.attachedProducts[0] && ProdutoForm.produto.attachedProducts[1]"> e </span>
-                    <span ng-if="ProdutoForm.produto.attachedProducts[1]"><b>{{ ProdutoForm.produto.attachedProducts[1] }}</b> pago(s)</span>.
-                </p>
-            </div>
         </tab>
-        <tab ng-if="ProdutoForm.produto.estado == '1'" name="produtosRevisados" title="Itens Revisados">
+        <tab ng-if="ProdutoForm.produto.revisoes.length" name="produtosRevisados" title="Itens Revisados">
             <div ng-if="ProdutoForm.produto.revisoes">
                 <p class="m-b-30">Os códigos de inspeção abaixo já foram revisados e estão aguardando um pedido ({{ ProdutoForm.produto.revisoes.length }})</p>
                 <span ng-repeat="revisao in ProdutoForm.produto.revisoes" class="col-md-3 fz-15 m-b-10 text-center">{{ revisao.id }}</span>
             </div>
-            <p ng-if="!ProdutoForm.produto.revisoes" class="text-center m-t-40">Não existe nenhum item revisado para este produto.</p>
+            <p ng-if="!ProdutoForm.produto.revisoes.length" class="text-center m-t-40">Não existe nenhum item revisado para este produto.</p>
+        </tab>
+        <tab ng-if="ProdutoForm.produto.attachedProducts.data.length" name="pedidosAbertos" title="Pedidos abertos">
+            <div class="row">
+                <div ng-if="ProdutoForm.produto.attachedProducts[0] || ProdutoForm.produto.attachedProducts[1]" class="col-md-12">
+                    <p>
+                        <span>Produtos reservados: </span>
+                        <span ng-if="ProdutoForm.produto.attachedProducts[0]"><b>{{ ProdutoForm.produto.attachedProducts[0] }}</b> pendente(s)</span>
+                        <span ng-if="ProdutoForm.produto.attachedProducts[0] && ProdutoForm.produto.attachedProducts[1]"> e </span>
+                        <span ng-if="ProdutoForm.produto.attachedProducts[1]"><b>{{ ProdutoForm.produto.attachedProducts[1] }}</b> pago(s)</span>.
+                    </p>
+                </div>
+            </div>
+            <div class="row m-t-0">
+                <div class="col-md-12">
+                    <table class="table info-style small first-col-normal table-scroll no-padding">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Código</th>
+                                <th class="text-center">Marketplace</th>
+                                <th class="text-center">Qtd</th>
+                                <th class="text-center">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody style="height:250px">
+                            <tr ng-repeat="pedido in ProdutoForm.produto.attachedProducts.data track by $index">
+                                <td class="text-center">
+                                    <span class="label label-{{ ProdutoForm.pedidoHelper.parseStatusClass(pedido.status) }} m-b-0">
+                                        {{ pedido.status_description }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <a ui-sref="app.pedidos.detalhe({id: pedido.id})">
+                                        {{ pedido.codigo_marketplace }}
+                                    </a>
+                                </td>
+                                <td class="text-center">{{ pedido.marketplace }}</td>
+                                <td class="text-center">{{ pedido.quantidade }}</td>
+                                <td class="text-center">{{ pedido.valor }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </tab>
     </tabs>
 </form>

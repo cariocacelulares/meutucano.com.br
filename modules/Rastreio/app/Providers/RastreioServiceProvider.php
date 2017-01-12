@@ -1,6 +1,9 @@
 <?php namespace Rastreio\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Rastreio\Models\Rastreio;
+use Rastreio\Observers\RastreioObserver;
+use Rastreio\Providers\EventServiceProvider;
 
 class RastreioServiceProvider extends ServiceProvider
 {
@@ -21,6 +24,8 @@ class RastreioServiceProvider extends ServiceProvider
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
+
+        Rastreio::observe(RastreioObserver::class);
     }
 
     /**
@@ -31,6 +36,7 @@ class RastreioServiceProvider extends ServiceProvider
     public function register()
     {
         \App::register(ScheduleServiceProvider::class);
+        \App::register(EventServiceProvider::class);
     }
 
     /**

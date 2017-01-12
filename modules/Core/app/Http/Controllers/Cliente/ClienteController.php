@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Core\Models\Cliente\Cliente;
 use Core\Models\Cliente\Endereco;
 use Illuminate\Support\Facades\Input;
+use Core\Transformers\ClientTransformer;
 
 /**
  * Class ClienteController
@@ -16,21 +17,17 @@ class ClienteController extends Controller
 
     const MODEL = Cliente::class;
 
-    protected $validationRules = [];
-
     /**
      * Lista pedidos para a tabela
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableList() {
-        $m = self::MODEL;
-
-        $list = $m::orderBy('clientes.created_at', 'DESC');
-
+    public function tableList()
+    {
+        $list = (self::MODEL)::orderBy('clientes.created_at', 'DESC');
         $list = $this->handleRequest($list);
 
-        return $this->listResponse($list);
+        return $this->listResponse(ClientTransformer::list($list));
     }
 
     /**
@@ -43,7 +40,7 @@ class ClienteController extends Controller
         $data = $m::with(['pedidos', 'enderecos'])->find($id);
 
         if ($data) {
-            return $this->showResponse($data);
+            return $this->showResponse(ClientTransformer::show($data));
         }
 
         return $this->notFoundResponse();
@@ -62,12 +59,6 @@ class ClienteController extends Controller
         }
 
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $data->fill(Input::except('enderecos'));
             $data->save();
 
@@ -84,7 +75,7 @@ class ClienteController extends Controller
 
             return $this->showResponse($data);
         } catch (\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }
@@ -95,7 +86,8 @@ class ClienteController extends Controller
      * @param  int $cliente_id
      * @return  \Symfony\Component\HttpFoundation\Response
      */
-    public function changeEmail($cliente_id) {
+    public function changeEmail($cliente_id)
+    {
         $m = self::MODEL;
 
         try {
@@ -106,7 +98,7 @@ class ClienteController extends Controller
             $data->save();
 
             return $this->showResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }

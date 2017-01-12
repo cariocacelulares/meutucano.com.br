@@ -1,10 +1,11 @@
 <h1>Devolução</h1>
 <div class="alert alert-info m-b-10"><i class="fa fa-info"></i>&nbsp; O rastreio assumirá o status de "Devolvido".</div>
+<validation errors="DevolucaoForm.validationErrors"></validation>
 <form ng-submit="DevolucaoForm.save()" novalidate="novalidate" class="form-default">
     <div class="row">
         <div class="col-md-12 form-group">
             <label for="motivo">Motivo</label>
-            <select ng-model="DevolucaoForm.devolucao.motivo" id="motivo" class="form-control" ng-change="DevolucaoForm.verifySeminovos()" required>
+            <select ng-model="DevolucaoForm.devolucao.motivo" id="motivo" class="form-control" required>
                 <option value="" disabled selected hidden>Motivo</option>
                 <option value="0">Endereço insuficiente</option>
                 <option value="1">Não procurado (Retirada)</option>
@@ -20,7 +21,7 @@
     <div class="row">
         <div class="col-md-12 form-group">
             <label for="acao">Ação realizada</label>
-            <select ng-model="DevolucaoForm.devolucao.acao" id="acao" class="form-control" ng-change="DevolucaoForm.verifySeminovos()">
+            <select ng-model="DevolucaoForm.devolucao.acao" id="acao" class="form-control">
                 <option value="">Ação realizada</option>
                 <option value="0">Reenvio</option>
                 <option value="1">Cancelamento</option>
@@ -45,50 +46,6 @@
         <div class="col-md-12 form-group">
             <label for="observacoes">Observações</label>
             <textarea class="form-control" id="observacoes" ng-model="DevolucaoForm.devolucao.observacoes" placeholder="Observacões gerais"></textarea>
-        </div>
-    </div>
-    <div class="row">
-        <div ng-if="!DevolucaoForm.inspecoes && DevolucaoForm.existsSeminovos" class="col-md-12">
-            <a ng-click="DevolucaoForm.inspecaoTecnicaHelper.verificarInspecoes(DevolucaoForm.devolucao.rastreio_id)" class="btn-complete full-width text-center"><i class="fa-bug"></i>&nbsp; Requisitar inspeções técnicas</a>
-        </div>
-        <div ng-if="DevolucaoForm.inspecoes.criar.length || DevolucaoForm.inspecoes.reservar.length" class="col-md-12">
-            <div class="form-group text-center">
-                <label>Inspeções técnicas</label>
-            </div>
-            <table class="table info-style small">
-                <thead>
-                    <tr>
-                        <th class="check-col"></th>
-                        <th class="text-left">Produto</th>
-                    </tr>
-                </thead>
-                <tbody ng-repeat="inspecao in DevolucaoForm.inspecoes.reservar">
-                    <tr>
-                        <td class="check-col">
-                            <div class="form-group">
-                                <div class="checkbox check-success">
-                                    <input id="reservar{{ $index }}" type="checkbox" ng-model="inspecao.aplicar" ng-true-value="1">
-                                    <label for="reservar{{ $index }}" class="text-normal"></label>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="text-left p-l-0">{{ inspecao.titulo }}</td>
-                    </tr>
-                </tbody>
-                <tbody ng-repeat="inspecao in DevolucaoForm.inspecoes.criar">
-                    <tr>
-                        <td class="check-col">
-                            <div class="form-group">
-                                <div class="checkbox check-success">
-                                    <input id="reservar{{ $index }}" type="checkbox" ng-model="inspecao.aplicar" ng-true-value="1">
-                                    <label for="reservar{{ $index }}" class="text-normal"></label>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="text-left p-l-0">{{ inspecao.titulo }}</td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
     <div class="row">

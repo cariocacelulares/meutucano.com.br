@@ -86,8 +86,7 @@ class GamificationController extends Controller
             $recursos = ['gamification'];
 
             if ($proprio) {
-                $recursos['tarefas'] = function($query)
-                {
+                $recursos['tarefas'] = function ($query) {
                     $query->orderBy('created_at', 'DESC');
                 };
             }
@@ -97,8 +96,9 @@ class GamificationController extends Controller
                 ->with($recursos)
                 ->first();
 
-            if (!$usuario)
+            if (!$usuario) {
                 return $this->notFoundResponse();
+            }
 
             $grafico = $this->graficoTarefas($usuario->id);
             $votos = $this->totalVotos($usuario->id);

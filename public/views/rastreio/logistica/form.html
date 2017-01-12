@@ -1,4 +1,5 @@
 <h1>Logística reversa</h1>
+<validation errors="Logistica.validationErrors"></validation>
 <div class="alert alert-info m-b-10"><i class="fa fa-info"></i>&nbsp; O rastreio assumirá o status de "Devolvido" caso receber ação.</div>
 <form ng-submit="Logistica.save()" novalidate="novalidate" class="form-default">
     <div class="row">
@@ -8,7 +9,7 @@
         </div>
         <div class="col-md-6 form-group">
             <label for="motivo">Motivo</label>
-            <select ng-model="Logistica.logistica.motivo" id="motivo" class="form-control" ng-change="Logistica.verifySeminovos()" required>
+            <select ng-model="Logistica.logistica.motivo" id="motivo" class="form-control" required>
                 <option value="" disabled selected hidden>Motivo</option>
                 <option value="0">Defeito</option>
                 <option value="1">Arrependimento</option>
@@ -22,25 +23,13 @@
     <hr>
     <div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i>&nbsp; Incluir as informações abaixo apenas quando o cliente enviar a mercadoria.</div>
     <div class="row">
-        <div class="col-md-6 form-group">
+        <div class="col-md-12 form-group">
             <label for="acao">Ação realizada</label>
             <select ng-model="Logistica.logistica.acao" id="acao" class="form-control" ng-change="Logistica.verifySeminovos()">
                 <option value="" disabled selected hidden>Ação realizada</option>
                 <option value="0">Reenvio</option>
                 <option value="1">Cancelamento</option>
             </select>
-        </div>
-        <div class="col-md-6 form-group">
-            <label for="motivo">Data de postagem</label>
-            <div class="date-picker">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                    <input class="form-control" id="data" ng-model="Logistica.logistica.data_postagem" placeholder="Data de postagem" ui-date-mask />
-                    <div class="picker-wrap">
-                        <date-picker ng-model="Logistica.logistica.data_postagem"></date-picker>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
     <div class="row" ng-if="Logistica.logistica.acao == 1 && Logistica.logistica.rastreio.pedido.marketplace !== 'MERCADOLIVRE'">
@@ -60,50 +49,6 @@
         <div class="col-md-12 form-group">
             <label for="observacoes">Observações</label>
             <textarea class="form-control" id="observacoes" ng-model="Logistica.logistica.observacoes" placeholder="Observacões gerais"></textarea>
-        </div>
-    </div>
-    <div class="row">
-        <div ng-if="!Logistica.inspecoes && Logistica.existsSeminovos" class="col-md-12">
-            <a ng-click="Logistica.inspecaoTecnicaHelper.verificarInspecoes(Logistica.logistica.rastreio_id)" class="btn-complete full-width text-center"><i class="fa-bug"></i>&nbsp; Requisitar inspeções técnicas</a>
-        </div>
-        <div ng-if="Logistica.inspecoes.criar.length || Logistica.inspecoes.reservar.length" class="col-md-12">
-            <div class="form-group text-center">
-                <label>Inspeções técnicas</label>
-            </div>
-            <table class="table info-style small">
-                <thead>
-                    <tr>
-                        <th class="check-col"></th>
-                        <th class="text-left">Produto</th>
-                    </tr>
-                </thead>
-                <tbody ng-repeat="inspecao in Logistica.inspecoes.reservar">
-                    <tr>
-                        <td class="check-col">
-                            <div class="form-group">
-                                <div class="checkbox check-success">
-                                    <input id="reservar{{ $index }}" type="checkbox" ng-model="inspecao.aplicar" ng-true-value="1">
-                                    <label for="reservar{{ $index }}" class="text-normal"></label>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="text-left p-l-0">{{ inspecao.titulo }}</td>
-                    </tr>
-                </tbody>
-                <tbody ng-repeat="inspecao in Logistica.inspecoes.criar">
-                    <tr>
-                        <td class="check-col">
-                            <div class="form-group">
-                                <div class="checkbox check-success">
-                                    <input id="reservar{{ $index }}" type="checkbox" ng-model="inspecao.aplicar" ng-true-value="1">
-                                    <label for="reservar{{ $index }}" class="text-normal"></label>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="text-left p-l-0">{{ inspecao.titulo }}</td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
     <div class="row">

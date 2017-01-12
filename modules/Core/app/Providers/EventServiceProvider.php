@@ -1,9 +1,9 @@
 <?php namespace Core\Providers;
 
-use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Core\Events\Handlers\SubtractStock;
-use Core\Events\Handlers\SumStock;
+use Illuminate\Support\Facades\Event;
+use Core\Events\Handlers\SetRefund;
+use Core\Events\Handlers\UpdateStock;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -17,8 +17,8 @@ class EventServiceProvider extends ServiceProvider
     ];
 
     protected $subscribe = [
-        SubtractStock::class,
-        SumStock::class,
+        UpdateStock::class,
+        SetRefund::class,
     ];
 
     /**

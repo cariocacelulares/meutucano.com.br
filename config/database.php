@@ -7,26 +7,40 @@ return [
     'connections' => [
 
         'mysql' => [
-            'driver' => 'mysql',
-            'host' => env('DB_HOST', 'localhost'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'meutucano'),
-            'username' => env('DB_USERNAME', 'dev'),
-            'password' => env('DB_PASSWORD', 'carioca5102'),
-            'charset' => 'utf8',
+            'driver'    => 'mysql',
+            'host'      => env('DB_HOST', 'localhost'),
+            'port'      => env('DB_PORT', '3306'),
+            'database'  => env('DB_DATABASE', 'meutucano'),
+            'username'  => env('DB_USERNAME', 'carioca'),
+            'password'  => env('DB_PASSWORD', '#@carioca2016'),
+            'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
-            'prefix' => '',
-            'strict' => false,
-            'engine' => null,
+            'prefix'    => '',
+            'strict'    => false,
+            'engine'    => null,
+        ],
+
+        'tests' => [
+            'driver'    => 'mysql',
+            'host'      => env('DB_TEST_HOST', '45.55.210.205'),
+            'port'      => env('DB_TEST_PORT', '3306'),
+            'database'  => env('DB_TEST_DATABASE', 'meutucano_tests'),
+            'username'  => env('DB_TEST_USERNAME', 'carioca'),
+            'password'  => env('DB_TEST_PASSWORD', '#@carioca2016'),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+            'engine'    => null,
         ],
 
         'mongodb' => [
             'driver'   => 'mongodb',
-            'host'     => env('MONGODB_HOST', 'localhost'),
+            'host'     => env('MONGODB_HOST', '45.55.208.16'),
             'port'     => env('MONGODB_PORT', 27017),
             'database' => env('MONGODB_DATABASE', 'meutucano'),
-            'username' => env('MONGODB_USERNAME', 'root'),
-            'password' => env('MONGODB_PASSWORD', 'root'),
+            'username' => env('MONGODB_USERNAME', 'carioca'),
+            'password' => env('MONGODB_PASSWORD', 'carioca5102'),
             'options' => [
                 'database' => 'meutucano'
             ]

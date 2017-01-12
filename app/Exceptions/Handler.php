@@ -54,6 +54,13 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        // custom errors views
+        if ((method_exists($exception, 'getStatusCode') && $exception->getStatusCode() === 404) || $exception instanceof ModelNotFoundException || $exception instanceof NotFoundHttpException) {
+            return redirect('/');
+        } elseif (!env('APP_DEBUG')) {
+            return response()->view('errors.500', [], 500);
+        }
+
         return parent::render($request, $exception);
     }
 

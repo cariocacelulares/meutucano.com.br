@@ -2,8 +2,6 @@
 
 use Venturecraft\Revisionable\RevisionableTrait;
 use Core\Models\Produto\Produto;
-use Core\Events\OrderSeminovo;
-use Core\Events\ProductDispach;
 use InspecaoTecnica\Models\InspecaoTecnica;
 
 /**
@@ -27,7 +25,7 @@ class PedidoProduto extends \Eloquent
         'produto_sku',
         'valor',
         'quantidade',
-        'imei'
+        'imei',
     ];
 
     /**
@@ -38,31 +36,9 @@ class PedidoProduto extends \Eloquent
     /**
      * @var array
      */
-    protected $appends = ['total'];
-
-    /**
-     * Actions
-     */
-    protected static function boot() {
-        parent::boot();
-
-        // Quando um novo pedido produto for criado
-        static::saved(function($pedidoProduto) {
-            $pedido = $pedidoProduto->pedido;
-            $produto = $pedidoProduto->produto;
-
-            if ($pedidoProduto->wasRecentlyCreated) {
-                if ((int) $pedido->status !== 5) {
-                    \Event::fire(new ProductDispach($pedidoProduto->produto, $pedidoProduto->quantidade));
-                }
-
-                // Se o status do pedido for pago, o pedido produto nao tiver inspecao nem imei e o produto for seminovo
-                if ($pedido->status == 1 && !$pedidoProduto->inspecao_tecnica && !$pedidoProduto->imei && $produto->estado == 1) {
-                    \Event::fire(new OrderSeminovo($pedidoProduto));
-                }
-            }
-        });
-    }
+    protected $appends = [
+        'total',
+    ];
 
     /**
      * Produto

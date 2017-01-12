@@ -1,6 +1,7 @@
 <?php namespace Magento\Console\Commands;
 
 use Illuminate\Console\Command;
+use Core\Models\Produto\Produto;
 use Magento\Http\Controllers\MagentoController;
 
 class RefreshMagentoStock extends Command
@@ -10,7 +11,7 @@ class RefreshMagentoStock extends Command
      *
      * @var string
      */
-    protected $signature = 'refresh:stock';
+    protected $signature = 'refresh:stock {produto}';
 
     /**
      * The console command description.
@@ -26,7 +27,11 @@ class RefreshMagentoStock extends Command
      */
     public function handle()
     {
-        $return = with(new MagentoController())->updateStock();
-        $this->comment($return);
+        if ($this->argument('produto') && $produto = Produto::find($this->argument('produto'))) {
+            $return = with(new MagentoController())->updateStock($produto);
+            $this->comment($return);
+        } else {
+            throw new \Exception('O sku de um produto válido precisa ser passado como parâmetro', 1);
+        }
     }
 }

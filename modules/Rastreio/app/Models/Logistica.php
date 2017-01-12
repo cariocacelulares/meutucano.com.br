@@ -28,7 +28,6 @@ class Logistica extends \Eloquent
         'autorizacao',
         'motivo',
         'acao',
-        'data_postagem',
         'observacoes',
     ];
 
@@ -38,14 +37,6 @@ class Logistica extends \Eloquent
     protected $casts = [
         'motivo' => 'string',
         'acao'   => 'string',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $appends = [
-        'protocolo',
-        'imagem_cancelamento',
     ];
 
     /**
@@ -67,77 +58,5 @@ class Logistica extends \Eloquent
     public function rastreioRef()
     {
         return $this->hasOne(PedidoRastreio::class, 'rastreio_ref_id');
-    }
-
-    /**
-     * @return string
-     */
-    public function getDataPostagemAttribute($data_postagem) {
-        return ($data_postagem) ? Carbon::createFromFormat('Y-m-d', $data_postagem)->format('d/m/Y') : null;
-    }
-
-    /**
-     * @return string
-     */
-    public function setDataPostagemAttribute($data_postagem) {
-        if ($data_postagem) {
-            $this->attributes['data_postagem'] = Carbon::createFromFormat('d/m/Y', $data_postagem)->format('Y-m-d');
-        }
-    }
-
-    /**
-     * @return string
-     */
-    public function getCreatedAtAttribute($created_at) {
-        if (!$created_at)
-            return null;
-
-        return Carbon::createFromFormat('Y-m-d H:i:s', $created_at)->format('d/m/Y H:i');
-    }
-
-    /**
-     * @return string
-     */
-    public function getUpdatedAtAttribute($updated_at) {
-        if (!$updated_at)
-            return null;
-
-        return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
-    }
-
-    /**
-     * Return protocolo from pedido
-     *
-     * @return string
-     */
-    public function getProtocoloAttribute()
-    {
-        if ((int)$this->acao === 1) {
-            if ($rastreio = Rastreio::find($this->rastreio_id)) {
-                if ($pedido = Pedido::find($rastreio->pedido_id)) {
-                    return ($pedido) ? $pedido->protocolo : null;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Return protocolo from pedido
-     *
-     * @return string
-     */
-    public function getImagemCancelamentoAttribute()
-    {
-        if ((int)$this->acao === 1) {
-            if ($rastreio = Rastreio::find($this->rastreio_id)) {
-                if ($pedido = Pedido::find($rastreio->pedido_id)) {
-                    return ($pedido) ? $pedido->imagem_cancelamento : null;
-                }
-            }
-        }
-
-        return null;
     }
 }

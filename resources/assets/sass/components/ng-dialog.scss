@@ -10,6 +10,16 @@
     }
 }
 
+.ngdialog-extra-big {
+    padding-top: 80px !important;
+    max-width: 100%;
+
+    .ngdialog-content {
+        width: 900px !important;
+        max-width: 100%;
+    }
+}
+
 .ngdialog-content {
     @extend .clearfix;
 

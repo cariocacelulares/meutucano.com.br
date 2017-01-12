@@ -2,13 +2,11 @@
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class PedidoProdutoTest extends TestCase
 {
   use WithoutMiddleware,
-    DatabaseMigrations,
     DatabaseTransactions,
     CreatePedido;
 
@@ -58,13 +56,17 @@ class PedidoProdutoTest extends TestCase
    * @return void
    */
   public function test__it_should_sum_stock_when_order_canceled()
-  {
-    $pedido = $this->createOrder([], $this->produto->sku);
+    {
+        $produto = $this->createProduto([
+            'estoque' => 10
+        ]);
 
-    $pedido->status = 5;
-    $pedido->save();
+        $pedido = $this->createOrder([], $produto->sku);
 
-    $this->produto = $this->produto->fresh();
-    $this->assertEquals(10, $this->produto->estoque);
-  }
+        $pedido->status = 5;
+        $pedido->save();
+
+        $produto = $produto->fresh();
+        $this->assertEquals(10, $produto->estoque);
+    }
 }

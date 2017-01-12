@@ -5,8 +5,10 @@
         .module('MeuTucano')
         .controller('PiFormController', PiFormController);
 
-    function PiFormController(Pi, $scope, toaster, $window, $httpParamSerializer, envService) {
+    function PiFormController(Pi, $scope, toaster, $window, $httpParamSerializer, ValidationErrors, envService) {
         var vm = this;
+
+        vm.validationErrors = [];
 
         vm.pi = $scope.ngDialogData.pi;
 
@@ -16,10 +18,17 @@
          * @return {void}
          */
         vm.save = function() {
-            Pi.save(vm.pi, vm.pi.id || null).then(function() {
-                $scope.closeThisDialog(true);
-                toaster.pop('success', 'Sucesso!', 'Pedido de informação salvo com sucesso!');
-            });
+            vm.validationErrors = [];
+
+            Pi.save(vm.pi, vm.pi.id || null).then(
+                function() {
+                    $scope.closeThisDialog(true);
+                    toaster.pop('success', 'Sucesso!', 'Pedido de informação salvo com sucesso!');
+                },
+                function(error) {
+                    vm.validationErrors = ValidationErrors.handle(error);
+                }
+            );
         };
 
         /**

@@ -14,7 +14,7 @@
         <tr class="table-filter" static-include="views/inspecao/fila/list_filter.html"></tr>
     </thead>
     <tbody ng-if="InspecaoFilaList.tableData.data && !InspecaoFilaList.loading">
-        <tr ng-repeat="inspecao in InspecaoFilaList.tableData.data" ng-class="{ 'priorizado': inspecao.priorizado, 'no-stock': inspecao.produto.estoque <= 0 }">
+        <tr ng-repeat="inspecao in InspecaoFilaList.tableData.data" ng-class="{ 'priorizado': inspecao.priorizado }">
             <td class="text-center">{{ inspecao.id }}</td>
             <td>
                 <span ng-if="inspecao.solicitante_id">{{ inspecao.solicitante.name }}</span>
@@ -24,7 +24,6 @@
                 {{ inspecao.pedido_produto.pedido.marketplace_readable || '-' }} <a ui-sref="app.pedidos.detalhe({id: inspecao.pedido_produto.pedido.id})">{{ inspecao.pedido_produto.pedido.codigo_marketplace }}</a>
             </td>
             <td>
-                <i ng-if="inspecao.produto.estoque <= 0" class="fa-ban" tooltips tooltip-template="Sem estoque">&nbsp; </i>
                 <a ui-sref="app.produtos.form({sku: inspecao.produto.sku})">{{ inspecao.produto.sku }}</a> {{ inspecao.produto.titulo || '-' }}
             </td>
             <td class="text-center">{{ inspecao.created_at }}</td>

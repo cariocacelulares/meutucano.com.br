@@ -1,10 +1,11 @@
 <div id="page-header" class="row">
     <page-title icon="fa-first-order" title="Pedido {{ PedidoDetalhe.pedido.codigo_marketplace }}" description="Pedido realizado em {{ PedidoDetalhe.pedido.marketplace_readable || 'Site' }}"></page-title>
     <div roles="admin|gestor|atendimento" class="col-md-6 button-bar">
-            <button class="btn-primary" ng-click="PedidoDetalhe.togglePriority()" ng-if="PedidoDetalhe.pedido.can_prioritize"><i class="fa-arrow-{{ PedidoDetalhe.pedido.priorizado ? 'down' : 'up' }}"></i>&nbsp; {{ PedidoDetalhe.pedido.priorizado ? 'Remover prioridade' : 'Priorizar' }}</button>
-            <button class="btn-info" ng-click="PedidoDetalhe.toggleHold()" ng-if="PedidoDetalhe.pedido.can_hold || PedidoDetalhe.pedido.segurado"><i class="fa-{{ PedidoDetalhe.pedido.segurado ? 'unlock' : 'lock' }}"></i>&nbsp; {{ PedidoDetalhe.pedido.segurado ? 'Liberar' : 'Segurar' }}</button>
-            <button class="btn-danger" ng-click="PedidoDetalhe.pedidoHelper.cancel(PedidoDetalhe.pedido, 'app.pedidos.index')" ng-if="PedidoDetalhe.pedido.can_cancel"><i class="fa-close"></i>&nbsp; Cancelar</button>
-            <a onclick="history.back()" title="Voltar para a página anterior" class="btn-default"><i class="fa-reply"></i>&nbsp; Voltar</a>
+        <button class="btn-complete" ng-click="PedidoDetalhe.inspecaoTecnicaHelper.requestInspection(PedidoDetalhe.pedido.id)" ng-if="PedidoDetalhe.hasSeminovo"><i class="fa-bug"></i>&nbsp; Solicitar inspeção</button>
+        <button class="btn-primary" ng-click="PedidoDetalhe.togglePriority()" ng-if="PedidoDetalhe.pedido.can_prioritize"><i class="fa-arrow-{{ PedidoDetalhe.pedido.priorizado ? 'down' : 'up' }}"></i>&nbsp; {{ PedidoDetalhe.pedido.priorizado ? 'Remover prioridade' : 'Priorizar' }}</button>
+        <button class="btn-info" ng-click="PedidoDetalhe.toggleHold()" ng-if="PedidoDetalhe.pedido.can_hold || PedidoDetalhe.pedido.segurado"><i class="fa-{{ PedidoDetalhe.pedido.segurado ? 'unlock' : 'lock' }}"></i>&nbsp; {{ PedidoDetalhe.pedido.segurado ? 'Liberar' : 'Segurar' }}</button>
+        <button class="btn-danger" ng-click="PedidoDetalhe.pedidoHelper.cancel(PedidoDetalhe.pedido, 'app.pedidos.index')" ng-if="PedidoDetalhe.pedido.can_cancel"><i class="fa-close"></i>&nbsp; Cancelar</button>
+        <a onclick="history.back()" title="Voltar para a página anterior" class="btn-default"><i class="fa-reply"></i>&nbsp; Voltar</a>
     </div>
 </div>
 <div class="row">
@@ -22,7 +23,7 @@
                     </div>
                     <div class="row" ng-if="PedidoDetalhe.pedido.codigo_marketplace">
                         <p class="pull-left">Código</p>
-                        <p class="pull-right bold">{{ PedidoDetalhe.pedido.codigo_marketplace }}</p>
+                        <p class="pull-right bold" clipboard text="PedidoDetalhe.pedido.codigo_marketplace">{{ PedidoDetalhe.pedido.codigo_marketplace }}</p>
                     </div>
                     <div class="row">
                         <p class="pull-left">Marketplace</p>
@@ -235,7 +236,10 @@
                                 <p class="clear">
                                     <span class="label label-{{ PedidoDetalhe.parseRastreioStatusClass(rastreio) }}">{{ rastreio.status_description }}</span>
                                     <br>
-                                    <small class="hint-text">Enviado {{ rastreio.data_envio_readable }}. Prazo de {{ rastreio.prazo }} dia(s)</small>
+                                    <small class="hint-text">
+                                        <span ng-if="PedidoDetalhe.pedido.status > 1">Enviado {{ rastreio.data_envio_readable }}.</span>
+                                         Prazo de {{ rastreio.prazo }} dia(s)
+                                     </small>
                                 </p>
                                 <div ng-if="rastreio.devolucao" class="alert alert-info m-t-10">
                                     <small><i class="fa-undo"></i>&nbsp; Devolução em {{ rastreio.devolucao.created_at }}</small>
@@ -297,6 +301,12 @@
                     </td>
                     <td class="text-center">{{ produto.quantidade }}</td>
                     <td class="text-center">{{ produto.valor | currency }}</td>
+                </tr>
+                <tr ng-if="PedidoDetalhe.pedido.desconto != null" class="total">
+                    <td></td>
+                    <td></td>
+                    <td class="bold">Desconto</td>
+                    <td>{{ PedidoDetalhe.pedido.desconto }}%</td>
                 </tr>
                 <tr ng-if="PedidoDetalhe.pedido.frete_valor != null" class="total">
                     <td></td>

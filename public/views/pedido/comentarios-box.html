@@ -5,8 +5,9 @@
     </div>
     <div class="panel-body">
         <form ng-submit="PedidoComentario.save()" novalidate="novalidate" name="PedidoComentario.formComentario">
+            <validation errors="PedidoComentario.validationErrors"></validation>
             <div class="form-group">
-                <textarea ng-model="PedidoComentario.comentario" class="form-control form-control" placeholder="Deixe seu comentário" required></textarea>
+                <textarea ng-model="PedidoComentario.comentario" class="form-control" placeholder="Deixe seu comentário" required></textarea>
                 <button busy="Salvando..." class="pull-right m-t-10 btn-primary">Salvar</button>
                 <div class="clear"></div>
             </div>
@@ -18,7 +19,7 @@
                 <i class="fa fa-trash"></i>&nbsp; Excluir
             </a>
             <strong>{{ comentario.usuario.name }}</strong>
-            <small class="hint-text">({{ comentario.created_at_diff_readable }})</small>
+            <small class="hint-text">({{ comentario.created_at_diff }})</small>
             <p class="m-t-5">{{ comentario.comentario }}</p>
         </div>
     </div>

@@ -1,8 +1,11 @@
 <?php namespace InspecaoTecnica\Providers;
 
-use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use InspecaoTecnica\Events\Handlers\CheckInspecoes;
+use Illuminate\Support\Facades\Event;
+use InspecaoTecnica\Events\Handlers\AttachInspecaoTecnica;
+use InspecaoTecnica\Events\Handlers\DeleteInspecaoTecnica;
+use InspecaoTecnica\Events\Handlers\DetachInspecaoTecnica;
+use InspecaoTecnica\Events\Handlers\UpdateInspecaoTecnica;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -16,7 +19,10 @@ class EventServiceProvider extends ServiceProvider
     ];
 
     protected $subscribe = [
-       CheckInspecoes::class
+       AttachInspecaoTecnica::class,
+       DetachInspecaoTecnica::class,
+       UpdateInspecaoTecnica::class,
+       DeleteInspecaoTecnica::class,
     ];
 
     /**

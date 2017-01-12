@@ -14,14 +14,13 @@ class RecompensaController extends Controller
 
     const MODEL = Recompensa::class;
 
-    protected $validationRules = [];
-
     /**
      * Lista recompensas para a tabela
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableList() {
+    public function tableList()
+    {
         $m = self::MODEL;
         $list = $m::orderBy('gamification_recompensas.nivel', 'ASC')
             ->orderBy('gamification_recompensas.valor', 'ASC')

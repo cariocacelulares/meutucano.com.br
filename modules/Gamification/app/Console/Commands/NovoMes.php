@@ -31,7 +31,7 @@ class NovoMes extends Command
     {
         try {
             $ativo = (bool) \Config::get('gamification.ativo');
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $ativo = false;
         }
 
@@ -59,7 +59,7 @@ class NovoMes extends Command
             if ($mes == 0) {
                 $mes = 12;
                 $ano--;
-            } else if ($mes == 13) {
+            } elseif ($mes == 13) {
                 $mes = 1;
                 $ano++;
             }

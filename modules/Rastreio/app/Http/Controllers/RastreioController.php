@@ -23,6 +23,9 @@ use PhpSigep\Model\ServicoDePostagem;
 use PhpSigep\Pdf\CartaoDePostagem;
 use Sunra\PhpSimple\HtmlDomParser;
 use GuzzleHttp\Client;
+use Rastreio\Http\Requests\RastreioRequest as Request;
+use Rastreio\Transformers\RastreioTransformer;
+use Rastreio\Transformers\Parsers\RastreioParser;
 
 /**
  * Class RastreioController
@@ -33,8 +36,6 @@ class RastreioController extends Controller
     use RestControllerTrait;
 
     const MODEL = Rastreio::class;
-
-    protected $validationRules = [];
 
     /**
      * Retorna os rastreios importantes
@@ -53,7 +54,26 @@ class RastreioController extends Controller
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse($list);
+        return $this->listResponse(RastreioTransformer::important($list));
+    }
+
+    /**
+     * Cria novo recurso
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function store(Request $request)
+    {
+        try {
+            $data = (self::MODEL)::create(Input::all());
+
+            return $this->createdResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
+        }
     }
 
     /**
@@ -62,36 +82,29 @@ class RastreioController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function update($id)
+    public function update($id, Request $request)
     {
-        $m = self::MODEL;
-
-        if (!$data = $m::find($id)) {
-            return $this->notFoundResponse();
-        }
-
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
-            $data->fill(Input::all());
-            $data->save();
+            $rastreio = (self::MODEL)::findOrFail($id);
+            $rastreio->fill(Input::all());
+            $rastreio->save();
 
             /**
              * Atualiza o rastreio
              */
-            if (Input::get('status') == 0)
-                $this->refresh($data);
+            if (Input::get('status') == 0) {
+                $this->refresh($rastreio);
+            }
 
-            return $this->showResponse($data);
-        } catch(\Exception $ex) {
-            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
+            return $this->showResponse($rastreio);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse([
+                'exception' => strstr(get_class($exception), 'ModelNotFoundException')
+                    ? 'Recurso nao encontrado'
+                    : $exception->getMessage()
+            ]);
         }
     }
 
@@ -105,14 +118,24 @@ class RastreioController extends Controller
         try {
             $model = self::MODEL;
 
+            $rastreiosML = $model
+                ::join('pedidos', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
+                ->where('pedido_rastreios.status', '=', 2)
+                ->where('pedidos.marketplace', '=', 'MERCADOLIVRE')
+                ->get();
+
+            foreach ($rastreiosML as $rastreio) {
+                $this->refresh($rastreio);
+            }
+
             $rastreios = $model::whereNotIn('status', [2, 3, 4, 5, 7, 8])->get();
 
             foreach ($rastreios as $rastreio) {
                 $this->refresh($rastreio);
             }
-        } catch (\Exception $ex) {
-            Log::warning(logMessage($e, 'Erro ao atualizar os rastreios'));
-            reportError('Erro ao atualizar os rastreios ' . $e->getMessage() . ' - ' . $e->getLine());
+        } catch (\Exception $exception) {
+            \Log::warning(logMessage($exception, 'Erro ao atualizar os rastreios'));
+            reportError('Erro ao atualizar os rastreios ' . $exception->getMessage() . ' - ' . $exception->getLine());
         }
     }
 
@@ -131,9 +154,8 @@ class RastreioController extends Controller
             $rastreio = $this->refresh($rastreio);
 
             return $this->showResponse($rastreio);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+        } catch (\Exception $exception) {
+            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
         }
     }
 
@@ -146,6 +168,11 @@ class RastreioController extends Controller
     public function refresh($rastreio)
     {
         try {
+            if (!$rastreio->prazo) {
+                $this->setDeadline($rastreio);
+                $rastreio = $rastreio->fresh();
+            }
+
             $ultimoEvento = $this->lastStatus($rastreio->rastreio);
 
             $prazoEntrega = date('d/m/Y', strtotime($rastreio->data_envio));
@@ -157,7 +184,7 @@ class RastreioController extends Controller
                 $status = $rastreio->status;
             } elseif (strpos($ultimoEvento['detalhes'], 'por favor, entre em contato conosco clicando') !== false) {
                 $status = 3;
-            } elseif(strpos($ultimoEvento['acao'], 'fluxo postal') !== false) {
+            } elseif (strpos($ultimoEvento['acao'], 'fluxo postal') !== false) {
                 $status = 3;
             } elseif ((strpos($ultimoEvento['acao'], 'devolvido ao remetente') !== false) || strpos($ultimoEvento['acao'], 'devolução ao remetente') !== false) {
                 $status = 5;
@@ -182,6 +209,7 @@ class RastreioController extends Controller
             return $rastreio;
         } catch (\Exception $e) {
             $data = ['exception' => $e->getMessage()];
+
             return $this->clientErrorResponse($data);
         }
     }
@@ -196,7 +224,7 @@ class RastreioController extends Controller
         try {
             $browsershot = new \Spatie\Browsershot\Browsershot();
             $browsershot
-                ->setURL($rastreio->rastreio_url)
+                ->setURL(RastreioParser::getRastreioUrl($rastreio->rastreio))
                 ->setWidth(1024)
                 ->setHeight(1024)
                 ->setTimeout(5000)
@@ -204,9 +232,11 @@ class RastreioController extends Controller
 
             $rastreio->imagem_historico = $rastreio->rastreio . '.jpg';
             \Log::info('Screenshot salva com sucesso: ' . $rastreio->imagem_historico);
+
             return $rastreio;
         } catch (\Exception $e) {
             \Log::error(logMessage($e, 'Não foi possível salvar a imagem do rastreio'));
+
             return false;
         }
     }
@@ -214,28 +244,64 @@ class RastreioController extends Controller
     /**
      * Gera ou regera uma imagem do rastreio e salva
      *
-     * @param  int $rastreio_id
+     * @param  Rastreio $rastreio
      * @return void
      */
-    public function forceScreenshot($rastreio_id)
+    public function forceScreenshot($rastreio)
     {
-        if ($rastreio = Rastreio::find($rastreio_id)) {
-            $rastreio = $this->screenshot($rastreio);
-            $rastreio->save();
+        if ($rastreio && $rastreio->rastreio) {
+            if ($rastreio = $this->screenshot($rastreio)) {
+                $rastreio->save();
+            }
         } else {
             \Log::error('Não foi possível gerar um screenshot: rastreio inválido');
         }
     }
 
     /**
+     * Set tracking deadline
+     *
+     * @param Rastreio $rastreio
+     * @return Object
+     */
+    public function setDeadline(Rastreio $rastreio)
+    {
+        try {
+            $deadline = $this->deadline($rastreio->rastreio, $rastreio->pedido->endereco->cep);
+
+            $rastreio->prazo = $deadline;
+
+            if ($rastreio->save()) {
+                \Log::notice('Prazo do rastreio foi atualizado!', [$rastreio]);
+                return $this->showResponse($rastreio);
+            } else {
+                throw new \Exception('Erro ao salvar o rastreio.', 1);
+            }
+        } catch (\Exception $exception) {
+            \Log::warning(logMessage($exception, 'Não foi possível inserir o prazo no rastreio'));
+            return $this->clientErrorResponse('Não foi possível inserir o prazo no rastreio', [$rastreio]);
+        }
+    }
+
+    /**
      * Retorna o prazo de entrega dos correios
      *
-     * @param $codigoRastreio
-     * @param $cep
-     * @return int
+     * @param  string $codigoRastreio   código ou letra do rastreio
+     * @param  string|null $cep         cep para calcular o prazo
+     * @return int                      prazo em dias
      */
-    public static function deadline($codigoRastreio, $cep)
+    public static function deadline($codigoRastreio, $cep = null)
     {
+        if (is_null($cep)) {
+            $rastreio = Rastreio::where('rastreio', '=', $codigoRastreio)->first();
+
+            if (!$rastreio) {
+                return null;
+            }
+
+            $cep = $rastreio->getCep();
+        }
+
         $tipoRastreio    = substr($codigoRastreio, 0, 1);
         $servicoPostagem = null;
         if ($tipoRastreio == 'P') {
@@ -287,8 +353,9 @@ class RastreioController extends Controller
                 $content = HtmlDomParser::file_get_html($correios);
                 if (sizeof($content->find('table tr')) > 1) {
                     foreach ($content->find('table tr') as $index => $row) {
-                        if ($row->find('td', 0)->plaintext == 'Data')
+                        if ($row->find('td', 0)->plaintext == 'Data') {
                             continue;
+                        }
 
                         if (sizeof($row->find('td')) > 1) {
                             $historico[$index]['data']  = mb_strtolower(utf8_encode($row->find('td', 0)->plaintext));
@@ -301,7 +368,6 @@ class RastreioController extends Controller
                     }
                 }
             } catch (\Exception $e) {
-
             }
 
             $detalhes[$key]['historico'] = $historico;
@@ -440,8 +506,6 @@ class RastreioController extends Controller
             $destino->setUf($rastreio->pedido->endereco->uf);
             $destino->setNumeroNotaFiscal($rastreio->pedido->notas()->orderBy('created_at', 'DESC')->first()->numero);
 
-
-
             /**
              * Rastreio
              */
@@ -465,8 +529,7 @@ class RastreioController extends Controller
             $encomenda->setDimensao($dimensao);
             $encomenda->setEtiqueta($etiqueta);
             $encomenda->setPeso(0.500 * (int) $rastreio->pedido->produtos->count());
-            $encomenda->setLote(round($rastreio->pedido->total));
-
+            $encomenda->setLote(round($rastreio->pedido->total - $rastreio->pedido->frete_valor));
 
             /**
              * Tipo frete
@@ -482,7 +545,6 @@ class RastreioController extends Controller
 
             $plp->setEncomendas([$encomenda]);
             $plp->setRemetente($remetente);
-
 
             $pdf = new CartaoDePostagem($plp, '', public_path('assets/img/carioca-negativo.jpg'));
 

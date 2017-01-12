@@ -6,10 +6,6 @@ use Venturecraft\Revisionable\RevisionableTrait;
 use Core\Models\Cliente\Cliente;
 use Core\Models\Cliente\Endereco;
 use Rastreio\Models\Rastreio;
-use InspecaoTecnica\Models\InspecaoTecnica;
-use Core\Events\OrderCancel;
-use Core\Events\OrderSeminovo;
-use Skyhub\Http\Controllers\SkyhubController;
 
 /**
  * Class Pedido
@@ -52,95 +48,9 @@ class Pedido extends \Eloquent
     /**
      * @var array
      */
-    protected $appends = [
-        'marketplace_readable',
-        'status_description',
-        'can_prioritize',
-        'can_hold',
-        'can_cancel',
-        'pagamento_metodo_readable',
-        'frete_metodo_readable'
-    ];
-
-    /**
-     * @var [type]
-     */
     protected $casts = [
         'status' => 'string'
     ];
-
-    /**
-     * Actions
-     */
-    protected static function boot() {
-        parent::boot();
-
-        // Salvar pedido (novo ou existente)
-        static::saving(function($pedido) {
-            $oldStatus = ($pedido->getOriginal('status') === null) ? null : (int)$pedido->getOriginal('status');
-            $newStatus = (is_null($pedido->status)) ? null : (int)$pedido->status;
-
-            // Se realmente ocorreu uma mudança de status e o pedido não veio do site
-            if ($newStatus !== $oldStatus && strtolower($pedido->marketplace) != 'site') {
-                // Se o novo status for entregue, notifica a Skyhub
-                if ($newStatus === 3) {
-                    with(new SkyhubController())->orderDelivered($pedido);
-                }
-            }
-
-            // Se o status foi alterado e o novo status for pago
-            if ($newStatus !== $oldStatus && $newStatus === 1) {
-                // pra cada produto do pedido
-                foreach ($pedido->produtos as $pedidoProduto) {
-                    // se o produto do pedido nao tiver inspecao tecnica nem imei, e for seminovo
-                    if (!$pedidoProduto->inspecao_tecnica && !$pedidoProduto->imei && $pedidoProduto->produto->estado == 1) {
-                        \Event::fire(new OrderSeminovo($pedidoProduto));
-                    }
-                }
-            }
-        });
-
-        // Atualizar pedido (existente)
-        static::updating(function($pedido) {
-            $oldStatus = ($pedido->getOriginal('status') === null) ? null : (int) $pedido->getOriginal('status');
-            $newStatus = ($pedido->status === null) ? null : (int)$pedido->status;
-
-            // Se realmente ocorreu uma mudança de status
-            if ($newStatus !== $oldStatus) {
-                // Se o status for cancelado
-                if ($newStatus === 5) {
-
-                    // Dispara o evento de cancelamento do pedido
-                    \Event::fire(new OrderCancel($pedido, getCurrentUserId()));
-
-                    // Se o status era enviado, pago ou entregue
-                    if (in_array($oldStatus, [1, 2, 3])) {
-                        $pedido->reembolso = true;
-                    }
-
-                    // Se tiver alguma inspeção na fila, deleta ela
-                    foreach ($pedido->produtos()->get() as $pedidoProduto) {
-                        $inspecoes = InspecaoTecnica
-                            ::where('pedido_produtos_id', '=', $pedidoProduto->id)
-                            ->whereNull('revisado_at')
-                            ->delete();
-                    }
-                }
-            }
-        });
-
-        // Set soft delete cascade
-        static::deleting(function($pedido) {
-            $pedido->notas()->delete();
-            $pedido->rastreios()->delete();
-        });
-
-        // Set soft delete cascade
-        static::restoring(function($pedido) {
-            $pedido->notas()->withTrashed()->restore();
-            $pedido->rastreios()->withTrashed()->restore();
-        });
-    }
 
     /**
      * Nota fiscal
@@ -213,99 +123,11 @@ class Pedido extends \Eloquent
     }
 
     /**
-     * Retorna o status de um pedido legível
+     * Define if a order can be holded
      *
-     * @return string
+     * @return boolean
      */
-    protected function getStatusDescriptionAttribute()
-    {
-        if (!isset(\Config::get('core.pedido_status')[$this->status])) {
-            return 'Desconhecido';
-        } else {
-            return \Config::get('core.pedido_status')[$this->status];
-        }
-    }
-
-    /**
-     * Return readable marketplace description
-     *
-     * @return string
-     */
-    protected function getMarketplaceReadableAttribute()
-    {
-        switch ($this->marketplace) {
-            case 'WALMART':
-                return 'Walmart';
-            case 'MERCADOLIVRE':
-                return 'Mercado Livre';
-            default:
-                return $this->marketplace;
-        }
-    }
-
-    /**
-     * Return readable payment method description
-     *
-     * @return string
-     */
-    protected function getPagamentoMetodoReadableAttribute()
-    {
-        $metodo = strtolower($this->pagamento_metodo);
-
-        if (!$metodo)
-            return null;
-
-        switch ($metodo) {
-            case 'credito':
-                $metodo = 'cartão de crédito';
-                break;
-            case 'debito':
-                $metodo = 'cartão de débito';
-                break;
-            case 'boleto':
-                $metodo = 'boleto';
-                break;
-            default:
-                $metodo = 'outro meio';
-                break;
-        }
-
-        return 'Pagamento via ' . $metodo;
-    }
-
-    /**
-     * Return readable shipment method description
-     *
-     * @return string
-     */
-    protected function getFreteMetodoReadableAttribute()
-    {
-        $metodo = strtolower($this->frete_metodo);
-
-        if (!$metodo)
-            return null;
-
-        switch ($metodo) {
-            case 'pac':
-                $metodo = 'PAC';
-                break;
-            case 'sedex':
-                $metodo = 'SEDEX';
-                break;
-            default:
-                $metodo = 'outro meio';
-                break;
-        }
-
-        return 'Envio via ' . $metodo;
-    }
-
-    /**
-     * Return can_hold
-     *
-     * @return string
-     */
-    protected function getCanHoldAttribute()
+    public function getCanHold()
     {
         if (in_array($this->status, [0,1])) {
             return true;
@@ -315,11 +137,11 @@ class Pedido extends \Eloquent
     }
 
     /**
-     * Return can_prioritize
+     * Defide if a order can be prioritized
      *
-     * @return string
+     * @return boolean
      */
-    protected function getCanPrioritizeAttribute()
+    public function getCanPrioritize()
     {
         if (in_array($this->status, [0,1])) {
             return true;
@@ -329,11 +151,11 @@ class Pedido extends \Eloquent
     }
 
     /**
-     * Return can_cancel
+     * Define if a order can be canceled
      *
-     * @return string
+     * @return boolean
      */
-    protected function getCanCancelAttribute()
+    public function getCanCancel()
     {
         if (in_array($this->status, [0,1])) {
             return true;
@@ -343,32 +165,24 @@ class Pedido extends \Eloquent
     }
 
     /**
-     * @return string
+     * Calculate discount percent based in order products: 100 - ((total - shipping) * 100 / totalProducts)
+     *
+     * @return null|int
      */
-    public function getCreatedAtAttribute($created_at) {
-        if (!$created_at)
-            return null;
+    public function getDesconto()
+    {
+        if (strtolower($this->marketplace) === 'b2w') {
+            $frete = ($this->frete_valor) ?: 0;
+            $total = 0;
+            foreach ($this->produtos as $produto) {
+                $total += $produto->total;
+            }
 
-        return Carbon::createFromFormat('Y-m-d H:i:s', $created_at)->format('d/m/Y H:i');
-    }
+            if ($total > 0 && ($this->total - $frete) != $total) {
+                return round(100 - ((($this->total - $frete) * 100) / $total));
+            }
+        }
 
-    /**
-     * @return string
-     */
-    public function getUpdatedAtAttribute($updated_at) {
-        if (!$updated_at)
-            return null;
-
-        return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
-    }
-
-    /**
-     * @return string
-     */
-    public function getEstimatedDeliveryAttribute($estimated_delivery) {
-        if (!$estimated_delivery)
-            return null;
-
-        return Carbon::createFromFormat('Y-m-d', $estimated_delivery)->format('d/m/Y');
+        return null;
     }
 }

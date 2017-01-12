@@ -10,7 +10,7 @@ use Core\Models\Cliente\Endereco;
 use Core\Models\Pedido\Pedido;
 use Core\Models\Pedido\PedidoProduto;
 use Core\Models\Produto\Produto;
-use Core\Http\Controllers\Pedido\RastreioController;
+use Rastreio\Http\Controllers\RastreioController;
 
 /**
  * Class SkyhubController
@@ -128,7 +128,7 @@ class SkyhubController extends Controller
         } elseif (strpos($shipping, 'sedex') !== false || strpos($shipping, 'expresso') !== false) {
             return 'SEDEX';
         } else {
-            return 'outro';
+            return 'PAC';
         }
     }
 
@@ -169,8 +169,9 @@ class SkyhubController extends Controller
      */
     public function request($url = null, $params = [], $method = 'GET')
     {
-        if ($url === null)
+        if ($url === null) {
             return false;
+        }
 
         try {
             Log::debug('Requisição skyhub para: ' . $url . ', method: ' . $method, $params);
@@ -191,13 +192,21 @@ class SkyhubController extends Controller
 
                 $r = $client->request($method, $url, $params);
 
+                if (!in_array($r->getStatusCode(), [200, 201, 204])) {
+                    throw new \Exception("API fora do ar", 1);
+                }
+
                 return json_decode($r->getBody(), true);
             }
-        } catch (Guzzle\Http\Exception\BadResponseException $e) {
-            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', method: ' . $method));
-            return false;
-        } catch (\Exception $e) {
-            Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', method: ' . $method));
+        } catch (\Exception $exception) {
+            if (strstr($exception->getMessage(), 'CANCELED -> CANCELED') !== false
+                || strstr($exception->getMessage(), 'SHIPPED -> SHIPPED') !== false) {
+                    return null;
+            }
+
+            Log::warning(logMessage(
+                $exception, 'Não foi possível fazer a requisição para: ' . $url . ', method: ' . $method
+            ));
             return false;
         }
     }
@@ -208,7 +217,8 @@ class SkyhubController extends Controller
      * @param  SkyhubPedido $order
      * @return boolean
      */
-    public function importPedido($order) {
+    public function importPedido($order)
+    {
         try {
             $clienteFone = null;
             if (sizeof($order['customer']['phones']) > 0) {
@@ -224,7 +234,8 @@ class SkyhubController extends Controller
             $cliente->nome  = $order['customer']['name'];
             $cliente->email = (isset($order['channel'])
                                 && strtolower($order['channel']) == 'mercadolivre'
-                                && $order['customer']['email'])
+                                && $order['customer']['email']
+                                && strstr($order['customer']['email'], 'mail.mercadolivre.com') === false)
                                     ? $order['customer']['email']
                                     : null;
             $cliente->fone  = ($clienteFone)
@@ -240,13 +251,13 @@ class SkyhubController extends Controller
                 'cliente_id' => $cliente->id,
                 'cep'        => $order['shipping_address']['postcode']
             ]);
-            $clienteEndereco->cep = $order['shipping_address']['postcode'];
-            $clienteEndereco->rua = $order['shipping_address']['street'];
-            $clienteEndereco->numero = $order['shipping_address']['number'];
+            $clienteEndereco->cep         = $order['shipping_address']['postcode'];
+            $clienteEndereco->rua         = $order['shipping_address']['street'];
+            $clienteEndereco->numero      = $order['shipping_address']['number'];
             $clienteEndereco->complemento = $order['shipping_address']['detail'];
-            $clienteEndereco->bairro = $order['shipping_address']['neighborhood'];
-            $clienteEndereco->cidade = $order['shipping_address']['city'];
-            $clienteEndereco->uf = $order['shipping_address']['region'];
+            $clienteEndereco->bairro      = $order['shipping_address']['neighborhood'];
+            $clienteEndereco->cidade      = $order['shipping_address']['city'];
+            $clienteEndereco->uf          = $order['shipping_address']['region'];
             if ($clienteEndereco->save()) {
                 Log::info("Endereço {$clienteEndereco->id} importado para o pedido " . $order['code']);
             } else {
@@ -289,19 +300,20 @@ class SkyhubController extends Controller
                 'codigo_marketplace'  => $codMarketplace
             ]);
 
-            $pedido->cliente_id = $cliente->id;
+            $pedido->cliente_id          = $cliente->id;
             $pedido->cliente_endereco_id = $clienteEndereco->id;
-            $pedido->codigo_api = isset($order['code']) ? $order['code'] : null;
-            $pedido->frete_valor = isset($order['shipping_cost']) ? $order['shipping_cost'] : null;
-            $pedido->frete_metodo = $this->parseShippingMethod(isset($order['shipping_method']) ? $order['shipping_method'] : null);
-            $pedido->pagamento_metodo = $this->parsePaymentMethod(isset($order['payments']) ? $order['payments'] : null);
-            $pedido->codigo_marketplace = $codMarketplace;
-            $pedido->marketplace = $marketplace;
-            $pedido->operacao = $operacao;
-            $pedido->total = $order['total_ordered'];
+            $pedido->codigo_api          = isset($order['code']) ? $order['code'] : null;
+            $pedido->frete_valor         = isset($order['shipping_cost']) ? $order['shipping_cost'] : null;
+            $pedido->frete_metodo        = $this->parseShippingMethod(isset($order['shipping_method']) ? $order['shipping_method'] : null);
+            $pedido->pagamento_metodo    = $this->parsePaymentMethod(isset($order['payments']) ? $order['payments'] : null);
+            $pedido->codigo_marketplace  = $codMarketplace;
+            $pedido->marketplace         = $marketplace;
+            $pedido->operacao            = $operacao;
+            $pedido->total               = $order['total_ordered'];
             $pedido->estimated_delivery  = $this->parseEstimatedDelivery($order['estimated_delivery'], $pedido->frete_metodo, $clienteEndereco->cep);
-            $pedido->status = $this->parseStatus(isset($order['status']['type']) ? $order['status']['type'] : null);
-            $pedido->created_at = substr($order['placed_at'], 0, 10) . ' ' . substr($order['placed_at'], 11, 8);
+            $pedido->status              = $this->parseStatus(isset($order['status']['type']) ? $order['status']['type'] : null);
+            $pedido->created_at          = substr($order['placed_at'], 0, 10) . ' ' . substr($order['placed_at'], 11, 8);
+
             if ($pedido->save()) {
                 Log::info('Pedido importado ' . $order['code']);
             } else {
@@ -309,8 +321,9 @@ class SkyhubController extends Controller
             }
 
             foreach ($order['items'] as $s_produto) {
-                if (!(int) $s_produto['product_id'])
+                if (!(int) $s_produto['product_id']) {
                     continue;
+                }
 
                 $pedidoProduto = PedidoProduto::firstOrNew([
                     'pedido_id'   => $pedido->id,
@@ -397,7 +410,8 @@ class SkyhubController extends Controller
     {
         try {
             if (!$order->codigo_api) {
-                Log::warning("Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub, pois o pedido não possui codigo_api válido.");
+                Log::warning("Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub,
+                    pois o pedido não possui codigo_api válido.");
             } else {
                 $this->request(
                     sprintf('/orders/%s/cancel', $order->codigo_api),
@@ -407,8 +421,11 @@ class SkyhubController extends Controller
                 Log::notice("Pedido {$order->id} / {$order->skyhub} cancelado na Skyhub.");
             }
         } catch (Exception $e) {
-            Log::warning(logMessage($e, "Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub"));
-            reportError("Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub" . $e->getMessage() . ' - ' . $e->getLine());
+            Log::warning(
+                logMessage($e, "Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub")
+            );
+            reportError("Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub" .
+                $e->getMessage() . ' - ' . $e->getLine());
         }
     }
 
@@ -421,6 +438,7 @@ class SkyhubController extends Controller
     public function orderInvoice($order)
     {
         try {
+            $jsonItens = [];
             foreach ($order->produtos as $produto) {
                 $jsonItens[] = [
                     "sku" => $produto->produto->sku,
@@ -429,33 +447,56 @@ class SkyhubController extends Controller
             }
 
             $rastreio = $order->rastreios->first();
+            $nota     = $order->notas()->orderBy('created_at', 'DESC')->first();
+
+            if ($rastreio) {
+                $shipment = [
+                    'code'  => $rastreio->rastreio,
+                    'items' => $jsonItens,
+                    'track' => [
+                        'code'    => $rastreio->rastreio,
+                        'carrier' => 'CORREIOS',
+                        'method'  => $rastreio->servico,
+                    ]
+                ];
+            } else {
+                $shipment = [
+                    'code'  => $nota->numero,
+                    'items' => $jsonItens,
+                    'track' => [
+                        'code'    => $nota->numero,
+                        'carrier' => 'TRANSPORTADORA',
+                        'method'  => 'normal',
+                    ]
+                ];
+            }
 
             $jsonData = [
-                "shipment" => [
-                    "code"  => ($rastreio && isset($rastreio->rastreio)) ? $rastreio->rastreio : null,
-                    "items" => $jsonItens,
-                    "track" => [
-                        "code"    => ($rastreio && isset($rastreio->rastreio)) ? $rastreio->rastreio : null,
-                        "carrier" => "CORREIOS",
-                        "method"  => ($rastreio && isset($rastreio->servico)) ? $rastreio->servico : null,
-                    ]
-                ],
-                "invoice" => [
-                    "key" => $order->notas()->orderBy('created_at', 'DESC')->first()->chave
+                'shipment' => $shipment,
+                'invoice' => [
+                    'key' => $nota ? $nota->chave : null
                 ]
             ];
 
-            $this->request(
+            $response = $this->request(
                 sprintf('/orders/%s/shipments', $order->codigo_api),
                 ['json' => $jsonData],
                 'POST'
             );
 
-            Log::notice("Dados de envio e nota fiscal atualizados do pedido {$order->id} / {$order->codigo_api} na Skyhub", $jsonData);
-        } catch (\Exception $e) {
-            Log::critical(logMessage($e, 'Pedido não faturado na Skyhub'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);
-            reportError('Pedido não faturado na Skyhub: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $order->id);
+            if ($response !== false) {
+                Log::notice("Dados de envio e nota fiscal atualizados do pedido {$order->id} / {$order->codigo_api} na Skyhub", $jsonData);
+                return true;
+            } else {
+                throw new \Exception('Erro ao tentar enviar dados de envio e rastreio para a Skyhub.', 1);
+            }
+        } catch (\Exception $exception) {
+            Log::critical(logMessage($exception, 'Pedido não faturado na Skyhub'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);
+            reportError('Pedido não faturado na Skyhub: ' . $exception->getMessage() . ' - ' . $exception->getLine() . ' - ' . $order->id);
+            return $exception;
         }
+
+        return new \Exception('Erro ao tentar enviar dados de envio e rastreio para a Skyhub.', 1);
     }
 
     /**
@@ -476,8 +517,13 @@ class SkyhubController extends Controller
                 Log::notice("Pedido {$pedido->codigo_api} alterado para enviado na skyhub.");
             }
         } catch (\Exception $e) {
-            Log::critical(logMessage($e, 'Não foi possível alterar o status do pedido na Skyhub'), ['id' => $pedido->id, 'codigo_api' => $pedido->codigo_api]);
-            reportError('Não foi possível alterar o status do pedido na Skyhub: ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $pedido->id);
+            Log::critical(logMessage(
+                $e,
+                'Não foi possível alterar o status do pedido na Skyhub'),
+                ['id' => $pedido->id, 'codigo_api' => $pedido->codigo_api]
+            );
+            reportError('Não foi possível alterar o status do pedido na Skyhub: ' .
+                $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $pedido->id);
         }
     }
 
@@ -501,6 +547,14 @@ class SkyhubController extends Controller
         return Carbon::createFromFormat('d/m/Y', $prazo)->format('Y-m-d');
     }
 
+    /**
+     * Formata a estimativa de entrega ou calcula eio_fallocate
+     *
+     * @param  string $estimatedDelivery
+     * @param  string $freteMetodo
+     * @param  string $cep
+     * @return string
+     */
     public function parseEstimatedDelivery($estimatedDelivery, $freteMetodo, $cep)
     {
         $data = $estimatedDelivery;

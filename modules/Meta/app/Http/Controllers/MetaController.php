@@ -52,7 +52,7 @@ class MetaController extends Controller
                  ->where(DB::raw('YEAR(pedido_notas.data)'), '=', date('Y'))->sum('total');
 
             $atualMesSmartphones = with(clone($mes))->where('produtos.ncm', '85171231')->first('total');
-            $atualMesOutros      = with(clone($mes))->where('produtos.ncm', '<>' , '85171231')->first('total');
+            $atualMesOutros      = with(clone($mes))->where('produtos.ncm', '<>', '85171231')->first('total');
 
             /**
              * Dias úteis

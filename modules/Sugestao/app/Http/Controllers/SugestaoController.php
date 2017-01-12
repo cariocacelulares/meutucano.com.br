@@ -16,8 +16,6 @@ class SugestaoController extends Controller
 
     const MODEL = Sugestao::class;
 
-    protected $validationRules = [];
-
     /**
      * Lista marcas para a tabela
      *
@@ -50,21 +48,15 @@ class SugestaoController extends Controller
     public function store(Request $request)
     {
         $m = self::MODEL;
+
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception('ValidationException');
-            }
-
             $data = $m::create(array_merge(Input::all(), ['usuario_id' => getCurrentUserId()]));
 
             return $this->createdResponse($data);
-        } catch(\Exception $exception) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $exception->getMessage()];
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'));
 
-            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
         }
     }
 
@@ -97,7 +89,7 @@ class SugestaoController extends Controller
             $data->save();
 
             return $this->showResponse($data);
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             $data = ['form_validations' => $v->errors(), 'exception' => $exception->getMessage()];

@@ -7,6 +7,10 @@ use Core\Models\Pedido\PedidoProduto;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
 use InspecaoTecnica\Models\InspecaoTecnica;
+use Core\Http\Requests\ProdutoRequest as Request;
+use Core\Transformers\ProductTransformer;
+use Core\Transformers\Parsers\ProductParser;
+use Core\Transformers\Parsers\OrderParser;
 
 /**
  * Class ProdutoController
@@ -18,14 +22,13 @@ class ProdutoController extends Controller
 
     const MODEL = Produto::class;
 
-    protected $validationRules = [];
-
     /**
      * Lista produtos para a tabela
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableList() {
+    public function tableList()
+    {
         $m = self::MODEL;
 
         $list = $m
@@ -42,7 +45,7 @@ class ProdutoController extends Controller
         }
 
         $reservados = PedidoProduto
-             ::select('pedido_produtos.produto_sku', 'pedidos.status', DB::raw('COUNT(*) as count'))
+            ::select('pedido_produtos.produto_sku', 'pedidos.status', DB::raw('COUNT(*) as count'))
             ->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
             ->with(['pedido'])
             ->whereIn('pedido_produtos.produto_sku', $ids)
@@ -65,7 +68,7 @@ class ProdutoController extends Controller
             ];
         }
 
-        return $this->listResponse($list);
+        return $this->listResponse(ProductTransformer::list($list));
     }
 
     /**
@@ -76,21 +79,34 @@ class ProdutoController extends Controller
      */
     public function show($id)
     {
-        $m = self::MODEL;
-        $data = $m::find($id);
+        $data = (self::MODEL)::find($id);
 
         $pedidoProdutos = PedidoProduto
-             ::select('pedidos.status', DB::raw('COUNT(*) as count'))
+            ::with('pedido')
             ->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
             ->where('produto_sku', '=', $data->sku)
             ->whereIn('pedidos.status', [0,1])
-            ->groupBy('pedidos.status')
+            ->orderBy('pedidos.status', 'ASC')
             ->get()
             ->toArray();
 
         $attachedProducts = [];
         foreach ($pedidoProdutos as $pedidoProduto) {
-            $attachedProducts[$pedidoProduto['status']] = $pedidoProduto['count'];
+            if (!isset($attachedProducts[$pedidoProduto['status']])) {
+                $attachedProducts[$pedidoProduto['status']] = 1;
+            } else {
+                $attachedProducts[$pedidoProduto['status']]++;
+            }
+
+            $attachedProducts['data'][] = [
+                'id'                 => $pedidoProduto['pedido']['id'],
+                'status'             => $pedidoProduto['pedido']['status'],
+                'status_description' => OrderParser::getStatusDescription($pedidoProduto['pedido']['status']),
+                'codigo_marketplace' => $pedidoProduto['pedido']['codigo_marketplace'],
+                'marketplace'        => $pedidoProduto['pedido']['marketplace'],
+                'quantidade'         => $pedidoProduto['quantidade'],
+                'valor'              => $pedidoProduto['valor'],
+            ];
         }
 
         $data->attachedProducts = $attachedProducts;
@@ -102,9 +118,9 @@ class ProdutoController extends Controller
                 ->whereNotNull('revisado_at')
                 ->get(['id']);
 
-            $data->revisoes = $revisoes ?: false;
+            $data->revisoes = $revisoes ?: [];
 
-            return $this->showResponse($data);
+            return $this->showResponse(ProductTransformer::show($data));
         }
 
         return $this->notFoundResponse();
@@ -143,7 +159,7 @@ class ProdutoController extends Controller
             $data->save();
 
             return $this->showResponse($data);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
@@ -171,22 +187,18 @@ class ProdutoController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function store()
+    public function store(Request $request)
     {
         $m = self::MODEL;
+
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
             $data = $m::create(Input::all());
-            return $this->createdResponse($data);
-        } catch(\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
 
-            \Log::error(logMessage($ex));
-            return $this->clientErrorResponse($data);
+            return $this->createdResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception));
+
+            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
         }
     }
 
@@ -203,12 +215,6 @@ class ProdutoController extends Controller
         }
 
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $data->fill(Input::except(['atributos']));
             $data->save();
 
@@ -229,8 +235,8 @@ class ProdutoController extends Controller
             }
 
             return $this->showResponse($data);
-        } catch(\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+        } catch (\Exception $ex) {
+            $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
     }

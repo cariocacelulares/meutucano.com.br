@@ -1,0 +1,67 @@
+<h1>Solicitando inspeção técnica</h1>
+<form ng-if="!InspecaoSolicitarFormModal.inspecoes.length" ng-submit="InspecaoSolicitarFormModal.solicitar()" novalidate="novalidate" class="form-default">
+    <p>Selecione o(s) produto(s) e quantidade(s) que você deseja solicitar inspeção.</p>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table info-style small">
+                <thead>
+                    <tr>
+                        <th class="check-col"></th>
+                        <th class="text-left">SKU</th>
+                        <th class="text-left">Produto</th>
+                        <th class="p-r-10 text-center" width="100">Qtd</th>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="pedidoProduto in InspecaoSolicitarFormModal.pedidoProdutos">
+                    <tr>
+                        <td class="check-col">
+                            <div class="form-group">
+                                <div class="checkbox check-success">
+                                    <input id="reservar{{ $index }}" type="checkbox" ng-model="pedidoProduto.solicitacao.aplicar">
+                                    <label for="reservar{{ $index }}" class="text-normal"></label>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-left p-l-0">{{ pedidoProduto.produto.sku }}</td>
+                        <td class="text-left p-l-0">{{ pedidoProduto.produto.titulo }}</td>
+                        <td class="text-left p-l-0 form-group">
+                            <input ng-model="pedidoProduto.solicitacao.quantidade" type="number" min="0" ng-minlength="0" max="{{ pedidoProduto.solicitacao.max }}" ng-maxlength="{{ pedidoProduto.solicitacao.max }}">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="pull-right">
+            <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
+            <button busy="Salvando..." type="submit" class="btn btn-primary">Solicitar</button>
+        </div>
+    </div>
+</form>
+
+<div ng-if="InspecaoSolicitarFormModal.inspecoes.length">
+    <div class="alert alert-success m-b-10"><i class="fa fa-check"></i>&nbsp; Inspeções solicitadas com sucesso!</div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table info-style small">
+                <thead>
+                    <tr>
+                        <th class="text-center">Inspeção</th>
+                        <th class="text-center">SKU</th>
+                        <th class="p-l-15 text-left">Produto</th>
+                        <th class="p-r-0 text-center" width="100">Status</th>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="inspecao in InspecaoSolicitarFormModal.inspecoes">
+                    <tr>
+                        <td class="text-center p-l-0">{{ inspecao[1] }}</td>
+                        <td class="text-center">{{ inspecao[2].produto_sku }}</td>
+                        <td class="text-left">{{ inspecao[2].produto.titulo }}</td>
+                        <td class="text-center">{{ (inspecao[0] == 'attach') ? 'Pronto' : 'Fila' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

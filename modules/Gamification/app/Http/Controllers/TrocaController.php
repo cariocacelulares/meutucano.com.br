@@ -16,14 +16,13 @@ class TrocaController extends Controller
 
     const MODEL = Troca::class;
 
-    protected $validationRules = [];
-
     /**
      * Lista conquistas para a tabela
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableList() {
+    public function tableList()
+    {
         $m = self::MODEL;
         $list = $m::with('usuario')
             ->join('usuarios', 'usuarios.id', '=', 'gamification_trocas.usuario_id')
@@ -39,13 +38,8 @@ class TrocaController extends Controller
     public function store()
     {
         $m = self::MODEL;
+
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if ($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $recompensa = Input::get('recompensa');
 
             $data = $m::create(array_merge(Input::all(), [
@@ -62,8 +56,8 @@ class TrocaController extends Controller
             }
 
             return $return;
-        } catch(\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+        } catch (\Exception $ex) {
+            $data = ['exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
             return $this->clientErrorResponse($data);

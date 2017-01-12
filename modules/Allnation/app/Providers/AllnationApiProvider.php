@@ -15,7 +15,7 @@ class AllnationApiProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(AllnationApi::class, function(){
+        $this->app->bind(AllnationApi::class, function () {
             return new AllnationApi();
         });
     }

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Sugestao\Models\Sugestao;
 use Nwidart\Modules\Facades\Module;
+use Core\Transformers\OrderTransformer;
 
 /**
  * Class PedidoController
@@ -23,14 +24,13 @@ class PedidoController extends Controller
 
     const MODEL = Pedido::class;
 
-    protected $validationRules = [];
-
     /**
      * Lista pedidos para a tabela
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableList() {
+    public function tableList()
+    {
         $m = self::MODEL;
 
         $list = $m::with(['cliente', 'endereco'])
@@ -40,7 +40,7 @@ class PedidoController extends Controller
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse($list);
+        return $this->listResponse(OrderTransformer::list($list));
     }
 
     /**
@@ -48,7 +48,8 @@ class PedidoController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function faturamento() {
+    public function faturamento()
+    {
         $m = self::MODEL;
 
         $list = $m::with([
@@ -58,13 +59,14 @@ class PedidoController extends Controller
                 'rastreios',
                 'produtos',
                 'produtos.produto',
-                'produtos.inspecoes' => function($query) {
+                'produtos.inspecoes' => function ($query) {
                     $query->orderBy('priorizado', 'DESC');
                     $query->orderBy('id', 'ASC');
                 },
                 'comentarios'
             ])
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
+            ->join('cliente_enderecos', 'cliente_enderecos.id', '=', 'pedidos.cliente_endereco_id')
             ->leftJoin('pedido_rastreios', 'pedido_rastreios.pedido_id', '=', 'pedidos.id')
             ->leftJoin('pedido_produtos', 'pedido_produtos.pedido_id', '=', 'pedidos.id')
             ->leftJoin('pedido_notas', 'pedido_notas.pedido_id', '=', 'pedidos.id')
@@ -76,7 +78,7 @@ class PedidoController extends Controller
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse($list);
+        return $this->listResponse(OrderTransformer::faturamento($list));
     }
 
     /**
@@ -97,7 +99,7 @@ class PedidoController extends Controller
             $pedido->save();
 
             return $this->showResponse($pedido);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
@@ -121,7 +123,7 @@ class PedidoController extends Controller
             $pedido->save();
 
             return $this->showResponse($pedido);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }
@@ -134,7 +136,8 @@ class PedidoController extends Controller
      * @param  int $protocolo
      * @return Pedido
      */
-    public function alterarStatus($pedido_id) {
+    public function alterarStatus($pedido_id)
+    {
         $m = self::MODEL;
 
         try {
@@ -166,7 +169,7 @@ class PedidoController extends Controller
             $pedido->save();
 
             return $this->showResponse($pedido);
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao alterar status do pedido'));
             $data = ['exception' => $exception->getMessage()];
 
@@ -194,7 +197,7 @@ class PedidoController extends Controller
                 'rastreios',
                 'produtos',
                 'produtos.produto',
-                'produtos.inspecoes' => function($query) {
+                'produtos.inspecoes' => function ($query) {
                     $query->orderBy('priorizado', 'DESC');
                     $query->orderBy('id', 'ASC');
                 },
@@ -206,13 +209,14 @@ class PedidoController extends Controller
                 ->find($id);
 
             if ($data) {
-                return $this->showResponse($data);
+                return $this->showResponse(OrderTransformer::show($data));
             }
         } catch (\Exception $e) {
-            if ($e->getPrevious())
+            if ($e->getPrevious()) {
                 throw $e->getPrevious();
-            else
+            } else {
                 throw $e;
+            }
         }
 
         return $this->notFoundResponse();
@@ -229,12 +233,15 @@ class PedidoController extends Controller
 
         foreach ($pedidos as $pedido) {
             try {
-                $dataPedido = Carbon::createFromFormat('d/m/Y H:i', $pedido->created_at)->format('d/m/Y');
+                $dataPedido = Carbon::createFromFormat('Y-m-d H:i:s', $pedido->created_at)->format('d/m/Y');
                 $diasUteis = diasUteisPeriodo($dataPedido, date('d/m/Y'), true);
 
-                if (strtolower($pedido->marketplace) == 'site' && $diasUteis > \Config::get('magento.old_order')) {
-                    $pedido->status = 5;
-                    $pedido->save();
+                if (strtolower($pedido->marketplace) == 'site') {
+                    if (($pedido->pagamento_metodo == 'boleto' && $diasUteis > Config::get('magento.old_order.boleto'))
+                        || ($pedido->pagamento_metodo == 'credito' && $diasUteis > Config::get('magento.old_order.credito'))) {
+                        $pedido->status = 5;
+                        $pedido->save();
+                    }
                 }
             } catch (\Exception $e) {
                 Log::error(logMessage($e, 'Não foi possível cancelar o pedido na Integração'));
@@ -255,14 +262,8 @@ class PedidoController extends Controller
         if ($pedido = Pedido::find($pedido_id)) {
             $pedido->status = 2;
 
-            if (strtolower($pedido->marketplace) == 'site') {
-                (new MagentoController())->orderInvoice($pedido);
-            } else {
-                (new SkyhubController())->orderInvoice($pedido);
-            }
-
             if ($pedido->save()) {
-                \Event::fire(new \App\Events\Gamification\TarefaRealizada('fature-um-pedido'));
+                \Event::fire(new \Gamification\Events\TarefaRealizada('fature-um-pedido'));
             }
         }
     }
@@ -278,25 +279,25 @@ class PedidoController extends Controller
         $m = self::MODEL;
 
         try {
-            $pedido = $m::where('codigo_marketplace', '=', $codigo_pedido)->first();
+            if ($pedido = $m::where('codigo_marketplace', '=', $codigo_pedido)->first()) {
+                $rastreio = $pedido->rastreios()->orderBy('created_at', 'DESC')->first();
+                $codigo   = ($rastreio) ? $rastreio->rastreio : null;
 
-            $infoReturn = [
-                'taxvat'      => $pedido->cliente->taxvat,
-                'nome'        => mb_strtolower(removeAcentos($pedido->cliente->nome)),
-                'email'       => removeAcentos($pedido->cliente->email),
-                'cep'         => removeAcentos($pedido->endereco->cep),
-                'telefone'    => numbers($pedido->cliente->fone),
-                'rua'         => removeAcentos($pedido->endereco->rua),
-                'numero'      => numbers($pedido->endereco->numero),
-                'bairro'      => removeAcentos($pedido->endereco->bairro),
-                'complemento' => removeAcentos($pedido->endereco->complemento),
-                'marketplace' => mb_strtolower($pedido->marketplace),
-                'pedido'      => $codigo_pedido,
-                'frete'       => $pedido->frete_valor
-            ];
-
-            if ($pedido) {
-                return $this->showResponse($infoReturn);
+                return $this->showResponse([
+                    'taxvat'      => $pedido->cliente->taxvat,
+                    'nome'        => mb_strtolower(removeAcentos($pedido->cliente->nome)),
+                    'email'       => removeAcentos($pedido->cliente->email),
+                    'cep'         => removeAcentos($pedido->endereco->cep),
+                    'telefone'    => numbers($pedido->cliente->fone),
+                    'rua'         => removeAcentos($pedido->endereco->rua),
+                    'numero'      => numbers($pedido->endereco->numero),
+                    'bairro'      => removeAcentos($pedido->endereco->bairro),
+                    'complemento' => removeAcentos($pedido->endereco->complemento),
+                    'marketplace' => mb_strtolower($pedido->marketplace),
+                    'pedido'      => $codigo_pedido,
+                    'frete'       => $pedido->frete_valor,
+                    'rastreio'    => $codigo
+                ]);
             }
         } catch (\Exception $e) {
             \Log::warning(logMessage($e, 'Não foi possível obter os dados do pedido para o shopsystem!'));
@@ -317,7 +318,7 @@ class PedidoController extends Controller
         $dia = date('d');
         $inicioMes = "{$ano}-{$mes}-01 00:00:00";
 
-       $pedidos = Pedido
+        $pedidos = Pedido
             ::selectRaw('status, marketplace, COUNT(*) as count')
             ->whereNotNull('status')
             ->where('status', '!=', 5)
@@ -422,7 +423,7 @@ class PedidoController extends Controller
                     'mes' => $data['mes'] - 1,
                     'count' => 0
                 ];
-            } else if (($data['mes'] - 1) == $mes[0]['mes']) {
+            } elseif (($data['mes'] - 1) == $mes[0]['mes']) {
                 $mes[] = $mes[0];
 
                 $mes[0] = [
@@ -432,7 +433,21 @@ class PedidoController extends Controller
             }
         }
 
-       $dia = Pedido
+        if ($mes[1]['mes'] === 0) {
+           $mes[1]['count'] = Pedido
+                ::selectRaw('MONTH(created_at) as mes, COUNT(*) as count')
+                ->whereIn('status', [1,2,3])
+                ->where(DB::raw('MONTH(created_at)'), '=', 12)
+                ->where(DB::raw('YEAR(created_at)'), '=', ($data['ano'] - 1))
+                ->groupBy(DB::raw('MONTH(created_at)'))
+                ->orderBy(DB::raw('MONTH(created_at)'), 'DESC')
+                ->get()->toArray();
+
+            $mes[1]['count'] = $mes[1]['count'][0]['count'];
+            $mes[1]['mes'] = 12;
+        }
+
+        $dia = Pedido
             ::selectRaw('DAY(created_at) as dia, COUNT(*) as count')
             ->whereIn('status', [1,2,3])
             ->whereIn(DB::raw('DAY(created_at)'), [$data['dia'], $data['dia'] - 1])
@@ -455,7 +470,7 @@ class PedidoController extends Controller
                     'dia' => $data['dia'] - 1,
                     'count' => 0
                 ];
-            } else if (($data['dia'] - 1) == $dia[0]['dia']) {
+            } elseif (($data['dia'] - 1) == $dia[0]['dia']) {
                 $dia[] = $dia[0];
 
                 $dia[0] = [
@@ -473,11 +488,11 @@ class PedidoController extends Controller
                 'ultimo' => [$ano[1]['ano'], $ano[1]['count']],
             ],*/
             'mes' => [
-                'atual' => [$mesesExtenso[(int)$mes[0]['mes']], $mes[0]['count']],
+                'atual'  => [$mesesExtenso[(int)$mes[0]['mes']], $mes[0]['count']],
                 'ultimo' => [$mesesExtenso[(int)$mes[1]['mes']], $mes[1]['count']],
             ],
             'dia' => [
-                'atual' => [$dia[0]['dia'], $dia[0]['count']],
+                'atual'  => [$dia[0]['dia'], $dia[0]['count']],
                 'ultimo' => [$dia[1]['dia'], $dia[1]['count']],
             ]
         ];
@@ -492,7 +507,7 @@ class PedidoController extends Controller
      * @param  int $ano
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    function totalOrders($mes = null, $ano = null)
+    public function totalOrders($mes = null, $ano = null)
     {
         $atual = false;
 
@@ -505,7 +520,7 @@ class PedidoController extends Controller
             $ano = (int)date('Y');
         }
 
-       $pedidos = Pedido
+        $pedidos = Pedido
             ::selectRaw('DAY(created_at) AS dia, COUNT(*) as total')
             ->whereIn('status', [1,2,3])
             ->where(DB::raw('MONTH(created_at)'), '=', $mes)
@@ -549,7 +564,7 @@ class PedidoController extends Controller
 
             // arsort($list);
             return $this->listResponse($list);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $data = ['exception' => $ex->getMessage()];
             return $this->clientErrorResponse($data);
         }

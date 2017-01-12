@@ -31,7 +31,8 @@
         <tr>
             <th class="text-center" width="135">Código</th>
             <th class="text-center" width="110">Marketplace</th>
-            <th class="text-center" width="130">Rastreio</th>
+            <th class="text-center" width="88">UF</th>
+            <th class="text-center" width="110">Frete</th>
             <th>Cliente</th>
             <th class="text-center" width="140">Preço</th>
             <th class="text-center" width="100">Entrega</th>
@@ -53,7 +54,11 @@
                 </span>
             </td>
             <td class="text-center">{{ pedido.marketplace_readable }}</td>
-            <td class="text-center"><a ng-href="{{ pedido.rastreios[0].rastreio_url }}" target="_blank">{{ pedido.rastreios[0].rastreio || '-' }}</a></td>
+            <td class="text-center">{{ pedido.endereco.uf }}</td>
+            <td class="text-center">
+                {{ pedido.frete_metodo }}
+                <span ng-repeat="rastreio in pedido.rastreios" clipboard text="rastreio.rastreio">{{ rastreio.rastreio }}</span>
+            </td>
             <td>
                 <strong>{{ pedido.cliente.nome | uppercase }}</strong>
                 <br>
@@ -62,8 +67,16 @@
                 </small>
             </td>
             <td class="text-center">
+                <p ng-if="pedido.desconto" class="m-b-0">Desconto: <strong>{{ pedido.desconto }}%</strong></p>
                 <span ng-repeat="produto in pedido.produtos">
-                    <small><strong>{{ produto.produto_sku }}</strong>: {{ produto.quantidade }}x {{ produto.valor | currency }}</small>
+                    <small ng-if="!pedido.desconto">
+                        <strong tooltips tooltip-template="{{ produto.produto.titulo }}">{{ produto.produto_sku }}</strong>
+                        <small>: {{ produto.quantidade }}x {{ produto.valor | currency }}</small>
+                    </small>
+                    <small ng-if="pedido.desconto">
+                        <strong tooltips tooltip-template="{{ produto.produto.titulo }}">{{ produto.produto_sku }}</strong>
+                        <small tooltips tooltip-template="Desconto: {{ (produto.valor - (produto.valor - ((produto.valor * pedido.desconto) / 100))) | currency }}">: {{ produto.quantidade }}x {{ produto.valor | currency }}</small>
+                    </small>
                     <span ng-repeat="inspecao in produto.inspecoes" ng-class="{ 'label-success': inspecao.revisado_at, 'm-r-10': !$last }" class="label">{{ inspecao.id }}</span>
                 </span><br>
             </td>

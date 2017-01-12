@@ -15,8 +15,6 @@ class SenhaController extends Controller
 
     const MODEL = Senha::class;
 
-    protected $validationRules = [];
-
     /**
      * Return passwords from user
      *

@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Rastreio\Models\Rastreio;
 use Rastreio\Models\Monitorado;
+use Rastreio\Transformers\RastreioTransformer;
 
 /**
  * Class MonitoradoController
@@ -16,14 +17,13 @@ class MonitoradoController extends Controller
 
     const MODEL = Monitorado::class;
 
-    protected $validationRules = [];
-
     /**
      * Lista rastreios monitorados
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableList() {
+    public function tableList()
+    {
         $m = self::MODEL;
 
         $list = $m::with(['rastreio', 'rastreio.pedido', 'rastreio.pedido.cliente', 'rastreio.pedido.endereco'])
@@ -38,7 +38,7 @@ class MonitoradoController extends Controller
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse($list);
+        return $this->listResponse(RastreioTransformer::monitorado($list));
     }
 
     public function simpleList()
@@ -64,13 +64,8 @@ class MonitoradoController extends Controller
     public function store()
     {
         $m = self::MODEL;
+
         try {
-            $v = \Validator::make(Input::all(), $this->validationRules);
-
-            if($v->fails()) {
-                throw new \Exception("ValidationException");
-            }
-
             $rastreio_id = Input::get('rastreio_id');
             $usuario_id = getCurrentUserId();
 
@@ -82,8 +77,8 @@ class MonitoradoController extends Controller
             }
 
             return $this->createdResponse($data);
-        } catch(\Exception $ex) {
-            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+        } catch (\Exception $ex) {
+            $data = ['exception' => $ex->getMessage()];
 
             \Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
             return $this->clientErrorResponse($data);

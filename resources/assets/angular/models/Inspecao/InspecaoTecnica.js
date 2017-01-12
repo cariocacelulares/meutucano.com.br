@@ -11,6 +11,16 @@
 
             angular.extend(rest, {
                 /**
+                 * Retorna uma inspecao pelo pedido produto
+                 *
+                 * @param  {int} pedido_produtos_id
+                 * @return {Object}
+                 */
+                getByPedidoProduto: function(pedido_produtos_id) {
+                    return Restangular.one(this.baseUrl + '/get', pedido_produtos_id).get();
+                },
+
+                /**
                  * Retorna as inspecoes não revisadas
                  *
                  * @param  {Object} params
@@ -62,6 +72,16 @@
                  */
                 verificarReserva: function(params) {
                     return Restangular.all(this.baseUrl + '/verificar-reserva').post(params);
+                },
+
+                /**
+                 * Solicitar inspeções tecnicas
+                 *
+                 * @param  {array} params Um array com o pedido_produto_id e quantidade
+                 * @return {Object}
+                 */
+                solicitar: function(params) {
+                    return Restangular.all(this.baseUrl + '/solicitar').post({orderProducts: params});
                 }
             });
 
