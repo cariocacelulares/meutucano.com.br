@@ -128,7 +128,7 @@ class SkyhubController extends Controller
         } elseif (strpos($shipping, 'sedex') !== false || strpos($shipping, 'expresso') !== false) {
             return 'SEDEX';
         } else {
-            return 'outro';
+            return 'PAC';
         }
     }
 

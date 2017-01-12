@@ -3040,6 +3040,12 @@
                 "url": "git@github.com:cariocacelulares/php-sigep.git",
                 "reference": "b3749c73940b50b5f3131b14c0d3663a3f9cd9fd"
             },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cariocacelulares/php-sigep/zipball/b3749c73940b50b5f3131b14c0d3663a3f9cd9fd",
+                "reference": "b3749c73940b50b5f3131b14c0d3663a3f9cd9fd",
+                "shasum": ""
+            },
             "require": {
                 "php": ">=5.4",
                 "stavarengo/php-sigep-fpdf": "dev-master"
@@ -3070,6 +3076,9 @@
                 "correios",
                 "sigep"
             ],
+            "support": {
+                "source": "https://github.com/cariocacelulares/php-sigep/tree/master"
+            },
             "time": "2016-11-24 17:17:26"
         },
         {
