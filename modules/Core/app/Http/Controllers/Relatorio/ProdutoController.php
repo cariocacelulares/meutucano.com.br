@@ -236,7 +236,11 @@ class ProdutoController extends Controller
                 ->groupBy('produto_sku')
                 ->orderBy(DB::raw('quantidade'), 'DESC');
 
-            $filters = Input::all();
+            if (Input::get('params')) {
+                $filters = (array) json_decode(Input::get('params'));
+            } else {
+                $filters = Input::all();
+            }
 
             // limpa os filtros nulos
             foreach ($filters as $name => $filter) {
