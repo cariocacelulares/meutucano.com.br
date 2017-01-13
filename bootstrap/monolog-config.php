@@ -25,10 +25,10 @@ if (env('MONGOLOGGER_ENABLED', true) === true) {
             $db = env('MONGODB_DATABASE', 'meutucano');
             $mongoClient = new $mongoClient(
                 'mongodb://' .
-                /*env('MONGODB_USERNAME', 'carioca') .
+                env('MONGODB_USERNAME', 'carioca') .
                 ':' .
                 env('MONGODB_PASSWORD', 'carioca5102') .
-                '@' .*/
+                '@' .
                 env('MONGODB_HOST', '45.55.208.16') .
                 ':' .
                 env('MONGODB_PORT', 27017) .
