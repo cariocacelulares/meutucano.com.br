@@ -2,6 +2,7 @@
 
 use VCR\VCR;
 use Tests\TestCase;
+use Tests\Core\CreatePedido;
 use MailThief\Testing\InteractsWithMail;
 use Rastreio\Http\Controllers\RastreioController;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -11,14 +12,13 @@ class RastreioTest extends TestCase
 {
     use WithoutMiddleware,
         DatabaseTransactions,
-        InteractsWithMail,
-        CreateRastreio;
+        InteractsWithMail;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->rastreio = $this->createRastreio();
+        $this->rastreio = CreateRastreio::create();
     }
 
     /**
@@ -75,7 +75,7 @@ class RastreioTest extends TestCase
      */
     public function test__it_should_attach_rastreio_to_new_paid_order()
     {
-        $pedido = $this->createOrder([
+        $pedido = CreatePedido::create([
             'status' => 1
         ]);
 
@@ -90,7 +90,7 @@ class RastreioTest extends TestCase
      */
     public function test__it_should_attach_rastreio_on_order_paid()
     {
-        $pedido = $this->createOrder([
+        $pedido = CreatePedido::create([
             'status' => 0
         ]);
 
@@ -110,7 +110,7 @@ class RastreioTest extends TestCase
      */
     public function test__it_should_attach_rastreio_with_correct_shipment_service()
     {
-        $pedido = $this->createOrder([
+        $pedido = CreatePedido::create([
             'status' => 1
         ]);
 

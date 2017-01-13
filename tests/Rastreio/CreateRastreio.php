@@ -3,21 +3,19 @@
 use Tests\Core\CreatePedido;
 use Rastreio\Models\Rastreio;
 
-trait CreateRastreio
+class CreateRastreio
 {
-  use CreatePedido;
-
-  /**
-   * Cria um objeto de rastreio
-   *
-   * @return Rastreio\Models
-   */
-  public function createRastreio($data = [])
-  {
-    return factory(Rastreio::class)->create(array_merge([
-      'pedido_id' => $this->createOrder()->id,
-      'rastreio'  => 'DN677968684BR',
-      'servico'   => 'sedex'
-    ], $data));
-  }
+    /**
+    * Cria um objeto de rastreio
+    *
+    * @return Rastreio\Models
+    */
+    public static function create($data = [])
+    {
+        return factory(Rastreio::class)->create(array_merge([
+            'pedido_id' => CreatePedido::create()->id,
+            'rastreio'  => 'DN677968684BR',
+            'servico'   => 'sedex'
+        ], $data));
+    }
 }

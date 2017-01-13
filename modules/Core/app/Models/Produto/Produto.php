@@ -53,6 +53,13 @@ class Produto extends Model
     ];
 
     /**
+     * @var array
+     */
+    protected $appends = [
+        'estoque',
+    ];
+
+    /**
      * ProductStock
      * @return ProductStock
      */
@@ -79,6 +86,15 @@ class Produto extends Model
         }
 
         return $stock;
+    }
+
+    /**
+     * Return calculated estoque
+     * @return int quantity in stock
+     */
+    public function getEstoqueAttribute()
+    {
+        return $this->getStock();
     }
 
     /**

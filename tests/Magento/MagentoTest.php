@@ -12,8 +12,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 class MagentoTest extends TestCase
 {
     use WithoutMiddleware,
-        DatabaseTransactions,
-        CreatePedido;
+        DatabaseTransactions;
 
     const MAGENTO_ORDER = 200000846;
 
@@ -66,7 +65,7 @@ class MagentoTest extends TestCase
      */
     /*public function test__it_should_active_listener_on_order_cancel()
     {
-        $order = $this->createOrder([
+        $order = CreatePedido::create([
             'marketplace' => 'site',
             'codigo_api'  => self::MAGENTO_ORDER
         ]);

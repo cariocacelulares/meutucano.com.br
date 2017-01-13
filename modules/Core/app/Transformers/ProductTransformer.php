@@ -72,7 +72,7 @@ class ProductTransformer
             'sku'              => $product->sku,
             'ncm'              => $product->ncm,
             'titulo'           => $product->titulo,
-            'estoque'          => $product->getStock(),
+            'estoque'          => $product->estoque,
             'revisoes'         => $product->revisoes,
             'attachedProducts' => $product->attachedProducts,
         ];

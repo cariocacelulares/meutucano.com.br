@@ -7,8 +7,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class AuthTest extends TestCase
 {
-  use DatabaseTransactions,
-      CreateUsuario;
+    use DatabaseTransactions;
 
     /**
     * Testa se o usuário pode logar no sistema
@@ -19,7 +18,7 @@ class AuthTest extends TestCase
     {
         $authData = ['username' => 'test', 'password' => 'test'];
 
-        $usuario = $this->createUsuario($authData);
+        $usuario = CreateUsuario::create($authData);
 
         $this->json('POST', '/api/authenticate', $authData)->seeJsonStructure([
             'token'
