@@ -33,7 +33,12 @@ class SendInvoiceInfo implements ShouldQueue
     public function handle()
     {
         \Log::debug('Job Magento\SendInvoiceInfo executado', [$this->order]);
-        with(new MagentoController())->orderInvoice($this->order);
+        $action = with(new MagentoController())->orderInvoice($this->order);
+
+        if ($action !== true) {
+            $this->fail();
+            $this->failed();
+        }
     }
 
     /**
@@ -45,6 +50,18 @@ class SendInvoiceInfo implements ShouldQueue
     public function failed(Exception $exception)
     {
         # TODO: enviar notificacao
-        \Log::critical(logMessage($exception, 'Erro ao executar Job Magento\SendInvoiceInfo'), [$this->order]);
+        \Log::critical(logMessage($exception, '(failed) Erro ao executar Job Magento\SendInvoiceInfo'), [$this->order]);
+    }
+
+    /**
+     * The job fail to process.
+     *
+     * @param  Exception  $exception
+     * @return void
+     */
+    public function fail(Exception $exception)
+    {
+        # TODO: enviar notificacao
+        \Log::critical(logMessage($exception, '(fail) Erro ao executar Job Magento\SendInvoiceInfo'), [$this->order]);
     }
 }
