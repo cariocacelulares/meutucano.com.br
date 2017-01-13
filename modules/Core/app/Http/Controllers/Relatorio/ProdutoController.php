@@ -249,15 +249,15 @@ class ProdutoController extends Controller
                 }
             }
 
-            if ($filters['estado']) {
+            if (isset($filters['estado']) && $filters['estado']) {
                 $estado = $model->where('produtos.estado', '=', $filters['estado']);
             }
 
-            if ($filters['pedidos.marketplace']) {
+            if (isset($filters['pedidos.marketplace']) && $filters['pedidos.marketplace']) {
                 $estado = $model->whereIn('pedidos.marketplace', $filters['pedidos.marketplace']);
             }
 
-            if ($filters['pedidos.status']) {
+            if (isset($filters['pedidos.status']) && $filters['pedidos.status']) {
                 $estado = $model->whereIn('pedidos.status', $filters['pedidos.status']);
             }
 
