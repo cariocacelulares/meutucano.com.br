@@ -19,7 +19,7 @@ class CreateStocksTable extends Migration
     {
         Schema::create('stocks', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('slug', 100);
+            $table->string('slug', 100)->unique();
             $table->string('title', 100);
             $table->boolean('include')->default(false);
             $table->integer('priority')->nullable();
@@ -30,7 +30,8 @@ class CreateStocksTable extends Migration
         DB::table('stocks')->insert([
             'slug'     => 'default',
             'title'    => 'Estoque físico',
-            'priority' => 0
+            'priority' => 0,
+            'include'  => 1,
         ]);
     }
 

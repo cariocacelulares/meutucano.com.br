@@ -23,7 +23,15 @@ class AddStockOption extends Migration
         DB::table('stocks')->insert([
             'slug'     => 'allnation',
             'title'    => 'CD Allnation',
-            'priority' => ((int) $priority + 1)
+            'priority' => ((int) $priority + 1),
+            'include'  => 1,
+        ]);
+
+        DB::table('stocks')->insert([
+            'slug'     => 'claro-rio-do-sul',
+            'title'    => 'Claro Rio do Sul',
+            'priority' => ((int) $priority + 2),
+            'include'  => 0,
         ]);
     }
 
