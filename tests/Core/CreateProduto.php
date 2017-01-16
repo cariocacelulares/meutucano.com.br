@@ -16,11 +16,13 @@ class CreateProduto
 
         $product = factory(Produto::class)->create($data);
 
-        CreateProductStock::create(array_merge([
-            'product_sku' => $product->sku,
-        ], is_null($stock) ? [] : [
-            'quantity'    => $stock
-        ]));
+        if ($stock) {
+            CreateProductStock::create(array_merge([
+                'product_sku' => $product->sku,
+            ], is_null($stock) ? [] : [
+                'quantity'    => $stock
+            ]));
+        }
 
         return $product->fresh();
     }

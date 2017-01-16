@@ -111,4 +111,32 @@ class AllnationProductController extends Controller
                 'produto_sku' => $request->input('sku')
             ]);
     }
+
+    /**
+     * Fetch stock updates from AllNation
+     *
+     * @return void
+     */
+    public function fetchStocks(AllnationApi $api)
+    {
+        $lastDateTimeRequest = t('allnation.stock.lastrequest') ?: '2015-01-01 08:00:00';
+
+        t('allnation.stock.lastrequest',
+            Carbon::now()->format('Y-m-d H:i:s'));
+
+        $products = $api->fetchStocks($lastDateTimeRequest);
+
+        if ($products) {
+            foreach ($products as $product) {
+                $productId = ltrim($product->CODIGO, '0');
+
+                $productAllNation = AllnationProduct::find($productId);
+                if ($sku = $productAllNation->produto_sku) {
+                    \Stock::set($sku, (int) $product->ESTOQUEDISPONIVEL, 'allnation');
+                }
+
+                break;
+            }
+        }
+    }
 }
