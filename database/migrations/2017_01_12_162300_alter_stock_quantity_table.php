@@ -22,8 +22,8 @@ class AlterStockQuantityTable extends Migration
         $values = [];
         foreach ($products as $product) {
             $values[] = [
-                'stock_id'    => 1,
-                'produto_sku' => $product->sku,
+                'stock_slug'  => 'default',
+                'product_sku' => $product->sku,
                 'quantity'    => $product->estoque
             ];
         }

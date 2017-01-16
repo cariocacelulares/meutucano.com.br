@@ -44,6 +44,7 @@ class AddStockOption extends Migration
     {
         DB::table('stocks')
             ->where('slug', '=', 'allnation')
+            ->orWhere('slug', '=', 'claro-rio-do-sul')
             ->delete();
     }
 }

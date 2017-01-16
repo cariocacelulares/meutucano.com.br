@@ -11,12 +11,12 @@ class CreateProductStock
     */
     public static function create($data = [])
     {
-        if (!isset($data['stock_id'])) {
-            $data['stock_id'] = CreateStock::create()->id;
+        if (!isset($data['stock_slug'])) {
+            $data['stock_slug'] = CreateStock::create()->slug;
         }
 
-        if (!isset($data['produto_sku'])) {
-            $data['produto_sku'] = CreateProduto::create()->sku;
+        if (!isset($data['product_sku'])) {
+            $data['product_sku'] = CreateProduto::create()->sku;
         }
 
         return factory(ProductStock::class)->create($data);

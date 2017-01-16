@@ -18,13 +18,11 @@ class CreateStocksTable extends Migration
     public function up()
     {
         Schema::create('stocks', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('slug', 100)->unique();
+            $table->string('slug', 100);
             $table->string('title', 100);
             $table->boolean('include')->default(false);
             $table->integer('priority')->nullable();
-
-            $table->unique('slug', 'slug');
+            $table->primary('slug');
         });
 
         DB::table('stocks')->insert([

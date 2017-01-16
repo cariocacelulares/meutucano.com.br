@@ -37,8 +37,8 @@ $factory->define(\Core\Models\Stock::class, function () use ($faker) {
     $name = $faker->name;
 
     return [
-        'title'    => $name,
         'slug'     => str_slug($name),
+        'title'    => $name,
         'include'  => $faker->numberBetween(1, 2),
         'priority' => $faker->unique()->randomNumber(2),
     ];

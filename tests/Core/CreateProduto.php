@@ -17,7 +17,7 @@ class CreateProduto
         $product = factory(Produto::class)->create($data);
 
         CreateProductStock::create(array_merge([
-            'produto_sku' => $product->sku,
+            'product_sku' => $product->sku,
         ], is_null($stock) ? [] : [
             'quantity'    => $stock
         ]));
