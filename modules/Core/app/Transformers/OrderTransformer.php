@@ -269,6 +269,7 @@ class OrderTransformer
             'frete_valor'               => $order->frete_valor,
             'total'                     => $order->total,
             'pagamento_metodo_readable' => OrderParser::getPagamentoMetodoReadable($order->pagamento_metodo),
+            'estimated_delivery'        => dateConvert($order->estimated_delivery, 'Y-m-d', 'd/m/Y'),
             'created_at'                => dateConvert($order->created_at),
             'desconto'                  => $order->getDesconto(),
 
