@@ -82,7 +82,25 @@ class AllnationApi
             'Data' => $lastRequestDatetime
         ]);
 
-        $produtos = simplexml_load_string($response->RetornarListaProdutosResult->any)->NewDataSet;
+        $produtos = simplexml_load_string($response->RetornarListaProdutosResult->any)
+            ->NewDataSet;
+
+        return $produtos->Produtos;
+    }
+
+    /**
+     * Fetch stocks from API
+     *
+     * @return array
+     */
+    public function fetchStocks($lastRequestDatetime)
+    {
+        $response = $this->request('RetornarListaProdutosEstoque', [
+            'Data' => $lastRequestDatetime
+        ]);
+
+        $produtos = simplexml_load_string($response->RetornarListaProdutosEstoqueResult->any)
+            ->NewDataSet;
 
         return $produtos->Produtos;
     }

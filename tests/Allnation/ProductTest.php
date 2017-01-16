@@ -7,6 +7,7 @@ use Allnation\Http\Services\AllnationApi;
 use App\Http\Controllers\Auth\AuthenticateController;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Allnation\Http\Controllers\AllnationProductController;
+use Tests\Core\CreateProduto;
 
 class ProductTest extends TestCase
 {
@@ -30,7 +31,7 @@ class ProductTest extends TestCase
         $apiService = new AllnationApi;
 
         VCR::turnOn();
-        VCR::insertCassette('allnation.product.import');
+        VCR::insertCassette('allnation.product.import.yml');
 
         $response = with(new AllnationProductController)->fetchProducts($apiService);
 
@@ -76,32 +77,43 @@ class ProductTest extends TestCase
     }
 
     /**
-     * Test if magento product is being created
+     * Test if new stock information can be imported
      *
      * @return void
      */
-    public function test__it_should_create_product_on_magento()
+    public function test__it_should_be_able_to_import_stocks()
     {
+        $product = CreateProduto::create([
+            'sku' => 9999
+        ]);
 
-    }
+        $productAllNation = factory(AllnationProduct::class)->create([
+            'id'          => 28001,
+            'produto_sku' => $product->sku
+        ]);
 
-    /**
-     * Test if tucano product is being created
-     *
-     * @return void
-     */
-    public function test__it_should_create_product_on_tucano()
-    {
+        \T::shouldReceive('set')
+            ->once();
 
-    }
+        \T::shouldReceive('get')
+            ->once()
+            ->with('allnation.stock.lastrequest')
+            ->andReturn('2017-01-16 16:00:00');
 
-    /**
-     * Test if user can associate tucano product with allnation product
-     *
-     * @return void
-     */
-    public function test__it_should_be_able_to_associate_tucano_with_allnation_product()
-    {
+        $apiService = new AllnationApi;
 
+        VCR::turnOn();
+        VCR::insertCassette('allnation.stock.import.yml');
+
+        $response = with(new AllnationProductController)->fetchStocks($apiService);
+
+        VCR::eject();
+        VCR::turnOff();
+
+        $this->seeInDatabase('product_stocks', [
+            'product_sku' => 9999,
+            'stock_slug'  => 'allnation',
+            'quantity'    => 100
+        ]);
     }
 }

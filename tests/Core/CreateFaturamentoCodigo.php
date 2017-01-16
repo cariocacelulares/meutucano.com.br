@@ -2,14 +2,14 @@
 
 use Core\Models\Pedido\FaturamentoCodigo;
 
-trait CreateFaturamentoCodigo
+class CreateFaturamentoCodigo
 {
     /**
     * Cria um objeto de fataturamento codigo
     *
     * @return Core\Models\Produto\Produto
     */
-    public function createFaturamentoCodigo($data = [])
+    public static function create($data = [])
     {
         return factory(FaturamentoCodigo::class)->create($data);
     }
@@ -19,16 +19,16 @@ trait CreateFaturamentoCodigo
     *
     * @return void
     */
-    public function generateFaturamentoCodigo()
+    public static function generate()
     {
         if (!FaturamentoCodigo::find(0)) {
-            $this->createFaturamentoCodigo([
+            CreateFaturamentoCodigo::create([
                 'servico' => 0,
             ]);
         }
 
         if (!FaturamentoCodigo::find(1)) {
-            $this->createFaturamentoCodigo([
+            CreateFaturamentoCodigo::create([
                 'servico' => 1,
             ]);
         }

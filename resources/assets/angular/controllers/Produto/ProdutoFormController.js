@@ -13,7 +13,7 @@
         };
 
         vm.produto = {
-            sku    : $stateParams.sku || null,
+            sku    : parseInt($stateParams.sku) || null,
             unidade: 'un',
             ativo  : '1',
             estado : '0'

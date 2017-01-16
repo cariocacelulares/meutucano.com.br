@@ -9,7 +9,8 @@
         "Core\\Providers\\CoreServiceProvider"
     ],
     "aliases":{
-        "T": "Core\\Facades\\Config"
+        "T": "Core\\Facades\\Config",
+        "Stock": "Core\\Facades\\Stock"
     },
     "files": [
         "bootstrap.php",

@@ -2,6 +2,11 @@
 
 use Bootstrap\MongoFormatter;
 
+try {
+    (new Dotenv\Dotenv(__DIR__.'/../'))->load();
+} catch (\Exception $exception) {
+}
+
 if (env('MONGOLOGGER_ENABLED', true) === true) {
     try {
         $mongoClient = false;
@@ -17,11 +22,6 @@ if (env('MONGOLOGGER_ENABLED', true) === true) {
 
         // If found
         if ($mongoClient) {
-            try {
-                (new Dotenv\Dotenv(__DIR__.'/../'))->load();
-            } catch (\Exception $exception) {
-            }
-
             $db = env('MONGODB_DATABASE', 'meutucano');
             $mongoClient = new $mongoClient(
                 'mongodb://' .

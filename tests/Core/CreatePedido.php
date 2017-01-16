@@ -10,19 +10,16 @@ use Core\Models\Cliente\Endereco;
 use Core\Models\Pedido\PedidoProduto;
 use Tests\Core\CreateFaturamentoCodigo;
 
-trait CreatePedido
+class CreatePedido
 {
-    use CreateProduto,
-        CreateFaturamentoCodigo;
-
     /**
     * Create one order
     *
     * @return Core\Models\Pedido\Pedido
     */
-    public function createOrder($data = [], $productSku = null)
+    public static function create($data = [], $productSku = null)
     {
-        $this->generateFaturamentoCodigo();
+        CreateFaturamentoCodigo::generate();
 
         $cliente = factory(Cliente::class)->create();
         $endereco = factory(Endereco::class)->create([
@@ -38,7 +35,7 @@ trait CreatePedido
             'pedido_id'   => $pedido->id,
             'produto_sku' => ($productSku)
                 ? Produto::find($productSku)->sku
-                : $this->createProduto()->sku
+                : CreateProduto::create()->sku
         ]);
 
         return $pedido;

@@ -9,8 +9,7 @@ use Tests\Core\CreateFaturamentoCodigo;
 class FaturamentoCodigoTest extends TestCase
 {
     use WithoutMiddleware,
-    DatabaseTransactions,
-    CreateFaturamentoCodigo;
+        DatabaseTransactions;
 
     /**
     * Testa se é possível gerar código de rastreio
@@ -19,7 +18,7 @@ class FaturamentoCodigoTest extends TestCase
     */
     public function test__it_should_be_able_to_generate_code()
     {
-        $this->generateFaturamentoCodigo();
+        CreateFaturamentoCodigo::generate();
 
         $response = $this->json('GET', '/api/codigos/gerar/' . rand(0, 1))->seeJsonStructure([
             'data' => [

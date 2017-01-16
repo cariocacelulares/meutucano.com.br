@@ -3,38 +3,34 @@
 use Tests\CreateUsuario;
 use Core\Models\Pedido\Nota;
 
-trait CreateNota
+class CreateNota
 {
+    /**
+    * Create one invoice and create invoice test file
+    *
+    * @return Core\Models\Pedido\Nota
+    */
+    public static function create($data = [])
+    {
+        \File::copy(
+            storage_path('tests/nota/testNota.xml'),
+            storage_path('app/public/nota/testNota.xml')
+        );
 
-  use CreatePedido,
-    CreateUsuario;
+        return factory(Nota::class)->create(array_merge($data, [
+            'pedido_id'  => CreatePedido::create()->id,
+            'usuario_id' => CreateUsuario::create()->id,
+            'arquivo'    => 'testNota.xml'
+        ]));
+    }
 
-  /**
-   * Create one invoice and create invoice test file
-   *
-   * @return Core\Models\Pedido\Nota
-   */
-  public function createInvoice($data = [])
-  {
-    \File::copy(
-      storage_path('tests/nota/testNota.xml'),
-      storage_path('app/public/nota/testNota.xml')
-    );
-
-    return factory(Nota::class)->create(array_merge($data, [
-      'pedido_id'  => $this->createOrder()->id,
-      'usuario_id' => $this->createUsuario()->id,
-      'arquivo'    => 'testNota.xml'
-    ]));
-  }
-
-  /**
-   * Delete file from test invoice
-   *
-   * @return boolean
-   */
-  public function resetInvoice()
-  {
-    return \File::delete(storage_path('app/public/nota/testNota.xml'));
-  }
+    /**
+    * Delete file from test invoice
+    *
+    * @return boolean
+    */
+    public static function reset()
+    {
+        return \File::delete(storage_path('app/public/nota/testNota.xml'));
+    }
 }

@@ -3,18 +3,17 @@
 use App\Models\Usuario\Usuario;
 use App\Models\Usuario\Role;
 
-trait CreateUsuario
+class CreateUsuario
 {
+    /**
+    * Cria um objeto de usuário
+    *
+    * @return App\Models\Usuario\Usuario
+    */
+    public static function create($data = [])
+    {
+        $usuario = factory(Usuario::class)->create($data);
 
-  /**
-   * Cria um objeto de usuário
-   *
-   * @return App\Models\Usuario\Usuario
-   */
-  public function createUsuario($data = [])
-  {
-    $usuario = factory(Usuario::class)->create($data);
-
-    return $usuario;
-  }
+        return $usuario;
+    }
 }
