@@ -9,6 +9,16 @@ use Core\Models\Produto\ProductStock;
 class Stock extends \Eloquent
 {
     /**
+     * @var string
+     */
+    public $primaryKey = 'slug';
+
+    /**
+     * @var boolean
+     */
+    public $incrementing = false;
+
+    /**
      * @var boolean
      */
     protected $revisionCreationsEnabled = true;

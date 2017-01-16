@@ -19,20 +19,21 @@ class CreateProductStocksTable extends Migration
     {
         Schema::create('product_stocks', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('stock_id');
-            $table->unsignedInteger('produto_sku');
+            $table->string('stock_slug', 100);
+            $table->unsignedInteger('product_sku');
             $table->unsignedInteger('quantity');
+			$table->timestamps();
 
             $table
-                ->foreign('produto_sku', 'StockProductSku')
+                ->foreign('product_sku', 'StockProductSku')
                 ->references('sku')
                 ->on('produtos')
                 ->onDelete('CASCADE')
                 ->onUpdate('CASCADE');
 
             $table
-                ->foreign('stock_id', 'StockStockId')
-                ->references('id')
+                ->foreign('stock_slug', 'ProductStockStockSlug')
+                ->references('slug')
                 ->on('stocks')
                 ->onDelete('CASCADE')
                 ->onUpdate('CASCADE');

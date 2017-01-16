@@ -30,8 +30,8 @@ class ProductStock extends Model
      * @var array
      */
     protected $fillable = [
-        'stock_id',
-        'produto_sku',
+        'stock_slug',
+        'product_sku',
         'quantity',
     ];
 
@@ -41,7 +41,7 @@ class ProductStock extends Model
      */
     public function product()
     {
-        return $this->belongsTo(Produto::class, 'produto_sku', 'sku');
+        return $this->belongsTo(Produto::class, 'product_sku', 'sku');
     }
 
     /**
@@ -50,6 +50,6 @@ class ProductStock extends Model
      */
     public function stock()
     {
-        return $this->belongsTo(Stock::class);
+        return $this->belongsTo(Stock::class, 'stock_slug', 'slug');
     }
 }

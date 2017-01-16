@@ -65,7 +65,7 @@ class Produto extends Model
      */
     public function product_stocks()
     {
-        return $this->hasMany(ProductStock::class, 'produto_sku', 'sku');
+        return $this->hasMany(ProductStock::class, 'product_sku', 'sku');
     }
 
     /**
@@ -77,7 +77,7 @@ class Produto extends Model
         $stock = 0;
 
         $product_stocks = $this->product_stocks()
-                ->join('stocks', 'stocks.id', 'product_stocks.stock_id')
+                ->join('stocks', 'stocks.slug', 'product_stocks.stock_slug')
                 ->where('stocks.include', '=', true)
                 ->get();
 
