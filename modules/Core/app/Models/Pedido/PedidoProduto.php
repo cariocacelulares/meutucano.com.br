@@ -23,9 +23,9 @@ class PedidoProduto extends \Eloquent
     protected $fillable = [
         'pedido_id',
         'produto_sku',
+        'product_imei_id',
+        'product_stock_id',
         'valor',
-        'quantidade',
-        'imei',
     ];
 
     /**

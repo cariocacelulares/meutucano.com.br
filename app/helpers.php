@@ -9,6 +9,7 @@ if (!function_exists('logMessage')) {
      */
     function logMessage($exception, $message = 'Erro')
     {
+        return;
         return sprintf("%s
             Arquivo: %s
             Linha: %s

@@ -1,6 +1,6 @@
 <?php namespace Tests\Core;
 
-use Core\Models\Stock;
+use Core\Models\Produto\Stock;
 
 class CreateStock
 {

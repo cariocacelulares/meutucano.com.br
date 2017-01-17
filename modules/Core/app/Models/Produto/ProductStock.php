@@ -1,12 +1,8 @@
 <?php namespace Core\Models\Produto;
 
-use Carbon\Carbon;
-use Core\Models\Stock;
-use Core\Models\Produto\Produto;
-use Core\Events\ProductStockChange;
 use Illuminate\Database\Eloquent\Model;
-use Core\Models\Produto\Linha\Atributo;
 use Venturecraft\Revisionable\RevisionableTrait;
+use Core\Models\Pedido\PedidoProduto;
 
 /**
  * Class ProductStock
@@ -20,11 +16,6 @@ class ProductStock extends Model
      * @var boolean
      */
     protected $revisionCreationsEnabled = true;
-
-    /**
-     * @var boolean
-     */
-    public $timestamps = false;
 
     /**
      * @var array
@@ -51,5 +42,14 @@ class ProductStock extends Model
     public function stock()
     {
         return $this->belongsTo(Stock::class, 'stock_slug', 'slug');
+    }
+
+    /**
+     * PedidoProduto
+     * @return PedidoProduto
+     */
+    public function pedidoProdutos()
+    {
+        return $this->hasMany(PedidoProduto::class);
     }
 }

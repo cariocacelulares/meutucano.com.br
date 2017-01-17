@@ -16,7 +16,7 @@ class CreateProductImeisTable extends Migration
         Schema::create('product_imeis', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('product_stock_id');
-            $table->string('imei', 40);
+            $table->string('imei', 40)->unique();
 			$table->timestamps();
 
             $table

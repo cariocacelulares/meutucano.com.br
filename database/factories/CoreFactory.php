@@ -33,7 +33,7 @@ $factory->define(\Core\Models\Cliente\Endereco::class, function () use ($faker) 
 /**
 * Stock
 */
-$factory->define(\Core\Models\Stock::class, function () use ($faker) {
+$factory->define(\Core\Models\Produto\Stock::class, function () use ($faker) {
     $name = $faker->name;
 
     return [

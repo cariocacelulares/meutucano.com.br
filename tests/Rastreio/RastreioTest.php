@@ -116,6 +116,8 @@ class RastreioTest extends TestCase
 
         $pedido = $pedido->fresh();
 
-        $this->assertEquals($pedido->frete_metodo, $pedido->rastreios[0]->servico);
+        $servico = isset($pedido->rastreios[0]) ? $pedido->rastreios[0]->servico : null;
+
+        $this->assertEquals($pedido->frete_metodo, $servico);
     }
 }

@@ -1,13 +1,16 @@
-<?php namespace Core\Models;
+<?php namespace Core\Models\Produto;
 
-use Core\Models\Produto\ProductStock;
+use Illuminate\Database\Eloquent\Model;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
  * Stock model
- * @package Core\Models;
+ * @package Core\Models\Produto;
  */
-class Stock extends \Eloquent
+class Stock extends Model
 {
+    use RevisionableTrait;
+
     /**
      * @var string
      */
@@ -42,7 +45,7 @@ class Stock extends \Eloquent
      * ProductStock
      * @return ProductStock
      */
-    public function product_stoks()
+    public function productStoks()
     {
         return $this->hasMany(ProductStock::class);
     }

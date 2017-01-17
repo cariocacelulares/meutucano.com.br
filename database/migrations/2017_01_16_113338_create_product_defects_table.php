@@ -22,7 +22,7 @@ class CreateProductDefectsTable extends Migration
             $table
                 ->foreign('product_imei_id', 'ProductDefectsProductImeisId')
                 ->references('id')
-                ->on('product_stocks')
+                ->on('product_imeis')
                 ->onDelete('NO ACTION')
                 ->onUpdate('CASCADE');
         });

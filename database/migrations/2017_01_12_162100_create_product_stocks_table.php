@@ -19,9 +19,9 @@ class CreateProductStocksTable extends Migration
     {
         Schema::create('product_stocks', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('stock_slug', 100);
+            $table->string('stock_slug', 100)->default('default');
             $table->unsignedInteger('product_sku');
-            $table->unsignedInteger('quantity');
+            $table->unsignedInteger('quantity')->default(0);
 			$table->timestamps();
 
             $table
