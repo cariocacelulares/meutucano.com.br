@@ -18,7 +18,7 @@ class UpdateStock
      */
     public function subscribe(Dispatcher $events)
     {
-        $events->listen(
+        /*$events->listen(
             OrderProductCreated::class,
             '\Core\Events\Handlers\UpdateStock@onOrderProductCreated'
         );
@@ -31,7 +31,7 @@ class UpdateStock
         $events->listen(
             OrderCanceled::class,
             '\Core\Events\Handlers\UpdateStock@onOrderCanceled'
-        );
+        );*/
     }
 
     /**

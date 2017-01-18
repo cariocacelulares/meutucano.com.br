@@ -83,7 +83,7 @@ class Produto extends Model
     {
         $stock = 0;
 
-        $product_stocks = $this->product_stocks()
+        $product_stocks = $this->productStocks()
                 ->join('stocks', 'stocks.slug', 'product_stocks.stock_slug')
                 ->where('stocks.include', '=', true)
                 ->get();

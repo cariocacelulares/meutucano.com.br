@@ -3,11 +3,12 @@
 use Core\Models\Pedido\Nota;
 use Core\Models\Pedido\Pedido;
 use Core\Models\Pedido\Imposto;
+use Core\Models\Pedido\PedidoProduto;
 use Core\Models\Produto\Produto;
+use Core\Models\Produto\ProductStock;
 use Core\Models\Usuario\Usuario;
 use Core\Models\Cliente\Cliente;
 use Core\Models\Cliente\Endereco;
-use Core\Models\Pedido\PedidoProduto;
 use Tests\Core\CreateFaturamentoCodigo;
 
 class CreatePedido
@@ -21,7 +22,7 @@ class CreatePedido
     {
         CreateFaturamentoCodigo::generate();
 
-        $cliente = factory(Cliente::class)->create();
+        $cliente  = factory(Cliente ::class)->create();
         $endereco = factory(Endereco::class)->create([
             'cliente_id' => $cliente->id
         ]);
@@ -31,11 +32,13 @@ class CreatePedido
             'cliente_endereco_id' => $endereco->id
         ]));
 
+        $produto = ($productSku) ? Produto::find($productSku) : CreateProduto::create();
+        $productStock = ProductStock::where('product_sku', '=', $produto->sku)->first();
+
         factory(PedidoProduto::class)->create([
-            'pedido_id'   => $pedido->id,
-            'produto_sku' => ($productSku)
-                ? Produto::find($productSku)->sku
-                : CreateProduto::create()->sku
+            'pedido_id'        => $pedido->id,
+            'produto_sku'      => $produto->sku,
+            'product_stock_id' => $productStock->id,
         ]);
 
         return $pedido;

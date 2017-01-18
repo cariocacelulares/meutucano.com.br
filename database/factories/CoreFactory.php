@@ -121,8 +121,7 @@ $factory->define(\Core\Models\Pedido\Imposto::class, function () use ($faker) {
 */
 $factory->define(\Core\Models\Pedido\PedidoProduto::class, function () use ($faker) {
     return [
-        'valor'      => $faker->randomFloat(2, 500, 3000),
-        'quantidade' => 1,
+        'valor' => $faker->randomFloat(2, 500, 3000),
     ];
 });
 

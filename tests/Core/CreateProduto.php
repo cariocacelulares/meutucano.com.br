@@ -1,6 +1,7 @@
 <?php namespace Tests\Core;
 
 use Core\Models\Produto\Produto;
+use Core\Models\Produto\ProductStock;
 
 class CreateProduto
 {
@@ -16,7 +17,11 @@ class CreateProduto
 
         $product = factory(Produto::class)->create($data);
 
-        if ($stock) {
+        $productStock = ProductStock::where('product_sku', '=', $product->sku)->first();
+        if ($productStock && $stock) {
+            $productStock->quantity = $stock;
+            $productStock->save();
+        } else if (!$productStock) {
             CreateProductStock::create(array_merge([
                 'product_sku' => $product->sku,
             ], is_null($stock) ? [] : [
@@ -34,7 +39,7 @@ class CreateProduto
     */
     public static function createSeminovo($data = [])
     {
-        return factory(Produto::class)->create(array_merge($data, [
+        return CreateProduto::create(array_merge($data, [
             'estado' => 1
         ]));
     }

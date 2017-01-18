@@ -47,7 +47,7 @@ class PedidoProduto extends \Eloquent
      */
     public function produto()
     {
-        return $this->belongsTo(Produto::class, 'sku', 'produto_sku');
+        return $this->belongsTo(Produto::class, 'produto_sku', 'sku');
     }
 
     /**
