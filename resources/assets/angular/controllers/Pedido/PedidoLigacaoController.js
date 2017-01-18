@@ -32,13 +32,13 @@
          * Save ligacao
          */
         vm.uploadFile = function(file, errFiles) {
-            console.log(vm.ligacao);
             if (file) {
                 Upload.upload({
                     url: envService.read('apiUrl') + '/ligacoes',
                     headers: { Authorization: 'Bearer '+ localStorage.getItem('satellizer_token') },
                     data: {
-                        arquivo: vm.ligacao
+                        arquivo  : vm.ligacao,
+                        pedido_id: vm.pedido_id
                     }
                 }).success(function (response) {
                     toaster.pop('success', '', 'Áudio salvo com sucesso.');

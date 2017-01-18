@@ -30,6 +30,12 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     Route::resource('comentarios', 'Pedido\ComentarioController', ['except' => ['create', 'edit']]);
 
     /**
+     * Ligações
+     */
+    Route::get('ligacoes/{pedido_id}', 'Pedido\LigacaoController@ligacoesFromOrder');
+    Route::resource('ligacoes', 'Pedido\LigacaoController', ['except' => ['create', 'edit']]);
+
+    /**
      * Faturamento
      */
     Route::group(['middleware' => ['role:admin|faturamento']], function () {
