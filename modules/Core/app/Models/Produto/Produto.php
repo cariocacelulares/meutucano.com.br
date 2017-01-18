@@ -1,12 +1,10 @@
 <?php namespace Core\Models\Produto;
 
-use Carbon\Carbon;
+use Sofa\Eloquence\Eloquence;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Illuminate\Database\Eloquent\Model;
-use Core\Models\Produto\Linha\Atributo;
-use Core\Events\ProductStockUpdated;
-use Sofa\Eloquence\Eloquence;
 use Core\Models\Produto\ProductStock;
+use Core\Models\Produto\PedidoProduto;
 
 /**
  * Class Produto
@@ -63,9 +61,18 @@ class Produto extends Model
      * ProductStock
      * @return ProductStock
      */
-    public function product_stocks()
+    public function productStocks()
     {
         return $this->hasMany(ProductStock::class, 'product_sku', 'sku');
+    }
+
+    /**
+     * ProductStock
+     * @return ProductStock
+     */
+    public function pedidoProdutos()
+    {
+        return $this->hasMany(PedidoProduto::class, 'produto_sku', 'sku');
     }
 
     /**

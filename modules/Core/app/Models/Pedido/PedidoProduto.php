@@ -43,11 +43,11 @@ class PedidoProduto extends \Eloquent
     /**
      * Produto
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function produto()
     {
-        return $this->hasOne(Produto::class, 'sku', 'produto_sku');
+        return $this->belongsTo(Produto::class, 'sku', 'produto_sku');
     }
 
     /**
@@ -58,6 +58,26 @@ class PedidoProduto extends \Eloquent
     public function pedido()
     {
         return $this->belongsTo(Pedido::class);
+    }
+
+    /**
+     * ProductImei
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function productImei()
+    {
+        return $this->belongsTo(ProductImei::class);
+    }
+
+    /**
+     * ProductStock
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function productStock()
+    {
+        return $this->belongsTo(ProductStock::class);
     }
 
     /**

@@ -25,11 +25,36 @@ class ProductImei extends Model
     ];
 
     /**
+     * @var array
+     */
+    protected $appends = [
+        'pedidoProduto'
+    ];
+
+    /**
      * ProductStock
      * @return ProductStock
      */
     public function productStock()
     {
         return $this->belongsTo(ProductStock::class);
+    }
+
+    /**
+     * PedidoProduto
+     * @return PedidoProduto
+     */
+    public function pedidoProdutos()
+    {
+        return $this->hasMany(PedidoProduto::class);
+    }
+
+    /**
+     * Returns the last order productStock
+     * @return PedidoProduto
+     */
+    public function getPedidoProdutoAttribute()
+    {
+        return $this->pedidoProdutos->orderBy('created_at', 'desc')->first();
     }
 }

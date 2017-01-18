@@ -52,4 +52,13 @@ class ProductStock extends Model
     {
         return $this->hasMany(PedidoProduto::class);
     }
+
+    /**
+     * ProductImei
+     * @return ProductImei
+     */
+    public function productImeis()
+    {
+        return $this->hasMany(ProductImei::class);
+    }
 }
