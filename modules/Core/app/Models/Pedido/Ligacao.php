@@ -46,4 +46,9 @@ class Ligacao extends \Eloquent
     {
         return $this->belongsTo(Usuario::class);
     }
+
+    public function getArquivoAttribute($arquivo)
+    {
+        return "/storage/{$arquivo}";
+    }
 }

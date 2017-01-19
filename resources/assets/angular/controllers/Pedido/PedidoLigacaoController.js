@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('PedidoLigacaoController', PedidoLigacaoController);
 
-    function PedidoLigacaoController($stateParams, envService, Upload, toaster, Ligacao, ValidationErrors) {
+    function PedidoLigacaoController($stateParams, $httpParamSerializer, envService, Upload, toaster, Ligacao, ValidationErrors) {
         var vm = this;
 
         vm.ligacao          = null;
@@ -23,6 +23,19 @@
             Ligacao.getFromOrder(vm.pedido_id).then(function(ligacoes) {
                 vm.loading = false;
                 vm.ligacoes = ligacoes;
+
+                var auth = {
+                    token: localStorage.getItem('satellizer_token')
+                };
+
+                var apiUrl = envService.read('apiUrl');
+                var token  = '?' + $httpParamSerializer(auth);
+
+                for (var key in vm.ligacoes) {
+                    if (typeof vm.ligacoes[key] === 'object' && vm.ligacoes[key]) {
+                        vm.ligacoes[key].arquivo = apiUrl + vm.ligacoes[key].arquivo + token;
+                    }
+                }
             });
         };
 

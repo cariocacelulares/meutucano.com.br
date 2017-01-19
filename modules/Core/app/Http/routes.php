@@ -5,6 +5,26 @@ Route::get('pedidos/shopsystem/{taxvat}', 'Core\Http\Controllers\Pedido\PedidoCo
 
 Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namespace' => 'Core\Http\Controllers'], function () {
     /**
+     * Calls from storage
+     */
+     Route::get('storage/{path}/{filename}', function($path, $filename)
+     {
+         $path = storage_path() . "/{$path}/{$filename}";
+
+         if (!Illuminate\Support\Facades\File::exists($path)) {
+             abort(404);
+         }
+
+         $file     = Illuminate\Support\Facades\File::get($path);
+         $type     = Illuminate\Support\Facades\File::mimeType($path);
+         $response = Illuminate\Support\Facades\Response::make($file, 200);
+
+         $response->header("Content-Type", $type);
+
+         return $response;
+     });
+
+    /**
      * Notas
      */
     Route::group(['prefix' => 'notas', 'namespace' => 'Pedido'], function () {
