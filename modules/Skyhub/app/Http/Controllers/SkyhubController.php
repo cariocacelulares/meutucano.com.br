@@ -486,13 +486,15 @@ class SkyhubController extends Controller
 
             if ($response !== false) {
                 Log::notice("Dados de envio e nota fiscal atualizados do pedido {$order->id} / {$order->codigo_api} na Skyhub", $jsonData);
+
                 return true;
             } else {
-                throw new \Exception('Erro ao tentar enviar dados de envio e rastreio para a Skyhub.', 1);
+                return new \Exception('Erro ao tentar enviar dados de envio e rastreio para a Skyhub.', 1);
             }
         } catch (\Exception $exception) {
             Log::critical(logMessage($exception, 'Pedido não faturado na Skyhub'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);
             reportError('Pedido não faturado na Skyhub: ' . $exception->getMessage() . ' - ' . $exception->getLine() . ' - ' . $order->id);
+
             return $exception;
         }
 
