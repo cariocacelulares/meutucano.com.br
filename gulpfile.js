@@ -11,7 +11,17 @@ var rename       = require('gulp-rename');
 var sourcemaps   = require('gulp-sourcemaps');
 var notify       = require('gulp-notify');
 var gulpUtil     = require('gulp-util');
+var livereload   = require('gulp-livereload');
 var lib          = require('bower-files')();
+
+elixir.extend('html', function() {
+    var task = new elixir.Task('html', function() {
+        return gulp.src(['public/views/**/*.html'])
+            .pipe(livereload());
+    });
+
+    task.watch('public/views/**/*.html');
+});
 
 elixir.extend('customSass', function() {
     var task = new elixir.Task('customSass', function() {
@@ -26,7 +36,8 @@ elixir.extend('customSass', function() {
             .pipe(cleanCss())
             .pipe(sourcemaps.write('./'))
             .pipe(gulp.dest('public/assets/css'))
-            .pipe(notify('Sass compiled!'));
+            .pipe(notify('Sass compiled!'))
+            .pipe(livereload());
     });
 
     task.run();
@@ -48,7 +59,8 @@ elixir.extend('angularMinify', function() {
             })))
             .pipe(sourcemaps.write('./'))
             .pipe(gulp.dest('public/assets/js/'))
-            .pipe(notify('JS compiled!'));
+            .pipe(notify('JS compiled!'))
+            .pipe(livereload());
     });
 
     task.run();
@@ -61,7 +73,8 @@ elixir.extend('bowerJs', function() {
             .pipe(concat('lib.min.js'))
             .pipe(uglify())
             .pipe(gulp.dest('public/assets/js'))
-            .pipe(notify('Bower JS compiled!'));
+            .pipe(notify('Bower JS compiled!'))
+            .pipe(livereload());
     });
 
     task.run();
@@ -73,16 +86,20 @@ elixir.extend('bowerCss', function() {
             .pipe(concat('lib.min.css'))
             .pipe(cleanCss())
             .pipe(gulp.dest('public/assets/css'))
-            .pipe(notify('Bower CSS compiled!'));
+            .pipe(notify('Bower CSS compiled!'))
+            .pipe(livereload());
     });
 
     task.run();
 });
 
 elixir(function(mix) {
+    livereload.listen();
+
     mix
         .customSass()
         .angularMinify()
         .bowerJs()
-        .bowerCss();
+        .bowerCss()
+        .html();
 });

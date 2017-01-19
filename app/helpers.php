@@ -258,3 +258,21 @@ if (!function_exists('dateConvert')) {
       return \Carbon\Carbon::createFromFormat($from, $date)->format($to);
     }
 }
+
+if (!function_exists('diffForHumans')) {
+    /**
+     * Return the date difference for humans
+     * @param  string $date date to check difference
+     * @param  string $from from format
+     * @return string       formated date diff for humans
+     */
+    function diffForHumans($date = null, $from = 'Y-m-d H:i:s') {
+        if (!$date) {
+            return null;
+        }
+
+        \Carbon\Carbon::setLocale(config('app.locale'));
+
+        return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date)->diffForHumans();
+    }
+}

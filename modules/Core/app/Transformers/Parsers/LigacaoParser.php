@@ -3,9 +3,9 @@
 use Carbon\Carbon;
 
 /**
- * Class CommentParser
+ * Class LigacaoParser
  * @package Core\Transformers\Parsers
  */
-class CommentParser
+class LigacaoParser
 {
 }
