@@ -1,5 +1,6 @@
 <?php namespace InspecaoTecnica\Events\Handlers;
 
+use Core\Events\OrderCanceled;
 use Core\Events\OrderProductDeleting;
 use Core\Events\OrderProductQtyDecreased;
 use Core\Models\Pedido\PedidoProduto;
@@ -25,6 +26,11 @@ class DetachInspecaoTecnica
         $events->listen(
             OrderProductDeleting::class,
             '\InspecaoTecnica\Events\Handlers\DetachInspecaoTecnica@onOrderProductDeleting'
+        );
+
+        $events->listen(
+            OrderCanceled::class,
+            '\InspecaoTecnica\Events\Handlers\DetachInspecaoTecnica@onOrderCanceled'
         );
     }
 
@@ -63,6 +69,24 @@ class DetachInspecaoTecnica
         // Apenas se o produto for pago, enviado ou entregue
         if (in_array((int)$orderProduct->pedido->status, [1, 2, 3])) {
             Log::debug('Handler DetachInspecaoTecnica/OrderProductDeleting acionado.', [$event]);
+            $this->detachInspecao($orderProduct, true);
+        }
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param  OrderCanceled  $event
+     * @return void
+     */
+    public function onOrderCanceled(OrderCanceled $event)
+    {
+        $order = $event->order;
+        $order = $order->fresh();
+        Log::debug('Handler DeleteInspecaoTecnica/onOrderCanceled acionado.', [$event]);
+
+        // Cada produto do pedido
+        foreach ($order->produtos as $orderProduct) {
             $this->detachInspecao($orderProduct, true);
         }
     }

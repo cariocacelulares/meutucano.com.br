@@ -89,6 +89,29 @@ class InspecaoTecnicaTest extends TestCase
     }
 
     /**
+    * Testa se ao cancelar um pedido, desasocia a inspeção já revisada
+    *
+    * @return void
+    */
+    public function test__it_should_detach_reviewed_inspecao_when_pedido_canceled()
+    {
+        $produto    = $this->createProdutoSeminovo();
+        $pedido     = $this->createOrder(['status' => 1], $produto->sku);
+        $inspection = InspecaoTecnica::where('pedido_produtos_id', '=', $pedido->produtos()->first()->id)
+                            ->first();
+
+        $inspection->revisado_at = date('Y-m-d H:i:s');
+        $inspection->save();
+
+        $pedido->status = 5;
+        $pedido->save();
+
+        $inspection = $inspection->fresh();
+
+        $this->assertEquals(null, $inspection->pedido_produtos_id);
+    }
+
+    /**
      * Testa se quando aumenta a quantidade de um pedido produto, aloca uma nova inspecao tecnica
      *
      * @return void
