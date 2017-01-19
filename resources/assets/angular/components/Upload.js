@@ -32,7 +32,6 @@
                         }).success(function(response) {
                             vm.loading = false;
                             vm.resposta = response.data;
-                            $rootScope.$broadcast('upload');
                             $rootScope.$broadcast('stop-loading');
                             vm.statusAberto = false;
 
