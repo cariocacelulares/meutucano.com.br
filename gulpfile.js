@@ -14,6 +14,8 @@ var gulpUtil     = require('gulp-util');
 var livereload   = require('gulp-livereload');
 var lib          = require('bower-files')();
 
+var inProduction = elixir.config.production;
+
 elixir.extend('html', function() {
     var task = new elixir.Task('html', function() {
         return gulp.src(['public/views/**/*.html'])
@@ -25,7 +27,7 @@ elixir.extend('html', function() {
 
 elixir.extend('customSass', function() {
     var task = new elixir.Task('customSass', function() {
-        return gulp.src(['resources/assets/sass/app.scss'])
+        var build = gulp.src(['resources/assets/sass/app.scss'])
             .pipe(sourcemaps.init())
             .pipe(sass().on('error', notify.onError(function(error) {
                 gulpUtil.log(error);
@@ -35,9 +37,15 @@ elixir.extend('customSass', function() {
             .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
             .pipe(cleanCss())
             .pipe(sourcemaps.write('./'))
-            .pipe(gulp.dest('public/assets/css'))
-            .pipe(notify('Sass compiled!'))
-            .pipe(livereload());
+            .pipe(gulp.dest('public/assets/css'));
+
+        if (inProduction) {
+            return build;
+        } else {
+            return build
+                .pipe(notify('Sass compiled!'))
+                .pipe(livereload());
+        }
     });
 
     task.run();
@@ -46,7 +54,7 @@ elixir.extend('customSass', function() {
 
 elixir.extend('angularMinify', function() {
     var task = new elixir.Task('angularMinify', function() {
-        return gulp.src("resources/assets/angular/**/*.js")
+        var build = gulp.src("resources/assets/angular/**/*.js")
             .pipe(sourcemaps.init())
             .pipe(ngmin().on('error', notify.onError(function(error) {
                 gulpUtil.log(error);
@@ -58,9 +66,15 @@ elixir.extend('angularMinify', function() {
                 return error.message;
             })))
             .pipe(sourcemaps.write('./'))
-            .pipe(gulp.dest('public/assets/js/'))
-            .pipe(notify('JS compiled!'))
-            .pipe(livereload());
+            .pipe(gulp.dest('public/assets/js/'));
+
+        if (inProduction) {
+            return build;
+        } else {
+            return build
+                .pipe(notify('JS compiled!'))
+                .pipe(livereload());
+        }
     });
 
     task.run();
@@ -69,12 +83,18 @@ elixir.extend('angularMinify', function() {
 
 elixir.extend('bowerJs', function() {
     var task = new elixir.Task('bowerJs', function() {
-        return gulp.src(lib.ext('js').files)
+        var build = gulp.src(lib.ext('js').files)
             .pipe(concat('lib.min.js'))
             .pipe(uglify())
-            .pipe(gulp.dest('public/assets/js'))
-            .pipe(notify('Bower JS compiled!'))
-            .pipe(livereload());
+            .pipe(gulp.dest('public/assets/js'));
+
+        if (inProduction) {
+            return build;
+        } else {
+            return build
+                .pipe(notify('Bower JS compiled!'))
+                .pipe(livereload());
+        }
     });
 
     task.run();
@@ -82,24 +102,38 @@ elixir.extend('bowerJs', function() {
 
 elixir.extend('bowerCss', function() {
     var task = new elixir.Task('bowerCss', function() {
-        return gulp.src(lib.ext('css').files)
+        var build = gulp.src(lib.ext('css').files)
             .pipe(concat('lib.min.css'))
             .pipe(cleanCss())
-            .pipe(gulp.dest('public/assets/css'))
-            .pipe(notify('Bower CSS compiled!'))
-            .pipe(livereload());
+            .pipe(gulp.dest('public/assets/css'));
+
+        if (inProduction) {
+            return build;
+        } else {
+            return build
+                .pipe(notify('Bower CSS compiled!'))
+                .pipe(livereload());
+        }
     });
 
     task.run();
 });
 
 elixir(function(mix) {
-    livereload.listen();
+    if (inProduction) {
+        mix
+            .customSass()
+            .angularMinify()
+            .bowerJs()
+            .bowerCss();
+    } else {
+        livereload.listen();
 
-    mix
-        .customSass()
-        .angularMinify()
-        .bowerJs()
-        .bowerCss()
-        .html();
+        mix
+            .customSass()
+            .angularMinify()
+            .bowerJs()
+            .bowerCss()
+            .html();
+    }
 });
