@@ -35,7 +35,11 @@ class DeleteInspecaoTecnica
 
         // Cada produto do pedido
         foreach ($order->produtos as $orderProduct) {
-            $qty = InspecaoTecnica::where('pedido_produtos_id', '=', $orderProduct->id)->delete();
+            $qty = InspecaoTecnica
+                ::where('pedido_produtos_id', '=', $orderProduct->id)
+                ->whereNull('revisado_at')
+                ->delete();
+
             Log::notice($qty . ' inspecoes tecnica foram excluidas', [$qty, $orderProduct]);
         }
     }
