@@ -1,12 +1,12 @@
 <?php namespace Core\Transformers;
 
-use Core\Transformers\Parsers\CommentParser;
+use Core\Transformers\Parsers\LigacaoParser;
 
 /**
- * Class CommentTransformer
+ * Class LigacaoTransformer
  * @package Core\Transformers
  */
-class CommentTransformer
+class LigacaoTransformer
 {
     /**
      * @param  object $orders
@@ -20,7 +20,7 @@ class CommentTransformer
                 'id'              => $order->id,
                 'usuario'         => $order->usuario,
                 'created_at_diff' => diffForHumans($order->created_at),
-                'comentario'      => $order->comentario,
+                'arquivo'         => $order->arquivo,
             ];
         }
 
