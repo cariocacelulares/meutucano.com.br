@@ -119,16 +119,18 @@ elixir.extend('bowerCss', function() {
     task.run();
 });
 
+gulp.on('task_start', function (event) {
+    if (event.task === 'watch') {
+        livereload.listen();
+    }
+});
+
 elixir(function(mix) {
     if (inProduction) {
         mix
             .customSass()
-            .angularMinify()
-            .bowerJs()
-            .bowerCss();
+            .angularMinify();
     } else {
-        livereload.listen();
-
         mix
             .customSass()
             .angularMinify()

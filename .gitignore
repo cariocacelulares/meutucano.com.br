@@ -6,7 +6,9 @@ clear.sh
 /public/bower_components
 /.idea
 /media
-/public/assets/css
-/public/assets/js
+/public/assets/css/app.min.css
+/public/assets/css/app.min.css.map
+/public/assets/js/app.min.js
+/public/assets/js/app.min.js.map
 /public/images/gamification
 .php_cs.cache
