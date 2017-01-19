@@ -19,7 +19,7 @@ class LigacaoTransformer
             $data[] = [
                 'id'              => $order->id,
                 'usuario'         => $order->usuario,
-                'created_at_diff' => LigacaoParser::getCreatedAtDiff($order->created_at),
+                'created_at_diff' => diffForHumans($order->created_at),
                 'arquivo'         => $order->arquivo,
             ];
         }

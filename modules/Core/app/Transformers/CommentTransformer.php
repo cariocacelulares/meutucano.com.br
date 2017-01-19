@@ -19,7 +19,7 @@ class CommentTransformer
             $data[] = [
                 'id'              => $order->id,
                 'usuario'         => $order->usuario,
-                'created_at_diff' => CommentParser::getCreatedAtDiff($order->created_at),
+                'created_at_diff' => diffForHumans($order->created_at),
                 'comentario'      => $order->comentario,
             ];
         }

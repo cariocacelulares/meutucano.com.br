@@ -1,6 +1,7 @@
 <?php namespace Core\Http\Controllers\Pedido;
 
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\File;
 use Core\Models\Pedido\Ligacao;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestControllerTrait;
@@ -47,7 +48,7 @@ class LigacaoController extends Controller
                 $nomeArquivo = str_slug(Input::get('pedido_id') . " {$user} " . date('Ymd His'));
                 $nomeArquivo = $nomeArquivo . '.' . $arquivo->getClientOriginalExtension();
 
-                if (!$arquivo->move(storage_path($path), $nomeArquivo)) {
+                if (!$arquivo->move(storage_path("app/public/{$path}"), $nomeArquivo)) {
                     return $this->clientErrorResponse($data);
                 }
             }
@@ -64,6 +65,34 @@ class LigacaoController extends Controller
             $data = ['exception' => $exception->getMessage()];
 
             return $this->clientErrorResponse($data);
+        }
+    }
+
+    /**
+     * Deleta um recurso
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function destroy($id)
+    {
+        try {
+            $data    = (self::MODEL)::findOrFail($id);
+            $arquivo = storage_path('app/public' . str_replace('storage/', '', $data->arquivo));
+
+            File::delete($arquivo);
+
+            $data->delete();
+
+            return $this->deletedResponse();
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao excluir recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => strstr(get_class($exception), 'ModelNotFoundException')
+                    ? 'Recurso nao encontrado'
+                    : $exception->getMessage()
+            ]);
         }
     }
 }

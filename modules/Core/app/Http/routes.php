@@ -9,7 +9,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
      */
      Route::get('storage/{path}/{filename}', function($path, $filename)
      {
-         $path = storage_path() . "/{$path}/{$filename}";
+         $path = storage_path("app/public/{$path}/{$filename}");
 
          if (!Illuminate\Support\Facades\File::exists($path)) {
              abort(404);
