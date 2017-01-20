@@ -6,7 +6,7 @@
         <div class="col-md-12 form-group">
             <label for="delete_note">Motivo</label>
             <textarea id="delete_note" ng-model="DeleteRastreio.delete_note" class="form-control"
-                    required min="10" placeholder="Descreva o motivo pelo qual você está excluindo o rastreio"
+                    required min="10" ng-minlength="10" placeholder="Descreva o motivo pelo qual você está excluindo o rastreio"
             ></textarea>
         </div>
     </div>
