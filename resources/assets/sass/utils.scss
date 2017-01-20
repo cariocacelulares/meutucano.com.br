@@ -6,6 +6,7 @@
 }
 
 // Posicionamento, comportamento e espaçamento
+.deleted { opacity: 0.3 }
 .affix { position: fixed }
 .hidden, .hide { display: none !important }
 .show { display: block !important }

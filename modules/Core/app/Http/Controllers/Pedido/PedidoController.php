@@ -193,8 +193,14 @@ class PedidoController extends Controller
             $data = $m::with([
                 'cliente',
                 'endereco',
-                'notas',
-                'rastreios',
+                'notas' => function ($query)
+                {
+                    $query->withTrashed();
+                },
+                'rastreios' => function ($query)
+                {
+                    $query->withTrashed();
+                },
                 'produtos',
                 'produtos.produto',
                 'produtos.inspecoes' => function ($query) {

@@ -33,7 +33,8 @@ class Rastreio extends \Eloquent
         'valor',
         'prazo',
         'status',
-        'imagem_historico'
+        'imagem_historico',
+        'delete_note',
     ];
 
     /**

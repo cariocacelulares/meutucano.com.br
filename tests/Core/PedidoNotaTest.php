@@ -60,4 +60,27 @@ class PedidoNotaTest extends TestCase
     $this->assertEquals('application/pdf', $this->lastMessage()->attachments[0]['options']['mime']);
   }
 
+  /**
+   * Test if has validation when deleting invoice
+   * @return void
+   */
+  public function test__it_should_be_validate_delete_note_on_cancel_invoice()
+  {
+    $invoice = $this->createInvoice();
+
+    $response = $this->json('DELETE', "/api/notas/{$invoice->id}")
+      ->seeStatusCode(400);
+  }
+
+  /**
+   * Test if can delete a invoice
+   * @return void
+   */
+  public function test__it_should_be_able_to_delete_invoice()
+  {
+    $invoice = $this->createInvoice();
+
+    $response = $this->json('DELETE', "/api/notas/{$invoice->id}?delete_note=motivodaexclusao")
+      ->seeStatusCode(204);
+  }
 }

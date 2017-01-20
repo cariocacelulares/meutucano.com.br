@@ -207,6 +207,8 @@ class OrderTransformer
                 'devolucao'           => $devolucao,
                 'logistica'           => $logistica,
                 'pi'                  => $pi,
+                'deleted_at'          => $rastreio->deleted_at,
+                'delete_note'         => $rastreio->delete_note,
             ];
         }
 
@@ -218,11 +220,13 @@ class OrderTransformer
             ];
 
             $notas[] = [
-                'id'        => $nota->id,
-                'data'      => dateConvert($nota->data, 'Y-m-d', 'd/m/Y'),
-                'numero'    => $nota->numero,
-                'serie'     => $nota->serie,
-                'devolucao' => $devolucao,
+                'id'          => $nota->id,
+                'data'        => dateConvert($nota->data, 'Y-m-d', 'd/m/Y'),
+                'numero'      => $nota->numero,
+                'serie'       => $nota->serie,
+                'devolucao'   => $devolucao,
+                'deleted_at'  => $nota->deleted_at,
+                'delete_note' => $nota->delete_note,
             ];
         }
 
