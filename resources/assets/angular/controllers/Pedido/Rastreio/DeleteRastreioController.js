@@ -15,7 +15,7 @@
         /**
          * Delete rastreio
          */
-        vm.save = function() {
+        vm.remove = function() {
             vm.validationErrors = [];
 
             Rastreio.delete(vm.rastreio_id, vm.delete_note).then(

@@ -101,8 +101,9 @@ class RastreioTest extends TestCase
     public function test__it_should_attach_rastreio_to_new_paid_order()
     {
         $pedido = $this->createOrder([
-            'status' => 1
-        ], null, true);
+            'status'      => 1,
+            'marketplace' => 'Site',
+        ]);
 
         $this->seeInDatabase('pedido_rastreios', [
             'pedido_id' => $pedido->id,
@@ -116,8 +117,9 @@ class RastreioTest extends TestCase
     public function test__it_should_attach_rastreio_on_order_paid()
     {
         $pedido = $this->createOrder([
-            'status' => 0
-        ], null, true);
+            'status'      => 0,
+            'marketplace' => 'Site',
+        ]);
 
         $pedido->status = 1;
         $pedido->save();
@@ -136,8 +138,9 @@ class RastreioTest extends TestCase
     public function test__it_should_attach_rastreio_with_correct_shipment_service()
     {
         $pedido = $this->createOrder([
-            'status' => 1
-        ], null, true);
+            'status'      => 1,
+            'marketplace' => 'Site',
+        ]);
 
         $pedido = $pedido->fresh();
 

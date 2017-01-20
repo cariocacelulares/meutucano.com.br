@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use NFePHP\Extras\Danfe;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Core\Models\Pedido\Nota\Devolucao;
+use Core\Http\Requests\Nota\DeleteRequest;
 
 /**
  * Class NotaController
@@ -26,20 +27,10 @@ class NotaController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function destroy($id)
+    public function destroy($id, DeleteRequest $request)
     {
         try {
             $note = Input::get('delete_note');
-
-            if (!$note) {
-                return $this->validationFailResponse([
-                    'delete_note' => 'O campo motivo é obrigatório!'
-                ]);
-            } else if (strlen($note) < 10) {
-                return $this->validationFailResponse([
-                    'delete_note' => 'O campo motivo deve ter ao menos 10 caracteres!'
-                ]);
-            }
 
             $nota = (self::MODEL)::findOrFail($id);
 
@@ -53,9 +44,7 @@ class NotaController extends Controller
             \Log::error(logMessage($exception, 'Erro ao excluir recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => strstr(get_class($exception), 'ModelNotFoundException')
-                    ? 'Recurso nao encontrado'
-                    : $exception->getMessage()
+                'exception' => $exception->getMessage()
             ]);
         }
     }

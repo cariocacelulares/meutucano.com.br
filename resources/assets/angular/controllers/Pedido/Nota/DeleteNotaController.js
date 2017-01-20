@@ -15,7 +15,7 @@
         /**
          * Delete nota
          */
-        vm.save = function() {
+        vm.remove = function() {
             vm.validationErrors = [];
 
             Nota.delete(vm.nota_id, vm.delete_note).then(

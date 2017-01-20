@@ -23,9 +23,10 @@ use PhpSigep\Model\ServicoDePostagem;
 use PhpSigep\Pdf\CartaoDePostagem;
 use Sunra\PhpSimple\HtmlDomParser;
 use GuzzleHttp\Client;
-use Rastreio\Http\Requests\RastreioRequest as Request;
 use Rastreio\Transformers\RastreioTransformer;
 use Rastreio\Transformers\Parsers\RastreioParser;
+use Rastreio\Http\Requests\Rastreio\DeleteRequest;
+use Rastreio\Http\Requests\Rastreio\RastreioRequest as Request;
 
 /**
  * Class RastreioController
@@ -114,20 +115,10 @@ class RastreioController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function destroy($id)
+    public function destroy($id, DeleteRequest $request)
     {
         try {
             $note = Input::get('delete_note');
-
-            if (!$note) {
-                return $this->validationFailResponse([
-                    'delete_note' => 'O campo motivo é obrigatório!'
-                ]);
-            } else if (strlen($note) < 10) {
-                return $this->validationFailResponse([
-                    'delete_note' => 'O campo motivo deve ter ao menos 10 caracteres!'
-                ]);
-            }
 
             $rastreio = (self::MODEL)::findOrFail($id);
 
@@ -141,9 +132,7 @@ class RastreioController extends Controller
             \Log::error(logMessage($exception, 'Erro ao excluir recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => strstr(get_class($exception), 'ModelNotFoundException')
-                    ? 'Recurso nao encontrado'
-                    : $exception->getMessage()
+                'exception' => $exception->getMessage()
             ]);
         }
     }
