@@ -123,6 +123,10 @@ class RastreioController extends Controller
                 return $this->validationFailResponse([
                     'delete_note' => 'O campo motivo é obrigatório!'
                 ]);
+            } else if (strlen($note) < 10) {
+                return $this->validationFailResponse([
+                    'delete_note' => 'O campo motivo deve ter ao menos 10 caracteres!'
+                ]);
             }
 
             $rastreio = (self::MODEL)::findOrFail($id);

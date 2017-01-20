@@ -106,7 +106,7 @@ trait RestResponseTrait
         $response = [
             'code'   => 400,
             'status' => 'ValidationFail',
-            'data'   => $data
+            'data'   => [$data]
         ];
 
         return response()->json($response, $response['code']);
