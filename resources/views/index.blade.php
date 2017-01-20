@@ -7,9 +7,8 @@
         <meta name="robots" content="noindex, nofollow" />
 
         <title>Meu Tucano</title>
-
         <link rel="stylesheet" href="{{ Cdn::asset('assets/css/lib.min.css') }}" />
-        <link rel="stylesheet" href="{{ Cdn::asset('assets/css/app.min.css') }}" />
+        <link rel="stylesheet" href="{{ Cdn::asset(elixir('assets/css/app.min.css')) }}" />
 
         <link rel="icon" type="image/x-icon" href="{{ Cdn::asset('assets/img/favicon.ico') }}" />
     </head>
@@ -24,7 +23,7 @@
     <script src="{{ Cdn::asset('assets/js/lib.min.js') }}"></script>
 
     <!-- Application Scripts -->
-    <script src="{{ Cdn::asset('assets/js/app.min.js') }}"></script>
+    <script src="{{ Cdn::asset(elixir('assets/js/app.min.js')) }}"></script>
 
     <script>
         Raven
