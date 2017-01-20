@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use NFePHP\Extras\Danfe;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Core\Models\Pedido\Nota\Devolucao;
+use Core\Http\Requests\Nota\DeleteRequest;
 
 /**
  * Class NotaController
@@ -19,6 +20,34 @@ class NotaController extends Controller
     use RestControllerTrait;
 
     const MODEL = Nota::class;
+
+    /**
+     * Deleta um recurso
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function destroy($id, DeleteRequest $request)
+    {
+        try {
+            $note = Input::get('delete_note');
+
+            $nota = (self::MODEL)::findOrFail($id);
+
+            $nota->delete_note = $note;
+            $nota->save();
+
+            $nota->delete();
+
+            return $this->deletedResponse();
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao excluir recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
+        }
+    }
 
     /**
      * Gera o XML da nota fiscal

@@ -16,7 +16,7 @@
         /**
          * @type {Object}
          */
-        vm.notaHelper = NotaHelper;
+        vm.notaHelper = NotaHelper.init(vm);
 
         /**
          * @type {Object}

@@ -4,6 +4,7 @@ clear.sh
 /node_modules
 /vendor
 /public/bower_components
+/public/build
 /.idea
 /media
 /public/assets/css/app.min.css

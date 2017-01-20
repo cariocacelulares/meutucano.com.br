@@ -10,7 +10,7 @@ return [
     ],
     'old_order' => [
         'boleto'  => 5,
-        'credito' => 2
+        'credito' => 5
     ],
 
     /**

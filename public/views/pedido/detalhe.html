@@ -134,8 +134,12 @@
                         <div class="col-md-12"  ng-if="PedidoDetalhe.pedido.notas.length" ng-repeat="nota in PedidoDetalhe.pedido.notas">
                             <hr ng-if="!$first" />
                             <div class="row">
-                                <p class="pull-left bold">{{ nota.data }}</p>
-                                <div class="pull-right">
+                                <p class="pull-left bold" ng-class="{ deleted: nota.deleted_at }">{{ nota.data }}</p>
+                                <button ng-if="nota.deleted_at" ng-click="PedidoDetalhe.notaHelper.showNote(nota.delete_note)"
+                                    class="btn-default btn-xs pull-right">
+                                    Motivo 
+                                </button>
+                                <div class="pull-right" ng-if="!nota.deleted_at">
                                     <dropdown size="xs">
                                         <li>
                                             <a ng-click="PedidoDetalhe.notaHelper.printXML(nota.id)">
@@ -162,16 +166,21 @@
                                                 <i class="fa-envelope"></i>&nbsp; E-mail cliente
                                             </a>
                                         </li>
+                                        <li>
+                                            <a ng-click="PedidoDetalhe.notaHelper.delete(nota.id, true)">
+                                                <i class="fa-trash"></i>&nbsp; Excluir
+                                            </a>
+                                        </li>
                                     </dropdown>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row" ng-class="{ deleted: nota.deleted_at }">
                                 <p class="pull-left">Número / Série</p>
                                 <p class="pull-right bold">
                                     {{ nota.numero }}/{{ nota.serie }}
                                 </p>
                             </div>
-                            <div ng-if="nota.devolucao" class="row no-line">
+                            <div ng-if="nota.devolucao" class="row no-line" ng-class="{ deleted: nota.deleted_at }">
                                 <div class="alert alert-info">
                                     <small><i class="fa-undo"></i>&nbsp; Devolução em {{ nota.devolucao.data }}</small>
                                 </div>
@@ -193,12 +202,16 @@
                         </div>
                         <div class="col-md-12" ng-if="PedidoDetalhe.pedido.rastreios" ng-repeat="rastreio in PedidoDetalhe.pedido.rastreios">
                             <div class="row">
-                                <p class="pull-left">
+                                <p class="pull-left" ng-class="{ deleted: rastreio.deleted_at }">
                                     <a target="_blank" ng-href="{{ rastreio.rastreio_url }}">{{ rastreio.rastreio }}</a>
                                     &nbsp;
                                     <a ng-if="rastreio.imagem_historico" target="_blank" ng-click="PedidoDetalhe.rastreioHelper.printHistorico(rastreio.id)"><i class="fa-picture-o"></i></a>
                                 </p>
-                                <div class="pull-right">
+                                <button ng-if="rastreio.deleted_at" ng-click="PedidoDetalhe.rastreioHelper.showNote(rastreio.delete_note)"
+                                    class="btn-default btn-xs pull-right">
+                                    Motivo
+                                </button>
+                                <div class="pull-right" ng-if="!rastreio.deleted_at">
                                     <dropdown size="xs">
                                         <li>
                                             <a ng-click="PedidoDetalhe.rastreioHelper.editar(rastreio.id, true)">
@@ -235,9 +248,14 @@
                                                 <i class="fa-video-camera"></i>&nbsp; {{ (rastreio.monitorado) ? 'Parar de monitorar' : 'Monitorar' }}
                                             </a>
                                         </li>
+                                        <li>
+                                            <a ng-click="PedidoDetalhe.rastreioHelper.delete(rastreio.id, true)">
+                                                <i class="fa-trash"></i>&nbsp; Excluir
+                                            </a>
+                                        </li>
                                     </dropdown>
                                 </div>
-                                <p class="clear">
+                                <p class="clear" ng-class="{ deleted: rastreio.deleted_at }">
                                     <span class="label label-{{ PedidoDetalhe.parseRastreioStatusClass(rastreio) }}">{{ rastreio.status_description }}</span>
                                     <br>
                                     <small class="hint-text">
@@ -245,13 +263,13 @@
                                          Prazo de {{ rastreio.prazo }} dia(s)
                                      </small>
                                 </p>
-                                <div ng-if="rastreio.devolucao" class="alert alert-info m-t-10">
+                                <div ng-if="rastreio.devolucao" class="alert alert-info m-t-10" ng-class="{ deleted: rastreio.deleted_at }">
                                     <small><i class="fa-undo"></i>&nbsp; Devolução em {{ rastreio.devolucao.created_at }}</small>
                                 </div>
-                                <div ng-if="rastreio.logistica" class="alert alert-info m-t-10">
+                                <div ng-if="rastreio.logistica" class="alert alert-info m-t-10" ng-class="{ deleted: rastreio.deleted_at }">
                                     <small><i class="fa-exchange"></i>&nbsp; Logística em {{ rastreio.logistica.created_at }}</small>
                                 </div>
-                                <div ng-if="rastreio.pi" class="alert alert-info m-t-10">
+                                <div ng-if="rastreio.pi" class="alert alert-info m-t-10" ng-class="{ deleted: rastreio.deleted_at }">
                                     <small><i class="fa-warning"></i>&nbsp; PI em {{ rastreio.pi.created_at }}</small>
                                     <div class="full-width clearfix">
                                         <span class="pull-left">Cód. {{ rastreio.pi.codigo_pi }}</span>

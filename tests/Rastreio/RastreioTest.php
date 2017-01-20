@@ -7,6 +7,7 @@ use MailThief\Testing\InteractsWithMail;
 use Rastreio\Http\Controllers\RastreioController;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Rastreio\Models\Rastreio;
 
 class RastreioTest extends TestCase
 {
@@ -19,6 +20,30 @@ class RastreioTest extends TestCase
         parent::setUp();
 
         $this->rastreio = CreateRastreio::create();
+    }
+
+    /**
+    * Test if has validation when deleting invoice
+    * @return void
+    */
+    public function test__it_should_be_validate_delete_note_on_cancel_invoice()
+    {
+        $rastreio = $this->createRastreio();
+
+        $response = $this->json('DELETE', "/api/rastreios/{$rastreio->id}")
+            ->seeStatusCode(400);
+    }
+
+    /**
+    * Test if can delete a invoice
+    * @return void
+    */
+    public function test__it_should_be_able_to_delete_invoice()
+    {
+        $rastreio = $this->createRastreio();
+
+        $response = $this->json('DELETE', "/api/rastreios/{$rastreio->id}?delete_note=motivodaexclusao")
+            ->seeStatusCode(204);
     }
 
     /**
@@ -75,8 +100,9 @@ class RastreioTest extends TestCase
      */
     public function test__it_should_attach_rastreio_to_new_paid_order()
     {
-        $pedido = CreatePedido::create([
-            'status' => 1
+        $pedido = $this->createOrder([
+            'status'      => 1,
+            'marketplace' => 'Site',
         ]);
 
         $this->seeInDatabase('pedido_rastreios', [
@@ -90,8 +116,9 @@ class RastreioTest extends TestCase
      */
     public function test__it_should_attach_rastreio_on_order_paid()
     {
-        $pedido = CreatePedido::create([
-            'status' => 0
+        $pedido = $this->createOrder([
+            'status'      => 0,
+            'marketplace' => 'Site',
         ]);
 
         $pedido->status = 1;
@@ -110,8 +137,9 @@ class RastreioTest extends TestCase
      */
     public function test__it_should_attach_rastreio_with_correct_shipment_service()
     {
-        $pedido = CreatePedido::create([
-            'status' => 1
+        $pedido = $this->createOrder([
+            'status'      => 1,
+            'marketplace' => 'Site',
         ]);
 
         $pedido = $pedido->fresh();

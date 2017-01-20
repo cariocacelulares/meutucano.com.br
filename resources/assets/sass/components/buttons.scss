@@ -2,3 +2,7 @@
     font-size: 10px !important;
     padding: 3px 8px !important;
 }
+
+.sweet-alert button {
+    @extend .btn;
+}

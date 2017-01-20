@@ -3,7 +3,7 @@
 
     angular
         .module('MeuTucano')
-        .service('PedidoHelper', function($window, $httpParamSerializer, $state, envService, Upload, ngDialog, SweetAlert, toaster, Pedido) {
+        .service('PedidoHelper', function($window, $rootScope, $httpParamSerializer, $state, envService, Upload, ngDialog, SweetAlert, toaster, Pedido) {
             var vm;
 
             return {
@@ -70,6 +70,7 @@
                 faturar: function(pedido_id, updateVm) {
                     Pedido.faturar(pedido_id).then(function() {
                         toaster.pop('success', 'Sucesso!', 'Pedido faturado com sucesso!');
+                        $rootScope.$broadcast('upload');
 
                         if (typeof this.vm != 'undefined' &&
                             typeof updateVm !== 'undefined' &&

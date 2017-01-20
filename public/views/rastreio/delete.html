@@ -1,0 +1,19 @@
+<h1>Excluir rastreio</h1>
+<validation errors="DeleteRastreio.validationErrors"></validation>
+<div class="alert alert-info m-b-10"><i class="fa fa-info"></i>&nbsp; Tenha certeza antes de excluir, a ação não poderá ser desfeita.</div>
+<form ng-submit="DeleteRastreio.remove()" novalidate="novalidate" class="form-default">
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <label for="delete_note">Motivo</label>
+            <textarea id="delete_note" ng-model="DeleteRastreio.delete_note" class="form-control"
+                    required ng-minlength="10" placeholder="Descreva o motivo pelo qual você está excluindo o rastreio"
+            ></textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="pull-right">
+            <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
+            <button busy="Salvando..." type="submit" class="btn btn-danger">Excluir</button>
+        </div>
+    </div>
+</form>

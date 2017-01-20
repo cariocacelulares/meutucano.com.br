@@ -77,7 +77,7 @@
 -
     request:
         method: GET
-        url: 'http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx?nCdEmpresa=&sDsSenha=&sCepOrigem=89160314&sCepDestino=68745326&nVlPeso=1&nCdFormato=1&nVlComprimento=16&nVlAltura=10&nVlLargura=12&sCdMaoPropria=n&nVlValorDeclarado=100&sCdAvisoRecebimento=n&nCdServico=&nVlDiametro=0&StrRetorno=xml'
+        url: 'http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx?nCdEmpresa=&sDsSenha=&sCepOrigem=89160314&sCepDestino=41017294&nVlPeso=1&nCdFormato=1&nVlComprimento=16&nVlAltura=10&nVlLargura=12&sCdMaoPropria=n&nVlValorDeclarado=100&sCdAvisoRecebimento=n&nCdServico=&nVlDiametro=0&StrRetorno=xml'
         headers:
             Host: ws.correios.com.br
             Accept-Encoding: null
@@ -92,10 +92,10 @@
             Cache-Control: private
             Content-Length: '66'
             Content-Type: 'text/xml; charset=iso-8859-1'
-            Expires: 'Mon, 16 Jan 2017 20:05:20 GMT'
+            Expires: 'Fri, 20 Jan 2017 12:53:40 GMT'
             Server: Microsoft-IIS/7.5
             X-AspNet-Version: 4.0.30319
-            Set-Cookie: 'ASP.NET_SessionId=ljuvrf40da3gyexznzvvy0fz; path=/; HttpOnly'
+            Set-Cookie: 'ASP.NET_SessionId=uaqyrj5yfcypvy1ynhr3a1ct; path=/; HttpOnly'
             X-Powered-By: ASP.NET
-            Date: 'Mon, 16 Jan 2017 20:05:19 GMT'
+            Date: 'Fri, 20 Jan 2017 12:53:40 GMT'
         body: "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n<Servicos></Servicos>"
