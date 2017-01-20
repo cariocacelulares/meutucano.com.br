@@ -6,6 +6,7 @@ use MailThief\Testing\InteractsWithMail;
 use Rastreio\Http\Controllers\RastreioController;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Rastreio\Models\Rastreio;
 
 class RastreioTest extends TestCase
 {
@@ -19,6 +20,30 @@ class RastreioTest extends TestCase
         parent::setUp();
 
         $this->rastreio = $this->createRastreio();
+    }
+
+    /**
+    * Test if has validation when deleting invoice
+    * @return void
+    */
+    public function test__it_should_be_validate_delete_note_on_cancel_invoice()
+    {
+        $rastreio = $this->createRastreio();
+
+        $response = $this->json('DELETE', "/api/rastreios/{$rastreio->id}")
+            ->seeStatusCode(400);
+    }
+
+    /**
+    * Test if can delete a invoice
+    * @return void
+    */
+    public function test__it_should_be_able_to_delete_invoice()
+    {
+        $rastreio = $this->createRastreio();
+
+        $response = $this->json('DELETE', "/api/rastreios/{$rastreio->id}?delete_note=motivodaexclusao")
+            ->seeStatusCode(204);
     }
 
     /**
@@ -77,7 +102,7 @@ class RastreioTest extends TestCase
     {
         $pedido = $this->createOrder([
             'status' => 1
-        ]);
+        ], null, true);
 
         $this->seeInDatabase('pedido_rastreios', [
             'pedido_id' => $pedido->id,
@@ -92,7 +117,7 @@ class RastreioTest extends TestCase
     {
         $pedido = $this->createOrder([
             'status' => 0
-        ]);
+        ], null, true);
 
         $pedido->status = 1;
         $pedido->save();
@@ -112,7 +137,7 @@ class RastreioTest extends TestCase
     {
         $pedido = $this->createOrder([
             'status' => 1
-        ]);
+        ], null, true);
 
         $pedido = $pedido->fresh();
 

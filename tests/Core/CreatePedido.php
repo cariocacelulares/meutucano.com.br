@@ -20,8 +20,13 @@ trait CreatePedido
     *
     * @return Core\Models\Pedido\Pedido
     */
-    public function createOrder($data = [], $productSku = null)
+    public function createOrder($data = [], $productSku = null, $withoutMl = false)
     {
+        if ($withoutMl) {
+            $marketplaces        = ['B2W', 'CNOVA', 'SITE', 'WALMART'];
+            $data['marketplace'] = $marketplaces[rand(0, 3)];
+        }
+
         $this->generateFaturamentoCodigo();
 
         $cliente = factory(Cliente::class)->create();
