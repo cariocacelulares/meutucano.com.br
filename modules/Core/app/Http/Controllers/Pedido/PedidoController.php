@@ -194,7 +194,10 @@ class PedidoController extends Controller
                 'cliente',
                 'endereco',
                 'notas',
-                'rastreios',
+                'rastreios' => function ($query)
+                {
+                    $query->withTrashed();
+                },
                 'produtos',
                 'produtos.produto',
                 'produtos.inspecoes' => function ($query) {

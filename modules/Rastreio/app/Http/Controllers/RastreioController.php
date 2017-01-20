@@ -109,6 +109,42 @@ class RastreioController extends Controller
     }
 
     /**
+     * Deleta um recurso
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function destroy($id)
+    {
+        try {
+            $note = Input::get('delete_note');
+
+            if (!$note) {
+                return $this->validationFailResponse([
+                    'delete_note' => 'O campo motivo é obrigatório!'
+                ]);
+            }
+
+            $rastreio = (self::MODEL)::findOrFail($id);
+
+            $rastreio->delete_note = $note;
+            $rastreio->save();
+
+            $rastreio->delete();
+
+            return $this->deletedResponse();
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao excluir recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => strstr(get_class($exception), 'ModelNotFoundException')
+                    ? 'Recurso nao encontrado'
+                    : $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
      * Atualiza status de todos rastreios
      *
      * @return \Symfony\Component\HttpFoundation\Response

@@ -96,4 +96,19 @@ trait RestResponseTrait
 
         return response()->json($response, $response['code']);
     }
+
+    /**
+     * @param $data
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function validationFailResponse($data)
+    {
+        $response = [
+            'code'   => 400,
+            'status' => 'ValidationFail',
+            'data'   => $data
+        ];
+
+        return response()->json($response, $response['code']);
+    }
 }

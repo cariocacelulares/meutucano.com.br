@@ -11,6 +11,18 @@
 
             angular.extend(rest, {
                 /**
+                 * Deleta um registro do recurso
+                 *
+                 * @param  {int}    id
+                 * @return {Object}
+                 */
+                delete: function(id, delete_note) {
+                    return Restangular.one(this.baseUrl, id).customDELETE('', {
+                        delete_note: delete_note
+                    });
+                },
+
+                /**
                  * Retorna os rastreios importantes
                  *
                  * @param  {Object} params

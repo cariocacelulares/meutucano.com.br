@@ -193,12 +193,16 @@
                         </div>
                         <div class="col-md-12" ng-if="PedidoDetalhe.pedido.rastreios" ng-repeat="rastreio in PedidoDetalhe.pedido.rastreios">
                             <div class="row">
-                                <p class="pull-left">
+                                <p class="pull-left" ng-class="{ deleted: rastreio.deleted_at }">
                                     <a target="_blank" ng-href="{{ rastreio.rastreio_url }}">{{ rastreio.rastreio }}</a>
                                     &nbsp;
                                     <a ng-if="rastreio.imagem_historico" target="_blank" ng-click="PedidoDetalhe.rastreioHelper.printHistorico(rastreio.id)"><i class="fa-picture-o"></i></a>
                                 </p>
-                                <div class="pull-right">
+                                <button ng-if="rastreio.deleted_at" ng-click="PedidoDetalhe.rastreioHelper.showNote(rastreio.delete_note)"
+                                    class="btn-default btn-xs pull-right">
+                                    Motivo
+                                </button>
+                                <div class="pull-right" ng-if="!rastreio.deleted_at">
                                     <dropdown size="xs">
                                         <li>
                                             <a ng-click="PedidoDetalhe.rastreioHelper.editar(rastreio.id, true)">
@@ -235,9 +239,14 @@
                                                 <i class="fa-video-camera"></i>&nbsp; {{ (rastreio.monitorado) ? 'Parar de monitorar' : 'Monitorar' }}
                                             </a>
                                         </li>
+                                        <li>
+                                            <a ng-click="PedidoDetalhe.rastreioHelper.delete(rastreio.id, true)">
+                                                <i class="fa-trash"></i>&nbsp; Excluir
+                                            </a>
+                                        </li>
                                     </dropdown>
                                 </div>
-                                <p class="clear">
+                                <p class="clear" ng-class="{ deleted: rastreio.deleted_at }">
                                     <span class="label label-{{ PedidoDetalhe.parseRastreioStatusClass(rastreio) }}">{{ rastreio.status_description }}</span>
                                     <br>
                                     <small class="hint-text">
@@ -245,13 +254,13 @@
                                          Prazo de {{ rastreio.prazo }} dia(s)
                                      </small>
                                 </p>
-                                <div ng-if="rastreio.devolucao" class="alert alert-info m-t-10">
+                                <div ng-if="rastreio.devolucao" class="alert alert-info m-t-10" ng-class="{ deleted: rastreio.deleted_at }">
                                     <small><i class="fa-undo"></i>&nbsp; Devolução em {{ rastreio.devolucao.created_at }}</small>
                                 </div>
-                                <div ng-if="rastreio.logistica" class="alert alert-info m-t-10">
+                                <div ng-if="rastreio.logistica" class="alert alert-info m-t-10" ng-class="{ deleted: rastreio.deleted_at }">
                                     <small><i class="fa-exchange"></i>&nbsp; Logística em {{ rastreio.logistica.created_at }}</small>
                                 </div>
-                                <div ng-if="rastreio.pi" class="alert alert-info m-t-10">
+                                <div ng-if="rastreio.pi" class="alert alert-info m-t-10" ng-class="{ deleted: rastreio.deleted_at }">
                                     <small><i class="fa-warning"></i>&nbsp; PI em {{ rastreio.pi.created_at }}</small>
                                     <div class="full-width clearfix">
                                         <span class="pull-left">Cód. {{ rastreio.pi.codigo_pi }}</span>

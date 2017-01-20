@@ -207,6 +207,8 @@ class OrderTransformer
                 'devolucao'           => $devolucao,
                 'logistica'           => $logistica,
                 'pi'                  => $pi,
+                'deleted_at'          => $rastreio->deleted_at,
+                'delete_note'         => $rastreio->delete_note,
             ];
         }
 

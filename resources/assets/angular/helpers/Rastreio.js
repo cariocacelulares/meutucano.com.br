@@ -3,7 +3,7 @@
 
     angular
         .module('MeuTucano')
-        .service('RastreioHelper', function($window, $httpParamSerializer, envService, ngDialog, toaster, Rastreio, Devolucao, Pi, Logistica) {
+        .service('RastreioHelper', function($window, $httpParamSerializer, SweetAlert, envService, ngDialog, toaster, Rastreio, Devolucao, Pi, Logistica) {
             var vm;
 
             var codigo = {
@@ -44,6 +44,41 @@
                                 this.vm.load();
                             }
                         }.bind(this));
+                    }.bind(this));
+                },
+
+                /**
+                 * Mostra o motivo do cancelamento em um SweetAlert
+                 *
+                 * @param  {string} note delete_note
+                 * @return {void}
+                 */
+                showNote: function(note) {
+                    SweetAlert.swal({
+                        title             : '',
+                        text              : note,
+                        confirmButtonText : 'Ok'
+                    });
+                },
+
+                /**
+                 * Devolução
+                 * @param rastreio
+                 */
+                delete: function(id, updateVm) {
+                    ngDialog.open({
+                        template: 'views/rastreio/delete.html',
+                        controller: 'DeleteRastreioController',
+                        controllerAs: 'DeleteRastreio',
+                        data: {
+                            id: id
+                        }
+                    }).closePromise.then(function(data) {
+                        if (updateVm &&
+                            typeof this.vm != 'undefined' &&
+                            typeof this.vm.load != 'undefined') {
+                            this.vm.load();
+                        }
                     }.bind(this));
                 },
 
