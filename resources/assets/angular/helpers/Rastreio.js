@@ -62,8 +62,8 @@
                 },
 
                 /**
-                 * Devolução
-                 * @param rastreio
+                 * Abre o form de exclusão do rastreio
+                 * @param rastreio_id
                  */
                 delete: function(id, updateVm) {
                     ngDialog.open({

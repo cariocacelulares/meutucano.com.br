@@ -25,6 +25,7 @@ class Nota extends \Eloquent
         'chave',
         'arquivo',
         'data',
+        'delete_note',
     ];
 
     /**

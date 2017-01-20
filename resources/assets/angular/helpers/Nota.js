@@ -3,8 +3,56 @@
 
     angular
         .module('MeuTucano')
-        .service('NotaHelper', function(ngDialog, $window, envService, $httpParamSerializer, Restangular, toaster) {
+        .service('NotaHelper', function($httpParamSerializer, $window, SweetAlert, envService, ngDialog, Restangular, toaster) {
+            var vm;
+
             return {
+                /**
+                 * Retorna uma nova instância
+                 * @param  {Object} vm
+                 * @return {Object}
+                 */
+                init: function(vm) {
+                    this.vm = vm;
+
+                    return this;
+                },
+
+                /**
+                 * Mostra o motivo do cancelamento em um SweetAlert
+                 *
+                 * @param  {string} note delete_note
+                 * @return {void}
+                 */
+                showNote: function(note) {
+                    SweetAlert.swal({
+                        title             : '',
+                        text              : note,
+                        confirmButtonText : 'Ok'
+                    });
+                },
+
+                /**
+                 * Abre o form de exclusão da nota
+                 * @param nota_id
+                 */
+                delete: function(id, updateVm) {
+                    ngDialog.open({
+                        template: 'views/nota/delete.html',
+                        controller: 'DeleteNotaController',
+                        controllerAs: 'DeleteNota',
+                        data: {
+                            id: id
+                        }
+                    }).closePromise.then(function(data) {
+                        if (updateVm &&
+                            typeof this.vm != 'undefined' &&
+                            typeof this.vm.load != 'undefined') {
+                            this.vm.load();
+                        }
+                    }.bind(this));
+                },
+
                 /**
                  * Generate XML
                  * @param nota_id

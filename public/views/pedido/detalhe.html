@@ -134,8 +134,12 @@
                         <div class="col-md-12"  ng-if="PedidoDetalhe.pedido.notas.length" ng-repeat="nota in PedidoDetalhe.pedido.notas">
                             <hr ng-if="!$first" />
                             <div class="row">
-                                <p class="pull-left bold">{{ nota.data }}</p>
-                                <div class="pull-right">
+                                <p class="pull-left bold" ng-class="{ deleted: nota.deleted_at }">{{ nota.data }}</p>
+                                <button ng-if="nota.deleted_at" ng-click="PedidoDetalhe.notaHelper.showNote(nota.delete_note)"
+                                    class="btn-default btn-xs pull-right">
+                                    Motivo 
+                                </button>
+                                <div class="pull-right" ng-if="!nota.deleted_at">
                                     <dropdown size="xs">
                                         <li>
                                             <a ng-click="PedidoDetalhe.notaHelper.printXML(nota.id)">
@@ -162,16 +166,21 @@
                                                 <i class="fa-envelope"></i>&nbsp; E-mail cliente
                                             </a>
                                         </li>
+                                        <li>
+                                            <a ng-click="PedidoDetalhe.notaHelper.delete(nota.id, true)">
+                                                <i class="fa-trash"></i>&nbsp; Excluir
+                                            </a>
+                                        </li>
                                     </dropdown>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row" ng-class="{ deleted: nota.deleted_at }">
                                 <p class="pull-left">Número / Série</p>
                                 <p class="pull-right bold">
                                     {{ nota.numero }}/{{ nota.serie }}
                                 </p>
                             </div>
-                            <div ng-if="nota.devolucao" class="row no-line">
+                            <div ng-if="nota.devolucao" class="row no-line" ng-class="{ deleted: nota.deleted_at }">
                                 <div class="alert alert-info">
                                     <small><i class="fa-undo"></i>&nbsp; Devolução em {{ nota.devolucao.data }}</small>
                                 </div>

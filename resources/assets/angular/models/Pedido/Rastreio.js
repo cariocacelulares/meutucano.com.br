@@ -6,8 +6,8 @@
         .service('Rastreio', RastreioModel);
 
         function RastreioModel(Rest, Restangular) {
-            var rest   = angular.copy(Rest);
-            rest.baseUrl  = 'rastreios';
+            var rest     = angular.copy(Rest);
+            rest.baseUrl = 'rastreios';
 
             angular.extend(rest, {
                 /**
