@@ -1,6 +1,5 @@
 <?php namespace Core\Models;
 
-use Carbon\Carbon;
 use Core\Models\Pedido;
 use Sofa\Eloquence\Eloquence;
 use Core\Models\Cliente\Endereco;

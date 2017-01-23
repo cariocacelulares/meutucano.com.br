@@ -33,6 +33,13 @@ class PiTransformer
             'acao'                => $pi->acao,
             'protocolo'           => RastreioParser::getProtocolo($pi),
             'imagem_cancelamento' => RastreioParser::getImagemCancelamento($pi),
+            'rastreio'            => [
+                'id'     => $pi->rastreio->id,
+                'pedido' => [
+                    'id'          => $pi->rastreio->pedido->id,
+                    'marketplace' => $pi->rastreio->pedido->marketplace,
+                ],
+            ],
         ];
     }
 

@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
-use Core\Models\Produto;
 
 /**
  * Class ProductImei
@@ -29,7 +28,7 @@ class ProductImei extends Model
      * @var array
      */
     protected $appends = [
-        'pedidoProduto'
+        'pedidoProduto',
     ];
 
     /**

@@ -6,6 +6,7 @@
 Route::get('/', function () {
     return view('index');
 });
+
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
 /**

@@ -25,9 +25,7 @@ class LinhaController extends Controller
      */
     public function tableList()
     {
-        $m = self::MODEL;
-
-        $list = $m::orderBy('linhas.created_at', 'DESC');
+        $list = (self::MODEL)::orderBy('linhas.created_at', 'DESC');
 
         $list = $this->handleRequest($list);
 
@@ -40,8 +38,7 @@ class LinhaController extends Controller
      */
     public function show($id)
     {
-        $m = self::MODEL;
-        $data = $m::with('atributos')->find($id);
+        $data = (self::MODEL)::with('atributos')->find($id);
 
         if ($data) {
             return $this->showResponse($data);
@@ -84,9 +81,10 @@ class LinhaController extends Controller
                     }
                 }
             }
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+        } catch (\Exception $exception) {
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
         }
 
         return true;
@@ -179,9 +177,10 @@ class LinhaController extends Controller
                     }
                 }
             }
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+        } catch (\Exception $exception) {
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
         }
 
         return true;
@@ -206,11 +205,12 @@ class LinhaController extends Controller
             $this->attachAttributes($data, Input::get('atributos'));
 
             return $this->showResponse($data);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
-            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'));
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
         }
     }
 
@@ -228,11 +228,12 @@ class LinhaController extends Controller
             $this->attachAttributes($data, Input::get('atributos'));
 
             return $this->createdResponse($data);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
-            \Log::error(logMessage($ex, 'Erro ao salvar recurso'));
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
         }
     }
 }

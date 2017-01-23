@@ -1,6 +1,5 @@
 <?php namespace InspecaoTecnica\Models;
 
-use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Usuario\Usuario;
 use Core\Models\Produto;

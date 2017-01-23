@@ -1,8 +1,8 @@
 <?php namespace Core\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Sofa\Eloquence\Eloquence;
 use Venturecraft\Revisionable\RevisionableTrait;
-use Illuminate\Database\Eloquent\Model;
 use Core\Models\Produto\ProductStock;
 use Core\Models\Produto\PedidoProduto;
 

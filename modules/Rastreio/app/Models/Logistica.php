@@ -1,8 +1,6 @@
-<?php namespace Rastreio\Models;
+<?php namespace Rastreio\Models\Rastreio;
 
-use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
-use Core\Models\Pedido;
 
 /**
  * Class Logistica
@@ -47,16 +45,5 @@ class Logistica extends \Eloquent
     public function rastreio()
     {
         return $this->belongsTo(Rastreio::class);
-    }
-
-
-    /**
-     * Rastreio Ref
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function rastreioRef()
-    {
-        return $this->hasOne(PedidoRastreio::class, 'rastreio_ref_id');
     }
 }

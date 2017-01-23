@@ -1,5 +1,6 @@
 <?php namespace Core\Observers;
 
+use Illuminate\Support\Facades\Event;
 use Core\Events\OrderProductCreated;
 use Core\Events\OrderProductDeleting;
 use Core\Events\OrderProductProductChanged;
@@ -7,7 +8,6 @@ use Core\Events\OrderProductQtyDecreased;
 use Core\Events\OrderProductQtyIncreased;
 use Core\Events\OrderProductUpdated;
 use Core\Models\Pedido\PedidoProduto;
-use Illuminate\Support\Facades\Event;
 
 class PedidoProdutoObserver
 {

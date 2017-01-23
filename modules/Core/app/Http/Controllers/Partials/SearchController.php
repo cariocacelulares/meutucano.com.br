@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Core\Models\Pedido;
 use Core\Models\Produto;
 use Core\Models\Cliente;
-use Rastreio\Models;
 use Core\Transformers\ClientTransformer;
 use Core\Transformers\OrderTransformer;
 use Core\Transformers\ProductTransformer;

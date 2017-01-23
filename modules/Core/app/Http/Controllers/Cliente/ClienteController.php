@@ -1,10 +1,10 @@
 <?php namespace Core\Http\Controllers\Cliente;
 
+use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
 use Core\Models\Cliente;
 use Core\Models\Cliente\Endereco;
-use Illuminate\Support\Facades\Input;
 use Core\Transformers\ClientTransformer;
 
 /**
@@ -36,8 +36,7 @@ class ClienteController extends Controller
      */
     public function detail($id)
     {
-        $m = self::MODEL;
-        $data = $m::with(['pedidos', 'enderecos'])->find($id);
+        $data = (self::MODEL)::with(['pedidos', 'enderecos'])->find($id);
 
         if ($data) {
             return $this->showResponse(ClientTransformer::show($data));
@@ -52,9 +51,7 @@ class ClienteController extends Controller
      */
     public function update($id)
     {
-        $m = self::MODEL;
-
-        if (!$data = $m::find($id)) {
+        if (!$data = (self::MODEL)::find($id)) {
             return $this->notFoundResponse();
         }
 
@@ -74,9 +71,12 @@ class ClienteController extends Controller
             }
 
             return $this->showResponse($data);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
         }
     }
 
@@ -88,19 +88,18 @@ class ClienteController extends Controller
      */
     public function changeEmail($cliente_id)
     {
-        $m = self::MODEL;
-
         try {
             $email = \Request::get('email');
 
-            $data = $m::find($cliente_id);
+            $data = (self::MODEL)::find($cliente_id);
             $data->email = $email;
             $data->save();
 
             return $this->showResponse($data);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+        } catch (\Exception $exception) {
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
         }
     }
 }

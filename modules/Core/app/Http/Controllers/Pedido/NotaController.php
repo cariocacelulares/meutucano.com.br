@@ -1,13 +1,12 @@
 <?php namespace Core\Http\Controllers\Pedido;
 
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Mail;
+use NFePHP\Extras\Danfe;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
 use Skyhub\Http\Controllers\SkyhubController;
 use Core\Models\Pedido\Nota;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Mail;
-use NFePHP\Extras\Danfe;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Core\Models\Pedido\Nota\Devolucao;
 use Core\Http\Requests\Nota\DeleteRequest;
 
@@ -30,11 +29,9 @@ class NotaController extends Controller
     public function destroy($id, DeleteRequest $request)
     {
         try {
-            $note = Input::get('delete_note');
-
             $nota = (self::MODEL)::findOrFail($id);
 
-            $nota->delete_note = $note;
+            $nota->delete_note = Input::get('delete_note');
             $nota->save();
 
             $nota->delete();
@@ -57,14 +54,10 @@ class NotaController extends Controller
      */
     public function xml($id, $devolucao)
     {
-        $model = self::MODEL;
-
-        //TODO: Separar devolução de nota comum, mantendo um método para
-        //imprimir mas dois métodos chamando
         if ($devolucao) {
             $nota = Devolucao::find($id);
         } else {
-            $nota = $model::find($id);
+            $nota = (self::MODEL)::find($id);
         }
 
         // Nota fiscal não existe
@@ -92,13 +85,11 @@ class NotaController extends Controller
      */
     public function email($id)
     {
-        $model = self::MODEL;
-
         try {
-            if ($nota = $model::find($id)) {
+            if ($nota = (self::MODEL)::find($id)) {
                 $dataHora = date('His');
-                $arquivo = storage_path('app/public/' . $dataHora . '.pdf');
-                $email = $nota->pedido->cliente->email;
+                $arquivo  = storage_path('app/public/' . $dataHora . '.pdf');
+                $email    = $nota->pedido->cliente->email;
 
                 if ($email) {
                     if (\Config::get('core.email_send_enabled')) {
@@ -119,18 +110,22 @@ class NotaController extends Controller
 
                     if ($mail) {
                         \Log::debug('E-mail de venda enviado para: ' . $email);
+
                         return $this->showResponse(['send' => true]);
                     } else {
                         \Log::warning('Falha ao enviar e-mail de venda para: ' . $email);
+
                         return $this->showResponse(['send' => false]);
                     }
                 } else {
                     Log::warning('Falha ao enviar e-mail de venda, email inválido');
+
                     return $this->showResponse(['send' => false]);
                 }
             }
         } catch (\Exception $e) {
             \Log::warning('Falha ao tentar enviar um e-mail de venda', [$id]);
+
             return $this->clientErrorResponse();
         }
 
@@ -145,9 +140,7 @@ class NotaController extends Controller
      */
     public function danfe($id, $retorno = 'I', $caminhoArquivo = false)
     {
-        $model = self::MODEL;
-
-        $nota = $model::find($id);
+        $nota = (self::MODEL)::find($id);
         $nota = $nota ?: Devolucao::find($id);
 
         if ($nota) {

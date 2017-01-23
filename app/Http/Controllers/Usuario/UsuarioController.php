@@ -60,8 +60,9 @@ class UsuarioController extends Controller
             $data->save();
 
             return $this->showResponse($data);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
+        } catch (\Exception $exception) {
+            $data = ['exception' => $exception->getMessage()];
+
             return $this->clientErrorResponse($data);
         }
     }
@@ -91,8 +92,9 @@ class UsuarioController extends Controller
             $data->save();
 
             return $this->createdResponse($data);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
+        } catch (\Exception $exception) {
+            $data = ['exception' => $exception->getMessage()];
+
             return $this->clientErrorResponse($data);
         }
     }

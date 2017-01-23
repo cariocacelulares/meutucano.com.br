@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestControllerTrait;
-use Rastreio\Http\Controllers\Traits\RastreioTrait;
 use InspecaoTecnica\Http\Controllers\Traits\InspecaoTecnicaTrait;
+use Rastreio\Http\Controllers\Traits\RastreioTrait;
 use Rastreio\Models\Rastreio;
 use Rastreio\Models\Logistica;
 use Rastreio\Http\Requests\LogisticaRequest as Request;
@@ -71,7 +71,9 @@ class LogisticaController extends Controller
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
-            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
         }
     }
 
@@ -97,9 +99,7 @@ class LogisticaController extends Controller
             \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => strstr(get_class($exception), 'ModelNotFoundException')
-                    ? 'Recurso nao encontrado'
-                    : $exception->getMessage()
+                'exception' => $exception->getMessage()
             ]);
         }
     }

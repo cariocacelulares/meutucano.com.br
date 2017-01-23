@@ -1,11 +1,11 @@
 <?php namespace Core\Http\Controllers\Relatorio;
 
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Rest\RestResponseTrait;
 use Carbon\Carbon;
-use Core\Models\Pedido;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Rest\RestResponseTrait;
+use Core\Models\Pedido;
 use Core\Http\Controllers\Traits\RelatorioTrait;
 
 /**

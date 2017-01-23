@@ -1,14 +1,10 @@
 <?php namespace Rastreio\Http\Controllers;
 
-use App\Http\Controllers\Rest\RestControllerTrait;
-use App\Http\Controllers\Controller;
-use Rastreio\Models\Rastreio;
-use Core\Models\Pedido;
-use Core\Models\Pedido\PedidoProduto;
-use InspecaoTecnica\Models\InspecaoTecnica;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
+use GuzzleHttp\Client;
+use Sunra\PhpSimple\HtmlDomParser;
 use PhpSigep\Bootstrap;
 use PhpSigep\Model\AccessData;
 use PhpSigep\Model\Destinatario;
@@ -21,8 +17,12 @@ use PhpSigep\Model\Remetente;
 use PhpSigep\Model\ServicoAdicional;
 use PhpSigep\Model\ServicoDePostagem;
 use PhpSigep\Pdf\CartaoDePostagem;
-use Sunra\PhpSimple\HtmlDomParser;
-use GuzzleHttp\Client;
+use App\Http\Controllers\Rest\RestControllerTrait;
+use App\Http\Controllers\Controller;
+use Core\Models\Pedido;
+use Core\Models\Pedido\PedidoProduto;
+use InspecaoTecnica\Models\InspecaoTecnica;
+use Rastreio\Models\Rastreio;
 use Rastreio\Transformers\RastreioTransformer;
 use Rastreio\Transformers\Parsers\RastreioParser;
 use Rastreio\Http\Requests\Rastreio\DeleteRequest;
@@ -45,8 +45,7 @@ class RastreioController extends Controller
      */
     public function important()
     {
-        $model = self::MODEL;
-        $list = $model::with(['pedido', 'pedido.cliente', 'pedido.endereco'])
+        $list = (self::MODEL)::with(['pedido', 'pedido.cliente', 'pedido.endereco'])
             ->join('pedidos', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
             ->join('cliente_enderecos', 'cliente_enderecos.id', '=', 'pedidos.cliente_endereco_id')
@@ -102,9 +101,7 @@ class RastreioController extends Controller
             \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => strstr(get_class($exception), 'ModelNotFoundException')
-                    ? 'Recurso nao encontrado'
-                    : $exception->getMessage()
+                'exception' => $exception->getMessage()
             ]);
         }
     }
@@ -118,11 +115,9 @@ class RastreioController extends Controller
     public function destroy($id, DeleteRequest $request)
     {
         try {
-            $note = Input::get('delete_note');
-
             $rastreio = (self::MODEL)::findOrFail($id);
 
-            $rastreio->delete_note = $note;
+            $rastreio->delete_note = Input::get('delete_note');
             $rastreio->save();
 
             $rastreio->delete();
@@ -184,7 +179,9 @@ class RastreioController extends Controller
 
             return $this->showResponse($rastreio);
         } catch (\Exception $exception) {
-            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
         }
     }
 
@@ -247,9 +244,9 @@ class RastreioController extends Controller
 
             return $rastreio;
         } catch (\Exception $exception) {
-            $data = ['exception' => $exception->getMessage()];
-
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
         }
     }
 
@@ -318,6 +315,7 @@ class RastreioController extends Controller
             }
         } catch (\Exception $exception) {
             \Log::warning(logMessage($exception, 'Não foi possível inserir o prazo no rastreio'));
+
             return $this->clientErrorResponse('Não foi possível inserir o prazo no rastreio', [$rastreio]);
         }
     }
@@ -630,13 +628,13 @@ class RastreioController extends Controller
                     $semiNovos = [];
 
                     foreach ($pedidoProdutos as $pedidoProduto) {
-                        if ((int)$pedidoProduto->produto->estado == 1) {
+                        if ((int) $pedidoProduto->produto->estado == 1) {
                             $semiNovos[] = $pedidoProduto->toArray();
                         }
                     }
 
                     $inspecoes = [
-                        'criar' => [],
+                        'criar'    => [],
                         'reservar' => []
                     ];
 
@@ -656,21 +654,21 @@ class RastreioController extends Controller
                                 $inspecoesDisponiveis = array_values($inspecoesDisponiveis);
 
                                 $inspecoes['reservar'][] = [
-                                    'inspecao_id' => $inspecoesDisponiveis[0]['id'],
+                                    'inspecao_id'        => $inspecoesDisponiveis[0]['id'],
                                     'pedido_produtos_id' => $semiNovo['id'],
-                                    'produto_sku' => $semiNovo['produto_sku'],
-                                    'titulo' => $semiNovo['produto']['titulo'],
-                                    'aplicar' => 1
+                                    'produto_sku'        => $semiNovo['produto_sku'],
+                                    'titulo'             => $semiNovo['produto']['titulo'],
+                                    'aplicar'            => 1,
                                 ];
 
                                 unset($inspecoesDisponiveis[0]);
                             } else {
                                 // se não precisa adicionar na fila
                                 $inspecoes['criar'][] = [
-                                    'produto_sku' => $semiNovo['produto_sku'],
+                                    'produto_sku'        => $semiNovo['produto_sku'],
                                     'pedido_produtos_id' => $semiNovo['id'],
-                                    'titulo' => $semiNovo['produto']['titulo'],
-                                    'aplicar' => 1
+                                    'titulo'             => $semiNovo['produto']['titulo'],
+                                    'aplicar'            => 1,
                                 ];
                             }
                         }

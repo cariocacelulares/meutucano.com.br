@@ -28,6 +28,6 @@ class FaturamentoCodigo extends \Eloquent
         'servico',
         'prefix',
         'atual',
-        'fim'
+        'fim',
     ];
 }

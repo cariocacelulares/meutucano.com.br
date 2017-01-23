@@ -1,11 +1,11 @@
 <?php namespace Skyhub\Jobs;
 
-use Core\Models\Pedido;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Core\Models\Pedido;
 use Skyhub\Http\Controllers\SkyhubController;
 
 class SendCancelInfo implements ShouldQueue
@@ -44,7 +44,6 @@ class SendCancelInfo implements ShouldQueue
      */
     public function failed(Exception $exception)
     {
-        # TODO: enviar notificacao
         \Log::critical(logMessage($exception, 'Erro ao executar Job Skyhub\SendCancelInfo'), [$this->order]);
     }
 }

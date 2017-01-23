@@ -1,12 +1,12 @@
 <?php namespace Core\Events\Handlers;
 
+use Illuminate\Events\Dispatcher;
+use Illuminate\Support\Facades\Log;
 use Core\Events\OrderCanceled;
 use Core\Events\OrderProductCreated;
 use Core\Events\OrderProductUpdated;
 use Core\Events\OrderSaved;
 use Core\Models\Produto;
-use Illuminate\Events\Dispatcher;
-use Illuminate\Support\Facades\Log;
 
 class UpdateStock
 {
@@ -44,7 +44,7 @@ class UpdateStock
     {
         Log::debug('Handler UpdateStock/onOrderProductCreated acionado!', [$event]);
         $orderProduct = $event->orderProduct;
-        $order = $orderProduct->pedido;
+        $order        = $orderProduct->pedido;
 
         if (!$orderProduct) {
             Log::debug('PedidoProduto não encontrado!', [$orderProduct]);
@@ -136,7 +136,7 @@ class UpdateStock
         try {
             $qty = ($sum) ? ($qty * -1) : $qty;
 
-            $currentStock = $product->estoque;
+            $currentStock     = $product->estoque;
             $product->estoque = ($currentStock - $qty);
 
             if ($product->save()) {

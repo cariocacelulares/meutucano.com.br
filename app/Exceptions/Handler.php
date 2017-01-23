@@ -55,7 +55,11 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         // custom errors views
-        if ((method_exists($exception, 'getStatusCode') && $exception->getStatusCode() === 404) || $exception instanceof ModelNotFoundException || $exception instanceof NotFoundHttpException) {
+        if (
+            (method_exists($exception, 'getStatusCode') && $exception->getStatusCode() === 404)
+            || $exception instanceof ModelNotFoundException
+            || $exception instanceof NotFoundHttpException
+        ) {
             return redirect('/');
         } elseif (!env('APP_DEBUG')) {
             return response()->view('errors.500', [], 500);
@@ -76,6 +80,7 @@ class Handler extends ExceptionHandler
         if ($request->expectsJson()) {
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
+        
         return redirect()->guest('/');
     }
 }

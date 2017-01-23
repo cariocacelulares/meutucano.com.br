@@ -1,15 +1,14 @@
 <?php namespace Core\Http\Controllers\Produto;
 
-use App\Http\Controllers\Rest\RestControllerTrait;
-use App\Http\Controllers\Controller;
-use Core\Models\Produto;
-use Core\Models\Pedido\PedidoProduto;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Rest\RestControllerTrait;
+use App\Http\Controllers\Controller;
 use InspecaoTecnica\Models\InspecaoTecnica;
+use Core\Models\Produto;
+use Core\Models\Pedido\PedidoProduto;
 use Core\Http\Requests\ProdutoRequest as Request;
 use Core\Transformers\ProductTransformer;
-use Core\Transformers\Parsers\ProductParser;
 use Core\Transformers\Parsers\OrderParser;
 
 /**
@@ -29,9 +28,7 @@ class ProdutoController extends Controller
      */
     public function tableList()
     {
-        $m = self::MODEL;
-
-        $list = $m
+        $list = (self::MODEL)
             // ::with('linha')
             // ->with('marca')
             ::where('produtos.ativo', true)
@@ -132,13 +129,11 @@ class ProdutoController extends Controller
      */
     public function gerenateSku($oldSku = null)
     {
-        $m = self::MODEL;
-
         try {
             if (!$oldSku) {
                 $data = new Produto();
             } else {
-                $data = $m::find($oldSku);
+                $data = (self::MODEL)::find($oldSku);
                 if (!$data) {
                     return $this->notFoundResponse();
                 }
@@ -159,9 +154,10 @@ class ProdutoController extends Controller
             $data->save();
 
             return $this->showResponse($data);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+        } catch (\Exception $exception) {
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
         }
     }
 
@@ -177,10 +173,12 @@ class ProdutoController extends Controller
             if ($produto = Produto::find($sku)) {
                 return $this->showResponse(['exists' => true]);
             }
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
         }
 
-        return $this->showResponse(['exists' => false]);
+        return $this->showResponse([
+            'exists' => false
+        ]);
     }
 
     /**
@@ -189,16 +187,16 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        $m = self::MODEL;
-
         try {
-            $data = $m::create(Input::all());
+            $data = (self::MODEL)::create(Input::all());
 
             return $this->createdResponse($data);
         } catch (\Exception $exception) {
-            \Log::error(logMessage($exception));
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
-            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
         }
     }
 
@@ -208,9 +206,7 @@ class ProdutoController extends Controller
      */
     public function update($id)
     {
-        $m = self::MODEL;
-
-        if (!$data = $m::find($id)) {
+        if (!$data = (self::MODEL)::find($id)) {
             return $this->notFoundResponse();
         }
 
@@ -227,17 +223,20 @@ class ProdutoController extends Controller
                     $atributos[] = [
                         'produto_sku' => (isset($attr['pivot']['produto_sku']) && $attr['pivot']['produto_sku']) ? $attr['pivot']['produto_sku'] : $data->sku,
                         'atributo_id' => (isset($attr['pivot']['atributo_id']) && $attr['pivot']['atributo_id']) ? $attr['pivot']['atributo_id'] : $attr['id'],
-                        'opcao_id' => (isset($attr['pivot']['opcao_id']) && $attr['pivot']['opcao_id']) ? $attr['pivot']['opcao_id'] : null,
-                        'valor' => (isset($attr['pivot']['valor']) && $attr['pivot']['valor']) ? $attr['pivot']['valor'] : null
+                        'opcao_id'    => (isset($attr['pivot']['opcao_id']) && $attr['pivot']['opcao_id']) ? $attr['pivot']['opcao_id']          : null,
+                        'valor'       => (isset($attr['pivot']['valor']) && $attr['pivot']['valor']) ? $attr['pivot']['valor']                   : null
                     ];
                 }
                 $data->atributos()->attach($atributos);
             }
 
             return $this->showResponse($data);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
         }
     }
 
@@ -263,7 +262,7 @@ class ProdutoController extends Controller
             $list = $list->get(['produtos.sku', 'produtos.titulo'])->toArray();
 
             return $this->listResponse($list);
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             return $this->listResponse([]);
         }
     }

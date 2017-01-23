@@ -1,11 +1,11 @@
 <?php namespace Magento\Jobs;
 
-use Core\Models\Produto;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Core\Models\Produto;
 use Magento\Http\Controllers\MagentoController;
 
 class SendStockInfo implements ShouldQueue
@@ -44,7 +44,6 @@ class SendStockInfo implements ShouldQueue
      */
     public function failed(Exception $exception)
     {
-        # TODO: enviar notificacao
         \Log::critical(logMessage($exception, 'Erro ao executar Job SendStockInfo'), [$this->product]);
     }
 }

@@ -33,7 +33,7 @@ trait RastreioTrait
             }
 
             return !!$query;
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
         }
 
         \Log::warning('Não foi possível cancelar o pedido diretamente, corrija o estoque!', ['pedido' => $id]);
@@ -55,11 +55,11 @@ trait RastreioTrait
 
         $raw = false;
         if ($obj instanceof Logistica || strstr(get_class($obj), 'Logistica')) {
-            $raw = ((int)$obj->motivo === 0); // defeito
+            $raw = ((int) $obj->motivo === 0); // defeito
         } elseif ($obj instanceof Devolucao || strstr(get_class($obj), 'Devolucao')) {
-            $raw = ((int)$obj->motivo === 5); // defeito
+            $raw = ((int) $obj->motivo === 5); // defeito
         } elseif ($obj instanceof Pi || strstr(get_class($obj), 'Pi')) {
-            $raw = ((int)$obj->motivo_status === 3); // extravio
+            $raw = ((int) $obj->motivo_status === 3); // extravio
         }
 
         if ($raw) {

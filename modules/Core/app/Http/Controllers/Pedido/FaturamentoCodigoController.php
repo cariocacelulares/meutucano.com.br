@@ -1,9 +1,9 @@
 <?php namespace Core\Http\Controllers\Pedido;
 
-use App\Http\Controllers\Rest\RestResponseTrait;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use PhpSigep\Model\Etiqueta;
+use App\Http\Controllers\Rest\RestResponseTrait;
+use App\Http\Controllers\Controller;
 use Core\Models\Pedido\FaturamentoCodigo;
 
 class FaturamentoCodigoController extends Controller

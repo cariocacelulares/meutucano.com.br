@@ -44,6 +44,7 @@ class AllnationApi
             return true;
         } catch (\Exception $e) {
             Log::warning(logMessage($e, 'Não foi possível conectar à API da Allnation'));
+
             return false;
         }
     }
@@ -67,6 +68,7 @@ class AllnationApi
             return $response;
         } catch (\Exception $e) {
             Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $action));
+
             return null;
         }
     }

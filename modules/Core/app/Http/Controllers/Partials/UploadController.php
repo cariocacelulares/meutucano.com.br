@@ -3,14 +3,13 @@
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Mail;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestResponseTrait;
 use Skyhub\Http\Controllers\SkyhubController;
 use Core\Http\Controllers\Pedido\NotaController;
-use Rastreio\Http\Controllers\RastreioController;
 use Core\Models\Cliente;
 use Core\Models\Cliente\Endereco;
 use Core\Models\Pedido;
@@ -29,7 +28,7 @@ class UploadController extends Controller
 {
     use RestResponseTrait;
 
-    protected $nfe = null;
+    protected $nfe     = null;
     protected $protNfe = null;
 
     /**
@@ -119,6 +118,7 @@ class UploadController extends Controller
             }
 
             Log::info(sprintf('Foram importados %d arquivo(s) de %d enviado(s).', $uploadCount, count($arquivos)));
+
             return $this->createdResponse([
                 'total'   => count($arquivos),
                 'success' => $uploadCount,
@@ -127,8 +127,9 @@ class UploadController extends Controller
         } catch (\Exception $e) {
             Log::alert(logMessage($e, 'Não foi possível fazer upload do(s) arquivo(s)'));
 
-            $data = ['exception' => $e->getMessage()];
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse([
+                'exception' => $e->getMessage()
+            ]);
         }
     }
 
@@ -190,7 +191,7 @@ class UploadController extends Controller
 
             // Data
             $datetimeNota = \DateTime::createFromFormat('Y-m-d\TH:i:sP', $this->nfe->ide->dhEmi);
-            $dataNota = $datetimeNota->format('Y-m-d');
+            $dataNota     = $datetimeNota->format('Y-m-d');
 
             if (in_array($tipoOperacao, ['devolucao', 'estorno'])) {
                 $return = $this->importDevolucao($chave, $usuario_id, $notaArquivo, $tipoOperacao, $dataNota);
@@ -255,21 +256,21 @@ class UploadController extends Controller
     private function importCliente()
     {
         if ($this->nfe->dest->CNPJ) {
-            $tipo = 1;
+            $tipo   = 1;
             $taxvat = $this->nfe->dest->CNPJ;
-            $ie = $this->nfe->dest->IE;
+            $ie     = $this->nfe->dest->IE;
         } else {
-            $tipo = 0;
+            $tipo   = 0;
             $taxvat = $this->nfe->dest->CPF;
-            $ie = null;
+            $ie     = null;
         }
 
         $cliente = Cliente::firstOrCreate(['taxvat' => $taxvat]);
 
-        $cliente->taxvat = $taxvat;
-        $cliente->tipo = $tipo;
-        $cliente->nome = $this->nfe->dest->xNome;
-        $cliente->fone = '(' . substr($this->nfe->dest->enderDest->fone, 0, 2) . ') ' . substr($this->nfe->dest->enderDest->fone, 2, 4) . '-' . substr($this->nfe->dest->enderDest->fone, 6, 4);
+        $cliente->taxvat    = $taxvat;
+        $cliente->tipo      = $tipo;
+        $cliente->nome      = $this->nfe->dest->xNome;
+        $cliente->fone      = '(' . substr($this->nfe->dest->enderDest->fone, 0, 2) . ') ' . substr($this->nfe->dest->enderDest->fone, 2, 4) . '-' . substr($this->nfe->dest->enderDest->fone, 6, 4);
         $cliente->inscricao = $ie;
 
         // Só cadastrar email se  o cliente não existia
@@ -297,14 +298,14 @@ class UploadController extends Controller
         $clienteEndereco = Endereco::firstOrCreate(['cliente_id' => $cliente->id, 'cep' => $this->nfe->dest->enderDest->CEP]);
 
         if ($clienteEndereco->wasRecentlyCreated) {
-            $clienteEndereco->cliente_id = $cliente->id;
-            $clienteEndereco->cep = $this->nfe->dest->enderDest->CEP;
-            $clienteEndereco->rua = $this->nfe->dest->enderDest->xLgr;
-            $clienteEndereco->numero = $this->nfe->dest->enderDest->nro;
+            $clienteEndereco->cliente_id  = $cliente->id;
+            $clienteEndereco->cep         = $this->nfe->dest->enderDest->CEP;
+            $clienteEndereco->rua         = $this->nfe->dest->enderDest->xLgr;
+            $clienteEndereco->numero      = $this->nfe->dest->enderDest->nro;
             $clienteEndereco->complemento = removeAcentos($this->nfe->dest->enderDest->xCpl);
-            $clienteEndereco->bairro = $this->nfe->dest->enderDest->xBairro;
-            $clienteEndereco->cidade = $this->nfe->dest->enderDest->xMun;
-            $clienteEndereco->uf = $this->nfe->dest->enderDest->UF;
+            $clienteEndereco->bairro      = $this->nfe->dest->enderDest->xBairro;
+            $clienteEndereco->cidade      = $this->nfe->dest->enderDest->xMun;
+            $clienteEndereco->uf          = $this->nfe->dest->enderDest->UF;
 
             if ($clienteEndereco->save()) {
                 Log::info('Endereço do cliente importado ' . $clienteEndereco->id);
@@ -328,9 +329,9 @@ class UploadController extends Controller
      */
     private function importPedido($chave, $cliente, $clienteEndereco, $operacao, $tipoOperacao)
     {
-        $pedido = null;
+        $pedido        = null;
         $idMarketplace = null;
-        $notaTotal = $this->nfe->total->ICMSTot->vNF;
+        $notaTotal     = $this->nfe->total->ICMSTot->vNF;
 
         if ($tipoOperacao == 'devolucao') {
             $notaTotal = ((float) $notaTotal) * -1;
@@ -352,7 +353,7 @@ class UploadController extends Controller
         preg_match('/PEDIDO [0-9]{2,}\-?([0-9]{6,})?\w+/', $this->nfe->infAdic->infCpl, $codPedido);
         if ($codPedido) {
             $idMarketplace = with(new SkyhubController())->parseMarketplaceId($marketplace, substr($codPedido[0], strpos($codPedido[0], ' ') + 1));
-            $pedido = Pedido::withTrashed()->where('codigo_marketplace', '=', $idMarketplace)->first();
+            $pedido        = Pedido::withTrashed()->where('codigo_marketplace', '=', $idMarketplace)->first();
         }
 
         if ($pedido == null) {
@@ -368,17 +369,18 @@ class UploadController extends Controller
                 $pedido->codigo_marketplace = $idMarketplace;
             }
 
-            $pedido->cliente_id = $cliente->id;
+            $pedido->cliente_id          = $cliente->id;
             $pedido->cliente_endereco_id = $clienteEndereco->id;
-            $pedido->marketplace = $marketplace;
-            $pedido->operacao = $operacao;
-            $pedido->total = $notaTotal + $pedido->frete_valor;
-            $pedido->deleted_at = null;
+            $pedido->marketplace         = $marketplace;
+            $pedido->operacao            = $operacao;
+            $pedido->total               = $notaTotal + $pedido->frete_valor;
+            $pedido->deleted_at          = null;
 
             if ($pedido->save()) {
                 Log::info('Pedido importado ' . $pedido->id);
             } else {
                 Log::warning('Não foi possível importar o pedido ' . $pedido->id);
+
                 return false;
             }
         }
@@ -448,13 +450,13 @@ class UploadController extends Controller
          */
         $nota = Nota::withTrashed()->firstOrNew([
             'pedido_id' => $pedido->id,
-            'chave' => $chave
+            'chave'     => $chave
         ]);
-        $nota->pedido_id = $pedido->id;
+        $nota->pedido_id  = $pedido->id;
         $nota->usuario_id = $usuario_id;
-        $nota->data = $dataNota;
-        $nota->chave = $chave;
-        $nota->arquivo = $notaArquivo;
+        $nota->data       = $dataNota;
+        $nota->chave      = $chave;
+        $nota->arquivo    = $notaArquivo;
         $nota->deleted_at = null;
 
         if ($nota->save()) {
@@ -475,7 +477,7 @@ class UploadController extends Controller
         if ($rastreio) {
             // Serviço de envio
             $tipoRastreio = substr($rastreio, 0, 1);
-            $metodoEnvio = null;
+            $metodoEnvio  = null;
             if ($tipoRastreio == 'P') {
                 $metodoEnvio = 'PAC';
             } elseif ($tipoRastreio == 'D') {
@@ -515,13 +517,16 @@ class UploadController extends Controller
                 throw new \Exception('O código de rastreio já está sendo utilizado por outra.', 7);
             }
 
-            $pedidoRastreio = Rastreio::firstOrNew(['pedido_id' => $pedido->id, 'rastreio' => $rastreio]);
-            $pedidoRastreio->pedido_id = $pedido->id;
-            $pedidoRastreio->rastreio = $rastreio;
+            $pedidoRastreio             = Rastreio::firstOrNew([
+                'pedido_id' => $pedido->id,
+                'rastreio'  => $rastreio
+            ]);
+            $pedidoRastreio->pedido_id  = $pedido->id;
+            $pedidoRastreio->rastreio   = $rastreio;
             $pedidoRastreio->data_envio = $dataEnvio;
-            $pedidoRastreio->servico = $metodoEnvio;
-            $pedidoRastreio->valor = $freteTotal;
-            $pedidoRastreio->prazo = null;
+            $pedidoRastreio->servico    = $metodoEnvio;
+            $pedidoRastreio->valor      = $freteTotal;
+            $pedidoRastreio->prazo      = null;
 
             if ($pedidoRastreio->save()) {
                 Log::info('Rastreio importado ' . $pedidoRastreio->id);
@@ -533,13 +538,13 @@ class UploadController extends Controller
         /**
          * Impostos
          */
-        $imposto = Imposto::findOrNew($pedido->id);
-        $imposto->pedido_id = $pedido->id;
-        $imposto->icms = $this->nfe->total->ICMSTot->vICMS;
-        $imposto->pis = $this->nfe->total->ICMSTot->vPIS;
-        $imposto->cofins = $this->nfe->total->ICMSTot->vCOFINS;
+        $imposto                    = Imposto::findOrNew($pedido->id);
+        $imposto->pedido_id         = $pedido->id;
+        $imposto->icms              = $this->nfe->total->ICMSTot->vICMS;
+        $imposto->pis               = $this->nfe->total->ICMSTot->vPIS;
+        $imposto->cofins            = $this->nfe->total->ICMSTot->vCOFINS;
         $imposto->icms_destinatario = $this->nfe->total->ICMSTot->vICMSUFDest;
-        $imposto->icms_remetente = $this->nfe->total->ICMSTot->vICMSUFRemet;
+        $imposto->icms_remetente    = $this->nfe->total->ICMSTot->vICMSUFRemet;
 
         if ($imposto->save()) {
             Log::info('Imposto importado ' . $imposto->id);
@@ -550,11 +555,11 @@ class UploadController extends Controller
         /**
          * IMEI's
          */
-        $lastPos = 0;
+        $lastPos   = 0;
         $positions = [];
         while (($lastPos = stripos($this->nfe->infAdic->infCpl, 'PROD.:', $lastPos)) !== false) {
             $positions[] = $lastPos;
-            $lastPos = $lastPos + strlen('PROD.:');
+            $lastPos     = $lastPos + strlen('PROD.:');
         }
 
         // Separa os imeis por produto
@@ -585,12 +590,12 @@ class UploadController extends Controller
         $produtosNota = [];
         foreach ($produtos as $produto) {
             $produtosNota[(int)$produto->prod->cProd][] = [
-                'sku' => (int) $produto->prod->cProd,
-                'titulo' => (string) $produto->prod->xProd,
-                'ncm' => (string) $produto->prod->NCM,
-                'ean' => (string) $produto->prod->cEAN,
+                'sku'        => (int) $produto->prod->cProd,
+                'titulo'     => (string) $produto->prod->xProd,
+                'ncm'        => (string) $produto->prod->NCM,
+                'ean'        => (string) $produto->prod->cEAN,
                 'quantidade' => (float) $produto->prod->qCom,
-                'valor' => (string) $produto->prod->vUnCom,
+                'valor'      => (string) $produto->prod->vUnCom,
             ];
         }
 
@@ -612,7 +617,7 @@ class UploadController extends Controller
 
         // Cadastra os pedidoProdutos
         $cadastrados = [];
-        $utilizados = [];
+        $utilizados  = [];
         foreach ($produtosNota as $sku => $itens) {
             foreach ($itens as $key => $item) {
                 // Pega o produto por sku
@@ -658,10 +663,10 @@ class UploadController extends Controller
 
                 // Se acabou de ser criado, seta os valores
                 if ($pedidoProduto->wasRecentlyCreated) {
-                    $pedidoProduto->pedido_id = $pedido->id;
+                    $pedidoProduto->pedido_id   = $pedido->id;
                     $pedidoProduto->produto_sku = $sku;
-                    $pedidoProduto->valor = $item['valor'];
-                    $pedidoProduto->quantidade = $item['quantidade'];
+                    $pedidoProduto->valor       = $item['valor'];
+                    $pedidoProduto->quantidade  = $item['quantidade'];
                 } elseif ($pedidoProduto->getOriginal('quantidade') < $item['quantidade']) {
                     // Se o pedidoProduto já exisita e tinha menos qtd que na nota, atualiza a qtd
                     $pedidoProduto->quantidade = $item['quantidade'];
@@ -736,14 +741,14 @@ class UploadController extends Controller
          * Envia e-mail de compra
          */
         if ($this->nfe->dest->email) {
-            $nome = (string) $this->nfe->dest->xNome;
-            $email = (string) $this->nfe->dest->email;
+            $nome    = (string) $this->nfe->dest->xNome;
+            $email   = (string) $this->nfe->dest->email;
             $nota_id = $nota->id;
             $arquivo = storage_path('app/public/' . date('His') . '.pdf');
 
             if (\Config::get('core.email_send_enabled')) {
                 $mail = Mail::send('emails.compra', [
-                    'nome' => $this->nfe->dest->xNome,
+                    'nome'     => $this->nfe->dest->xNome,
                     'produtos' => $produtos,
                     'rastreio' => $rastreio
                 ], function ($message) use ($nota_id, $email, $nome, $arquivo) {

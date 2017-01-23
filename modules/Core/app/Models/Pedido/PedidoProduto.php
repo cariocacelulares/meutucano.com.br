@@ -1,8 +1,8 @@
 <?php namespace Core\Models\Pedido;
 
 use Venturecraft\Revisionable\RevisionableTrait;
-use Core\Models\Produto;
 use InspecaoTecnica\Models\InspecaoTecnica;
+use Core\Models\Produto;
 use Core\Models\Pedido;
 
 /**

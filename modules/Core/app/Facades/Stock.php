@@ -32,8 +32,8 @@ class StockProvider
     public function set($sku, $quantity, $stock = 'default')
     {
         return ProductStock::updateOrCreate([
-            'product_sku'        => $sku,
-            'stock_slug' => $stock
+            'product_sku' => $sku,
+            'stock_slug'  => $stock
         ], [
             'quantity' => $quantity
         ]);

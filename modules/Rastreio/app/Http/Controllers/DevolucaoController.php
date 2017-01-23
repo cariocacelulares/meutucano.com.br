@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestControllerTrait;
-use Rastreio\Http\Controllers\Traits\RastreioTrait;
 use InspecaoTecnica\Http\Controllers\Traits\InspecaoTecnicaTrait;
+use Rastreio\Http\Controllers\Traits\RastreioTrait;
 use Rastreio\Models\Rastreio;
 use Rastreio\Models\Devolucao;
 use Rastreio\Http\Requests\DevolucaoRequest as Request;
@@ -43,7 +43,7 @@ class DevolucaoController extends Controller
 
             return $this->showResponse([
                 'rastreio_id' => $data->id,
-                'rastreio' => $data
+                'rastreio'    => $data
             ]);
         }
 
@@ -95,7 +95,9 @@ class DevolucaoController extends Controller
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
-            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
         }
     }
 
@@ -121,9 +123,7 @@ class DevolucaoController extends Controller
             \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => strstr(get_class($exception), 'ModelNotFoundException')
-                    ? 'Recurso nao encontrado'
-                    : $exception->getMessage()
+                'exception' => $exception->getMessage()
             ]);
         }
     }

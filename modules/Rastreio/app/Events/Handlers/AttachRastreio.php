@@ -1,12 +1,11 @@
 <?php namespace Rastreio\Events\Handlers;
 
-use Core\Events\OrderPaid;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;
+use Core\Events\OrderPaid;
+use Core\Http\Controllers\Pedido\FaturamentoCodigoController;
 use Rastreio\Models\Rastreio;
 use Rastreio\Jobs\SetDeadline;
-use Rastreio\Http\Controllers\RastreioController;
-use Core\Http\Controllers\Pedido\FaturamentoCodigoController;
 
 class AttachRastreio
 {
@@ -39,7 +38,7 @@ class AttachRastreio
 
             $servico = \Config::get('rastreio.servico.' . strtolower($order->frete_metodo))
                 ?: \Config::get('rastreio.servico.pac');
-            $codigo  = with(new FaturamentoCodigoController)->rawTrakingCode($servico);
+            $codigo = with(new FaturamentoCodigoController)->rawTrakingCode($servico);
 
             if ($codigo) {
                 $rastreio = Rastreio::create([

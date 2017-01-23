@@ -1,11 +1,10 @@
 <?php namespace Core\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
+use Rastreio\Models\Rastreio;
 use Core\Models\Cliente;
 use Core\Models\Cliente\Endereco;
-use Rastreio\Models\Rastreio;
 use Core\Models\Pedido\Nota;
 use Core\Models\Pedido\PedidoProduto;
 use Core\Models\Pedido\Comentario;
@@ -45,14 +44,14 @@ class Pedido extends \Eloquent
         'imagem_cancelamento',
         'segurado',
         'reembolso',
-        'priorizado'
+        'priorizado',
     ];
 
     /**
      * @var array
      */
     protected $casts = [
-        'status' => 'string'
+        'status' => 'string',
     ];
 
     /**

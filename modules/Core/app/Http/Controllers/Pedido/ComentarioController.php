@@ -1,11 +1,11 @@
 <?php namespace Core\Http\Controllers\Pedido;
 
 use Tymon\JWTAuth\Facades\JWTAuth;
-use Core\Models\Pedido\Comentario;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestControllerTrait;
-use Core\Http\Requests\ComentarioRequest as Request;
+use Core\Models\Pedido\Comentario;
 use Core\Transformers\CommentTransformer;
+use Core\Http\Requests\ComentarioRequest as Request;
 
 /**
  * Class ComentarioController
@@ -36,16 +36,17 @@ class ComentarioController extends Controller
      */
     public function store(Request $request)
     {
-        $m = self::MODEL;
-
         try {
             $user = getCurrentUserId();
-            $data = $m::create(array_merge(\Request::all(), ['usuario_id' => $user]));
+            $data = (self::MODEL)::create(array_merge(\Request::all(), ['usuario_id' => $user]));
 
             return $this->createdResponse($data);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
         }
     }
 }

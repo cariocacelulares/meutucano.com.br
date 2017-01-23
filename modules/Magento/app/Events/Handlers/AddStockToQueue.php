@@ -1,7 +1,7 @@
 <?php namespace Magento\Events\Handlers;
 
-use Core\Events\ProductStockUpdated;
 use Illuminate\Events\Dispatcher;
+use Core\Events\ProductStockUpdated;
 use Magento\Jobs\SendStockInfo;
 
 class AddStockToQueue

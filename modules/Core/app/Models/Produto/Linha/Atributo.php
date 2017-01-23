@@ -19,7 +19,7 @@ class Atributo extends Model
      */
     protected $fillable = [
         'titulo',
-        'linha_id'
+        'linha_id',
     ];
 
     /**
@@ -31,14 +31,14 @@ class Atributo extends Model
      * @var array
      */
     protected $with = [
-        'opcoes'
+        'opcoes',
     ];
 
     /**
      * @var array
      */
     protected $appends = [
-        'tipo'
+        'tipo',
     ];
 
     /**

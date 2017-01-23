@@ -1,8 +1,8 @@
 <?php namespace Core\Events\Handlers;
 
-use Core\Events\OrderCanceled;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;
+use Core\Events\OrderCanceled;
 
 class SetRefund
 {

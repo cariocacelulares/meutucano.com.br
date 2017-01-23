@@ -1,11 +1,11 @@
 <?php namespace InspecaoTecnica\Events\Handlers;
 
+use Illuminate\Events\Dispatcher;
+use Illuminate\Support\Facades\Log;
 use Core\Events\OrderCanceled;
 use Core\Events\OrderProductDeleting;
 use Core\Events\OrderProductQtyDecreased;
 use Core\Models\Pedido\PedidoProduto;
-use Illuminate\Events\Dispatcher;
-use Illuminate\Support\Facades\Log;
 use InspecaoTecnica\Http\Controllers\InspecaoTecnicaController;
 
 class DetachInspecaoTecnica

@@ -21,9 +21,7 @@ class MarcaController extends Controller
      */
     public function tableList()
     {
-        $m = self::MODEL;
-
-        $list = $m::orderBy('marcas.created_at', 'DESC');
+        $list = (self::MODEL)::orderBy('marcas.created_at', 'DESC');
 
         $list = $this->handleRequest($list);
 

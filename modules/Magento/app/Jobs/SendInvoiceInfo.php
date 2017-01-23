@@ -1,11 +1,11 @@
 <?php namespace Magento\Jobs;
 
-use Core\Models\Pedido;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Core\Models\Pedido;
 use Magento\Http\Controllers\MagentoController;
 
 class SendInvoiceInfo implements ShouldQueue
@@ -36,7 +36,7 @@ class SendInvoiceInfo implements ShouldQueue
         $action = with(new MagentoController())->orderInvoice($this->order);
 
         if ($action !== true) {
-            // throw new Exception('Erro ao executar Job Magento\SendInvoiceInfo', 1);
+            throw new Exception('Erro ao executar Job Magento\SendInvoiceInfo', 1);
         }
     }
 
@@ -48,7 +48,6 @@ class SendInvoiceInfo implements ShouldQueue
      */
     public function failed(Exception $exception)
     {
-        # TODO: enviar notificacao
         \Log::critical(logMessage($exception, '(failed) Erro ao executar Job Magento\SendInvoiceInfo'), [$this->order]);
     }
 
@@ -60,7 +59,6 @@ class SendInvoiceInfo implements ShouldQueue
      */
     public function fail(Exception $exception)
     {
-        # TODO: enviar notificacao
         \Log::critical(logMessage($exception, '(fail) Erro ao executar Job Magento\SendInvoiceInfo'), [$this->order]);
     }
 }

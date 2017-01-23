@@ -1,6 +1,5 @@
 <?php namespace Core\Models\Produto\Linha\Atributo;
 
-use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**

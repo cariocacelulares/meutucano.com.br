@@ -26,13 +26,15 @@ class EnderecoController extends Controller
     public function store(Request $request)
     {
         try {
-            $data = Endereco::create(Input::all());
+            $data = (self::MODEL)::create(Input::all());
 
             return $this->createdResponse($data);
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
-            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
         }
     }
 
@@ -45,7 +47,7 @@ class EnderecoController extends Controller
     public function update($id, Request $request)
     {
         try {
-            $endereco = Endereco::findOrFail($id);
+            $endereco = (self::MODEL)::findOrFail($id);
             $endereco->fill(Input::all());
             $endereco->save();
 
@@ -54,9 +56,7 @@ class EnderecoController extends Controller
             \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => strstr(get_class($exception), 'ModelNotFoundException')
-                    ? 'Recurso nao encontrado'
-                    : $exception->getMessage()
+                'exception' => $exception->getMessage()
             ]);
         }
     }

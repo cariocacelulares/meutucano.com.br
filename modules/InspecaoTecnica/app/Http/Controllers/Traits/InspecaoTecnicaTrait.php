@@ -19,9 +19,9 @@ trait InspecaoTecnicaTrait
                 foreach ($inspecoes['criar'] as $config) {
                     if ($config['aplicar']) {
                         InspecaoTecnica::create([
-                            'produto_sku' => $config['produto_sku'],
+                            'produto_sku'        => $config['produto_sku'],
                             'pedido_produtos_id' => $config['pedido_produtos_id'],
-                            'solicitante_id' => getCurrentUserId()
+                            'solicitante_id'     => getCurrentUserId()
                         ]);
                     }
                 }
@@ -37,9 +37,9 @@ trait InspecaoTecnicaTrait
                         } else {
                             \Log::warning("A inspeção técnica {$config['inspecao_id']} não foi associada ao pedidoProduto {$config['pedido_produtos_id']} pois não está liberada, foi adicionada uma nova inspeção na fila", $config);
                             InspecaoTecnica::create([
-                                'produto_sku' => $config['produto_sku'],
+                                'produto_sku'        => $config['produto_sku'],
                                 'pedido_produtos_id' => $config['pedido_produtos_id'],
-                                'solicitante_id' => getCurrentUserId()
+                                'solicitante_id'     => getCurrentUserId()
                             ]);
                         }
                     }

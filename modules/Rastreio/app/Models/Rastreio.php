@@ -1,10 +1,8 @@
-<?php namespace Rastreio\Models;
+<?php namespace Rastreio\Models\Rastreio;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Core\Models\Pedido;
-use Rastreio\Http\Controllers\RastreioController;
 
 /**
  * Class Rastreio

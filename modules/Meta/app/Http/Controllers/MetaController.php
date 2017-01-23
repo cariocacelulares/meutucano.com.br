@@ -98,8 +98,9 @@ class MetaController extends Controller
             }
 
             return $this->showResponse($response);
-        } catch (\Exception $e) {
-            echo $e->getMessage() . $e->getLine();
+        } catch (\Exception $exception) {
+            echo $exception->getMessage() . $exception->getLine();
+
             return $this->notFoundResponse();
         }
     }

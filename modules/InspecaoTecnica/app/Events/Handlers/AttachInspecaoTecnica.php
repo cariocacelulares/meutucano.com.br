@@ -1,12 +1,11 @@
 <?php namespace InspecaoTecnica\Events\Handlers;
 
+use Illuminate\Events\Dispatcher;
+use Illuminate\Support\Facades\Log;
 use Core\Events\OrderPaid;
 use Core\Events\OrderProductCreated;
 use Core\Events\OrderProductQtyIncreased;
-use Core\Models\Pedido;
 use Core\Models\Pedido\PedidoProduto;
-use Illuminate\Events\Dispatcher;
-use Illuminate\Support\Facades\Log;
 use InspecaoTecnica\Http\Controllers\InspecaoTecnicaController;
 use InspecaoTecnica\Models\InspecaoTecnica;
 

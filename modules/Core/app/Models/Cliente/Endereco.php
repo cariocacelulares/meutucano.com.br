@@ -1,6 +1,5 @@
 <?php namespace Core\Models\Cliente;
 
-use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Core\Models\Cliente;
 
@@ -32,7 +31,7 @@ class Endereco extends \Eloquent
      * @var array
      */
     protected $casts = [
-        'cep' => 'string'
+        'cep' => 'string',
     ];
 
     /**

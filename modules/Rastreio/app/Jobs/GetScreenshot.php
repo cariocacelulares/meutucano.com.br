@@ -4,10 +4,9 @@ use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use App\Jobs\Traits\SerializesNullableModels;
 use Rastreio\Http\Controllers\RastreioController;
 use Rastreio\Models\Rastreio;
-// use Illuminate\Queue\SerializesModels;
-use App\Jobs\Traits\SerializesNullableModels;
 
 class GetScreenshot implements ShouldQueue
 {
@@ -53,7 +52,6 @@ class GetScreenshot implements ShouldQueue
      */
     public function failed(Exception $exception)
     {
-        # TODO: enviar notificacao
         \Log::critical(logMessage($exception, 'Erro ao executar Job Rastreio\GetScreenshot'), [$this->rastreio]);
     }
 }

@@ -48,7 +48,6 @@ class SetDeadline implements ShouldQueue
      */
     public function failed(Exception $exception)
     {
-        # TODO: enviar notificacao
         \Log::critical(logMessage($exception, 'Erro ao executar Job Rastreio\SetDeadline'), [$this->rastreio]);
     }
 }

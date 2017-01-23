@@ -36,7 +36,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     /**
      * Pedido Produto
      */
-    Route::resource('pedido-produto', 'PedidoProdutoController');
+    Route::resource('pedido-produto', 'Pedido\PedidoProdutoController');
 
     /**
      * Notas

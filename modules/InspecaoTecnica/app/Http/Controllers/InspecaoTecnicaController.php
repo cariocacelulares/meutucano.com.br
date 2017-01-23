@@ -113,11 +113,12 @@ class InspecaoTecnicaController extends Controller
             ], Input::all()));
 
             return $this->createdResponse($data);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
+        } catch (\Exception $exception) {
+            Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
-            Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
         }
     }
 
@@ -144,12 +145,14 @@ class InspecaoTecnicaController extends Controller
             }
 
             $data->save();
-            return $this->showResponse($data);
-        } catch (\Exception $ex) {
-            Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+            return $this->showResponse($data);
+        } catch (\Exception $exception) {
+            Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
         }
     }
 
@@ -161,8 +164,8 @@ class InspecaoTecnicaController extends Controller
      */
     public function show($id)
     {
-        $m = self::MODEL;
-        $data = $m::with('produto')->where('id', '=', $id)->first();
+        $m    = self::MODEL;
+        $data = $m  ::with('produto')->where('id', '=', $id)->first();
 
         if ($data) {
             return $this->showResponse($data);
@@ -179,8 +182,8 @@ class InspecaoTecnicaController extends Controller
      */
     public function showByPedidoProduto($id)
     {
-        $m = self::MODEL;
-        $data = $m::with('produto')->where('pedido_produtos_id', '=', $id)->first();
+        $m    = self::MODEL;
+        $data = $m  ::with('produto')->where('pedido_produtos_id', '=', $id)->first();
 
         if ($data) {
             return $this->showResponse($data);
@@ -214,10 +217,12 @@ class InspecaoTecnicaController extends Controller
             }
 
             return $this->showResponse($data);
-        } catch (\Exception $e) {
-            Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+        } catch (\Exception $exception) {
+            Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
         }
     }
 
@@ -229,23 +234,23 @@ class InspecaoTecnicaController extends Controller
     public function verificarReserva()
     {
         $acoes = [
-            'reservar' => [
+            'reservar'    =>[
                 'quantidade' => 0,
-                'aplicar' => 0,
-                'ids' => []
+                'aplicar'    => 0,
+                'ids'        => []
             ],
-            'fila' => [
+            'fila'        =>[
                 'quantidade' => 0,
-                'aplicar' => 0
+                'aplicar'    => 0
             ],
-            'sem_estoque' => [
+            'sem_estoque' =>[
                 'quantidade' => 0,
-                'aplicar' => 0
+                'aplicar'    => 0
             ],
         ];
 
         $produto_sku = Input::get('produto');
-        $quantidade = (int)Input::get('quantidade');
+        $quantidade  = (int)Input::get('quantidade');
 
         if (!$produto = Produto::find($produto_sku)) {
             return $this->notFoundResponse();
@@ -286,8 +291,8 @@ class InspecaoTecnicaController extends Controller
 
         $acoes['reservar']['ids'] = implode(',', $acoes['reservar']['ids']);
 
-        $acoes['reservar']['aplicar'] = ($acoes['reservar']['quantidade'] > 0) ? 1 : 0;
-        $acoes['fila']['aplicar'] = ($acoes['fila']['quantidade'] > 0) ? 1 : 0;
+        $acoes['reservar']['aplicar']    = ($acoes['reservar']['quantidade'] > 0)    ? 1 : 0;
+        $acoes['fila']['aplicar']        = ($acoes['fila']['quantidade'] > 0)        ? 1 : 0;
         $acoes['sem_estoque']['aplicar'] = ($acoes['sem_estoque']['quantidade'] > 0) ? 1 : 0;
 
         return $this->listResponse($acoes);
@@ -302,9 +307,9 @@ class InspecaoTecnicaController extends Controller
     {
         $retorno = [];
         $produto_sku = Input::get('produto_sku');
-        $reservar = Input::get('reservar');
-        $fila = Input::get('fila');
-        $semEstoque = Input::get('sem_estoque');
+        $reservar    = Input::get('reservar');
+        $fila        = Input::get('fila');
+        $semEstoque  = Input::get('sem_estoque');
 
         if ($reservar['aplicar'] == 1) {
             $itensReservar = explode(',', $reservar['ids']);
@@ -334,15 +339,15 @@ class InspecaoTecnicaController extends Controller
                         $retorno[] = ['antigo' => $id, 'novo' => $inspecao->id];
                     } else {
                         $inspecao = InspecaoTecnica::create([
-                            'produto_sku' => $produto_sku,
-                            'reservado' => true,
+                            'produto_sku'    => $produto_sku,
+                            'reservado'      => true,
                             'solicitante_id' => getCurrentUserId(),
                         ]);
 
                         $retorno[] = ['antigo' => $id, 'novo' => false];
                     }
                 } else {
-                    $inspecao->reservado = true;
+                    $inspecao->reservado      = true;
                     $inspecao->solicitante_id = getCurrentUserId();
                     $inspecao->save();
                 }
@@ -352,8 +357,8 @@ class InspecaoTecnicaController extends Controller
         if ($fila['aplicar'] == 1) {
             for ($i=0; $i < $fila['quantidade']; $i++) {
                 $inspecao = InspecaoTecnica::create([
-                    'produto_sku' => $produto_sku,
-                    'reservado' => true,
+                    'produto_sku'    => $produto_sku,
+                    'reservado'      => true,
                     'solicitante_id' => getCurrentUserId(),
                 ]);
             }
@@ -362,8 +367,8 @@ class InspecaoTecnicaController extends Controller
         if ($semEstoque['aplicar'] == 1) {
             for ($i=0; $i < $semEstoque['quantidade']; $i++) {
                 $inspecao = InspecaoTecnica::create([
-                    'produto_sku' => $produto_sku,
-                    'reservado' => true,
+                    'produto_sku'    => $produto_sku,
+                    'reservado'      => true,
                     'solicitante_id' => getCurrentUserId(),
                 ]);
             }
@@ -399,7 +404,7 @@ class InspecaoTecnicaController extends Controller
      */
     public function attachInspecao(PedidoProduto $orderProduct)
     {
-        $product = $orderProduct->produto;
+        $product     = $orderProduct->produto;
         $currentUser = getCurrentUserId();
 
         // Checa se é seminovo
@@ -421,6 +426,7 @@ class InspecaoTecnicaController extends Controller
                 $inspecaoDisponivel->solicitante_id = $currentUser;
                 if ($inspecaoDisponivel->save()) {
                     Log::notice('Inspecao tecnica adicionada ao pedido produto ' . $orderProduct->id, [$orderProduct, $inspecaoDisponivel]);
+
                     return [
                         'attach',
                         $inspecaoDisponivel->id,
@@ -428,18 +434,20 @@ class InspecaoTecnicaController extends Controller
                     ];
                 } else {
                     Log::warning('Erro ao tentar adicionar pedido produto na inspecao tecnica', [$orderProduct, $inspecaoDisponivel]);
+
                     return null;
                 }
             }
 
             $inspecao = new InspecaoTecnica([
-                'produto_sku' => $product->sku,
+                'produto_sku'        => $product->sku,
                 'pedido_produtos_id' => $orderProduct->id,
-                'solicitante_id' => $currentUser,
+                'solicitante_id'     => $currentUser,
             ]);
 
             if ($inspecao->save()) {
-                Log::notice('Inspecao tecnica adicioada na fila para o pedido produto ' . $orderProduct->id, [$orderProduct->toArray(), $inspecao->toArray()]);
+                Log::notice('Inspecao tecnica adicioada na fila para o pedido produto ' . $orderProduct->id, [$orderProduct->toArray(), $inspecao->toArray()])
+
                 return [
                     'add',
                     $inspecao->id,
@@ -482,6 +490,7 @@ class InspecaoTecnicaController extends Controller
                     $inspection->pedido_produtos_id = null;
                     if ($inspection->save()) {
                         Log::notice("Inspeção {$inspection->id} desassociada com o pedido produto.", [$inspection]);
+
                         return $this->listResponse([
                             ['detach', $inspection->id]
                         ]);
@@ -492,6 +501,7 @@ class InspecaoTecnicaController extends Controller
                     $id = $inspection->id;
                     $inspection->delete();
                     Log::notice("Inspeção {$id} excluida para o pedido produto " . (isset($orderProduct->id) ? $orderProduct->id : ''), [$inspection]);
+
                     return $this->listResponse([
                         ['delete']
                     ]);

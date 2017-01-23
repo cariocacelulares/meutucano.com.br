@@ -1,6 +1,5 @@
 <?php namespace Rastreio\Transformers;
 
-use Core\Transformers\Parsers\ClientParser;
 use Core\Transformers\Parsers\AddressParser;
 use Core\Transformers\Parsers\OrderParser;
 use Rastreio\Transformers\Parsers\RastreioParser;
@@ -27,6 +26,13 @@ class DevolucaoTransformer
             'observacoes'         => $devolucao->observacoes,
             'protocolo'           => RastreioParser::getProtocolo($devolucao),
             'imagem_cancelamento' => RastreioParser::getImagemCancelamento($devolucao),
+            'rastreio'            => [
+                'id'     => $devolucao->rastreio->id,
+                'pedido' => [
+                    'id'          => $devolucao->rastreio->pedido->id,
+                    'marketplace' => $devolucao->rastreio->pedido->marketplace,
+                ],
+            ],
         ];
     }
 

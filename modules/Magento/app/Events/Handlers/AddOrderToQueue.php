@@ -1,8 +1,8 @@
 <?php namespace Magento\Events\Handlers;
 
+use Illuminate\Events\Dispatcher;
 use Core\Events\OrderCanceled;
 use Core\Events\OrderSent;
-use Illuminate\Events\Dispatcher;
 use Magento\Jobs\SendCancelInfo;
 use Magento\Jobs\SendInvoiceInfo;
 

@@ -1,16 +1,15 @@
 <?php namespace Magento\Http\Controllers;
 
 use Carbon\Carbon;
-use Core\Models\Pedido;
-use Core\Models\Produto;
-use Core\Models\Cliente;
-use Core\Models\Cliente\Endereco;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Magento\Models\MagentoCategory;
-use App\Http\Controllers\Controller;
-use Core\Models\Pedido\PedidoProduto;
 use Illuminate\Support\Facades\Config;
+use App\Http\Controllers\Controller;
+use Core\Models\Produto;
+use Core\Models\Pedido;
+use Core\Models\Pedido\PedidoProduto;
+use Core\Models\Cliente;
+use Core\Models\Cliente\Endereco;
 
 /**
  * Class MagentoController
@@ -46,10 +45,10 @@ class MagentoController extends Controller
                                 'user_agent' => 'PHPSoapClient'
                             ]
                         ]),
-                        'trace' => true,
-                        'exceptions' => true,
+                        'trace'              => true,
+                        'exceptions'         => true,
                         'connection_timeout' => 20,
-                        'cache_wsdl' => WSDL_CACHE_NONE
+                        'cache_wsdl'         => WSDL_CACHE_NONE
                     ]
                 );
 
@@ -169,7 +168,7 @@ class MagentoController extends Controller
             } else {
                 $client = new \GuzzleHttp\Client([
                     'base_uri' => \Config::get('magento.tucanomg.host'),
-                    'headers' => [
+                    'headers'  => [
                         "Accept"         => "application/json",
                         "Content-type"   => "application/json",
                         "X-Access-Token" => \Config::get('magento.tucanomg.token')
@@ -182,6 +181,7 @@ class MagentoController extends Controller
             }
         } catch (\Exception $e) {
             Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', com o method: ' . $method));
+
             return false;
         }
     }
@@ -316,6 +316,7 @@ class MagentoController extends Controller
             // Fecha a transação e comita as alterações
             DB::commit();
             Log::debug('Transaction - commit');
+
             return true;
         } catch (\Exception $e) {
             // Fecha a trasação e cancela as alterações
@@ -324,6 +325,7 @@ class MagentoController extends Controller
 
             Log::critical(logMessage($e, 'Pedido ' . $order['increment_id'] . ' não importado'), $order);
             reportError('Pedido ' . $order['increment_id'] . ' não importado: ' . $e->getMessage() . ' - ' . $e->getLine());
+
             return false;
         }
     }
@@ -456,11 +458,13 @@ class MagentoController extends Controller
 
             if ($request) {
                 Log::notice("Dados de nota atualizados do pedido {$order->id} / {$order->codigo_api} no Magento", [$request]);
+
                 return true;
             }
         } catch (\Exception $e) {
             Log::critical(logMessage($e, 'Pedido não faturado no Magento (nota)'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);
             reportError('Pedido não faturado no Magento (nota) ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $order->id);
+
             return false;
         }
 
@@ -495,11 +499,13 @@ class MagentoController extends Controller
 
             if ($shipmentId) {
                 Log::notice("Dados de envio atualizados do pedido {$order->id} / {$order->codigo_api} no Magento", [$shipmentId, $request]);
+
                 return true;
             }
         } catch (\Exception $e) {
             Log::critical(logMessage($e, 'Pedido não faturado no Magento (rastreio)'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);
             reportError('Pedido não faturado no Magento (rastreio) ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $order->id);
+
             return false;
         }
 

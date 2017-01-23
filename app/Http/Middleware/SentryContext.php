@@ -20,8 +20,8 @@ class SentryContext
 
             if ($jwtAuth) {
                 app('sentry')->user_context([
-                    'id' => $jwtAuth->id,
-                    'email' => $jwtAuth->email,
+                    'id'       => $jwtAuth->id,
+                    'email'    => $jwtAuth->email,
                     'username' => $jwtAuth->username
                 ]);
             }

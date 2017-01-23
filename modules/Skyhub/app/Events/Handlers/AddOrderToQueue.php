@@ -1,9 +1,9 @@
 <?php namespace Skyhub\Events\Handlers;
 
+use Illuminate\Events\Dispatcher;
 use Core\Events\OrderCanceled;
 use Core\Events\OrderDelivered;
 use Core\Events\OrderSent;
-use Illuminate\Events\Dispatcher;
 use Skyhub\Jobs\SendCancelInfo;
 use Skyhub\Jobs\SendDeliveredInfo;
 use Skyhub\Jobs\SendInvoiceInfo;

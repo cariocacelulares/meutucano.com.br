@@ -1,9 +1,9 @@
 <?php namespace Skyhub\Http\Controllers;
 
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-use GuzzleHttp\Client;
 use App\Http\Controllers\Controller;
 use Core\Models\Cliente;
 use Core\Models\Cliente\Endereco;
@@ -103,7 +103,7 @@ class SkyhubController extends Controller
             'APPROVED'  => 1,
             'SHIPPED'   => 2,
             'DELIVERED' => 3,
-            'CANCELED'  => 5
+            'CANCELED'  => 5,
         ];
 
         return (!$reverse) ? $statusConvert[$status] : array_search($status, $statusConvert);
@@ -182,7 +182,7 @@ class SkyhubController extends Controller
             } else {
                 $client = new Client([
                     'base_uri' => \Config::get('skyhub.api.url'),
-                    'headers' => [
+                    'headers'  => [
                         "Accept"       => "application/json",
                         "Content-type" => "application/json; charset=utf-8",
                         "X-User-Email" => \Config::get('skyhub.api.email'),
@@ -207,6 +207,7 @@ class SkyhubController extends Controller
             Log::warning(logMessage(
                 $exception, 'Não foi possível fazer a requisição para: ' . $url . ', method: ' . $method
             ));
+
             return false;
         }
     }
@@ -359,6 +360,7 @@ class SkyhubController extends Controller
 
             Log::critical(logMessage($e, 'Pedido ' . (isset($order['code']) ? $order['code'] : '') . ' não importado'), [$order]);
             reportError('Pedido ' . (isset($order['code']) ? $order['code'] : '') . ' não importado: ' . $e->getMessage() . ' - ' . $e->getLine());
+
             return false;
         }
     }
@@ -420,12 +422,12 @@ class SkyhubController extends Controller
                 );
                 Log::notice("Pedido {$order->id} / {$order->skyhub} cancelado na Skyhub.");
             }
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             Log::warning(
-                logMessage($e, "Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub")
+                logMessage($exception, "Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub")
             );
             reportError("Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub" .
-                $e->getMessage() . ' - ' . $e->getLine());
+                $exception->getMessage() . ' - ' . $exception->getLine());
         }
     }
 
@@ -518,14 +520,14 @@ class SkyhubController extends Controller
                 );
                 Log::notice("Pedido {$pedido->codigo_api} alterado para enviado na skyhub.");
             }
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             Log::critical(logMessage(
-                $e,
+                $exception,
                 'Não foi possível alterar o status do pedido na Skyhub'),
                 ['id' => $pedido->id, 'codigo_api' => $pedido->codigo_api]
             );
             reportError('Não foi possível alterar o status do pedido na Skyhub: ' .
-                $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $pedido->id);
+                $exception->getMessage() . ' - ' . $exception->getLine() . ' - ' . $pedido->id);
         }
     }
 
@@ -546,6 +548,7 @@ class SkyhubController extends Controller
 
         $diasPrazo = (int) RastreioController::deadline($rastreio, $cep) + 3;
         $prazo = SomaDiasUteis(date('d/m/Y'), $diasPrazo);
+        
         return Carbon::createFromFormat('d/m/Y', $prazo)->format('Y-m-d');
     }
 

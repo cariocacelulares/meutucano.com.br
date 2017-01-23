@@ -28,7 +28,9 @@ class Imposto extends \Eloquent
     /**
      * @var array
      */
-    protected $fillable = ['*'];
+    protected $fillable = [
+        '*'
+    ];
 
     /**
      * Pedido
