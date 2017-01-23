@@ -4,7 +4,7 @@ use Core\Events\OrderCanceled;
 use Core\Events\OrderProductCreated;
 use Core\Events\OrderProductUpdated;
 use Core\Events\OrderSaved;
-use Core\Models\Produto\Produto;
+use Core\Models\Produto;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;
 

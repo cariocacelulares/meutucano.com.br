@@ -1,4 +1,4 @@
-<?php namespace Core\Models\Produto;
+<?php namespace Core\Models;
 
 use Sofa\Eloquence\Eloquence;
 use Venturecraft\Revisionable\RevisionableTrait;
@@ -8,7 +8,7 @@ use Core\Models\Produto\PedidoProduto;
 
 /**
  * Class Produto
- * @package Core\Models\Produto
+ * @package Core\Models
  */
 class Produto extends Model
 {

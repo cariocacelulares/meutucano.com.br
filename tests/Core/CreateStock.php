@@ -1,13 +1,13 @@
 <?php namespace Tests\Core;
 
-use Core\Models\Produto\Stock;
+use Core\Models\Stock;
 
 class CreateStock
 {
     /**
     * Create a Stock register
     *
-    * @return Core\Models\Produto\Stock
+    * @return Core\Models\Stock
     */
     public static function create($data = [])
     {

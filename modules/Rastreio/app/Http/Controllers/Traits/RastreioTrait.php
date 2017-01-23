@@ -1,7 +1,7 @@
 <?php namespace Rastreio\Http\Controllers\Traits;
 
 use Illuminate\Support\Facades\DB;
-use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido;
 use Rastreio\Models\Rastreio;
 use Rastreio\Models\Logistica;
 use Rastreio\Models\Devolucao;

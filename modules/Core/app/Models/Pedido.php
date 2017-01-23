@@ -1,15 +1,15 @@
-<?php namespace Core\Models\Pedido;
+<?php namespace Core\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
-use Core\Models\Cliente\Cliente;
+use Core\Models\Cliente;
 use Core\Models\Cliente\Endereco;
 use Rastreio\Models\Rastreio;
 
 /**
  * Class Pedido
- * @package Core\Models\Pedido
+ * @package Core\Models
  */
 class Pedido extends \Eloquent
 {

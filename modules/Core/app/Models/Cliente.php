@@ -1,12 +1,12 @@
-<?php namespace Core\Models\Cliente;
+<?php namespace Core\Models;
 
 use Carbon\Carbon;
-use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido;
 use Sofa\Eloquence\Eloquence;
 
 /**
  * Class Cliente
- * @package Core\Models\Cliente
+ * @package Core\Models
  */
 class Cliente extends \Eloquent
 {

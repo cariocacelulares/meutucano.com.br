@@ -1,9 +1,9 @@
 <?php namespace Magento\Http\Controllers;
 
 use Carbon\Carbon;
-use Core\Models\Pedido\Pedido;
-use Core\Models\Produto\Produto;
-use Core\Models\Cliente\Cliente;
+use Core\Models\Pedido;
+use Core\Models\Produto;
+use Core\Models\Cliente;
 use Core\Models\Cliente\Endereco;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;

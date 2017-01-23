@@ -5,7 +5,7 @@ $faker = Faker\Factory::create('pt_BR');
 /**
 * Cliente
 */
-$factory->define(\Core\Models\Cliente\Cliente::class, function () use ($faker) {
+$factory->define(\Core\Models\Cliente::class, function () use ($faker) {
     return [
         'taxvat' => $faker->randomNumber(5) . $faker->randomNumber(6),
         'tipo'   => 0,
@@ -33,7 +33,7 @@ $factory->define(\Core\Models\Cliente\Endereco::class, function () use ($faker) 
 /**
 * Stock
 */
-$factory->define(\Core\Models\Produto\Stock::class, function () use ($faker) {
+$factory->define(\Core\Models\Stock::class, function () use ($faker) {
     $name = $faker->name;
 
     return [
@@ -56,7 +56,7 @@ $factory->define(\Core\Models\Produto\ProductStock::class, function () use ($fak
 /**
 * Produto
 */
-$factory->define(\Core\Models\Produto\Produto::class, function () use ($faker) {
+$factory->define(\Core\Models\Produto::class, function () use ($faker) {
     return [
         'titulo' => 'Smartphone ' . $faker->randomNumber(2),
         'ean'    => $faker->isbn10,
@@ -67,7 +67,7 @@ $factory->define(\Core\Models\Produto\Produto::class, function () use ($faker) {
 /**
 * Pedido
 */
-$factory->define(\Core\Models\Pedido\Pedido::class, function () use ($faker) {
+$factory->define(\Core\Models\Pedido::class, function () use ($faker) {
     return [
         'frete_valor'      => $faker->randomFloat(2, 10, 40),
         'frete_metodo'     => $faker->randomElement(['pac', 'sedex']),

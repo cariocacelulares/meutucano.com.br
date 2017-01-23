@@ -1,7 +1,7 @@
 <?php namespace InspecaoTecnica\Events\Handlers;
 
 use Core\Events\OrderProductProductChanged;
-use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido;
 use Core\Models\Pedido\PedidoProduto;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;

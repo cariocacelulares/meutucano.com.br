@@ -1,6 +1,6 @@
 <?php namespace Magento\Jobs;
 
-use Core\Models\Produto\Produto;
+use Core\Models\Produto;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

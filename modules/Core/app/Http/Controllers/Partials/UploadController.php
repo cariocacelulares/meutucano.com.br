@@ -11,15 +11,15 @@ use App\Http\Controllers\Rest\RestResponseTrait;
 use Skyhub\Http\Controllers\SkyhubController;
 use Core\Http\Controllers\Pedido\NotaController;
 use Rastreio\Http\Controllers\RastreioController;
-use Core\Models\Cliente\Cliente;
+use Core\Models\Cliente;
 use Core\Models\Cliente\Endereco;
-use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido;
 use Core\Models\Pedido\Imposto;
 use Core\Models\Pedido\Nota;
 use Core\Models\Pedido\Nota\Devolucao;
 use Rastreio\Models\Rastreio;
 use Core\Models\Pedido\PedidoProduto;
-use Core\Models\Produto\Produto;
+use Core\Models\Produto;
 
 /**
  * Class UploadController

@@ -1,6 +1,6 @@
 <?php namespace Skyhub\Jobs;
 
-use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

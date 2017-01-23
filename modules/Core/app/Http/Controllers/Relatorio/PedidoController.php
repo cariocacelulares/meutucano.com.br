@@ -3,7 +3,7 @@
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestResponseTrait;
 use Carbon\Carbon;
-use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Core\Http\Controllers\Traits\RelatorioTrait;

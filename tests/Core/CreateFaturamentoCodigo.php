@@ -7,7 +7,7 @@ class CreateFaturamentoCodigo
     /**
     * Cria um objeto de fataturamento codigo
     *
-    * @return Core\Models\Produto\Produto
+    * @return Core\Models\Produto
     */
     public static function create($data = [])
     {

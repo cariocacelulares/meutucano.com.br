@@ -3,7 +3,7 @@
 use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Usuario\Usuario;
-use Core\Models\Produto\Produto;
+use Core\Models\Produto;
 use Core\Models\Pedido\PedidoProduto;
 
 /**

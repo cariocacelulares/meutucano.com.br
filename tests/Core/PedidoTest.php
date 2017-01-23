@@ -1,8 +1,8 @@
 <?php namespace Tests\Core;
 
 use Tests\TestCase;
-use Core\Models\Pedido\Pedido;
-use Core\Http\Controllers\Pedido\PedidoController;
+use Core\Models\Pedido;
+use Core\Http\Controllers\PedidoController;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 

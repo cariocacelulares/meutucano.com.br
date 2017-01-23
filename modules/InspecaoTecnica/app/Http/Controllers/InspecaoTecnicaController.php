@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestControllerTrait;
-use Core\Models\Produto\Produto;
+use Core\Models\Produto;
 use Core\Models\Pedido\PedidoProduto;
 use InspecaoTecnica\Models\InspecaoTecnica;
 use InspecaoTecnica\Transformers\InspecaoTecnicaTransformer;

@@ -1,6 +1,6 @@
 <?php namespace Allnation\Models;
 
-use Core\Models\Produto\Produto;
+use Core\Models\Produto;
 use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
 

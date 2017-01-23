@@ -3,9 +3,9 @@
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestResponseTrait;
 use App\Http\Controllers\Controller;
-use Core\Models\Pedido\Pedido;
-use Core\Models\Produto\Produto;
-use Core\Models\Cliente\Cliente;
+use Core\Models\Pedido;
+use Core\Models\Produto;
+use Core\Models\Cliente;
 use Rastreio\Models;
 use Core\Transformers\ClientTransformer;
 use Core\Transformers\OrderTransformer;

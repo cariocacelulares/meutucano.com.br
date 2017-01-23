@@ -1,7 +1,7 @@
 <?php namespace Core\Observers;
 
 use Illuminate\Support\Facades\Event;
-use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido;
 use Core\Events\OrderCanceled;
 use Core\Events\OrderCreated;
 use Core\Events\OrderDelivered;

@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
-use Core\Models\Cliente\Cliente;
+use Core\Models\Cliente;
 use Core\Models\Cliente\Endereco;
 use Illuminate\Support\Facades\Input;
 use Core\Transformers\ClientTransformer;

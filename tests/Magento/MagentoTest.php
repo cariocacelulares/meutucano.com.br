@@ -4,7 +4,7 @@ use VCR\VCR;
 use Tests\TestCase;
 use Core\Events\OrderCancel;
 use Tests\Core\CreatePedido;
-use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido;
 use Magento\Http\Controllers\MagentoController;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;

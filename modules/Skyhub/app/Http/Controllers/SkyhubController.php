@@ -5,11 +5,11 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use GuzzleHttp\Client;
 use App\Http\Controllers\Controller;
-use Core\Models\Cliente\Cliente;
+use Core\Models\Cliente;
 use Core\Models\Cliente\Endereco;
-use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido;
 use Core\Models\Pedido\PedidoProduto;
-use Core\Models\Produto\Produto;
+use Core\Models\Produto;
 use Rastreio\Http\Controllers\RastreioController;
 
 /**

@@ -1,13 +1,13 @@
 <?php namespace Tests\Core;
 
 use Core\Models\Pedido\Nota;
-use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido;
 use Core\Models\Pedido\Imposto;
 use Core\Models\Pedido\PedidoProduto;
-use Core\Models\Produto\Produto;
+use Core\Models\Produto;
 use Core\Models\Produto\ProductStock;
 use Core\Models\Usuario\Usuario;
-use Core\Models\Cliente\Cliente;
+use Core\Models\Cliente;
 use Core\Models\Cliente\Endereco;
 use Tests\Core\CreateFaturamentoCodigo;
 
@@ -16,7 +16,7 @@ class CreatePedido
     /**
     * Create one order
     *
-    * @return Core\Models\Pedido\Pedido
+    * @return Core\Models\Pedido
     */
     public static function create($data = [], $productSku = null)
     {

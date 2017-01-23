@@ -1,8 +1,8 @@
 <?php namespace Core\Providers;
 
-use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido;
 use Core\Models\Pedido\PedidoProduto;
-use Core\Models\Produto\Produto;
+use Core\Models\Produto;
 use Core\Observers\PedidoObserver;
 use Core\Observers\PedidoProdutoObserver;
 use Core\Observers\ProdutoObserver;

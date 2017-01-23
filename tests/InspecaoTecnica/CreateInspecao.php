@@ -2,7 +2,7 @@
 
 use Tests\CreateUsuario;
 use Tests\Core\CreatePedido;
-use Core\Models\Produto\Produto;
+use Core\Models\Produto;
 use InspecaoTecnica\Models\InspecaoTecnica;
 
 class CreateInspecao

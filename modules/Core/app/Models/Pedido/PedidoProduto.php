@@ -1,7 +1,7 @@
 <?php namespace Core\Models\Pedido;
 
 use Venturecraft\Revisionable\RevisionableTrait;
-use Core\Models\Produto\Produto;
+use Core\Models\Produto;
 use InspecaoTecnica\Models\InspecaoTecnica;
 
 /**

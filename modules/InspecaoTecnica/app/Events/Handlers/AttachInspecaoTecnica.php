@@ -3,7 +3,7 @@
 use Core\Events\OrderPaid;
 use Core\Events\OrderProductCreated;
 use Core\Events\OrderProductQtyIncreased;
-use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido;
 use Core\Models\Pedido\PedidoProduto;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;

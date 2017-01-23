@@ -1,7 +1,7 @@
 <?php namespace Core\Observers;
 
 use Core\Events\ProductStockUpdated;
-use Core\Models\Produto\Produto;
+use Core\Models\Produto;
 use Illuminate\Support\Facades\Event;
 
 class ProdutoObserver

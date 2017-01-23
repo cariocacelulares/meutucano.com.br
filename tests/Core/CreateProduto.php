@@ -1,6 +1,6 @@
 <?php namespace Tests\Core;
 
-use Core\Models\Produto\Produto;
+use Core\Models\Produto;
 use Core\Models\Produto\ProductStock;
 
 class CreateProduto
@@ -8,7 +8,7 @@ class CreateProduto
     /**
     * Cria um objeto de produto
     *
-    * @return Core\Models\Produto\Produto
+    * @return Core\Models\Produto
     */
     public static function create($data = [])
     {
@@ -35,7 +35,7 @@ class CreateProduto
     /**
     * Cria um objeto de produto seminovo
     *
-    * @return Core\Models\Produto\Produto
+    * @return Core\Models\Produto
     */
     public static function createSeminovo($data = [])
     {

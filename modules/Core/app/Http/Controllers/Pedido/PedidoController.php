@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
-use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;

@@ -3,7 +3,7 @@
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Core\Models\Produto\Produto;
+use Core\Models\Produto;
 use Illuminate\Routing\Controller;
 use Allnation\Models\AllnationProduct;
 use Allnation\Http\Services\AllnationApi;

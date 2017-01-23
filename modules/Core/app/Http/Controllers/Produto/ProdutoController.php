@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
-use Core\Models\Produto\Produto;
+use Core\Models\Produto;
 use Core\Models\Pedido\PedidoProduto;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;

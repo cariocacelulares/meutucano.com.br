@@ -3,7 +3,7 @@
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
 use Rastreio\Models\Rastreio;
-use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido;
 use Core\Models\Pedido\PedidoProduto;
 use InspecaoTecnica\Models\InspecaoTecnica;
 use Carbon\Carbon;

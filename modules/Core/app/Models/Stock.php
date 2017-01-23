@@ -1,11 +1,11 @@
-<?php namespace Core\Models\Produto;
+<?php namespace Core\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
  * Stock model
- * @package Core\Models\Produto;
+ * @package Core\Models
  */
 class Stock extends Model
 {
