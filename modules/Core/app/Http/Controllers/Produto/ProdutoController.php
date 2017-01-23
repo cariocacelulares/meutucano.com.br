@@ -104,7 +104,7 @@ class ProdutoController extends Controller
                 'status_description' => OrderParser::getStatusDescription($pedidoProduto['pedido']['status']),
                 'codigo_marketplace' => $pedidoProduto['pedido']['codigo_marketplace'],
                 'marketplace'        => $pedidoProduto['pedido']['marketplace'],
-                'quantidade'         => $pedidoProduto['quantidade'],
+                // 'quantidade'         => $pedidoProduto['quantidade'],
                 'valor'              => $pedidoProduto['valor'],
             ];
         }

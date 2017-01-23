@@ -6,6 +6,9 @@ use Venturecraft\Revisionable\RevisionableTrait;
 use Core\Models\Cliente;
 use Core\Models\Cliente\Endereco;
 use Rastreio\Models\Rastreio;
+use Core\Models\Pedido\Nota;
+use Core\Models\Pedido\PedidoProduto;
+use Core\Models\Pedido\Comentario;
 
 /**
  * Class Pedido

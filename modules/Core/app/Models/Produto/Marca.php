@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
+use Core\Models\Produto;
 
 /**
  * Class Marca

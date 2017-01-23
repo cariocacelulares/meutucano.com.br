@@ -1,7 +1,7 @@
 <?php namespace Core\Console\Commands;
 
 use Illuminate\Console\Command;
-use Core\Http\Controllers\PedidoController;
+use Core\Http\Controllers\Pedido\PedidoController;
 
 class CancelOldOrders extends Command
 {

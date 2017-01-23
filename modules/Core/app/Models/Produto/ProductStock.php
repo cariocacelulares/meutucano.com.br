@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Core\Models\Pedido\PedidoProduto;
+use Core\Models\Produto;
 
 /**
  * Class ProductStock

@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Core\Models\Pedido\Nota\Devolucao;
+use Core\Models\Pedido;
 
 /**
  * Class Nota

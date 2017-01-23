@@ -1,7 +1,7 @@
 <?php
 
 // Extensão do chrome para o shopsystem
-Route::get('pedidos/shopsystem/{taxvat}', 'Core\Http\Controllers\PedidoController@shopsystem');
+Route::get('pedidos/shopsystem/{taxvat}', 'Core\Http\Controllers\Pedido\PedidoController@shopsystem');
 
 Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namespace' => 'Core\Http\Controllers'], function () {
     /**
@@ -88,7 +88,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
         Route::put('prioridade/{pedido_id}', 'PedidoController@prioridade');
         Route::put('segurar/{pedido_id}', 'PedidoController@segurar');
     });
-    Route::resource('pedidos', 'PedidoController', ['except' => ['create', 'edit']]);
+    Route::resource('pedidos', 'Pedido\PedidoController', ['except' => ['create', 'edit']]);
 
     /**
      * Produtos
@@ -99,7 +99,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
         Route::get('list', 'ProdutoController@tableList');
         Route::get('search/{term}', 'ProdutoController@search');
     });
-    Route::resource('produtos', 'ProdutoController');
+    Route::resource('produtos', 'Produto\ProdutoController');
 
     /**
      * Marcas
@@ -126,7 +126,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
         Route::get('list', 'ClienteController@tableList');
         Route::put('email/{cliente_id}', 'ClienteController@changeEmail');
     });
-    Route::resource('clientes', 'ClienteController', ['except' => ['create', 'edit', 'store']]);
+    Route::resource('clientes', 'Cliente\ClienteController', ['except' => ['create', 'edit', 'store']]);
 
     /**
      * Endereço

@@ -2,6 +2,7 @@
 
 use Venturecraft\Revisionable\RevisionableTrait;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Core\Models\Produto;
 
 /**
  * Class ProdutoAtributoPivot

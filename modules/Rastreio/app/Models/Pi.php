@@ -2,7 +2,7 @@
 
 use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
-use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido;
 
 /**
  * Class Pi

@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use App\Models\Usuario\Usuario;
+use Core\Models\Pedido;
 
 /**
  * Class Ligacao

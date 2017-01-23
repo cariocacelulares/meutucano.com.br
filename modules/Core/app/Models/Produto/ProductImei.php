@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
+use Core\Models\Produto;
 
 /**
  * Class ProductImei

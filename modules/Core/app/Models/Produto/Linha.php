@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Core\Models\Produto\Linha\Atributo;
+use Core\Models\Produto;
 
 /**
  * Class Linha

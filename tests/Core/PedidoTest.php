@@ -2,7 +2,7 @@
 
 use Tests\TestCase;
 use Core\Models\Pedido;
-use Core\Http\Controllers\PedidoController;
+use Core\Http\Controllers\Pedido\PedidoController;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 

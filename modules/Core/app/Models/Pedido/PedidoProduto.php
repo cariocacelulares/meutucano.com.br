@@ -3,6 +3,7 @@
 use Venturecraft\Revisionable\RevisionableTrait;
 use Core\Models\Produto;
 use InspecaoTecnica\Models\InspecaoTecnica;
+use Core\Models\Pedido;
 
 /**
  * Class PedidoProduto
