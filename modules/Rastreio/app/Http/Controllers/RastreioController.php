@@ -50,7 +50,7 @@ class RastreioController extends Controller
             ->join('pedidos', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
             ->join('cliente_enderecos', 'cliente_enderecos.id', '=', 'pedidos.cliente_endereco_id')
-            ->whereIn('pedido_rastreios.status', [2, 3, 6])
+            ->whereIn('pedido_rastreios.status', [2, 3, 6, 9])
             ->orderBy('pedido_rastreios.created_at', 'DESC');
 
         $list = $this->handleRequest($list);
@@ -157,7 +157,7 @@ class RastreioController extends Controller
                 $this->refresh($rastreio);
             }
 
-            $rastreios = $model::whereNotIn('status', [2, 3, 4, 5, 7, 8])->get();
+            $rastreios = $model::whereNotIn('status', [2, 3, 4, 5, 7, 8, 9])->get();
 
             foreach ($rastreios as $rastreio) {
                 $this->refresh($rastreio);
@@ -208,8 +208,16 @@ class RastreioController extends Controller
             $prazoEntrega = \SomaDiasUteis($prazoEntrega, $rastreio->prazo);
             $prazoEntrega = date('Ymd', \dataToTimestamp($prazoEntrega));
 
+            $dateDiff = 0;
+            if ($rastreio->data_envio) {
+                $dateDiff = (Carbon::createFromFormat('Y-m-d', date('Y-m-d')))
+                    ->diffInDays(Carbon::createFromFormat('Y-m-d', $rastreio->data_envio));
+            }
+
             $status = 1;
-            if (!$ultimoEvento['acao']) {
+            if ($ultimoEvento === false && $dateDiff > 15) {
+                $status = 9;
+            } else if (!$ultimoEvento['acao']) {
                 $status = $rastreio->status;
             } elseif (strpos($ultimoEvento['detalhes'], 'por favor, entre em contato conosco clicando') !== false) {
                 $status = 3;
@@ -229,15 +237,17 @@ class RastreioController extends Controller
             }
 
             if ($rastreio->status == 0 && ($rastreio->status != $status)) {
-                $rastreio->data_envio = Carbon::createFromFormat('d/m/Y H:i', $this->firstStatus($rastreio->rastreio)['data'])->format('Y-m-d');
+                if ($firstStatusDate = $this->firstStatus($rastreio->rastreio)['data']) {
+                    $rastreio->data_envio = Carbon::createFromFormat('d/m/Y H:i', $firstStatusDate)->format('Y-m-d');
+                }
             }
 
             $rastreio->status = $status;
             $rastreio->save();
 
             return $rastreio;
-        } catch (\Exception $e) {
-            $data = ['exception' => $e->getMessage()];
+        } catch (\Exception $exception) {
+            $data = ['exception' => $exception->getMessage()];
 
             return $this->clientErrorResponse($data);
         }
