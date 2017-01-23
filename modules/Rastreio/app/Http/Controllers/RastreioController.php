@@ -26,7 +26,7 @@ use GuzzleHttp\Client;
 use Rastreio\Transformers\RastreioTransformer;
 use Rastreio\Transformers\Parsers\RastreioParser;
 use Rastreio\Http\Requests\Rastreio\DeleteRequest;
-use Rastreio\Http\Requests\Rastreio\RastreioRequest as Request;
+use Rastreio\Http\Requests\RastreioRequest as Request;
 
 /**
  * Class RastreioController
