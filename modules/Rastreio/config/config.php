@@ -20,7 +20,9 @@ return [
         6 => 'Retirada',
         7 => 'Tratado',
         8 => 'Solucionado',
+        9 => 'Desconhecido',
     ],
+
     'devolucao_status' => [
         0 => 'Endereço insuficiente',
         1 => 'Não procurado (Retirada)',
