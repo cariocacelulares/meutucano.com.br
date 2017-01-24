@@ -1,8 +1,8 @@
 <?php namespace Tests\Allnation;
 
-use Tests\TestCase;
-use App\Http\Controllers\Auth\AuthenticateController;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use App\Http\Controllers\Auth\AuthenticateController;
+use Tests\TestCase;
 
 class StockTest extends TestCase
 {

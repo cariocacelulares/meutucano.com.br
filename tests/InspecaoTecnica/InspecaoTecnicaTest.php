@@ -1,11 +1,12 @@
 <?php namespace Tests\InspecaoTecnica;
 
-use Tests\TestCase;
-use Tests\Core\CreateProduto;
-use Tests\Core\CreatePedido;
-use InspecaoTecnica\Models\InspecaoTecnica;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use InspecaoTecnica\Models\InspecaoTecnica;
+use Tests\TestCase;
+use Tests\Core\Create\Produto;
+use Tests\Core\Create\Pedido;
+use Tests\InspecaoTecnica\Create\InspecaoTecnica;
 
 class InspecaoTecnicaTest extends TestCase
 {
@@ -19,7 +20,7 @@ class InspecaoTecnicaTest extends TestCase
     */
     public function test__it_should_be_able_to_change_priority()
     {
-        /*$inspecao = CreateInspecao::create();
+        /*$inspecao = InspecaoTecnica::create();
 
         $this->json('POST', "/api/inspecao_tecnica/priority/{$inspecao->pedido_produtos_id}")
             ->seeJsonStructure([
@@ -38,14 +39,14 @@ class InspecaoTecnicaTest extends TestCase
     */
     public function test__it_should_be_able_to_attach_inspection_to_new_pedidos()
     {
-        /*$produto = CreateProduto::createSeminovo();
+        /*$produto = Produto::createSeminovo();
 
-        $inspecao = CreateInspecao::createWithNoAssociation([
+        $inspecao = InspecaoTecnica::createWithNoAssociation([
             'produto_sku' => $produto->sku,
             'revisado_at' => date('Y-m-d H:i:s'),
         ]);
 
-        $pedido = CreatePedido::create(['status' => 1], $produto->sku);
+        $pedido = Pedido::create(['status' => 1], $produto->sku);
 
         $inspecao = $inspecao->fresh();
 
@@ -59,8 +60,8 @@ class InspecaoTecnicaTest extends TestCase
     */
     public function test__it_should_be_able_to_create_new_inspection_to_new_pedidos()
     {
-        /*$produto = CreateProduto::createSeminovo();
-        $pedido  = CreatePedido::create(['status' => 1], $produto->sku);
+        /*$produto = Produto::createSeminovo();
+        $pedido  = Pedido::create(['status' => 1], $produto->sku);
 
         $inspecao = InspecaoTecnica::where('pedido_produtos_id', '=',
             $pedido->produtos()->first()->id)
@@ -76,8 +77,8 @@ class InspecaoTecnicaTest extends TestCase
     */
     public function test__it_should_delete_inspecao_when_pedido_canceled()
     {
-        /*$produto = CreateProduto::createSeminovo();
-        $pedido  = CreatePedido::create(['status' => 1], $produto->sku);
+        /*$produto = Produto::createSeminovo();
+        $pedido  = Pedido::create(['status' => 1], $produto->sku);
         $pedido->status = 5;
         $pedido->save();
 
@@ -118,8 +119,8 @@ class InspecaoTecnicaTest extends TestCase
      */
     public function test__it_should_attach_inspection_when_order_product_quantity_inscreased()
     {
-        /*$product      = CreateProduto::createSeminovo();
-        $order        = CreatePedido::create(['status' => 1], $product->sku);
+        /*$product      = Produto::createSeminovo();
+        $order        = Pedido::create(['status' => 1], $product->sku);
         $orderProduct = $order->produtos()->first();
 
         $orderProduct->quantidade = $orderProduct->quantidade + 1;
@@ -139,17 +140,17 @@ class InspecaoTecnicaTest extends TestCase
      */
     public function test__it_should_attach_inspection_when_order_product_quantity_inscreased_and_exists_an_inspection_without_order()
     {
-        /*$product = CreateProduto::createSeminovo();
+        /*$product = Produto::createSeminovo();
 
         $inspection = InspecaoTecnica::where('produto_sku', '=', $product->sku)
             ->first();
 
-        $inspection = CreateInspecao::createWithNoAssociation([
+        $inspection = InspecaoTecnica::createWithNoAssociation([
             'produto_sku' => $product->sku,
             'revisado_at' => date('Y-m-d H:i:s'),
         ]);
 
-        $order        = CreatePedido::create(['status' => 1], $product->sku);
+        $order        = Pedido::create(['status' => 1], $product->sku);
         $orderProduct = $order->produtos()->first();
 
         $orderProduct->quantidade = $orderProduct->quantidade + 1;
@@ -167,8 +168,8 @@ class InspecaoTecnicaTest extends TestCase
      */
     public function test__it_should_delete_non_reviewed_inspection_when_order_product_quantity_decreased()
     {
-        /*$product      = CreateProduto::createSeminovo();
-        $order        = CreatePedido::create(['status' => 1], $product->sku);
+        /*$product      = Produto::createSeminovo();
+        $order        = Pedido::create(['status' => 1], $product->sku);
         $orderProduct = $order->produtos()->first();
         $inspection   = InspecaoTecnica::where('pedido_produtos_id', '=', $orderProduct->id)->whereNull('revisado_at')
                             ->first();
@@ -188,8 +189,8 @@ class InspecaoTecnicaTest extends TestCase
      */
     public function test__it_should_detach_reviewed_inspection_when_order_product_quantity_decreased()
     {
-        /*$product      = CreateProduto::createSeminovo();
-        $order        = CreatePedido::create(['status' => 1], $product->sku);
+        /*$product      = Produto::createSeminovo();
+        $order        = Pedido::create(['status' => 1], $product->sku);
         $orderProduct = $order->produtos()->first();
         $inspection   = InspecaoTecnica::where('pedido_produtos_id', '=', $orderProduct->id)
                             ->first();
@@ -212,13 +213,13 @@ class InspecaoTecnicaTest extends TestCase
      */
     public function test__it_should_delete_non_reviewed_inspection_when_product_changed()
     {
-        /*$product      = CreateProduto::createSeminovo();
-        $order        = CreatePedido::create(['status' => 1], $product->sku);
+        /*$product      = Produto::createSeminovo();
+        $order        = Pedido::create(['status' => 1], $product->sku);
         $orderProduct = $order->produtos()->first();
         $inspection   = InspecaoTecnica::where('pedido_produtos_id', '=', $orderProduct->id)->whereNull('revisado_at')
                             ->first();
 
-        $orderProduct->produto_sku = (CreateProduto::createSeminovo())->sku;
+        $orderProduct->produto_sku = (Produto::createSeminovo())->sku;
         $orderProduct->save();
 
         $inspection = $inspection->fresh();
@@ -233,8 +234,8 @@ class InspecaoTecnicaTest extends TestCase
      */
     public function test__it_should_detach_reviewed_inspection_when_product_changed()
     {
-        /*$product      = CreateProduto::createSeminovo();
-        $order        = CreatePedido::create(['status' => 1], $product->sku);
+        /*$product      = Produto::createSeminovo();
+        $order        = Pedido::create(['status' => 1], $product->sku);
         $orderProduct = $order->produtos()->first();
         $inspection   = InspecaoTecnica::where('pedido_produtos_id', '=', $orderProduct->id)
                             ->first();
@@ -242,7 +243,7 @@ class InspecaoTecnicaTest extends TestCase
         $inspection->revisado_at = date('Y-m-d H:i:s');
         $inspection->save();
 
-        $orderProduct->produto_sku = (CreateProduto::createSeminovo())->sku;
+        $orderProduct->produto_sku = (Produto::createSeminovo())->sku;
         $orderProduct->save();
 
         $inspection = $inspection->fresh();
@@ -257,11 +258,11 @@ class InspecaoTecnicaTest extends TestCase
      */
     public function test__it_should_attach_inspection_when_product_changed()
     {
-        /*$product      = CreateProduto::createSeminovo();
-        $order        = CreatePedido::create(['status' => 1], $product->sku);
+        /*$product      = Produto::createSeminovo();
+        $order        = Pedido::create(['status' => 1], $product->sku);
         $orderProduct = $order->produtos()->first();
 
-        $orderProduct->produto_sku = (CreateProduto::createSeminovo())->sku;
+        $orderProduct->produto_sku = (Produto::createSeminovo())->sku;
         $orderProduct->save();
 
         $inspections = $orderProduct->inspecoes()->get();
@@ -276,8 +277,8 @@ class InspecaoTecnicaTest extends TestCase
      */
     public function test__it_should_detach_reviewed_inspection_when_order_product_is_deleted()
     {
-        /*$product      = CreateProduto::createSeminovo();
-        $order        = CreatePedido::create(['status' => 1], $product->sku);
+        /*$product      = Produto::createSeminovo();
+        $order        = Pedido::create(['status' => 1], $product->sku);
         $orderProduct = $order->produtos()->first();
         $inspection   = InspecaoTecnica::where('pedido_produtos_id', '=', $orderProduct->id)
                             ->first();
@@ -298,8 +299,8 @@ class InspecaoTecnicaTest extends TestCase
      */
     public function test__it_should_delete_non_reviewed_inspection_when_order_product_is_deleted()
     {
-        /*$product      = CreateProduto::createSeminovo();
-        $order        = CreatePedido::create(['status' => 1], $product->sku);
+        /*$product      = Produto::createSeminovo();
+        $order        = Pedido::create(['status' => 1], $product->sku);
         $orderProduct = $order->produtos()->first();
         $inspection   = InspecaoTecnica::where('pedido_produtos_id', '=', $orderProduct->id)->whereNull('revisado_at')
                             ->first();

@@ -1,10 +1,11 @@
 <?php namespace Tests\Rastreio;
 
-use Tests\TestCase;
-use Tests\Core\CreatePedido;
-use Rastreio\Models\Pi;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
+use Tests\Core\Create\Pedido;
+use Tests\Rastreio\Create\Rastreio;
+use Tests\Rastreio\Create\Pi;
 
 class PiTest extends TestCase
 {
@@ -18,7 +19,7 @@ class PiTest extends TestCase
         parent::setUp();
 
         if (!$this->rastreio) {
-            $this->rastreio = CreateRastreio::create();
+            $this->rastreio = Rastreio::create();
         }
     }
 
@@ -29,7 +30,7 @@ class PiTest extends TestCase
     */
     public function test__it_should_be_able_to_show_the_pi_from_rastreio()
     {
-        $pi = factory(Pi::class)->create([
+        $pi = Pi::create([
             'rastreio_id' => $this->rastreio->id
         ]);
 
@@ -47,7 +48,7 @@ class PiTest extends TestCase
     */
     public function test__it_should_be_able_to_list_pending_pis()
     {
-        factory(Pi::class)->create([
+        Pi::create([
             'acao'        => null,
             'rastreio_id' => $this->rastreio->id
         ]);
@@ -119,9 +120,9 @@ class PiTest extends TestCase
     */
     public function test__it_should_add_protocolo_to_pedido_when_pi_is_create()
     {
-        $pedido = CreatePedido::create();
+        $pedido = Pedido::create();
 
-        $this->rastreio = CreateRastreio::create([
+        $this->rastreio = Rastreio::create([
             'pedido_id' => $pedido->id
         ]);
 

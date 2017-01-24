@@ -1,11 +1,11 @@
-<?php namespace Tests\InspecaoTecnica;
+<?php namespace Tests\InspecaoTecnica\Create;
 
-use Tests\CreateUsuario;
-use Tests\Core\CreatePedido;
 use Core\Models\Produto;
-use InspecaoTecnica\Models\InspecaoTecnica;
+use InspecaoTecnica\Models\InspecaoTecnica as InspecaoTecnicaModel;
+use Tests\CreateUsuario;
+use Tests\Core\Create\Pedido;
 
-class CreateInspecao
+class InspecaoTecnica
 {
     /**
     * Cria um novo objeto de inspeção
@@ -14,9 +14,9 @@ class CreateInspecao
     */
     public static function create($data = [])
     {
-        $pedido = CreatePedido::create();
+        $pedido = Pedido::create();
 
-        return factory(InspecaoTecnica::class)->create(array_merge($data, [
+        return factory(InspecaoTecnicaModel::class)->create(array_merge($data, [
             'usuario_id'         => CreateUsuario::create()->id,
             'pedido_produtos_id' => $pedido->produtos()->first()->id,
             'produto_sku'        => $pedido->produtos()->first()->produto->sku,
@@ -30,7 +30,7 @@ class CreateInspecao
     */
     public static function createWithNoAssociation($data = [])
     {
-        return factory(InspecaoTecnica::class)->create(array_merge($data, [
+        return factory(InspecaoTecnicaModel::class)->create(array_merge($data, [
             'usuario_id' => CreateUsuario::create()->id
         ]));
     }

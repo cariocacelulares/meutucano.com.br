@@ -1,12 +1,12 @@
 <?php namespace Tests\Allnation;
 
-use VCR\VCR;
-use Tests\TestCase;
-use Allnation\Models\AllnationProduct;
-use Allnation\Http\Services\AllnationApi;
-use App\Http\Controllers\Auth\AuthenticateController;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Allnation\Http\Controllers\AllnationProductController;
+use VCR\VCR;
+use App\Http\Controllers\Auth\AuthenticateController;
+use Allnation\Models\AllnationProduct;
+use Allnation\Http\Services\AllnationApi;
+use Tests\TestCase;
 use Tests\Core\CreateProduto;
 
 class ProductTest extends TestCase

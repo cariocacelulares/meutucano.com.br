@@ -1,10 +1,11 @@
 <?php namespace Tests\Rastreio;
 
-use Tests\TestCase;
-use Rastreio\Models\Devolucao;
-use Tests\Core\CreatePedido;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
+use Tests\Core\Create\Pedido;
+use Tests\Rastreio\Create\Rastreio;
+use Tests\Rastreio\Create\Devolucao;
 
 class DevolucaoTest extends TestCase
 {
@@ -18,9 +19,9 @@ class DevolucaoTest extends TestCase
     */
     public function test__it_should_be_able_to_show_the_devolucao_from_rastreio()
     {
-        $rastreio = CreateRastreio::create();
+        $rastreio = Rastreio::create();
 
-        factory(Devolucao::class)->create([
+        Devolucao::create([
             'rastreio_id' => $rastreio->id
         ]);
 
@@ -36,9 +37,9 @@ class DevolucaoTest extends TestCase
     */
     public function test__it_should_be_able_to_list_pending_devolucoes()
     {
-        factory(Devolucao::class)->create([
+        Devolucao::create([
             'acao'        => null,
-            'rastreio_id' => CreateRastreio::create()->id
+            'rastreio_id' => Rastreio::create()->id
         ]);
 
         $this->json('GET', "/api/devolucoes/pending")
@@ -53,7 +54,7 @@ class DevolucaoTest extends TestCase
     */
     public function test__it_should_be_able_to_create_devolucao()
     {
-        $rastreio = CreateRastreio::create();
+        $rastreio = Rastreio::create();
 
         $this->json('POST', "/api/devolucoes", [
             'motivo'      => 1,
@@ -73,7 +74,7 @@ class DevolucaoTest extends TestCase
     */
     public function test__it_should_change_rastreio_status_when_devolucao_is_created()
     {
-        $rastreio = CreateRastreio::create();
+        $rastreio = Rastreio::create();
 
         $this->json('POST', "/api/devolucoes", [
             'motivo'      => 1,
@@ -92,9 +93,9 @@ class DevolucaoTest extends TestCase
     */
     public function test__it_should_add_protocolo_to_pedido_when_devolucao_is_create()
     {
-        $pedido = CreatePedido::create();
+        $pedido = Pedido::create();
 
-        $rastreio = CreateRastreio::create([
+        $rastreio = Rastreio::create([
             'pedido_id' => $pedido->id
         ]);
 

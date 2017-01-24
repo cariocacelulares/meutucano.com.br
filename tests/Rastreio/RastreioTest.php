@@ -1,13 +1,13 @@
 <?php namespace Tests\Rastreio;
 
-use VCR\VCR;
-use Tests\TestCase;
-use Tests\Core\CreatePedido;
-use MailThief\Testing\InteractsWithMail;
-use Rastreio\Http\Controllers\RastreioController;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Rastreio\Models\Rastreio;
+use MailThief\Testing\InteractsWithMail;
+use VCR\VCR;
+use Rastreio\Http\Controllers\RastreioController;
+use Tests\TestCase;
+use Tests\Rastreio\Create\Rastreio;
+use Tests\Core\Create\Pedido;
 
 class RastreioTest extends TestCase
 {
@@ -19,7 +19,7 @@ class RastreioTest extends TestCase
     {
         parent::setUp();
 
-        $this->rastreio = CreateRastreio::create();
+        $this->rastreio = Rastreio::create();
     }
 
     /**
@@ -28,7 +28,7 @@ class RastreioTest extends TestCase
     */
     public function test__it_should_be_validate_delete_note_on_cancel_invoice()
     {
-        $rastreio = $this->createRastreio();
+        $rastreio = Rastreio::create();
 
         $response = $this->json('DELETE', "/api/rastreios/{$rastreio->id}")
             ->seeStatusCode(400);
@@ -40,7 +40,7 @@ class RastreioTest extends TestCase
     */
     public function test__it_should_be_able_to_delete_invoice()
     {
-        $rastreio = $this->createRastreio();
+        $rastreio = Rastreio::create();
 
         $response = $this->json('DELETE', "/api/rastreios/{$rastreio->id}?delete_note=motivodaexclusao")
             ->seeStatusCode(204);
@@ -100,7 +100,7 @@ class RastreioTest extends TestCase
      */
     public function test__it_should_attach_rastreio_to_new_paid_order()
     {
-        $pedido = $this->createOrder([
+        $pedido = Pedido::create([
             'status'      => 1,
             'marketplace' => 'Site',
         ]);
@@ -116,7 +116,7 @@ class RastreioTest extends TestCase
      */
     public function test__it_should_attach_rastreio_on_order_paid()
     {
-        $pedido = $this->createOrder([
+        $pedido = Pedido::create([
             'status'      => 0,
             'marketplace' => 'Site',
         ]);
@@ -137,7 +137,7 @@ class RastreioTest extends TestCase
      */
     public function test__it_should_attach_rastreio_with_correct_shipment_service()
     {
-        $pedido = $this->createOrder([
+        $pedido = Pedido::create([
             'status'      => 1,
             'marketplace' => 'Site',
         ]);

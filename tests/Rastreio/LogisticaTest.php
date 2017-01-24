@@ -1,10 +1,11 @@
 <?php namespace Tests\Rastreio;
 
-use Tests\TestCase;
-use Tests\Core\CreatePedido;
-use Rastreio\Models\Logistica;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
+use Tests\Core\Create\Pedido;
+use Tests\Rastreio\Create\Rastreio;
+use Tests\Rastreio\Create\Logistica;
 
 class LogisticaTest extends TestCase
 {
@@ -18,9 +19,9 @@ class LogisticaTest extends TestCase
     */
     public function test__it_should_be_able_to_show_the_logistica_from_rastreio()
     {
-        $rastreio = CreateRastreio::create();
+        $rastreio = Rastreio::create();
 
-        factory(Logistica::class)->create([
+        Logistica::create([
             'rastreio_id' => $rastreio->id
         ]);
 
@@ -36,7 +37,7 @@ class LogisticaTest extends TestCase
     */
     public function test__it_should_be_able_to_create_logistica()
     {
-        $rastreio = CreateRastreio::create();
+        $rastreio = Rastreio::create();
 
         $this->json('POST', "/api/logisticas", [
             'autorizacao' => '45456464564',
@@ -57,7 +58,7 @@ class LogisticaTest extends TestCase
     */
     public function test__it_should_change_rastreio_status_when_logistica_is_created()
     {
-        $rastreio = CreateRastreio::create();
+        $rastreio = Rastreio::create();
 
         $this->json('POST', '/api/logisticas', [
             'autorizacao' => '45456464564',
@@ -78,9 +79,9 @@ class LogisticaTest extends TestCase
     */
     public function test__it_should_add_protocolo_to_pedido_when_logistica_is_create()
     {
-        $pedido = CreatePedido::create();
+        $pedido = Pedido::create();
 
-        $rastreio = CreateRastreio::create([
+        $rastreio = Rastreio::create([
             'pedido_id' => $pedido->id
         ]);
 

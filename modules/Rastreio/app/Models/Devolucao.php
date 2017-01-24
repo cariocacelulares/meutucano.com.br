@@ -25,7 +25,6 @@ class Devolucao extends \Eloquent
      */
     protected $fillable = [
         'rastreio_id',
-        'usuario_id',
         'motivo',
         'acao',
         'pago_cliente',
