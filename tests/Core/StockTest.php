@@ -15,20 +15,16 @@ class StockTest extends TestCase
      */
     public function test__it_should_be_able_to_create_stock()
     {
-        $include  = rand(10, 20);
-        $priority = rand(1, 10);
-
-        $this->json('POST', '/api/stocks', [
+        $data = [
             'title'    => 'Novo estoque',
-            'include'  => $include,
-            'priority' => $priority,
-        ])->seeStatusCode(201);
+            'include'  => rand(10, 20),
+            'priority' => rand(1, 10),
+        ];
 
-        $this->seeInDatabase('stocks', [
-            'title' => 'Novo estoque',
-            'include'  => $include,
-            'priority' => $priority,
-        ]);
+        $this->json('POST', '/api/stocks', $data)
+            ->seeStatusCode(201);
+
+        $this->seeInDatabase('stocks', $data);
 }
 
     /**
@@ -39,19 +35,17 @@ class StockTest extends TestCase
     {
         $stock = CreateStock::create();
 
-        $include  = rand(10, 20);
-        $priority = rand(1, 10);
-
-        $stock->update([
+        $data = [
             'title'    => 'Novo titulo',
-            'include'  => $include,
-            'priority' => $priority,
-        ]);
+            'include'  => rand(10, 20),
+            'priority' => rand(1, 10),
+        ];
 
-        $this->seeInDatabase('stocks', [
-            'title'    => 'Novo titulo',
-            'include'  => $include,
-            'priority' => $priority,
-        ]);
+        $this->json('PUT', "/api/stocks/{$stock->slug}", $data)
+            ->seeStatusCode(200);
+
+        $this->seeInDatabase('stocks', array_merge($data, [
+            'slug' => $stock->slug
+        ]));
     }
 }

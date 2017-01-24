@@ -49,7 +49,8 @@ $factory->define(\Core\Models\Stock::class, function () use ($faker) {
 */
 $factory->define(\Core\Models\Produto\ProductStock::class, function () use ($faker) {
     return [
-        'quantity' => $faker->randomNumber(1),
+        'quantity'       => $faker->randomNumber(1),
+        'serial_enabled' => $faker->numberBetween(0, 1),
     ];
 });
 

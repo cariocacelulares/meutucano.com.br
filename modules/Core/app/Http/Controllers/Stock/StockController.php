@@ -16,8 +16,7 @@ class StockController extends Controller
     const MODEL = Stock::class;
 
     /**
-     * Lista produtos para a tabela
-     *
+     * Lista para a tabela
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function tableList()

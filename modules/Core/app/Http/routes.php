@@ -134,12 +134,17 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     Route::resource('enderecos', 'Cliente\EnderecoController', ['except' => ['create', 'edit']]);
 
     /**
-     * Produtos
+     * Stock
      */
     Route::group(['prefix' => 'stocks', 'namespace' => 'Stock'], function () {
         Route::get('list', 'StockController@tableList');
     });
     Route::resource('stocks', 'Stock\StockController');
+
+    /**
+     * Product stock
+     */
+    Route::resource('product-stocks', 'Produto\ProductStockController');
 
     /**
      * Partials

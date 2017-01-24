@@ -25,6 +25,14 @@ class ProductStock extends Model
         'stock_slug',
         'product_sku',
         'quantity',
+        'serial_enabled',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'serial_enabled' => 'boolean',
     ];
 
     /**

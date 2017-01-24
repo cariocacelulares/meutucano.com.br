@@ -37,7 +37,6 @@ class Produto extends Model
         'referencia',
         'unidade',
         'estado',
-        'controle_serial',
         'ativo',
     ];
 
@@ -47,7 +46,6 @@ class Produto extends Model
     protected $casts = [
         'ativo'           => 'string',
         'estado'          => 'string',
-        'controle_serial' => 'boolean',
     ];
 
     /**
