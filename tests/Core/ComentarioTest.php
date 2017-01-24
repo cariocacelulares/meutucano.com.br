@@ -15,7 +15,7 @@ class ComentarioTest extends TestCase
     *
     * @return void
     */
-    public function it_should_list_comments_from_order()
+    public function test__it_should_list_comments_from_order()
     {
         $pedido = CreatePedido::create();
 

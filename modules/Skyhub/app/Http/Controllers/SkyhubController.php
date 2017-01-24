@@ -178,6 +178,7 @@ class SkyhubController extends Controller
 
             if (!\Config::get('skyhub.enabled')) {
                 Log::debug('Requisição bloqueada, a integração com o skyhub está desativada!');
+
                 return null;
             } else {
                 $client = new Client([
@@ -548,7 +549,7 @@ class SkyhubController extends Controller
 
         $diasPrazo = (int) RastreioController::deadline($rastreio, $cep) + 3;
         $prazo = SomaDiasUteis(date('d/m/Y'), $diasPrazo);
-        
+
         return Carbon::createFromFormat('d/m/Y', $prazo)->format('Y-m-d');
     }
 

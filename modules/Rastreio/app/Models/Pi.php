@@ -1,4 +1,4 @@
-<?php namespace Rastreio\Models\Rastreio;
+<?php namespace Rastreio\Models;
 
 use Venturecraft\Revisionable\RevisionableTrait;
 

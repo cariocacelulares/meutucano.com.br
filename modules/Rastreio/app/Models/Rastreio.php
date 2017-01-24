@@ -1,4 +1,4 @@
-<?php namespace Rastreio\Models\Rastreio;
+<?php namespace Rastreio\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;

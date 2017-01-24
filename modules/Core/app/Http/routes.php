@@ -134,6 +134,26 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     Route::resource('enderecos', 'Cliente\EnderecoController', ['except' => ['create', 'edit']]);
 
     /**
+     * Produtos
+     */
+    Route::group(['prefix' => 'stocks', 'namespace' => 'Stock'], function () {
+        Route::get('list', 'StockController@tableList');
+    });
+    Route::resource('stocks', 'Stock\StockController');
+
+    /**
+     * Partials
+     */
+    Route::group(['namespace' => 'Partials'], function () {
+        Route::post('upload', [
+            'middleware' => ['role:admin|gestor|atendimento|faturamento'],
+            'uses' => 'UploadController@upload'
+        ]);
+
+        Route::get('search', 'SearchController@search');
+    });
+
+    /**
      * Relatórios
      */
     Route::group(['middleware' => ['role:admin'], 'namespace' => 'Relatorio', 'prefix' => 'relatorios'], function () {
@@ -151,17 +171,5 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
         // Produtos genérico
         Route::post('retirada-estoque', 'ProdutoController@retiradaEstoque');
         Route::get('retirada-estoque/{return_type}', 'ProdutoController@retiradaEstoque');
-    });
-
-    /**
-     * Partials
-     */
-    Route::group(['namespace' => 'Partials'], function () {
-        Route::post('upload', [
-            'middleware' => ['role:admin|gestor|atendimento|faturamento'],
-            'uses' => 'UploadController@upload'
-        ]);
-
-        Route::get('search', 'SearchController@search');
     });
 });
