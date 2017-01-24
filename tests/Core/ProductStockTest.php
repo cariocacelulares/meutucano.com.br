@@ -1,8 +1,11 @@
 <?php namespace Tests\Core;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
+use Tests\Core\Create\Stock;
+use Tests\Core\Create\Produto;
+use Tests\Core\Create\ProductStock;
 
 class ProductStockTest extends TestCase
 {
@@ -15,8 +18,8 @@ class ProductStockTest extends TestCase
      */
     public function test__it_should_be_able_to_create_product_stock()
     {
-        $stockSlug  = CreateStock::create()->slug;
-        $productSku = CreateProduto::create()->sku;
+        $stockSlug  = Stock::create()->slug;
+        $productSku = Produto::create()->sku;
 
         $data = [
             'stock_slug'     => $stockSlug,
@@ -37,20 +40,20 @@ class ProductStockTest extends TestCase
      */
     public function test__it_should_be_able_to_update_product_stock_without_serial_enabled()
     {
-        $produtStock = CreateProductStock::createWithoutSerial();
+        $productStock = ProductStock::createWithoutSerial();
 
         $data = [
-            'quantity' => ($produtStock->quantity - 2),
+            'quantity' => ($productStock->quantity - 2),
         ];
 
-        $this->json('PUT', "/api/product-stocks/{$produtStock->id}", $data)
+        $this->json('PUT', "/api/product-stocks/{$productStock->id}", $data)
             ->seeStatusCode(200);
 
         $this->seeInDatabase('product_stocks', array_merge($data, [
-            'id'             => $produtStock->id,
-            'stock_slug'     => $produtStock->stock_slug,
-            'product_sku'    => $produtStock->product_sku,
-            'serial_enabled' => $produtStock->serial_enabled,
+            'id'             => $productStock->id,
+            'stock_slug'     => $productStock->stock_slug,
+            'product_sku'    => $productStock->product_sku,
+            'serial_enabled' => $productStock->serial_enabled,
         ]));
     }
 }

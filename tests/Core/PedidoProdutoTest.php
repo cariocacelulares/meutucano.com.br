@@ -1,8 +1,9 @@
 <?php namespace Tests\Core;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
+use Tests\Core\Create\Produto;
 
 class PedidoProdutoTest extends TestCase
 {
@@ -13,7 +14,7 @@ class PedidoProdutoTest extends TestCase
     {
         parent::setUp();
 
-        $this->produto = CreateProduto::create([
+        $this->produto = Produto::create([
             'estoque' => 10
         ]);
     }

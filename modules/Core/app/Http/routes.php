@@ -147,6 +147,11 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     Route::resource('product-stocks', 'Produto\ProductStockController');
 
     /**
+     * Product imei
+     */
+    Route::resource('product-imeis', 'Produto\ProductImeiController');
+
+    /**
      * Partials
      */
     Route::group(['namespace' => 'Partials'], function () {

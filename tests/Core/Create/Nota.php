@@ -1,9 +1,9 @@
-<?php namespace Tests\Core;
+<?php namespace Tests\Core\Create;
 
 use Tests\CreateUsuario;
-use Core\Models\Pedido\Nota;
+use Core\Models\Pedido\Nota as NotaModel;
 
-class CreateNota
+class Nota
 {
     /**
     * Create one invoice and create invoice test file
@@ -17,8 +17,8 @@ class CreateNota
             storage_path('app/public/nota/testNota.xml')
         );
 
-        return factory(Nota::class)->create(array_merge($data, [
-            'pedido_id'  => CreatePedido::create()->id,
+        return factory(NotaModel::class)->create(array_merge($data, [
+            'pedido_id'  => Pedido::create()->id,
             'usuario_id' => CreateUsuario::create()->id,
             'arquivo'    => 'testNota.xml'
         ]));

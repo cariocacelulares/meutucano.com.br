@@ -1,9 +1,10 @@
 <?php namespace Tests\Core;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use MailThief\Testing\InteractsWithMail;
+use Tests\TestCase;
+use Tests\Core\Create\Nota;
 
 class PedidoNotaTest extends TestCase
 {
@@ -15,12 +16,12 @@ class PedidoNotaTest extends TestCase
     {
         parent::setUp();
 
-        $this->invoice = CreateNota::create();
+        $this->invoice = Nota::create();
     }
 
     public function tearDown()
     {
-        CreateNota::reset();
+        Nota::reset();
 
         parent::tearDown();
     }
@@ -67,7 +68,7 @@ class PedidoNotaTest extends TestCase
     */
     public function test__it_should_be_validate_delete_note_on_cancel_invoice()
     {
-        $invoice = CreateNota::create();
+        $invoice = Nota::create();
 
         $response = $this->json('DELETE', "/api/notas/{$invoice->id}")
             ->seeStatusCode(400);
@@ -79,7 +80,7 @@ class PedidoNotaTest extends TestCase
     */
     public function test__it_should_be_able_to_delete_invoice()
     {
-        $invoice = CreateNota::create();
+        $invoice = Nota::create();
 
         $response = $this->json('DELETE', "/api/notas/{$invoice->id}?delete_note=motivodaexclusao")
             ->seeStatusCode(204);

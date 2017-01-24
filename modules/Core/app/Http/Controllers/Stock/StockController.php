@@ -26,7 +26,7 @@ class StockController extends Controller
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse(/*ProductTransformer::list($list)*/$list);
+        return $this->listResponse($list);
     }
 
     /**

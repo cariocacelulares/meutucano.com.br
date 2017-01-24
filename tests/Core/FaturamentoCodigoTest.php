@@ -1,10 +1,9 @@
 <?php namespace Tests\Core;
 
-use Tests\TestCase;
-use Core\Models\Pedido\FaturamentoCodigo;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Tests\Core\CreateFaturamentoCodigo;
+use Tests\TestCase;
+use Tests\Core\Create\FaturamentoCodigo;
 
 class FaturamentoCodigoTest extends TestCase
 {
@@ -18,14 +17,14 @@ class FaturamentoCodigoTest extends TestCase
     */
     public function test__it_should_be_able_to_generate_code()
     {
-        CreateFaturamentoCodigo::generate();
+        FaturamentoCodigo::generate();
 
-        $response = $this->json('GET', '/api/codigos/gerar/' . rand(0, 1))->seeJsonStructure([
-            'data' => [
-                'codigo'
-            ]
-        ]);
-
-        $this->seeStatusCode(200);
+        $response = $this->json('GET', '/api/codigos/gerar/' . rand(0, 1))
+            ->seeStatusCode(200)
+            ->seeJsonStructure([
+                'data' => [
+                    'codigo'
+                ]
+            ]);
     }
 }

@@ -1,8 +1,8 @@
-<?php namespace Tests\Core;
+<?php namespace Tests\Core\Create;
 
-use Core\Models\Produto\ProductStock;
+use Core\Models\Produto\ProductStock as ProductStockModel;
 
-class CreateProductStock
+class ProductStock
 {
     /**
     * Create a ProductStock register
@@ -12,14 +12,14 @@ class CreateProductStock
     public static function create($data = [])
     {
         if (!isset($data['stock_slug'])) {
-            $data['stock_slug'] = CreateStock::create()->slug;
+            $data['stock_slug'] = Stock::create()->slug;
         }
 
         if (!isset($data['product_sku'])) {
-            $data['product_sku'] = CreateProduto::create()->sku;
+            $data['product_sku'] = Produto::create()->sku;
         }
 
-        return factory(ProductStock::class)->create($data);
+        return factory(ProductStockModel::class)->create($data);
     }
 
     /**
@@ -29,7 +29,7 @@ class CreateProductStock
      */
     public static function createWithSerial($data = [])
     {
-        return CreateProductStock::create(array_merge(
+        return ProductStock::create(array_merge(
             $data,
             [
                 'serial_enabled' => true
@@ -44,7 +44,7 @@ class CreateProductStock
      */
     public static function createWithoutSerial($data = [])
     {
-        return CreateProductStock::create(array_merge(
+        return ProductStock::create(array_merge(
             $data,
             [
                 'serial_enabled' => false

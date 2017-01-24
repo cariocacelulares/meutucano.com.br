@@ -1,9 +1,10 @@
 <?php namespace Tests\Core;
 
-use Tests\TestCase;
-use Core\Models\Pedido\Comentario;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
+use Tests\Core\Create\Pedido;
+use Tests\Core\Create\Comentario;
 
 class ComentarioTest extends TestCase
 {
@@ -17,9 +18,9 @@ class ComentarioTest extends TestCase
     */
     public function test__it_should_list_comments_from_order()
     {
-        $pedido = CreatePedido::create();
+        $pedido = Pedido::create();
 
-        factory(Comentario::class)->create([
+        Comentario::create([
             'comentario' => 'Teste de comentário',
             'pedido_id'  => $pedido->id
         ]);
@@ -40,7 +41,7 @@ class ComentarioTest extends TestCase
     {
         $this->json('POST', '/api/comentarios', [
             'comentario' => 'Teste de comentário',
-            'pedido_id'  => CreatePedido::create()->id
+            'pedido_id'  => Pedido::create()->id
         ])->seeStatusCode(201);
 
         $this->seeInDatabase('pedido_comentarios', [
@@ -55,9 +56,9 @@ class ComentarioTest extends TestCase
     */
     public function test__it_should_delete_comment()
     {
-        $comentario = factory(Comentario::class)->create([
+        $comentario = Comentario::create([
             'comentario' => 'Teste de comentário',
-            'pedido_id'  => CreatePedido::create()->id
+            'pedido_id'  => Pedido::create()->id
         ]);
 
         $this->json('DELETE', "/api/comentarios/{$comentario->id}")

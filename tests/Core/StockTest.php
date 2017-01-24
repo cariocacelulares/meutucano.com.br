@@ -1,8 +1,9 @@
 <?php namespace Tests\Core;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
+use Tests\Core\Create\Stock;
 
 class StockTest extends TestCase
 {
@@ -33,7 +34,7 @@ class StockTest extends TestCase
      */
     public function test__it_should_be_able_to_update_stock()
     {
-        $stock = CreateStock::create();
+        $stock = Stock::create();
 
         $data = [
             'title'    => 'Novo titulo',

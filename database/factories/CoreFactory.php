@@ -55,6 +55,15 @@ $factory->define(\Core\Models\Produto\ProductStock::class, function () use ($fak
 });
 
 /**
+* ProductImei
+*/
+$factory->define(\Core\Models\Produto\ProductImei::class, function () use ($faker) {
+    return [
+        'imei' => str_random(15),
+    ];
+});
+
+/**
 * Produto
 */
 $factory->define(\Core\Models\Produto::class, function () use ($faker) {

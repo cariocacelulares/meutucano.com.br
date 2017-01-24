@@ -1,8 +1,8 @@
-<?php namespace Tests\Core;
+<?php namespace Tests\Core\Create;
 
-use Core\Models\Stock;
+use Core\Models\Stock as StockModel;
 
-class CreateStock
+class Stock
 {
     /**
     * Create a Stock register
@@ -11,6 +11,6 @@ class CreateStock
     */
     public static function create($data = [])
     {
-        return factory(Stock::class)->create($data);
+        return factory(StockModel::class)->create($data);
     }
 }

@@ -25,13 +25,6 @@ class ProductImei extends Model
     ];
 
     /**
-     * @var array
-     */
-    protected $appends = [
-        'pedidoProduto',
-    ];
-
-    /**
      * ProductStock
      * @return ProductStock
      */
@@ -50,10 +43,10 @@ class ProductImei extends Model
     }
 
     /**
-     * Returns the last order productStock
+     * Returns the last order product
      * @return PedidoProduto
      */
-    public function getPedidoProdutoAttribute()
+    public function lastOrderProduct()
     {
         return $this->pedidoProdutos->orderBy('created_at', 'desc')->first();
     }

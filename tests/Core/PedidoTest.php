@@ -1,10 +1,10 @@
 <?php namespace Tests\Core;
 
-use Tests\TestCase;
-use Core\Models\Pedido;
-use Core\Http\Controllers\Pedido\PedidoController;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Core\Http\Controllers\Pedido\PedidoController;
+use Tests\TestCase;
+use Tests\Core\Create\Pedido;
 
 class PedidoTest extends TestCase
 {
@@ -18,13 +18,14 @@ class PedidoTest extends TestCase
     */
     public function test__it_should_be_able_to_change_priority()
     {
-        $pedido = CreatePedido::create();
+        $pedido = Pedido::create();
 
         $this->json('PUT', "/api/pedidos/prioridade/{$pedido->id}", [
             'priorizado' => 1
         ])->seeStatusCode(200);
 
         $pedido = $pedido->fresh();
+
         $this->assertEquals(1, $pedido->priorizado);
     }
 
@@ -35,13 +36,14 @@ class PedidoTest extends TestCase
     */
     public function test__it_should_be_able_to_hold()
     {
-        $pedido = CreatePedido::create();
+        $pedido = Pedido::create();
 
         $this->json('PUT', "/api/pedidos/segurar/{$pedido->id}", [
             'segurar' => 1
         ])->seeStatusCode(200);
 
         $pedido = $pedido->fresh();
+
         $this->assertEquals(1, $pedido->segurado);
     }
 
@@ -52,7 +54,7 @@ class PedidoTest extends TestCase
     */
     public function test__it_should_not_be_able_to_cancel_without_protocolo_in_required_marketplaces()
     {
-        $pedido = CreatePedido::create([
+        $pedido = Pedido::create([
             'marketplace' => 'b2w',
             'status'      => 0
         ]);
@@ -69,7 +71,7 @@ class PedidoTest extends TestCase
     */
     public function test__it_should_be_able_to_cancel_without_protocolo_in_non_required_marketplaces()
     {
-        $pedido = CreatePedido::create([
+        $pedido = Pedido::create([
             'marketplace' => 'site',
             'status'      => 0
         ]);
@@ -79,6 +81,7 @@ class PedidoTest extends TestCase
         ])->seeStatusCode(200);
 
         $pedido = $pedido->fresh();
+
         $this->assertEquals(5, $pedido->status);
     }
 
@@ -89,7 +92,7 @@ class PedidoTest extends TestCase
     */
     public function test__it_should_mark_as_reembolso_when_canceled_after_paid()
     {
-        $pedido = CreatePedido::create([
+        $pedido = Pedido::create([
             'status' => 1
         ]);
 
@@ -99,6 +102,7 @@ class PedidoTest extends TestCase
         ])->seeStatusCode(200);
 
         $pedido = $pedido->fresh();
+
         $this->assertEquals(1, $pedido->reembolso);
     }
 
@@ -109,7 +113,7 @@ class PedidoTest extends TestCase
     */
     public function test__it_slould_receive_order_info_in_chorme_app_request()
     {
-        $order = CreatePedido::create([
+        $order = Pedido::create([
             'status' => 1,
             'codigo_marketplace' => 123456789
         ]);

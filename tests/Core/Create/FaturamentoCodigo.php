@@ -1,8 +1,8 @@
-<?php namespace Tests\Core;
+<?php namespace Tests\Core\Create;
 
-use Core\Models\Pedido\FaturamentoCodigo;
+use Core\Models\Pedido\FaturamentoCodigo as FaturamentoCodigoModel;
 
-class CreateFaturamentoCodigo
+class FaturamentoCodigo
 {
     /**
     * Cria um objeto de fataturamento codigo
@@ -11,7 +11,7 @@ class CreateFaturamentoCodigo
     */
     public static function create($data = [])
     {
-        return factory(FaturamentoCodigo::class)->create($data);
+        return factory(FaturamentoCodigoModel::class)->create($data);
     }
 
     /**
@@ -21,14 +21,14 @@ class CreateFaturamentoCodigo
     */
     public static function generate()
     {
-        if (!FaturamentoCodigo::find(0)) {
-            CreateFaturamentoCodigo::create([
+        if (!FaturamentoCodigoModel::find(0)) {
+            FaturamentoCodigoModel::create([
                 'servico' => 0,
             ]);
         }
 
-        if (!FaturamentoCodigo::find(1)) {
-            CreateFaturamentoCodigo::create([
+        if (!FaturamentoCodigoModel::find(1)) {
+            FaturamentoCodigoModel::create([
                 'servico' => 1,
             ]);
         }
