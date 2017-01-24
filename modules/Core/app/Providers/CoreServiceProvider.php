@@ -1,12 +1,14 @@
 <?php namespace Core\Providers;
 
+use Illuminate\Support\ServiceProvider;
 use Core\Models\Pedido;
 use Core\Models\Pedido\PedidoProduto;
 use Core\Models\Produto;
+use Core\Models\Produto\ProductStock;
 use Core\Observers\PedidoObserver;
 use Core\Observers\PedidoProdutoObserver;
 use Core\Observers\ProdutoObserver;
-use Illuminate\Support\ServiceProvider;
+use Core\Observers\ProductStockObserver;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -31,6 +33,7 @@ class CoreServiceProvider extends ServiceProvider
         Produto::observe(ProdutoObserver::class);
         Pedido::observe(PedidoObserver::class);
         PedidoProduto::observe(PedidoProdutoObserver::class);
+        ProductStock::observe(ProductStockObserver::class);
     }
 
     /**

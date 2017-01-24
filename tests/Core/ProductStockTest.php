@@ -29,7 +29,7 @@ class ProductStockTest extends TestCase
             ->seeStatusCode(201);
 
         $this->seeInDatabase('product_stocks', $data);
-}
+    }
 
     /**
      * If can update product stock without serial enabled via api
@@ -51,6 +51,30 @@ class ProductStockTest extends TestCase
         $this->seeInDatabase('product_stocks', array_merge($data, [
             'id'             => $productStock->id,
             'serial_enabled' => $productStock->serial_enabled,
+        ]));
+    }
+
+    /**
+     * If block update quantity of a product stock with serial enabled
+     * @return void
+     */
+    public function test__it_should_be_block_to_update_product_stock_quantity_with_serial_enabled()
+    {
+        $productStock = ProductStock::createWithSerial();
+
+        $data = [
+            'stock_slug'  => Stock::create()->slug,
+            'product_sku' => Produto::create()->sku,
+            'quantity'    => ($productStock->quantity + 2),
+        ];
+
+        $this->json('PUT', "/api/product-stocks/{$productStock->id}", $data)
+            ->seeStatusCode(200);
+
+        $this->seeInDatabase('product_stocks', array_merge($data, [
+            'id'             => $productStock->id,
+            'serial_enabled' => true,
+            'quantity'       => $productStock->quantity,
         ]));
     }
 }
