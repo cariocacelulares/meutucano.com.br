@@ -17,10 +17,8 @@ class ProductImeiTest extends TestCase
      */
     public function test__it_should_be_able_to_create_product_imei()
     {
-        $productStockId = ProductStock::create()->id;
-
         $data = [
-            'product_stock_id' => $productStockId,
+            'product_stock_id' => ProductStock::create()->id,
             'imei'             => str_random(15),
         ];
 
@@ -39,15 +37,15 @@ class ProductImeiTest extends TestCase
         $productImei = ProductImei::create();
 
         $data = [
-            'imei' => str_random(15),
+            'product_stock_id' => ProductStock::create()->id,
+            'imei'             => str_random(15),
         ];
 
         $this->json('PUT', "/api/product-imeis/{$productImei->id}", $data)
             ->seeStatusCode(200);
 
         $this->seeInDatabase('product_imeis', array_merge($data, [
-            'id'               => $productImei->id,
-            'product_stock_id' => $productImei->product_stock_id,
+            'id' => $productImei->id,
         ]));
     }
 }

@@ -2,14 +2,79 @@
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Core\Http\Controllers\Pedido\PedidoController;
 use Tests\TestCase;
 use Tests\Core\Create\Pedido;
+use Tests\Core\Create\Cliente;
+use Tests\Core\Create\Endereco;
+use Tests\Core\Create\FaturamentoCodigo;
 
 class PedidoTest extends TestCase
 {
     use WithoutMiddleware,
         DatabaseTransactions;
+
+    /**
+     * If can create order via api
+     * @return void
+     */
+    public function test__it_should_be_able_to_create_order()
+    {
+        FaturamentoCodigo::generate();
+
+        $cliente_id          = Cliente::create()->id;
+        $cliente_endereco_id = Endereco::create([
+            'cliente_id' => $cliente_id
+        ])->id;
+
+        $data = [
+            'cliente_id'          => $cliente_id,
+            'cliente_endereco_id' => $cliente_endereco_id,
+            'frete_valor'         => rand(1, 50),
+            'frete_metodo'        => 'sedex',
+            'pagamento_metodo'    => 'boleto',
+            'marketplace'         => 'SITE',
+            'operacao'            => '6108',
+            'total'               => rand(1, 1000),
+            'status'              => rand(0, 3),
+        ];
+
+        $this->json('POST', '/api/pedidos', $data)
+            ->seeStatusCode(201);
+
+        $this->seeInDatabase('pedidos', $data);
+    }
+
+    /**
+     * If can update order via api
+     * @return void
+     */
+    public function test__it_should_be_able_to_update_order()
+    {
+        $order = Pedido::create();
+
+        $cliente_id          = Cliente::create()->id;
+        $cliente_endereco_id = Endereco::create([
+            'cliente_id' => $cliente_id
+        ])->id;
+
+        $data = [
+            'cliente_id'          => $cliente_id,
+            'cliente_endereco_id' => $cliente_endereco_id,
+            'frete_valor'         => rand(1, 50),
+            'total'               => rand(1, 1000),
+            'status'              => rand(0, 3),
+        ];
+
+        $this->json('PUT', "/api/pedidos/{$order->id}", $data)
+            ->seeStatusCode(200);
+
+        $this->seeInDatabase('pedidos', array_merge($data, [
+            'frete_metodo'        => $order->frete_metodo,
+            'pagamento_metodo'    => $order->pagamento_metodo,
+            'marketplace'         => $order->marketplace,
+            'operacao'            => $order->operacao,
+        ]));
+    }
 
     /**
     * Testa se é possível alterar a prioridade do pedido

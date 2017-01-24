@@ -4,12 +4,14 @@ $faker = Faker\Factory::create('pt_BR');
 
 $factory->define(\Rastreio\Models\Rastreio::class, function () use ($faker) {
     return [
-        'data_envio' => $faker->dateTimeThisMonth->format('Y-m-d'),
-        'rastreio'   => 'PJ' . $faker->randomNumber(9) . 'BR',
-        'servico'    => 'PAC',
-        'valor'      => $faker->randomFloat(2, 10, 30),
-        'prazo'      => $faker->randomNumber(2),
-        'status'     => 0,
+        'data_envio'       => $faker->dateTimeThisMonth->format('Y-m-d'),
+        'rastreio'         => 'PJ' . $faker->randomNumber(9) . 'BR',
+        'servico'          => 'PAC',
+        'valor'            => $faker->randomFloat(2, 10, 30),
+        'prazo'            => $faker->randomNumber(2),
+        'status'           => 0,
+        'imagem_historico' => null,
+        'delete_note'      => null,
     ];
 });
 

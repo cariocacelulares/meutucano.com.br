@@ -22,13 +22,13 @@ class FaturamentoCodigo
     public static function generate()
     {
         if (!FaturamentoCodigoModel::find(0)) {
-            FaturamentoCodigoModel::create([
+            FaturamentoCodigo::create([
                 'servico' => 0,
             ]);
         }
 
         if (!FaturamentoCodigoModel::find(1)) {
-            FaturamentoCodigoModel::create([
+            FaturamentoCodigo::create([
                 'servico' => 1,
             ]);
         }

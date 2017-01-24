@@ -7,11 +7,12 @@ $faker = Faker\Factory::create('pt_BR');
 */
 $factory->define(\Core\Models\Cliente::class, function () use ($faker) {
     return [
-        'taxvat' => $faker->randomNumber(5) . $faker->randomNumber(6),
-        'tipo'   => 0,
-        'nome'   => $faker->name,
-        'fone'   => $faker->randomNumber(5) . $faker->randomNumber(5),
-        'email'  => $faker->email,
+        'taxvat'    => $faker->randomNumber(5) . $faker->randomNumber(6),
+        'tipo'      => 0,
+        'nome'      => $faker->name,
+        'fone'      => $faker->randomNumber(5) . $faker->randomNumber(5),
+        'email'     => $faker->email,
+        'inscricao' => null,
     ];
 });
 
@@ -24,7 +25,7 @@ $factory->define(\Core\Models\Cliente\Endereco::class, function () use ($faker) 
         'rua'         => $faker->streetName,
         'numero'      => $faker->buildingNumber,
         'complemento' => $faker->streetSuffix,
-        'bairro'      => 'Jardim américa',
+        'bairro'      => 'Centro',
         'cidade'      => $faker->city,
         'uf'          => 'SC',
     ];
@@ -79,13 +80,21 @@ $factory->define(\Core\Models\Produto::class, function () use ($faker) {
 */
 $factory->define(\Core\Models\Pedido::class, function () use ($faker) {
     return [
-        'frete_valor'      => $faker->randomFloat(2, 10, 40),
-        'frete_metodo'     => $faker->randomElement(['pac', 'sedex']),
-        'pagamento_metodo' => 'boleto',
-        'marketplace'      => $faker->randomElement(['B2W', 'CNOVA', 'MERCADOLIVRE', 'SITE', 'WALMART']),
-        'operacao'         => '6108',
-        'total'            => $faker->randomFloat(2, 800, 3000),
-        'status'           => $faker->numberBetween(0, 5)
+        'frete_valor'         => $faker->randomFloat(2, 10, 40),
+        'frete_metodo'        => $faker->randomElement(['pac', 'sedex']),
+        'pagamento_metodo'    => 'boleto',
+        'marketplace'         => $faker->randomElement(['B2W', 'CNOVA', 'MERCADOLIVRE', 'SITE', 'WALMART']),
+        'operacao'            => '6108',
+        'total'               => $faker->randomFloat(2, 800, 3000),
+        'status'              => $faker->numberBetween(0, 5),
+        'codigo_api'          => null,
+        'codigo_marketplace'  => null,
+        'estimated_delivery'  => null,
+        'protocolo'           => null,
+        'imagem_cancelamento' => null,
+        'segurado'            => false,
+        'reembolso'           => false,
+        'priorizado'          => false,
     ];
 });
 
@@ -152,6 +161,6 @@ $factory->define(Core\Models\Pedido\FaturamentoCodigo::class, function () use ($
         'servico' => $faker->unique()->numberBetween(0, 1),
         'prefix'  => str_random(2),
         'atual'   => '97255050',
-        'fim'     => '97256430'
+        'fim'     => '97256430',
     ];
 });

@@ -1,11 +1,10 @@
 <?php namespace Tests\Core\Create;
 
 use Core\Models\Pedido as PedidoModel;
-use Core\Models\Pedido\PedidoProduto as PedidoProdutoModel;
-use Core\Models\Produto as ProdutoModel;
-use Core\Models\Produto\ProductStock as ProductStockModel;
-use Core\Models\Cliente as ClienteModel;
-use Core\Models\Cliente\Endereco as EnderecoModel;
+use Tests\Core\Create\FaturamentoCodigo;
+use Tests\Core\Create\Cliente;
+use Tests\Core\Create\Endereco;
+use Tests\Core\Create\PedidoProduto;
 
 class Pedido
 {
@@ -18,23 +17,20 @@ class Pedido
     {
         FaturamentoCodigo::generate();
 
-        $cliente  = factory(ClienteModel::class)->create();
-        $endereco = factory(EnderecoModel::class)->create([
-            'cliente_id' => $cliente->id
-        ]);
+        if (!isset($data['cliente_id'])) {
+            $data['cliente_id'] = Cliente::create()->id;
+        }
 
-        $pedido = factory(PedidoModel::class)->create(array_merge($data, [
-            'cliente_id'          => $cliente->id,
-            'cliente_endereco_id' => $endereco->id
-        ]));
+        if (!isset($data['cliente_endereco_id'])) {
+            $data['cliente_endereco_id'] = Endereco::create([
+                'cliente_id' => $data['cliente_id']
+            ])->id;
+        }
 
-        $produto = ($productSku) ? ProdutoModel::find($productSku) : Produto::create();
-        $productStock = ProductStockModel::where('product_sku', '=', $produto->sku)->first();
+        $pedido = factory(PedidoModel::class)->create($data);
 
-        factory(PedidoProdutoModel::class)->create([
-            'pedido_id'        => $pedido->id,
-            'produto_sku'      => $produto->sku,
-            'product_stock_id' => $productStock->id,
+        PedidoProduto::create([
+            'pedido_id' => $pedido->id,
         ]);
 
         return $pedido;

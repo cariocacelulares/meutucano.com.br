@@ -19,7 +19,7 @@ class FaturamentoCodigoTest extends TestCase
     {
         FaturamentoCodigo::generate();
 
-        $response = $this->json('GET', '/api/codigos/gerar/' . rand(0, 1))
+        $this->json('GET', '/api/codigos/gerar/' . rand(0, 1))
             ->seeStatusCode(200)
             ->seeJsonStructure([
                 'data' => [

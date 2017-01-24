@@ -30,11 +30,6 @@ class PedidoProduto extends \Eloquent
     ];
 
     /**
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * @var array
      */
     protected $appends = [

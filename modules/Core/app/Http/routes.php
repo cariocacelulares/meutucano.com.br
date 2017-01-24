@@ -36,7 +36,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     /**
      * Pedido Produto
      */
-    Route::resource('pedido-produto', 'Pedido\PedidoProdutoController');
+    Route::resource('pedido-produtos', 'Pedido\PedidoProdutoController');
 
     /**
      * Notas
@@ -126,7 +126,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
         Route::get('list', 'ClienteController@tableList');
         Route::put('email/{cliente_id}', 'ClienteController@changeEmail');
     });
-    Route::resource('clientes', 'Cliente\ClienteController', ['except' => ['create', 'edit', 'store']]);
+    Route::resource('clientes', 'Cliente\ClienteController', ['except' => ['create', 'edit']]);
 
     /**
      * Endereço

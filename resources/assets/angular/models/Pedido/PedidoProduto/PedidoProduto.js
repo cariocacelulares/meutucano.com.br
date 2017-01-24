@@ -7,7 +7,7 @@
 
         function PedidoProdutoModel(Rest, Restangular) {
             var rest = angular.copy(Rest);
-            rest.baseUrl = 'pedido-produto';
+            rest.baseUrl = 'pedido-produtos';
 
             return rest;
         }

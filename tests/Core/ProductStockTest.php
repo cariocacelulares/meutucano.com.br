@@ -18,12 +18,9 @@ class ProductStockTest extends TestCase
      */
     public function test__it_should_be_able_to_create_product_stock()
     {
-        $stockSlug  = Stock::create()->slug;
-        $productSku = Produto::create()->sku;
-
         $data = [
-            'stock_slug'     => $stockSlug,
-            'product_sku'    => $productSku,
+            'stock_slug'     => Stock::create()->slug,
+            'product_sku'    => Produto::create()->sku,
             'quantity'       => 10,
             'serial_enabled' => rand(0, 1),
         ];
@@ -43,7 +40,9 @@ class ProductStockTest extends TestCase
         $productStock = ProductStock::createWithoutSerial();
 
         $data = [
-            'quantity' => ($productStock->quantity - 2),
+            'stock_slug'  => Stock::create()->slug,
+            'product_sku' => Produto::create()->sku,
+            'quantity'    => ($productStock->quantity + 2),
         ];
 
         $this->json('PUT', "/api/product-stocks/{$productStock->id}", $data)
@@ -51,8 +50,6 @@ class ProductStockTest extends TestCase
 
         $this->seeInDatabase('product_stocks', array_merge($data, [
             'id'             => $productStock->id,
-            'stock_slug'     => $productStock->stock_slug,
-            'product_sku'    => $productStock->product_sku,
             'serial_enabled' => $productStock->serial_enabled,
         ]));
     }
