@@ -9,7 +9,6 @@ use Core\Models\Produto;
 use Core\Models\Pedido\PedidoProduto;
 use Core\Http\Requests\ProdutoRequest as Request;
 use Core\Transformers\ProductTransformer;
-use Core\Transformers\Parsers\OrderParser;
 
 /**
  * Class ProdutoController
@@ -76,51 +75,28 @@ class ProdutoController extends Controller
      */
     public function show($id)
     {
-        $data = (self::MODEL)::find($id);
+        $product = (self::MODEL)
+            ::with([
+                'productStocks',
+                'pedidoProdutos'    => function ($query) {
+                    $query->with(['pedido']);
+                    $query->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id');
+                    $query->whereIn('pedidos.status', [0,1]);
+                    $query->orderBy('pedidos.status', 'ASC');
+                },
+                'inspecoesTecnicas' => function ($query) {
+                    $query->whereNull('inspecao_tecnica.pedido_produtos_id');
+                    $query->whereNotNull('inspecao_tecnica.revisado_at');
+                },
+            ])
+            ->where('produtos.sku', '=', $id)
+            ->first();
 
-        $pedidoProdutos = PedidoProduto
-            ::with('pedido')
-            ->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
-            ->where('produto_sku', '=', $data->sku)
-            ->whereIn('pedidos.status', [0,1])
-            ->orderBy('pedidos.status', 'ASC')
-            ->get()
-            ->toArray();
-
-        $attachedProducts = [];
-        foreach ($pedidoProdutos as $pedidoProduto) {
-            if (!isset($attachedProducts[$pedidoProduto['status']])) {
-                $attachedProducts[$pedidoProduto['status']] = 1;
-            } else {
-                $attachedProducts[$pedidoProduto['status']]++;
-            }
-
-            $attachedProducts['data'][] = [
-                'id'                 => $pedidoProduto['pedido']['id'],
-                'status'             => $pedidoProduto['pedido']['status'],
-                'status_description' => OrderParser::getStatusDescription($pedidoProduto['pedido']['status']),
-                'codigo_marketplace' => $pedidoProduto['pedido']['codigo_marketplace'],
-                'marketplace'        => $pedidoProduto['pedido']['marketplace'],
-                // 'quantidade'         => $pedidoProduto['quantidade'],
-                'valor'              => $pedidoProduto['valor'],
-            ];
+        if (!$product) {
+            return $this->notFoundResponse();
         }
 
-        $data->attachedProducts = $attachedProducts;
-
-        if ($data) {
-            $revisoes = InspecaoTecnica
-                ::where('produto_sku', '=', $data->sku)
-                ->whereNull('pedido_produtos_id')
-                ->whereNotNull('revisado_at')
-                ->get(['id']);
-
-            $data->revisoes = $revisoes ?: [];
-
-            return $this->showResponse(ProductTransformer::show($data));
-        }
-
-        return $this->notFoundResponse();
+        return $this->showResponse(ProductTransformer::show($product));
     }
 
     /**
@@ -214,7 +190,7 @@ class ProdutoController extends Controller
             $data->fill(Input::except(['atributos']));
             $data->save();
 
-            $attrs = Input::get('atributos');
+            /*$attrs = Input::get('atributos');
             if ($attrs) {
                 $data->atributos()->detach();
 
@@ -228,7 +204,7 @@ class ProdutoController extends Controller
                     ];
                 }
                 $data->atributos()->attach($atributos);
-            }
+            }*/
 
             return $this->showResponse($data);
         } catch (\Exception $exception) {

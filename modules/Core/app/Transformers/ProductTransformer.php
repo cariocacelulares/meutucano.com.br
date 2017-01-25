@@ -1,6 +1,7 @@
 <?php namespace Core\Transformers;
 
 use Core\Transformers\Parsers\ProductParser;
+use Core\Transformers\Parsers\OrderParser;
 
 /**
  * Class ProductTransformer
@@ -64,6 +65,32 @@ class ProductTransformer
      */
     public static function show($product)
     {
+        $inspecoesTecnicas = [];
+        foreach ($product->inspecoesTecnicas as $inspecaoTecnica) {
+            $inspecoesTecnicas[] = [
+                'id' => $inspecaoTecnica->id
+            ];
+        }
+
+        $attachedProducts = [];
+        foreach ($product->pedidoProdutos as $pedidoProduto) {
+            if (!isset($attachedProducts[$pedidoProduto['status']])) {
+                $attachedProducts[$pedidoProduto['status']] = 1;
+            } else {
+                $attachedProducts[$pedidoProduto['status']]++;
+            }
+
+            $attachedProducts['data'][] = [
+                'id'                 => $pedidoProduto['pedido']['id'],
+                'status'             => $pedidoProduto['pedido']['status'],
+                'status_description' => OrderParser::getStatusDescription($pedidoProduto['pedido']['status']),
+                'codigo_marketplace' => $pedidoProduto['pedido']['codigo_marketplace'],
+                'marketplace'        => $pedidoProduto['pedido']['marketplace'],
+                // 'quantidade'         => $pedidoProduto['quantidade'],
+                'valor'              => $pedidoProduto['valor'],
+            ];
+        }
+
         return [
             'sku'              => $product->sku,
             'unidade'          => $product->unidade,
@@ -73,8 +100,8 @@ class ProductTransformer
             'ncm'              => $product->ncm,
             'titulo'           => $product->titulo,
             'estoque'          => $product->estoque,
-            'revisoes'         => $product->revisoes,
-            'attachedProducts' => $product->attachedProducts,
+            'revisoes'         => $inspecoesTecnicas,
+            'attachedProducts' => $attachedProducts,
         ];
     }
 }

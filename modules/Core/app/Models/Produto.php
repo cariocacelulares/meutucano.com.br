@@ -3,8 +3,9 @@
 use Illuminate\Database\Eloquent\Model;
 use Sofa\Eloquence\Eloquence;
 use Venturecraft\Revisionable\RevisionableTrait;
+use InspecaoTecnica\Models\InspecaoTecnica;
+use Core\Models\Pedido\PedidoProduto;
 use Core\Models\Produto\ProductStock;
-use Core\Models\Produto\PedidoProduto;
 
 /**
  * Class Produto
@@ -74,6 +75,15 @@ class Produto extends Model
     }
 
     /**
+     * InspecaoTecnica
+     * @return InspecaoTecnica
+     */
+    public function inspecoesTecnicas()
+    {
+        return $this->hasMany(InspecaoTecnica::class, 'produto_sku', 'sku');
+    }
+
+    /**
      * Return the sum of included stocks
      * @return int
      */
@@ -81,13 +91,13 @@ class Produto extends Model
     {
         $stock = 0;
 
-        $product_stocks = $this->productStocks()
+        $productStocks = $this->productStocks()
                 ->join('stocks', 'stocks.slug', 'product_stocks.stock_slug')
                 ->where('stocks.include', '=', true)
                 ->get();
 
-        foreach ($product_stocks as $product_stock) {
-            $stock += $product_stock->quantity;
+        foreach ($productStocks as $productStock) {
+            $stock += $productStock->quantity;
         }
 
         return $stock;
