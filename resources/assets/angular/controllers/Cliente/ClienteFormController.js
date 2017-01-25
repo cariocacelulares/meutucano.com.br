@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('ClienteFormController', ClienteFormController);
 
-    function ClienteFormController($state, $stateParams, toaster, ValidationErrors, Cep, Cliente) {
+    function ClienteFormController($state, $stateParams, toaster, ValidationErrors, Cep, Endereco, Cliente) {
         var vm = this;
 
         vm.validationErrors = [];
@@ -15,12 +15,18 @@
             enderecos : []
         };
 
+        /**
+         * Add a empty address
+         */
         vm.addAddress = function() {
             vm.cliente.enderecos.push({
                 cliente_id: vm.cliente.id || null
             });
         }
 
+        /**
+         * On form loads
+         */
         vm.load = function() {
             if (vm.cliente.id) {
                 Cliente.get(vm.cliente.id).then(function(response) {
@@ -41,20 +47,22 @@
 
         vm.load();
 
+        /**
+         * Get and fill address by cep
+         * @param  {int} addressIndex
+         */
         vm.getAddress = function(addressIndex) {
             if (typeof vm.cliente.enderecos[addressIndex] !== 'undefined'
                 && typeof vm.cliente.enderecos[addressIndex].cep !== 'undefined'
                 && vm.cliente.enderecos[addressIndex].cep
             ) {
                 Cep.getAddress(vm.cliente.enderecos[addressIndex].cep).then(function(response) {
-                    vm.cliente.enderecos[addressIndex] = {
-                        bairro      : response.bairro,
-                        cidade      : response.cidade,
-                        complemento : response.complemento,
-                        numero      : response.numero,
-                        rua         : response.rua,
-                        uf          : response.uf
-                    };
+                    vm.cliente.enderecos[addressIndex].bairro      = response.bairro;
+                    vm.cliente.enderecos[addressIndex].cidade      = response.cidade;
+                    vm.cliente.enderecos[addressIndex].complemento = response.complemento;
+                    vm.cliente.enderecos[addressIndex].numero      = response.numero;
+                    vm.cliente.enderecos[addressIndex].rua         = response.rua;
+                    vm.cliente.enderecos[addressIndex].uf          = response.uf;
                 });
             }
         }

@@ -17,7 +17,7 @@
                  * @return {Object}
                  */
                 byClient: function(clientId) {
-                    return Restangular.all(baseUrl + '/cliente/', clientId).customGET();
+                    return Restangular.all(this.baseUrl + '/cliente/' + clientId).customGET();
                 }
             });
 

@@ -32,9 +32,14 @@
             </td>
             <td class="text-center">{{ cliente.created_at }}</td>
             <td class="text-center">
-                <a class="btn-info" ui-sref="app.clientes.detalhe({id: cliente.id})">
-                    <i class="fa-eye"></i>
-                </a>
+                <dropdown>
+                        <li>
+                            <a ui-sref="app.clientes.detalhe({id: cliente.id})"><i class="fa-eye"></i>&nbsp; Visualizar</a>
+                        </li>
+                        <li roles="admin|gestor">
+                            <a ui-sref="app.clientes.form({id: cliente.id})"><i class="fa-pencil"></i>&nbsp; Editar</a>
+                        </li>
+                </dropdown>
             </td>
         </tr>
     </tbody>
