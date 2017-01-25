@@ -131,6 +131,9 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     /**
      * Endereço
      */
+    Route::group(['prefix' => 'enderecos', 'namespace' => 'Cliente'], function () {
+        Route::get('cliente/{clienteId}', 'EnderecoController@byClient');
+    });
     Route::resource('enderecos', 'Cliente\EnderecoController', ['except' => ['create', 'edit']]);
 
     /**

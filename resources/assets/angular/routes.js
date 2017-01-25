@@ -144,9 +144,15 @@
                 })
 
                 .state('app.clientes.detalhe', {
-                    url: '/{id}',
+                    url: '/detalhe/{id}',
                     templateUrl: 'views/cliente/detalhe.html',
                     controller: 'ClienteDetalheController as ClienteDetalhe'
+                })
+
+                .state('app.clientes.form', {
+                    url: '/{id}',
+                    templateUrl: 'views/cliente/form.html',
+                    controller: 'ClienteFormController as ClienteForm'
                 })
 
                 /**

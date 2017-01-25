@@ -142,7 +142,6 @@ elixir(function(mix) {
             .angularMinify()
             .bowerJs()
             .bowerCss()
-            .html()
-            .version(versionable);
+            .html();
     }
 });

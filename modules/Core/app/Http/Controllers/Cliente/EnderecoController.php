@@ -60,4 +60,27 @@ class EnderecoController extends Controller
             ]);
         }
     }
+
+    /**
+     * Retorna um único recurso
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function byClient($clientId)
+    {
+        try {
+            $enderecos = (self::MODEL)
+                ::where('cliente_id', '=', $clientId)
+                ->get();
+
+            return $this->listResponse($enderecos);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao obter recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
+        }
+    }
 }
