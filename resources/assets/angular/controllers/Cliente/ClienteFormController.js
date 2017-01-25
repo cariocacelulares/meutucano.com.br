@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('ClienteFormController', ClienteFormController);
 
-    function ClienteFormController($stateParams, Cliente) {
+    function ClienteFormController($stateParams, Cep, Cliente) {
         var vm = this;
 
         vm.enderecos = [];
@@ -39,5 +39,24 @@
         }
 
         vm.load();
+
+        vm.getAddress = function(addressIndex) {
+            if (typeof vm.enderecos[addressIndex] !== 'undefined'
+                && typeof vm.enderecos[addressIndex].cep !== 'undefined'
+                && vm.enderecos[addressIndex].cep
+            ) {
+                Cep.getAddress(vm.enderecos[addressIndex].cep).then(function(response) {
+                    vm.enderecos[addressIndex] = {
+                        bairro      : response.bairro,
+                        cep         : response.cep || vm.enderecos[addressIndex].cep,
+                        cidade      : response.cidade,
+                        complemento : response.complemento,
+                        numero      : response.numero,
+                        rua         : response.rua,
+                        uf          : response.uf
+                    };
+                });
+            }
+        }
     }
 })();

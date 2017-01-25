@@ -5,6 +5,11 @@ Route::get('pedidos/shopsystem/{taxvat}', 'Core\Http\Controllers\Pedido\PedidoCo
 
 Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namespace' => 'Core\Http\Controllers'], function () {
     /**
+     * CEP
+     */
+     Route::get('cep/{cep}', 'Partials\CepController@getAddress');
+     
+    /**
      * Calls from storage
      */
      Route::get('storage/{path}/{filename}', function($path, $filename)

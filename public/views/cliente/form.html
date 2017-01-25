@@ -41,7 +41,7 @@
                 <div class="row form-group">
                     <div class="col-md-3">
                         <label for="cep">CEP</label>
-                        <input type="text" ng-model="endereco.cep" id="cep" placeholder="CEP do endereço" required />
+                        <input type="text" ng-model="endereco.cep" ng-change="ClienteForm.getAddress($index)" ng-model-options="{debounce:500}" id="cep" placeholder="CEP do endereço" required />
                     </div>
                     <div class="col-md-4">
                         <label for="rua">Rua</label>
@@ -66,8 +66,8 @@
                         <input type="text" ng-model="endereco.cidade" id="cidade" placeholder="Cidade" required />
                     </div>
                     <div class="col-md-3">
-                        <label for="estado">Estado</label>
-                        <input type="text" ng-model="endereco.estado" id="estado" placeholder="Estado" required />
+                        <label for="uf">UF</label>
+                        <input type="text" ng-model="endereco.uf" id="uf" placeholder="UF" required />
                     </div>
                 </div>
                 <hr/>
