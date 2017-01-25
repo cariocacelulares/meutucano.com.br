@@ -1,5 +1,6 @@
 <?php namespace Tests\Allnation;
 
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Allnation\Http\Controllers\AllnationProductController;
 use VCR\VCR;
@@ -7,11 +8,12 @@ use App\Http\Controllers\Auth\AuthenticateController;
 use Allnation\Models\AllnationProduct;
 use Allnation\Http\Services\AllnationApi;
 use Tests\TestCase;
-use Tests\Core\CreateProduto;
+use Tests\Core\Create\Produto;
 
 class ProductTest extends TestCase
 {
-    use DatabaseTransactions;
+    use WithoutMiddleware,
+        DatabaseTransactions;
 
     /**
      * Test if products can be imported from Allnation API
@@ -83,7 +85,7 @@ class ProductTest extends TestCase
      */
     public function test__it_should_be_able_to_import_stocks()
     {
-        $product = CreateProduto::create([
+        $product = Produto::create([
             'sku' => 9999
         ]);
 
