@@ -18,7 +18,7 @@ class ClientTransformer
     {
         $transformed = [];
         foreach ($clients as $client) {
-            $lastEndereco = (!$client->enderecos) ? [] : [
+            $lastEndereco = (!isset($client->enderecos[0])) ? [] : [
                 'cep'          => $client->enderecos[0]['cep'],
                 'cep_readable' => AddressParser::getCepReadable($client->enderecos[0]['cep']),
                 'cidade'       => $client->enderecos[0]['cidade'],
@@ -51,7 +51,7 @@ class ClientTransformer
         $transformed = [];
 
         foreach ($clients as $client) {
-            $lastEndereco = (!$client->enderecos) ? [] : [
+            $lastEndereco = (!isset($client->enderecos[0])) ? [] : [
                 'cep'          => $client->enderecos[0]['cep'],
                 'cep_readable' => AddressParser::getCepReadable($client->enderecos[0]['cep']),
                 'cidade'       => $client->enderecos[0]['cidade'],

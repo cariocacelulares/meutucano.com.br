@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Core\Models\Cliente;
 use Core\Models\Cliente\Endereco;
 use Core\Transformers\ClientTransformer;
+use Core\Http\Requests\ClientRequest as Request;
 
 /**
  * Class ClienteController
@@ -46,10 +47,55 @@ class ClienteController extends Controller
     }
 
     /**
+     * Cria novo recurso
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function store(Request $request)
+    {
+        try {
+            $data = Input::except(['enderecos']);
+
+            if (isset($data['taxvat'])) {
+                $data['taxvat'] = numbers($data['taxvat']);
+
+                if (strlen($data['taxvat']) > 11) {
+                    $data['tipo'] = 1;
+                } else {
+                    $data['tipo'] = 0;
+                }
+            }
+
+            $cliente = (self::MODEL)::create($data);
+
+            $enderecos = [];
+            foreach (Input::get('enderecos') as $endereco) {
+                $enderecos[] = new Endereco($endereco);
+            }
+
+            $cliente->enderecos()->saveMany($enderecos);
+
+            $cliente = (self::MODEL)
+                ::where('id', '=', $cliente->id)
+                ->with('enderecos')
+                ->first();
+
+            return $this->createdResponse($cliente);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function update($id)
+    public function update($id, Request $request)
     {
         if (!$data = (self::MODEL)::find($id)) {
             return $this->notFoundResponse();

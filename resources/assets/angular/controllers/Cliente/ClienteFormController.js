@@ -5,17 +5,18 @@
         .module('MeuTucano')
         .controller('ClienteFormController', ClienteFormController);
 
-    function ClienteFormController($stateParams, Cep, Cliente) {
+    function ClienteFormController($state, $stateParams, toaster, ValidationErrors, Cep, Cliente) {
         var vm = this;
 
-        vm.enderecos = [];
-        vm.loading   = false;
-        vm.cliente   = {
-            id : parseInt($stateParams.id) || null,
+        vm.validationErrors = [];
+        vm.loading          = false;
+        vm.cliente          = {
+            id        : parseInt($stateParams.id) || null,
+            enderecos : []
         };
 
         vm.addAddress = function() {
-            vm.enderecos.push({
+            vm.cliente.enderecos.push({
                 cliente_id: vm.cliente.id || null
             });
         }
@@ -27,13 +28,13 @@
                 });
 
                 Endereco.byClient(vm.cliente.id).then(function(response) {
-                    vm.enderecos = response;
+                    vm.cliente.enderecos = response;
 
-                    if (!vm.enderecos.length) {
+                    if (!vm.cliente.enderecos.length) {
                         vm.addAddress();
                     }
                 });
-            } else if (!vm.enderecos.length) {
+            } else if (!vm.cliente.enderecos.length) {
                 vm.addAddress();
             }
         }
@@ -41,14 +42,13 @@
         vm.load();
 
         vm.getAddress = function(addressIndex) {
-            if (typeof vm.enderecos[addressIndex] !== 'undefined'
-                && typeof vm.enderecos[addressIndex].cep !== 'undefined'
-                && vm.enderecos[addressIndex].cep
+            if (typeof vm.cliente.enderecos[addressIndex] !== 'undefined'
+                && typeof vm.cliente.enderecos[addressIndex].cep !== 'undefined'
+                && vm.cliente.enderecos[addressIndex].cep
             ) {
-                Cep.getAddress(vm.enderecos[addressIndex].cep).then(function(response) {
-                    vm.enderecos[addressIndex] = {
+                Cep.getAddress(vm.cliente.enderecos[addressIndex].cep).then(function(response) {
+                    vm.cliente.enderecos[addressIndex] = {
                         bairro      : response.bairro,
-                        cep         : response.cep || vm.enderecos[addressIndex].cep,
                         cidade      : response.cidade,
                         complemento : response.complemento,
                         numero      : response.numero,
@@ -58,5 +58,35 @@
                 });
             }
         }
+
+        /**
+         * Salva o cliente
+         *
+         * @return {void}
+         */
+        vm.save = function() {
+            vm.validationErrors = [];
+            Cliente.save(vm.cliente, vm.cliente.id).then(
+                function() {
+                    toaster.pop('success', 'Sucesso!', 'Cliente salvo com sucesso!');
+                    $state.go('app.clientes.index');
+                },
+                function(error) {
+                    vm.validationErrors = ValidationErrors.handle(error);
+                }
+            );
+        };
+
+        /**
+         * Exclui o cliente
+         *
+         * @return {void}
+         */
+        vm.destroy = function() {
+            Cliente.delete(vm.cliente.sku).then(function() {
+                toaster.pop('success', 'Sucesso!', 'Cliente excluido com sucesso!');
+                $state.go('app.clientes.index');
+            });
+        };
     }
 })();

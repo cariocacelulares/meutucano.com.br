@@ -28,9 +28,11 @@
 }
 
 .form-default {
-    padding: 20px;
-    border: 1px solid $color-master-light;
-    background: $color-white;
+    &:not(.style-form-box) {
+        padding: 20px;
+        border: 1px solid $color-master-light;
+        background: $color-white;
+    }
 
     &.form-clean {
         padding: 0;
@@ -46,6 +48,12 @@
                 margin-top: 0;
             }
         }
+    }
+
+    .form-box {
+        padding: 20px;
+        border: 1px solid $color-master-light;
+        background: $color-white;
     }
 
     .tabs-wrapper {
