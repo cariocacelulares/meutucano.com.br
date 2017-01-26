@@ -14,7 +14,7 @@ class PassSerialEnabledFieldToProductStocksTable extends Migration
     public function up()
     {
 		Schema::table('product_stocks', function(Blueprint $table) {
-            $table->boolean('serial_enabled')->default(false);
+            $table->boolean('serial_enabled')->default(false)->after('quantity');
         });
 
         Schema::table('produtos', function (Blueprint $table) {

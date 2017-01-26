@@ -8,30 +8,29 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
      * CEP
      */
      Route::get('cep/{cep}', 'Partials\CepController@getAddress');
-     
+
     /**
      * Calls from storage
      */
-     Route::get('storage/{path}/{filename}', function($path, $filename)
-     {
-         $path = storage_path("app/public/{$path}/{$filename}");
+     Route::get('storage/{path}/{filename}', function ($path, $filename) {
+        $path = storage_path("app/public/{$path}/{$filename}");
 
-         if (!Illuminate\Support\Facades\File::exists($path)) {
-             abort(404);
-         }
+        if (!Illuminate\Support\Facades\File::exists($path)) {
+            abort(404);
+        }
 
-         $file     = Illuminate\Support\Facades\File::get($path);
-         $type     = Illuminate\Support\Facades\File::mimeType($path);
-         $response = Illuminate\Support\Facades\Response::make($file, 200);
+        $file     = Illuminate\Support\Facades\File::get($path);
+        $type     = Illuminate\Support\Facades\File::mimeType($path);
+        $response = Illuminate\Support\Facades\Response::make($file, 200);
 
-         $response->header("Content-Type", $type);
+        $response->header("Content-Type", $type);
 
-         return $response;
+        return $response;
      });
 
     /**
-     * Notas
-     */
+    * Notas
+    */
     Route::group(['prefix' => 'notas', 'namespace' => 'Pedido'], function () {
         Route::get('xml/{id}/{devolucao}', 'NotaController@xml');
         Route::get('danfe/{id}/{retorno?}', 'NotaController@danfe');
@@ -39,24 +38,24 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     });
 
     /**
-     * Pedido Produto
-     */
+    * Pedido Produto
+    */
     Route::resource('pedido-produtos', 'Pedido\PedidoProdutoController');
 
     /**
-     * Notas
-     */
+    * Notas
+    */
     Route::resource('notas', 'Pedido\NotaController', ['except' => ['create', 'edit']]);
 
     /**
-     * Comentarios
-     */
+    * Comentarios
+    */
     Route::get('comentarios/{pedido_id}', 'Pedido\ComentarioController@commentsFromOrder');
     Route::resource('comentarios', 'Pedido\ComentarioController', ['except' => ['create', 'edit']]);
 
     /**
-     * Ligações
-     */
+    * Ligações
+    */
     Route::get('ligacoes/{pedido_id}', 'Pedido\LigacaoController@ligacoesFromOrder');
     Route::resource('ligacoes', 'Pedido\LigacaoController', ['except' => ['create', 'edit']]);
 
@@ -152,12 +151,16 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     /**
      * Product stock
      */
+    Route::group(['prefix' => 'product-stocks', 'namespace' => 'Produto'], function () {
+        Route::get('list/{sku}', 'ProductStockController@listBySku');
+        Route::post('entry', 'ProductStockController@entry');
+    });
     Route::resource('product-stocks', 'Produto\ProductStockController');
 
     /**
      * Product imei
      */
-    Route::resource('product-imeis', 'Produto\ProductImeiController');
+     Route::resource('product-imeis', 'Produto\ProductImeiController');
 
     /**
      * Partials

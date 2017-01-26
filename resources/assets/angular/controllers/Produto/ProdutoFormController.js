@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('ProdutoFormController', ProdutoFormController);
 
-    function ProdutoFormController($state, $stateParams, SweetAlert, toaster, TabsHelper, PedidoHelper, Produto, /*Linha, Marca, Atributo, */ValidationErrors) {
+    function ProdutoFormController($state, $stateParams, ngDialog, SweetAlert, toaster, TabsHelper, PedidoHelper, Produto, /*Linha, Marca, Atributo, */ValidationErrors) {
         var vm       = this;
         var original = {
             linha_id: null,
@@ -228,6 +228,19 @@
             Produto.delete(vm.produto.sku).then(function() {
                 toaster.pop('success', 'Sucesso!', 'Produto excluido com sucesso!');
                 $state.go('app.produtos.index');
+            });
+        };
+
+        vm.openImeiForm = function() {
+            ngDialog.open({
+                template: 'views/produto/entrada-produto.html',
+                controller: 'EntradaProdutoFormController',
+                controllerAs: 'EntradaProdutoForm',
+                data: {
+                    sku: vm.produto.sku
+                }
+            }).closePromise.then(function(data) {
+                vm.load();
             });
         };
     }

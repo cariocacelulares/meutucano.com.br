@@ -1,0 +1,36 @@
+<h1>Entrada de produtos</h1>
+<validation errors="EntradaProdutoForm.validationErrors"></validation>
+<form ng-submit="EntradaProdutoForm.save()" novalidate="novalidate" class="form-default">
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <label for="estoque">Estoque</label>
+            <select ng-model="EntradaProdutoForm.entrada.stock_slug"
+                 ng-change="EntradaProdutoForm.changeStock($index)">
+                <option ng-repeat="productStocks in EntradaProdutoForm.productStocks track by $index"
+                    value="{{ productStocks.stock.slug }}">
+                    {{ productStocks.stock.title }}
+                </option>
+            </select>
+        </div>
+    </div>
+    <div class="row" ng-if="!EntradaProdutoForm.productStock.serial_enabled">
+        <div class="col-md-12 form-group">
+            <label for="quantity">Quantidade</label>
+            <input ng-model="EntradaProdutoForm.entrada.quantity" id="quantity" type="number" min="1" placeholder="Quantidade do produto">
+        </div>
+    </div>
+    <div class="row" ng-if="EntradaProdutoForm.productStock.serial_enabled">
+        <div class="col-md-12 form-group">
+            <label for="imeis">Imeis</label>
+            <textarea ng-model="EntradaProdutoForm.entrada.imeis" id="imeis" placeholder="Um IMEI por linha">
+            </textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="pull-right">
+            <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
+            <a ng-if="EntradaProdutoForm.marca.id" confirm="EntradaProdutoForm.destroy()" class="btn-danger">Excluir</a>
+            <button busy="Salvando..." type="submit" class="btn btn-success">Salvar</button>
+        </div>
+    </div>
+</form>
