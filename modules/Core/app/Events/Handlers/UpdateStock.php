@@ -2,11 +2,13 @@
 
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;
-use Core\Events\OrderCanceled;
+use Core\Events\ProductImeiCreated;
+
+/*use Core\Events\OrderCanceled;
 use Core\Events\OrderProductCreated;
 use Core\Events\OrderProductUpdated;
 use Core\Events\OrderSaved;
-use Core\Models\Produto;
+use Core\Models\Produto;*/
 
 class UpdateStock
 {
@@ -18,6 +20,11 @@ class UpdateStock
      */
     public function subscribe(Dispatcher $events)
     {
+        $events->listen(
+            ProductImeiCreated::class,
+            '\Core\Events\Handlers\UpdateStock@onProductImeiCreated'
+        );
+
         /*$events->listen(
             OrderProductCreated::class,
             '\Core\Events\Handlers\UpdateStock@onOrderProductCreated'
@@ -35,12 +42,42 @@ class UpdateStock
     }
 
     /**
+     * Trigger stock updates on product imei created
+     *
+     * @param  ProductImeiCreated $event
+     * @return void
+     */
+    public function onProductImeiCreated(ProductImeiCreated $event)
+    {
+        Log::debug('Handler UpdateStock/onProductImeiCreated acionado!', [$event]);
+
+        if ($productImei = $event->productImei) {
+            $this->incrementStock($productImei->productStock);
+        } else {
+            Log::warning('ProductImei não encontrado!', [$productImei]);
+        }
+    }
+
+    public function incrementStock($productStock)
+    {
+        $productStock = $productStock->fresh();
+
+        $productStock->quantity++;
+        if ($productStock->save()) {
+            Log::debug("Estoque ({$productStock->id}) do produto {$productStock->sku}
+                 alterado de {$productStock->quantity} para " . ($productStock->quantity - 1));
+        } else {
+            Log::error("Falha ao incrementar o estoque ({$productStock->id}) do produto {$productStock->sku}");
+        }
+    }
+
+    /**
      * Trigger stock updates on order product created
      *
      * @param  OrderProductCreated  $event
      * @return void
      */
-    public function onOrderProductCreated(OrderProductCreated $event)
+    /*public function onOrderProductCreated(OrderProductCreated $event)
     {
         Log::debug('Handler UpdateStock/onOrderProductCreated acionado!', [$event]);
         $orderProduct = $event->orderProduct;
@@ -51,7 +88,7 @@ class UpdateStock
         } elseif ((int)$order->status !== 5) {
             $this->updateStock($orderProduct->produto, $orderProduct->quantidade);
         }
-    }
+    }*/
 
     /**
      * Trigger stock updates on order product updated
@@ -59,7 +96,7 @@ class UpdateStock
      * @param  OrderProductUpdated  $event
      * @return void
      */
-    public function onOrderProductUpdated(OrderProductUpdated $event)
+    /*public function onOrderProductUpdated(OrderProductUpdated $event)
     {
         Log::debug('Handler UpdateStock/onOrderProductUpdated acionado!', [$event]);
 
@@ -90,7 +127,7 @@ class UpdateStock
             Log::warning(logMessage($exception, 'Ocorreu um erro ao tentar diminuir o estoque no tucano (OrderSaved/UpdateStock/onOrderSaved)', [$orderProduct]));
             reportError('Ocorreu um erro ao tentar diminuir o estoque no tucano: ' . $exception->getMessage() . ' - ' . $exception->getLine() . ' - ' . (isset($product->sku) ? $product->sku : ''));
         }
-    }
+    }*/
 
     /**
      * Trigger stock updates when order canceled
@@ -98,7 +135,7 @@ class UpdateStock
      * @param  OrderCanceled  $event
      * @return void
      */
-    public function onOrderCanceled(OrderCanceled $event)
+    /*public function onOrderCanceled(OrderCanceled $event)
     {
         Log::debug('Handler UpdateStock/onOrderCanceled acionado!', [$event]);
 
@@ -117,7 +154,7 @@ class UpdateStock
             Log::warning(logMessage($exception, 'Ocorreu um erro ao tentar acrescentar o estoque no tucano (OrderCanceled/UpdateStock/onOrderCanceled)', [$order]));
             reportError('Ocorreu um erro ao tentar acrescentar o estoque no tucano: ' . $exception->getMessage() . ' - ' . $exception->getLine() . ' - ' . (isset($produto->sku) ? $produto->sku : ''));
         }
-    }
+    }*/
 
     /**
      * Update stock from product
@@ -127,7 +164,7 @@ class UpdateStock
      * @param  bool $sum
      * @return void
      */
-    public function updateStock($product, int $qty, bool $sum = null)
+    /*public function updateStock($product, int $qty, bool $sum = null)
     {
         if (!$product) {
             return null;
@@ -148,5 +185,5 @@ class UpdateStock
             Log::warning(logMessage($exception, 'Ocorreu um erro ao tentar alterar o estoque no tucano (OrderCanceled/UpdateStock)', [$product]));
             reportError('Ocorreu um erro ao tentar alterar o estoque no tucano: ' . $exception->getMessage() . ' - ' . $exception->getLine() . ' - ' . (isset($product->sku) ? $product->sku : ''));
         }
-    }
+    }*/
 }
