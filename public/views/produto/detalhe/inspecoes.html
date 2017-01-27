@@ -1,0 +1,4 @@
+<div ng-if="ProdutoDetalhe.inspecoesTecnicas">
+    <p class="m-b-30">Os códigos de inspeção abaixo já foram revisados e estão aguardando um pedido (<b>{{ ProdutoDetalhe.inspecoesTecnicas.length }}</b>)</p>
+    <span ng-repeat="revisao in ProdutoDetalhe.inspecoesTecnicas" class="col-md-3 fz-15 m-b-10 text-center">{{ revisao.id }}</span>
+</div>
