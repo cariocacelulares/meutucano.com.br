@@ -6,23 +6,23 @@
         .controller('ProdutoFormController', ProdutoFormController);
 
     function ProdutoFormController($state, $stateParams, ngDialog, SweetAlert,
-            toaster, Produto, /*Linha, Marca, Atributo, */ValidationErrors) {
+            toaster, Produto, /*Linha, Marca, Atributo, */ValidationErrors, ProductStock) {
         var vm       = this;
         var original = {
-            linha_id: null,
-            attrs   : null
+            linha_id : null,
+            attrs    : null
         };
 
         vm.produto = {
-            sku    : parseInt($stateParams.sku) || null,
-            unidade: 'un',
-            ativo  : '1',
-            estado : '0'
+            sku     : parseInt($stateParams.sku) || null,
+            unidade : 'un',
+            ativo   : '1',
+            estado  : '0'
         };
 
         vm.sku = {
-            original: vm.produto.sku,
-            gerado  : false
+            original : vm.produto.sku,
+            gerado   : false
         };
 
         vm.imeis = {};
@@ -31,6 +31,7 @@
         vm.marcas = {};*/
 
         vm.validationErrors = [];
+        vm.productStocks    = [];
 
         vm.load = function() {
             vm.loading = true;
@@ -58,6 +59,10 @@
                     vm.loadAtributos();*/
 
                 vm.loading = false;
+
+                ProductStock.listBySku(vm.produto.sku).then(function (response) {
+                    vm.productStocks = response;
+                });
             });
         };
 
@@ -199,7 +204,10 @@
                 Produto.save(vm.produto, ((vm.sku.gerado) ? vm.produto.sku : vm.sku.original)).then(
                     function() {
                         toaster.pop('success', 'Sucesso!', 'Produto salvo com sucesso!');
-                        $state.go('app.produtos.index');
+
+                        ProductStock.refresh(vm.productStocks).then(function (response) {
+                            $state.go('app.produtos.index');
+                        });
                     },
                     function(error) {
                         vm.validationErrors = ValidationErrors.handle(error);

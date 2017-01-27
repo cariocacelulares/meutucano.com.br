@@ -19,6 +19,25 @@ class ProductStockController extends Controller
     /**
      * Returns a list of ProductStock filtered by sku
      *
+     * @return Response
+     */
+    public function refresh()
+    {
+        try {
+            dd(Input::all());
+            //#TODO: atualizar o controle serial, validar e atualizar a qtd
+        } catch (\Exception $exception) {
+            \Log::error('Erro ao tentar atualizar as informações de estoque');
+
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Returns a list of ProductStock filtered by sku
+     *
      * @param  int $sku
      * @return Response
      */

@@ -157,6 +157,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     Route::group(['prefix' => 'product-stocks', 'namespace' => 'Produto'], function () {
         Route::get('list/{sku}', 'ProductStockController@listBySku');
         Route::post('entry', 'ProductStockController@entry');
+        Route::post('refresh', 'ProductStockController@refresh');
     });
     Route::resource('product-stocks', 'Produto\ProductStockController');
 

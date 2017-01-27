@@ -28,6 +28,16 @@
                  */
                 entry: function(data) {
                     return Restangular.one(rest.baseUrl + '/entry').customPOST(data);
+                },
+
+                /**
+                 * Atualiza as inforamcoes do product stock
+                 *
+                 * @param  {int} productStocks informacoes da entrada
+                 * @return {Object}
+                 */
+                refresh: function(productStocks) {
+                    return Restangular.one(rest.baseUrl + '/refresh').customPOST(productStocks);
                 }
             });
 
