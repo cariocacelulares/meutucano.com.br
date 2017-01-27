@@ -20,6 +20,23 @@ class InspecaoTecnicaController extends Controller
     const MODEL = InspecaoTecnica::class;
 
     /**
+     * Lists reviewed and not attached InspecaoTecnica by sku
+     *
+     * @param  int $sku
+     * @return response
+     */
+    public function listBySku($sku)
+    {
+        $inspecoesTecnicas = (self::MODEL)
+            ::where('produto_sku', '=', $sku)
+            ->whereNull('inspecao_tecnica.pedido_produtos_id')
+            ->whereNotNull('inspecao_tecnica.revisado_at')
+            ->get();
+
+        return $this->listResponse($inspecoesTecnicas);
+    }
+
+    /**
      * Lista inspecoes para a tabela
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -446,7 +463,10 @@ class InspecaoTecnicaController extends Controller
             ]);
 
             if ($inspecao->save()) {
-                Log::notice('Inspecao tecnica adicioada na fila para o pedido produto ' . $orderProduct->id, [$orderProduct->toArray(), $inspecao->toArray()])
+                Log::notice(
+                    'Inspecao tecnica adicioada na fila para o pedido produto ' . $orderProduct->id,
+                    [$orderProduct->toArray(), $inspecao->toArray()]
+                );
 
                 return [
                     'add',

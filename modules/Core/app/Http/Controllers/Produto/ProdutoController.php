@@ -76,20 +76,7 @@ class ProdutoController extends Controller
     public function show($id)
     {
         $product = (self::MODEL)
-            ::with([
-                'productStocks',
-                'pedidoProdutos'    => function ($query) {
-                    $query->with(['pedido']);
-                    $query->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id');
-                    $query->whereIn('pedidos.status', [0,1]);
-                    $query->orderBy('pedidos.status', 'ASC');
-                },
-                'inspecoesTecnicas' => function ($query) {
-                    $query->whereNull('inspecao_tecnica.pedido_produtos_id');
-                    $query->whereNotNull('inspecao_tecnica.revisado_at');
-                },
-            ])
-            ->where('produtos.sku', '=', $id)
+            ::where('produtos.sku', '=', $id)
             ->first();
 
         if (!$product) {
@@ -100,6 +87,8 @@ class ProdutoController extends Controller
     }
 
     /**
+     * Generates a new sku
+     *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */

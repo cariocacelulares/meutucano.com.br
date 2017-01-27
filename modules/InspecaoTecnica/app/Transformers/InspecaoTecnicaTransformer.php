@@ -10,6 +10,22 @@ use Core\Transformers\Parsers\OrderParser;
 class InspecaoTecnicaTransformer
 {
     /**
+     * @param  object $inspecoesTecnicas
+     * @return array
+     */
+    public static function listBySku($inspecoesTecnicas)
+    {
+        $data = [];
+        foreach ($inspecoesTecnicas as $inspecaoTecnica) {
+            $data[] = [
+                'id' => $inspecaoTecnica->id
+            ];
+        }
+
+        return $data;
+    }
+
+    /**
      * @param  object $inspecoes
      * @return array
      */

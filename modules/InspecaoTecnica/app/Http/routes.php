@@ -11,6 +11,8 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
         Route::get('fila', 'InspecaoTecnicaController@fila');
         Route::get('list', 'InspecaoTecnicaController@tableList');
         Route::get('get/{id}', 'InspecaoTecnicaController@showByPedidoProduto');
+
+        Route::get('list/{sku}', 'InspecaoTecnicaController@listBySku');
     });
 
     Route::resource('inspecao_tecnica', 'InspecaoTecnicaController');

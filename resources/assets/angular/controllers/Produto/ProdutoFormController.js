@@ -6,8 +6,7 @@
         .controller('ProdutoFormController', ProdutoFormController);
 
     function ProdutoFormController($state, $stateParams, ngDialog, SweetAlert,
-            toaster, TabsHelper, PedidoHelper, Produto, /*Linha, Marca, Atributo, */
-            ValidationErrors, ProductImei) {
+            toaster, Produto, /*Linha, Marca, Atributo, */ValidationErrors) {
         var vm       = this;
         var original = {
             linha_id: null,
@@ -32,8 +31,6 @@
         vm.marcas = {};*/
 
         vm.validationErrors = [];
-        vm.tabsHelper       = TabsHelper;
-        vm.pedidoHelper     = PedidoHelper;
 
         vm.load = function() {
             vm.loading = true;
@@ -61,12 +58,8 @@
                     vm.loadAtributos();*/
 
                 vm.loading = false;
-
-                ProductImei.listBySku(vm.produto.sku).then(function (response) {
-                    vm.imeis = response;
-                });
             });
-        }; 
+        };
 
         /*vm.loadLinhas = function() {
             vm.loading = true;

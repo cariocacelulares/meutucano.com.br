@@ -11,6 +11,16 @@
 
             angular.extend(rest, {
                 /**
+                 * Lista as inspecoes sem pedido e revisadas associadas ao sky
+                 *
+                 * @param  {int} sku
+                 * @return {Object}
+                 */
+                listBySku: function(sku) {
+                    return Restangular.one(rest.baseUrl + '/list/').customGET(sku);
+                },
+
+                /**
                  * Retorna uma inspecao pelo pedido produto
                  *
                  * @param  {int} pedido_produtos_id

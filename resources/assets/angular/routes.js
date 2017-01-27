@@ -251,6 +251,12 @@
                     controller: 'ProdutoFormController as ProdutoForm'
                 })
 
+                .state('app.produtos.detalhe', {
+                    url: '/detalhe/{sku}',
+                    templateUrl: 'views/produto/detalhe.html',
+                    controller: 'ProdutoDetalheController as ProdutoDetalhe'
+                })
+
                 /**
                  * Linhas
                  */

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
 use Core\Models\Pedido\PedidoProduto;
+use Core\Transformers\OrderProductTransformer;
 
 /**
  * Class PedidoProdutoController
@@ -14,6 +15,25 @@ class PedidoProdutoController extends Controller
     use RestControllerTrait;
 
     const MODEL = PedidoProduto::class;
+
+    /**
+     * Lists pending orders by sku
+     *
+     * @param  int $sku
+     * @return response
+     */
+    public function listBySku($sku)
+    {
+        $orderProducts = (self::MODEL)
+            ::with(['pedido'])
+            ->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
+            ->where('produto_sku', '=', $sku)
+            ->whereIn('pedidos.status', [0,1])
+            ->orderBy('pedidos.status', 'ASC')
+            ->get();
+
+        return $this->listResponse(OrderProductTransformer::listBySku($orderProducts));
+    }
 
     /**
      * Retorna um único recurso

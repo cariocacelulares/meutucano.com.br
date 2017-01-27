@@ -40,6 +40,9 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     /**
     * Pedido Produto
     */
+    Route::group(['prefix' => 'pedido-produtos', 'namespace' => 'Pedido'], function () {
+        Route::get('list/{sku}', 'PedidoProdutoController@listBySku');
+    });
     Route::resource('pedido-produtos', 'Pedido\PedidoProdutoController');
 
     /**
