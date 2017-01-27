@@ -522,7 +522,7 @@ class SkyhubController extends Controller
                 if (is_null($response) || $response === false) {
                     throw new \Exception("Não foi possível alterar o pedido {$pedido->codigo_api} para enviado na skyhub.", 1);
                 } else {
-                    Log::notice("Pedido {$pedido->codigo_api} alterado para enviado na skyhub.");
+                    Log::notice("Pedido {$pedido->codigo_api} alterado para entregue na skyhub.");
 
                     return true;
                 }
