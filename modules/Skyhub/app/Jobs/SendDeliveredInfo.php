@@ -55,16 +55,4 @@ class SendDeliveredInfo implements ShouldQueue
         # TODO: enviar notificacao
         \Log::critical(logMessage($exception, '(failed) Erro ao executar Job Skyhub\SendDeliveredInfo'), [$this->order]);
     }
-
-    /**
-     * The job fail to process.
-     *
-     * @param  Exception  $exception
-     * @return void
-     */
-    public function fail(Exception $exception)
-    {
-        # TODO: enviar notificacao
-        \Log::critical(logMessage($exception, '(fail) Erro ao executar Job Skyhub\SendDeliveredInfo'), [$this->order]);
-    }
 }

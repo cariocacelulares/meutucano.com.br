@@ -197,7 +197,7 @@ class SkyhubController extends Controller
                     throw new \Exception("API fora do ar", 1);
                 }
 
-                return json_decode($r->getBody(), true);
+                return json_decode($r->getBody(), true) ?: true;
             }
         } catch (\Exception $exception) {
             if (strstr($exception->getMessage(), 'CANCELED -> CANCELED') !== false
