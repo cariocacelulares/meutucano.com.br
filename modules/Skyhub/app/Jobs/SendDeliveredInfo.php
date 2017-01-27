@@ -33,7 +33,15 @@ class SendDeliveredInfo implements ShouldQueue
     public function handle()
     {
         \Log::debug('Job Skyhub\SendDeliveredInfo executado', [$this->order]);
-        with(new SkyhubController())->orderDelivered($this->order);
+        $action = with(new SkyhubController())->orderDelivered($this->order);
+
+        if ($action !== true) {
+            if (get_class($action) == 'Exception') {
+                throw new Exception($action->getMessage(), $action->getCode(), $action);
+            } else {
+                throw new Exception('Erro ao executar Job Skyhub\SendDeliveredInfo', 1);
+            }
+        }
     }
 
     /**
@@ -45,6 +53,18 @@ class SendDeliveredInfo implements ShouldQueue
     public function failed(Exception $exception)
     {
         # TODO: enviar notificacao
-        \Log::critical(logMessage($exception, 'Erro ao executar Job Skyhub\SendDeliveredInfo'), [$this->order]);
+        \Log::critical(logMessage($exception, '(failed) Erro ao executar Job Skyhub\SendDeliveredInfo'), [$this->order]);
+    }
+
+    /**
+     * The job fail to process.
+     *
+     * @param  Exception  $exception
+     * @return void
+     */
+    public function fail(Exception $exception)
+    {
+        # TODO: enviar notificacao
+        \Log::critical(logMessage($exception, '(fail) Erro ao executar Job Skyhub\SendDeliveredInfo'), [$this->order]);
     }
 }

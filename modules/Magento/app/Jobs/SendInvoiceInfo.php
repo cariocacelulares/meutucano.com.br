@@ -36,7 +36,7 @@ class SendInvoiceInfo implements ShouldQueue
         $action = with(new MagentoController())->orderInvoice($this->order);
 
         if ($action !== true) {
-            // throw new Exception('Erro ao executar Job Magento\SendInvoiceInfo', 1);
+            throw new Exception('Erro ao executar Job Magento\SendInvoiceInfo', 1);
         }
     }
 

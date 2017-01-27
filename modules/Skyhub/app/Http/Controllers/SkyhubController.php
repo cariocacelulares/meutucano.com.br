@@ -178,6 +178,7 @@ class SkyhubController extends Controller
 
             if (!\Config::get('skyhub.enabled')) {
                 Log::debug('Requisição bloqueada, a integração com o skyhub está desativada!');
+
                 return null;
             } else {
                 $client = new Client([
@@ -207,6 +208,7 @@ class SkyhubController extends Controller
             Log::warning(logMessage(
                 $exception, 'Não foi possível fazer a requisição para: ' . $url . ', method: ' . $method
             ));
+
             return false;
         }
     }
@@ -511,22 +513,33 @@ class SkyhubController extends Controller
     {
         try {
             if ((int)$pedido->status === 3 && $pedido->codigo_api) {
-                $this->request(
+                $response = $this->request(
                     sprintf('/orders/%s/delivery', $pedido->codigo_api),
                     [],
                     'POST'
                 );
-                Log::notice("Pedido {$pedido->codigo_api} alterado para enviado na skyhub.");
+
+                if (is_null($response) || $response === false) {
+                    throw new Exception("Não foi possível alterar o pedido {$pedido->codigo_api} para enviado na skyhub.", 1);
+                } else {
+                    Log::notice("Pedido {$pedido->codigo_api} alterado para enviado na skyhub.");
+
+                    return true;
+                }
             }
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             Log::critical(logMessage(
-                $e,
+                $exception,
                 'Não foi possível alterar o status do pedido na Skyhub'),
                 ['id' => $pedido->id, 'codigo_api' => $pedido->codigo_api]
             );
             reportError('Não foi possível alterar o status do pedido na Skyhub: ' .
-                $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $pedido->id);
+                $exception->getMessage() . ' - ' . $exception->getLine() . ' - ' . $pedido->id);
+
+                return new \Exception($exception->getMessage(), $exception->getCode(), $exception);
         }
+
+        return false;
     }
 
     /**

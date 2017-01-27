@@ -33,13 +33,13 @@ class SendInvoiceInfo implements ShouldQueue
     public function handle()
     {
         \Log::debug('Job Skyhub\SendInvoiceInfo executado', [$this->order]);
-
         $action = with(new SkyhubController())->orderInvoice($this->order);
+
         if ($action !== true) {
             if (get_class($action) == 'Exception') {
-                // throw new Exception($action->getMessage(), $action->getCode(), $action);
+                throw new Exception($action->getMessage(), $action->getCode(), $action);
             } else {
-                // throw new Exception('Erro ao executar Job Skyhub\SendInvoiceInfo', 1);
+                throw new Exception('Erro ao executar Job Skyhub\SendInvoiceInfo', 1);
             }
         }
     }
