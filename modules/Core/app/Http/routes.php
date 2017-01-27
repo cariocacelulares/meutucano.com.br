@@ -160,7 +160,10 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     /**
      * Product imei
      */
-     Route::resource('product-imeis', 'Produto\ProductImeiController');
+    Route::group(['prefix' => 'product-imeis', 'namespace' => 'Produto'], function () {
+        Route::get('list/{sku}', 'ProductImeiController@listBySku');
+    });
+    Route::resource('product-imeis', 'Produto\ProductImeiController');
 
     /**
      * Partials

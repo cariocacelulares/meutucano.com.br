@@ -16,6 +16,12 @@ class ProductStockController extends Controller
 
     const MODEL = ProductStock::class;
 
+    /**
+     * Returns a list of ProductStock filtered by sku
+     *
+     * @param  int $sku
+     * @return Response
+     */
     public function listBySku($sku)
     {
         try {
@@ -36,6 +42,7 @@ class ProductStockController extends Controller
 
     /**
      * Stock entry
+     *
      * @return response
      */
     public function entry()

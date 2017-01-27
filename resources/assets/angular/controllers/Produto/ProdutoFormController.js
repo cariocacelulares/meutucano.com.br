@@ -5,7 +5,9 @@
         .module('MeuTucano')
         .controller('ProdutoFormController', ProdutoFormController);
 
-    function ProdutoFormController($state, $stateParams, ngDialog, SweetAlert, toaster, TabsHelper, PedidoHelper, Produto, /*Linha, Marca, Atributo, */ValidationErrors) {
+    function ProdutoFormController($state, $stateParams, ngDialog, SweetAlert,
+            toaster, TabsHelper, PedidoHelper, Produto, /*Linha, Marca, Atributo, */
+            ValidationErrors, ProductImei) {
         var vm       = this;
         var original = {
             linha_id: null,
@@ -23,6 +25,8 @@
             original: vm.produto.sku,
             gerado  : false
         };
+
+        vm.imeis = {};
 
         /*vm.linhas = {};
         vm.marcas = {};*/
@@ -57,8 +61,12 @@
                     vm.loadAtributos();*/
 
                 vm.loading = false;
+
+                ProductImei.listBySku(vm.produto.sku).then(function (response) {
+                    vm.imeis = response;
+                });
             });
-        };
+        }; 
 
         /*vm.loadLinhas = function() {
             vm.loading = true;
