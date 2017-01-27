@@ -422,7 +422,7 @@ class SkyhubController extends Controller
                 );
                 Log::notice("Pedido {$order->id} / {$order->skyhub} cancelado na Skyhub.");
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Log::warning(
                 logMessage($e, "Não foi possível cancelar o pedido {$order->id} / {$order->skyhub} na Skyhub")
             );
@@ -520,7 +520,7 @@ class SkyhubController extends Controller
                 );
 
                 if (is_null($response) || $response === false) {
-                    throw new Exception("Não foi possível alterar o pedido {$pedido->codigo_api} para enviado na skyhub.", 1);
+                    throw new \Exception("Não foi possível alterar o pedido {$pedido->codigo_api} para enviado na skyhub.", 1);
                 } else {
                     Log::notice("Pedido {$pedido->codigo_api} alterado para enviado na skyhub.");
 

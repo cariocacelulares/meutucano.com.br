@@ -1,11 +1,11 @@
 <?php namespace Skyhub\Jobs;
 
-use Core\Models\Pedido\Pedido;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Core\Models\Pedido\Pedido;
 use Skyhub\Http\Controllers\SkyhubController;
 
 class SendDeliveredInfo implements ShouldQueue
