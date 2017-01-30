@@ -70,7 +70,7 @@ class ClienteController extends Controller
             $cliente = (self::MODEL)::create($data);
 
             $enderecos = [];
-            foreach (Input::get('enderecos') as $endereco) {
+            foreach ((Input::get('enderecos') ?: []) as $endereco) {
                 $enderecos[] = new Endereco($endereco);
             }
 
