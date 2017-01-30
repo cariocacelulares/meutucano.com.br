@@ -24,8 +24,29 @@ class ProductStockController extends Controller
     public function refresh()
     {
         try {
-            dd(Input::all());
-            //#TODO: atualizar o controle serial, validar e atualizar a qtd
+            foreach (Input::all() as $productStockData) {
+                $productStock = (self::MODEL)::find($productStockData['id']);
+
+                if ($productStock) {
+                    if ($productStockData['serial_enabled'] !== $productStock->serial_enabled) {
+                        $productStock->serial_enabled = $productStockData['serial_enabled'];
+                    }
+
+                    if (!$productStock->serial_enabled) {
+                        if ($productStockData['quantity'] !== $productStock->quantity) {
+                            $productStock->quantity = $productStockData['quantity'];
+                        }
+                    }
+
+                    if ($productStock->getDirty()) {
+                        $productStock->save();
+                    }
+                }
+            }
+
+            return $this->showResponse([
+                'updated' => true
+            ]);
         } catch (\Exception $exception) {
             \Log::error('Erro ao tentar atualizar as informações de estoque');
 

@@ -5,12 +5,13 @@
         .module('MeuTucano')
         .controller('ProdutoDetalheController', ProdutoDetalheController);
 
-    function ProdutoDetalheController($stateParams, PedidoHelper, Produto, ProductImei, PedidoProduto, InspecaoTecnica) {
+    function ProdutoDetalheController($stateParams, PedidoHelper, Produto, ProductImei, PedidoProduto, InspecaoTecnica, ProductStock) {
         var vm = this;
 
         vm.pedidoProdutos    = {};
         vm.imeis             = {};
         vm.inspecoesTecnicas = {};
+        vm.productStocks     = {};
         vm.produto           = {
             sku : parseInt($stateParams.sku)
         };
@@ -23,6 +24,10 @@
             Produto.get(vm.produto.sku).then(function(response) {
                 vm.produto = response;
                 vm.loading = false;
+
+                ProductStock.listBySku(vm.produto.sku).then(function (response) {
+                    vm.productStocks = response;
+                });
 
                 PedidoProduto.listBySku(vm.produto.sku).then(function (response) {
                     vm.pedidoProdutos = response;

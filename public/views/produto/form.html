@@ -41,7 +41,7 @@
                 </div>
             </div>
         </tab>
-        <tab name="estoques" title="Estoques">
+        <tab name="estoques" title="Estoques" ng-if="ProdutoForm.productStocks.length">
             <div class="row" ng-repeat="productStock in ProdutoForm.productStocks track by $index">
                 <div class="col-md-3 form-group">
                     <label for="title-{{ $index }}">Estoque</label>
@@ -58,12 +58,12 @@
                 <div class="col-md-2 form-group">
                     <label for="serial_enabled-{{ $index }}">Controle Serial</label>
                     <div class="radio radio-success pull-left">
-                        <input id="serial_enabled-{{ $index }}" type="radio" ng-model="productStock.serial_enabled" ng-value="true">
-                        <label for="serial_enabled-{{ $index }}">Sim</label>
+                        <input id="serial_enabled-{{ $index }}-true" type="radio" ng-model="productStock.serial_enabled" ng-value="true">
+                        <label for="serial_enabled-{{ $index }}-true">Sim</label>
                     </div>
                     <div class="radio radio-success pull-left m-t-10">
-                        <input id="serial_enabled-{{ $index }}" type="radio" ng-model="productStock.serial_enabled" ng-value="false">
-                        <label for="serial_enabled-{{ $index }}">Não</label>
+                        <input id="serial_enabled-{{ $index }}-false" type="radio" ng-model="productStock.serial_enabled" ng-value="false">
+                        <label for="serial_enabled-{{ $index }}-false">Não</label>
                     </div>
                 </div>
                 <div class="col-md-3 form-group">

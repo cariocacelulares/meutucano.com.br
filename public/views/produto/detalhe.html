@@ -37,5 +37,8 @@
         <tab name="imeisDisponiveis" title="Imeis disponíveis" ng-if="ProdutoDetalhe.imeis.length">
             <div static-include="views/produto/detalhe/imeis.html"></div>
         </tab>
+        <tab name="estoques" title="Estoques" ng-if="ProdutoDetalhe.productStocks.length">
+            <div static-include="views/produto/detalhe/stocks.html"></div>
+        </tab>
     </tabs>
 </form>
