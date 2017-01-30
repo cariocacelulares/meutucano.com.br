@@ -100,6 +100,13 @@ class Produto extends Model
             $stock += $productStock->quantity;
         }
 
+        $reservados = $this->pedidoProdutos()
+            ->join('pedidos', 'pedidos.id', 'pedido_produtos.pedido_id')
+            ->whereIn('pedidos.status', [0, 1])
+            ->count();
+
+        $stock -= $reservados;
+
         return $stock;
     }
 
