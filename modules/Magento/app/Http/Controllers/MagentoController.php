@@ -564,6 +564,51 @@ class MagentoController extends Controller
     }
 
     /**
+     * Update product price
+     *
+     * @param  Produto $product
+     * @return boolean
+     */
+    public function updatePrice(Produto $product)
+    {
+        if (!$this->checkApi()) {
+            return null;
+        }
+
+        try {
+            if (!$product || !$productSku = $product->sku) {
+                return $this->notFoundResponse();
+            }
+
+            $stock = $this->api->catalogProductUpdate(
+                $this->session,
+                $productSku,
+                [
+                    'price' => $product->valor,
+                ],
+                null,
+                'sku'
+            );
+
+            if (is_soap_fault($stock)) {
+                throw new \Exception('SOAP Fault ao tentar atualizar o stock no magento!', 1);
+            }
+
+            if ($stock) {
+                Log::notice('Preco do produto ' . $productSku . ' alterado para ' . $product->valor . ' no magento.');
+
+                return true;
+            }
+        } catch (\Exception $exception) {
+            Log::critical(logMessage($exception, "Erro ao atualizar o preco do produto {$productSku} no magento."));
+
+            return $exception;
+        }
+
+        return null;
+    }
+
+    /**
      * Remove produto do tucanomg
      *
      * @param  int  $productSku

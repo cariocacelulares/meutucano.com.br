@@ -4,7 +4,6 @@ use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Core\Models\Produto\Linha\Atributo;
-use Core\Events\ProductStockUpdated;
 use Sofa\Eloquence\Eloquence;
 
 /**
