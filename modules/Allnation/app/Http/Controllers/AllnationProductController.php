@@ -40,12 +40,11 @@ class AllnationProductController extends Controller
      *
      * @return void
      */
-    public function fetchProducts(AllnationApi $api)
+    public function fetchProducts(AllnationApi $api = null)
     {
-        $lastDateTimeRequest = t('allnation.product.lastrequest') ?: '2015-01-01 08:00:00';
+        $api = $api ?: new AllnationApi;
 
-        t('allnation.product.lastrequest',
-            Carbon::now()->format('Y-m-d H:i:s'));
+        $lastDateTimeRequest = t('allnation.product.lastrequest') ?: '2015-01-01 08:00:00';
 
         $products = $api->fetchProducts($lastDateTimeRequest);
 
@@ -83,6 +82,9 @@ class AllnationProductController extends Controller
                 ]);
             }
         }
+
+        t('allnation.product.lastrequest',
+            Carbon::now()->format('Y-m-d H:i:s'));
     }
 
     /**
@@ -110,5 +112,37 @@ class AllnationProductController extends Controller
             ->update([
                 'produto_sku' => $request->input('sku')
             ]);
+    }
+
+    /**
+     * Fetch stock updates from AllNation
+     *
+     * @return void
+     */
+    public function fetchStocks(AllnationApi $api)
+    {
+        $api = $api ?: new AllnationApi;
+        
+        $lastDateTimeRequest = t('allnation.stock.lastrequest') ?: '2015-01-01 08:00:00';
+
+        $products = $api->fetchStocks($lastDateTimeRequest);
+
+        if ($products) {
+            foreach ($products as $product) {
+                $productId = ltrim($product->CODIGO, '0');
+
+                $productAllNation = AllnationProduct::find($productId);
+                if ($sku = $productAllNation->produto_sku) {
+                    if ($tucanoProduct = Produto::find($sku)) {
+                        $tucanoProduct->estoque = (int) $product->ESTOQUEDISPONIVEL;
+                        $tucanoProduct->valor   = ceil(((float) ($product->PRECOSEMST) * 0.9075) / 0.7075) - 0.10;
+                        $tucanoProduct->save();
+                    }
+                }
+            }
+        }
+
+        t('allnation.stock.lastrequest',
+            Carbon::now()->format('Y-m-d H:i:s'));
     }
 }

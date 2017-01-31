@@ -31,6 +31,7 @@ class AllnationServiceProvider extends ServiceProvider
     public function register()
     {
         \App::register(AllnationApiProvider::class);
+        \App::register(ScheduleServiceProvider::class);
     }
 
     /**

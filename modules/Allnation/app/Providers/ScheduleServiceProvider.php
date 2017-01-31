@@ -1,12 +1,9 @@
-<?php namespace Magento\Providers;
+<?php namespace Allnation\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
-use Magento\Console\Commands\RefreshMagentoStock;
-use Magento\Console\Commands\MagentoPedido;
-use Magento\Console\Commands\MagentoPedidos;
-use Magento\Console\Commands\MagentoProdutos;
-use Magento\Console\Commands\MagentoPrecos;
+use Allnation\Console\Commands\AllnationStockAndPrice;
+use Allnation\Console\Commands\AllnationProducts;
 
 class ScheduleServiceProvider extends ServiceProvider
 {
@@ -16,11 +13,8 @@ class ScheduleServiceProvider extends ServiceProvider
      * @var array
      */
     protected $commands = [
-        RefreshMagentoStock::class,
-        MagentoPedido::class,
-        MagentoPedidos::class,
-        MagentoProdutos::class,
-        MagentoPrecos::class,
+        AllnationStockAndPrice::class,
+        AllnationProducts::class,
     ];
 
     /**
@@ -35,8 +29,11 @@ class ScheduleServiceProvider extends ServiceProvider
         $this->app->booted(function () {
             $schedule = $this->app->make(Schedule::class);
 
-            $schedule->command('magento:pedidos')
-                ->everyMinute();
+            // $schedule->command('allnation:stocks-prices')
+                // ->everyTenMinutes();
+
+            $schedule->command('allnation:products')
+                ->twiceDaily('00:30', '12:30');
         });
     }
 

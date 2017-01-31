@@ -72,6 +72,7 @@ class ProductTransformer
             'sku'              => $product->sku,
             'ncm'              => $product->ncm,
             'titulo'           => $product->titulo,
+            'valor'            => $product->valor,
             'estoque'          => $product->estoque,
             'revisoes'         => $product->revisoes,
             'attachedProducts' => $product->attachedProducts,

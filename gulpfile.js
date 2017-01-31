@@ -126,23 +126,20 @@ gulp.on('task_start', function (event) {
 });
 
 elixir(function(mix) {
-    var versionable = [
-        'public/assets/css/app.min.css',
-        'public/assets/js/app.min.js'
-    ];
-
     if (inProduction) {
         mix
             .customSass()
             .angularMinify()
-            .version(versionable);
+            .version([
+                'public/assets/css/app.min.css',
+                'public/assets/js/app.min.js'
+            ]);
     } else {
         mix
             .customSass()
             .angularMinify()
             .bowerJs()
             .bowerCss()
-            .html()
-            .version(versionable);
+            .html();
     }
 });

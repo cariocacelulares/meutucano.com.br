@@ -1,6 +1,7 @@
 <?php namespace Core\Observers;
 
 use Core\Events\ProductStockUpdated;
+use Core\Events\ProductPriceUpdated;
 use Core\Models\Produto\Produto;
 use Illuminate\Support\Facades\Event;
 
@@ -18,6 +19,10 @@ class ProdutoObserver
 
         if (isset($dirty['estoque'])) {
             Event::fire(new ProductStockUpdated($product));
+        }
+
+        if (isset($dirty['valor'])) {
+            Event::fire(new ProductPriceUpdated($product));
         }
     }
 }
