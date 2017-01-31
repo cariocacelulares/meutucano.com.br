@@ -33,10 +33,10 @@ class SendInvoiceInfo implements ShouldQueue
     public function handle()
     {
         \Log::debug('Job Skyhub\SendInvoiceInfo executado', [$this->order]);
-
         $action = with(new SkyhubController())->orderInvoice($this->order);
+
         if ($action !== true && app('env') !== 'testing') {
-            if (get_class($action) == 'Exception') {
+            if (!is_bool($action) && !is_null($action) && get_class($action) == 'Exception') {
                 throw new Exception($action->getMessage(), $action->getCode(), $action);
             } else {
                 throw new Exception('Erro ao executar Job Skyhub\SendInvoiceInfo', 1);
@@ -53,16 +53,5 @@ class SendInvoiceInfo implements ShouldQueue
     public function failed(Exception $exception)
     {
         \Log::critical(logMessage($exception, '(failed) Erro ao executar Job Skyhub\SendInvoiceInfo'), [$this->order]);
-    }
-
-    /**
-     * The job fail to process.
-     *
-     * @param  Exception  $exception
-     * @return void
-     */
-    public function fail(Exception $exception)
-    {
-        \Log::critical(logMessage($exception, '(fail) Erro ao executar Job Skyhub\SendInvoiceInfo'), [$this->order]);
     }
 }

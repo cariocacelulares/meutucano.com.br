@@ -197,7 +197,7 @@ class SkyhubController extends Controller
                     throw new \Exception("API fora do ar", 1);
                 }
 
-                return json_decode($r->getBody(), true);
+                return json_decode($r->getBody(), true) ?: true;
             }
         } catch (\Exception $exception) {
             if (strstr($exception->getMessage(), 'CANCELED -> CANCELED') !== false
@@ -514,12 +514,19 @@ class SkyhubController extends Controller
     {
         try {
             if ((int)$pedido->status === 3 && $pedido->codigo_api) {
-                $this->request(
+                $response = $this->request(
                     sprintf('/orders/%s/delivery', $pedido->codigo_api),
                     [],
                     'POST'
                 );
-                Log::notice("Pedido {$pedido->codigo_api} alterado para enviado na skyhub.");
+
+                if (is_null($response) || $response === false) {
+                    throw new \Exception("Não foi possível alterar o pedido {$pedido->codigo_api} para enviado na skyhub.", 1);
+                } else {
+                    Log::notice("Pedido {$pedido->codigo_api} alterado para entregue na skyhub.");
+
+                    return true;
+                }
             }
         } catch (\Exception $exception) {
             Log::critical(logMessage(
@@ -529,7 +536,11 @@ class SkyhubController extends Controller
             );
             reportError('Não foi possível alterar o status do pedido na Skyhub: ' .
                 $exception->getMessage() . ' - ' . $exception->getLine() . ' - ' . $pedido->id);
+
+                return new \Exception($exception->getMessage(), $exception->getCode(), $exception);
         }
+
+        return false;
     }
 
     /**
