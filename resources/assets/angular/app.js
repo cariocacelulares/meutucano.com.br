@@ -27,6 +27,7 @@
             'ngSanitize',
             'ui.select',
             'ngRaven',
-            'textAngular'
+            'textAngular',
+            'ui.utils.masks'
         ]);
 })();
