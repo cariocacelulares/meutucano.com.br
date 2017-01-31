@@ -44,8 +44,8 @@ class AllnationProductController extends Controller
     {
         $lastDateTimeRequest = t('allnation.product.lastrequest') ?: '2015-01-01 08:00:00';
 
-        t('allnation.product.lastrequest',
-            Carbon::now()->format('Y-m-d H:i:s'));
+        // t('allnation.product.lastrequest',
+        //     Carbon::now()->format('Y-m-d H:i:s'));
 
         $products = $api->fetchProducts($lastDateTimeRequest);
 
@@ -110,5 +110,35 @@ class AllnationProductController extends Controller
             ->update([
                 'produto_sku' => $request->input('sku')
             ]);
+    }
+
+    /**
+     * Fetch stock updates from AllNation
+     *
+     * @return void
+     */
+    public function fetchStocks(AllnationApi $api)
+    {
+        $lastDateTimeRequest = t('allnation.stock.lastrequest') ?: '2015-01-01 08:00:00';
+
+        t('allnation.stock.lastrequest',
+            Carbon::now()->format('Y-m-d H:i:s'));
+
+        $products = $api->fetchStocks($lastDateTimeRequest);
+
+        if ($products) {
+            foreach ($products as $product) {
+                $productId = ltrim($product->CODIGO, '0');
+
+                $productAllNation = AllnationProduct::find($productId);
+                if ($sku = $productAllNation->produto_sku) {
+                    if ($tucanoProduct = Produto::find($sku)) {
+                        $tucanoProduct->estoque = (int) $product->ESTOQUEDISPONIVEL;
+                        // $tucanoProduct->preco   = ceil(((float) ($product->PRECOSEMST) * 0.9075) / 0.7075) - 0.10;
+                        $tucanoProduct->save();
+                    }
+                }
+            }
+        }
     }
 }
