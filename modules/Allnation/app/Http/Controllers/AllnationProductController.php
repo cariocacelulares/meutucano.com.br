@@ -40,8 +40,10 @@ class AllnationProductController extends Controller
      *
      * @return void
      */
-    public function fetchProducts(AllnationApi $api)
+    public function fetchProducts(AllnationApi $api = null)
     {
+        $api = $api ?: new AllnationApi;
+
         $lastDateTimeRequest = t('allnation.product.lastrequest') ?: '2015-01-01 08:00:00';
 
         $products = $api->fetchProducts($lastDateTimeRequest);
@@ -119,6 +121,8 @@ class AllnationProductController extends Controller
      */
     public function fetchStocks(AllnationApi $api)
     {
+        $api = $api ?: new AllnationApi;
+        
         $lastDateTimeRequest = t('allnation.stock.lastrequest') ?: '2015-01-01 08:00:00';
 
         $products = $api->fetchStocks($lastDateTimeRequest);
@@ -131,7 +135,7 @@ class AllnationProductController extends Controller
                 if ($sku = $productAllNation->produto_sku) {
                     if ($tucanoProduct = Produto::find($sku)) {
                         $tucanoProduct->estoque = (int) $product->ESTOQUEDISPONIVEL;
-                        // $tucanoProduct->preco   = ceil(((float) ($product->PRECOSEMST) * 0.9075) / 0.7075) - 0.10;
+                        $tucanoProduct->valor   = ceil(((float) ($product->PRECOSEMST) * 0.9075) / 0.7075) - 0.10;
                         $tucanoProduct->save();
                     }
                 }
