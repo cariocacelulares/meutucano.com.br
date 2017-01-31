@@ -6,6 +6,7 @@ use Magento\Console\Commands\RefreshMagentoStock;
 use Magento\Console\Commands\MagentoPedido;
 use Magento\Console\Commands\MagentoPedidos;
 use Magento\Console\Commands\MagentoProdutos;
+use Magento\Console\Commands\MagentoPrecos;
 
 class ScheduleServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,7 @@ class ScheduleServiceProvider extends ServiceProvider
         MagentoPedido::class,
         MagentoPedidos::class,
         MagentoProdutos::class,
+        MagentoPrecos::class,
     ];
 
     /**

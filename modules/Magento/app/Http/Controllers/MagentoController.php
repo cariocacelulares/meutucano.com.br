@@ -598,6 +598,32 @@ class MagentoController extends Controller
         return Carbon::createFromFormat('d/m/Y', $estimate)->format('Y-m-d');
     }
 
+    public function syncPrices()
+    {
+        try {
+            $products = $this->api->catalogProductList($this->session);
+            $count    = 0;
+
+            foreach ($products as $mgProduct) {
+                if ($product = Produto::find($mgProduct->sku)) {
+                    $product->valor = $mgProduct->price;
+
+                    if ($product->save()) {
+                        $count++;
+                    }
+                }
+            }
+
+            Log::info($count . ' de ' . count($products) . ' precos foram sincronizados do magento para o tucano!');
+
+            return $count . ' de ' . count($products) . ' importados!';
+        } catch (\Exception $exception) {
+            Log::warning(logMessage($exception, 'Erro ao sincronizar os precos do magento para o tucano'));
+        }
+
+        return 'Ocorreu um problema, consulte os logs!';
+    }
+
     /**
      * Sincroniza os produtos do magento para o tucano
      *
@@ -610,8 +636,8 @@ class MagentoController extends Controller
 
             $count = 0;
             foreach ($result as $product) {
-                $produto = Produto::firstOrNew(['sku' => $product->sku]);
-                $produto->sku = $product->sku;
+                $produto         = Produto::firstOrNew(['sku' => $product->sku]);
+                $produto->sku    = $product->sku;
                 $produto->titulo = $product->name;
 
                 if ($produto->save()) {
