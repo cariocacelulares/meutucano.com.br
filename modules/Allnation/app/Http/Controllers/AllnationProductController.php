@@ -44,9 +44,6 @@ class AllnationProductController extends Controller
     {
         $lastDateTimeRequest = t('allnation.product.lastrequest') ?: '2015-01-01 08:00:00';
 
-        // t('allnation.product.lastrequest',
-        //     Carbon::now()->format('Y-m-d H:i:s'));
-
         $products = $api->fetchProducts($lastDateTimeRequest);
 
         if ($products) {
@@ -83,6 +80,9 @@ class AllnationProductController extends Controller
                 ]);
             }
         }
+
+        t('allnation.product.lastrequest',
+            Carbon::now()->format('Y-m-d H:i:s'));
     }
 
     /**
@@ -121,9 +121,6 @@ class AllnationProductController extends Controller
     {
         $lastDateTimeRequest = t('allnation.stock.lastrequest') ?: '2015-01-01 08:00:00';
 
-        t('allnation.stock.lastrequest',
-            Carbon::now()->format('Y-m-d H:i:s'));
-
         $products = $api->fetchStocks($lastDateTimeRequest);
 
         if ($products) {
@@ -140,5 +137,8 @@ class AllnationProductController extends Controller
                 }
             }
         }
+
+        t('allnation.stock.lastrequest',
+            Carbon::now()->format('Y-m-d H:i:s'));
     }
 }
