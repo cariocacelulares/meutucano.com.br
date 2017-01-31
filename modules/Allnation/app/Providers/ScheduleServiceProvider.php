@@ -29,8 +29,8 @@ class ScheduleServiceProvider extends ServiceProvider
         $this->app->booted(function () {
             $schedule = $this->app->make(Schedule::class);
 
-            $schedule->command('allnation:stocks-prices')
-                ->everyTenMinutes();
+            // $schedule->command('allnation:stocks-prices')
+                // ->everyTenMinutes();
 
             $schedule->command('allnation:products')
                 ->twiceDaily('00:30', '12:30');
