@@ -47,6 +47,7 @@ class ProductTransformer
                 'linha'              => $product['linha'],
                 'marca'              => $product['marca'],
                 'estoque'            => $product['estoque'],
+                'valor'              => $product['valor'],
                 'estado'             => $product['estado'],
                 'estado_description' => ProductParser::getEstadoDescription($product['estado']),
                 'attachedProducts'   => $product['attachedProducts'],
