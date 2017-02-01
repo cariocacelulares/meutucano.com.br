@@ -46,7 +46,7 @@ if (env('MONGOLOGGER_ENABLED', true) === true) {
                 $monolog->pushHandler($mongoHandler);
 
                 // Extra fields
-                $monolog->pushProcessor(new Monolog\Processor\GitProcessor());
+                // $monolog->pushProcessor(new Monolog\Processor\GitProcessor());
                 $monolog->pushProcessor(new Monolog\Processor\WebProcessor());
                 $monolog->pushProcessor(function ($record) {
                     if (Tymon\JWTAuth\Facades\JWTAuth::getToken()) {
