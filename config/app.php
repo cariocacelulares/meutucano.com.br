@@ -48,7 +48,6 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         Laracasts\Generators\GeneratorsServiceProvider::class,
         Zizaco\Entrust\EntrustServiceProvider::class,
-        Arcanedev\LogViewer\LogViewerServiceProvider::class,
         Spatie\Browsershot\BrowsershotServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Vinelab\Cdn\CdnServiceProvider::class,
@@ -57,7 +56,7 @@ return [
         Nwidart\Modules\LaravelModulesServiceProvider::class,
         Spatie\Backup\BackupServiceProvider::class,
         Spatie\FailedJobMonitor\FailedJobMonitorServiceProvider::class,
-        Sofa\Eloquence\ServiceProvider::class
+        Sofa\Eloquence\ServiceProvider::class,
     ],
 
 
