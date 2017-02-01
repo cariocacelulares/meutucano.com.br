@@ -132,11 +132,13 @@ class AllnationProductController extends Controller
                 $productId = ltrim($product->CODIGO, '0');
 
                 $productAllNation = AllnationProduct::find($productId);
-                if ($sku = $productAllNation->produto_sku) {
-                    if ($tucanoProduct = Produto::find($sku)) {
-                        $tucanoProduct->estoque = (int) $product->ESTOQUEDISPONIVEL;
-                        $tucanoProduct->valor   = ceil(((float) ($product->PRECOSEMST) * 0.9075) / 0.7075) - 0.10;
-                        $tucanoProduct->save();
+                if ($productAllNation) {
+                    if ($sku = $productAllNation->produto_sku) {
+                        if ($tucanoProduct = Produto::find($sku)) {
+                            $tucanoProduct->estoque = (int) $product->ESTOQUEDISPONIVEL;
+                            $tucanoProduct->valor   = ceil(((float) ($product->PRECOSEMST) * 0.9075) / 0.7075) - 0.10;
+                            $tucanoProduct->save();
+                        }
                     }
                 }
             }
