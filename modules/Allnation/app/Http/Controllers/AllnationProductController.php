@@ -119,10 +119,10 @@ class AllnationProductController extends Controller
      *
      * @return void
      */
-    public function fetchStocks(AllnationApi $api)
+    public function fetchStocks(AllnationApi $api = null)
     {
         $api = $api ?: new AllnationApi;
-        
+
         $lastDateTimeRequest = t('allnation.stock.lastrequest') ?: '2015-01-01 08:00:00';
 
         $products = $api->fetchStocks($lastDateTimeRequest);
