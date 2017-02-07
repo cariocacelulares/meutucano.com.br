@@ -600,9 +600,15 @@ class MagentoController extends Controller
                 return true;
             }
         } catch (\Exception $exception) {
-            Log::critical(logMessage($exception, "Erro ao atualizar o preco do produto {$productSku} no magento."));
+            if ($e->getCode() == 100 || strstr($e->getMessage(), 'order not exists') !== false) {
+                Log::debug("Não foi possível atualizar o preço pois o produto {$productSku} não existe no magento.");
 
-            return $exception;
+                return true;
+            } else {
+                Log::critical(logMessage($exception, "Erro ao atualizar o preco do produto {$productSku} no magento."));
+
+                return $exception;
+            }
         }
 
         return null;
