@@ -57,7 +57,7 @@ class ICMSController extends Controller
         foreach ($devolucoes as $dev) {
             $relatorio[] = (($dev->nota->pedido->endereco->uf == 'SC') ? '1202' : '2202') . ';';
             $relatorio[] = 'DEVOLUCAO;';
-            $relatorio[] = $dev->nota->numero . ';';
+            $relatorio[] = $dev->numero . ';';
             $relatorio[] = \Config::get('tucano.uf'). ';';
             $relatorio[] = 'R$' . (count($dev->nota->pedido->imposto) ? number_format($dev->nota->pedido->imposto->icms_remetente, 2, ',', '.') : '0,00') . ';';
             $relatorio[] = $dev->nota->pedido->endereco->uf . ';';
