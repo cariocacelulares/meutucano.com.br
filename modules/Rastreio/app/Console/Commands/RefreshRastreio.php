@@ -29,7 +29,7 @@ class RefreshRastreio extends Command
     {
         $codigos = $this->argument('codigos');
         $codigos = explode(',', $codigos);
-        $codigos = is_array($codigos) ?: [];
+        $codigos = is_array($codigos) ? $codigos : [];
 
         $total = count($codigos);
         $i = 0;
