@@ -33,7 +33,7 @@ class ScheduleServiceProvider extends ServiceProvider
                 ->everyTenMinutes();
 
             $schedule->command('allnation:products')
-                ->twiceDaily(1, 12);
+                ->twiceDaily(2, 13);
         });
     }
 
