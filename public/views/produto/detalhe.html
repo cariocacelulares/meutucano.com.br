@@ -10,7 +10,7 @@
     <tabs>
         <tab name="infosProduto" title="Informações do produto">
             <div class="row form-group">
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <label for="titulo">Título</label>
                     <input ng-model="ProdutoDetalhe.produto.titulo" id="titulo" readonly />
                 </div>
@@ -18,9 +18,13 @@
                     <label for="estado">Estado</label>
                     <input ng-model="ProdutoDetalhe.produto.estado_description" id="estado" readonly />
                 </div>
-                <div class="col-md-3 form-group">
+                <div class="col-md-2 form-group">
                     <label for="sku">SKU</label>
                     <input ng-model="ProdutoDetalhe.produto.sku" id="sku" readonly />
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="valor">Preço</label>
+                    <input ng-model="ProdutoDetalhe.produto.valor" id="valor" ui-money-mask readonly />
                 </div>
                 <div class="col-md-1 form-group">
                     <label for="estoque">Estoque</label>
