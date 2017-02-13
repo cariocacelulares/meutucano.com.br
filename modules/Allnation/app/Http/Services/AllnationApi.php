@@ -106,4 +106,21 @@ class AllnationApi
 
         return $produtos->Produtos;
     }
+
+    /**
+     * Fetch stocks from API
+     *
+     * @return array
+     */
+    public function fetchStocks($lastRequestDatetime)
+    {
+        $response = $this->request('RetornarListaProdutosEstoque', [
+            'Data' => $lastRequestDatetime
+        ]);
+
+        $produtos = simplexml_load_string($response->RetornarListaProdutosEstoqueResult->any)
+            ->NewDataSet;
+
+        return $produtos->Produtos;
+    }
 }

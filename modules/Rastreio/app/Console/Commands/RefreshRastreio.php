@@ -11,14 +11,14 @@ class RefreshRastreio extends Command
      *
      * @var string
      */
-    protected $signature = 'refresh:rastreio {codigo}';
+    protected $signature = 'refresh:rastreio {codigos}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Atualiza um rastreio';
+    protected $description = 'Atualiza os rastreios';
 
     /**
      * Execute the console command.
@@ -27,13 +27,18 @@ class RefreshRastreio extends Command
      */
     public function handle()
     {
-        $codigo = $this->argument('codigo');
+        $codigos = $this->argument('codigos');
+        $codigos = explode(',', $codigos);
+        $codigos = is_array($codigos) ? $codigos : [];
 
-        if ($codigo) {
+        $total = count($codigos);
+        $i = 0;
+        foreach ($codigos as $codigo) {
             $rastreio = Rastreio::where('rastreio', '=', $codigo)->first();
 
             if ($rastreio) {
                 $return = with(new RastreioController())->refresh($rastreio);
+                $i++;
 
                 if (json_decode($return)) {
                     $this->comment("{$return->rastreio}: {$return->status_description} - {$return->prazo} dias");
@@ -43,8 +48,8 @@ class RefreshRastreio extends Command
             } else {
                 $this->comment("Não foi possível encontrar um rastreio com o código '{$codigo}'");
             }
-        } else {
-            throw new \Exception('Um código de rastreio válido precisa ser passado como parâmetro', 1);
         }
+
+        $this->comment("{$i} de {$total} rastreios foram atualizados.");
     }
 }

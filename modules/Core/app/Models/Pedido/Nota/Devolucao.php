@@ -51,4 +51,24 @@ class Devolucao extends \Eloquent
     {
         return ($this->tipo == 1) ? 'Estorno' : 'Devolução';
     }
+
+    /**
+     * Return numero attribute
+     *
+     * @return string
+     */
+    public function getNumeroAttribute()
+    {
+        return (int) (substr($this->chave, 25, 9)) ?: $this->pedido_id;
+    }
+
+    /**
+     * Return serie attribute
+     *
+     * @return string
+     */
+    public function getSerieAttribute()
+    {
+        return (substr($this->chave, 34, 1)) ?: 1;
+    }
 }

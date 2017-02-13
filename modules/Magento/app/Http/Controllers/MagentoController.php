@@ -570,6 +570,57 @@ class MagentoController extends Controller
     }
 
     /**
+     * Update product price
+     *
+     * @param  Produto $product
+     * @return boolean
+     */
+    public function updatePrice(Produto $product)
+    {
+        if (!$this->checkApi()) {
+            return null;
+        }
+
+        try {
+            if (!$product || !$productSku = $product->sku) {
+                return $this->notFoundResponse();
+            }
+
+            $stock = $this->api->catalogProductUpdate(
+                $this->session,
+                $productSku,
+                [
+                    'price' => $product->valor,
+                ],
+                null,
+                'sku'
+            );
+
+            if (is_soap_fault($stock)) {
+                throw new \Exception('SOAP Fault ao tentar atualizar o stock no magento!', 1);
+            }
+
+            if ($stock) {
+                Log::notice('Preco do produto ' . $productSku . ' alterado para ' . $product->valor . ' no magento.');
+
+                return true;
+            }
+        } catch (\Exception $exception) {
+            if ($exception->getCode() == 100 || strstr($exception->getMessage(), 'Product not exist') !== false) {
+                Log::debug("Não foi possível atualizar o preço pois o produto {$productSku} não existe no magento.");
+
+                return true;
+            } else {
+                Log::critical(logMessage($exception, "Erro ao atualizar o preco do produto {$productSku} no magento."));
+
+                return $exception;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Remove produto do tucanomg
      *
      * @param  int  $productSku
@@ -604,6 +655,32 @@ class MagentoController extends Controller
         return Carbon::createFromFormat('d/m/Y', $estimate)->format('Y-m-d');
     }
 
+    public function syncPrices()
+    {
+        try {
+            $products = $this->api->catalogProductList($this->session);
+            $count    = 0;
+
+            foreach ($products as $mgProduct) {
+                if ($product = Produto::find($mgProduct->sku)) {
+                    $product->valor = $mgProduct->price;
+
+                    if ($product->save()) {
+                        $count++;
+                    }
+                }
+            }
+
+            Log::info($count . ' de ' . count($products) . ' precos foram sincronizados do magento para o tucano!');
+
+            return $count . ' de ' . count($products) . ' importados!';
+        } catch (\Exception $exception) {
+            Log::warning(logMessage($exception, 'Erro ao sincronizar os precos do magento para o tucano'));
+        }
+
+        return 'Ocorreu um problema, consulte os logs!';
+    }
+
     /**
      * Sincroniza os produtos do magento para o tucano
      *
@@ -616,8 +693,8 @@ class MagentoController extends Controller
 
             $count = 0;
             foreach ($result as $product) {
-                $produto = Produto::firstOrNew(['sku' => $product->sku]);
-                $produto->sku = $product->sku;
+                $produto         = Produto::firstOrNew(['sku' => $product->sku]);
+                $produto->sku    = $product->sku;
                 $produto->titulo = $product->name;
 
                 if ($produto->save()) {

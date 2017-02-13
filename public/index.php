@@ -1,5 +1,5 @@
 <?php
-
+try {
 require __DIR__.'/../bootstrap/autoload.php';
 
 date_default_timezone_set('America/Sao_Paulo');
@@ -14,3 +14,8 @@ $response = $kernel->handle(
 $response->send();
 
 $kernel->terminate($request, $response);
+} catch(\Exception $e) {
+    echo "<pre>";
+    echo $e;
+    echo "</pre>";
+}

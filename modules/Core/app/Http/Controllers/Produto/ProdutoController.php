@@ -41,7 +41,7 @@ class ProdutoController extends Controller
         }
 
         $reservados = PedidoProduto
-            ::select('pedido_produtos.produto_sku', 'pedidos.status', DB::raw('COUNT(*) as count'))
+            ::select('pedido_produtos.produto_sku', 'pedidos.status', DB::raw('SUM(pedido_produtos.quantidade) as quantidade'))
             ->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
             ->with(['pedido'])
             ->whereIn('pedido_produtos.produto_sku', $ids)
@@ -54,7 +54,7 @@ class ProdutoController extends Controller
 
         $attachedProducts = [];
         foreach ($reservados as $item) {
-            $attachedProducts[$item['produto_sku']][$item['status']] = $item['count'];
+            $attachedProducts[$item['produto_sku']][$item['status']] = $item['quantidade'];
         }
 
         foreach ($list as $item) {
@@ -78,7 +78,7 @@ class ProdutoController extends Controller
         $product = (self::MODEL)
             ::where('produtos.sku', '=', $id)
             ->first();
-
+            
         if (!$product) {
             return $this->notFoundResponse();
         }

@@ -9,6 +9,7 @@
         <tr>
             <th width="150" class="text-center">SKU</th>
             <th>Título</th>
+            <th width="200" class="text-center">Preço</th>
             <th width="160" class="text-center">Estado</th>
             <th width="160" class="text-center">Estoque</th>
             <th width="75"></th>
@@ -24,6 +25,9 @@
                 <small>
                     {{ produto.linha.titulo + ((produto.linha.titulo && produto.marca.titulo) ? ' / ' : '') + produto.marca.titulo }}
                 </small>
+            </td>
+            <td class="text-center">
+                {{ produto.valor | currency }}
             </td>
             <td class="text-center">
                 {{ produto.estado_description }}

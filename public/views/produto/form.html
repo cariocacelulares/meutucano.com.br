@@ -13,7 +13,7 @@
     <tabs>
         <tab name="infosProduto" title="Informações do produto">
             <div class="row form-group">
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <label for="titulo">Título</label>
                     <input type="text" ng-model="ProdutoForm.produto.titulo" id="titulo" placeholder="Título do produto" required />
                 </div>
@@ -24,7 +24,7 @@
                         <option value="1">Seminovo</option>
                     </select>
                 </div>
-                <div class="col-md-3 form-group">
+                <div class="col-md-2 form-group">
                     <label for="sku">SKU</label>
                     <div class="input-group">
                         <input ng-model="ProdutoForm.produto.sku" type="number" id="sku" placeholder="SKU do produto" required />
@@ -34,6 +34,10 @@
                             </a>
                         </span>
                     </div>
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="valor">Preço</label>
+                    <input ng-model="ProdutoForm.produto.valor" id="valor" placeholder="R$" ui-money-mask required />
                 </div>
                 <div class="col-md-1 form-group">
                     <label for="estoque">Estoque</label>

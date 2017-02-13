@@ -61,7 +61,6 @@ return [
      */
     'feriados' => [
         '01/01',
-        '02/02',
         date('d/m', (easter_date(date('Y'))) - (46 * 86400)),
         date('d/m', (easter_date(date('Y'))) - (47 * 86400)),
         date('d/m', (easter_date(date('Y'))) - (2 * 86400)),

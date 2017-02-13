@@ -4,6 +4,7 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Event;
 use Magento\Events\Handlers\AddOrderToQueue;
 use Magento\Events\Handlers\AddStockToQueue;
+use Magento\Events\Handlers\AddPriceToQueue;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,7 @@ class EventServiceProvider extends ServiceProvider
     protected $subscribe = [
         AddOrderToQueue::class,
         AddStockToQueue::class,
+        AddPriceToQueue::class,
     ];
 
     /**

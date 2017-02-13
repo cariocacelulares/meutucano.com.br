@@ -36,6 +36,7 @@ class Produto extends Model
         'ncm',
         'ean',
         'referencia',
+        'valor',
         'unidade',
         'estado',
         'ativo',
