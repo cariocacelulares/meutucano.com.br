@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Event;
 use Core\Events\ProductStockUpdated;
 use Core\Events\ProductPriceUpdated;
-use Core\Models\Produto\Produto;
+use Core\Models\Produto;
 
 class ProdutoObserver
 {

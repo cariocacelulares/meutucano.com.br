@@ -3,12 +3,13 @@
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Core\Models\Produto;
 use Illuminate\Routing\Controller;
+use App\Http\Controllers\Rest\RestControllerTrait;
+use Core\Models\Produto;
+use Core\Models\Produto\ProductStock;
+use Magento\Http\Controllers\MagentoController;
 use Allnation\Models\AllnationProduct;
 use Allnation\Http\Services\AllnationApi;
-use Magento\Http\Controllers\MagentoController;
-use App\Http\Controllers\Rest\RestControllerTrait;
 
 /**
  * Class AllnationProductController
@@ -135,9 +136,17 @@ class AllnationProductController extends Controller
                 if ($productAllNation) {
                     if ($sku = $productAllNation->produto_sku) {
                         if ($tucanoProduct = Produto::find($sku)) {
-                            $tucanoProduct->estoque = (int) $product->ESTOQUEDISPONIVEL;
+                            // Atualiza o preço do produto, considerando imposto e margem
                             $tucanoProduct->valor   = ceil(((float) ($product->PRECOSEMST) * 0.9075) / 0.7075) - 0.10;
                             $tucanoProduct->save();
+
+                            // Atualiza o estoque do produto
+                            $productStock = ProductStock::firstOrNew([
+                                'product_sku' => $sku,
+                                'stock_slug'  => \Config::get('allnation.stock_slug'),
+                            ]);
+                            $productStock->quantity = (int) $product->ESTOQUEDISPONIVEL;
+                            $productStock->save();
                         }
                     }
                 }
