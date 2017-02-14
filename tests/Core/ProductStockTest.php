@@ -168,6 +168,24 @@ class ProductStockTest extends TestCase
     }
 
     /**
+     * If stock not modify when canceled order is created
+     * @return void
+     */
+    public function test__it_should_not_modify_stock_when_canceled_order_is_created()
+    {
+        $product  = Produto::create();
+        $oldStock = $product->estoque;
+
+        Pedido::create([
+            'status' => 5
+        ], $product->sku);
+
+        $product = $product->fresh();
+
+        $this->assertEquals($oldStock, $product->estoque);
+    }
+
+    /**
      * If stock increment when entry by imei
      * @return void
      */

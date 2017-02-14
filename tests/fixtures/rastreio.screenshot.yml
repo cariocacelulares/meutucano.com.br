@@ -167,3 +167,53 @@
             X-Powered-By: ASP.NET
             Date: 'Mon, 30 Jan 2017 13:55:44 GMT'
         body: "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n<Servicos></Servicos>"
+-
+    request:
+        method: GET
+        url: 'http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx?nCdEmpresa=&sDsSenha=&sCepOrigem=89160314&sCepDestino=62138201&nVlPeso=1&nCdFormato=1&nVlComprimento=16&nVlAltura=10&nVlLargura=12&sCdMaoPropria=n&nVlValorDeclarado=100&sCdAvisoRecebimento=n&nCdServico=&nVlDiametro=0&StrRetorno=xml'
+        headers:
+            Host: ws.correios.com.br
+            Accept-Encoding: null
+            User-Agent: 'GuzzleHttp/6.2.1 curl/7.47.0 PHP/7.0.14-2+deb.sury.org~xenial+1'
+            Accept: null
+    response:
+        status:
+            http_version: '1.1'
+            code: '200'
+            message: OK
+        headers:
+            Cache-Control: private
+            Content-Length: '66'
+            Content-Type: 'text/xml; charset=iso-8859-1'
+            Expires: 'Tue, 14 Feb 2017 13:26:17 GMT'
+            Server: Microsoft-IIS/7.5
+            X-AspNet-Version: 4.0.30319
+            Set-Cookie: 'ASP.NET_SessionId=3ir5jt5b2ctoxw1jkn1oubyc; path=/; HttpOnly'
+            X-Powered-By: ASP.NET
+            Date: 'Tue, 14 Feb 2017 13:26:17 GMT'
+        body: "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n<Servicos></Servicos>"
+-
+    request:
+        method: GET
+        url: 'http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx?nCdEmpresa=&sDsSenha=&sCepOrigem=89160314&sCepDestino=53552035&nVlPeso=1&nCdFormato=1&nVlComprimento=16&nVlAltura=10&nVlLargura=12&sCdMaoPropria=n&nVlValorDeclarado=100&sCdAvisoRecebimento=n&nCdServico=&nVlDiametro=0&StrRetorno=xml'
+        headers:
+            Host: ws.correios.com.br
+            Accept-Encoding: null
+            User-Agent: 'GuzzleHttp/6.2.1 curl/7.47.0 PHP/7.0.14-2+deb.sury.org~xenial+1'
+            Accept: null
+    response:
+        status:
+            http_version: '1.1'
+            code: '200'
+            message: OK
+        headers:
+            Cache-Control: private
+            Content-Length: '66'
+            Content-Type: 'text/xml; charset=iso-8859-1'
+            Expires: 'Tue, 14 Feb 2017 13:30:36 GMT'
+            Server: Microsoft-IIS/7.5
+            X-AspNet-Version: 4.0.30319
+            Set-Cookie: 'ASP.NET_SessionId=d2vyzyan3apnmwstxsxhip1z; path=/; HttpOnly'
+            X-Powered-By: ASP.NET
+            Date: 'Tue, 14 Feb 2017 13:30:36 GMT'
+        body: "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n<Servicos></Servicos>"
