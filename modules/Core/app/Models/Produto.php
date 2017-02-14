@@ -46,8 +46,8 @@ class Produto extends Model
      * @var array
      */
     protected $casts = [
-        'ativo'           => 'string',
-        'estado'          => 'string',
+        'ativo'  => 'string',
+        'estado' => 'string',
     ];
 
     /**
@@ -90,25 +90,17 @@ class Produto extends Model
      */
     public function getStock()
     {
-        $stock = 0;
-
-        $productStocks = $this->productStocks()
+        $stock = $this->productStocks()
                 ->join('stocks', 'stocks.slug', 'product_stocks.stock_slug')
                 ->where('stocks.include', '=', true)
-                ->get();
-
-        foreach ($productStocks as $productStock) {
-            $stock += $productStock->quantity;
-        }
+                ->sum('quantity');
 
         $reservados = $this->pedidoProdutos()
             ->join('pedidos', 'pedidos.id', 'pedido_produtos.pedido_id')
             ->whereIn('pedidos.status', [0, 1])
             ->count();
 
-        $stock -= $reservados;
-
-        return $stock;
+        return ($stock - $reservados);
     }
 
     /**
