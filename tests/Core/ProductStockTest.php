@@ -145,19 +145,85 @@ class ProductStockTest extends TestCase
         $this->assertEquals($oldStock - 1, $product->estoque);
     }
 
-    public function test__it_should_show_stock_minus_pending_and_payed_orders()
-    {
-    }
-
+    /**
+     * If stock increment when order is canceled
+     * @return void
+     */
     public function test__it_should_increase_stock_when_order_canceled()
     {
+        $order = Pedido::create([
+            'status' => 0
+        ]);
+
+        $productSku = $order->produtos[0]->produto_sku;
+        $stock      = \Stock::choose($productSku);
+        $oldStock   = \Stock::get($productSku, $stock)[0];
+
+        $order->status = 5; // cancelado
+        $order->save();
+
+        $updatedStock = \Stock::get($productSku, $stock)[0];
+
+        $this->assertEquals($oldStock + 1, $updatedStock);
     }
 
     public function test__it_should_increase_stock_when_entry_with_serial()
     {
+        $product = Produto::create([
+            'serial_enabled' => true,
+        ]);
+        $oldStock = $product->estoque;
+
+        $productStock = ProductStockModel
+            ::join('stocks', 'stocks.slug', 'product_stocks.stock_slug')
+            ->where('product_sku', '=', $product->sku)
+            ->where('stocks.include', '=', true)
+            ->orderBy('stocks.priority', 'ASC')
+            ->first();
+
+        $imeis = 'DASD21DSD2ED' . PHP_EOL . 'REW432ERWR23';
+
+        $this->json('POST', '/api/product-stocks/entry', [
+                'sku'        => $product->sku,
+                'stock_slug' => $productStock->stock_slug,
+                'imeis'      => $imeis,
+                'quantity'   => null,
+            ])
+            ->seeStatusCode(200);
+
+        $product = $product->fresh();
+
+        $this->assertEquals($oldStock + 2, $product->estoque);
     }
 
     public function test__it_should_increase_stock_when_entry_without_serial()
+    {
+        $product = Produto::create([
+            'serial_enabled' => false,
+        ]);
+        $oldStock = $product->estoque;
+
+        $productStock = ProductStockModel
+            ::join('stocks', 'stocks.slug', 'product_stocks.stock_slug')
+            ->where('product_sku', '=', $product->sku)
+            ->where('stocks.include', '=', true)
+            ->orderBy('stocks.priority', 'ASC')
+            ->first();
+
+        $this->json('POST', '/api/product-stocks/entry', [
+                'sku'        => $product->sku,
+                'stock_slug' => $productStock->stock_slug,
+                'imeis'      => null,
+                'quantity'   => 2,
+            ])
+            ->seeStatusCode(200);
+
+        $product = $product->fresh();
+
+        $this->assertEquals($oldStock + 2, $product->estoque);
+    }
+
+    public function test__it_should_show_stock_minus_pending_and_payed_orders()
     {
     }
 }

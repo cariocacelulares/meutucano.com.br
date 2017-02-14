@@ -12,9 +12,9 @@ class ProductStock
     public static function create($data = [], $includedStock = false)
     {
         if (!isset($data['stock_slug'])) {
-            $stockData = $includedStock ? ['include' => true] : [];
-
-            $data['stock_slug'] = Stock::create($stockData)->slug;
+            $data['stock_slug'] = Stock::create(
+                $includedStock ? ['include' => true] : []
+            )->slug;
         }
 
         if (!isset($data['product_sku'])) {

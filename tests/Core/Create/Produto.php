@@ -15,6 +15,9 @@ class Produto
         $stock = isset($data['estoque']) ? $data['estoque'] : null;
         unset($data['estoque']);
 
+        $serial = isset($data['serial_enabled']) ? $data['serial_enabled'] : null;
+        unset($data['serial_enabled']);
+
         $product = factory(ProdutoModel::class)->create($data);
 
         $productStock = ProductStockModel
@@ -25,13 +28,17 @@ class Produto
             ->first();
 
         if ($productStock && $stock) {
-            $productStock->quantity = $stock;
+            $productStock->quantity       = $stock;
+            $productStock->serial_enabled = $serial;
+
             $productStock->save();
         } else if (!$productStock) {
             ProductStock::create(array_merge([
-                'product_sku' => $product->sku,
+                'product_sku'    => $product->sku,
             ], is_null($stock) ? [] : [
-                'quantity'    => $stock
+                'quantity'       => $stock
+            ], is_null($serial) ? [] : [
+                'serial_enabled' => $serial
             ]), true);
         }
 

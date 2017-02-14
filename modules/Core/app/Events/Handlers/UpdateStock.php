@@ -5,12 +5,8 @@ use Illuminate\Support\Facades\Log;
 use Core\Events\ProductImeiCreated;
 use Core\Events\OrderSent;
 use Core\Events\OrderProductCreated;
+use Core\Events\OrderCanceled;
 
-/*use Core\Events\OrderCanceled;
-use Core\Events\OrderProductCreated;
-use Core\Events\OrderProductUpdated;
-use Core\Events\OrderSaved;
-use Core\Models\Produto;*/
 
 class UpdateStock
 {
@@ -36,6 +32,11 @@ class UpdateStock
         $events->listen(
             OrderProductCreated::class,
             '\Core\Events\Handlers\UpdateStock@onOrderProductCreated'
+        );
+
+        $events->listen(
+            OrderCanceled::class,
+            '\Core\Events\Handlers\UpdateStock@onOrderCanceled'
         );
 
         /*$events->listen(
@@ -76,7 +77,7 @@ class UpdateStock
     }
 
     /**
-     * Trigger stock updates when order canceled
+     * Trigger stock updates when order sent
      *
      * @param  OrderSent  $event
      * @return void
@@ -115,6 +116,29 @@ class UpdateStock
 
             $stock = \Stock::choose($orderProduct->produto_sku);
             \Stock::substract($orderProduct->produto_sku, 1, $stock);
+        }
+    }
+
+    /**
+     * Trigger stock updates when order canceled
+     *
+     * @param  OrderCanceled  $event
+     * @return void
+     */
+    public function onOrderCanceled(OrderCanceled $event)
+    {
+        Log::debug('Handler UpdateStock/onOrderCanceled acionado!', [$event]);
+
+        $order = $event->order;
+        $order = $order->fresh();
+
+        if (!$order) {
+            Log::debug('Pedido não encontrado!', [$order]);
+        } else {
+            foreach ($order->produtos as $orderProduct) {
+                $stock = \Stock::choose($orderProduct->produto_sku);
+                \Stock::add($orderProduct->produto_sku, 1, $stock);
+            }
         }
     }
 
