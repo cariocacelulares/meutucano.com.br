@@ -444,6 +444,23 @@
                     templateUrl: 'views/allnation/product/form.html',
                     controller: 'AllnationProductFormController as AllnationProductForm'
                 })
+
+                /**
+                 * Estoque
+                 */
+                .state('app.estoque', {
+                    url: '/estoque',
+                    templateUrl: 'views/layouts/default.html',
+                    data: {
+                        roles: ['admin', 'gestor']
+                    }
+                })
+
+                .state('app.estoque.retirada', {
+                    url: '/retiradas',
+                    templateUrl: 'views/estoque/retirada/list.html',
+                    controller: 'RetiradaEstoqueListController as RetiradaEstoqueList'
+                })
             ;
         });
 })();

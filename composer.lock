@@ -89,16 +89,16 @@
         },
         {
             "name": "barryvdh/laravel-ide-helper",
-            "version": "v2.2.3",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-ide-helper.git",
-                "reference": "a7fc2ec489aada6062d3a63ddc915004a21e38af"
+                "reference": "555d3e37009bdb78f5d8bcea6eb8a816529a5cfa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/a7fc2ec489aada6062d3a63ddc915004a21e38af",
-                "reference": "a7fc2ec489aada6062d3a63ddc915004a21e38af",
+                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/555d3e37009bdb78f5d8bcea6eb8a816529a5cfa",
+                "reference": "555d3e37009bdb78f5d8bcea6eb8a816529a5cfa",
                 "shasum": ""
             },
             "require": {
@@ -151,7 +151,7 @@
                 "phpstorm",
                 "sublime"
             ],
-            "time": "2017-01-05 21:20:42"
+            "time": "2017-02-13 19:20:12"
         },
         {
             "name": "barryvdh/reflection-docblock",
@@ -837,16 +837,16 @@
         },
         {
             "name": "jenssegers/mongodb",
-            "version": "v3.1.3",
+            "version": "v3.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jenssegers/laravel-mongodb.git",
-                "reference": "02ca494f0a6e6c2d0dcca9edd36ae5f377205ac3"
+                "reference": "e3bea54120cfb45ca6dadffad11ecaed6952e063"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jenssegers/laravel-mongodb/zipball/02ca494f0a6e6c2d0dcca9edd36ae5f377205ac3",
-                "reference": "02ca494f0a6e6c2d0dcca9edd36ae5f377205ac3",
+                "url": "https://api.github.com/repos/jenssegers/laravel-mongodb/zipball/e3bea54120cfb45ca6dadffad11ecaed6952e063",
+                "reference": "e3bea54120cfb45ca6dadffad11ecaed6952e063",
                 "shasum": ""
             },
             "require": {
@@ -860,7 +860,7 @@
                 "mockery/mockery": "^0.9",
                 "orchestra/testbench": "^3.1",
                 "phpunit/phpunit": "^4.0|^5.0",
-                "satooshi/php-coveralls": "^0.6"
+                "satooshi/php-coveralls": "^1.0"
             },
             "suggest": {
                 "jenssegers/mongodb-sentry": "Add Sentry support to Laravel-MongoDB",
@@ -894,7 +894,7 @@
                 "mongo",
                 "mongodb"
             ],
-            "time": "2016-11-04 18:10:36"
+            "time": "2017-02-14 14:12:04"
         },
         {
             "name": "jeremeamia/SuperClosure",
