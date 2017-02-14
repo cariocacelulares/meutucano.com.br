@@ -167,6 +167,10 @@ class ProductStockTest extends TestCase
         $this->assertEquals($oldStock + 1, $updatedStock);
     }
 
+    /**
+     * If stock increment when entry by imei
+     * @return void
+     */
     public function test__it_should_increase_stock_when_entry_with_serial()
     {
         $product = Produto::create([
@@ -196,6 +200,10 @@ class ProductStockTest extends TestCase
         $this->assertEquals($oldStock + 2, $product->estoque);
     }
 
+    /**
+     * If stock increment when entry by quantity
+     * @return void
+     */
     public function test__it_should_increase_stock_when_entry_without_serial()
     {
         $product = Produto::create([
@@ -223,7 +231,90 @@ class ProductStockTest extends TestCase
         $this->assertEquals($oldStock + 2, $product->estoque);
     }
 
-    public function test__it_should_show_stock_minus_pending_and_payed_orders()
+    /**
+     * If modify only calculated stock and not the real stock, when a pending order is created
+     * @return void
+     */
+    public function test__it_should_be_modify_only_calculated_stock_when_pending_order()
     {
+        $product = Produto::create([
+            'estoque' => 10
+        ]);
+        $product  = $product->fresh();
+        $oldStock = $product->estoque;
+
+        Pedido::create([
+            'status' => 0
+        ], $product->sku);
+
+        $product  = $product->fresh();
+
+        $realStock = ProductStockModel
+            ::join('stocks', 'stocks.slug', 'product_stocks.stock_slug')
+            ->where('product_sku', '=', $product->sku)
+            ->where('stocks.include', '=', true)
+            ->sum('quantity');
+
+        $this->assertEquals($realStock, $oldStock);
+        $this->assertEquals($oldStock - 1, $product->estoque);
+    }
+
+    /**
+     * If modify only calculated stock and not the real stock, when a payed order is created
+     * @return void
+     */
+    public function test__it_should_be_modify_only_calculated_stock_when_payed_order()
+    {
+        $product = Produto::create([
+            'estoque' => 10
+        ]);
+        $product  = $product->fresh();
+        $oldStock = $product->estoque;
+
+        Pedido::create([
+            'status' => 1
+        ], $product->sku);
+
+        $product  = $product->fresh();
+
+        $realStock = ProductStockModel
+            ::join('stocks', 'stocks.slug', 'product_stocks.stock_slug')
+            ->where('product_sku', '=', $product->sku)
+            ->where('stocks.include', '=', true)
+            ->sum('quantity');
+
+        $this->assertEquals($realStock, $oldStock);
+        $this->assertEquals($oldStock - 1, $product->estoque);
+    }
+
+    /**
+     * If modify only calculated stock and not the real stock, when a payed order is payed
+     * @return void
+     */
+    public function test__it_should_be_modify_only_calculated_stock_when_pay_order()
+    {
+        $product = Produto::create([
+            'estoque' => 10
+        ]);
+        $product  = $product->fresh();
+        $oldStock = $product->estoque;
+
+        $order = Pedido::create([
+            'status' => 0
+        ], $product->sku);
+
+        $order->status = 1;
+        $order->save();
+
+        $product = $product->fresh();
+
+        $realStock = ProductStockModel
+            ::join('stocks', 'stocks.slug', 'product_stocks.stock_slug')
+            ->where('product_sku', '=', $product->sku)
+            ->where('stocks.include', '=', true)
+            ->sum('quantity');
+
+        $this->assertEquals($realStock, $oldStock);
+        $this->assertEquals($oldStock - 1, $product->estoque);
     }
 }
