@@ -3,6 +3,8 @@
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;
 use Core\Events\ProductImeiCreated;
+use Core\Events\OrderSent;
+use Core\Events\OrderProductCreated;
 
 /*use Core\Events\OrderCanceled;
 use Core\Events\OrderProductCreated;
@@ -23,6 +25,17 @@ class UpdateStock
         $events->listen(
             ProductImeiCreated::class,
             '\Core\Events\Handlers\UpdateStock@onProductImeiCreated'
+        );
+
+        $events->listen(
+            OrderSent::class,
+            '\Core\Events\Handlers\UpdateStock@onOrderSent'
+        );
+
+        // Aqui foi criado uma redundancia pois quando o produto é criado já com status pago ele ainda não possui pedido produto
+        $events->listen(
+            OrderProductCreated::class,
+            '\Core\Events\Handlers\UpdateStock@onOrderProductCreated'
         );
 
         /*$events->listen(
@@ -52,22 +65,56 @@ class UpdateStock
         Log::debug('Handler UpdateStock/onProductImeiCreated acionado!', [$event]);
 
         if ($productImei = $event->productImei) {
-            $this->incrementStock($productImei->productStock);
+            \Stock::add(
+                $productImei->productStock->product_sku,
+                1,
+                $productImei->productStock->stock_slug
+            );
         } else {
             Log::warning('ProductImei não encontrado!', [$productImei]);
         }
     }
 
-    public function incrementStock($productStock)
+    /**
+     * Trigger stock updates when order canceled
+     *
+     * @param  OrderSent  $event
+     * @return void
+     */
+    public function onOrderSent(OrderSent $event)
     {
-        $productStock = $productStock->fresh();
+        Log::debug('Handler UpdateStock/onOrderSent acionado!', [$event]);
 
-        $productStock->quantity++;
-        if ($productStock->save()) {
-            Log::debug("Estoque ({$productStock->id}) do produto {$productStock->sku}
-                 alterado de {$productStock->quantity} para " . ($productStock->quantity - 1));
+        $order = $event->order;
+        $order = $order->fresh();
+
+        if (!$order) {
+            Log::debug('Pedido não encontrado!', [$order]);
         } else {
-            Log::error("Falha ao incrementar o estoque ({$productStock->id}) do produto {$productStock->sku}");
+            foreach ($order->produtos as $orderProduct) {
+                $stock = \Stock::choose($orderProduct->produto_sku);
+                \Stock::substract($orderProduct->produto_sku, 1, $stock);
+            }
+        }
+    }
+
+    /**
+     * Trigger stock updates when order canceled
+     *
+     * @param  OrderProductCreated  $event
+     * @return void
+     */
+    public function onOrderProductCreated(OrderProductCreated $event)
+    {
+        $orderProduct = $event->orderProduct;
+        $orderProduct = $orderProduct->fresh();
+
+        // Apenas se o produto for enviado ou entregue
+        if (in_array((int)$orderProduct->pedido->status, [2, 3])) {
+            Log::debug('Handler UpdateStock/onOrderProductCreated acionado.', [$event]);
+
+            $stock = \Stock::choose($orderProduct->produto_sku);
+            \Stock::substract($orderProduct->produto_sku, 1, $stock);
         }
     }
 

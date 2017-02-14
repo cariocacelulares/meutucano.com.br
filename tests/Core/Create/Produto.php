@@ -17,7 +17,13 @@ class Produto
 
         $product = factory(ProdutoModel::class)->create($data);
 
-        $productStock = ProductStockModel::where('product_sku', '=', $product->sku)->first();
+        $productStock = ProductStockModel
+            ::join('stocks', 'stocks.slug', 'product_stocks.stock_slug')
+            ->where('product_sku', '=', $product->sku)
+            ->where('stocks.include', '=', true)
+            ->orderBy('stocks.priority', 'ASC')
+            ->first();
+
         if ($productStock && $stock) {
             $productStock->quantity = $stock;
             $productStock->save();
@@ -26,7 +32,7 @@ class Produto
                 'product_sku' => $product->sku,
             ], is_null($stock) ? [] : [
                 'quantity'    => $stock
-            ]));
+            ]), true);
         }
 
         return $product->fresh();

@@ -29,9 +29,15 @@ class Pedido
 
         $pedido = factory(PedidoModel::class)->create($data);
 
-        PedidoProduto::create([
+        $productData = [
             'pedido_id' => $pedido->id,
-        ]);
+        ];
+
+        if ($productSku) {
+            $productData['produto_sku'] = $productSku;
+        }
+
+        PedidoProduto::create($productData);
 
         return $pedido;
     }

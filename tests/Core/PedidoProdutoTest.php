@@ -56,7 +56,7 @@ class PedidoProdutoTest extends TestCase
             'produto_sku'      => Produto::create()->sku,
             'product_imei_id'  => ProductImei::create()->id,
             'product_stock_id' => ProductStock::create()->id,
-            'valor' => 2.50,
+            'valor'            => 2.50,
         ];
 
         $this->json('PUT', "/api/pedido-produtos/{$orderProduct->id}", $data)

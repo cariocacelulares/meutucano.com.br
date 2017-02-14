@@ -42,6 +42,13 @@ class Stock extends Model
     ];
 
     /**
+     * @var array
+     */
+    protected $casts = [
+        'include' => 'boolean',
+    ];
+
+    /**
      * ProductStock
      * @return ProductStock
      */

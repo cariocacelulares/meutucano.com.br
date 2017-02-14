@@ -9,10 +9,12 @@ class ProductStock
     * @param  array $data
     * @return Core\Models\Produto\ProductStock
     */
-    public static function create($data = [])
+    public static function create($data = [], $includedStock = false)
     {
         if (!isset($data['stock_slug'])) {
-            $data['stock_slug'] = Stock::create()->slug;
+            $stockData = $includedStock ? ['include' => true] : [];
+
+            $data['stock_slug'] = Stock::create($stockData)->slug;
         }
 
         if (!isset($data['product_sku'])) {

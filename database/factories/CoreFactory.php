@@ -40,7 +40,7 @@ $factory->define(\Core\Models\Stock::class, function () use ($faker) {
     return [
         'slug'     => str_slug($name),
         'title'    => $name,
-        'include'  => $faker->numberBetween(1, 2),
+        'include'  => $faker->numberBetween(0, 1),
         'priority' => $faker->unique()->randomNumber(2),
     ];
 });
@@ -50,7 +50,7 @@ $factory->define(\Core\Models\Stock::class, function () use ($faker) {
 */
 $factory->define(\Core\Models\Produto\ProductStock::class, function () use ($faker) {
     return [
-        'quantity'       => $faker->randomNumber(1),
+        'quantity'       => $faker->numberBetween(1, 100),
         'serial_enabled' => $faker->numberBetween(0, 1),
     ];
 });
