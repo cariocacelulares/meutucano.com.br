@@ -16,8 +16,18 @@ class CreateStockRemovalsTable extends Migration
 		Schema::create('stock_removals', function(Blueprint $table)
 		{
 			$table->increments('id');
+			$table->integer('user_id')->unsigned()->index();
 			$table->dateTime('closed_at')->nullable();
 			$table->timestamps();
+		});
+
+        Schema::table('stock_removals', function ($table) {
+            $table
+                ->foreign('user_id', 'StockRemovalsUsers')
+                ->references('id')
+                ->on('usuarios')
+                ->onDelete('CASCADE')
+                ->onUpdate('CASCADE');
 		});
     }
 

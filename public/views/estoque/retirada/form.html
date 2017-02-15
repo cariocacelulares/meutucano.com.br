@@ -1,0 +1,41 @@
+<div id="page-header" class="row">
+    <page-title icon="fa fa-cart-arrow-down" title="Retirada de estoque {{ RetiradaEstoqueForm.stockRemoval.id ? '#' + RetiradaEstoqueForm.stockRemoval.id : '' }}" description="Controla todas as retiradas de estoque."></page-title>
+    <div ng-if="RetiradaEstoqueForm.stockRemoval.id" class="col-md-6 button-bar">
+        <a ng-click="" class="btn-danger"><i class="fa-times">&nbsp;</i> Fechar</a>
+        <a ng-click="" class="btn-info"><i class="fa-check">&nbsp;</i> Confirmar</a>
+    </div>
+</div>
+
+<form ng-submit="RetiradaEstoqueForm.save()" novalidate="novalidate" class="form-default" id="formProduto">
+    <validation errors="RetiradaEstoqueForm.validationErrors"></validation>
+    <div class="row form-group">
+        <div class="col-md-4">
+            <label for="user_id">Retirado por</label>
+            <input ng-model="RetiradaEstoqueForm.stockRemoval.user_id" id="user_id" placeholder="Quem retirou os produtos" required />
+        </div>
+        <div class="col-md-4">
+            <label for="created_at">Retirado em</label>
+            <input ng-model="RetiradaEstoqueForm.stockRemoval.created_at" id="created_at" placeholder="Data da retirada" required />
+        </div>
+        <div class="col-md-4">
+            <label for="closed_at">Fechado em</label>
+            <input ng-model="RetiradaEstoqueForm.stockRemoval.closed_at" id="closed_at" placeholder="Data de fechamento da retirada" readonly />
+        </div>
+    </div>
+    <div class="row">
+        <hr>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h4 class="m-t-0">Produtos da retirada</h4>
+        </div>
+        <div class="col-md-6">
+            <button ng-click="RetiradaEstoqueForm.addImeis()" class="btn-info pull-right" type="button">
+                <i class="fa-plus"></i>&nbsp; Serial
+            </button>
+            <button ng-click="RetiradaEstoqueForm.addQty()" class="btn-info pull-right m-r-10" type="button">
+                <i class="fa-plus"></i>&nbsp; Quantidade
+            </button>
+        </div>
+    </div>
+</form>

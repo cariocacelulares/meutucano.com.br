@@ -102,11 +102,11 @@
                         title: 'Estoque',
                         icon: 'fa-archive',
                         roles: ['admin', 'gestor'],
-                        sub: [ 
+                        sub: [
                             {
                                 title: 'Retirada',
                                 icon: 'fa-cart-arrow-down',
-                                sref: $state.href('app.estoque.retirada')
+                                sref: $state.href('app.estoque.retirada.index')
                             }
                         ]
                     },
