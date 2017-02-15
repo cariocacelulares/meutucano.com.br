@@ -121,4 +121,14 @@ return [
         'b2w',
         'cnova'
     ],
+
+    /**
+     * Status da retirada de estoque
+     */
+    'stock_removal_status' => [
+        0 => 'Retirado',
+        1 => 'Entregue',
+        2 => 'Enviado',
+        3 => 'Devolvido',
+    ]
 ];

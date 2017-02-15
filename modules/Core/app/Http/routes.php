@@ -170,6 +170,14 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     Route::resource('product-imeis', 'Produto\ProductImeiController');
 
     /**
+     * Stock removal
+     */
+    Route::group(['prefix' => 'stock-removal', 'namespace' => 'Stock'], function () {
+        Route::get('list', 'StockRemovalController@tableList');
+    });
+    Route::resource('stock-removal', 'Stock\StockRemovalController');
+
+    /**
      * Partials
      */
     Route::group(['namespace' => 'Partials'], function () {
