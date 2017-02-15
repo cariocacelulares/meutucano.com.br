@@ -42,7 +42,7 @@ class RemovalProduct extends Model
      */
     public function removal()
     {
-        return $this->belongsTo(Removal::class);
+        return $this->belongsTo(Removal::class, 'stock_removal_id', 'id');
     }
 
     /**

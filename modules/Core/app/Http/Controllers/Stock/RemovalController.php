@@ -81,4 +81,25 @@ class RemovalController extends Controller
             ]);
         }
     }
+
+    /**
+     * Retorna um único recurso
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function show($id)
+    {
+        try {
+            return $this->showResponse(
+                (self::MODEL)::with('removalProducts')->findOrFail($id)
+            );
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao obter recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
+        }
+    }
 }

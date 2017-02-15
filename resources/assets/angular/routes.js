@@ -462,13 +462,13 @@
                 })
 
                 .state('app.estoque.retirada.index', {
-                    url: '/retiradas/list',
+                    url: '/list',
                     templateUrl: 'views/estoque/retirada/list.html',
                     controller: 'RetiradaEstoqueListController as RetiradaEstoqueList'
                 })
 
                 .state('app.estoque.retirada.form', {
-                    url: '/retiradas/form/{sku}',
+                    url: '/form/{id}',
                     templateUrl: 'views/estoque/retirada/form.html',
                     controller: 'RetiradaEstoqueFormController as RetiradaEstoqueForm'
                 })

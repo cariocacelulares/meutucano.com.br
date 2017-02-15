@@ -42,6 +42,6 @@ class Removal extends Model
      */
     public function removalProducts()
     {
-        return $this->hasMany(RemovalProduct::class);
+        return $this->hasMany(RemovalProduct::class, 'stock_removal_id', 'id');
     }
 }

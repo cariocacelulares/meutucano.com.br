@@ -15,7 +15,7 @@
         vm.registeredSkus   = [];
         vm.stockRemoval     = {
             id      : parseInt($stateParams.id) || null,
-            products: {
+            removal_products: {
                 imei: [],
                 sku : []
             }
@@ -35,6 +35,8 @@
 
                 StockRemoval.get(vm.stockRemoval.id).then(function(stockRemoval) {
                     vm.stockRemoval = stockRemoval;
+                    vm.stockRemoval.user_id = vm.stockRemoval.user_id ? vm.stockRemoval.user_id + '' : null;
+
                     vm.loading      = false;
                 });
             }
@@ -57,7 +59,7 @@
 
                     for (var key in data) {
                         if (vm.registeredImeis.indexOf(data[key].imei) < 0) {
-                            vm.stockRemoval.products.imei.push(data[key]);
+                            vm.stockRemoval.removal_products.imei.push(data[key]);
                             vm.registeredImeis.push(data[key].imei);
                         }
                     }
@@ -87,13 +89,13 @@
                             }
                         }
 
-                        vm.stockRemoval.products.sku.push(produto);
+                        vm.stockRemoval.removal_products.sku.push(produto);
                         vm.registeredSkus.push(produto.sku);
                     } else {
                         var item = null;
-                        for (var key in vm.stockRemoval.products.sku) {
-                            if (vm.stockRemoval.products.sku[key].sku == produto.sku) {
-                                vm.stockRemoval.products.sku[key].quantity += produto.quantity;
+                        for (var key in vm.stockRemoval.removal_products.sku) {
+                            if (vm.stockRemoval.removal_products.sku[key].sku == produto.sku) {
+                                vm.stockRemoval.removal_products.sku[key].quantity += produto.quantity;
                                 break;
                             }
                         }
@@ -111,9 +113,9 @@
          */
         vm.removeProduct = function(index, sku) {
             if (sku === true) {
-                delete vm.stockRemoval.products.sku[index];
+                delete vm.stockRemoval.removal_products.sku[index];
             } else {
-                delete vm.stockRemoval.products.imei[index];
+                delete vm.stockRemoval.removal_products.imei[index];
             }
         };
 
