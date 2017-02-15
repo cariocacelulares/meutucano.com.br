@@ -33,24 +33,6 @@
                         controller: 'SugestaoFormController',
                         controllerAs: 'SugestaoForm'
                     });
-
-                    /*Devolucao.get(id).then(function(devolucao) {
-                        ngDialog.open({
-                            template: 'views/sugestao/form.html',
-                            controller: 'DevolucaoFormController',
-                            controllerAs: 'DevolucaoForm',
-                            data: {
-                                devolucao: devolucao || { rastreio_id: id }
-                            }
-                        }).closePromise.then(function(data) {
-                            if (updateVm &&
-                                typeof this.vm != 'undefined' &&
-                                typeof this.vm.load != 'undefined' &&
-                                data.value === true) {
-                                this.vm.load();
-                            }
-                        }.bind(this));
-                    }.bind(this));*/
                 }
             };
         });

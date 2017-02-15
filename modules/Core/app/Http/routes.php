@@ -166,6 +166,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
      */
     Route::group(['prefix' => 'product-imeis', 'namespace' => 'Produto'], function () {
         Route::get('list/{sku}', 'ProductImeiController@listBySku');
+        Route::post('parse', 'ProductImeiController@parseImeis');
     });
     Route::resource('product-imeis', 'Produto\ProductImeiController');
 

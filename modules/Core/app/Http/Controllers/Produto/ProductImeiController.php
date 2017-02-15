@@ -71,4 +71,61 @@ class ProductImeiController extends Controller
             ]);
         }
     }
+
+    /**
+     * Parse imeis and get each product info
+     *
+     * @return Response
+     */
+    public function parseImeis()
+    {
+        $imeis = Input::get('imeis');
+
+        try {
+            $products   = [];
+            $registered = [];
+            $imeis      = explode(PHP_EOL, $imeis);
+
+            foreach ($imeis as $key => $imei) {
+                $imei = trim($imei);
+
+                if (array_search($imei, $registered) !== false) {
+                    continue;
+                }
+
+                if ($imei) {
+                    $imei = ProductImei
+                        ::with([
+                            'productStock',
+                            'productStock.stock',
+                            'productStock.product',
+                        ])
+                        ->where('imei', '=', $imei)
+                        ->first();
+                }
+
+                if ($imei) {
+                    $products[] = [
+                        'imei'             => $imei->imei,
+                        'product_imei_id'  => $imei->id,
+                        'product_stock_id' => $imei->productStock->id,
+                        'stock'            => $imei->productStock->stock->title,
+                        'sku'              => $imei->productStock->product->sku,
+                        'title'            => $imei->productStock->product->titulo,
+                    ];
+
+                    $registered[] = $imei->imei;
+                }
+            }
+
+            return $this->listResponse([
+                'products' => $products
+            ]);
+        } catch (\Exception $exception) {
+        }
+
+        return $this->listResponse([
+            'products' => []
+        ]);
+    }
 }

@@ -1,0 +1,16 @@
+<h1>Adicionar imeis</h1>
+<form ng-submit="RetiradaEstoqueImeisForm.save()" novalidate="novalidate" class="form-default">
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <label for="imeis">Imeis</label>
+            <textarea ng-model="RetiradaEstoqueImeisForm.imeis" id="imeis" placeholder="Um IMEI por linha">
+            </textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="pull-right">
+            <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
+            <button busy="Salvando..." type="submit" class="btn btn-success">Adicionar</button>
+        </div>
+    </div>
+</form>
