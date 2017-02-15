@@ -13,6 +13,13 @@ class RemovalProduct extends Model
 {
     use RevisionableTrait;
 
+    protected $table = 'stock_removal_products';
+
+    /**
+     * @var boolean
+     */
+    public $timestamps = false;
+
     /**
      * @var boolean
      */

@@ -1,8 +1,10 @@
 <div id="page-header" class="row">
     <page-title icon="fa fa-cart-arrow-down" title="Retirada de estoque {{ RetiradaEstoqueForm.stockRemoval.id ? '#' + RetiradaEstoqueForm.stockRemoval.id : '' }}" description="Controla todas as retiradas de estoque."></page-title>
-    <div ng-if="RetiradaEstoqueForm.stockRemoval.id" class="col-md-6 button-bar">
-        <a ng-click="" class="btn-danger"><i class="fa-times">&nbsp;</i> Fechar</a>
-        <a ng-click="" class="btn-info"><i class="fa-check">&nbsp;</i> Confirmar</a>
+    <div class="col-md-6 button-bar">
+        <a ng-if="RetiradaEstoqueForm.stockRemoval.id" ng-click="RetiradaEstoqueForm.close()" class="btn-danger"><i class="fa-times">&nbsp;</i> Fechar</a>
+        <a ng-if="RetiradaEstoqueForm.stockRemoval.id" ng-click="RetiradaEstoqueForm.confirm()" class="btn-info"><i class="fa-check">&nbsp;</i> Confirmar</a>
+        <a ng-if="RetiradaEstoqueForm.stockRemoval.products.sku.length || RetiradaEstoqueForm.stockRemoval.products.imei.length"
+            ng-click="RetiradaEstoqueForm.save()" class="btn-success"><i class="fa-save">&nbsp;</i> Salvar</a>
     </div>
 </div>
 
@@ -16,7 +18,7 @@
                 <option ng-repeat="user in RetiradaEstoqueForm.users.data" value="{{ user.id }}">{{ user.name }}</option>
             </select>
         </div>
-        <div class="col-md-4">
+        <div ng-if="RetiradaEstoqueForm.stockRemoval.id" class="col-md-4">
             <label for="created_at">Retirado em</label>
             <div class="date-picker">
                 <div class="input-group">
@@ -28,9 +30,10 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div ng-if="RetiradaEstoqueForm.stockRemoval.id" class="col-md-4">
             <label for="closed_at">Fechado em</label>
-            <input ng-model="RetiradaEstoqueForm.stockRemoval.closed_at" id="closed_at" placeholder="Data de fechamento da retirada" readonly />
+            <input ng-model="RetiradaEstoqueForm.stockRemoval.closed_at" ng-if="RetiradaEstoqueForm.stockRemoval.closed_at" id="closed_at" placeholder="Data de fechamento da retirada" readonly />
+            <input ng-if="!RetiradaEstoqueForm.stockRemoval.closed_at" value="Em aberto" readonly />
         </div>
     </div>
     <div class="row">
@@ -48,27 +51,60 @@
                 <i class="fa-plus"></i>&nbsp; Quantidade
             </button>
         </div>
-        <div ng-if="product.sku" ng-repeat="product in RetiradaEstoqueForm.stockRemoval.products track by $index" class="col-md-12">
-            <div class="col-md-6">
-                <label for="title">Produto</label>
-                <input ng-model="product.title" id="title" readonly />
-            </div>
-            <div class="col-md-1">
-                <label for="sku">SKU</label>
-                <input ng-model="product.sku" id="sku" readonly />
-            </div>
-            <div class="col-md-2">
-                <label for="imei">IMEI</label>
-                <input ng-model="product.imei" id="imei" readonly />
-            </div>
-            <div class="col-md-2">
-                <label for="stock">Estoque</label>
-                <input ng-model="product.stock" id="stock" readonly />
-            </div>
-            <div class="col-md-1">
-                <label>&nbsp;</label>
-                <button confirm="RetiradaEstoqueForm.removeProduct($index)" type="button" class="btn-danger btn-block">Remover</button>
-            </div>
-        </div>
+
+        <table class="table-alt table-hover no-padding" ng-if="RetiradaEstoqueForm.stockRemoval.products.sku.length || RetiradaEstoqueForm.stockRemoval.products.imei.length">
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>SKU</th>
+                    <th>Estoque</th>
+                    <th>IMEI / QTD</th>
+                    <th width="46"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="product.sku" ng-repeat="product in RetiradaEstoqueForm.stockRemoval.products.sku track by $index">
+                    <td class="form-group">
+                        <input ng-model="product.title" id="title" readonly />
+                    </td>
+                    <td class="form-group">
+                        <input ng-model="product.sku" id="sku" readonly />
+                    </td>
+                    <td class="form-group">
+                        <select ng-model="product.product_stock_id" id="stock">
+                            <option ng-repeat="productStock in product.productStocks" value="{{ productStock.id }}">{{ productStock.stock.title }}</option>
+                        </select>
+                    </td>
+                    <td class="form-group">
+                        <input ng-model="product.quantity" id="quantity" type="number" min="1" ng-minlength="1" required />
+                    </td>
+                    <td class="form-group">
+                        <button confirm="RetiradaEstoqueForm.removeProduct($index, true)" type="button" class="btn-danger btn-block">
+                            <i class="fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+
+                <tr ng-if="product.sku" ng-repeat="product in RetiradaEstoqueForm.stockRemoval.products.imei track by $index">
+                    <td class="form-group">
+                        <input ng-model="product.title" id="title" readonly />
+                    </td>
+                    <td class="form-group">
+                        <input ng-model="product.sku" id="sku" readonly />
+                    </td>
+                    <td class="form-group">
+                        <input ng-model="product.stock" id="stock" readonly />
+                    </td>
+                    <td class="form-group">
+                        <input ng-model="product.imei" id="imei" readonly />
+                    </td>
+                    <td class="form-group">
+                        <button confirm="RetiradaEstoqueForm.removeProduct($index)" type="button" class="btn-danger btn-block">
+                            <i class="fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </form>

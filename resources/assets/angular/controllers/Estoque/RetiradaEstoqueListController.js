@@ -19,7 +19,7 @@
 
         /**
          * Cabeçalho da tabela
-         * @type {TableHeader} 
+         * @type {TableHeader}
          */
         vm.tableHeader = TableHeader.init('stock_removal', vm);
 
@@ -27,7 +27,7 @@
             vm.loading = true;
 
             StockRemoval.getList({
-                fields:   ['stock_removal.*'],
+                fields:   ['stock_removals.*'],
                 filter:   vm.filterList.parse(),
                 page:     vm.tableHeader.pagination.page,
                 per_page: vm.tableHeader.pagination.per_page

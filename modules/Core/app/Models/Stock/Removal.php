@@ -12,6 +12,8 @@ class Removal extends Model
 {
     use RevisionableTrait;
 
+    protected $table = 'stock_removals';
+
     /**
      * @var boolean
      */
@@ -32,5 +34,14 @@ class Removal extends Model
     public function user()
     {
         return $this->belongsTo(Usuario::class);
+    }
+
+    /**
+     * RemovalProduct
+     * @return RemovalProduct
+     */
+    public function removalProducts()
+    {
+        return $this->hasMany(RemovalProduct::class);
     }
 }

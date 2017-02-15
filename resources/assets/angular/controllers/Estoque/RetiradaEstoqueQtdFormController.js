@@ -8,6 +8,7 @@
     function RetiradaEstoqueQtdFormController($scope, toaster, Produto) {
         var vm = this;
 
+        vm.quantity = 1;
         vm.produto  = null;
         vm.produtos = [];
 
@@ -29,9 +30,10 @@
          * Send imeis and get products
          */
         vm.save = function () {
-            // #TODO: fazer a busca em alguma rota e retornar os dados que preciso
-            ProductImei.parseImeis(vm.imeis).then(function (response) {
-                toaster.pop('success', 'Sucesso!', 'Imeis foram adicionados!');
+            Produto.getStocks(vm.produto.sku).then(function (response) {
+                response.produto.quantity = vm.quantity;
+
+                toaster.pop('success', 'Sucesso!', 'O produto foi adicionado!');
                 $scope.closeThisDialog(response);
             });
         };

@@ -231,4 +231,40 @@ class ProdutoController extends Controller
             return $this->listResponse([]);
         }
     }
+
+    /**
+     * Get produto info and stocks by sku
+     *
+     * @param  int $sku
+     * @return Response
+     */
+    public function getStocks($sku)
+    {
+        $product = Produto
+            ::where('sku', '=', $sku)
+            ->with([
+                'productStocks',
+                'productStocks.stock',
+            ])
+            ->first();
+
+        if ($product) {
+            try {
+                $product = [
+                    'sku'           => $product->sku,
+                    'title'         => $product->titulo,
+                    'productStocks' => $product->productStocks,
+                ];
+
+                return $this->showResponse([
+                    'produto' => $product
+                ]);
+            } catch (\Exception $exception) {
+            }
+        }
+
+        return $this->showResponse([
+            'produto' => []
+        ]);
+    }
 }

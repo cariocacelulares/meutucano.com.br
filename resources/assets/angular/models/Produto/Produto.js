@@ -33,8 +33,8 @@
                 /**
                  * Busca produtos por sku ou titulo baseado no parametro
                  *
-                 * @param  {string} term   termo a ser buscado
-                 * @param  {int|string}      estado estado do item (novo/seminovo)
+                 * @param  {string}     term   termo a ser buscado
+                 * @param  {int|string} estado estado do item (novo/seminovo)
                  * @return {Object}
                  */
                 search: function(term, estado) {
@@ -45,6 +45,16 @@
                     }
 
                     return Restangular.one(rest.baseUrl + '/search/' + term + estado).customGET();
+                },
+
+                /**
+                 * Get product stocks
+                 * 
+                 * @param  {int} sku product sku
+                 * @return {Object}
+                 */
+                getStocks: function(sku) {
+                    return Restangular.one(rest.baseUrl + '/get-stocks/' + sku).customGET();
                 }
             });
 

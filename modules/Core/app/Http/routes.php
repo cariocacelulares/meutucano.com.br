@@ -105,6 +105,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
         Route::get('check-sku/{sku}', 'ProdutoController@checkSku');
         Route::get('list', 'ProdutoController@tableList');
         Route::get('search/{term}', 'ProdutoController@search');
+        Route::get('get-stocks/{sku}', 'ProdutoController@getStocks');
     });
     Route::resource('produtos', 'Produto\ProdutoController');
 
@@ -173,10 +174,10 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     /**
      * Stock removal
      */
-    Route::group(['prefix' => 'stock-removal', 'namespace' => 'Stock'], function () {
-        Route::get('list', 'StockRemovalController@tableList');
+    Route::group(['prefix' => 'estoque/retirada', 'namespace' => 'Stock'], function () {
+        Route::get('list', 'RemovalController@tableList');
     });
-    Route::resource('stock-removal', 'Stock\StockRemovalController');
+    Route::resource('estoque/retirada', 'Stock\RemovalController');
 
     /**
      * Partials
