@@ -245,6 +245,7 @@
                 template: 'views/produto/entrada-produto.html',
                 controller: 'EntradaProdutoFormController',
                 controllerAs: 'EntradaProdutoForm',
+                closeByDocument: false,
                 data: {
                     sku: vm.produto.sku
                 }

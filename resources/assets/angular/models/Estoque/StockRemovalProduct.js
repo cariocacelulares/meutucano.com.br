@@ -19,6 +19,16 @@
                  */
                 changeStatus: function(id, status) {
                     return Restangular.one(this.baseUrl + '/status', id).customPOST({ status: status });
+                },
+
+                /**
+                 * Verify imei status
+                 *
+                 * @param  {string} imei
+                 * @return {Object}
+                 */
+                verifyImei: function(imei) {
+                    return Restangular.one(this.baseUrl + '/verificar/', imei).customGET();
                 }
             });
 

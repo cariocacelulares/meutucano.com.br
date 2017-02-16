@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
+use Core\Models\Produto\ProductImei;
 use Core\Models\Stock\RemovalProduct;
 use Core\Transformers\StockRemovalProductTransformer;
 
@@ -44,5 +45,55 @@ class RemovalProductController extends Controller
             ->find($removalProduct->id);
 
         return $this->showResponse(StockRemovalProductTransformer::show($removalProduct));
+    }
+
+    public function verify($imei)
+    {
+        try {
+            $productImei = ProductImei
+                ::where('imei', '=', $imei)
+                ->first();
+
+            if (!$productImei) {
+                return $this->listResponse([
+                    'icon'    => 'ban',
+                    'message' => 'Imei não registrado!',
+                ]);
+            }
+
+            $removalProduct = RemovalProduct
+                ::where('product_imei_id', '=', $productImei->id)
+                ->where('status', '!=', 3)
+                ->first();
+
+            if ($removalProduct) {
+                return $this->listResponse([
+                    'icon'    => 'shopping-cart',
+                    'message' => "Imei em aberto na retirada #{$removalProduct->stock_removal_id}",
+                ]);
+            }
+
+            $orderProducts = $productImei->pedidoProdutos
+                ->whereIn('status', [2, 3])
+                ->orderBy('created_at', 'DESC')
+                ->first();
+
+            if ($orderProducts) {
+                return $this->listResponse([
+                    'icon'    => 'exclamation',
+                    'message' => 'Imei já faturado!',
+                ]);
+            }
+
+            return $this->listResponse([
+                'icon'    => 'check',
+                'message' => 'Imei disponível!',
+            ]);
+        } catch (\Exception $exception) {
+            return $this->listResponse([
+                'icon'    => 'check',
+                'message' => 'Imei disponível!',
+            ]);
+        }
     }
 }

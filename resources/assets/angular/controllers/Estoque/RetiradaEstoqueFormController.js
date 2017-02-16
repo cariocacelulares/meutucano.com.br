@@ -67,12 +67,15 @@
         /**
          * Add new products to stock removal by imeis
          */
-        vm.addImeis = function() {
+        vm.addImeis = function(confirm) {
             ngDialog.open({
                 template: 'views/estoque/retirada/form-imeis.html',
                 controller: 'RetiradaEstoqueImeisFormController',
                 controllerAs: 'RetiradaEstoqueImeisForm',
-                closeByDocument: false
+                closeByDocument: false,
+                data: {
+                    confirm: confirm
+                }
             }).closePromise.then(function(data) {
                 if (data && typeof data.value.products !== 'undefined') {
                     data = data.value.products;
@@ -90,12 +93,15 @@
         /**
          * Add new products to stock removal by sku and qty
          */
-        vm.addQty = function() {
+        vm.addQty = function(confirm) {
             ngDialog.open({
                 template: 'views/estoque/retirada/form-quantidade.html',
                 controller: 'RetiradaEstoqueQtdFormController',
                 controllerAs: 'RetiradaEstoqueQtdForm',
-                closeByDocument: false
+                closeByDocument: false,
+                data: {
+                    confirm: confirm
+                }
             }).closePromise.then(function(data) {
                 if (data && typeof data.value.produto !== 'undefined') {
                     var produto = data.value.produto;
