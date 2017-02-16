@@ -180,6 +180,14 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
     Route::resource('estoque/retirada', 'Stock\RemovalController');
 
     /**
+     * Stock removal product
+     */
+    Route::group(['prefix' => 'estoque/retirada/produto', 'namespace' => 'Stock'], function () {
+       Route::post('status/{id}', 'RemovalProductController@changeStatus');
+    });
+    Route::resource('estoque/retirada/produto', 'Stock\RemovalProductController');
+
+    /**
      * Partials
      */
     Route::group(['namespace' => 'Partials'], function () {

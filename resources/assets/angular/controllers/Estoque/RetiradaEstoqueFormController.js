@@ -6,7 +6,7 @@
         .controller('RetiradaEstoqueFormController', RetiradaEstoqueFormController);
 
     function RetiradaEstoqueFormController($state, $stateParams, ngDialog, toaster, ValidationErrors,
-            Usuario, StockRemoval) {
+            Usuario, StockRemoval, StockRemovalProduct) {
         var vm = this;
 
         vm.validationErrors = [];
@@ -35,9 +35,29 @@
 
                 StockRemoval.get(vm.stockRemoval.id).then(function(stockRemoval) {
                     vm.stockRemoval = stockRemoval;
-                    vm.stockRemoval.user_id = vm.stockRemoval.user_id ? vm.stockRemoval.user_id + '' : null;
 
-                    vm.loading      = false;
+                    var current = null;
+                    if (typeof vm.stockRemoval.removal_products.imei != 'undefined') {
+                        for (var key in vm.stockRemoval.removal_products.imei) {
+                            current = vm.stockRemoval.removal_products.imei[key];
+
+                            if (vm.registeredImeis.indexOf(current.imei) < 0) {
+                                vm.registeredImeis.push(current.imei);
+                            }
+                        }
+                    }
+
+                    if (typeof vm.stockRemoval.removal_products.sku != 'undefined') {
+                        for (var key in vm.stockRemoval.removal_products.sku) {
+                            current = vm.stockRemoval.removal_products.sku[key];
+
+                            if (vm.registeredSkus.indexOf(current.sku) < 0) {
+                                vm.registeredSkus.push(current.sku);
+                            }
+                        }
+                    }
+
+                    vm.loading = false;
                 });
             }
         };
@@ -142,6 +162,50 @@
 
         vm.close = function() {
             $state.go('app.estoque.retirada.index');
+        };
+
+        /**
+         * Set removal product to returned
+         *
+         * @param  {int} index
+         * @param  {boolean} sku   if is in sku list
+         * @return {void}
+         */
+        vm.returnProduct = function(index, sku) {
+            if (sku === true) {
+                var id = vm.stockRemoval.removal_products.sku[index].id;
+            } else {
+                var id = vm.stockRemoval.removal_products.imei[index].id;
+            }
+
+            if (id) {
+                vm.loading = true;
+                var status = 3;
+                StockRemovalProduct.changeStatus(id, status).then(function (removalProduct) {
+                    vm.loading = false;
+
+                    if (sku === true) {
+                        vm.stockRemoval.removal_products.sku[index] = removalProduct;
+                    } else {
+                        vm.stockRemoval.removal_products.imei[index] = removalProduct;
+                    }
+                });
+            }
+        };
+
+        /**
+         * Returns a style status class
+         *
+         * @param  {int} status removal product status
+         * @return {string}     color status class
+         */
+        vm.parseStatusClass = function(status) {
+            switch (status) {
+                case 0: return 'default'; // Retirado
+                case 1: return 'info';    // Entregue
+                case 2: return 'success'; // Enviado
+                case 3: return 'danger';  // Devolvido
+            }
         };
     }
 })();

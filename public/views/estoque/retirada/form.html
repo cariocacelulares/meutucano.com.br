@@ -1,39 +1,39 @@
 <div id="page-header" class="row">
     <page-title icon="fa fa-cart-arrow-down" title="Retirada de estoque {{ RetiradaEstoqueForm.stockRemoval.id ? '#' + RetiradaEstoqueForm.stockRemoval.id : '' }}" description="Controla todas as retiradas de estoque."></page-title>
-    <div class="col-md-6 button-bar">
-        <a ng-if="RetiradaEstoqueForm.stockRemoval.id" ng-click="RetiradaEstoqueForm.close()" class="btn-danger"><i class="fa-times">&nbsp;</i> Fechar</a>
-        <a ng-if="RetiradaEstoqueForm.stockRemoval.id" ng-click="RetiradaEstoqueForm.confirm()" class="btn-info"><i class="fa-check">&nbsp;</i> Confirmar</a>
-        <a ng-if="RetiradaEstoqueForm.stockRemoval.products.sku.length || RetiradaEstoqueForm.stockRemoval.products.imei.length"
-            ng-click="RetiradaEstoqueForm.save()" class="btn-success"><i class="fa-save">&nbsp;</i> Salvar</a>
+    <div ng-if="RetiradaEstoqueForm.stockRemoval.id" class="col-md-6 button-bar">
+        <a ng-click="RetiradaEstoqueForm.close()" class="btn-danger"><i class="fa-times">&nbsp;</i> Fechar</a>
+        <a ng-click="RetiradaEstoqueForm.confirm()" class="btn-info"><i class="fa-check">&nbsp;</i> Confirmar</a>
+    </div>
+    <div ng-if="!RetiradaEstoqueForm.stockRemoval.id" class="col-md-6 button-bar">
+        <a ng-if="RetiradaEstoqueForm.stockRemoval.removal_products.sku.length || RetiradaEstoqueForm.stockRemoval.removal_products.imei.length"
+        ng-click="RetiradaEstoqueForm.save()" class="btn-success"><i class="fa-save">&nbsp;</i> Salvar</a>
     </div>
 </div>
 
 <form ng-submit="RetiradaEstoqueForm.save()" novalidate="novalidate" class="form-default" id="formProduto">
     <validation errors="RetiradaEstoqueForm.validationErrors"></validation>
-    <div class="row form-group">
+    <div ng-if="RetiradaEstoqueForm.stockRemoval.id" class="row form-group">
+        <div class="col-md-4">
+            <label for="user_id">Retirado por</label>
+            <input ng-model="RetiradaEstoqueForm.stockRemoval.user.name" readonly />
+        </div>
+        <div class="col-md-4">
+            <label for="created_at">Retirado em</label>
+            <input ng-model="RetiradaEstoqueForm.stockRemoval.created_at" id="created_at" readonly />
+        </div>
+        <div class="col-md-4">
+            <label for="closed_at">Fechado em</label>
+            <input ng-model="RetiradaEstoqueForm.stockRemoval.closed_at" ng-if="RetiradaEstoqueForm.stockRemoval.closed_at" id="closed_at" readonly />
+            <input ng-if="!RetiradaEstoqueForm.stockRemoval.closed_at" value="Em aberto" readonly />
+        </div>
+    </div>
+    <div ng-if="!RetiradaEstoqueForm.stockRemoval.id" class="row form-group">
         <div class="col-md-4">
             <label for="user_id">Retirado por</label>
             <select ng-model="RetiradaEstoqueForm.stockRemoval.user_id" id="user_id" required>
                 <option value="" disabled selected hidden>Quem fez a retirada</option>
                 <option ng-repeat="user in RetiradaEstoqueForm.users.data" value="{{ user.id }}">{{ user.name }}</option>
             </select>
-        </div>
-        <div ng-if="RetiradaEstoqueForm.stockRemoval.id" class="col-md-4">
-            <label for="created_at">Retirado em</label>
-            <div class="date-picker">
-                <div class="input-group">
-                    <span class="input-group-addon fa-calendar"></span>
-                    <input class="form-control" id="created_at" ng-model="RetiradaEstoqueForm.stockRemoval.created_at" placeholder="Data de retirada" ui-date-mask />
-                    <div class="picker-wrap">
-                        <date-picker ng-model="RetiradaEstoqueForm.stockRemoval.created_at"></date-picker>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div ng-if="RetiradaEstoqueForm.stockRemoval.id" class="col-md-4">
-            <label for="closed_at">Fechado em</label>
-            <input ng-model="RetiradaEstoqueForm.stockRemoval.closed_at" ng-if="RetiradaEstoqueForm.stockRemoval.closed_at" id="closed_at" placeholder="Data de fechamento da retirada" readonly />
-            <input ng-if="!RetiradaEstoqueForm.stockRemoval.closed_at" value="Em aberto" readonly />
         </div>
     </div>
     <div class="row">
@@ -43,7 +43,7 @@
         <div class="col-md-6">
             <h4 class="m-t-0">Produtos da retirada</h4>
         </div>
-        <div class="col-md-6">
+        <div ng-if="!RetiradaEstoqueForm.stockRemoval.id" class="col-md-6">
             <button ng-click="RetiradaEstoqueForm.addImeis()" class="btn-info pull-right" type="button">
                 <i class="fa-plus"></i>&nbsp; Serial
             </button>
@@ -52,55 +52,73 @@
             </button>
         </div>
 
-        <table class="table-alt table-hover no-padding" ng-if="RetiradaEstoqueForm.stockRemoval.products.sku.length || RetiradaEstoqueForm.stockRemoval.products.imei.length">
+        <table class="table-alt table-hover no-padding" ng-if="RetiradaEstoqueForm.stockRemoval.removal_products.sku.length || RetiradaEstoqueForm.stockRemoval.removal_products.imei.length">
             <thead>
                 <tr>
                     <th>Produto</th>
                     <th>SKU</th>
                     <th>Estoque</th>
                     <th>IMEI / QTD</th>
+                    <th ng-if="RetiradaEstoqueForm.stockRemoval.id" class="text-center">Status</th>
                     <th width="46"></th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-if="product.sku" ng-repeat="product in RetiradaEstoqueForm.stockRemoval.products.sku track by $index">
+                <tr ng-if="product.sku" ng-repeat="product in RetiradaEstoqueForm.stockRemoval.removal_products.sku track by $index">
                     <td class="form-group">
-                        <input ng-model="product.title" id="title" readonly />
+                        <input ng-model="product.title" readonly />
                     </td>
                     <td class="form-group">
-                        <input ng-model="product.sku" id="sku" readonly />
+                        <input ng-model="product.sku" readonly />
                     </td>
                     <td class="form-group">
-                        <select ng-model="product.product_stock_id" id="stock">
+                        <select ng-if="!product.id" ng-model="product.product_stock_id">
                             <option ng-repeat="productStock in product.productStocks" value="{{ productStock.id }}">{{ productStock.stock.title }}</option>
                         </select>
+                        <input ng-if="product.id" ng-model="product.stock" readonly />
                     </td>
                     <td class="form-group">
-                        <input ng-model="product.quantity" id="quantity" type="number" min="1" ng-minlength="1" required />
+                        <input ng-model="product.quantity" type="number" min="1" ng-minlength="1" ng-readonly="product.id" />
                     </td>
-                    <td class="form-group">
-                        <button confirm="RetiradaEstoqueForm.removeProduct($index, true)" type="button" class="btn-danger btn-block">
+                    <td ng-if="RetiradaEstoqueForm.stockRemoval.id" class="text-center">
+                        <span class="label label-{{ RetiradaEstoqueForm.parseStatusClass(product.status) }}">
+                            {{ product.status_description }}
+                        </span>
+                    </td>
+                    <td class="form-group p-r-15">
+                        <button ng-if="!product.id" confirm="RetiradaEstoqueForm.removeProduct($index, true)" type="button" class="btn-danger btn-block">
                             <i class="fa-trash"></i>
+                        </button>
+                        <button ng-if="product.id" confirm="RetiradaEstoqueForm.returnProduct($index, true)" tooltips tooltip-template="Devolver ao estoque" type="button" class="btn-info btn-block">
+                            <i class="fa-retweet"></i>
                         </button>
                     </td>
                 </tr>
 
-                <tr ng-if="product.sku" ng-repeat="product in RetiradaEstoqueForm.stockRemoval.products.imei track by $index">
+                <tr ng-if="product.imei" ng-repeat="product in RetiradaEstoqueForm.stockRemoval.removal_products.imei track by $index">
                     <td class="form-group">
-                        <input ng-model="product.title" id="title" readonly />
+                        <input ng-model="product.title" readonly />
                     </td>
                     <td class="form-group">
-                        <input ng-model="product.sku" id="sku" readonly />
+                        <input ng-model="product.sku" readonly />
                     </td>
                     <td class="form-group">
-                        <input ng-model="product.stock" id="stock" readonly />
+                        <input ng-model="product.stock" readonly />
                     </td>
                     <td class="form-group">
-                        <input ng-model="product.imei" id="imei" readonly />
+                        <input ng-model="product.imei" readonly />
                     </td>
-                    <td class="form-group">
-                        <button confirm="RetiradaEstoqueForm.removeProduct($index)" type="button" class="btn-danger btn-block">
+                    <td ng-if="RetiradaEstoqueForm.stockRemoval.id" class="text-center">
+                        <span class="label label-{{ RetiradaEstoqueForm.parseStatusClass(product.status) }}">
+                            {{ product.status_description }}
+                        </span>
+                    </td>
+                    <td class="form-group p-r-15">
+                        <button ng-if="!product.id" confirm="RetiradaEstoqueForm.removeProduct($index)" type="button" class="btn-danger btn-block">
                             <i class="fa-trash"></i>
+                        </button>
+                        <button ng-if="product.id" confirm="RetiradaEstoqueForm.returnProduct($index)" tooltips tooltip-template="Devolver ao estoque" type="button" class="btn-info btn-block">
+                            <i class="fa-retweet"></i>
                         </button>
                     </td>
                 </tr>
