@@ -84,12 +84,11 @@ class ProductImeiController extends Controller
         try {
             $products   = [];
             $registered = [];
-            $imeis      = explode(PHP_EOL, $imeis);
 
-            foreach ($imeis as $key => $imei) {
-                $imei = trim($imei);
+            foreach ($imeis as $item) {
+                $imei = trim($item['imei']);
 
-                if (array_search($imei, $registered) !== false) {
+                if ($item['ok'] !== true || array_search($imei, $registered) !== false) {
                     continue;
                 }
 
@@ -122,6 +121,7 @@ class ProductImeiController extends Controller
                 'products' => $products
             ]);
         } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao organizar imeis na retirada de estoque!'));
         }
 
         return $this->listResponse([

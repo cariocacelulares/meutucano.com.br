@@ -5,6 +5,11 @@
     text-overflow: ellipsis;
 }
 
+.scroll-wrapper {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 // Posicionamento, comportamento e espaçamento
 .deleted { opacity: 0.3 }
 .affix { position: fixed }

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
+use Core\Models\Pedido;
 use Core\Models\Produto\ProductImei;
 use Core\Models\Stock\RemovalProduct;
 use Core\Transformers\StockRemovalProductTransformer;
@@ -58,6 +59,7 @@ class RemovalProductController extends Controller
                 return $this->listResponse([
                     'icon'    => 'ban',
                     'message' => 'Imei não registrado!',
+                    'ok'      => false,
                 ]);
             }
 
@@ -70,29 +72,37 @@ class RemovalProductController extends Controller
                 return $this->listResponse([
                     'icon'    => 'shopping-cart',
                     'message' => "Imei em aberto na retirada #{$removalProduct->stock_removal_id}",
+                    'ok'      => false,
                 ]);
             }
 
-            $orderProducts = $productImei->pedidoProdutos
-                ->whereIn('status', [2, 3])
-                ->orderBy('created_at', 'DESC')
+            $order = Pedido
+                ::join('pedido_produtos', 'pedido_produtos.pedido_id', 'pedidos.id')
+                ->where('pedido_produtos.product_imei_id', '=', $productImei->id)
+                ->whereIn('pedidos.status', [2, 3])
+                ->orderBy('pedidos.created_at', 'DESC')
                 ->first();
 
-            if ($orderProducts) {
+            if ($order) {
                 return $this->listResponse([
                     'icon'    => 'exclamation',
                     'message' => 'Imei já faturado!',
+                    'ok'      => false,
                 ]);
             }
 
             return $this->listResponse([
                 'icon'    => 'check',
                 'message' => 'Imei disponível!',
+                'ok'      => true,
             ]);
         } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Não foi possível verificar o imei!'));
+
             return $this->listResponse([
-                'icon'    => 'check',
-                'message' => 'Imei disponível!',
+                'icon'    => 'times',
+                'message' => 'Não foi possível verificar o imei!',
+                'ok'      => false,
             ]);
         }
     }
