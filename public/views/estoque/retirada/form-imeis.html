@@ -11,7 +11,8 @@
                     </tr>
                 </thead>
                 <body>
-                    <tr ng-if="$first || $last || item.imei" ng-repeat="item in RetiradaEstoqueImeisForm.imeis track by $index" class="form-group">
+                    <tr ng-if="$first || $last || item.imei" ng-repeat="item in RetiradaEstoqueImeisForm.imeis track by $index"
+                        ng-class="{ warn: !item.ok && item.verified }" class="form-group">
                         <td>
                             <input ng-model="item.imei" class="input-imei" ng-blur="RetiradaEstoqueImeisForm.checkImei(item)"
                                 ng-keyup="RetiradaEstoqueImeisForm.addImei($event, $index)" placeholder="Código serial" />
