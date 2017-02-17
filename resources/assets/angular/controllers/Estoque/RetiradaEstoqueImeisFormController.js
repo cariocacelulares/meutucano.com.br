@@ -6,8 +6,7 @@
         .controller('RetiradaEstoqueImeisFormController', RetiradaEstoqueImeisFormController);
 
     function RetiradaEstoqueImeisFormController($scope, toaster, ProductImei, StockRemovalProduct) {
-        var vm   = this;
-        var wait = false;
+        var vm = this;
 
         var defaultItem = {
             imei: '',
@@ -15,6 +14,7 @@
             message: 'Aguardando entrada do usuário'
         };
 
+        vm.loading    = false;
         vm.registered = [];
         vm.imeis      = [angular.copy(defaultItem)];
 
@@ -43,14 +43,14 @@
             if (item.verified !== true && item.imei) {
                 item.icon = 'circle-o-notch fa-spin';
 
-                wait = true;
+                vm.loading = true;
                 StockRemovalProduct.verifyImei(item.imei).then(function (response) {
                     item.icon     = response.icon;
                     item.message  = response.message;
                     item.ok       = response.ok;
                     item.verified = true;
 
-                    wait = false;
+                    vm.loading = false;
                 });
             }
         };
@@ -102,7 +102,7 @@
          * Send imeis and get products
          */
         vm.save = function () {
-            if (wait) {
+            if (vm.loading) {
                 return;
             }
 

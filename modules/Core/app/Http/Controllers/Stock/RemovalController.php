@@ -33,6 +33,32 @@ class RemovalController extends Controller
     }
 
     /**
+     * Check if requested quantity to removal has in stock
+     *
+     * @param  array  $removalProduct
+     * @return boolean
+     */
+    public function hasStock($removalProduct)
+    {
+        $qty   = $removalProduct['quantity'];
+        $stock = false;
+
+        foreach ($removalProduct['productStocks'] as $productStock) {
+            if ($productStock['id'] == $removalProduct['product_stock_id']) {
+                $stock = $productStock['quantity'];
+            }
+        }
+
+        if (!$stock) {
+            return false;
+        } else if ($stock < $qty) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
      * Cria novo recurso
      *
      * @param Request $request
@@ -41,10 +67,19 @@ class RemovalController extends Controller
     public function store(Request $request)
     {
         try {
+            $products = Input::get('removal_products');
+            foreach ($products['sku'] as $product) {
+                if (!$this->hasStock($product)) {
+                    return $this->validationFailResponse([
+                        'O produto ' . $product['title'] . ' (' . $product['sku'] . ') ' .
+                        'não possui ' . $product['quantity'] . ' itens no estoque selecionado'
+                    ]);
+                }
+            }
+
             $removal = (self::MODEL)
                 ::create(Input::except('products'));
 
-            $products = Input::get('products');
             if ($products) {
                 if (isset($products['sku']) && $products['sku']) {
                     $removalProducts = [];
@@ -56,6 +91,7 @@ class RemovalController extends Controller
                         ];
 
                         RemovalProduct::insert($removalProducts);
+
                     }
                 }
 

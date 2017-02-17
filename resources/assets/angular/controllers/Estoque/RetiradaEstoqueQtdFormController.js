@@ -30,12 +30,22 @@
          * Send imeis and get products
          */
         vm.save = function () {
-            Produto.getStocks(vm.produto.sku).then(function (response) {
-                response.produto.quantity = vm.quantity;
+            if (vm.produto.estoque < vm.quantity) {
+                toaster.pop(
+                    'error',
+                    'Quantidade insuficiente!',
+                    'Você está tentando retirar ' +
+                    vm.quantity + ' unidades, mas existem ' +
+                    'apenas ' + vm.produto.estoque + ' em estoque!'
+                );
+            } else {
+                Produto.getStocks(vm.produto.sku).then(function (response) {
+                    response.produto.quantity = vm.quantity;
 
-                toaster.pop('success', 'Sucesso!', 'O produto foi adicionado!');
-                $scope.closeThisDialog(response);
-            });
+                    toaster.pop('success', 'Sucesso!', 'O produto foi adicionado!');
+                    $scope.closeThisDialog(response);
+                });
+            }
         };
     }
 })();
