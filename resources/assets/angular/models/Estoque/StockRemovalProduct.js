@@ -27,7 +27,7 @@
                  * @param  {string} imei
                  * @return {Object}
                  */
-                verifyImei: function(imei) {
+                verifyStatus: function(imei) {
                     return Restangular.one(this.baseUrl + '/verificar/', imei).customGET();
                 },
 
@@ -38,7 +38,7 @@
                  * @param  {string} stockRemovalId
                  * @return {Object}
                  */
-                checkImei: function(imei, stockRemovalId) {
+                check: function(imei, stockRemovalId) {
                     return Restangular.one(this.baseUrl + '/verificar/' + imei + '/' + stockRemovalId).customGET();
                 },
 

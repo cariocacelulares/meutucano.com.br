@@ -175,7 +175,7 @@ class RemovalProductController extends Controller
 
     /**
      * Change stock removal product status to 1 - Entregue
-     * 
+     *
      * @param  int $stockRemovalId
      * @return Response
      */

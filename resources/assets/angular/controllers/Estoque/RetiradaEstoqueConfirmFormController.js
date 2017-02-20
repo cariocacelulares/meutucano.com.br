@@ -3,9 +3,9 @@
 
     angular
         .module('MeuTucano')
-        .controller('ConfirmacaoRetiradaImeisFormController', ConfirmacaoRetiradaImeisFormController);
+        .controller('RetiradaEstoqueConfirmFormController', RetiradaEstoqueConfirmFormController);
 
-    function ConfirmacaoRetiradaImeisFormController($scope, toaster, ProductImei, StockRemovalProduct) {
+    function RetiradaEstoqueConfirmFormController($scope, toaster, ProductImei, StockRemovalProduct) {
         var vm = this;
 
         vm.removal_id = $scope.ngDialogData.removal_id;
@@ -46,7 +46,7 @@
                 item.icon = 'circle-o-notch fa-spin';
 
                 vm.loading = true;
-                StockRemovalProduct.checkImei(item.imei, vm.removal_id).then(function (response) {
+                StockRemovalProduct.check(item.imei, vm.removal_id).then(function (response) {
                     item.icon     = response.icon;
                     item.message  = response.message;
                     item.ok       = response.ok;

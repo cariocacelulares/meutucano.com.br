@@ -3,9 +3,9 @@
 
     angular
         .module('MeuTucano')
-        .controller('RetiradaEstoqueImeisFormController', RetiradaEstoqueImeisFormController);
+        .controller('RetiradaEstoqueAddFormController', RetiradaEstoqueAddFormController);
 
-    function RetiradaEstoqueImeisFormController($scope, toaster, ProductImei, StockRemovalProduct) {
+    function RetiradaEstoqueAddFormController($scope, toaster, ProductImei, StockRemovalProduct) {
         var vm = this;
 
         var defaultItem = {
@@ -44,7 +44,7 @@
                 item.icon = 'circle-o-notch fa-spin';
 
                 vm.loading = true;
-                StockRemovalProduct.verifyImei(item.imei).then(function (response) {
+                StockRemovalProduct.verifyStatus(item.imei).then(function (response) {
                     item.icon     = response.icon;
                     item.message  = response.message;
                     item.ok       = response.ok;

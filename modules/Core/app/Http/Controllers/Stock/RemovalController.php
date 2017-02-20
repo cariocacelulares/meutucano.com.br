@@ -35,32 +35,6 @@ class RemovalController extends Controller
     }
 
     /**
-     * Check if requested quantity to removal has in stock
-     *
-     * @param  array  $removalProduct
-     * @return boolean
-     */
-    public function hasStock($removalProduct)
-    {
-        $qty   = $removalProduct['quantity'];
-        $stock = false;
-
-        foreach ($removalProduct['productStocks'] as $productStock) {
-            if ($productStock['id'] == $removalProduct['product_stock_id']) {
-                $stock = $productStock['quantity'];
-            }
-        }
-
-        if (!$stock) {
-            return false;
-        } else if ($stock < $qty) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
      * Cria novo recurso
      *
      * @param Request $request
@@ -69,46 +43,18 @@ class RemovalController extends Controller
     public function store(Request $request)
     {
         try {
-            $products = Input::get('removal_products');
-            foreach ($products['sku'] as $product) {
-                if (!$this->hasStock($product)) {
-                    return $this->validationFailResponse([
-                        'O produto ' . $product['title'] . ' (' . $product['sku'] . ') ' .
-                        'não possui ' . $product['quantity'] . ' itens no estoque selecionado'
-                    ]);
-                }
-            }
-
             $removal = (self::MODEL)
-                ::create(Input::except('products'));
+                ::create(Input::except('removal_products'));
 
-            if ($products) {
-                if (isset($products['sku']) && $products['sku']) {
-                    $removalProducts = [];
-                    foreach ($products['sku'] as $product) {
-                        $removalProducts = [
-                            'product_stock_id' => $product['product_stock_id'],
-                            'quantity'         => $product['quantity'],
-                            'stock_removal_id' => $removal->id,
-                        ];
+            $removalProducts = [];
+            foreach (Input::get('removal_products') as $product) {
+                $removalProducts = [
+                    'product_stock_id' => $product['product_stock_id'],
+                    'product_imei_id'  => $product['product_imei_id'],
+                    'stock_removal_id' => $removal->id,
+                ];
 
-                        RemovalProduct::insert($removalProducts);
-
-                    }
-                }
-
-                if (isset($products['imei']) && $products['imei']) {
-                    $removalProducts = [];
-                    foreach ($products['imei'] as $product) {
-                        $removalProducts = [
-                            'product_stock_id' => $product['product_stock_id'],
-                            'product_imei_id'  => $product['product_imei_id'],
-                            'stock_removal_id' => $removal->id,
-                        ];
-
-                        RemovalProduct::insert($removalProducts);
-                    }
-                }
+                RemovalProduct::insert($removalProducts);
             }
 
             return $this->createdResponse($removal);
@@ -130,49 +76,22 @@ class RemovalController extends Controller
     public function update($id)
     {
         try {
-            $data = (self::MODEL)::findOrFail($id);
-            $data->fill(Input::except('removal_products'));
-            $data->save();
+            $removal = (self::MODEL)::findOrFail($id);
+            $removal->fill(Input::except('removal_products'));
+            $removal->save();
 
-            $products = Input::get('removal_products');
-            if ($products) {
-                if (isset($products['sku']) && $products['sku']) {
-                    $removalProducts = [];
-                    foreach ($products['sku'] as $product) {
-                        if (isset($product['id']) && $product['id']) {
-                            if ($removalProduct = RemovalProduct::find($product['id'])) {
-                                $removalProduct->quantity         = $product['quantity'];
-                                $removalProduct->product_stock_id = $product['product_stock_id'];
+            $removalProducts = [];
+            foreach (Input::get('removal_products') as $product) {
+                $removalProducts = [
+                    'product_stock_id' => $product['product_stock_id'],
+                    'product_imei_id'  => $product['product_imei_id'],
+                    'stock_removal_id' => $removal->id,
+                ];
 
-                                $removalProduct->save();
-                            }
-                        } else {
-                            $removalProducts = [
-                                'product_stock_id' => $product['product_stock_id'],
-                                'quantity'         => $product['quantity'],
-                                'stock_removal_id' => $removal->id,
-                            ];
-
-                            RemovalProduct::insert($removalProducts);
-                        }
-                    }
-                }
-
-                if (isset($products['imei']) && $products['imei']) {
-                    $removalProducts = [];
-                    foreach ($products['imei'] as $product) {
-                        $removalProducts = [
-                            'product_stock_id' => $product['product_stock_id'],
-                            'product_imei_id'  => $product['product_imei_id'],
-                            'stock_removal_id' => $removal->id,
-                        ];
-
-                        RemovalProduct::insert($removalProducts);
-                    }
-                }
+                RemovalProduct::insert($removalProducts);
             }
 
-            return $this->showResponse($data);
+            return $this->showResponse($removal);
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 

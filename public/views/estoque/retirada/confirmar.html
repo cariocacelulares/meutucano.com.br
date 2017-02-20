@@ -1,4 +1,4 @@
-<h1>Confirmar recebimento por imei</h1>
+<h1>Confirmar recebimento</h1>
 <form novalidate="novalidate" class="form-default">
     <div class="row">
         <div class="col-md-12 scroll-wrapper" style="height:205px">
@@ -11,11 +11,11 @@
                     </tr>
                 </thead>
                 <body>
-                    <tr ng-if="$first || $last || item.imei" ng-repeat="item in ConfirmacaoRetiradaImeisForm.imeis track by $index"
+                    <tr ng-if="$first || $last || item.imei" ng-repeat="item in RetiradaEstoqueConfirmForm.imeis track by $index"
                         ng-class="{ warn: !item.ok && item.verified }" class="form-group">
                         <td>
-                            <input ng-model="item.imei" class="input-imei" ng-blur="ConfirmacaoRetiradaImeisForm.checkImei(item)"
-                                ng-keyup="ConfirmacaoRetiradaImeisForm.addImei($event, $index)" placeholder="Código serial" />
+                            <input ng-model="item.imei" class="input-imei" ng-blur="RetiradaEstoqueConfirmForm.checkImei(item)"
+                                ng-keyup="RetiradaEstoqueConfirmForm.addImei($event, $index)" placeholder="Código serial" />
                         </td>
                         <td class="text-center">
                             <span class="block" tooltips tooltip-template="{{ item.message }}">
@@ -23,7 +23,7 @@
                             </span>
                         </td>
                         <td class="text-center">
-                            <button ng-click="ConfirmacaoRetiradaImeisForm.removeImei($index)" type="button" class="btn-danger btn-sm" tabindex="-1">
+                            <button ng-click="RetiradaEstoqueConfirmForm.removeImei($index)" type="button" class="btn-danger btn-sm" tabindex="-1">
                                 <i class="fa-trash"></i>
                             </button>
                         </td>
@@ -35,7 +35,7 @@
     <div class="row">
         <div class="pull-right">
             <button type="button" ng-click="closeThisDialog(false)" class="btn btn-default m-r-10">Cancelar</button>
-            <button type="button" ng-click="ConfirmacaoRetiradaImeisForm.save()" class="btn btn-success">Adicionar</button>
+            <button type="button" ng-click="RetiradaEstoqueConfirmForm.save()" class="btn btn-success">Adicionar</button>
         </div>
     </div>
 </form>
