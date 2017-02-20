@@ -2,7 +2,6 @@
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
-use Core\Console\Commands\RefreshStockRemoval;
 use Core\Console\Commands\CancelOldOrders;
 use Core\Console\Commands\InvoiceOrders;
 
@@ -15,7 +14,6 @@ class ScheduleServiceProvider extends ServiceProvider
      */
     protected $commands = [
         CancelOldOrders::class,
-        RefreshStockRemoval::class,
         InvoiceOrders::class,
     ];
 

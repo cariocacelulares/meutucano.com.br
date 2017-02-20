@@ -140,8 +140,6 @@ class RemovalController extends Controller
      */
     public function close($id)
     {
-        $this->refresh($id);
-
         $stockRemoval = (self::MODEL)::findOrFail($id);
 
         $openProducts = $stockRemoval->removalProducts->whereIn('status', [0, 1]);
@@ -156,40 +154,5 @@ class RemovalController extends Controller
         $stockRemoval->save();
 
         return $this->showResponse($stockRemoval);
-    }
-
-    /**
-     * Check if stock removal products is sent and refresh status
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function refresh($id)
-    {
-        $stockRemoval = (self::MODEL)::findOrFail($id);
-        $i = 0;
-
-        try {
-            $openProducts = $stockRemoval->removalProducts->where('status', '=', 1);
-
-            foreach ($openProducts as $removalProduct) {
-                $orderProduct = PedidoProduto
-                    ::join('pedidos', 'pedidos.id', 'pedido_produtos.pedido_id')
-                    ->where('product_imei_id', '=', $removalProduct->product_imei_id)
-                    ->where('product_stock_id', '=', $removalProduct->product_stock_id)
-                    ->whereIn('status', [2, 3])
-                    ->count();
-
-                if ($orderProduct) {
-                    $removalProduct->status = 2;
-                    $removalProduct->save();
-                    $i++;
-                }
-            }
-        } catch (Exception $exception) {
-            \Log::warning(logMessage($exception, 'Ocorreu um erro ao tentar atualizar o status dos produtos da retirada de estoque'));
-        }
-
-        return $this->showResponse($i);
     }
 }

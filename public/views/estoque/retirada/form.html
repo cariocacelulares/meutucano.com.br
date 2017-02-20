@@ -2,9 +2,6 @@
     <page-title icon="fa fa-cart-arrow-down" title="Retirada de estoque {{ RetiradaEstoqueForm.stockRemoval.id ? '#' + RetiradaEstoqueForm.stockRemoval.id : '' }}" description="Controla todas as retiradas de estoque."></page-title>
     <div ng-if="RetiradaEstoqueForm.stockRemoval.id && !RetiradaEstoqueForm.stockRemoval.closed_at" class="col-md-6 button-bar">
         <a ng-click="RetiradaEstoqueForm.close()" class="btn-danger"><i class="fa-times">&nbsp;</i> Fechar</a>
-        <button ng-click="RetiradaEstoqueForm.refresh()" class="btn-info pull-right m-r-10" type="button">
-            <i class="fa-refresh"></i>&nbsp; Atualizar status
-        </button>
     </div>
     <div ng-if="!RetiradaEstoqueForm.stockRemoval.id" class="col-md-6 button-bar">
         <a ng-if="RetiradaEstoqueForm.stockRemoval.removal_products.length"

@@ -127,16 +127,6 @@
         };
 
         /**
-         * Refresh stock removal product status
-         */
-        vm.refresh = function() {
-            StockRemoval.refresh(vm.stockRemoval.id).then(function (data) {
-                toaster.pop('success', '', 'Itens atualizados com sucesso!');
-                vm.load();
-            });
-        }
-
-        /**
          * Salva o stockRemoval
          *
          * @return {void}
