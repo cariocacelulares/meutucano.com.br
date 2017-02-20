@@ -210,4 +210,27 @@ class RemovalController extends Controller
             ]);
         }
     }
+
+    /**
+     * Verify and closes a stock removal
+     * 
+     * @param  int $id
+     * @return Response
+     */
+    public function close($id)
+    {
+        $stockRemoval = (self::MODEL)::findOrFail($id);
+
+        $openProducts = $stockRemoval->removalProducts->whereIn('status', [0, 1]);
+        if ($openProducts) {
+            return $this->validationFailResponse([
+                'Existem produtos que não foram faturados ou devolvidos ao estoque!'
+            ]);
+        }
+
+        $stockRemoval->closed_at = \Carbon::now();
+        $stockRemoval->save();
+
+        return $this->showResponse($stockRemoval);
+    }
 }

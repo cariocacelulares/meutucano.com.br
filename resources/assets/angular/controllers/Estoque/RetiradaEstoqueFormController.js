@@ -69,13 +69,10 @@
          */
         vm.addImeis = function(confirm) {
             ngDialog.open({
-                template: 'views/estoque/retirada/form-imeis.html',
-                controller: 'RetiradaEstoqueImeisFormController',
-                controllerAs: 'RetiradaEstoqueImeisForm',
-                closeByDocument: false,
-                data: {
-                    confirm: confirm
-                }
+                template       : 'views/estoque/retirada/form-imeis.html',
+                controller     : 'RetiradaEstoqueImeisFormController',
+                controllerAs   : 'RetiradaEstoqueImeisForm',
+                closeByDocument: false
             }).closePromise.then(function(data) {
                 if (data && typeof data.value.products !== 'undefined') {
                     data = data.value.products;
@@ -95,13 +92,10 @@
          */
         vm.addQty = function(confirm) {
             ngDialog.open({
-                template: 'views/estoque/retirada/form-quantidade.html',
-                controller: 'RetiradaEstoqueQtdFormController',
-                controllerAs: 'RetiradaEstoqueQtdForm',
-                closeByDocument: false,
-                data: {
-                    confirm: confirm
-                }
+                template       : 'views/estoque/retirada/form-quantidade.html',
+                controller     : 'RetiradaEstoqueQtdFormController',
+                controllerAs   : 'RetiradaEstoqueQtdForm',
+                closeByDocument: false
             }).closePromise.then(function(data) {
                 if (data && typeof data.value.produto !== 'undefined') {
                     var produto = data.value.produto;
@@ -125,6 +119,94 @@
                                 break;
                             }
                         }
+                    }
+                }
+            });
+        };
+
+        /**
+         * Confirm stock removal products by imei
+         */
+        vm.confirmImeis = function() {
+            ngDialog.open({
+                template       : 'views/estoque/retirada/confirmacao/form-imeis.html',
+                controller     : 'ConfirmacaoRetiradaImeisFormController',
+                controllerAs   : 'ConfirmacaoRetiradaImeisForm',
+                closeByDocument: false,
+                data: {
+                    removal_id: vm.stockRemoval.id
+                }
+            }).closePromise.then(function(data) {
+                if (data && typeof data.value.imeis !== 'undefined') {
+                    data = data.value.imeis;
+
+                    var toConfirm = [];
+                    for (var key in data) {
+                        var item = data[key];
+                        if (item.ok && item.imei) {
+                            var index = vm.registeredImeis.indexOf(data[key].imei);
+
+                            if (index >= 0) {
+                                item = vm.stockRemoval.removal_products.imei[index];
+
+                                if (typeof item !== 'undefined') {
+                                    toConfirm.push(item.id);
+                                }
+                            }
+                        }
+                    }
+
+                    StockRemovalProduct.confirm(toConfirm, vm.stockRemoval.id).then(function (data) {
+                        if (typeof data.count !== 'undefined') {
+                            if (data.count > 0) {
+                                toaster.pop('success', data.count + ' itens confirmados!', '');
+                                vm.load();
+                            }
+                        }
+                    });
+                }
+            });
+        };
+
+        /**
+         * Confirm stock removal products by quantity
+         */
+        vm.confirmQty = function(confirm) {
+            ngDialog.open({
+                template       : 'views/estoque/retirada/confirmacao/form-quantidade.html',
+                controller     : 'ConfirmacaoRetiradaQtdFormController',
+                controllerAs   : 'ConfirmacaoRetiradaQtdForm',
+                closeByDocument: false
+            }).closePromise.then(function(data) {
+                if (data && typeof data.value.produto !== 'undefined') {
+                    var produto = data.value.produto;
+                    var index   = vm.registeredSkus.indexOf(produto.sku);
+
+                    var item = (index >= 0) ? vm.stockRemoval.removal_products.sku[index] : null;
+
+                    if (item) {
+                        if (item.sku == produto.sku) {
+                            if (item.quantity == produto.quantity) {
+                                StockRemovalProduct.confirm(item.id, vm.stockRemoval.id).then(function (data) {
+                                    if (typeof data.count !== 'undefined') {
+                                        if (data.count > 0) {
+                                            toaster.pop('success', data.count + ' itens confirmados!', '');
+                                            vm.load();
+                                        }
+                                    }
+                                });
+                            } else {
+                                toaster.pop(
+                                    'error',
+                                    'Quantidade incorreta!',
+                                    'Você tentou confirmar ' + produto.quantity +
+                                    ' itens, mas ' + item.quantity +
+                                    ' foram retirados.'
+                                );
+                            }
+                        }
+                    } else {
+                        toaster.pop('warning', 'Não encontrado!', 'O item que você tentou confirmar não está nesta lista!');
                     }
                 }
             });
@@ -162,12 +244,20 @@
             );
         };
 
-        vm.confirm = function() {
-            $state.go('app.estoque.retirada.index');
-        };
-
+        /**
+         * Closes the stock removal
+         */
         vm.close = function() {
-            $state.go('app.estoque.retirada.index');
+            StockRemoval.close(vm.stockRemoval.id).then(
+                function (data) {
+                    toaster.pop('success', '', 'Retirada fechada com sucesso!');
+                    $state.go('app.estoque.retirada.index');
+                },
+                function(error) {
+                    vm.validationErrors = ValidationErrors.handle(error);
+                }
+            );
+
         };
 
         /**

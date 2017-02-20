@@ -5,6 +5,7 @@ use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
 use Core\Models\Pedido;
 use Core\Models\Produto\ProductImei;
+use Core\Models\Stock\Removal;
 use Core\Models\Stock\RemovalProduct;
 use Core\Transformers\StockRemovalProductTransformer;
 
@@ -48,6 +49,12 @@ class RemovalProductController extends Controller
         return $this->showResponse(StockRemovalProductTransformer::show($removalProduct));
     }
 
+    /**
+     * Verify imei status when add to a stock removal
+     *
+     * @param  string $imei
+     * @return Response
+     */
     public function verify($imei)
     {
         try {
@@ -58,7 +65,7 @@ class RemovalProductController extends Controller
             if (!$productImei) {
                 return $this->listResponse([
                     'icon'    => 'ban',
-                    'message' => 'Imei não registrado!',
+                    'message' => 'Serial não registrado!',
                     'ok'      => false,
                 ]);
             }
@@ -71,7 +78,7 @@ class RemovalProductController extends Controller
             if ($removalProduct) {
                 return $this->listResponse([
                     'icon'    => 'shopping-cart',
-                    'message' => "Imei em aberto na retirada #{$removalProduct->stock_removal_id}",
+                    'message' => "Serial em aberto na retirada #{$removalProduct->stock_removal_id}",
                     'ok'      => false,
                 ]);
             }
@@ -86,14 +93,14 @@ class RemovalProductController extends Controller
             if ($order) {
                 return $this->listResponse([
                     'icon'    => 'exclamation',
-                    'message' => 'Imei já faturado!',
+                    'message' => 'Serial já faturado!',
                     'ok'      => false,
                 ]);
             }
 
             return $this->listResponse([
                 'icon'    => 'check',
-                'message' => 'Imei disponível!',
+                'message' => 'Serial disponível!',
                 'ok'      => true,
             ]);
         } catch (\Exception $exception) {
@@ -105,5 +112,101 @@ class RemovalProductController extends Controller
                 'ok'      => false,
             ]);
         }
+    }
+
+    /**
+     * Check if imei is able to be confirmed in stock removal_products
+     *
+     * @param  string $imei
+     * @param  int $stockRemovalId
+     * @return Response
+     */
+    public function check($imei, $stockRemovalId)
+    {
+        try {
+            $productImei = ProductImei
+                ::where('imei', '=', $imei)
+                ->first();
+
+            if (!$productImei) {
+                return $this->listResponse([
+                    'icon'    => 'ban',
+                    'message' => 'Serial não registrado!',
+                    'ok'      => false,
+                ]);
+            }
+
+            $removalProduct = RemovalProduct
+                ::where('product_imei_id', '=', $productImei->id)
+                ->where('status', '!=', 3)
+                ->first();
+
+            if (!$removalProduct) {
+                return $this->listResponse([
+                    'icon'    => 'times',
+                    'message' => 'Serial não registrado em uma retirada!',
+                    'ok'      => false,
+                ]);
+            }
+
+            if ($removalProduct->stock_removal_id != $stockRemovalId) {
+                return $this->listResponse([
+                    'icon'    => 'exclamation',
+                    'message' => 'O serial não está registrado nesta retirada!',
+                    'ok'      => false,
+                ]);
+            }
+
+            return $this->listResponse([
+                'icon'    => 'check',
+                'message' => 'Serial disponível p/ confirmação!',
+                'ok'      => true,
+            ]);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Não foi possível verificar o serial!'));
+
+            return $this->listResponse([
+                'icon'    => 'times',
+                'message' => 'Não foi possível verificar o serial!',
+                'ok'      => false,
+            ]);
+        }
+    }
+
+    /**
+     * Change stock removal product status to 1 - Entregue
+     * 
+     * @param  int $stockRemovalId
+     * @return Response
+     */
+    public function confirm($stockRemovalId)
+    {
+        $stockRemoval = Removal::findOrFail($stockRemovalId);
+        $itens        = Input::get('itens');
+
+        try {
+            if ($itens) {
+                if (!is_array($itens)) {
+                    $itens = [$itens];
+                }
+
+                $update = (self::MODEL)
+                    ::whereIn('id', $itens)
+                    ->where('stock_removal_id', '=', $stockRemoval->id)
+                    ->update([
+                        'status' => 1
+                    ]);
+
+                return $this->listResponse([
+                    'count' => $update
+                ]);
+            }
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Não foi possível confirmar os produtos da retirada ' . $stockRemoval->id));
+        }
+
+        return $this->listResponse([
+            'count' => 0
+        ]);
     }
 }

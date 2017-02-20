@@ -176,6 +176,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
      */
     Route::group(['prefix' => 'estoque/retirada', 'namespace' => 'Stock'], function () {
         Route::get('list', 'RemovalController@tableList');
+        Route::post('fechar/{id}', 'RemovalController@close');
     });
     Route::resource('estoque/retirada', 'Stock\RemovalController');
 
@@ -184,6 +185,8 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
      */
     Route::group(['prefix' => 'estoque/retirada/produto', 'namespace' => 'Stock'], function () {
         Route::get('verificar/{imei}', 'RemovalProductController@verify');
+        Route::get('verificar/{imei}/{stockRemovalId}', 'RemovalProductController@check');
+        Route::post('confirmar/{stockRemovalId}', 'RemovalProductController@confirm');
         Route::post('status/{id}', 'RemovalProductController@changeStatus');
     });
     Route::resource('estoque/retirada/produto', 'Stock\RemovalProductController');

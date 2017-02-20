@@ -29,6 +29,30 @@
                  */
                 verifyImei: function(imei) {
                     return Restangular.one(this.baseUrl + '/verificar/', imei).customGET();
+                },
+
+                /**
+                 * Verify if imei is in stock removal
+                 *
+                 * @param  {string} imei
+                 * @param  {string} stockRemovalId
+                 * @return {Object}
+                 */
+                checkImei: function(imei, stockRemovalId) {
+                    return Restangular.one(this.baseUrl + '/verificar/' + imei + '/' + stockRemovalId).customGET();
+                },
+
+                /**
+                 * Confirm itens
+                 *
+                 * @param  {array} itens
+                 * @param  {int} stockRemovalId
+                 * @return {Object}
+                 */
+                confirm: function(itens, stockRemovalId) {
+                    return Restangular.one(this.baseUrl + '/confirmar/', stockRemovalId).customPOST({
+                        itens: itens
+                    });
                 }
             });
 
