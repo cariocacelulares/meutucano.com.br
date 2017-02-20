@@ -19,6 +19,8 @@ use Core\Models\Pedido\Nota\Devolucao;
 use Rastreio\Models\Rastreio;
 use Core\Models\Pedido\PedidoProduto;
 use Core\Models\Produto;
+use Core\Models\Stock\RemovalProduct;
+use Core\Models\Produto\ProductImei;
 
 /**
  * Class UploadController
@@ -584,6 +586,35 @@ class UploadController extends Controller
             $produtoImei[$sku] = array_map(function ($imei) {
                 return trim($imei);
             }, $produtoImei[$sku]);
+        }
+
+        foreach ($produtoImei as $sku => $imeis) {
+            foreach ($imeis as $imei) {
+                $imei = 'dasdasdsada';
+                $productImei = ProductImei::where('imei', '=', $imei)->first();
+
+                $removalProducts = RemovalProduct
+                    ::join('stock_removals', 'stock_removals.id', 'stock_removal_products.stock_removal_id')
+                    ->whereNull('stock_removals.closed_at')
+                    ->where('product_imei_id', '=', $productImei->id)
+                    ->orderBy('stock_removals.created_at', 'DESC')
+                    ->get(['stock_removal_products.*']);
+
+                foreach ($removalProducts as $removalProduct) {
+                    if ($removalProduct->status === 0) {
+                        throw new \Exception("O imei {$imei} não teve confirmação na retirada de estoque", 7);
+                    } else if ($removalProduct->status === 3) {
+                        throw new \Exception("O imei {$imei} consta como devolvido na retirada de estoque", 7);
+                    } else if ($removalProduct->status === 1) {
+                        $removalProduct->status = 2;
+                        $removalProduct->save();
+                    }
+                }
+
+                if ($removalProducts->isEmpty()) {
+                    throw new \Exception("O imei {$imei} não tem registro de retirada de estoque", 7);
+                }
+            }
         }
 
         // Organiza os produtos da nota

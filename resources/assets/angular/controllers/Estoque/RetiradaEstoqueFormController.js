@@ -77,7 +77,7 @@
          */
         vm.confirm = function() {
             ngDialog.open({
-                template       : 'views/estoque/retirada/confirmacao/form-imeis.html',
+                template       : 'views/estoque/retirada/confirmar.html',
                 controller     : 'RetiradaEstoqueConfirmFormController',
                 controllerAs   : 'RetiradaEstoqueConfirmForm',
                 closeByDocument: false,

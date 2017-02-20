@@ -173,32 +173,17 @@ class RemovalController extends Controller
             $openProducts = $stockRemoval->removalProducts->where('status', '=', 1);
 
             foreach ($openProducts as $removalProduct) {
-                if ($removalProduct->product_imei_id) {
-                    $orderProduct = PedidoProduto
-                        ::join('pedidos', 'pedidos.id', 'pedido_produtos.pedido_id')
-                        ->where('product_imei_id', '=', $removalProduct->product_imei_id)
-                        ->where('product_stock_id', '=', $removalProduct->product_stock_id)
-                        ->whereIn('status', [2, 3])
-                        ->count();
+                $orderProduct = PedidoProduto
+                    ::join('pedidos', 'pedidos.id', 'pedido_produtos.pedido_id')
+                    ->where('product_imei_id', '=', $removalProduct->product_imei_id)
+                    ->where('product_stock_id', '=', $removalProduct->product_stock_id)
+                    ->whereIn('status', [2, 3])
+                    ->count();
 
-                    if ($orderProduct) {
-                        $removalProduct->status = 2;
-                        $removalProduct->save();
-                        $i++;
-                    }
-                } else {
-                    $orderProduct = PedidoProduto
-                        ::join('pedidos', 'pedidos.id', 'pedido_produtos.pedido_id')
-                        ->where('produto_sku', '=', $removalProduct->product_sky)
-                        ->where('product_stock_id', '=', $removalProduct->product_stock_id)
-                        ->whereIn('status', [2, 3])
-                        ->count();
-
-                    if ($orderProduct >= $removalProduct->quantity) {
-                        $removalProduct->status = 2;
-                        $removalProduct->save();
-                        $i++;
-                    }
+                if ($orderProduct) {
+                    $removalProduct->status = 2;
+                    $removalProduct->save();
+                    $i++;
                 }
             }
         } catch (Exception $exception) {

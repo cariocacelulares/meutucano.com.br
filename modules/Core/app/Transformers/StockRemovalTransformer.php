@@ -14,9 +14,7 @@ class StockRemovalTransformer
     {
         $removalProducts = [];
         foreach ($removal->removalProducts as $removalProduct) {
-            $key = $removalProduct->product_imei_id ? 'imei' : 'sku';
-
-            $removalProducts[$key][] = StockRemovalProductTransformer::show($removalProduct);
+            $removalProducts[] = StockRemovalProductTransformer::show($removalProduct);
         }
 
         return [
