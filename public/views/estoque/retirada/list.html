@@ -10,8 +10,9 @@
     <thead>
         <tr>
             <th class="text-center">Código</th>
-            <th class="text-center" width="200">Data</th>
-            <th class="text-center" width="200">Fechado</th>
+            <th class="text-center">Pessoa</th>
+            <th class="text-center" width="200">Abertura</th>
+            <th class="text-center" width="200">Fechamento</th>
             <th width="75"></th>
         </tr>
         <tr class="table-filter" static-include="views/estoque/retirada/list_filter.html"></tr>
@@ -19,6 +20,7 @@
     <tbody ng-if="RetiradaEstoqueList.tableData.data && !RetiradaEstoqueList.loading">
         <tr ng-repeat="estoque in RetiradaEstoqueList.tableData.data">
             <td class="text-center">#{{ estoque.id }}</td>
+            <td class="text-center">{{ estoque.user.name }}</td>
             <td class="text-center">{{ estoque.created_at }}</td>
             <td class="text-center">{{ estoque.closed_at }}</td>
             <td class="text-center">

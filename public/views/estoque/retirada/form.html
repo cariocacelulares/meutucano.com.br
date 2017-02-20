@@ -1,7 +1,10 @@
 <div id="page-header" class="row">
     <page-title icon="fa fa-cart-arrow-down" title="Retirada de estoque {{ RetiradaEstoqueForm.stockRemoval.id ? '#' + RetiradaEstoqueForm.stockRemoval.id : '' }}" description="Controla todas as retiradas de estoque."></page-title>
-    <div ng-if="RetiradaEstoqueForm.stockRemoval.id" class="col-md-6 button-bar">
+    <div ng-if="RetiradaEstoqueForm.stockRemoval.id && !RetiradaEstoqueForm.stockRemoval.closed_at" class="col-md-6 button-bar">
         <a ng-click="RetiradaEstoqueForm.close()" class="btn-danger"><i class="fa-times">&nbsp;</i> Fechar</a>
+        <button ng-click="RetiradaEstoqueForm.refresh()" class="btn-info pull-right m-r-10" type="button">
+            <i class="fa-refresh"></i>&nbsp; Atualizar status
+        </button>
     </div>
     <div ng-if="!RetiradaEstoqueForm.stockRemoval.id" class="col-md-6 button-bar">
         <a ng-if="RetiradaEstoqueForm.stockRemoval.removal_products.sku.length || RetiradaEstoqueForm.stockRemoval.removal_products.imei.length"
@@ -100,7 +103,7 @@
                         <button ng-if="!product.id" confirm="RetiradaEstoqueForm.removeProduct($index, true)" type="button" class="btn-danger btn-block">
                             <i class="fa-trash"></i>
                         </button>
-                        <button ng-if="product.id && product.status != 2" confirm="RetiradaEstoqueForm.returnProduct($index, true)" tooltips tooltip-template="Devolver ao estoque" type="button" class="btn-info btn-block">
+                        <button ng-if="product.id && product.status != 2 && !RetiradaEstoqueForm.stockRemoval.closed_at" confirm="RetiradaEstoqueForm.returnProduct($index, true)" tooltips tooltip-template="Devolver ao estoque" type="button" class="btn-info btn-block">
                             <i class="fa-retweet"></i>
                         </button>
                     </td>
@@ -128,7 +131,7 @@
                         <button ng-if="!product.id" confirm="RetiradaEstoqueForm.removeProduct($index)" type="button" class="btn-danger btn-block">
                             <i class="fa-trash"></i>
                         </button>
-                        <button ng-if="product.id" confirm="RetiradaEstoqueForm.returnProduct($index)" tooltips tooltip-template="Devolver ao estoque" type="button" class="btn-info btn-block">
+                        <button ng-if="product.id && product.status != 2 && !RetiradaEstoqueForm.stockRemoval.closed_at" confirm="RetiradaEstoqueForm.returnProduct($index)" tooltips tooltip-template="Devolver ao estoque" type="button" class="btn-info btn-block">
                             <i class="fa-retweet"></i>
                         </button>
                     </td>

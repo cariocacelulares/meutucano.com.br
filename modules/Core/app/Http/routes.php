@@ -176,6 +176,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
      */
     Route::group(['prefix' => 'estoque/retirada', 'namespace' => 'Stock'], function () {
         Route::get('list', 'RemovalController@tableList');
+        Route::get('atualizar/{id}', 'RemovalController@refresh');
         Route::post('fechar/{id}', 'RemovalController@close');
     });
     Route::resource('estoque/retirada', 'Stock\RemovalController');

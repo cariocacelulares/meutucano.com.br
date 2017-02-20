@@ -227,6 +227,13 @@
             }
         };
 
+        vm.refresh = function() {
+            StockRemoval.refresh(vm.stockRemoval.id).then(function (data) {
+                toaster.pop('success', '', 'Iten atualizados com sucesso!');
+                vm.load();
+            });
+        }
+
         /**
          * Salva o stockRemoval
          *

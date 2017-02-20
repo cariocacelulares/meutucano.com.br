@@ -1,8 +1,10 @@
 <?php namespace Core\Http\Controllers\Stock;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
+use Core\Models\Pedido\PedidoProduto;
 use Core\Models\Stock\Removal;
 use Core\Models\Stock\RemovalProduct;
 use Core\Http\Requests\Stock\RemovalRequest as Request;
@@ -29,7 +31,7 @@ class RemovalController extends Controller
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse($list);
+        return $this->listResponse(StockRemovalTransformer::list($list));
     }
 
     /**
@@ -213,24 +215,77 @@ class RemovalController extends Controller
 
     /**
      * Verify and closes a stock removal
-     * 
+     *
      * @param  int $id
      * @return Response
      */
     public function close($id)
     {
+        $this->refresh($id);
+
         $stockRemoval = (self::MODEL)::findOrFail($id);
 
         $openProducts = $stockRemoval->removalProducts->whereIn('status', [0, 1]);
-        if ($openProducts) {
+
+        if ($openProducts->count()) {
             return $this->validationFailResponse([
                 'Existem produtos que não foram faturados ou devolvidos ao estoque!'
             ]);
         }
 
-        $stockRemoval->closed_at = \Carbon::now();
+        $stockRemoval->closed_at = Carbon::now();
         $stockRemoval->save();
 
         return $this->showResponse($stockRemoval);
+    }
+
+    /**
+     * Check if stock removal products is sent and refresh status
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function refresh($id)
+    {
+        $stockRemoval = (self::MODEL)::findOrFail($id);
+        $i = 0;
+
+        try {
+            $openProducts = $stockRemoval->removalProducts->where('status', '=', 1);
+
+            foreach ($openProducts as $removalProduct) {
+                if ($removalProduct->product_imei_id) {
+                    $orderProduct = PedidoProduto
+                        ::join('pedidos', 'pedidos.id', 'pedido_produtos.pedido_id')
+                        ->where('product_imei_id', '=', $removalProduct->product_imei_id)
+                        ->where('product_stock_id', '=', $removalProduct->product_stock_id)
+                        ->whereIn('status', [2, 3])
+                        ->count();
+
+                    if ($orderProduct) {
+                        $removalProduct->status = 2;
+                        $removalProduct->save();
+                        $i++;
+                    }
+                } else {
+                    $orderProduct = PedidoProduto
+                        ::join('pedidos', 'pedidos.id', 'pedido_produtos.pedido_id')
+                        ->where('produto_sku', '=', $removalProduct->product_sky)
+                        ->where('product_stock_id', '=', $removalProduct->product_stock_id)
+                        ->whereIn('status', [2, 3])
+                        ->count();
+
+                    if ($orderProduct >= $removalProduct->quantity) {
+                        $removalProduct->status = 2;
+                        $removalProduct->save();
+                        $i++;
+                    }
+                }
+            }
+        } catch (Exception $exception) {
+            \Log::warning(logMessage($exception, 'Ocorreu um erro ao tentar atualizar o status dos produtos da retirada de estoque'));
+        }
+
+        return $this->showResponse($i);
     }
 }

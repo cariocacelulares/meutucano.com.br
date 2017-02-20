@@ -1,6 +1,12 @@
 <th>
     <input class="form-control big" ng-model="RetiradaEstoqueList.filter['id']" placeholder="Código" ng-model-options="{debounce:500}" />
 </th>
+<th>
+    <select ng-model="RetiradaEstoqueList.filter['user_id']" class="form-control">
+        <option value="">Todos</option>
+        <option ng-repeat="user in RetiradaEstoqueList.users" value="{{ user.id }}">{{ user.name }}</option>
+    </select>
+</th>
 <th class="between-group">
     <div class="date-picker">
         <input class="form-control" ng-model="RetiradaEstoqueList.filter['created_at'].from" placeholder="De" ng-model-options="{debounce:500}" />

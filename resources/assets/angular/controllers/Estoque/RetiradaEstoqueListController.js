@@ -5,8 +5,10 @@
         .module('MeuTucano')
         .controller('RetiradaEstoqueListController', RetiradaEstoqueListController);
 
-    function RetiradaEstoqueListController(Filter, TableHeader, StockRemoval) {
+    function RetiradaEstoqueListController(Filter, TableHeader, Usuario, StockRemoval) {
         var vm = this;
+
+        vm.users = {};
 
         /**
          * Filtros
@@ -25,6 +27,10 @@
 
         vm.load = function() {
             vm.loading = true;
+
+            Usuario.getList().then(function(response) {
+                vm.users = response.data;
+            });
 
             StockRemoval.getList({
                 fields:   ['stock_removals.*'],
