@@ -19,7 +19,6 @@ class CreateStockRemovalProductsTable extends Migration
 			$table->integer('stock_removal_id')->unsigned()->index();
 			$table->integer('product_stock_id')->unsigned()->index();
 			$table->integer('product_imei_id')->unsigned()->nullable()->index();
-			$table->integer('quantity')->unsigned()->nullable();
 			$table->tinyInteger('status')->default(0);
 		});
 

@@ -32,7 +32,6 @@ class RemovalProduct extends Model
         'stock_removal_id',
         'product_stock_id',
         'product_imei_id',
-        'quantity',
         'status',
     ];
 
