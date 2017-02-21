@@ -240,11 +240,14 @@
             });
         };
 
+        /**
+         * Open form to add new imeis
+         */
         vm.openImeiForm = function() {
             ngDialog.open({
-                template: 'views/produto/entrada-produto.html',
-                controller: 'EntradaProdutoFormController',
-                controllerAs: 'EntradaProdutoForm',
+                template       : 'views/produto/entrada-produto.html',
+                controller     : 'EntradaProdutoFormController',
+                controllerAs   : 'EntradaProdutoForm',
                 closeByDocument: false,
                 data: {
                     sku: vm.produto.sku

@@ -141,6 +141,23 @@ class ProductStockController extends Controller
             return $this->showResponse([
                 'saved' => true
             ]);
+        } catch (\Illuminate\Database\QueryException $exception) {
+            // Tenta encontrar o imei que violou a unique key e informa ao usuario
+            if (strstr($exception->getMessage(), 'Duplicate entry')) {
+                if ($pos = strpos($exception->getMessage(), 'Duplicate entry')) {
+                    $substring = substr($exception->getMessage(), ($pos + 17));
+
+                    if ($pos = strpos($substring, "'")) {
+                        $duplicado = substr($substring, 0, $pos);
+
+                        if ($duplicado) {
+                            return $this->validationFailResponse([
+                                "O serial {$duplicado} já foi utilizado!"
+                            ]);
+                        }
+                    }
+                }
+            }
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao dar entrada no estoque'));
 
