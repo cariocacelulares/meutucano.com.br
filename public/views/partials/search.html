@@ -128,7 +128,7 @@
                                 <span ng-bind-html="'<i class=fa-mobile></i>&nbsp;' + produto.titulo | highlight: Search.term"></span>
                             </div>
                             <div class="panel-controls">
-                                <a ng-click="Search.goTo('app.produtos.form', {sku: produto.sku})" class="btn-default"><i class="fa-eye"></i></a>
+                                <a ng-click="Search.goTo('app.produtos.detalhe', {sku: produto.sku})" class="btn-default"><i class="fa-eye"></i></a>
                             </div>
                         </div>
                         <div class="panel-body alternate">

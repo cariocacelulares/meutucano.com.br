@@ -310,7 +310,7 @@
                 <tr ng-if="PedidoDetalhe.pedido.produtos" ng-repeat="produto in PedidoDetalhe.pedido.produtos">
                     <td class="text-center">
                         <i class="fa-refresh m-r-10" roles="admin|atendimento|faturamento|gestor" tooltips tooltip-template="Atualizar informações" ng-click="PedidoDetalhe.openOrderProductForm(produto)"></i>
-                        <a ui-sref="app.produtos.form({sku: produto.produto_sku})" title="Visualizar produto {{ produto.produto.titulo }}">
+                        <a ui-sref="app.produtos.detalhe({sku: produto.produto_sku})" title="Visualizar produto {{ produto.produto.titulo }}">
                             {{ produto.produto_sku }}
                         </a>
                     </td>

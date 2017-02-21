@@ -26,7 +26,7 @@
                 </a>
             </td>
             <td>
-                <a ui-sref="app.produtos.form({sku: inspecao.produto.sku})">{{ inspecao.produto.sku }}</a> {{ inspecao.produto.titulo || '-' }}
+                <a ui-sref="app.produtos.detalhe({sku: inspecao.produto.sku})">{{ inspecao.produto.sku }}</a> {{ inspecao.produto.titulo || '-' }}
             </td>
             <td class="text-center">
                 <span ng-if="!inspecao.revisado_at">Não</span>
