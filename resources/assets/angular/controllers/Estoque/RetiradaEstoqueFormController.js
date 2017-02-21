@@ -117,6 +117,50 @@
         };
 
         /**
+         * Return stock removal products by imei
+         */
+        vm.return = function() {
+            ngDialog.open({
+                template       : 'views/estoque/retirada/retornar.html',
+                controller     : 'RetiradaEstoqueReturnFormController',
+                controllerAs   : 'RetiradaEstoqueReturnForm',
+                closeByDocument: false,
+                data: {
+                    registered: vm.registered
+                }
+            }).closePromise.then(function(data) {
+                if (data && typeof data.value.imeis !== 'undefined') {
+                    data = data.value.imeis;
+
+                    var toReturn = [];
+                    for (var key in data) {
+                        var item = data[key];
+                        if (item.ok && item.imei) {
+                            var index = vm.registered.indexOf(item.imei);
+
+                            if (index >= 0) {
+                                item = vm.stockRemoval.removal_products[index];
+
+                                if (typeof item !== 'undefined') {
+                                    toReturn.push(item.id);
+                                }
+                            }
+                        }
+                    }
+
+                    StockRemovalProduct.return(toReturn, vm.stockRemoval.id).then(function (data) {
+                        if (typeof data.count !== 'undefined') {
+                            if (data.count > 0) {
+                                toaster.pop('success', data.count + ' itens retornados!', '');
+                                vm.load();
+                            }
+                        }
+                    });
+                }
+            });
+        };
+
+        /**
          * Remove product from stock removal
          *
          * @param  {int} index

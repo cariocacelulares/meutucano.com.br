@@ -174,12 +174,13 @@ class RemovalProductController extends Controller
     }
 
     /**
-     * Change stock removal product status to 1 - Entregue
+     * Update status
      *
      * @param  int $stockRemovalId
+     * @param  int $status          new status
      * @return Response
      */
-    public function confirm($stockRemovalId)
+    private function updateStatus($stockRemovalId, $status)
     {
         $stockRemoval = Removal::findOrFail($stockRemovalId);
         $itens        = Input::get('itens');
@@ -194,7 +195,7 @@ class RemovalProductController extends Controller
                     ::whereIn('id', $itens)
                     ->where('stock_removal_id', '=', $stockRemoval->id)
                     ->update([
-                        'status' => 1
+                        'status' => $status
                     ]);
 
                 return $this->listResponse([
@@ -202,11 +203,33 @@ class RemovalProductController extends Controller
                 ]);
             }
         } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Não foi possível confirmar os produtos da retirada ' . $stockRemoval->id));
+            \Log::error(logMessage($exception, 'Não foi possível alterar o status dos produtos da retirada ' . $stockRemoval->id), [$itens]);
         }
 
         return $this->listResponse([
             'count' => 0
         ]);
+    }
+
+    /**
+     * Change stock removal product status to 1 - Entregue
+     *
+     * @param  int $stockRemovalId
+     * @return Response
+     */
+    public function confirm($stockRemovalId)
+    {
+        return $this->updateStatus($stockRemovalId, 1);
+    }
+
+    /**
+     * Change stock removal product status to 3 - Retornado
+     *
+     * @param  int $stockRemovalId
+     * @return Response
+     */
+    public function return($stockRemovalId)
+    {
+        return $this->updateStatus($stockRemovalId, 3);
     }
 }

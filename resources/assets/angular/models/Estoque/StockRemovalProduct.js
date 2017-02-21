@@ -53,6 +53,19 @@
                     return Restangular.one(this.baseUrl + '/confirmar/', stockRemovalId).customPOST({
                         itens: itens
                     });
+                },
+
+                /**
+                 * Return itens
+                 *
+                 * @param  {array} itens
+                 * @param  {int} stockRemovalId
+                 * @return {Object}
+                 */
+                return: function(itens, stockRemovalId) {
+                    return Restangular.one(this.baseUrl + '/retornar/', stockRemovalId).customPOST({
+                        itens: itens
+                    });
                 }
             });
 

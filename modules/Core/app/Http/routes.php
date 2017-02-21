@@ -187,6 +187,7 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
         Route::get('verificar/{imei}', 'RemovalProductController@verify');
         Route::get('verificar/{imei}/{stockRemovalId}', 'RemovalProductController@check');
         Route::post('confirmar/{stockRemovalId}', 'RemovalProductController@confirm');
+        Route::post('retornar/{stockRemovalId}', 'RemovalProductController@return');
         Route::post('status/{id}', 'RemovalProductController@changeStatus');
     });
     Route::resource('estoque/retirada/produto', 'Stock\RemovalProductController');

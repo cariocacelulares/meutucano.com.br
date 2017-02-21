@@ -127,8 +127,8 @@ return [
      */
     'stock_removal_status' => [
         0 => 'Retirado',
-        1 => 'Entregue',
-        2 => 'Enviado',
-        3 => 'Devolvido',
+        1 => 'Confirmado',
+        2 => 'Faturado',
+        3 => 'Retornado',
     ]
 ];
