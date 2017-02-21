@@ -8,7 +8,7 @@ use Tests\Core\Create\Removal;
 use Tests\Core\Create\RemovalProduct;
 use Tests\Core\Create\ProductImei;
 
-class StockTest extends TestCase
+class StockRemovalTest extends TestCase
 {
     use WithoutMiddleware,
         DatabaseTransactions;
