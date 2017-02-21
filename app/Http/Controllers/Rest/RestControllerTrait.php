@@ -13,7 +13,7 @@ trait RestControllerTrait
     use RestResponseTrait;
 
     /**
-     * Retorna uma lista de todos recursos
+     * Return a list of all resources
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -26,7 +26,7 @@ trait RestControllerTrait
     }
 
     /**
-     * Manipula a requisição para listagem
+     * Manipulate the request to the list
      *
      * @param  EloquentBuilder $m
      * @return array
@@ -37,55 +37,55 @@ trait RestControllerTrait
          * Filter
          */
         if (Input::get('filter')) {
-            foreach (json_decode(Input::get('filter'), true) as $filtro) {
-                if ($filtro['operator'] == 'LIKE') {
-                    $filtro['value'] = '%' . $filtro['value'] . '%';
+            foreach (json_decode(Input::get('filter'), true) as $filter) {
+                if ($filter['operator'] == 'LIKE') {
+                    $filter['value'] = '%' . $filter['value'] . '%';
                 }
 
-                if ($filtro['operator'] == 'BETWEEN' && !is_array($filtro['value'])) {
-                    $filtro['operator'] = '=';
+                if ($filter['operator'] == 'BETWEEN' && !is_array($filter['value'])) {
+                    $filter['operator'] = '=';
                 }
 
-                if ($filtro['operator'] == 'BETWEEN') {
-                    if ((!isset($filtro['value']['to']) || (!$filtro['value']['to'] && $filtro['value']['to'] !== 0)) && isset($filtro['value']['from'])) {
-                        $filtro['operator'] = '>=';
-                        $filtro['value']    = $filtro['value']['from'];
-                    } elseif ((!isset($filtro['value']['from']) || (!$filtro['value']['from'] && $filtro['value']['from'] !== 0)) && isset($filtro['value']['to'])) {
-                        $filtro['operator'] = '<=';
-                        $filtro['value']    = $filtro['value']['to'];
+                if ($filter['operator'] == 'BETWEEN') {
+                    if ((!isset($filter['value']['to']) || (!$filter['value']['to'] && $filter['value']['to'] !== 0)) && isset($filter['value']['from'])) {
+                        $filter['operator'] = '>=';
+                        $filter['value']    = $filter['value']['from'];
+                    } elseif ((!isset($filter['value']['from']) || (!$filter['value']['from'] && $filter['value']['from'] !== 0)) && isset($filter['value']['to'])) {
+                        $filter['operator'] = '<=';
+                        $filter['value']    = $filter['value']['to'];
                     }
                 }
 
-                if ($filtro['operator'] == 'BETWEEN') {
-                    foreach ($filtro['value'] as $key => $value) {
+                if ($filter['operator'] == 'BETWEEN') {
+                    foreach ($filter['value'] as $key => $value) {
                         if (is_string($value) && \DateTime::createFromFormat('d/m/Y', $value) !== false) {
-                            $filtro['value'][$key] = Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d');
+                            $filter['value'][$key] = Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d');
                         }
                     }
 
                     $m = $m->whereBetween(
-                        $filtro['column'],
+                        $filter['column'],
                         [
-                            $filtro['value']['from'],
-                            $filtro['value']['to']
+                            $filter['value']['from'],
+                            $filter['value']['to']
                         ]
                     );
-                } elseif (is_string($filtro['value']) && \DateTime::createFromFormat('d/m/Y', $filtro['value']) !== false) {
+                } elseif (is_string($filter['value']) && \DateTime::createFromFormat('d/m/Y', $filter['value']) !== false) {
                     $m = $m->whereDate(
-                        $filtro['column'],
-                        $filtro['operator'],
-                        Carbon::createFromFormat('d/m/Y', $filtro['value'])->format('Y-m-d')
+                        $filter['column'],
+                        $filter['operator'],
+                        Carbon::createFromFormat('d/m/Y', $filter['value'])->format('Y-m-d')
                     );
-                } else if ($filtro['operator'] == 'IN') {
+                } else if ($filter['operator'] == 'IN') {
                     $m = $m->whereIn(
-                        $filtro['column'],
-                        $filtro['value']
+                        $filter['column'],
+                        $filter['value']
                     );
                 } else {
                     $m = $m->where(
-                        $filtro['column'],
-                        $filtro['operator'],
-                        $filtro['value']
+                        $filter['column'],
+                        $filter['operator'],
+                        $filter['value']
                     );
                 }
             }
@@ -101,7 +101,7 @@ trait RestControllerTrait
     }
 
     /**
-     * Retorna um único recurso
+     * Returns a unique resource
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
@@ -120,7 +120,7 @@ trait RestControllerTrait
     }
 
     /**
-     * Cria novo recurso
+     * Create a new resource
      *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -141,7 +141,7 @@ trait RestControllerTrait
     }
 
     /**
-     * Atualiza um recurso
+     * Update a resource
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
@@ -164,7 +164,7 @@ trait RestControllerTrait
     }
 
     /**
-     * Deleta um recurso
+     * Deletes a resource
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
