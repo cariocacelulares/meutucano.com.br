@@ -164,3 +164,20 @@ $factory->define(Core\Models\Pedido\FaturamentoCodigo::class, function () use ($
         'fim'     => '97256430',
     ];
 });
+
+/**
+ * Stock Removal
+ */
+ $factory->define(Core\Models\Stock\Removal::class, function () use ($faker) {
+     return [
+     ];
+ });
+
+/**
+ * Stock Removal Product
+ */
+ $factory->define(Core\Models\Stock\RemovalProduct::class, function () use ($faker) {
+     return [
+         'status' => $faker->numberBetween(0, 3),
+     ];
+ });

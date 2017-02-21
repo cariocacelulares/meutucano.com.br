@@ -12,8 +12,6 @@ class CreateUsuario
     */
     public static function create($data = [])
     {
-        $usuario = factory(Usuario::class)->create($data);
-
-        return $usuario;
+        return factory(Usuario::class)->create($data);
     }
 }
