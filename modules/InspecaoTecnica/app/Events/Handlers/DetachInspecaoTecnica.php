@@ -101,9 +101,7 @@ class DetachInspecaoTecnica
     {
         $product = $orderProduct->produto;
 
-        for ($i=0; $i < $orderProduct->quantidade; $i++) {
-            Log::debug('Tentando desrelacionar pedido produto e inspecao tecnica.');
-            with(new InspecaoTecnicaController())->detachInspecao($orderProduct, $onlyReviewed);
-        }
+        Log::debug('Tentando desrelacionar pedido produto e inspecao tecnica.');
+        with(new InspecaoTecnicaController())->detachInspecao($orderProduct, $onlyReviewed);
     }
 }

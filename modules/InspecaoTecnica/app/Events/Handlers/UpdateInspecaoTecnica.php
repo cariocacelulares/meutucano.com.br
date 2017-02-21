@@ -49,9 +49,7 @@ class UpdateInspecaoTecnica
                 ]);
             Log::notice($reviewedInspection . ' inspeções não revisadas foram desassociadas', [$orderProduct->id]);
 
-            for ($i=0; $i < $orderProduct->quantidade; $i++) {
-                with(new InspecaoTecnicaController())->attachInspecao($orderProduct);
-            }
+            with(new InspecaoTecnicaController())->attachInspecao($orderProduct);
         }
     }
 }

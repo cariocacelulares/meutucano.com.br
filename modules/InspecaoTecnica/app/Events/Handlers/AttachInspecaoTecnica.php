@@ -112,9 +112,7 @@ class AttachInspecaoTecnica
             return;
         }
 
-        for ($i=0; $i < $orderProduct->quantidade; $i++) {
-            Log::debug('Tentando relacionar pedido produto e inspecao tecnica.');
-            with(new InspecaoTecnicaController())->attachInspecao($orderProduct);
-        }
+        Log::debug('Tentando relacionar pedido produto e inspecao tecnica.');
+        with(new InspecaoTecnicaController())->attachInspecao($orderProduct);
     }
 }
