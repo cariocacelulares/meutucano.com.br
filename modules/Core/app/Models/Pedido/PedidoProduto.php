@@ -30,13 +30,6 @@ class PedidoProduto extends \Eloquent
     ];
 
     /**
-     * @var array
-     */
-    protected $appends = [
-        'total',
-    ];
-
-    /**
      * Produto
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -84,15 +77,5 @@ class PedidoProduto extends \Eloquent
     public function inspecoes()
     {
         return $this->hasMany(InspecaoTecnica::class, 'pedido_produtos_id', 'id');
-    }
-
-    /**
-     * Return readable created_at
-     *
-     * @return string
-     */
-    protected function getTotalAttribute()
-    {
-        return $this->valor * $this->quantidade;
     }
 }

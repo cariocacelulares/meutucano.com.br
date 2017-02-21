@@ -300,16 +300,18 @@ class MagentoController extends Controller
             }
 
             foreach ($order['items'] as $s_produto) {
-                $pedidoProduto = PedidoProduto::firstOrNew([
-                    'pedido_id'   => $pedido->id,
-                    'produto_sku' => $s_produto['sku'],
-                    'valor' => $s_produto['price'],
-                    'quantidade'  => $s_produto['qty_ordered']
-                ]);
-                if ($pedidoProduto->save()) {
-                    Log::info('PedidoProduto ' . $s_produto['sku'] . ' importado no pedido ' . $order['increment_id']);
-                } else {
-                    Log::warning('Não foi possível importar o PedidoProduto ' . $s_produto['sku'] . ' / ' . $order['increment_id']);
+                for ($i=0; $i < $s_produto['qty_ordered']; $i++) {
+                    $pedidoProduto = PedidoProduto::firstOrNew([
+                        'pedido_id'   => $pedido->id,
+                        'produto_sku' => $s_produto['sku'],
+                        'valor'       => $s_produto['price'],
+                    ]);
+
+                    if ($pedidoProduto->save()) {
+                        Log::info('PedidoProduto ' . $s_produto['sku'] . ' importado no pedido ' . $order['increment_id']);
+                    } else {
+                        Log::warning('Não foi possível importar o PedidoProduto ' . $s_produto['sku'] . ' / ' . $order['increment_id']);
+                    }
                 }
             }
 
@@ -426,11 +428,18 @@ class MagentoController extends Controller
             return null;
         }
 
-        $qty = [];
+        $qty      = [];
+        $products = [];
+
         foreach ($order->produtos as $produto) {
+            $sku = $produto->produto->sku;
+            $products[$sku] = (isset($products[$sku])) ? ($products[$sku] + 1) : 1;
+        }
+
+        foreach ($products as $sku => $qtd) {
             $qty[] = [
-                'order_item_id' => $produto->produto->sku,
-                'qty' => $produto->quantidade
+                'order_item_id' => $sku,
+                'qty'           => $qtd,
             ];
         }
 

@@ -4,7 +4,6 @@ use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;
 use Core\Events\OrderPaid;
 use Core\Events\OrderProductCreated;
-use Core\Events\OrderProductQtyIncreased;
 use Core\Models\Pedido\PedidoProduto;
 use InspecaoTecnica\Http\Controllers\InspecaoTecnicaController;
 use InspecaoTecnica\Models\InspecaoTecnica;
@@ -28,12 +27,6 @@ class AttachInspecaoTecnica
         $events->listen(
             OrderPaid::class,
             '\InspecaoTecnica\Events\Handlers\AttachInspecaoTecnica@onOrderPaid'
-        );
-        // ########
-
-        $events->listen(
-            OrderProductQtyIncreased::class,
-            '\InspecaoTecnica\Events\Handlers\AttachInspecaoTecnica@onOrderProductQtyIncreased'
         );
     }
 
@@ -73,27 +66,6 @@ class AttachInspecaoTecnica
         if (in_array((int)$orderProduct->pedido->status, [1, 2, 3])) {
             Log::debug('Handler AttachInspecaoTecnica/onOrderProductCreated acionado.', [$event]);
             $this->attachInspecaoTecnica($orderProduct);
-        }
-    }
-
-    /**
-     * Handle the event.
-     *
-     * @param  OrderProductQtyIncreased  $event
-     * @return void
-     */
-    public function onOrderProductQtyIncreased(OrderProductQtyIncreased $event)
-    {
-        $orderProduct = $event->orderProduct;
-        $qty          = $event->qty;
-        $orderProduct = $orderProduct->fresh();
-
-        // Apenas se o produto for pago, enviado ou entregue
-        if (in_array((int)$orderProduct->pedido->status, [1, 2, 3])) {
-            Log::debug('Handler AttachInspecaoTecnica/onOrderProductQtyIncreased acionado.', [$event]);
-            for ($i=0; $i < $qty; $i++) {
-                with(new InspecaoTecnicaController())->attachInspecao($orderProduct);
-            }
         }
     }
 

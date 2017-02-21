@@ -28,7 +28,6 @@ class OrderTransformer
                 $produtos[] = [
                     'id'          => $orderProduct->id,
                     'produto_sku' => $orderProduct->produto_sku,
-                    'quantidade'  => $orderProduct->quantidade,
                     'valor'       => $orderProduct->valor,
                     'produto'     => [
                         'sku'    => $orderProduct->produto->sku,
@@ -245,7 +244,6 @@ class OrderTransformer
                 'produto_sku' => $produto->produto_sku,
                 'id'          => $produto->id,
                 'imei'        => $produto->imei,
-                'quantidade'  => $produto->quantidade,
                 'valor'       => $produto->valor,
                 'produto'     => [
                     'titulo' => $produto->produto->titulo,

@@ -137,7 +137,7 @@
                                 <p class="pull-left bold" ng-class="{ deleted: nota.deleted_at }">{{ nota.data }}</p>
                                 <button ng-if="nota.deleted_at" ng-click="PedidoDetalhe.notaHelper.showNote(nota.delete_note)"
                                     class="btn-default btn-xs pull-right">
-                                    Motivo 
+                                    Motivo
                                 </button>
                                 <div class="pull-right" ng-if="!nota.deleted_at">
                                     <dropdown size="xs">
@@ -299,7 +299,6 @@
             <thead>
                 <th width="100">SKU</th>
                 <th class="text-left">Nome</th>
-                <th width="60">Qtd</th>
                 <th width="160">Valor</th>
             </thead>
             <tbody ng-if="!PedidoDetalhe.pedido.produtos">
@@ -324,25 +323,21 @@
                         </a>
                         <small class="hint-text">{{ produto.imei }}</small>
                     </td>
-                    <td class="text-center">{{ produto.quantidade }}</td>
                     <td class="text-center">{{ produto.valor | currency }}</td>
                 </tr>
                 <tr ng-if="PedidoDetalhe.pedido.desconto != null" class="total">
                     <td></td>
-                    <td></td>
-                    <td class="bold">Desconto</td>
+                    <td class="bold text-right">Desconto</td>
                     <td>{{ PedidoDetalhe.pedido.desconto }}%</td>
                 </tr>
                 <tr ng-if="PedidoDetalhe.pedido.frete_valor != null" class="total">
                     <td></td>
-                    <td></td>
-                    <td class="bold">Frete</td>
+                    <td class="bold text-right">Frete</td>
                     <td>{{ PedidoDetalhe.pedido.frete_valor | currency }}</td>
                 </tr>
                 <tr ng-if="PedidoDetalhe.pedido.total" class="total">
                     <td><span roles="admin|atendimento|faturamento|gestor" ng-click="PedidoDetalhe.openOrderProductForm()" class="btn-info btn-xs"><i class="fa-plus">&nbsp;</i>Adicionar produto</span></td>
-                    <td></td>
-                    <td class="bold">TOTAL</td>
+                    <td class="bold text-right">TOTAL</td>
                     <td>{{ PedidoDetalhe.pedido.total | currency }}</td>
                 </tr>
             </tbody>

@@ -166,7 +166,7 @@ class Pedido extends \Eloquent
     }
 
     /**
-     * Calculate discount percent based in order products: 100 - ((total - shipping) * 100 / totalProducts)
+     * Calculate discount percent based in order products: 100 - ((valor - shipping) * 100 / totalProducts)
      *
      * @return null|int
      */
@@ -174,13 +174,13 @@ class Pedido extends \Eloquent
     {
         if (strtolower($this->marketplace) === 'b2w') {
             $frete = ($this->frete_valor) ?: 0;
-            $total = 0;
+            $valor = 0;
             foreach ($this->produtos as $produto) {
-                $total += $produto->total;
+                $valor += $produto->valor;
             }
 
-            if ($total > 0 && ($this->total - $frete) != $total) {
-                return round(100 - ((($this->total - $frete) * 100) / $total));
+            if ($valor > 0 && ($this->valor - $frete) != $valor) {
+                return round(100 - ((($this->valor - $frete) * 100) / $valor));
             }
         }
 

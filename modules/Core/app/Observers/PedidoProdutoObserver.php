@@ -5,7 +5,6 @@ use Core\Events\OrderProductCreated;
 use Core\Events\OrderProductDeleting;
 use Core\Events\OrderProductProductChanged;
 use Core\Events\OrderProductQtyDecreased;
-use Core\Events\OrderProductQtyIncreased;
 use Core\Events\OrderProductUpdated;
 use Core\Models\Pedido\PedidoProduto;
 
@@ -22,19 +21,6 @@ class PedidoProdutoObserver
         Event::fire(new OrderProductUpdated($orderProduct));
 
         $dirty = $orderProduct->getDirty();
-
-        // If qty is changed
-        if (isset($dirty['quantidade'])) {
-            $qty = [];
-            $qty['old'] = $orderProduct->getOriginal('quantidade');
-            $qty['new'] = $orderProduct->quantidade;
-
-            if ($qty['new'] > $qty['old']) {
-                Event::fire(new OrderProductQtyIncreased($orderProduct, ($qty['new'] - $qty['old'])));
-            } elseif (($qty['new'] < $qty['old'])) {
-                Event::fire(new OrderProductQtyDecreased($orderProduct, ($qty['old'] - $qty['new'])));
-            }
-        }
 
         // If product is changed
         if (isset($dirty['produto_sku'])) {

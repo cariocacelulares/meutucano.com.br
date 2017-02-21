@@ -648,29 +648,27 @@ class RastreioController extends Controller
                             ->get(['inspecao_tecnica.*'])
                             ->toArray();
 
-                        for ($i=0; $i < $semiNovo['quantidade']; $i++) {
-                            // se existirem produtos revisados
-                            if (!empty($inspecoesDisponiveis)) {
-                                $inspecoesDisponiveis = array_values($inspecoesDisponiveis);
+                        // se existirem produtos revisados
+                        if (!empty($inspecoesDisponiveis)) {
+                            $inspecoesDisponiveis = array_values($inspecoesDisponiveis);
 
-                                $inspecoes['reservar'][] = [
-                                    'inspecao_id'        => $inspecoesDisponiveis[0]['id'],
-                                    'pedido_produtos_id' => $semiNovo['id'],
-                                    'produto_sku'        => $semiNovo['produto_sku'],
-                                    'titulo'             => $semiNovo['produto']['titulo'],
-                                    'aplicar'            => 1,
-                                ];
+                            $inspecoes['reservar'][] = [
+                                'inspecao_id'        => $inspecoesDisponiveis[0]['id'],
+                                'pedido_produtos_id' => $semiNovo['id'],
+                                'produto_sku'        => $semiNovo['produto_sku'],
+                                'titulo'             => $semiNovo['produto']['titulo'],
+                                'aplicar'            => 1,
+                            ];
 
-                                unset($inspecoesDisponiveis[0]);
-                            } else {
-                                // se não precisa adicionar na fila
-                                $inspecoes['criar'][] = [
-                                    'produto_sku'        => $semiNovo['produto_sku'],
-                                    'pedido_produtos_id' => $semiNovo['id'],
-                                    'titulo'             => $semiNovo['produto']['titulo'],
-                                    'aplicar'            => 1,
-                                ];
-                            }
+                            unset($inspecoesDisponiveis[0]);
+                        } else {
+                            // se não precisa adicionar na fila
+                            $inspecoes['criar'][] = [
+                                'produto_sku'        => $semiNovo['produto_sku'],
+                                'pedido_produtos_id' => $semiNovo['id'],
+                                'titulo'             => $semiNovo['produto']['titulo'],
+                                'aplicar'            => 1,
+                            ];
                         }
                     }
 

@@ -71,11 +71,11 @@
                 <span ng-repeat="produto in pedido.produtos">
                     <small ng-if="!pedido.desconto">
                         <strong tooltips tooltip-template="{{ produto.produto.titulo }}">{{ produto.produto_sku }}</strong>
-                        <small>: {{ produto.quantidade }}x {{ produto.valor | currency }}</small>
+                        <small>: {{ produto.valor | currency }}</small>
                     </small>
                     <small ng-if="pedido.desconto">
                         <strong tooltips tooltip-template="{{ produto.produto.titulo }}">{{ produto.produto_sku }}</strong>
-                        <small tooltips tooltip-template="Desconto: {{ (produto.valor - (produto.valor - ((produto.valor * pedido.desconto) / 100))) | currency }}">: {{ produto.quantidade }}x {{ produto.valor | currency }}</small>
+                        <small tooltips tooltip-template="Desconto: {{ (produto.valor - (produto.valor - ((produto.valor * pedido.desconto) / 100))) | currency }}">: {{ produto.valor | currency }}</small>
                     </small>
                     <span ng-repeat="inspecao in produto.inspecoes" ng-class="{ 'label-success': inspecao.revisado_at, 'm-r-10': !$last }" class="label">{{ inspecao.id }}</span>
                 </span><br>

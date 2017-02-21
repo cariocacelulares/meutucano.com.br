@@ -327,16 +327,18 @@ class SkyhubController extends Controller
                     continue;
                 }
 
-                $pedidoProduto = PedidoProduto::firstOrNew([
-                    'pedido_id'   => $pedido->id,
-                    'produto_sku' => $s_produto['product_id'],
-                    'valor'       => $s_produto['special_price'],
-                    'quantidade'  => $s_produto['qty']
-                ]);
-                if ($pedidoProduto->save()) {
-                    Log::info('PedidoProduto ' . $s_produto['product_id'] . ' importado no pedido ' . $order['code']);
-                } else {
-                    Log::warning('Não foi importar o PedidoProduto ' . $s_produto['product_id'] . ' / ' . $order['code']);
+                for ($i=0; $i < $s_produto['qty']; $i++) {
+                    $pedidoProduto = PedidoProduto::firstOrNew([
+                        'pedido_id'   => $pedido->id,
+                        'produto_sku' => $s_produto['product_id'],
+                        'valor'       => $s_produto['special_price']
+                    ]);
+
+                    if ($pedidoProduto->save()) {
+                        Log::info('PedidoProduto ' . $s_produto['product_id'] . ' importado no pedido ' . $order['code']);
+                    } else {
+                        Log::warning('Não foi importar o PedidoProduto ' . $s_produto['product_id'] . ' / ' . $order['code']);
+                    }
                 }
             }
 
@@ -442,10 +444,17 @@ class SkyhubController extends Controller
     {
         try {
             $jsonItens = [];
+            $products  = [];
+
             foreach ($order->produtos as $produto) {
+                $sku = $produto->produto->sku;
+                $products[$sku] = (isset($products[$sku])) ? ($products[$sku] + 1) : 1;
+            }
+
+            foreach ($products as $sku => $qtd) {
                 $jsonItens[] = [
-                    "sku" => $produto->produto->sku,
-                    "qty" => $produto->quantidade
+                    'sku' => $sku,
+                    'qty' => $qtd
                 ];
             }
 

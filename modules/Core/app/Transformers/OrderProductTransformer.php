@@ -28,7 +28,6 @@ class OrderProductTransformer
                 'status_description' => OrderParser::getStatusDescription($orderProduct['pedido']['status']),
                 'codigo_marketplace' => $orderProduct['pedido']['codigo_marketplace'],
                 'marketplace'        => $orderProduct['pedido']['marketplace'],
-                // 'quantidade'         => $orderProduct['quantidade'],
                 'valor'              => $orderProduct['valor'],
             ];
         }
