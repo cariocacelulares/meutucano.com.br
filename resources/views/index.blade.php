@@ -24,11 +24,4 @@
 
     <!-- Application Scripts -->
     <script src="{{ Cdn::asset(elixir('assets/js/app.min.js')) }}"></script>
-
-    <script>
-        Raven
-            .config('https://933ad761df37421295bfdba036a75311@sentry.io/112695--45656456456456')
-            .addPlugin(Raven.Plugins.Angular)
-            .install();
-    </script>
 </html>

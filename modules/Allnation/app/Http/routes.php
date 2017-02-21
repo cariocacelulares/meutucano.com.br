@@ -2,7 +2,7 @@
 
 
 Route::group([
-  'middleware' => ['sentry'/*, 'jwt.auth'*/],
+  'middleware' => ['jwt.auth'],
   'prefix'     => 'api/allnation',
   'namespace'  => 'Allnation\Http\Controllers'
 ], function () {

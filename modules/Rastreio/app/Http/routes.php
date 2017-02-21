@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namespace' => 'Rastreio\Http\Controllers'], function () {
+Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'Rastreio\Http\Controllers'], function () {
     /**
      * Rastreios
      */

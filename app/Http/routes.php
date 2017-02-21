@@ -10,7 +10,7 @@ Route::get('/', function () {
 /**
  * API
  */
-Route::group(['prefix' => '/api', 'middleware' => 'sentry'], function () {
+Route::group(['prefix' => '/api'], function () {
     /**
      * Auth
      */

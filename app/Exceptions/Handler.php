@@ -35,13 +35,6 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
-        try {
-            if ($this->shouldReport($exception)) {
-                app('sentry')->captureException($exception);
-            }
-        } catch (\Exception $exception) {
-        }
-
         parent::report($exception);
     }
 
@@ -80,7 +73,7 @@ class Handler extends ExceptionHandler
         if ($request->expectsJson()) {
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
-        
+
         return redirect()->guest('/');
     }
 }

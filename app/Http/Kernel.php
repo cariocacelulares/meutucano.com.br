@@ -49,7 +49,6 @@ class Kernel extends HttpKernel
         'jwt.auth'    => \Tymon\JWTAuth\Middleware\GetUserFromToken::class,
         'jwt.refresh' => \Tymon\JWTAuth\Middleware\RefreshToken::class,
         'role'        => \Zizaco\Entrust\Middleware\EntrustRole::class,
-        'sentry'      => \App\Http\Middleware\SentryContext::class,
         'bindings'    => \Illuminate\Routing\Middleware\SubstituteBindings::class,
     ];
 }
