@@ -3,7 +3,8 @@
     <div class="row">
         <div class="col-md-12 form-group">
             <label for="produto">Produto</label>
-            <ui-select ng-model="PedidoProdutoForm.pedidoProduto.produto" theme="selectize" id="produto" on-select="PedidoProdutoForm.selected()">
+            <input ng-if="PedidoProdutoForm.pedidoProduto.id" ng-model="PedidoProdutoForm.pedidoProduto.produto.titulo" readonly />
+            <ui-select ng-if="!PedidoProdutoForm.pedidoProduto.id" ng-model="PedidoProdutoForm.pedidoProduto.produto" theme="selectize" id="produto" on-select="PedidoProdutoForm.selected()">
                 <ui-select-match placeholder="Selecione um produto">{{ $select.selected.titulo }}</ui-select-match>
                 <ui-select-choices repeat="produto in PedidoProdutoForm.produtos | propsFilter: {titulo: $select.search, sku: $select.search}"
                     refresh="PedidoProdutoForm.search($select.search)" refresh-delay="300">
