@@ -321,7 +321,7 @@
                             ng-click="PedidoDetalhe.inspecaoTecnicaHelper.alterarPrioridade(produto.id, true)" class="btn-xs btn-primary">
                                 <i class="fa-arrow-{{ produto.inspecoes[0].priorizado ? 'down' : 'up' }}"></i>&nbsp; {{ produto.inspecoes[0].priorizado ? 'Remover prioridade da' : 'Priorizar' }} inspeção
                         </a>
-                        <small class="hint-text">{{ produto.imei }}</small>
+                        <small class="hint-text">{{ produto.productImei.imei }}</small>
                     </td>
                     <td class="text-center">{{ produto.valor | currency }}</td>
                 </tr>

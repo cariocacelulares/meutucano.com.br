@@ -240,15 +240,20 @@ class OrderTransformer
                 ];
             }
 
+            $productImei = !$produto->productImei ? null : [
+                'id'   => $produto->productImei->id,
+                'imei' => $produto->productImei->imei,
+            ];
+
             $produtos[] = [
                 'produto_sku' => $produto->produto_sku,
                 'id'          => $produto->id,
-                'imei'        => $produto->imei,
                 'valor'       => $produto->valor,
                 'produto'     => [
                     'titulo' => $produto->produto->titulo,
                     'estado' => $produto->produto->estado,
                 ],
+                'productImei' => $productImei,
                 'inspecoes'   => $inspecoes,
             ];
         }

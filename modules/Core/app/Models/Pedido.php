@@ -174,13 +174,13 @@ class Pedido extends \Eloquent
     {
         if (strtolower($this->marketplace) === 'b2w') {
             $frete = ($this->frete_valor) ?: 0;
-            $valor = 0;
+            $totalProdutos = 0;
             foreach ($this->produtos as $produto) {
-                $valor += $produto->valor;
+                $totalProdutos += $produto->valor;
             }
 
-            if ($valor > 0 && ($this->valor - $frete) != $valor) {
-                return round(100 - ((($this->valor - $frete) * 100) / $valor));
+            if ($totalProdutos > 0 && ($this->total - $frete) != $totalProdutos) {
+                return round(100 - ((($this->total - $frete) * 100) / $totalProdutos));
             }
         }
 

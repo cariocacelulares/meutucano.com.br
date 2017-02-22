@@ -176,16 +176,15 @@ class PedidoController extends Controller
             $data = (self::MODEL)::with([
                 'cliente',
                 'endereco',
-                'notas' => function ($query)
-                {
+                'notas' => function ($query) {
                     $query->withTrashed();
                 },
-                'rastreios' => function ($query)
-                {
+                'rastreios' => function ($query) {
                     $query->withTrashed();
                 },
                 'produtos',
                 'produtos.produto',
+                'produtos.productImei',
                 'produtos.inspecoes' => function ($query) {
                     $query->orderBy('priorizado', 'DESC');
                     $query->orderBy('id', 'ASC');
