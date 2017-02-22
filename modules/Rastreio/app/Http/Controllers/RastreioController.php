@@ -349,6 +349,22 @@ class RastreioController extends Controller
             $servicoPostagem = 40010;
         }
 
+        if (!$servicoPostagem) {
+            if (!isset($rastreio)) {
+                $rastreio = Rastreio::where('rastreio', '=', $codigoRastreio)->first();
+
+                if (!$rastreio) {
+                    return null;
+                }
+            }
+
+            if (strtolower($rastreio->pedido->frete_metodo) == 'sedex') {
+                $servicoPostagem = 40010;
+            } else {
+                $servicoPostagem = 41106;
+            }
+        }
+
         $correiosUrl = sprintf(
             "http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx?nCdEmpresa=&sDsSenha=&sCepOrigem=%s&sCepDestino=%s&nVlPeso=1&nCdFormato=1&nVlComprimento=16&nVlAltura=10&nVlLargura=12&sCdMaoPropria=n&nVlValorDeclarado=100&sCdAvisoRecebimento=n&nCdServico=%s&nVlDiametro=0&StrRetorno=xml",
             Config::get('core.cep'),
