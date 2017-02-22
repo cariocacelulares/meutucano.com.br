@@ -7,6 +7,7 @@ use Core\Events\OrderProductProductChanged;
 use Core\Events\OrderProductQtyDecreased;
 use Core\Events\OrderProductUpdated;
 use Core\Models\Pedido\PedidoProduto;
+use Core\Models\Produto\ProductStock;
 
 class PedidoProdutoObserver
 {
@@ -25,6 +26,30 @@ class PedidoProdutoObserver
         // If product is changed
         if (isset($dirty['produto_sku'])) {
             Event::fire(new OrderProductProductChanged($orderProduct));
+        }
+    }
+
+    /**
+     * Listen to the PedidoProduto saving event.
+     *
+     * @param  PedidoProduto  $orderProduct
+     * @return void
+     */
+    public function saving(PedidoProduto $orderProduct)
+    {
+        // Seleciona o stock por prioridade se nao possuir um
+        if (is_null($orderProduct->product_stock_id)) {
+            $stock = \Stock::choose($orderProduct->produto_sku);
+
+            if ($stock) {
+                $productStock = ProductStock
+                    ::where('stock_slug', '=', $stock)
+                    ->where('product_sku', '=', $orderProduct->produto_sku)
+                    ->orderBy('quantity', 'DESC')
+                    ->first();
+
+                $orderProduct->product_stock_id = $productStock->id;
+            }
         }
     }
 

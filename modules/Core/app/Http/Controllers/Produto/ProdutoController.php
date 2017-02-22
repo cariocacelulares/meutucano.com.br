@@ -224,7 +224,7 @@ class ProdutoController extends Controller
                 $list = Produto::where('titulo', 'LIKE', "%{$term}%")->orWhere('sku', 'LIKE', "%{$term}%");
             }
 
-            $list = $list->get(['produtos.sku', 'produtos.titulo'])->toArray();
+            $list = $list->get(['produtos.sku', 'produtos.titulo', 'produtos.valor'])->toArray();
 
             return $this->listResponse($list);
         } catch (\Exception $exception) {
