@@ -1,0 +1,17 @@
+<h1>Transferir estoque</h1>
+<validation errors="TransferirEstoque.validationErrors"></validation>
+<form ng-submit="TransferirEstoque.save()" novalidate="novalidate" class="form-default">
+    <div class="row" ng-if="TransferirEstoque.productStock.serial_enabled">
+        <div class="col-md-12 form-group">
+            <label for="imeis">Imeis</label>
+            <textarea ng-model="TransferirEstoque.entrada.imeis" id="imeis" placeholder="Um IMEI por linha">
+            </textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="pull-right">
+            <button type="button" ng-click="closeThisDialog(false)" class="btn btn-default m-r-10">Cancelar</button>
+            <button busy="Salvando..." type="submit" class="btn btn-success">Transferir</button>
+        </div>
+    </div>
+</form>

@@ -46,35 +46,49 @@
             </div>
         </tab>
         <tab name="estoques" title="Estoques" ng-if="ProdutoForm.productStocks.length">
-            <div class="row" ng-repeat="productStock in ProdutoForm.productStocks track by $index">
-                <div class="col-md-3 form-group">
-                    <label for="title-{{ $index }}">Estoque</label>
-                    <input value="{{ productStock.stock.title }}" id="title-{{ $index }}" readonly />
-                </div>
-                <div class="col-md-2 form-group">
-                    <label for="include-{{ $index }}">Incluir</label>
-                    <input value="{{ productStock.stock.include ? 'Sim' : 'Não' }}" id="include-{{ $index }}" readonly />
-                </div>
-                <div class="col-md-2 form-group">
-                    <label for="priority-{{ $index }}">Ordem</label>
-                    <input value="{{ productStock.stock.priority }}" id="priority-{{ $index }}" readonly />
-                </div>
-                <div class="col-md-2 form-group">
-                    <label for="serial_enabled-{{ $index }}">Controle Serial</label>
-                    <div class="radio radio-success pull-left">
-                        <input id="serial_enabled-{{ $index }}-true" type="radio" ng-model="productStock.serial_enabled" ng-value="true">
-                        <label for="serial_enabled-{{ $index }}-true">Sim</label>
-                    </div>
-                    <div class="radio radio-success pull-left m-t-10">
-                        <input id="serial_enabled-{{ $index }}-false" type="radio" ng-model="productStock.serial_enabled" ng-value="false">
-                        <label for="serial_enabled-{{ $index }}-false">Não</label>
-                    </div>
-                </div>
-                <div class="col-md-3 form-group">
-                    <label for="quantity-{{ $index }}">Estoque</label>
-                    <input type="number" ng-model="productStock.quantity" id="quantity-{{ $index }}" placeholder="Qtd" ng-disabled="productStock.serial_enabled" />
-                </div>
-            </div>
+            <table class="table-alt table-hover no-padding">
+                <thead>
+                    <tr>
+                        <th>Estoque</th>
+                        <th>Incluir</th>
+                        <th>Ordem</th>
+                        <th>Ctrl Serial</th>
+                        <th>Estoque</th>
+                        <th width="46"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="productStock in ProdutoForm.productStocks track by $index">
+                        <td class="form-group">
+                            <input value="{{ productStock.stock.title }}" id="title-{{ $index }}" readonly />
+                        </td>
+                        <td class="form-group">
+                            <input value="{{ productStock.stock.include ? 'Sim' : 'Não' }}" id="include-{{ $index }}" readonly />
+                        </td>
+                        <td class="form-group">
+                            <input value="{{ productStock.stock.priority }}" id="priority-{{ $index }}" readonly />
+                        </td>
+                        <td class="form-group">
+                            <div class="radio radio-success pull-left m-l-15">
+                                <input id="serial_enabled-{{ $index }}-true" type="radio" ng-model="productStock.serial_enabled" ng-value="true">
+                                <label for="serial_enabled-{{ $index }}-true">Sim</label>
+                            </div>
+                            <div class="radio radio-success pull-left m-t-10">
+                                <input id="serial_enabled-{{ $index }}-false" type="radio" ng-model="productStock.serial_enabled" ng-value="false">
+                                <label for="serial_enabled-{{ $index }}-false">Não</label>
+                            </div>
+                        </td>
+                        <td class="form-group">
+                            <input type="number" ng-model="productStock.quantity" id="quantity-{{ $index }}" placeholder="Qtd" ng-disabled="productStock.serial_enabled" />
+                        </td>
+                        <td>
+                            <button ng-click="ProdutoForm.transfer(productStock)" type="button" class="btn-info btn-sm" title="Transferir estoque">
+                                <i class="fa-retweet"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </tab>
     </tabs>
 </form>

@@ -256,5 +256,19 @@
                 vm.load();
             });
         };
+
+        vm.transfer = function(productStock) {
+            ngDialog.open({
+                template       : 'views/estoque/transferir.html',
+                controller     : 'TransferirEstoqueController',
+                controllerAs   : 'TransferirEstoque',
+                closeByDocument: false,
+                data: {
+                    productStock: productStock
+                }
+            }).closePromise.then(function(data) {
+                vm.load();
+            });
+        };
     }
 })();
