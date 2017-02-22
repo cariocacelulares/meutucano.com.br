@@ -5,14 +5,12 @@
         .module('MeuTucano')
         .controller('EstoqueFormController', EstoqueFormController);
 
-    function EstoqueFormController($state, $stateParams, toaster, ValidationErrors, Filter, TableHeader,
-            ProductStock, Stock) {
+    function EstoqueFormController($stateParams, toaster, ValidationErrors, Stock) {
         var vm = this;
         vm.validationErrors = [];
 
-        vm.loading       = false;
-        vm.productStocks = [];
-        vm.stock         = {
+        vm.loading = false;
+        vm.stock   = {
             slug: $stateParams.slug || null
         };
 
@@ -23,8 +21,6 @@
                 Stock.get(vm.stock.slug).then(function (stock) {
                     vm.stock   = stock;
                     vm.loading = false;
-
-                    vm.loadProducts();
                 });
             }
         };
@@ -60,38 +56,5 @@
                 $state.go('app.estoque.index');
             });
         };
-
-        /**
-         * Daqui pra baixo é em relação a listagem de estoque dos produtos
-         */
-
-         /**
-          * Filtros
-          * @type {Filter}
-          */
-         vm.filterList = Filter.init('stock_products', vm, {
-             'produtos.sku'   : 'LIKE',
-             'produtos.titulo': 'LIKE'
-         });
-
-         /**
-          * Cabeçalho da tabela
-          * @type {TableHeader}
-          */
-         vm.tableHeader = TableHeader.init('stock_products', vm);
-
-         vm.loadProducts = function() {
-             vm.loading = true;
-
-             ProductStock.listBySlug(vm.stock.slug, {
-                 fields:   ['product_stocks.*'],
-                 filter:   vm.filterList.parse(),
-                 page:     vm.tableHeader.pagination.page,
-                 per_page: vm.tableHeader.pagination.per_page
-             }).then(function(response) {
-                 vm.tableData = response;
-                 vm.loading   = false;
-             });
-         };
-    }
+     }
 })();

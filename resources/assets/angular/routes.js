@@ -468,6 +468,12 @@
                     controller: 'EstoqueFormController as EstoqueForm'
                 })
 
+                .state('app.estoque.detalhe', {
+                    url: '/detalhe/{slug}',
+                    templateUrl: 'views/estoque/detalhe.html',
+                    controller: 'EstoqueDetalheController as EstoqueDetalhe'
+                })
+
                 .state('app.estoque.retirada', {
                     url: '/retiradas',
                     templateUrl: 'views/layouts/default.html',

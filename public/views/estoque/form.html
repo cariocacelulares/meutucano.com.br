@@ -1,8 +1,10 @@
 <div id="page-header" class="row">
-    <page-title icon="fa-archive" title="Estoque{{ EstoqueForm.stock.title ? ': ' + EstoqueForm.stock.title : '' }}" description="Controla as configurações do estoque e visulizada os produtos"></page-title>
+    <page-title icon="fa-archive" title="Estoque{{ EstoqueForm.stock.title ? ': ' + EstoqueForm.stock.title : '' }}" description="Editar as configurações do estoque"></page-title>
     <div class="col-md-6 button-bar">
         <a ng-click="EstoqueForm.save()" class="btn-success"><i class="fa-save">&nbsp;</i> Salvar</a>
         <a ng-if="EstoqueForm.stock.slug" confirm="EstoqueForm.destroy()" class="btn-danger"><i class="fa-trash">&nbsp;</i> Excluir</a>
+        <a ui-sref="app.estoque.detalhe({slug: EstoqueForm.stock.slug})" class="btn-info"><i class="fa-eye">&nbsp;</i> Detalhes</a>
+        <a onclick="history.back()" title="Voltar para a página anterior" class="btn-default"><i class="fa-reply"></i>&nbsp; Voltar</a>
     </div>
 </div>
 
@@ -27,65 +29,5 @@
             <label for="priority">Ordem</label>
             <input ng-model="EstoqueForm.stock.priority" id="priority" required />
         </div>
-    </div>
-    <div ng-if="EstoqueForm.stock.slug" class="row">
-        <hr>
-    </div>
-    <div ng-if="EstoqueForm.stock.slug" class="row">
-        <div class="col-md-6">
-            <h4 class="m-t-0">Produtos neste estoque</h4>
-        </div>
-
-        <table table-list="EstoqueForm" class="table-hover">
-            <thead>
-                <tr>
-                    <th width="80" class="text-center">SKU</th>
-                    <th>Produto</th>
-                    <th width="70" class="text-center">Serial</th>
-                    <th width="70" class="text-center">Qtd</th>
-                    <th width="180" class="text-center">Última alteração</th>
-                    <th width="46"></th>
-                </tr>
-                <tr class="table-filter" static-include="views/estoque/form_list_filter.html"></tr>
-            </thead>
-            <tbody ng-if="EstoqueForm.tableData.data && !EstoqueForm.loading">
-                <tr ng-repeat="productStock in EstoqueForm.tableData.data">
-                    <td class="text-center">
-                        <a ui-sref="app.produtos.detalhe({sku: productStock.product.sku})">
-                            {{ productStock.product.sku }}
-                        </a>
-                    </td>
-                    <td>{{ productStock.product.titulo }}</td>
-                    <td class="text-center">{{ productStock.serial_enabled ? 'Sim' : 'Não' }}</td>
-                    <td class="text-center">{{ productStock.quantity }}</td>
-                    <td class="text-center">{{ productStock.updated_at }}</td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        <!-- <table class="table table-alt table-hover table-no-button">
-            <thead>
-                <tr>
-                    <th width="70" class="text-center text-black">SKU</th>
-                    <th class="text-black">Produto</th>
-                    <th width="70" class="text-center text-black">Serial</th>
-                    <th width="70" class="text-center text-black">Qtd</th>
-                    <th width="180" class="text-center text-black">Última alteração</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="productStock in EstoqueForm.productStocks track by $index">
-                    <td class="text-center">
-                        <a ui-sref="app.produtos.detalhe({sku: productStock.product.sku})">
-                            {{ productStock.product.sku }}
-                        </a>
-                    </td>
-                    <td>{{ productStock.product.titulo }}</td>
-                    <td class="text-center">{{ productStock.serial_enabled ? 'Sim' : 'Não' }}</td>
-                    <td class="text-center">{{ productStock.quantity }}</td>
-                    <td class="text-center">{{ productStock.updated_at }}</td>
-                </tr>
-            </tbody>
-        </table> -->
     </div>
 </form>
