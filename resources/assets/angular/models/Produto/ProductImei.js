@@ -7,7 +7,7 @@
 
         function ProductImeiModel(Rest, Restangular) {
             var rest = angular.copy(Rest);
-            rest.baseUrl = 'product-imeis';
+            rest.baseUrl = 'produto-imei';
 
             angular.extend(rest, {
                 /**

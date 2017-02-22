@@ -5,6 +5,7 @@ use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
 use Core\Models\Produto\ProductStock;
 use Core\Models\Produto\ProductImei;
+use Core\Transformers\ProductStockTransformer;
 
 /**
  * Class ProductStockController
@@ -73,6 +74,31 @@ class ProductStockController extends Controller
                 ->get();
 
             return $this->listResponse($productStocks);
+        } catch (\Exception $exception) {
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Returns a list of ProductStock filtered by slug
+     *
+     * @param  int $slug
+     * @return Response
+     */
+    public function listBySlug($slug)
+    {
+        try {
+            $productStocks = (self::MODEL)
+                ::with(['product'])
+                ->join('produtos', 'produtos.sku', 'product_stocks.product_sku')
+                ->where('stock_slug', '=', $slug)
+                ->orderBy('quantity', 'DESC');
+
+            $productStocks = $this->handleRequest($productStocks);
+
+            return $this->listResponse(ProductStockTransformer::listBySlug($productStocks));
         } catch (\Exception $exception) {
             return $this->clientErrorResponse([
                 'exception' => $exception->getMessage()

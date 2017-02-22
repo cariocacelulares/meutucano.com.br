@@ -7,9 +7,21 @@
 
         function ProductStockModel(Rest, Restangular) {
             var rest = angular.copy(Rest);
-            rest.baseUrl = 'product-stocks';
+            rest.baseUrl = 'produto-estoque';
 
             angular.extend(rest, {
+                /**
+                 * Lista os estoques associados ao slug
+                 *
+                 * @param  {int} slug
+                 * @return {Object}
+                 */
+                listBySlug: function(slug, params) {
+                    params = this.parseParams(params);
+
+                    return Restangular.all(rest.baseUrl + '/slug/').customGET(slug, params || {});
+                },
+
                 /**
                  * Lista os estoques associados ao sku
                  *

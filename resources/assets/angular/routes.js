@@ -456,6 +456,18 @@
                     }
                 })
 
+                .state('app.estoque.index', {
+                    url: '/list',
+                    templateUrl: 'views/estoque/list.html',
+                    controller: 'EstoqueListController as EstoqueList'
+                })
+
+                .state('app.estoque.form', {
+                    url: '/form/{slug}',
+                    templateUrl: 'views/estoque/form.html',
+                    controller: 'EstoqueFormController as EstoqueForm'
+                })
+
                 .state('app.estoque.retirada', {
                     url: '/retiradas',
                     templateUrl: 'views/layouts/default.html',

@@ -147,29 +147,30 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     /**
      * Stock
      */
-    Route::group(['prefix' => 'stocks', 'namespace' => 'Stock'], function () {
+    Route::group(['prefix' => 'estoque', 'namespace' => 'Stock'], function () {
         Route::get('list', 'StockController@tableList');
     });
-    Route::resource('stocks', 'Stock\StockController');
+    Route::resource('estoque', 'Stock\StockController');
 
     /**
      * Product stock
      */
-    Route::group(['prefix' => 'product-stocks', 'namespace' => 'Produto'], function () {
+    Route::group(['prefix' => 'produto-estoque', 'namespace' => 'Produto'], function () {
         Route::get('list/{sku}', 'ProductStockController@listBySku');
+        Route::get('slug/{slug}', 'ProductStockController@listBySlug');
         Route::post('entry', 'ProductStockController@entry');
         Route::post('refresh', 'ProductStockController@refresh');
     });
-    Route::resource('product-stocks', 'Produto\ProductStockController');
+    Route::resource('produto-estoque', 'Produto\ProductStockController');
 
     /**
      * Product imei
      */
-    Route::group(['prefix' => 'product-imeis', 'namespace' => 'Produto'], function () {
+    Route::group(['prefix' => 'produto-imei', 'namespace' => 'Produto'], function () {
         Route::get('list/{sku}', 'ProductImeiController@listBySku');
         Route::post('parse', 'ProductImeiController@parseImeis');
     });
-    Route::resource('product-imeis', 'Produto\ProductImeiController');
+    Route::resource('produto-imei', 'Produto\ProductImeiController');
 
     /**
      * Stock removal

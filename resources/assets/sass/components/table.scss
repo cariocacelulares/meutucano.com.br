@@ -12,6 +12,18 @@ tr.warn {
     border: 1px solid $color-master-lighter;
     border-right: 0;
 
+    &.table-no-button {
+        tbody td:last-child {
+            border-left: 1px solid $color-master-lighter !important;
+        }
+
+        thead tr th:first-child,
+        thead tr th:last-child {
+            padding-left: 8px !important;
+            padding-right: 8px !important;
+        }
+    }
+
     &.bordered {
         border-right: 1px solid $color-master-lighter;
 

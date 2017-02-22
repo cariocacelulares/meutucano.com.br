@@ -91,7 +91,7 @@
          * @return {void}
          */
         vm.destroy = function() {
-            Cliente.delete(vm.cliente.sku).then(function() {
+            Cliente.delete(vm.cliente.id).then(function() {
                 toaster.pop('success', 'Sucesso!', 'Cliente excluido com sucesso!');
                 $state.go('app.clientes.index');
             });

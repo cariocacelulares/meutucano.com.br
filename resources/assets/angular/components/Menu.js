@@ -104,6 +104,11 @@
                         roles: ['admin', 'gestor'],
                         sub: [
                             {
+                                title: 'Estoques',
+                                icon: 'fa-archive',
+                                sref: $state.href('app.estoque.index')
+                            },
+                            {
                                 title: 'Retirada',
                                 icon: 'fa-cart-arrow-down',
                                 sref: $state.href('app.estoque.retirada.index')

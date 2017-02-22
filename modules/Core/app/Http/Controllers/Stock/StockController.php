@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
 use Core\Models\Stock;
+use Core\Http\Requests\Stock\StockRequest as Request;
 
 /**
  * Class StockController
@@ -35,7 +36,7 @@ class StockController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function store()
+    public function store(Request $request)
     {
         try {
             $input = Input::all();

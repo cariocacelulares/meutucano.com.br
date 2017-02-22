@@ -1,0 +1,34 @@
+<div id="page-header" class="row">
+    <page-title icon="fa fa-archive" title="Estoques" description="Controla todos os estoques da empresa."></page-title>
+    <div class="col-md-6 button-bar">
+        <a ui-sref="app.estoque.form" class="btn-success">
+            <i class="fa-plus">&nbsp;</i> Adicionar
+        </a>
+    </div>
+</div>
+<table table-list="EstoqueList">
+    <thead>
+        <tr>
+            <th class="text-center">Título</th>
+            <th class="text-center" width="200">Incluso</th>
+            <th class="text-center" width="200">Prioridade</th>
+            <th width="75"></th>
+        </tr>
+        <tr class="table-filter" static-include="views/estoque/list_filter.html"></tr>
+    </thead>
+    <tbody ng-if="EstoqueList.tableData.data && !EstoqueList.loading">
+        <tr ng-repeat="estoque in EstoqueList.tableData.data">
+            <td class="text-center">
+                {{ estoque.title }}<br/>
+                <small>{{ estoque.slug }}</small>
+            </td>
+            <td class="text-center">{{ estoque.include ? 'Sim' : 'Não' }}</td>
+            <td class="text-center">{{ estoque.priority }}</td>
+            <td class="text-center">
+                <a class="btn-info" ui-sref="app.estoque.form({slug: estoque.slug})">
+                    <i class="fa-pencil"></i>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
