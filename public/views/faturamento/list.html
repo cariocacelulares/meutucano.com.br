@@ -68,17 +68,17 @@
             </td>
             <td class="text-center">
                 <p ng-if="pedido.desconto" class="m-b-0">Desconto: <strong>{{ pedido.desconto }}%</strong></p>
-                <span ng-repeat="produto in pedido.produtos">
-                    <small ng-if="!pedido.desconto">
+                <p ng-repeat="produto in pedido.produtos" class="m-b-0">
+                    <span ng-if="!pedido.desconto">
                         <strong tooltips tooltip-template="{{ produto.produto.titulo }}">{{ produto.produto_sku }}</strong>
-                        <small>: {{ produto.valor | currency }}</small>
-                    </small>
-                    <small ng-if="pedido.desconto">
+                        <span>: {{ produto.valor | currency }}</span>
+                    </span>
+                    <span ng-if="pedido.desconto">
                         <strong tooltips tooltip-template="{{ produto.produto.titulo }}">{{ produto.produto_sku }}</strong>
-                        <small tooltips tooltip-template="Desconto: {{ (produto.valor - (produto.valor - ((produto.valor * pedido.desconto) / 100))) | currency }}">: {{ produto.valor | currency }}</small>
-                    </small>
+                        <span tooltips tooltip-template="Desconto: {{ (produto.valor - (produto.valor - ((produto.valor * pedido.desconto) / 100))) | currency }}">: {{ produto.valor | currency }}</span>
+                    </span>
                     <span ng-repeat="inspecao in produto.inspecoes" ng-class="{ 'label-success': inspecao.revisado_at, 'm-r-10': !$last }" class="label">{{ inspecao.id }}</span>
-                </span><br>
+                </p>
             </td>
             <td class="text-center">{{ pedido.estimated_delivery }}</td>
             <td class="text-center">{{ pedido.created_at }}</td>
