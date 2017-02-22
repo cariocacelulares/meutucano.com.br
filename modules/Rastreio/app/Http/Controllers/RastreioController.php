@@ -345,10 +345,30 @@ class RastreioController extends Controller
             $servicoPostagem = 41106;
         } elseif ($tipoRastreio == 'D') {
             $servicoPostagem = 40010;
+        } elseif ($tipoRastreio == 'O') {
+            $servicoPostagem = 81019;
+        }
+
+        if (!$servicoPostagem) {
+            if (!isset($rastreio)) {
+                $rastreio = Rastreio::where('rastreio', '=', $codigoRastreio)->first();
+
+                if (!$rastreio) {
+                    return null;
+                }
+            }
+
+            if (strtolower($rastreio->pedido->frete_metodo) == 'sedex') {
+                $servicoPostagem = 40010;
+            } else {
+                $servicoPostagem = 41106;
+            }
         }
 
         $correiosUrl = sprintf(
-            "http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx?nCdEmpresa=&sDsSenha=&sCepOrigem=%s&sCepDestino=%s&nVlPeso=1&nCdFormato=1&nVlComprimento=16&nVlAltura=10&nVlLargura=12&sCdMaoPropria=n&nVlValorDeclarado=100&sCdAvisoRecebimento=n&nCdServico=%s&nVlDiametro=0&StrRetorno=xml",
+            "http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx?nCdEmpresa=%s&sDsSenha=%s&sCepOrigem=%s&sCepDestino=%s&nVlPeso=1&nCdFormato=1&nVlComprimento=16&nVlAltura=10&nVlLargura=12&sCdMaoPropria=n&nVlValorDeclarado=100&sCdAvisoRecebimento=n&nCdServico=%s&nVlDiametro=0&StrRetorno=xml",
+            Config::get('rastreio.correios.accessData.codAdministrativo'),
+            Config::get('rastreio.correios.accessData.senha'),
             Config::get('core.cep'),
             $cep,
             $servicoPostagem

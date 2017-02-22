@@ -153,12 +153,6 @@ class UploadController extends Controller
                 }
             }
 
-            // Cliente
-            $cliente = $this->importCliente();
-
-            // Endereço
-            $clienteEndereco = $this->importClienteEndereco($cliente);
-
             /**
              * Produtos
              */
@@ -200,7 +194,7 @@ class UploadController extends Controller
                 $pedido = $return->nota->pedido;
             } else {
                 // Pedido
-                $pedido = $this->importPedido($chave, $cliente, $clienteEndereco, $operacao, $tipoOperacao);
+                $pedido = $this->importPedido($chave, $operacao, $tipoOperacao);
                 $return = $this->importVenda($chave, $pedido, $usuario_id, $dataNota, $notaArquivo, $produtos, $datetimeNota);
             }
 
@@ -253,9 +247,10 @@ class UploadController extends Controller
     /**
      * Importa os dados do cliente
      *
+     * @param  Pedido $pedido
      * @return Cliente
      */
-    private function importCliente()
+    private function importCliente($pedido)
     {
         if ($this->nfe->dest->CNPJ) {
             $tipo   = 1;
@@ -265,6 +260,12 @@ class UploadController extends Controller
             $tipo   = 0;
             $taxvat = $this->nfe->dest->CPF;
             $ie     = null;
+        }
+
+        $taxvat = (string) $taxvat;
+
+        if (!strstr($taxvat, $pedido->cliente->taxvat)) {
+            throw new \Exception('O documento do cliente na nota não bate com o cadastrado!', 7);
         }
 
         $cliente = Cliente::firstOrCreate(['taxvat' => $taxvat]);
@@ -323,13 +324,11 @@ class UploadController extends Controller
      * Importa os dados do pedido
      *
      * @param  string $chave               chave da nota
-     * @param  Cliente $cliente
-     * @param  ClienteEndereco $clienteEndereco
      * @param  int $operacao               cfop da operação
      * @param  string $tipoOperacao    venda|devolucao|estorno
      * @return Pedido|boolean
      */
-    private function importPedido($chave, $cliente, $clienteEndereco, $operacao, $tipoOperacao)
+    private function importPedido($chave, $operacao, $tipoOperacao)
     {
         $pedido        = null;
         $idMarketplace = null;
@@ -365,6 +364,12 @@ class UploadController extends Controller
         if (!$pedido) {
             throw new \Exception('O pedido não existe no tucano!', 7);
         }
+
+        // Cliente
+        $cliente = $this->importCliente($pedido);
+
+        // Endereço
+        $clienteEndereco = $this->importClienteEndereco($cliente);
 
         if (!in_array($tipoOperacao, ['devolucao', 'estorno'])) {
             if ($idMarketplace) {
