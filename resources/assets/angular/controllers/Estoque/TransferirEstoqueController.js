@@ -51,5 +51,9 @@
                 }
             );
         };
+
+        /**
+         * Gerenciamento dos inputs de imei
+         */
     }
 })();

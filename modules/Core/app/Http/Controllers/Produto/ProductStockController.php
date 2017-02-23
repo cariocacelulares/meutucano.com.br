@@ -270,6 +270,14 @@ class ProductStockController extends Controller
         return $this->listResponse($options);
     }
 
+    /**
+     * Transfer $qty of products $from $to
+     *
+     * @param  ProductStock $from
+     * @param  ProductStock $to
+     * @param  int          $qty
+     * @return boolean|Response
+     */
     private function transferQty(ProductStock $from, ProductStock $to, $qty)
     {
         if (!$qty) {
@@ -317,15 +325,30 @@ class ProductStockController extends Controller
         return false;
     }
 
-    private function transferImeis(ProductStock $from, ProductStock $to, $imeis)
+    /**
+     * Transfer $imeis of products $from $to
+     *
+     * @param  ProductStock $from
+     * @param  ProductStock $to
+     * @param  array        $imeis
+     * @return boolean|Response
+     */
+    private function transferImeis(ProductStock $from, ProductStock $to, array $imeis)
     {
         if (!$imeis || empty($imeis)) {
             return $this->validationFailResponse([
                 'Nenhum serial foi informado ou são inválidos.'
             ]);
         }
+
+        dd($imeis);
     }
 
+    /**
+     * Verify if transfer is enabled and do it
+     *
+     * @return Response
+     */
     public function transfer()
     {
         $from  = Input::get('from');
