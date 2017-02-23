@@ -4,27 +4,27 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9cca816157afa5119b117679672e469c",
-    "content-hash": "4e33fc78f1ba00e773ae41ca63d40933",
+    "hash": "b681616d9b5398267f0ebddeb8f66fab",
+    "content-hash": "18962d1bda94f2177ed6ef9e64a5cadf",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.22.7",
+            "version": "3.18.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "eea83aaac2b6c86f72a5c85c54d1839b70d4fd21"
+                "reference": "a2791b6f14b7aa6eeb4fb9f3f779cc291ab455db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/eea83aaac2b6c86f72a5c85c54d1839b70d4fd21",
-                "reference": "eea83aaac2b6c86f72a5c85c54d1839b70d4fd21",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a2791b6f14b7aa6eeb4fb9f3f779cc291ab455db",
+                "reference": "a2791b6f14b7aa6eeb4fb9f3f779cc291ab455db",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/guzzle": "^5.3.1|^6.2.1",
+                "guzzlehttp/guzzle": "~5.3|~6.0.1|~6.1",
                 "guzzlehttp/promises": "~1.0",
-                "guzzlehttp/psr7": "~1.3.1",
+                "guzzlehttp/psr7": "~1.0",
                 "mtdowling/jmespath.php": "~2.2",
                 "php": ">=5.5"
             },
@@ -85,20 +85,20 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2017-02-17 20:09:40"
+            "time": "2016-06-30 19:49:43"
         },
         {
             "name": "barryvdh/laravel-ide-helper",
-            "version": "v2.3.1",
+            "version": "v2.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-ide-helper.git",
-                "reference": "25c8de637ddf79567d721c1856616be01db7b960"
+                "reference": "e82de98cef0d6597b1b686be0b5813a3a4bb53c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/25c8de637ddf79567d721c1856616be01db7b960",
-                "reference": "25c8de637ddf79567d721c1856616be01db7b960",
+                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/e82de98cef0d6597b1b686be0b5813a3a4bb53c5",
+                "reference": "e82de98cef0d6597b1b686be0b5813a3a4bb53c5",
                 "shasum": ""
             },
             "require": {
@@ -151,7 +151,7 @@
                 "phpstorm",
                 "sublime"
             ],
-            "time": "2017-02-20 12:54:53"
+            "time": "2017-02-22 12:27:33"
         },
         {
             "name": "barryvdh/reflection-docblock",
@@ -603,16 +603,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.3.1",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "5c6447c9df362e8f8093bda8f5d8873fe5c7f65b"
+                "reference": "04a6d1a00ea5da0727ee94309a9f0d3dbaecb569"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/5c6447c9df362e8f8093bda8f5d8873fe5c7f65b",
-                "reference": "5c6447c9df362e8f8093bda8f5d8873fe5c7f65b",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/04a6d1a00ea5da0727ee94309a9f0d3dbaecb569",
+                "reference": "04a6d1a00ea5da0727ee94309a9f0d3dbaecb569",
                 "shasum": ""
             },
             "require": {
@@ -648,16 +648,23 @@
                     "name": "Michael Dowling",
                     "email": "mtdowling@gmail.com",
                     "homepage": "https://github.com/mtdowling"
+                },
+                {
+                    "name": "Tobias Schultze",
+                    "homepage": "https://github.com/Tobion"
                 }
             ],
-            "description": "PSR-7 message implementation",
+            "description": "PSR-7 message implementation that also provides common utility methods",
             "keywords": [
                 "http",
                 "message",
+                "request",
+                "response",
                 "stream",
-                "uri"
+                "uri",
+                "url"
             ],
-            "time": "2016-06-24 23:00:38"
+            "time": "2017-02-21 01:20:32"
         },
         {
             "name": "intervention/image",
@@ -2469,121 +2476,6 @@
             "time": "2016-11-22 19:21:44"
         },
         {
-            "name": "sentry/sentry",
-            "version": "1.6.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/getsentry/sentry-php.git",
-                "reference": "5bee26136ab3fc166334cd972892bf71bd361558"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/5bee26136ab3fc166334cd972892bf71bd361558",
-                "reference": "5bee26136ab3fc166334cd972892bf71bd361558",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "php": ">=5.2.4"
-            },
-            "conflict": {
-                "raven/raven": "*"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^1.8.0",
-                "monolog/monolog": "*",
-                "phpunit/phpunit": "^4.8 || ^5.0"
-            },
-            "suggest": {
-                "monolog/monolog": "Automatically capture Monolog events as breadcrumbs"
-            },
-            "bin": [
-                "bin/sentry"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.6.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Raven_": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "David Cramer",
-                    "email": "dcramer@gmail.com"
-                }
-            ],
-            "description": "A PHP client for Sentry (http://getsentry.com)",
-            "homepage": "http://getsentry.com",
-            "keywords": [
-                "log",
-                "logging"
-            ],
-            "time": "2017-02-03 07:32:53"
-        },
-        {
-            "name": "sentry/sentry-laravel",
-            "version": "0.4.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/getsentry/sentry-laravel.git",
-                "reference": "34e4f5d800ce8db087272df4e244bdf565fce4e1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/getsentry/sentry-laravel/zipball/34e4f5d800ce8db087272df4e244bdf565fce4e1",
-                "reference": "34e4f5d800ce8db087272df4e244bdf565fce4e1",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/support": "4.*|5.*",
-                "php": ">=5.2.4",
-                "sentry/sentry": ">=1.5.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^1.8.0",
-                "phpunit/phpunit": "^4.6.6"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.4.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Sentry\\SentryLaravel\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "David Cramer",
-                    "email": "dcramer@gmail.com"
-                }
-            ],
-            "description": "Laravel integration for Sentry (http://getsentry.com)",
-            "homepage": "http://getsentry.com",
-            "keywords": [
-                "errors",
-                "laravel",
-                "logging",
-                "sentry"
-            ],
-            "time": "2016-09-30 07:13:57"
-        },
-        {
             "name": "sofa/eloquence",
             "version": "v5.3.2",
             "source": {
@@ -2841,16 +2733,16 @@
         },
         {
             "name": "spatie/laravel-backup",
-            "version": "4.6.5",
+            "version": "4.6.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-backup.git",
-                "reference": "40ba5879a0f7134a3991ad220d2b08c4d75cb1c1"
+                "reference": "e67a7a9459e46fdab6a62fbc5aed36d7b393dfe3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-backup/zipball/40ba5879a0f7134a3991ad220d2b08c4d75cb1c1",
-                "reference": "40ba5879a0f7134a3991ad220d2b08c4d75cb1c1",
+                "url": "https://api.github.com/repos/spatie/laravel-backup/zipball/e67a7a9459e46fdab6a62fbc5aed36d7b393dfe3",
+                "reference": "e67a7a9459e46fdab6a62fbc5aed36d7b393dfe3",
                 "shasum": ""
             },
             "require": {
@@ -2903,7 +2795,7 @@
                 "laravel-backup",
                 "spatie"
             ],
-            "time": "2017-02-19 12:54:38"
+            "time": "2017-02-22 14:34:37"
         },
         {
             "name": "spatie/laravel-failed-job-monitor",
@@ -5559,23 +5451,23 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "4.0.5",
+            "version": "4.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "c19cfc7cbb0e9338d8c469c7eedecc2a428b0971"
+                "reference": "ca060f645beeddebedb1885c97bf163e93264c35"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/c19cfc7cbb0e9338d8c469c7eedecc2a428b0971",
-                "reference": "c19cfc7cbb0e9338d8c469c7eedecc2a428b0971",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/ca060f645beeddebedb1885c97bf163e93264c35",
+                "reference": "ca060f645beeddebedb1885c97bf163e93264c35",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.6 || ^7.0",
                 "phpunit/php-file-iterator": "~1.3",
                 "phpunit/php-text-template": "~1.2",
-                "phpunit/php-token-stream": "^1.4.2",
+                "phpunit/php-token-stream": "^1.4.2 || ^2.0",
                 "sebastian/code-unit-reverse-lookup": "~1.0",
                 "sebastian/environment": "^1.3.2 || ^2.0",
                 "sebastian/version": "~1.0|~2.0"
@@ -5618,7 +5510,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-01-20 15:06:43"
+            "time": "2017-02-23 07:38:02"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -5754,16 +5646,16 @@
         },
         {
             "name": "phpunit/php-token-stream",
-            "version": "1.4.9",
+            "version": "1.4.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-token-stream.git",
-                "reference": "3b402f65a4cc90abf6e1104e388b896ce209631b"
+                "reference": "284fb0679dd25fb5ffb56dad92c72860c0a22f1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/3b402f65a4cc90abf6e1104e388b896ce209631b",
-                "reference": "3b402f65a4cc90abf6e1104e388b896ce209631b",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/284fb0679dd25fb5ffb56dad92c72860c0a22f1b",
+                "reference": "284fb0679dd25fb5ffb56dad92c72860c0a22f1b",
                 "shasum": ""
             },
             "require": {
@@ -5799,7 +5691,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2016-11-15 14:06:22"
+            "time": "2017-02-23 06:14:45"
         },
         {
             "name": "phpunit/phpunit",

@@ -50,6 +50,34 @@
                  */
                 refresh: function(productStocks) {
                     return Restangular.one(rest.baseUrl + '/refresh').customPOST(productStocks);
+                },
+
+                /**
+                 * Returns a list of transfer options to the giver product stock
+                 *
+                 * @param  {int} id
+                 * @return {Object}
+                 */
+                transferOptions: function(id) {
+                    return Restangular.one(rest.baseUrl + '/transferencia', id).customGET();
+                },
+
+                /**
+                 * Transfer stock values from to
+                 *
+                 * @param  {int}   from   id of productStock
+                 * @param  {int}   to     id of productStock
+                 * @param  {int}   qty    quantity to transfer
+                 * @param  {array} values imeis to transfer
+                 * @return {Object}
+                 */
+                transfer: function(from, to, qty, imeis) {
+                    return Restangular.one(rest.baseUrl + '/transferencia').customPOST({
+                        from : from,
+                        to   : to,
+                        qty  : qty,
+                        imeis: imeis
+                    });
                 }
             });
 

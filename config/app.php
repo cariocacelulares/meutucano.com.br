@@ -51,7 +51,6 @@ return [
         Spatie\Browsershot\BrowsershotServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Vinelab\Cdn\CdnServiceProvider::class,
-        Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
         Jenssegers\Mongodb\MongodbServiceProvider::class,
         Nwidart\Modules\LaravelModulesServiceProvider::class,
         Spatie\Backup\BackupServiceProvider::class,
@@ -101,8 +100,6 @@ return [
         'Entrust'      => Zizaco\Entrust\EntrustFacade::class,
 
         'Excel'        => Maatwebsite\Excel\Facades\Excel::class,
-
-        'Sentry'       => Sentry\SentryLaravel\SentryFacade::class,
 
         'Moloquent'    => Jenssegers\Mongodb\Eloquent\Model::class,
 

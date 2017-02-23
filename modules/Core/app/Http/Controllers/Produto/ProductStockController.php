@@ -1,5 +1,7 @@
 <?php namespace Core\Http\Controllers\Produto;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
@@ -226,5 +228,112 @@ class ProductStockController extends Controller
                 'exception' => $exception->getMessage()
             ]);
         }
+    }
+
+    /**
+     * Returns a list of product stocks available to transfer from the given stock
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function transferOptions($id)
+    {
+        $productStock = ProductStock::findOrFail($id);
+
+        $options = ProductStock
+            ::with('stock')
+            ->where('serial_enabled', '=', $productStock->serial_enabled)
+            ->where('product_sku', '=', $productStock->product_sku)
+            ->where('id', '!=', $productStock->id)
+            ->get();
+
+        return $this->listResponse($options);
+    }
+
+    private function transferQty(ProductStock $from, ProductStock $to, $qty)
+    {
+        if (!$qty) {
+            return $this->validationFailResponse([
+                'Nenhuma quantidade foi informada.'
+            ]);
+        }
+
+        if ($qty > $from->quantity) {
+            return $this->validationFailResponse([
+                'A quantidade que você está tentando transferir é maior que a que o estoque de origem possui.'
+            ]);
+        }
+
+        DB::beginTransaction();
+        Log::debug('Transaction - begin');
+
+        $from->quantity = $from->quantity - $qty;
+        $to->quantity   = $to->quantity + $qty;
+
+        if ($from->save() && $to->save()) {
+            DB::commit();
+            Log::debug('Transaction - commit');
+            Log::info('Transferencia de estoque realizada com sucesso', [
+                'from'     => $from->id,
+                'to'       => $to->id,
+                'from_qty' => $from->quantity,
+                'to_qty'   => $to->quantity,
+                'qty'      => $qty,
+            ]);
+
+            return true;
+        } else {
+            DB::rollBack();
+            Log::debug('Transaction - rollback');
+            Log::warning('Não foi possível realizar a transferência de estoque!', [
+                'from'     => $from->id,
+                'to'       => $to->id,
+                'from_qty' => $from->quantity,
+                'to_qty'   => $to->quantity,
+                'qty'      => $qty,
+            ]);
+        }
+
+        return false;
+    }
+
+    private function transferImeis(ProductStock $from, ProductStock $to, $imeis)
+    {
+        if (!$imeis || empty($imeis)) {
+            return $this->validationFailResponse([
+                'Nenhum serial foi informado ou são inválidos.'
+            ]);
+        }
+    }
+
+    public function transfer()
+    {
+        $from  = Input::get('from');
+        $to    = Input::get('to');
+        $qty   = Input::get('qty');
+
+        $imeis = [];
+        foreach ((Input::get('imeis') ?: []) as $imei) {
+            if (trim($imei)) {
+                $imeis[] = trim($imei);
+            }
+        }
+
+        $from = ProductStock::findOrFail($from);
+        $to   = ProductStock::findOrFail($to);
+
+        if ($from->serial_enabled !== $to->serial_enabled) {
+            return $this->validationFailResponse([
+                'Os estoques de destino e origem não possuem a mesma opção de controle serial!'
+            ]);
+        }
+
+        if ($from->serial_enabled) {
+            $return = $this->transferImeis($from, $to, $qty);
+        } else {
+            $return = $this->transferQty($from, $to, $qty);
+        }
+
+        return $this->showResponse($return);
     }
 }

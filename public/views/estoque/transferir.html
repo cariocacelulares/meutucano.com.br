@@ -1,11 +1,19 @@
 <h1>Transferir estoque</h1>
 <validation errors="TransferirEstoque.validationErrors"></validation>
 <form ng-submit="TransferirEstoque.save()" novalidate="novalidate" class="form-default">
-    <div class="row" ng-if="TransferirEstoque.productStock.serial_enabled">
+    <div class="row">
         <div class="col-md-12 form-group">
-            <label for="imeis">Imeis</label>
-            <textarea ng-model="TransferirEstoque.entrada.imeis" id="imeis" placeholder="Um IMEI por linha">
-            </textarea>
+            <label for="productStock">Estoque</label>
+            <select ng-model="TransferirEstoque.destination" id="productStock" required>
+                <option value="" disabled selected hidden>Selecione o estoque de destino</option>
+                <option ng-repeat="productStock in TransferirEstoque.productStocks" ng-value="productStock.id">{{ productStock.stock.title }}</option>
+            </select>
+        </div>
+    </div>
+    <div ng-if="!TransferirEstoque.productStock.serial_enabled" class="row">
+        <div class="col-md-12 form-group">
+            <label for="qty">Quantidade</label>
+            <input ng-model="TransferirEstoque.qty" type="number" min="1" ng-minlength="0" max="{{ TransferirEstoque.productStock.quantity }}" ng-maxlength="TransferirEstoque.productStock.quantity">
         </div>
     </div>
     <div class="row">
