@@ -160,6 +160,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::get('slug/{slug}', 'ProductStockController@listBySlug');
         Route::post('entry', 'ProductStockController@entry');
         Route::post('refresh', 'ProductStockController@refresh');
+        Route::get('adicionar/{sku}', 'ProductStockController@addOptions');
         Route::get('transferencia/{id}', 'ProductStockController@transferOptions');
         Route::post('transferencia', 'ProductStockController@transfer');
     });

@@ -33,6 +33,12 @@
         vm.validationErrors = [];
         vm.productStocks    = [];
 
+        vm.loadProductStocks = function() {
+            ProductStock.listBySku(vm.produto.sku).then(function (response) {
+                vm.productStocks = response;
+            });
+        };
+
         vm.load = function() {
             vm.loading = true;
 
@@ -60,9 +66,7 @@
 
                 vm.loading = false;
 
-                ProductStock.listBySku(vm.produto.sku).then(function (response) {
-                    vm.productStocks = response;
-                });
+                vm.loadProductStocks();
             });
         };
 
@@ -163,14 +167,14 @@
 
                     toaster.pop('success', 'Sucesso!', 'Um novo SKU foi gerado para este produto!');
 
-                    for (var i in vm.produto.atributos) {
+                    /*for (var i in vm.produto.atributos) {
                         if (vm.produto.atributos[i] && typeof vm.produto.atributos[i] == 'object' && vm.produto.atributos[i].id) {
                             if (!vm.produto.atributos[i].pivot)
                                 vm.produto.atributos[i].pivot = {};
 
                             vm.produto.atributos[i].pivot.produto_sku = product.sku;
                         }
-                    }
+                    }*/
                 });
             }
 
@@ -267,7 +271,21 @@
                     productStock: productStock
                 }
             }).closePromise.then(function(data) {
-                vm.load();
+                vm.loadProductStocks();
+            });
+        };
+
+        vm.addProductStock = function() {
+            ngDialog.open({
+                template       : 'views/estoque/adicionar-estoque.html',
+                controller     : 'AdicionarEstoqueController',
+                controllerAs   : 'AdicionarEstoque',
+                closeByDocument: false,
+                data: {
+                    sku: vm.produto.sku
+                }
+            }).closePromise.then(function(data) {
+                vm.loadProductStocks();
             });
         };
     }

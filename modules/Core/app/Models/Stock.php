@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
+use Core\Models\Produto\ProductStock;
 
 /**
  * Stock model
@@ -52,8 +53,8 @@ class Stock extends Model
      * ProductStock
      * @return ProductStock
      */
-    public function productStoks()
+    public function productStocks()
     {
-        return $this->hasMany(ProductStock::class);
+        return $this->hasMany(ProductStock::class, 'stock_slug', 'slug');
     }
 }

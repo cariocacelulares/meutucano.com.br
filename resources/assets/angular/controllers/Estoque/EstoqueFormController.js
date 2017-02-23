@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('EstoqueFormController', EstoqueFormController);
 
-    function EstoqueFormController($stateParams, toaster, ValidationErrors, Stock) {
+    function EstoqueFormController($state, $stateParams, toaster, ValidationErrors, Stock) {
         var vm = this;
         vm.validationErrors = [];
 

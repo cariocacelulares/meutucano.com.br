@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
+use Core\Models\Stock;
+use Core\Models\Produto;
 use Core\Models\Produto\ProductStock;
 use Core\Models\Produto\ProductImei;
 use Core\Transformers\ProductStockTransformer;
@@ -228,6 +230,24 @@ class ProductStockController extends Controller
                 'exception' => $exception->getMessage()
             ]);
         }
+    }
+
+    /**
+     * Returns a list of product stocks available to add to given product
+     *
+     * @param  int $sku
+     * @return Response
+     */
+    public function addOptions($sku)
+    {
+        $product = Produto::findOrFail($sku);
+
+        $options = Stock
+            ::whereDoesntHave('productStocks', function($query) use ($sku) {
+                $query->where('product_sku', '=', $sku);
+            })->get();
+
+        return $this->listResponse($options);
     }
 
     /**

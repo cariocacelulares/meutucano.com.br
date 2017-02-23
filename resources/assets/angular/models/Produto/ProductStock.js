@@ -53,7 +53,17 @@
                 },
 
                 /**
-                 * Returns a list of transfer options to the giver product stock
+                 * Returns a list of product stock options to the given product
+                 *
+                 * @param  {int} sku
+                 * @return {Object}
+                 */
+                addOptions: function(sku) {
+                    return Restangular.one(rest.baseUrl + '/adicionar', sku).customGET();
+                },
+
+                /**
+                 * Returns a list of transfer options to the given product stock
                  *
                  * @param  {int} id
                  * @return {Object}

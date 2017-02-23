@@ -1,7 +1,14 @@
 <h1>Transferir estoque</h1>
 <validation errors="TransferirEstoque.validationErrors"></validation>
 <form ng-submit="TransferirEstoque.save()" novalidate="novalidate" class="form-default">
-    <div class="row">
+    <div ng-if="!TransferirEstoque.loading && !TransferirEstoque.productStocks.length" class="row">
+        <div class="col-md-12">
+            <div class="alert alert-warning m-b-20">
+                <i class="fa fa-exclamation-triangle"></i>&nbsp; Nenhuma opção de transferência para este estoque.
+            </div>
+        </div>
+    </div>
+    <div ng-if="!TransferirEstoque.loading && TransferirEstoque.productStocks.length" class="row">
         <div class="col-md-12 form-group">
             <label for="productStock">Estoque</label>
             <select ng-model="TransferirEstoque.destination" id="productStock" required>
@@ -19,7 +26,7 @@
     <div class="row">
         <div class="pull-right">
             <button type="button" ng-click="closeThisDialog(false)" class="btn btn-default m-r-10">Cancelar</button>
-            <button busy="Salvando..." type="submit" class="btn btn-success">Transferir</button>
+            <button ng-if="!TransferirEstoque.loading && TransferirEstoque.productStocks.length" busy="Salvando..." type="submit" class="btn btn-success">Transferir</button>
         </div>
     </div>
 </form>
