@@ -261,6 +261,11 @@
             });
         };
 
+        /**
+         * Open transfer modal
+         *
+         * @param  {object} productStock
+         */
         vm.transfer = function(productStock) {
             ngDialog.open({
                 template       : 'views/estoque/transferir.html',
@@ -275,6 +280,9 @@
             });
         };
 
+        /**
+         * Open add product stock modal
+         */
         vm.addProductStock = function() {
             ngDialog.open({
                 template       : 'views/estoque/adicionar-estoque.html',
