@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
+use Core\Models\Pedido;
 use Core\Models\Stock;
+use Core\Models\Stock\RemovalProduct;
 use Core\Models\Produto;
 use Core\Models\Produto\ProductStock;
 use Core\Models\Produto\ProductImei;
@@ -295,22 +297,14 @@ class ProductStockController extends Controller
         DB::beginTransaction();
         Log::debug('Transaction - begin');
 
-        $from->quantity = $from->quantity - $qty;
-        $to->quantity   = $to->quantity + $qty;
+        try {
+            $from->quantity = $from->quantity - $qty;
+            $to->quantity   = $to->quantity + $qty;
 
-        if ($from->save() && $to->save()) {
-            DB::commit();
-            Log::debug('Transaction - commit');
-            Log::info('Transferencia de estoque realizada com sucesso', [
-                'from'     => $from->id,
-                'to'       => $to->id,
-                'from_qty' => $from->quantity,
-                'to_qty'   => $to->quantity,
-                'qty'      => $qty,
-            ]);
-
-            return true;
-        } else {
+            if (!$from->save() || !$to->save()) {
+                throw new \Exception('Erro ao salvar recursos', 1);
+            }
+        } catch (\Exception $exception) {
             DB::rollBack();
             Log::debug('Transaction - rollback');
             Log::warning('Não foi possível realizar a transferência de estoque!', [
@@ -320,9 +314,21 @@ class ProductStockController extends Controller
                 'to_qty'   => $to->quantity,
                 'qty'      => $qty,
             ]);
+
+            return false;
         }
 
-        return false;
+        DB::commit();
+        Log::debug('Transaction - commit');
+        Log::info('Transferencia de estoque realizada com sucesso', [
+            'from'     => $from->id,
+            'to'       => $to->id,
+            'from_qty' => $from->quantity,
+            'to_qty'   => $to->quantity,
+            'qty'      => $qty,
+        ]);
+
+        return true;
     }
 
     /**
@@ -341,7 +347,58 @@ class ProductStockController extends Controller
             ]);
         }
 
-        dd($imeis);
+        DB::beginTransaction();
+        Log::debug('Transaction - begin');
+
+        try {
+            foreach ($imeis as $imei) {
+                $error = false;
+
+                $productImei = ProductImei
+                    ::where('imei', '=', $imei)
+                    ->first();
+
+                if (!$productImei) {
+                    $error = 'Os estoques de destino e origem não possuem a mesma opção de controle serial!';
+                }
+
+                if ('product_stock_id' != $from->id) {
+                    $error = 'Os estoques de destino e origem não possuem a mesma opção de controle serial!';
+                }
+
+                $productImei->product_stock_id = $to->id;
+                $from->quantity                = $from->quantity - 1;
+                $to->quantity                  = $to->quantity + 1;
+
+                if (!$productImei->save() || !$from->save() || !$to->save()) {
+                    throw new \Exception('Erro ao salvar recursos', 1);
+                }
+            }
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::debug('Transaction - rollback');
+            Log::warning(logMessage($exception, 'Erro ao tentar realizar uma transferencia de estoque'), [
+                'from'     => $from->id,
+                'to'       => $to->id,
+                'from_qty' => $from->quantity,
+                'to_qty'   => $to->quantity,
+                'imeis'    => $imeis,
+            ]);
+
+            return false;
+        }
+
+        DB::commit();
+        Log::debug('Transaction - commit');
+        Log::info('Transferencia de estoque realizada com sucesso', [
+            'from'     => $from->id,
+            'to'       => $to->id,
+            'from_qty' => $from->quantity,
+            'to_qty'   => $to->quantity,
+            'imeis'    => $imeis,
+        ]);
+
+        return true;
     }
 
     /**
@@ -372,11 +429,87 @@ class ProductStockController extends Controller
         }
 
         if ($from->serial_enabled) {
-            $return = $this->transferImeis($from, $to, $qty);
+            $return = $this->transferImeis($from, $to, $imeis);
         } else {
             $return = $this->transferQty($from, $to, $qty);
         }
 
         return $this->showResponse($return);
+    }
+
+    /**
+     * Verifica se um $imei pode ser transferido de um product stock $id
+     *
+     * @param  int $id
+     * @param  string $imei
+     * @return Response
+     */
+    public function verifyTransfer($id, $imei)
+    {
+        try {
+            $productStock = ProductStock::findOrFail($id);
+
+            $productImei = ProductImei
+                ::where('imei', '=', $imei)
+                ->first();
+
+            if (!$productImei) {
+                return $this->listResponse([
+                    'icon'    => 'ban',
+                    'message' => 'Serial não registrado!',
+                    'ok'      => false,
+                ]);
+            }
+
+            if ($productImei->product_stock_id != $productStock->id) {
+                return $this->listResponse([
+                    'icon'    => 'exclamation',
+                    'message' => 'Serial não pertence ao estoque selecionado!',
+                    'ok'      => false,
+                ]);
+            }
+
+            $removalProduct = RemovalProduct
+                ::where('product_imei_id', '=', $productImei->id)
+                ->whereNotIn('status', [2, 3])
+                ->first();
+
+            if ($removalProduct) {
+                return $this->listResponse([
+                    'icon'    => 'shopping-cart',
+                    'message' => "Serial em aberto na retirada #{$removalProduct->stock_removal_id}",
+                    'ok'      => false,
+                ]);
+            }
+
+            $order = Pedido
+                ::join('pedido_produtos', 'pedido_produtos.pedido_id', 'pedidos.id')
+                ->where('pedido_produtos.product_imei_id', '=', $productImei->id)
+                ->whereIn('pedidos.status', [2, 3])
+                ->orderBy('pedidos.created_at', 'DESC')
+                ->first();
+
+            if ($order) {
+                return $this->listResponse([
+                    'icon'    => 'cart-arrow-down',
+                    'message' => 'Serial já faturado!',
+                    'ok'      => false,
+                ]);
+            }
+
+            return $this->listResponse([
+                'icon'    => 'check',
+                'message' => 'Serial disponível!',
+                'ok'      => true,
+            ]);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Não foi possível verificar o imei!'));
+
+            return $this->listResponse([
+                'icon'    => 'times',
+                'message' => 'Não foi possível verificar o imei!',
+                'ok'      => false,
+            ]);
+        }
     }
 }

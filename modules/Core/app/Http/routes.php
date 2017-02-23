@@ -162,6 +162,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::post('refresh', 'ProductStockController@refresh');
         Route::get('adicionar/{sku}', 'ProductStockController@addOptions');
         Route::get('transferencia/{id}', 'ProductStockController@transferOptions');
+        Route::get('transferencia/verificar/{id}/{imei}', 'ProductStockController@verifyTransfer');
         Route::post('transferencia', 'ProductStockController@transfer');
     });
     Route::resource('produto-estoque', 'Produto\ProductStockController');

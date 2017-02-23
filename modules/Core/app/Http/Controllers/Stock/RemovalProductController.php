@@ -72,7 +72,7 @@ class RemovalProductController extends Controller
 
             $removalProduct = RemovalProduct
                 ::where('product_imei_id', '=', $productImei->id)
-                ->where('status', '!=', 3)
+                ->whereNotIn('status', [2, 3])
                 ->first();
 
             if ($removalProduct) {

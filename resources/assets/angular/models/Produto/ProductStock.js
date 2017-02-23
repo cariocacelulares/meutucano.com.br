@@ -88,6 +88,18 @@
                         qty  : qty,
                         imeis: imeis
                     });
+                },
+
+                /**
+                 * Verify if imei is enable to transfer from given product stock
+                 *
+                 * @param  {int} fromId product stock id
+                 * @param  {string} imei
+                 * @return {Object}
+                 */
+                verifyTransfer: function(fromId, imei) {
+                    return Restangular.one(rest.baseUrl + '/transferencia/verificar/' + fromId + '/' + imei)
+                        .customGET();
                 }
             });
 

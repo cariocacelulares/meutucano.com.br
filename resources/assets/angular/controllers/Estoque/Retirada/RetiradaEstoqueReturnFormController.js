@@ -61,13 +61,13 @@
         };
 
         /**
-         * Add new black imei to the list and focus it
+         * Add new blank imei to the list and focus it
          * If was registered, re-verify
          *
          * @param {void} event
          */
         vm.addImei = function(event, lastIndex) {
-            // if pressed key is enteder
+            // if pressed key is enter
             if ((event.keyCode === 13 || event.key == 'Enter')) {
                 // if imei is not blank
                 if (event.target.value && vm.imeis[lastIndex].imei) {
@@ -89,7 +89,7 @@
         };
 
         /**
-         * Remove imei from de list, when it is the last or first, put it blank
+         * Remove imei from the list, when it is the last or first, put it blank
          *
          * @param  {int} index
          * @return {void}
