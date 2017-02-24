@@ -18,7 +18,7 @@ class ProductImeiController extends Controller
     const MODEL = ProductImei::class;
 
     /**
-     * Returns a list of ProductImei filtered by sku
+     * Returns a list of ProductImei available filtered by sku
      *
      * @param  int $sku
      * @return Response
@@ -38,6 +38,18 @@ class ProductImeiController extends Controller
                     $query->whereNotIn('pedidos.status', [0, 1, 2, 3]);
                     $query->orWhereNull('pedidos.status');
                 })
+                ->where(
+                    \DB::raw('(
+                        SELECT COUNT(*)
+                        FROM pedido_produtos p1
+                            JOIN pedidos o1 ON p1.pedido_id = o1.id
+                        WHERE p1.product_imei_id = product_imeis.id
+                            AND (o1.status IN (0,1,2,3) OR o1.status IS NULL
+                        )
+                    )'),
+                    '=',
+                    0
+                )
                 ->orderBy('product_imeis.created_at', 'DESC')
                 ->get(['product_imeis.*']);
 
