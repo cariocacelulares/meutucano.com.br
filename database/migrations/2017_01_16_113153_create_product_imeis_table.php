@@ -18,6 +18,7 @@ class CreateProductImeisTable extends Migration
             $table->unsignedInteger('product_stock_id');
             $table->string('imei', 40)->unique();
 			$table->timestamps();
+			$table->softDeletes();
 
             $table
                 ->foreign('product_stock_id', 'ProductImeisProductStockId')

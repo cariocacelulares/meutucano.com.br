@@ -490,6 +490,12 @@
                     templateUrl: 'views/estoque/retirada/form.html',
                     controller: 'RetiradaEstoqueFormController as RetiradaEstoqueForm'
                 })
+
+                .state('app.estoque.baixa', {
+                    url: '/baixa',
+                    templateUrl: 'views/estoque/baixa.html',
+                    controller: 'BaixaEstoqueController as BaixaEstoque'
+                })
             ;
         });
 })();

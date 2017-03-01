@@ -1,5 +1,6 @@
 <?php namespace Core\Models\Produto;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Core\Models\Pedido\PedidoProduto;
@@ -10,7 +11,8 @@ use Core\Models\Pedido\PedidoProduto;
  */
 class ProductImei extends Model
 {
-    use RevisionableTrait;
+    use SoftDeletes,
+        RevisionableTrait;
 
     /**
      * @var boolean
