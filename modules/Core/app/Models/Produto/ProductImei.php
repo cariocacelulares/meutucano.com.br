@@ -51,6 +51,6 @@ class ProductImei extends Model
      */
     public function lastOrderProduct()
     {
-        return $this->pedidoProdutos->orderBy('created_at', 'desc')->first();
+        return $this->pedidoProdutos()->orderBy('created_at', 'desc')->first();
     }
 }

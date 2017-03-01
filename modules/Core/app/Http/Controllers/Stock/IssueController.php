@@ -1,5 +1,6 @@
 <?php namespace Core\Http\Controllers\Stock;
 
+use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
 use Core\Models\Produto\ProductImei;
@@ -35,9 +36,11 @@ class IssueController extends Controller
             $productImei = ProductImei::where('imei', '=', $imei)->first();
 
             if ($productImei) {
-                if ($productImei->lastOrderProduct->pedido->status != 5) {
+                $lastOrderProduct = $productImei->lastOrderProduct();
+
+                if ($lastOrderProduct && $lastOrderProduct->pedido->status != 5) {
                     return $this->validationFailResponse([
-                        'O serial pertence a um pedido em aberto ou já enviado';
+                        'O serial pertence a um pedido em aberto ou já enviado'
                     ]);
                 } else {
                     $fields['product_imei_id'] = $productImei->id;

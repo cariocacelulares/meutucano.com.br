@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Event;
 use Core\Events\ProductImeiCreated;
+use Core\Events\ProductImeiDeleted;
 use Core\Models\Produto\ProductImei;
 
 class ProductImeiObserver
