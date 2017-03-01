@@ -200,7 +200,10 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     /**
      * Stock issue
      */
-    Route::post('estoque/baixa', 'Stock\IssueController@store');
+    Route::group(['prefix' => 'estoque/baixa', 'namespace' => 'Stock'], function () {
+        Route::get('list', 'IssueController@tableList');
+    });
+    Route::resource('estoque/baixa', 'Stock\IssueController');
 
     /**
      * Partials

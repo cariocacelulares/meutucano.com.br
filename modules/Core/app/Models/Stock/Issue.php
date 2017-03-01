@@ -45,6 +45,6 @@ class Issue extends Model
      */
     public function productImei()
     {
-        return $this->belongsTo(ProductImei::class);
+        return $this->belongsTo(ProductImei::class)->withTrashed();
     }
 }

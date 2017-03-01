@@ -3,9 +3,9 @@
 
     angular
         .module('MeuTucano')
-        .controller('BaixaEstoqueController', BaixaEstoqueController);
+        .controller('BaixaEstoqueFormController', BaixaEstoqueFormController);
 
-    function BaixaEstoqueController(ValidationErrors, StockIssue) {
+    function BaixaEstoqueFormController($state, toaster, ValidationErrors, StockIssue) {
         var vm = this;
 
         vm.validationErrors = [];
@@ -20,10 +20,7 @@
             StockIssue.save(vm.baixa).then(
                 function() {
                     toaster.pop('success', 'Sucesso!', 'Baixa realizada com sucesso!');
-
-                    vm.baixa = {
-                        reason: 'Outro'
-                    };
+                    $state.go('app.estoque.baixa.index');
                 },
                 function(error) {
                     vm.validationErrors = ValidationErrors.handle(error);

@@ -112,11 +112,11 @@
                                 title: 'Retirada',
                                 icon: 'fa-cart-arrow-down',
                                 sref: $state.href('app.estoque.retirada.index')
-                            }, 
+                            },
                             {
                                 title: 'Baixa',
                                 icon: 'fa-arrow-down',
-                                sref: $state.href('app.estoque.baixa')
+                                sref: $state.href('app.estoque.baixa.index')
                             }
                         ]
                     },

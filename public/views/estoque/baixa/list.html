@@ -1,0 +1,35 @@
+<div id="page-header" class="row">
+    <page-title icon="fa fa-arrow-down" title="Baixas de estoque" description="Lista todas as baixas de estoque."></page-title>
+    <div class="col-md-6 button-bar">
+        <a ui-sref="app.estoque.baixa.form" class="btn-success">
+            <i class="fa-plus">&nbsp;</i> Adicionar
+        </a>
+    </div>
+</div>
+<table table-list="BaixaEstoqueList">
+    <thead>
+        <tr>
+            <th class="text-center">Produto</th>
+            <th class="text-center">Motivo</th>
+            <th class="text-center" width="160">Usuário</th>
+            <th class="text-center" width="160">Data</th>
+            <th width="75"></th>
+        </tr>
+        <tr class="table-filter" static-include="views/estoque/baixa/list_filter.html"></tr>
+    </thead>
+    <tbody ng-if="BaixaEstoqueList.tableData.data && !BaixaEstoqueList.loading">
+        <tr ng-repeat="issue in BaixaEstoqueList.tableData.data">
+            <td class="text-center">
+                <a ui-sref="app.produtos.detalhe({ sku: issue.product_imei.product_stock.product.sku})">{{ issue.product_imei.product_stock.product.sku }}</a>: {{ issue.product_imei.product_stock.product.titulo }}<br/>
+                {{ issue.product_imei.product_stock.stock.title }} - <b>{{ issue.product_imei.imei }}</b>
+            </td>
+            <td class="text-center">
+                {{ issue.reason }}<br/>
+                {{ issue.description }}
+            </td>
+            <td class="text-center">{{ issue.user.name }}</td>
+            <td class="text-center">{{ issue.created_at }}</td>
+            <td class="text-center"></td>
+        </tr>
+    </tbody>
+</table>

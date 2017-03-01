@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Core\Models\Produto\ProductImei;
 use Core\Models\Stock\Issue;
 use Core\Http\Requests\Stock\IssueRequest as Request;
+use Core\Transformers\StockIssueTransformer;
 
 /**
  * Class IssueController
@@ -16,6 +17,28 @@ class IssueController extends Controller
     use RestControllerTrait;
 
     const MODEL = Issue::class;
+
+    /**
+     * Lista para a tabela
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function tableList()
+    {
+        $list = (self::MODEL)
+            ::join('product_imeis', 'product_imeis.id', 'stock_issues.product_imei_id')
+            ->with([
+                'user',
+                'productImei',
+                'productImei.productStock',
+                'productImei.productStock.stock',
+                'productImei.productStock.product',
+            ])
+            ->orderBy('created_at', 'DESC');
+
+        $list = $this->handleRequest($list);
+
+        return $this->listResponse(StockIssueTransformer::list($list));
+    }
 
     /**
      * Cria novo recurso

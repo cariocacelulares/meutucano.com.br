@@ -492,9 +492,20 @@
                 })
 
                 .state('app.estoque.baixa', {
-                    url: '/baixa',
-                    templateUrl: 'views/estoque/baixa.html',
-                    controller: 'BaixaEstoqueController as BaixaEstoque'
+                    url: '/baixas',
+                    templateUrl: 'views/layouts/default.html',
+                })
+
+                .state('app.estoque.baixa.index', {
+                    url: '/list',
+                    templateUrl: 'views/estoque/baixa/list.html',
+                    controller: 'BaixaEstoqueListController as BaixaEstoqueList'
+                })
+
+                .state('app.estoque.baixa.form', {
+                    url: '/form',
+                    templateUrl: 'views/estoque/baixa/form.html',
+                    controller: 'BaixaEstoqueFormController as BaixaEstoqueForm'
                 })
             ;
         });
