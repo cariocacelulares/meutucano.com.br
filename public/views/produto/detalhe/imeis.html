@@ -1,25 +1,25 @@
-<div class="row">
-    <div class="col-md-12">
-        <p>Existem <b>{{ ProdutoDetalhe.imeis.length }}</b> IMEIS disponíveis para este produto.</p>
-    </div>
-</div>
-<div class="row m-t-0">
-    <div class="col-md-12">
-        <table class="table info-style small first-col-normal table-scroll no-padding">
-            <thead>
-                <tr>
-                    <th class="text-center">IMEI</th>
-                    <th class="text-center">Entrada</th>
-                    <th class="text-center">Estoque</th>
-                </tr>
-            </thead>
-            <tbody style="height:250px">
-                <tr ng-repeat="imei in ProdutoDetalhe.imeis track by $index">
-                    <td class="text-center">{{ imei.imei }}</td>
-                    <td class="text-center">{{ imei.created_at }}</td>
-                    <td class="text-center">{{ imei.product_stock.stock.title }}</td>
-                </tr>
-            </tbody>
-        </table>
+<div ng-controller="ImeiListController as ImeiList">
+    <div class="row m-t-0">
+        <div class="col-md-12">
+            <table table-list="ImeiList" class="table info-style small first-col-normal table-hover">
+                <thead>
+                    <tr>
+                        <th class="text-center">IMEI</th>
+                        <th class="text-center">Entrada</th>
+                        <th class="text-center">Estoque</th>
+                        <th width="46"></th>
+                    </tr>
+                    <tr class="table-filter" static-include="views/produto/detalhe/imeis_list_filter.html"></tr>
+                </thead>
+                <tbody ng-if="ImeiList.tableData.data && !ImeiList.loading">
+                    <tr ng-repeat="imei in ImeiList.tableData.data">
+                        <td class="text-center">{{ imei.imei }}</td>
+                        <td class="text-center">{{ imei.created_at }}</td>
+                        <td class="text-center">{{ imei.product_stock.stock.title }}</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

@@ -14,10 +14,13 @@
                  * Lista os imeis associados ao sku
                  *
                  * @param  {int} sku
+                 * @param  {Object} params
                  * @return {Object}
                  */
-                listBySku: function(sku) {
-                    return Restangular.one(rest.baseUrl + '/list/').customGET(sku);
+                listBySku: function(sku, params) {
+                    params = this.parseParams(params);
+
+                    return Restangular.all(rest.baseUrl + '/list/' + sku).customGET('', params || {});
                 },
 
                 /**

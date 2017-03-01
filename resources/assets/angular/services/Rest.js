@@ -9,21 +9,21 @@
 
                 /**
                  * Retorna uma lista do recurso
-                 * 
-                 * @param  {Object} params  
-                 * @return {Array}        
+                 *
+                 * @param  {Object} params
+                 * @return {Array}
                  */
                 getList: function(params) {
                     params = this.parseParams(params);
 
-                    return Restangular.all(this.baseUrl + '/list').customGET("", params || {});
-                }, 
+                    return Restangular.all(this.baseUrl + '/list').customGET('', params || {});
+                },
 
                 /**
                  * Retorna os parâmetros manipulados
-                 * 
-                 * @param  {Object} params 
-                 * @return {Object}        
+                 *
+                 * @param  {Object} params
+                 * @return {Object}
                  */
                 parseParams: function(params) {
                     if (params) {
@@ -39,9 +39,9 @@
 
                 /**
                  * Busca um registro de recurso
-                 * 
-                 * @param  {int}    id 
-                 * @return {Object}    
+                 *
+                 * @param  {int}    id
+                 * @return {Object}
                  */
                 get: function(id) {
                     return Restangular.one(this.baseUrl, id).get();
@@ -49,8 +49,8 @@
 
                 /**
                  * Cria um novo registro do recurso
-                 * 
-                 * @param  {Object} params 
+                 *
+                 * @param  {Object} params
                  * @return {Object}
                  */
                 create: function(params) {
@@ -59,10 +59,10 @@
 
                 /**
                  * Atualiza um registro do recurso
-                 * 
-                 * @param  {int}    id     
-                 * @param  {Object} params 
-                 * @return {Object}       
+                 *
+                 * @param  {int}    id
+                 * @param  {Object} params
+                 * @return {Object}
                  */
                 update: function(id, params) {
                     return Restangular.one(this.baseUrl, id).customPUT(params || {});
@@ -70,10 +70,10 @@
 
                 /**
                  * Atualiza ou cria um registro do recurso
-                 * 
-                 * @param  {Object} params 
-                 * @param  {int} id     
-                 * @return {Object}        
+                 *
+                 * @param  {Object} params
+                 * @param  {int} id
+                 * @return {Object}
                  */
                 save: function(params, id) {
                     if (id) {
@@ -85,9 +85,9 @@
 
                 /**
                  * Deleta um registro do recurso
-                 * 
-                 * @param  {int}    id 
-                 * @return {Object}    
+                 *
+                 * @param  {int}    id
+                 * @return {Object}
                  */
                 delete: function(id) {
                     return Restangular.one(this.baseUrl, id).remove();

@@ -1,22 +1,32 @@
-<div class="row" ng-repeat="productStock in ProdutoDetalhe.productStocks track by $index">
-    <div class="col-md-3 form-group">
-        <label for="title-{{ $index }}">Estoque</label>
-        <input value="{{ productStock.stock.title }}" id="title-{{ $index }}" readonly />
-    </div>
-    <div class="col-md-2 form-group">
-        <label for="include-{{ $index }}">Incluir</label>
-        <input value="{{ productStock.stock.include ? 'Sim' : 'Não' }}" id="include-{{ $index }}" readonly />
-    </div>
-    <div class="col-md-2 form-group">
-        <label for="priority-{{ $index }}">Ordem</label>
-        <input value="{{ productStock.stock.priority }}" id="priority-{{ $index }}" readonly />
-    </div>
-    <div class="col-md-2 form-group">
-        <label for="serial_enabled-{{ $index }}">Controle Serial</label>
-        <input value="{{ productStock.serial_enabled ? 'Sim' : 'Não' }}" id="serial_enabled-{{ $index }}" readonly />
-    </div>
-    <div class="col-md-3 form-group">
-        <label for="quantity-{{ $index }}">Estoque</label>
-        <input ng-model="productStock.quantity" id="quantity-{{ $index }}" readonly ng-disabled="productStock.serial_enabled" />
-    </div>
-</div>
+<table class="table-alt table-hover no-padding">
+    <thead>
+        <tr>
+            <th>Estoque</th>
+            <th>Incluir</th>
+            <th>Ordem</th>
+            <th>Ctrl Serial</th>
+            <th>Estoque</th>
+            <th width="1"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="productStock in ProdutoDetalhe.productStocks track by $index">
+            <td class="form-group">
+                <input value="{{ productStock.stock.title }}" id="title-{{ $index }}" readonly />
+            </td>
+            <td class="form-group">
+                <input value="{{ productStock.stock.include ? 'Sim' : 'Não' }}" id="include-{{ $index }}" readonly />
+            </td>
+            <td class="form-group">
+                <input value="{{ productStock.stock.priority }}" id="priority-{{ $index }}" readonly />
+            </td>
+            <td class="form-group">
+                <input value="{{ productStock.serial_enabled ? 'Sim' : 'Não' }}" id="serial_enabled-{{ $index }}" readonly />
+            </td>
+            <td class="form-group">
+                <input ng-model="productStock.quantity" id="quantity-{{ $index }}" readonly />
+            </td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>

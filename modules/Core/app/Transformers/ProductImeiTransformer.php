@@ -12,9 +12,11 @@ class ProductImeiTransformer
      */
     public static function listBySku($productImeis)
     {
-        $data = [];
+        $pagination  = $productImeis->toArray();
+        $transformed = [];
+
         foreach ($productImeis as $productImei) {
-            $data[] = [
+            $transformed[] = [
                 'id'            => $productImei->id,
                 'imei'          => $productImei->imei,
                 'created_at'    => dateConvert($productImei->created_at),
@@ -28,6 +30,8 @@ class ProductImeiTransformer
             ];
         }
 
-        return $data;
+        $pagination['data'] = $transformed;
+
+        return $pagination;
     }
 }

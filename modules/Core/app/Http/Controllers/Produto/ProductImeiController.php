@@ -51,7 +51,9 @@ class ProductImeiController extends Controller
                     0
                 )
                 ->orderBy('product_imeis.created_at', 'DESC')
-                ->get(['product_imeis.*']);
+                ->select(['product_imeis.*']);
+
+            $productImeis = $this->handleRequest($productImeis);
 
             return $this->listResponse(ProductImeiTransformer::listBySku($productImeis));
         } catch (\Exception $exception) {
