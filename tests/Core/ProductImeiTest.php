@@ -22,8 +22,8 @@ class ProductImeiTest extends TestCase
             'imei'             => str_random(15),
         ];
 
-        $this->json('POST', '/api/product-imeis', $data)
-            ->seeStatusCode(201);
+        $this->json('POST', '/api/produto-imei', $data)
+           ->seeStatusCode(201);
 
         $this->seeInDatabase('product_imeis', $data);
     }
@@ -41,7 +41,7 @@ class ProductImeiTest extends TestCase
             'imei'             => str_random(15),
         ];
 
-        $this->json('PUT', "/api/product-imeis/{$productImei->id}", $data)
+        $this->json('PUT', "/api/produto-imei/{$productImei->id}", $data)
             ->seeStatusCode(200);
 
         $this->seeInDatabase('product_imeis', array_merge($data, [

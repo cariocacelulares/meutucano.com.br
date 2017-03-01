@@ -22,7 +22,7 @@ class StockTest extends TestCase
             'priority' => rand(1, 10),
         ];
 
-        $this->json('POST', '/api/stocks', $data)
+        $this->json('POST', '/api/estoque', $data)
             ->seeStatusCode(201);
 
         $this->seeInDatabase('stocks', $data);
@@ -42,7 +42,7 @@ class StockTest extends TestCase
             'priority' => rand(1, 10),
         ];
 
-        $this->json('PUT', "/api/stocks/{$stock->slug}", $data)
+        $this->json('PUT', "/api/estoque/{$stock->slug}", $data)
             ->seeStatusCode(200);
 
         $this->seeInDatabase('stocks', array_merge($data, [

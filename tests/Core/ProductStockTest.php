@@ -28,7 +28,7 @@ class ProductStockTest extends TestCase
             'serial_enabled' => rand(0, 1),
         ];
 
-        $this->json('POST', '/api/product-stocks', $data)
+        $this->json('POST', '/api/produto-estoque', $data)
             ->seeStatusCode(201);
 
         $this->seeInDatabase('product_stocks', $data);
@@ -48,7 +48,7 @@ class ProductStockTest extends TestCase
             'quantity'    => ($productStock->quantity + 2),
         ];
 
-        $this->json('PUT', "/api/product-stocks/{$productStock->id}", $data)
+        $this->json('PUT', "/api/produto-estoque/{$productStock->id}", $data)
             ->seeStatusCode(200);
 
         $this->seeInDatabase('product_stocks', array_merge($data, [
@@ -71,7 +71,7 @@ class ProductStockTest extends TestCase
             'quantity'    => ($productStock->quantity + 2),
         ];
 
-        $this->json('PUT', "/api/product-stocks/{$productStock->id}", $data)
+        $this->json('PUT', "/api/produto-estoque/{$productStock->id}", $data)
             ->seeStatusCode(200);
 
         $this->seeInDatabase('product_stocks', array_merge($data, [
@@ -205,7 +205,7 @@ class ProductStockTest extends TestCase
 
         $imeis = 'DASD21DSD2ED' . PHP_EOL . 'REW432ERWR23';
 
-        $this->json('POST', '/api/product-stocks/entry', [
+        $this->json('POST', '/api/produto-estoque/entry', [
                 'sku'        => $product->sku,
                 'stock_slug' => $productStock->stock_slug,
                 'imeis'      => $imeis,
@@ -236,7 +236,7 @@ class ProductStockTest extends TestCase
             ->orderBy('stocks.priority', 'ASC')
             ->first();
 
-        $this->json('POST', '/api/product-stocks/entry', [
+        $this->json('POST', '/api/produto-estoque/entry', [
                 'sku'        => $product->sku,
                 'stock_slug' => $productStock->stock_slug,
                 'imeis'      => null,

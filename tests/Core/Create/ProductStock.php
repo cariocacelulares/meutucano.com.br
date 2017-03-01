@@ -6,6 +6,7 @@ class ProductStock
 {
     /**
     * Create a ProductStock register
+    *
     * @param  array $data
     * @return Core\Models\Produto\ProductStock
     */
@@ -26,6 +27,7 @@ class ProductStock
 
     /**
      * Creates a ProductStock with serial enabled
+     *
      * @param  array $data
      * @return Core\Models\Produto\ProductStock
      */
@@ -41,6 +43,7 @@ class ProductStock
 
     /**
      * Creates a ProductStock without serial enabled
+     * 
      * @param  array $data
      * @return Core\Models\Produto\ProductStock
      */
