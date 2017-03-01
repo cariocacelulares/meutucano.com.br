@@ -3,6 +3,7 @@
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;
 use Core\Events\ProductImeiCreated;
+use Core\Events\ProductImeiDeleted;
 use Core\Events\OrderSent;
 use Core\Events\OrderProductCreated;
 use Core\Events\OrderCanceled;
@@ -18,6 +19,11 @@ class UpdateStock
      */
     public function subscribe(Dispatcher $events)
     {
+        $events->listen(
+            ProductImeiDeleted::class,
+            '\Core\Events\Handlers\UpdateStock@onProductImeiDeleted'
+        );
+
         $events->listen(
             ProductImeiCreated::class,
             '\Core\Events\Handlers\UpdateStock@onProductImeiCreated'
@@ -52,6 +58,27 @@ class UpdateStock
 
         if ($productImei = $event->productImei) {
             \Stock::add(
+                $productImei->productStock->product_sku,
+                1,
+                $productImei->productStock->stock_slug
+            );
+        } else {
+            Log::warning('ProductImei não encontrado!', [$productImei]);
+        }
+    }
+
+    /**
+     * Trigger stock updates on product imei deleted
+     *
+     * @param  ProductImeiDeleted $event
+     * @return void
+     */
+    public function onProductImeiDeleted(ProductImeiDeleted $event)
+    {
+        Log::debug('Handler UpdateStock/onProductImeiDeleted acionado!', [$event]);
+
+        if ($productImei = $event->productImei) {
+            \Stock::substract(
                 $productImei->productStock->product_sku,
                 1,
                 $productImei->productStock->stock_slug

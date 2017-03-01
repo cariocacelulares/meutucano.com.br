@@ -16,4 +16,15 @@ class ProductImeiObserver
     {
         Event::fire(new ProductImeiCreated($productImei));
     }
+
+    /**
+     * Listen to the ProductImei deleted event.
+     *
+     * @param  ProductImei $productImei
+     * @return void
+     */
+    public function deleted(ProductImei $productImei)
+    {
+        Event::fire(new ProductImeiDeleted($productImei));
+    }
 }

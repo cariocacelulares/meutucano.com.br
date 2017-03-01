@@ -35,10 +35,15 @@ class IssueController extends Controller
             $productImei = ProductImei::where('imei', '=', $imei)->first();
 
             if ($productImei) {
-                $fields['product_imei_id'] = $productImei->id;
-                $productImei->delete();
+                if ($productImei->lastOrderProduct->pedido->status != 5) {
+                    return $this->validationFailResponse([
+                        'O serial pertence a um pedido em aberto ou já enviado';
+                    ]);
+                } else {
+                    $fields['product_imei_id'] = $productImei->id;
+                    $productImei->delete();
+                }
             } else {
-                #TODO: validar se está um pedido, etc
                 return $this->validationFailResponse([
                     'Não foi possível encontrar o imei ' . $imei
                 ]);
