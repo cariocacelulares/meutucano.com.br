@@ -198,6 +198,11 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::resource('estoque/retirada/produto', 'Stock\RemovalProductController');
 
     /**
+     * Stock issue
+     */
+    Route::post('estoque/baixa', 'Stock\IssueController@store');
+
+    /**
      * Partials
      */
     Route::group(['namespace' => 'Partials'], function () {
