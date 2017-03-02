@@ -112,6 +112,11 @@
                                 title: 'Retirada',
                                 icon: 'fa-cart-arrow-down',
                                 sref: $state.href('app.estoque.retirada.index')
+                            },
+                            {
+                                title: 'Gerar IMEI',
+                                icon: 'fa-barcode',
+                                sref: $state.href('app.estoque.imei.gerar')
                             }
                         ]
                     },

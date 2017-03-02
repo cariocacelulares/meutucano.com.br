@@ -51,12 +51,12 @@ return [
         Spatie\Browsershot\BrowsershotServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Vinelab\Cdn\CdnServiceProvider::class,
-        Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
         Jenssegers\Mongodb\MongodbServiceProvider::class,
         Nwidart\Modules\LaravelModulesServiceProvider::class,
         Spatie\Backup\BackupServiceProvider::class,
         Spatie\FailedJobMonitor\FailedJobMonitorServiceProvider::class,
         Sofa\Eloquence\ServiceProvider::class,
+        Milon\Barcode\BarcodeServiceProvider::class,
     ],
 
 
@@ -106,7 +106,10 @@ return [
 
         'Moloquent'    => Jenssegers\Mongodb\Eloquent\Model::class,
 
-        'Module' => Nwidart\Modules\Facades\Module::class,
+        'Module'       => Nwidart\Modules\Facades\Module::class,
+
+        'DNS1D'        => Milon\Barcode\Facades\DNS1DFacade::class,
+        'DNS2D'        => Milon\Barcode\Facades\DNS2DFacade::class,
     ],
 
 ];

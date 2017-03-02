@@ -490,6 +490,19 @@
                     templateUrl: 'views/estoque/retirada/form.html',
                     controller: 'RetiradaEstoqueFormController as RetiradaEstoqueForm'
                 })
+
+                .state('app.estoque.imei', {
+                    url: '/imei',
+                    templateUrl: 'views/layouts/default.html',
+                    templateUrl: 'views/estoque/gerar-imei.html',
+                    controller: 'GerarImeiController as GerarImei'
+                })
+
+                .state('app.estoque.imei.gerar', {
+                    url: '/gerar',
+                    templateUrl: 'views/estoque/imei/gerar.html',
+                    controller: 'GerarImeiController as GerarImei'
+                })
             ;
         });
 })();
