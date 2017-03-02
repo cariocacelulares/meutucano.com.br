@@ -516,6 +516,17 @@
                     templateUrl: 'views/estoque/baixa/form.html',
                     controller: 'BaixaEstoqueFormController as BaixaEstoqueForm'
                 })
+
+                .state('app.estoque.imei', {
+                    url: '/imei',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.estoque.imei.gerar', {
+                    url: '/gerar',
+                    templateUrl: 'views/estoque/imei/gerar.html',
+                    controller: 'GerarImeiController as GerarImei'
+                })
             ;
         });
 })();

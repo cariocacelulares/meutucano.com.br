@@ -29,7 +29,8 @@ class NotaController extends Controller
     public function destroy($id, DeleteRequest $request)
     {
         try {
-            $nota = (self::MODEL)::findOrFail($id);
+            $model = self::MODEL;
+            $nota = $model::findOrFail($id);
 
             $nota->delete_note = Input::get('delete_note');
             $nota->save();
@@ -57,7 +58,8 @@ class NotaController extends Controller
         if ($devolucao) {
             $nota = Devolucao::find($id);
         } else {
-            $nota = (self::MODEL)::find($id);
+            $model = self::MODEL;
+            $nota = $model::find($id);
         }
 
         // Nota fiscal não existe
@@ -86,7 +88,10 @@ class NotaController extends Controller
     public function email($id)
     {
         try {
-            if ($nota = (self::MODEL)::find($id)) {
+            $model = self::MODEL;
+            $nota = $model::find($id);
+
+            if ($nota) {
                 $dataHora = date('His');
                 $arquivo  = storage_path('app/public/' . $dataHora . '.pdf');
                 $email    = $nota->pedido->cliente->email;
@@ -140,32 +145,40 @@ class NotaController extends Controller
      */
     public function danfe($id, $retorno = 'I', $caminhoArquivo = false)
     {
-        $nota = (self::MODEL)::find($id);
-        $nota = $nota ?: Devolucao::find($id);
+        try {
+            $model = self::MODEL;
+            $nota = $model::find($id);
 
-        if ($nota) {
-            $file_path = storage_path('app/public/nota/'. $nota->arquivo);
+            $nota = $nota ?: Devolucao::find($id);
 
-            if (file_exists($file_path)) {
-                $xml = file_get_contents($file_path);
+            if ($nota) {
+                $file_path = storage_path('app/public/nota/'. $nota->arquivo);
 
-                $danfe = new Danfe(
-                    $xml,
-                    'P',
-                    'A4',
-                    public_path('assets/img/logocarioca.jpg'),
-                    public_path('assets/img/watermark.jpg'),
-                    $retorno,
-                    ''
-                );
+                if (file_exists($file_path)) {
+                    $xml = file_get_contents($file_path);
 
-                $nomeDanfe = ($caminhoArquivo) ?: substr($nota->arquivo, 0, -4) . '.pdf';
+                    $danfe = new Danfe(
+                        $xml,
+                        'P',
+                        'A4',
+                        public_path('assets/img/logocarioca.jpg'),
+                        public_path('assets/img/watermark.jpg'),
+                        $retorno,
+                        ''
+                    );
 
-                $danfe->montaDANFE('P', 'A4', 'L');
-                $danfe->printDANFE($nomeDanfe, $retorno);
+                    $nomeDanfe = ($caminhoArquivo) ?: substr($nota->arquivo, 0, -4) . '.pdf';
 
-                return $this->showResponse([]);
+                    $danfe->montaDANFE('P', 'A4', 'L');
+                    $danfe->printDANFE($nomeDanfe, $retorno);
+
+                    return $this->showResponse([]);
+                }
             }
+        } catch (\Exception $e) {
+            \Log::warning('Falha ao tentar imprimir DANFe', [$id]);
+
+            return $this->clientErrorResponse();
         }
 
         return $this->notFoundResponse();

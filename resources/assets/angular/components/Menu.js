@@ -117,6 +117,11 @@
                                 title: 'Baixa',
                                 icon: 'fa-arrow-down',
                                 sref: $state.href('app.estoque.baixa.index')
+                            },
+                            {
+                                title: 'Gerar IMEI',
+                                icon: 'fa-barcode',
+                                sref: $state.href('app.estoque.imei.gerar')
                             }
                         ]
                     },

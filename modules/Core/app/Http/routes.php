@@ -150,6 +150,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
      */
     Route::group(['prefix' => 'estoque', 'namespace' => 'Stock'], function () {
         Route::get('list', 'StockController@tableList');
+        Route::get('imei/generate', 'ImeiController@generate');
     });
     Route::resource('estoque', 'Stock\StockController');
 

@@ -1,0 +1,18 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-barcode" title="Gerar IMEI" description="Você pode gerar IMEI's para os produtos."></page-title>
+    <div class="col-md-2 col-md-offset-4 button-bar">
+        <form class="form-default form-clean" ng-submit="GerarImei.generate()">
+            <div class="input-group form-group">
+                <select ng-model="GerarImei.listSize" ng-init="GerarImei.listSize = '24'" class="bg-white">
+                    <option value="24">1 página</option>
+                    <option value="48">2 páginas</option>
+                    <option value="72">3 páginas</option>
+                    <option value="96">4 páginas</option>
+                </select>
+                <div class="input-group-btn">
+                    <button class="btn btn-primary" type="submit">Gerar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
