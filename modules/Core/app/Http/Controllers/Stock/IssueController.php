@@ -67,7 +67,6 @@ class IssueController extends Controller
                     ]);
                 } else {
                     $fields['product_imei_id'] = $productImei->id;
-                    $productImei->delete();
                 }
             } else {
                 return $this->validationFailResponse([

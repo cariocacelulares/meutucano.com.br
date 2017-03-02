@@ -181,3 +181,13 @@ $factory->define(Core\Models\Pedido\FaturamentoCodigo::class, function () use ($
          'status' => $faker->numberBetween(0, 3),
      ];
  });
+
+/**
+ * Stock Issue
+ */
+ $factory->define(Core\Models\Stock\Issue::class, function () use ($faker) {
+     return [
+         'reason'      => $faker->text(10),
+         'description' => $faker->text(50),
+     ];
+ });

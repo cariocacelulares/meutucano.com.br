@@ -6,11 +6,13 @@ use Core\Models\Pedido\PedidoProduto;
 use Core\Models\Produto;
 use Core\Models\Produto\ProductStock;
 use Core\Models\Produto\ProductImei;
+use Core\Models\Stock\Issue;
 use Core\Observers\PedidoObserver;
 use Core\Observers\PedidoProdutoObserver;
 use Core\Observers\ProdutoObserver;
 use Core\Observers\ProductStockObserver;
 use Core\Observers\ProductImeiObserver;
+use Core\Observers\StockIssueObserver;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -37,6 +39,7 @@ class CoreServiceProvider extends ServiceProvider
         PedidoProduto::observe(PedidoProdutoObserver::class);
         ProductStock::observe(ProductStockObserver::class);
         ProductImei::observe(ProductImeiObserver::class);
+        Issue::observe(StockIssueObserver::class);
     }
 
     /**
