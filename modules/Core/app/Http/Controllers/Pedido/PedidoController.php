@@ -140,7 +140,7 @@ class PedidoController extends Controller
 
             $pedido = (self::MODEL)::find($pedido_id);
 
-            if (in_array($pedido->marketplace, \Config::get('core.required_protocolo')) && $status === 5 && !$protocolo) {
+            if ($status === 5 && !$protocolo && in_array($pedido->marketplace, \Config::get('core.required_protocolo'))) {
                 throw new \Exception('Protocolo obrigatório para cancelar pedidos nesse marketplace.', 422);
             }
 
@@ -153,6 +153,10 @@ class PedidoController extends Controller
                 $name = substr(str_slug($protocolo . '-' . $imagem->getClientOriginalName()), 0, 200) . '.' . $imagem->extension();
                 $imagem->move(storage_path('app/public/cancelamento'), $name);
                 $pedido->imagem_cancelamento = $name;
+            }
+
+            if ($status == 2 && !$pedido->rastreios) {
+                $status = 3;
             }
 
             $pedido->status = $status;

@@ -62,6 +62,15 @@
         vm.load();
 
         /**
+         * Set order as invoiced
+         */
+        vm.invoice = function() {
+            Pedido.status(vm.pedido_id, {status: 2}).then(function (response) {
+                vm.load();
+            });
+        }
+
+        /**
          * Abre formulario para atualizar ou inserir produtos no pedido
          *
          * @param  {Object} orderProduct produto do pedido
