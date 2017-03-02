@@ -7,7 +7,7 @@ use Tests\CreateUsuario;
 use Tests\Core\Create\Issue;
 use Tests\Core\Create\ProductImei;
 
-class StockRemovalTest extends TestCase
+class StockIssueTest extends TestCase
 {
     use WithoutMiddleware,
         DatabaseTransactions;
