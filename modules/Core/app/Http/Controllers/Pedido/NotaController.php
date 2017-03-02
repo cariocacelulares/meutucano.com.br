@@ -175,10 +175,10 @@ class NotaController extends Controller
                     return $this->showResponse([]);
                 }
             }
-        } catch (\Exception $e) {
-            \Log::warning('Falha ao tentar imprimir DANFe', [$id]);
+        } catch (\Exception $exception) {
+            \Log::warning(logMessage($exception, 'Falha ao tentar imprimir DANFe'), [$id]);
 
-            return $this->clientErrorResponse();
+            return $this->clientErrorResponse('Falha ao tentar imprimir DANFe');
         }
 
         return $this->notFoundResponse();
