@@ -45,7 +45,7 @@
                 </div>
             </div>
         </tab>
-        <tab name="estoques" title="Estoques" ng-if="ProdutoForm.productStocks">
+        <tab ng-if="ProdutoForm.produto.sku" name="estoques" title="Estoques" ng-if="ProdutoForm.productStocks">
             <table class="table-alt table-hover no-padding">
                 <thead>
                     <tr>
