@@ -122,6 +122,11 @@
                                 title: 'Gerar IMEI',
                                 icon: 'fa-barcode',
                                 sref: $state.href('app.estoque.imei.gerar')
+                            },
+                            {
+                                title: 'Consultar IMEI',
+                                icon: 'fa-search',
+                                sref: $state.href('app.estoque.imei.consultar')
                             }
                         ]
                     },

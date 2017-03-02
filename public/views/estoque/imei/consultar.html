@@ -1,0 +1,15 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-barcode" title="Consultar IMEI" description="Todos os registros relacionados ao imei"></page-title>
+    <div class="col-md-6 button-bar">
+        <form class="form-default form-clean" ng-submit="ConsultarImei.load()">
+            <div class="input-group">
+                <input ng-model="ConsultarImei.imei" class="bg-white" placeholder="Código serial" required>
+                <div class="input-group-btn">
+                    <button class="btn-primary" type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

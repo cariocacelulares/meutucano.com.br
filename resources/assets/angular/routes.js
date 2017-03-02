@@ -527,6 +527,12 @@
                     templateUrl: 'views/estoque/imei/gerar.html',
                     controller: 'GerarImeiController as GerarImei'
                 })
+
+                .state('app.estoque.imei.consultar', {
+                    url: '/consultar',
+                    templateUrl: 'views/estoque/imei/consultar.html',
+                    controller: 'ConsultarImeiController as ConsultarImei'
+                })
             ;
         });
 })();
