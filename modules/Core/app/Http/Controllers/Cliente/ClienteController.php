@@ -148,4 +148,25 @@ class ClienteController extends Controller
             ]);
         }
     }
+
+    /**
+     * Search clients by taxvat and name based on term
+     *
+     * @param  string $term
+     * @return Object
+     */
+    public function search($term)
+    {
+        try {
+            $list = (self::MODEL)
+                ::with('enderecos')
+                ->where('nome', 'LIKE', "%{$term}%")
+                ->orWhere('taxvat', 'LIKE', "%{$term}%")
+                ->get();
+
+            return $this->listResponse(ClientTransformer::directSearch($list));
+        } catch (\Exception $exception) {
+            return $this->listResponse([]);
+        }
+    }
 }

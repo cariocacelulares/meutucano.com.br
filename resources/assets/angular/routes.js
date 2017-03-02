@@ -122,6 +122,15 @@
                     controller: 'PedidoListController as PedidoList'
                 })
 
+                .state('app.pedidos.form', {
+                    url: '/form',
+                    templateUrl: 'views/pedido/form.html',
+                    controller: 'PedidoFormController as PedidoForm',
+                    data: {
+                        roles: ['admin', 'gestor']
+                    }
+                })
+
                 .state('app.pedidos.detalhe', {
                     url: '/{id}',
                     templateUrl: 'views/pedido/detalhe.html',

@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
 use Core\Models\Pedido;
+use Core\Models\Pedido\PedidoProduto;
 use Core\Transformers\OrderTransformer;
+use Core\Http\Requests\PedidoRequest as Request;
 
 /**
  * Class PedidoController
@@ -567,5 +569,68 @@ class PedidoController extends Controller
         }
 
         return $this->notFoundResponse();
+    }
+
+    /**
+     * Create a new resource
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function store(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            Log::debug('Transaction - begin');
+
+            $order = (self::MODEL)::create(Input::except([
+                'cliente',
+                'products',
+            ]));
+
+            $orderProducts = Input::get('products');
+            if ($orderProducts) {
+                $products   = [];
+                $quantities = [];
+                foreach ($orderProducts as $orderProduct) {
+                    for ($i=0; $i < $orderProduct['qtd']; $i++) {
+                        $products[] = $orderProduct;
+                        $quantities[$orderProduct['sku']] = isset($quantities[$orderProduct['sku']]) ? $quantities[$orderProduct['sku']] +1 : 1;
+                    }
+                }
+
+                foreach ($quantities as $sku => $qtd) {
+                    $stock = \Stock::get($sku)[0];
+
+                    if ($stock < $qtd) {
+                        return $this->validationFailResponse([
+                            "Você está solicitando {$qtd} quantidades do produto {$sku}, mas existem apenas {$stock} em estoque."
+                        ]);
+                    }
+                }
+
+                foreach ($products as $orderProduct) {
+                    PedidoProduto::create([
+                        'pedido_id'        => $order->id,
+                        'produto_sku'      => $orderProduct['sku'],
+                        'valor'            => $orderProduct['valor'],
+                    ]);
+                }
+            }
+
+            DB::commit();
+            Log::debug('Transaction - commit');
+
+            return $this->createdResponse($order);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
+
+            DB::rollBack();
+            Log::debug('Transaction - rollback');
+
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
+        }
     }
 }

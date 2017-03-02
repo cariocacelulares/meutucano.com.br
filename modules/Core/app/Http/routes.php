@@ -95,7 +95,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::put('prioridade/{pedido_id}', 'PedidoController@prioridade');
         Route::put('segurar/{pedido_id}', 'PedidoController@segurar');
     });
-    Route::resource('pedidos', 'Pedido\PedidoController', ['except' => ['create', 'edit']]);
+    Route::resource('pedidos', 'Pedido\PedidoController');
 
     /**
      * Produtos
@@ -133,6 +133,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::get('detail/{cliente_id}', 'ClienteController@detail');
         Route::get('list', 'ClienteController@tableList');
         Route::put('email/{cliente_id}', 'ClienteController@changeEmail');
+        Route::get('search/{term}', 'ClienteController@search');
     });
     Route::resource('clientes', 'Cliente\ClienteController', ['except' => ['create', 'edit']]);
 

@@ -31,7 +31,17 @@
                  */
                 changeEmail: function(cliente_id, email) {
                     return Restangular.one('clientes/email/' + cliente_id).customPUT({ 'email': email });
-                }
+                },
+
+                /**
+                 * Search clients by taxvat and name based on term
+                 *
+                 * @param {string} term
+                 * @return {Object}
+                 */
+                search: function(term) {
+                    return Restangular.one(rest.baseUrl + '/search/' + term).customGET();
+                },
             });
 
             return rest;
