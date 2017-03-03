@@ -1,5 +1,5 @@
 <div id="page-header" class="row">
-    <page-title icon="fa-barcode" title="Consultar IMEI" description="Todos o histórico de registros relacionados ao imei"></page-title>
+    <page-title icon="fa-barcode" title="Consultar IMEI{{ ConsultarImei.imei ? ': ' + ConsultarImei.imei : '' }}" description="Todos o histórico de registros relacionados ao imei"></page-title>
     <div class="col-md-6 button-bar">
         <form class="form-default form-clean form-group" ng-submit="ConsultarImei.load()">
             <div class="input-group">

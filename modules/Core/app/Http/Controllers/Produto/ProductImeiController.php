@@ -151,7 +151,7 @@ class ProductImeiController extends Controller
         $productImei = (self::MODEL)::where('imei', '=', $imei)->withTrashed()->first();
 
         if ($productImei) {
-            // try {
+            try {
                 $actions      = [];
                 $deleteAction = null;
 
@@ -296,8 +296,11 @@ class ProductImeiController extends Controller
                 }
 
                 return $this->showResponse($history);
-            // } catch (\Exception $exception) {
-            // }
+            } catch (\Exception $exception) {
+                \Log::error(logMessage($exception, 'Erro ao consultar histórico de imei'));
+
+                return $this->clientErrorResponse('Erro ao consultar histórico de imei');
+            }
         } else {
             return $this->showResponse([]);
         }
