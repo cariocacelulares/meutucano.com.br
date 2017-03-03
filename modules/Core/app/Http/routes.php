@@ -209,6 +209,14 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::resource('estoque/baixa', 'Stock\IssueController');
 
     /**
+     * Product defect
+     */
+    Route::group(['prefix' => 'produto/defeito', 'namespace' => 'Produto'], function () {
+        Route::get('list', 'DefectController@tableList');
+    });
+    Route::resource('produto/defeito', 'Produto\DefectController');
+
+    /**
      * Partials
      */
     Route::group(['namespace' => 'Partials'], function () {

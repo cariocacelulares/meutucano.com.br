@@ -191,3 +191,12 @@ $factory->define(Core\Models\Pedido\FaturamentoCodigo::class, function () use ($
          'description' => $faker->text(50),
      ];
  });
+
+/**
+ * Product Defect
+ */
+ $factory->define(Core\Models\Produto\Defect::class, function () use ($faker) {
+     return [
+         'description' => $faker->text(50),
+     ];
+ });
