@@ -1,11 +1,14 @@
 <?php namespace Tests\Core\Create;
 
 use Tests\CreateUsuario;
+use Venturecraft\Revisionable\RevisionableTrait;
 use Core\Models\Produto\ProductImei as ProductImeiModel;
 use Core\Models\Stock\RemovalProduct as RemovalProductModel;
 
 class RemovalProduct
 {
+    use RevisionableTrait;
+
     /**
     * Create a RemovalProduct register
     *

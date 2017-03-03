@@ -3,7 +3,10 @@
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
+use App\Models\Usuario\Usuario;
+use Core\Models\Pedido;
 use Core\Models\Produto;
+use Core\Models\Produto\ProductStock;
 use Core\Models\Produto\ProductImei;
 use Core\Transformers\ProductImeiTransformer;
 
@@ -141,5 +144,162 @@ class ProductImeiController extends Controller
         return $this->listResponse([
             'products' => []
         ]);
+    }
+
+    public function history($imei)
+    {
+        $productImei = (self::MODEL)::where('imei', '=', $imei)->withTrashed()->first();
+
+        if ($productImei) {
+            // try {
+                $actions      = [];
+                $deleteAction = null;
+
+                $issue           = $productImei->issue;
+                $removalProducts = $productImei->removalProducts;
+                $pedidoProdutos  = $productImei->pedidoProdutos;
+
+                $imeiCreated = null;
+                $firstStock  = false;
+                $revisions   = $productImei->revisionHistory;
+                foreach ($revisions as $revision) {
+                    if ($revision->key == 'created_at') {
+                        $imeiCreated = [
+                            'key'   => strtotime($revision->new_value),
+                            'value' => [
+                                'model' => 'ProductImei',
+                                'desc'  => 'Serial registrado',
+                                'date'  => dateConvert($revision->new_value),
+                                'user'  => $revision->user_id ? Usuario::find($revision->user_id)->name : null,
+                            ],
+                        ];
+                    } else if ($revision->key == 'deleted_at') {
+                        $actions[strtotime($revision->new_value)][] = [
+                            'model' => 'ProductImei',
+                            'desc'  => 'Serial excluido',
+                            'date'  => dateConvert($revision->new_value),
+                            'user'  => $revision->user_id ? Usuario::find($revision->user_id)->name : null,
+                        ];
+                    } else if ($revision->key == 'product_stock_id') {
+                        $oldStock = ProductStock::find($revision->old_value)->stock->title;
+                        $newStock = ProductStock::find($revision->new_value)->stock->title;
+
+                        if (!$firstStock) {
+                            $firstStock = $oldStock;
+                        }
+
+                        $actions[strtotime($revision->created_at)][] = [
+                            'model' => 'ProductImei',
+                            'desc'  => "Transferência do estoque '{$oldStock}' para o estoque '{$newStock}'",
+                            'date'  => dateConvert($revision->created_at),
+                            'user'  => $revision->user_id ? Usuario::find($revision->user_id)->name : null,
+                        ];
+                    }
+                }
+
+                if ($imeiCreated) {
+                    if ($firstStock) {
+                        $imeiCreated['value']['desc'] .= " no estoque '{$firstStock}'";
+                    }
+
+                    $actions[$imeiCreated['key']][] = $imeiCreated['value'];
+                }
+
+                if ($issue) {
+                    $actions[strtotime($issue->created_at)][] = [
+                        'model' => 'Issue',
+                        'desc'  => "Baixa de estoque<br/>Motivo: {$issue->reason} - {$issue->description}",
+                        'date'  => dateConvert($issue->created_at),
+                        'user'  => $issue->user_id ? Usuario::find($issue->user_id)->name : null,
+                    ];
+                }
+
+                foreach ($removalProducts as $removalProduct) {
+                    $revisions = $removalProduct->revisionHistory;
+
+                    foreach ($revisions as $revision) {
+                        if ($revision->key == 'created_at') {
+                            $actions[strtotime($revision->new_value)][] = [
+                                'model' => 'Removal',
+                                'desc'  => "Registrado na retirada de estoque #{$removalProduct->stock_removal_id}",
+                                'date'  => dateConvert($revision->new_value),
+                                'user'  => $revision->user_id ? Usuario::find($revision->user_id)->name : null,
+                            ];
+                        } elseif ($revision->key == 'status') {
+                            $oldStatus = \Config('core.stock_removal_status')[$revision->old_value];
+                            $newStatus = \Config('core.stock_removal_status')[$revision->new_value];
+
+                            $actions[strtotime($revision->created_at)][] = [
+                                'model' => 'Removal',
+                                'desc'  => "Status na retirada de estoque #{$removalProduct->stock_removal_id} alterado de {$oldStatus} para {$newStatus}",
+                                'date'  => dateConvert($revision->created_at),
+                                'user'  => $revision->user_id ? Usuario::find($revision->user_id)->name : null,
+                            ];
+                        }
+                    }
+                }
+
+                foreach ($pedidoProdutos as $pedidoProduto) {
+                    $orderCreated = null;
+                    $revisions    = $pedidoProduto->revisionHistory;
+                    foreach ($revisions as $revision) {
+                        if ($revision->key == 'product_imei_id') {
+                            $orderCreated = [
+                                'key'   => strtotime($revision->created_at),
+                                'value' => [
+                                    'model' => 'Pedido',
+                                    'desc'  => "Anexado ao pedido {$pedidoProduto->pedido_id}",
+                                    'date'  => dateConvert($revision->created_at),
+                                    'user'  => $revision->user_id ? Usuario::find($revision->user_id)->name : null,
+                                ]
+                            ];
+                        }
+                    }
+
+                    $pedido      = Pedido::find($pedidoProduto->pedido_id);
+                    $revisions   = $pedido->revisionHistory;
+                    $firstStatus = false;
+                    foreach ($revisions as $revision) {
+                        if ($revision->key == 'status') {
+                            $oldStatus = \Config('core.pedido_status')[$revision->old_value];
+                            $newStatus = \Config('core.pedido_status')[$revision->new_value];
+
+                            if (!$firstStatus) {
+                                $firstStatus = $oldStatus;
+                            }
+
+                            $actions[strtotime($revision->created_at)][] = [
+                                'model' => 'Pedido',
+                                'desc'  => "Status do pedido {$revision->revisionable_id} alterado de {$oldStatus} para {$newStatus}",
+                                'date'  => dateConvert($revision->created_at),
+                                'user'  => $revision->user_id ? Usuario::find($revision->user_id)->name : null,
+                            ];
+                        }
+                    }
+
+                    if ($orderCreated) {
+                        if ($firstStatus) {
+                            $orderCreated['value']['desc'] .= " com o status {$firstStatus}";
+                        }
+
+                        $actions[$orderCreated['key']][] = $orderCreated['value'];
+                    }
+                }
+
+                ksort($actions);
+
+                $history = [];
+                foreach ($actions as $list) {
+                    foreach ($list as $action) {
+                        $history[] = $action;
+                    }
+                }
+
+                return $this->showResponse($history);
+            // } catch (\Exception $exception) {
+            // }
+        } else {
+            return $this->showResponse([]);
+        }
     }
 }

@@ -174,6 +174,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
      */
     Route::group(['prefix' => 'produto-imei', 'namespace' => 'Produto'], function () {
         Route::get('list/{sku}', 'ProductImeiController@listBySku');
+        Route::get('historico/{imei}', 'ProductImeiController@history');
         Route::post('parse', 'ProductImeiController@parseImeis');
     });
     Route::resource('produto-imei', 'Produto\ProductImeiController');

@@ -1,7 +1,7 @@
 <div id="page-header" class="row">
-    <page-title icon="fa-barcode" title="Consultar IMEI" description="Todos os registros relacionados ao imei"></page-title>
+    <page-title icon="fa-barcode" title="Consultar IMEI" description="Todos o histórico de registros relacionados ao imei"></page-title>
     <div class="col-md-6 button-bar">
-        <form class="form-default form-clean" ng-submit="ConsultarImei.load()">
+        <form class="form-default form-clean form-group" ng-submit="ConsultarImei.load()">
             <div class="input-group">
                 <input ng-model="ConsultarImei.imei" class="bg-white" placeholder="Código serial" required>
                 <div class="input-group-btn">
@@ -13,3 +13,27 @@
         </form>
     </div>
 </div>
+<table ng-if="ConsultarImei.imei" class="table info-style table-hover">
+    <thead class="table-header">
+        <tr>
+            <th width="46"></th>
+            <th>Ação</th>
+            <th width="160" class="text-center">Data</th>
+            <th width="200" class="text-center" style="padding-left:8px;padding-right:8px">Usuário</th>
+        </tr>
+    </thead>
+    <tbody ng-if="ConsultarImei.loading" class="loading">
+        <tr><td colspan="50"><loading></loading></td></tr>
+    </tbody>
+    <tbody ng-if="!ConsultarImei.acoes.length && !ConsultarImei.loading" class="empty">
+        <tr><td colspan="50">Nenhum registro foi encontrado!</td></tr>
+    </tbody>
+    <tbody ng-if="ConsultarImei.acoes.length && !ConsultarImei.loading">
+        <tr ng-repeat="acao in ConsultarImei.acoes">
+            <td><i class="fa-{{ ConsultarImei.getIcon(acao.model) }}"></i></td>
+            <td ng-bind-html="acao.desc"></td>
+            <td class="text-center">{{ acao.date }}</td>
+            <td class="text-center">{{ acao.user }}</td>
+        </tr>
+    </tbody>
+</table>
