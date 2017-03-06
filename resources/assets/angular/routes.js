@@ -533,6 +533,23 @@
                     templateUrl: 'views/estoque/imei/consultar.html',
                     controller: 'ConsultarImeiController as ConsultarImei'
                 })
+
+                .state('app.estoque.defeitos', {
+                    url: '/defeitos',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.estoque.defeitos.index', {
+                    url: '/list',
+                    templateUrl: 'views/estoque/defeito/list.html',
+                    controller: 'DefeitoListController as DefeitoList'
+                })
+
+                .state('app.estoque.defeitos.form', {
+                    url: '/form/{id}',
+                    templateUrl: 'views/estoque/defeito/form.html',
+                    controller: 'DefeitoFormController as DefeitoForm'
+                })
             ;
         });
 })();

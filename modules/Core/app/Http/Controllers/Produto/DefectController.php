@@ -5,6 +5,7 @@ use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
 use Core\Models\Produto\Defect;
 use Core\Models\Produto\ProductImei;
+use Core\Transformers\ProductDefectTransformer;
 use Core\Http\Requests\DefectRequest as Request;
 
 /**
@@ -25,6 +26,7 @@ class DefectController extends Controller
     {
         $list = (self::MODEL)
             ::join('product_imeis', 'product_imeis.id', 'product_defects.product_imei_id')
+            ->join('produtos', 'produtos.sku', 'product_defects.product_sku')
             ->with([
                 'productImei',
                 'product',
@@ -67,6 +69,29 @@ class DefectController extends Controller
             return $this->createdResponse($defect);
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Update a resource
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function update($id)
+    {
+        try {
+            $data = (self::MODEL)::findOrFail($id);
+            $data->fill(Input::all());
+            $data->save();
+
+            return $this->showResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
                 'exception' => $exception->getMessage()

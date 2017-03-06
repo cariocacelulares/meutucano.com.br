@@ -127,6 +127,11 @@
                                 title: 'Consultar IMEI',
                                 icon: 'fa-search',
                                 sref: $state.href('app.estoque.imei.consultar')
+                            },
+                            {
+                                title: 'Defeitos',
+                                icon: 'fa-bug',
+                                sref: $state.href('app.estoque.defeitos.index')
                             }
                         ]
                     },

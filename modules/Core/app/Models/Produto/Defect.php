@@ -34,7 +34,7 @@ class Defect extends Model
      */
     public function product()
     {
-        return $this->belongsTo(Produto::class);
+        return $this->belongsTo(Produto::class, 'product_sku', 'sku');
     }
 
     /**
@@ -43,6 +43,6 @@ class Defect extends Model
      */
     public function productImei()
     {
-        return $this->belongsTo(ProductImei::class);
+        return $this->belongsTo(ProductImei::class)->withTrashed();
     }
 }

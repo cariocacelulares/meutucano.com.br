@@ -1,0 +1,29 @@
+<th>
+    <input class="form-control big" ng-model="DefeitoList.filter['description']" placeholder="Descrição do defeito" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <input class="form-control big" ng-model="DefeitoList.filter['produtos.sku']" placeholder="SKU do produto" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <input class="form-control big" ng-model="DefeitoList.filter['product_imeis.imei']" placeholder="Serial do produto" ng-model-options="{debounce:500}" />
+</th>
+<th class="between-group">
+    <div class="date-picker">
+        <input class="form-control" ng-model="DefeitoList.filter['product_defects.created_at'].from" placeholder="De" ng-model-options="{debounce:500}" />
+        <div class="picker-wrap">
+            <date-picker ng-model="DefeitoList.filter['product_defects.created_at'].from" ng-model-options="{debounce:500}"></date-picker>
+        </div>
+    </div>
+    <span>/</span>
+    <div class="date-picker">
+        <input class="form-control" ng-model="DefeitoList.filter['product_defects.created_at'].to" placeholder="Até" ng-model-options="{debounce:500}" />
+        <div class="picker-wrap">
+            <date-picker ng-model="DefeitoList.filter['product_defects.created_at'].to" ng-model-options="{debounce:500}"></date-picker>
+        </div>
+    </div>
+</th>
+<th class="item-button">
+    <a title="Limpar filtros" class="btn-danger btn-reset-filter" ng-click="DefeitoList.filterList.clear()">
+        <i class="fa-eraser"></i>
+    </a>
+</th>

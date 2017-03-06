@@ -18,11 +18,15 @@ class ProductDefectTransformer
         foreach ($defects as $defect) {
             $transformed[] = [
                 'id'          => $defect->id,
-                'description' =>$defect->description,
+                'description' => $defect->description,
                 'created_at'  => dateConvert($defect->created_at),
                 'product'     => [
-                    'sku'    => $defect->productImei->productStock->product->sku,
-                    'titulo' => $defect->productImei->productStock->product->titulo,
+                    'sku'    => $defect->product->sku,
+                    'titulo' => $defect->product->titulo,
+                ],
+                'productImei' => [
+                    'id'   => $defect->productImei->id,
+                    'imei' => $defect->productImei->imei,
                 ],
             ];
         }
