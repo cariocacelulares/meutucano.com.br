@@ -23,7 +23,7 @@
         "stavarengo/php-sigep": "dev-master",
         "stavarengo/php-sigep-fpdf": "dev-master",
         "itbz/fpdf": "^1.7",
-        "nfephp-org/nfephp": "dev-carioca",
+        "nfephp-org/nfephp": "dev-master",
         "zizaco/entrust": "5.2.x-dev",
         "sunra/php-simple-html-dom-parser": "^1.5",
         "guzzlehttp/guzzle": "~6.0",
@@ -111,7 +111,7 @@
         },
         "nfephp": {
             "type": "git",
-            "url": "git@github.com:diego3g/nfephp.git"
+            "url": "git@github.com:cariocacelulares/nfephp.git"
         }
     }
 }
