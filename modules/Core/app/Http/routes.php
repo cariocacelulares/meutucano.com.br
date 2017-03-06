@@ -246,5 +246,9 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         // Produtos genérico
         Route::post('retirada-estoque', 'ProdutoController@retiradaEstoque');
         Route::get('retirada-estoque/{return_type}', 'ProdutoController@retiradaEstoque');
+
+        // Inventário
+        Route::post('inventario', 'InventarioController@relatorio');
+        Route::get('inventario/{return_type}', 'InventarioController@relatorio');
     });
 });

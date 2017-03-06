@@ -181,8 +181,16 @@
                                 icon: 'fa-cart-arrow-down',
                                 sref: $state.href('app.relatorios.retirada-estoque')
                             },
-                            {title: 'Caixa diário', icon: 'fa-money'},
-                            {title: 'ICMS mensal', icon: 'fa-file-pdf-o', sref: $state.href('app.admin.icms')}
+                            {
+                                title: 'ICMS mensal',
+                                icon: 'fa-file-pdf-o',
+                                sref: $state.href('app.admin.icms')
+                            },
+                            {
+                                title: 'Inventário',
+                                icon: 'fa-archive',
+                                sref: $state.href('app.relatorios.inventario')
+                            }
                         ],
                         roles: ['admin', 'gestor']
                     },
