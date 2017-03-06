@@ -37,21 +37,21 @@ class DefectTest extends TestCase
     }
 
     /**
-     * Test if stock decrease when issue is created, by deleting product imei
+     * Test if stock decrease when defect is created, by deleting product imei
      */
-    /*public function test__it_should_be_subtract_stock_when_create_defect()
+    public function test__it_should_be_subtract_stock_when_create_defect()
     {
         $productImei = ProductImei::create();
         $productStock = $productImei->productStock->fresh();
 
         $oldStock = $productStock->quantity;
 
-        Issue::create([
+        Defect::create([
             'product_imei_id' => $productImei->id
         ]);
 
         $productStock = $productStock->fresh();
 
         $this->assertEquals(($oldStock - 1), $productStock->quantity);
-    }*/
+    }
 }

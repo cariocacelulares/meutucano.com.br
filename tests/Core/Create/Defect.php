@@ -18,7 +18,7 @@ class Defect
 
             $data['product_sku'] = $productImei->productStock->product_sku;
         } else if (!isset($data['product_sku'])) {
-            $productImei = ProductImei::find($data['product_imei_id']);
+            $productImei = ProductImeiModel::find($data['product_imei_id']);
             $data['product_sku'] = $productImei->productStock->product_sku;
         }
 
