@@ -8,6 +8,8 @@ use Core\Models\Pedido;
 use Core\Models\Produto;
 use Core\Models\Produto\ProductStock;
 use Core\Models\Produto\ProductImei;
+use Core\Models\Produto\Defect;
+use Core\Models\Stock\Issue;
 use Core\Transformers\ProductImeiTransformer;
 
 /**
@@ -146,6 +148,12 @@ class ProductImeiController extends Controller
         ]);
     }
 
+    /**
+     * Get revisions of a product imei
+     *
+     * @param  string $imei
+     * @return Reponse
+     */
     public function history($imei)
     {
         $productImei = (self::MODEL)::where('imei', '=', $imei)->withTrashed()->first();
@@ -156,6 +164,7 @@ class ProductImeiController extends Controller
                 $deleteAction = null;
 
                 $issue           = $productImei->issue;
+                $defect          = $productImei->defect;
                 $removalProducts = $productImei->removalProducts;
                 $pedidoProdutos  = $productImei->pedidoProdutos;
 
@@ -174,10 +183,10 @@ class ProductImeiController extends Controller
                             ],
                         ];
                     } else if ($revision->key == 'deleted_at') {
-                        $actions[strtotime($revision->new_value)][] = [
+                        $actions[strtotime($revision->new_value ?: $revision->created_at)][] = [
                             'model' => 'ProductImei',
                             'desc'  => 'Serial excluido',
-                            'date'  => dateConvert($revision->new_value),
+                            'date'  => dateConvert($revision->new_value ?: $revision->created_at),
                             'user'  => $revision->user_id ? Usuario::find($revision->user_id)->name : null,
                         ];
                     } else if ($revision->key == 'product_stock_id') {
@@ -212,6 +221,25 @@ class ProductImeiController extends Controller
                         'date'  => dateConvert($issue->created_at),
                         'user'  => $issue->user_id ? Usuario::find($issue->user_id)->name : null,
                     ];
+                }
+
+                if ($defect) {
+                    $userId = null;
+
+                    foreach ($defect->revisionHistory as $revision) {
+                        if ($revision->key == 'created_at') {
+                            $userId = $revision->user_id;
+                        }
+                    }
+
+                    $actions[strtotime($defect->created_at)][] = [
+                        'model' => 'Defect',
+                        'desc'  => "Defeito<br/>{$defect->description}",
+                        'date'  => dateConvert($defect->created_at),
+                        'user'  => $userId ? Usuario::find($userId)->name : null,
+                    ];
+
+                    unset($userId);
                 }
 
                 foreach ($removalProducts as $removalProduct) {
@@ -285,6 +313,8 @@ class ProductImeiController extends Controller
                         $actions[$orderCreated['key']][] = $orderCreated['value'];
                     }
                 }
+
+
 
                 ksort($actions);
 
