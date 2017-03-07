@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('BaixaEstoqueListController', BaixaEstoqueListController);
 
-    function BaixaEstoqueListController(Filter, TableHeader, Usuario, StockIssue) {
+    function BaixaEstoqueListController(toaster, Filter, TableHeader, Usuario, StockIssue) {
         var vm = this;
 
         vm.users = {};
@@ -44,6 +44,13 @@
         };
 
         vm.load();
+
+        vm.destroy = function(issue) {
+            StockIssue.delete(issue.id).then(function() {
+                toaster.pop('success', 'Sucesso!', 'Baixa excluida com sucesso!');
+                vm.load();
+            });
+        };
     }
 
 })();

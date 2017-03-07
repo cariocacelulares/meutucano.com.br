@@ -29,7 +29,12 @@
             </td>
             <td class="text-center">{{ issue.user.name }}</td>
             <td class="text-center">{{ issue.created_at }}</td>
-            <td class="text-center"></td>
+            <td class="text-center">
+                <button confirm="BaixaEstoqueList.destroy(issue)" type="button" class="btn-danger"
+                    tooltips tooltip-template="Excluir baixa / Retornar estoque">
+                    <i class="fa-undo"></i>
+                </button>
+            </td>
         </tr>
     </tbody>
 </table>

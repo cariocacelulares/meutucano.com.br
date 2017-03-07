@@ -24,7 +24,7 @@
         vm.load();
 
         vm.save = function() {
-            vm.validationErrors = []; 
+            vm.validationErrors = [];
 
             ProductDefect.save(vm.defect, vm.defect.id).then(
                 function() {
@@ -35,6 +35,13 @@
                     vm.validationErrors = ValidationErrors.handle(error);
                 }
             );
+        };
+
+        vm.destroy = function() {
+            ProductDefect.delete(vm.defect.id).then(function() {
+                toaster.pop('success', 'Sucesso!', 'Defeito excluido com sucesso!');
+                $state.go('app.estoque.defeitos.index');
+            });
         };
     }
 })();

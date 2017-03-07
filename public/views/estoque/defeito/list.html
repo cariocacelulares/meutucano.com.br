@@ -21,8 +21,7 @@
         <tr ng-repeat="defect in DefeitoList.tableData.data">
             <td>{{ defect.description }}</td>
             <td class="text-center">
-                <a ui-sref="app.produtos.detalhe({sku: defect.product.sku})">{{ defect.product.sku }}</a>
-                : {{ defect.product.titulo }}
+                <a ui-sref="app.produtos.detalhe({sku: defect.product.sku})">{{ defect.product.sku }}</a>: {{ defect.product.titulo }}
             </td>
             <td class="text-center">{{ defect.productImei.imei }}</td>
             <td class="text-center">{{ defect.created_at }}</td>
