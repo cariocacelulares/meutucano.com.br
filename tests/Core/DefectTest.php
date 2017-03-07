@@ -54,4 +54,25 @@ class DefectTest extends TestCase
 
         $this->assertEquals(($oldStock - 1), $productStock->quantity);
     }
+
+    /**
+     * Test if stock increase when defect is deleted, by restoring product imei
+     */
+    public function test__it_should_be_increase_stock_when_defect_is_deleted()
+    {
+        $productImei = ProductImei::create();
+        $productStock = $productImei->productStock->fresh();
+
+        $oldStock = $productStock->quantity;
+
+        $defect = Defect::create([
+            'product_imei_id' => $productImei->id
+        ]);
+
+        $defect->delete();
+
+        $productStock = $productStock->fresh();
+
+        $this->assertEquals($oldStock, $productStock->quantity);
+    }
 }
