@@ -226,30 +226,6 @@
                         roles: ['admin']
                     },
                     {
-                        title: 'Inspeção técnica',
-                        icon: 'fa-bug',
-                        sub: [
-                            {
-                                title: 'Inspeções Realizadas',
-                                icon: 'fa-bug',
-                                sref: $state.href('app.inspecao.realizada'),
-                                roles: ['admin', 'tecnico']
-                            },
-                            {
-                                title: 'Fila de Inspeção',
-                                icon: 'fa-cogs',
-                                sref: $state.href('app.inspecao.fila'),
-                                roles: ['admin', 'tecnico']
-                            },
-                            {
-                                title: 'Solicitar Inspeção',
-                                icon: 'fa-cogs',
-                                sref: $state.href('app.inspecao.solicitada'),
-                                roles: ['admin', 'atendimento', 'faturamento']
-                            }
-                        ]
-                    },
-                    {
                         title: 'Interno',
                         icon: 'fa-desktop',
                         sub: [

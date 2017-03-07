@@ -3,7 +3,6 @@
 use Illuminate\Database\Eloquent\Model;
 use Sofa\Eloquence\Eloquence;
 use Venturecraft\Revisionable\RevisionableTrait;
-use InspecaoTecnica\Models\InspecaoTecnica;
 use Core\Models\Pedido\PedidoProduto;
 use Core\Models\Produto\ProductStock;
 
@@ -73,15 +72,6 @@ class Produto extends Model
     public function pedidoProdutos()
     {
         return $this->hasMany(PedidoProduto::class, 'produto_sku', 'sku');
-    }
-
-    /**
-     * InspecaoTecnica
-     * @return InspecaoTecnica
-     */
-    public function inspecoesTecnicas()
-    {
-        return $this->hasMany(InspecaoTecnica::class, 'produto_sku', 'sku');
     }
 
     /**

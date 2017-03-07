@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestControllerTrait;
-use InspecaoTecnica\Http\Controllers\Traits\InspecaoTecnicaTrait;
 use Rastreio\Http\Controllers\Traits\RastreioTrait;
 use Rastreio\Models\Rastreio;
 use Rastreio\Models\Logistica;
@@ -16,7 +15,7 @@ use Rastreio\Transformers\LogisticaTransformer;
  */
 class LogisticaController extends Controller
 {
-    use RestControllerTrait, RastreioTrait, InspecaoTecnicaTrait;
+    use RestControllerTrait, RastreioTrait;
 
     const MODEL = Logistica::class;
 
@@ -55,8 +54,6 @@ class LogisticaController extends Controller
     public function store(Request $request)
     {
         try {
-            $this->aplicarDevolucao(Input::get(['inspecoes']));
-
             $logistica = (self::MODEL)::create(Input::except(['protocolo', 'imagem']));
 
             if (Input::has('acao')) {
@@ -86,8 +83,6 @@ class LogisticaController extends Controller
     public function update($id, Request $request)
     {
         try {
-            $this->aplicarDevolucao(Input::get(['inspecoes']));
-
             $logistica = (self::MODEL)::findOrFail($id);
             $logistica->fill(Input::except(['protocolo']));
             $logistica->save();

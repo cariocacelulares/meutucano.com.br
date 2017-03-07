@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
-use InspecaoTecnica\Models\InspecaoTecnica;
 use Core\Models\Produto;
 use Core\Models\Pedido\PedidoProduto;
 use Core\Http\Requests\ProdutoRequest as Request;

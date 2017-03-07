@@ -11,7 +11,6 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'R
             Route::get('important', 'RastreioController@important');
             Route::get('historico/{id}', 'RastreioController@imagemHistorico');
             Route::get('pi/{id}', 'RastreioController@pi');
-            Route::get('inspecao-tecnica/{id}', 'RastreioController@getPedidoProdutoInspecao');
             Route::get('busca-seminovos/{id}', 'RastreioController@existsSeminovos');
 
             Route::put('refresh_all', 'RastreioController@refreshAll');

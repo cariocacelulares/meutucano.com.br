@@ -77,7 +77,6 @@
                         <strong tooltips tooltip-template="{{ produto.produto.titulo }}">{{ produto.produto_sku }}</strong>
                         <span tooltips tooltip-template="Desconto: {{ (produto.valor - (produto.valor - ((produto.valor * pedido.desconto) / 100))) | currency }}">: {{ produto.valor | currency }}</span>
                     </span>
-                    <span ng-repeat="inspecao in produto.inspecoes" ng-class="{ 'label-success': inspecao.revisado_at, 'm-r-10': !$last }" class="label">{{ inspecao.id }}</span>
                 </p>
             </td>
             <td class="text-center">{{ pedido.estimated_delivery }}</td>

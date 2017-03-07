@@ -53,10 +53,6 @@ class PedidoController extends Controller
                 'rastreios',
                 'produtos',
                 'produtos.produto',
-                'produtos.inspecoes' => function ($query) {
-                    $query->orderBy('priorizado', 'DESC');
-                    $query->orderBy('id', 'ASC');
-                },
                 'comentarios'
             ])
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
@@ -191,10 +187,6 @@ class PedidoController extends Controller
                 'produtos',
                 'produtos.produto',
                 'produtos.productImei',
-                'produtos.inspecoes' => function ($query) {
-                    $query->orderBy('priorizado', 'DESC');
-                    $query->orderBy('id', 'ASC');
-                },
                 'comentarios',
                 'rastreios.devolucao',
                 'rastreios.pi',

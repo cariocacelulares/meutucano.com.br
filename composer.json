@@ -63,7 +63,6 @@
             "Bootstrap\\": "bootstrap/",
             "Core\\": "modules/Core/app",
             "Gamification\\": "modules/Gamification/app",
-            "InspecaoTecnica\\": "modules/InspecaoTecnica/app",
             "Magento\\": "modules/Magento/app",
             "Marketing\\": "modules/Marketing/app",
             "Meta\\": "modules/Meta/app",

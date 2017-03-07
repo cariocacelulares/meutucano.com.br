@@ -12,9 +12,6 @@
         <testsuite name="app">
             <directory>./tests/</directory>
         </testsuite>
-        <testsuite name="InspecaoTecnica">
-            <directory>./tests/InspecaoTecnica/</directory>
-        </testsuite>
         <testsuite name="Core">
             <directory>./tests/Core/</directory>
         </testsuite>

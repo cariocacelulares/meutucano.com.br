@@ -2,7 +2,6 @@
     <page-title icon="fa-first-order" title="Pedido {{ PedidoDetalhe.pedido.codigo_marketplace }}" description="Pedido realizado em {{ PedidoDetalhe.pedido.marketplace_readable || 'Site' }}"></page-title>
     <div roles="admin|gestor|atendimento" class="col-md-6 button-bar">
         <button roles="admin|gestor|faturamento" ng-if="PedidoDetalhe.pedido.status == 1 && PedidoDetalhe.pedido.notas.length" class="btn-success" ng-click="PedidoDetalhe.invoice())"><i class="fa-check"></i>&nbsp; Faturar</button>
-        <button class="btn-complete" ng-click="PedidoDetalhe.inspecaoTecnicaHelper.requestInspection(PedidoDetalhe.pedido.id)" ng-if="PedidoDetalhe.hasSeminovo"><i class="fa-bug"></i>&nbsp; Solicitar inspeção</button>
         <button class="btn-primary" ng-click="PedidoDetalhe.togglePriority()" ng-if="PedidoDetalhe.pedido.can_prioritize"><i class="fa-arrow-{{ PedidoDetalhe.pedido.priorizado ? 'down' : 'up' }}"></i>&nbsp; {{ PedidoDetalhe.pedido.priorizado ? 'Remover prioridade' : 'Priorizar' }}</button>
         <button class="btn-info" ng-click="PedidoDetalhe.toggleHold()" ng-if="PedidoDetalhe.pedido.can_hold || PedidoDetalhe.pedido.segurado"><i class="fa-{{ PedidoDetalhe.pedido.segurado ? 'unlock' : 'lock' }}"></i>&nbsp; {{ PedidoDetalhe.pedido.segurado ? 'Liberar' : 'Segurar' }}</button>
         <button class="btn-danger" ng-click="PedidoDetalhe.pedidoHelper.cancel(PedidoDetalhe.pedido, 'app.pedidos.index')" ng-if="PedidoDetalhe.pedido.can_cancel"><i class="fa-close"></i>&nbsp; Cancelar</button>
@@ -317,11 +316,6 @@
                     </td>
                     <td class="text-left">
                         <b>{{ produto.produto.titulo }}</b><br>
-                        <span ng-repeat="inspecao in produto.inspecoes" ng-class="{ 'label-success': inspecao.revisado_at }" class="label m-r-10">{{ inspecao.id }}</span>
-                        <a ng-if="!produto.inspecoes[0].revisado_at && produto.produto.estado == '1' && produto.inspecoes.length"
-                            ng-click="PedidoDetalhe.inspecaoTecnicaHelper.alterarPrioridade(produto.id, true)" class="btn-xs btn-primary">
-                                <i class="fa-arrow-{{ produto.inspecoes[0].priorizado ? 'down' : 'up' }}"></i>&nbsp; {{ produto.inspecoes[0].priorizado ? 'Remover prioridade da' : 'Priorizar' }} inspeção
-                        </a>
                         <small class="hint-text">{{ produto.productImei.imei }}</small>
                     </td>
                     <td class="text-center">{{ produto.valor | currency }}</td>
