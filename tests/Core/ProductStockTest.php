@@ -29,7 +29,16 @@ class ProductStockTest extends TestCase
         ];
 
         $this->json('POST', '/api/produto-estoque', $data)
-            ->seeStatusCode(201);
+            ->seeStatusCode(201)
+            ->seeJsonStructure([
+                'data' => [
+                    'id',
+                    'stock_slug',
+                    'product_sku',
+                    'quantity',
+                    'serial_enabled',
+                ]
+            ]);
 
         $this->seeInDatabase('product_stocks', $data);
     }
@@ -49,7 +58,16 @@ class ProductStockTest extends TestCase
         ];
 
         $this->json('PUT', "/api/produto-estoque/{$productStock->id}", $data)
-            ->seeStatusCode(200);
+            ->seeStatusCode(200)
+            ->seeJsonStructure([
+                'data' => [
+                    'id',
+                    'stock_slug',
+                    'product_sku',
+                    'quantity',
+                    'serial_enabled',
+                ]
+            ]);
 
         $this->seeInDatabase('product_stocks', array_merge($data, [
             'id'             => $productStock->id,
@@ -72,7 +90,16 @@ class ProductStockTest extends TestCase
         ];
 
         $this->json('PUT', "/api/produto-estoque/{$productStock->id}", $data)
-            ->seeStatusCode(200);
+            ->seeStatusCode(200)
+            ->seeJsonStructure([
+                'data' => [
+                    'id',
+                    'stock_slug',
+                    'product_sku',
+                    'quantity',
+                    'serial_enabled',
+                ]
+            ]);
 
         $this->seeInDatabase('product_stocks', array_merge($data, [
             'id'             => $productStock->id,

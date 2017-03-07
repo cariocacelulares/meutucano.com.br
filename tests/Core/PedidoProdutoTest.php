@@ -38,7 +38,17 @@ class PedidoProdutoTest extends TestCase
         ];
 
         $this->json('POST', '/api/pedido-produtos', $data)
-            ->seeStatusCode(201);
+            ->seeStatusCode(201)
+            ->seeJsonStructure([
+                'data' => [
+                    'id',
+                    'pedido_id',
+                    'produto_sku',
+                    'product_imei_id',
+                    'product_stock_id',
+                    'valor',
+                ]
+            ]);
 
         $this->seeInDatabase('pedido_produtos', $data);
     }
@@ -60,8 +70,20 @@ class PedidoProdutoTest extends TestCase
         ];
 
         $this->json('PUT', "/api/pedido-produtos/{$orderProduct->id}", $data)
-            ->seeStatusCode(200);
+            ->seeStatusCode(200)
+            ->seeJsonStructure([
+                'data' => [
+                    'id',
+                    'pedido_id',
+                    'produto_sku',
+                    'product_imei_id',
+                    'product_stock_id',
+                    'valor',
+                ]
+            ]);
 
-        $this->seeInDatabase('pedido_produtos', $data);
+        $this->seeInDatabase('pedido_produtos', array_merge($data, [
+            'id' => $orderProduct->id
+        ]));
     }
 }

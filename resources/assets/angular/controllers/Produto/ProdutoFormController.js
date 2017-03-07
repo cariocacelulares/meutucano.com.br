@@ -210,7 +210,7 @@
                         toaster.pop('success', 'Sucesso!', 'Produto salvo com sucesso!');
 
                         ProductStock.refresh(vm.productStocks).then(function (response) {
-                            $state.go('app.produtos.index');
+                            vm.load();
                         });
                     },
                     function(error) {

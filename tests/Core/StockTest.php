@@ -23,7 +23,15 @@ class StockTest extends TestCase
         ];
 
         $this->json('POST', '/api/estoque', $data)
-            ->seeStatusCode(201);
+            ->seeStatusCode(201)
+            ->seeJsonStructure([
+                'data' => [
+                    'slug',
+                    'title',
+                    'include',
+                    'priority',
+                ]
+            ]);
 
         $this->seeInDatabase('stocks', $data);
 }
@@ -43,7 +51,15 @@ class StockTest extends TestCase
         ];
 
         $this->json('PUT', "/api/estoque/{$stock->slug}", $data)
-            ->seeStatusCode(200);
+            ->seeStatusCode(200)
+            ->seeJsonStructure([
+                'data' => [
+                    'slug',
+                    'title',
+                    'include',
+                    'priority',
+                ]
+            ]);
 
         $this->seeInDatabase('stocks', array_merge($data, [
             'slug' => $stock->slug

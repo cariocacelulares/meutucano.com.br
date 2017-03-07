@@ -34,6 +34,12 @@ class DefectTest extends TestCase
                     'description',
                 ]
             ]);
+
+        $this->seeInDatabase('product_defects', [
+            'product_sku'     => $productImei->productStock->product_sku,
+            'product_imei_id' => $productImei->id,
+            'description'     => $data['description'],
+        ]);
     }
 
     /**

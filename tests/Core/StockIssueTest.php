@@ -39,6 +39,13 @@ class StockIssueTest extends TestCase
                     'description',
                 ]
             ]);
+
+         $this->seeInDatabase('stock_issues', [
+             'user_id'         => $user->id,
+             'product_imei_id' => $productImei->id,
+             'reason'          => 'Outro',
+             'description'     => 'Caiu da janela'
+         ]);
     }
 
     /**

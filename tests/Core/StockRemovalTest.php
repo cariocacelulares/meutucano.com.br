@@ -45,6 +45,20 @@ class StockRemovalTest extends TestCase
                     'user_id',
                 ]
             ]);
+
+         $this->seeInDatabase('stock_removals', [
+             'user_id' => $user->id
+         ]);
+
+         $this->seeInDatabase('stock_removal_products', [
+             'product_imei_id'  => $productImei1->id,
+             'product_stock_id' => $productImei1->product_stock_id,
+         ]);
+
+         $this->seeInDatabase('stock_removal_products', [
+             'product_imei_id'  => $productImei2->id,
+             'product_stock_id' => $productImei2->product_stock_id,
+         ]);
     }
 
     /**
