@@ -70,7 +70,8 @@
             "Rastreio\\": "modules/Rastreio/app",
             "Skyhub\\": "modules/Skyhub/app",
             "Sugestao\\": "modules/Sugestao/app",
-            "Allnation\\": "modules/Allnation/app"
+            "Allnation\\": "modules/Allnation/app",
+            "Mercadolivre\\": "modules/Mercadolivre/app"
         },
         "files": [
             "app/helpers.php"
