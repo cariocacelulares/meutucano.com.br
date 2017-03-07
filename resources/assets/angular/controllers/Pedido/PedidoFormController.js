@@ -75,7 +75,7 @@
         vm.updateTotal = function() {
             var total = 0;
             for (var key in vm.order.products) {
-                total += vm.order.products[key].valor;
+                total += parseFloat(vm.order.products[key].valor);
             }
 
             vm.order.total = total;
