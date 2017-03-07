@@ -43,6 +43,17 @@ class RemovalController extends Controller
     public function store(Request $request)
     {
         try {
+            $openRemoval = (self::MODEL)
+                ::where('user_id', '=', Input::get('user_id'))
+                ->whereNull('closed_at')
+                ->first();
+
+            if ($openRemoval) {
+                return $this->validationFailResponse([
+                    'Este usuário possui uma retirada em aberto!'
+                ]);
+            }
+
             $removal = (self::MODEL)
                 ::create(Input::except('removal_products'));
 

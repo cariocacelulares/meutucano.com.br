@@ -48,7 +48,7 @@
             <button ng-if="!RetiradaEstoqueForm.stockRemoval.id" ng-click="RetiradaEstoqueForm.add()" class="btn-info pull-right" type="button">
                 <i class="fa-plus"></i>&nbsp; Adicionar
             </button>
-            <button ng-if="RetiradaEstoqueForm.stockRemoval.id && !RetiradaEstoqueForm.stockRemoval.closed_at" ng-click="RetiradaEstoqueForm.confirm()" class="btn-info pull-right" type="button">
+            <button ng-if="(RetiradaEstoqueForm.stockRemoval.id && !RetiradaEstoqueForm.stockRemoval.closed_at) && currentUser.id == RetiradaEstoqueForm.stockRemoval.user.id" ng-click="RetiradaEstoqueForm.confirm()" class="btn-info pull-right" type="button">
                 <i class="fa-check"></i>&nbsp; Confirmar
             </button>
             <button ng-if="RetiradaEstoqueForm.stockRemoval.id && !RetiradaEstoqueForm.stockRemoval.closed_at" ng-click="RetiradaEstoqueForm.return()" class="btn-info pull-right m-r-10" type="button">
