@@ -276,3 +276,39 @@ if (!function_exists('diffForHumans')) {
         return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date)->diffForHumans();
     }
 }
+
+if (!function_exists('parseMarketplaceId')) {
+    /**
+     * Formata o ID do pedido no marketplace
+     *
+     * @param  string  $marketplace
+     * @param  id      $pedidoId
+     * @return string
+     */
+    function parseMarketplaceId($marketplace, $pedidoId)
+    {
+        if ($marketplace === 'B2W') {
+            if (substr($pedidoId, 0, 1) !== '0') {
+                $inicio = substr($pedidoId, 0, 2);
+
+                if ($inicio === '10') {
+                    $inicioId = '01';
+                    $posSub   = 2;
+                } else {
+                    $inicioId = '0' . substr($pedidoId, 0, 1);
+                    $posSub   = 1;
+                }
+
+                $fim = substr($pedidoId, $posSub, -2);
+
+                return $inicioId . '-' . $fim;
+            }
+        } elseif ($marketplace === 'WALMART') {
+            if (strpos($pedidoId, '-') > 0) {
+                return substr($pedidoId, 0, strpos($pedidoId, '-'));
+            }
+        }
+
+        return $pedidoId;
+    }
+}

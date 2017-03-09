@@ -122,6 +122,7 @@ class ProductStockController extends Controller
         try {
             $sku        = Input::get('sku');
             $stock_slug = Input::get('stock_slug');
+            $duplicate  = [];
 
             if ($sku && $stock_slug) {
                 $quantity = Input::get('quantity');
@@ -143,12 +144,25 @@ class ProductStockController extends Controller
                                 continue;
                             }
 
-                            $productImeis[] = new ProductImei([
-                                'imei' => $imei,
-                            ]);
+                            $productImei = ProductImei
+                                ::where('imei', $imei)
+                                ->withTrashed()
+                                ->first();
+
+                            if (!$productImei) {
+                                $productImeis[] = new ProductImei([
+                                    'imei' => $imei,
+                                ]);
+                            } else if (!is_null($productImei->deleted_at)) {
+                                $productImei->restore();
+                                $productImei->product_stock_id = $productStock->id;
+                                $productImei->save();
+                            } else {
+                                $duplicate[] = $imei;
+                            }
                         }
 
-                        $productStock->productImeis()->saveMany($productImeis);
+                        $productStock->productImeis()->saveMany(array_unique($productImeis));
                     } else {
                         return $this->validationFailResponse([
                             'O estoque que você selecionou possui controle de serial e os seriais não foram informados.'
@@ -167,6 +181,12 @@ class ProductStockController extends Controller
             } else {
                 return $this->validationFailResponse([
                     'Não foi possível encontrar os identificadores do produto e do estoque.'
+                ]);
+            }
+
+            if ($duplicate) {
+                return $this->validationFailResponse([
+                    'O(s) seriai(s) ' . implode(', ', $duplicate) . ' não foram registrado neste produto pois pertencem a outro.'
                 ]);
             }
 

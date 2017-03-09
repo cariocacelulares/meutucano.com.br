@@ -94,6 +94,8 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
 
         Route::put('prioridade/{pedido_id}', 'PedidoController@prioridade');
         Route::put('segurar/{pedido_id}', 'PedidoController@segurar');
+
+        Route::post('upload', 'UploadController@upload');
     });
     Route::resource('pedidos', 'Pedido\PedidoController');
 
@@ -220,11 +222,6 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
      * Partials
      */
     Route::group(['namespace' => 'Partials'], function () {
-        Route::post('upload', [
-            'middleware' => ['role:admin|gestor|atendimento|faturamento'],
-            'uses' => 'UploadController@upload'
-        ]);
-
         Route::get('search', 'SearchController@search');
     });
 

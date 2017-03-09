@@ -16,7 +16,7 @@ class AddProductStockProductImeiAndTimestampsFieldsToPedidoProdutosTable extends
         echo 'executing AddProductStockProductImeiAndTimestampsFieldsToPedidoProdutosTable ' . date('H:i:s') . PHP_EOL;
 
         Schema::table('pedido_produtos', function ($table) {
-            $table->unsignedInteger('product_stock_id')->after('produto_sku');
+            $table->unsignedInteger('product_stock_id')->nullable()->after('produto_sku');
             $table->unsignedInteger('product_imei_id')->nullable()->default(null)->after('product_stock_id');
             $table->timestamps();
         });
