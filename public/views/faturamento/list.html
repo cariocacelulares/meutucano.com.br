@@ -3,7 +3,7 @@
     <div class="col-md-6 button-bar">
         <div class="row">
             <form class="form-default form-clean col-md-9" ng-submit="FaturamentoList.rastreioHelper.generateCode()" style="padding-top:3px">
-                <div class="col-md-6 p-l-0 form-group">
+                <div class="col-md-6 p-l-0 form-group" ng-class="{ 'pull-right': !FaturamentoList.rastreioHelper.codigo.rastreio }">
                     <div class="input-group">
                         <select ng-model="FaturamentoList.rastreioHelper.codigo.servico" ng-init="FaturamentoList.rastreioHelper.codigo.servico = '0'" class="bg-white">
                             <option value="0">PAC</option>
@@ -14,7 +14,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 form-group p-r-0">
+                <div class="col-md-6 form-group p-r-0" ng-if="FaturamentoList.rastreioHelper.codigo.rastreio">
                     <div class="input-group">
                         <input type="text" ng-model="FaturamentoList.rastreioHelper.codigo.rastreio" class="bg-white" readonly>
                         <div class="input-group-btn">

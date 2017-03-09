@@ -28,11 +28,22 @@ class UploadController extends Controller
     use RestControllerTrait,
         Uploadable;
 
+    /**
+     * Call trait method to prepare upload
+     *
+     * @return Response
+     */
     public function upload()
     {
         return $this->uploadMultiple(Input::file('files'));
     }
 
+    /**
+     * Process all data to import info to invoice order
+     *
+     * @param  string $fileName name of UploadedFile
+     * @return bool|array       return of process
+     */
     public function processUpload($fileName)
     {
         try {
@@ -88,6 +99,12 @@ class UploadController extends Controller
         return false;
     }
 
+    /**
+     * Validate and import all products
+     *
+     * @param  Pedido $order
+     * @return void
+     */
     private function importProducts($order)
     {
         $reenvio  = strstr($this->nfe->infAdic->infCpl, 'REENVIO') ? true : false;
@@ -237,7 +254,15 @@ class UploadController extends Controller
         }
     }
 
-    private function sendEmailNotification($products, $order, $rastreio, $invoice)
+    /**
+     * Send email notification to customer with danfe
+     *
+     * @param  Pedido $order
+     * @param  Rastreio $rastreio
+     * @param  Nota $invoice
+     * @return void
+     */
+    private function sendEmailNotification($order, $rastreio, $invoice)
     {
         if ($this->nfe->dest->email) {
             $nome    = (string) $this->nfe->dest->xNome;
@@ -248,7 +273,7 @@ class UploadController extends Controller
             if (\Config::get('core.email_send_enabled')) {
                 $mail = Mail::send('emails.compra', [
                     'nome'     => $this->nfe->dest->xNome,
-                    'produtos' => $products,
+                    'produtos' => $this->getProducts(),
                     'rastreio' => $rastreio->rastreio
                 ], function ($message) use ($nota_id, $email, $nome, $arquivo) {
                     with(new NotaController())->danfe($nota_id, 'F', $arquivo);
@@ -276,6 +301,12 @@ class UploadController extends Controller
         }
     }
 
+    /**
+     * Import order taxation
+     *
+     * @param  Pedido $order
+     * @return Imposto|false
+     */
     private function importTaxation($order)
     {
         $taxation                    = Imposto::findOrNew($order->id);
@@ -297,6 +328,15 @@ class UploadController extends Controller
         return $taxation;
     }
 
+    /**
+     * Import order invoice
+     *
+     * @param  string $key      invoice key
+     * @param  Pedido $order
+     * @param  string $fileName
+     * @param  string $dateTime
+     * @return Nota|false
+     */
     private function importInvoice($key, $order, $fileName, $dateTime)
     {
         $nota = Nota::withTrashed()->firstOrNew([
@@ -320,6 +360,13 @@ class UploadController extends Controller
         }
     }
 
+    /**
+     * Import order rastreio
+     *
+     * @param  Pedido $order
+     * @param  stringn $dateTime
+     * @return Rastreio|false
+     */
     private function importRastreio($order, $dateTime)
     {
         $codRastreio = null;
@@ -390,6 +437,13 @@ class UploadController extends Controller
         }
     }
 
+    /**
+     * Import order
+     *
+     * @param  string $key
+     * @param  int $cfop
+     * @return Pedido|false
+     */
     private function importOrder($key, $cfop)
     {
         $order         = null;
@@ -456,6 +510,12 @@ class UploadController extends Controller
         return $order;
     }
 
+    /**
+     * Import order customer
+     *
+     * @param  Pedido $order
+     * @return Cliente|false
+     */
     private function importCliente($order)
     {
         if ($this->nfe->dest->CNPJ) {
@@ -496,6 +556,12 @@ class UploadController extends Controller
         return $client;
     }
 
+    /**
+     * Import client address
+     *
+     * @param  Cliente $client
+     * @return Endereco|false
+     */
     private function importClienteEndereco($client)
     {
         $address = Endereco::firstOrCreate([
