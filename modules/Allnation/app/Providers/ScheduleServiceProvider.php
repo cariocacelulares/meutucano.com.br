@@ -32,8 +32,8 @@ class ScheduleServiceProvider extends ServiceProvider
             //$schedule->command('allnation:stocks-prices')
                 //->everyTenMinutes();
 
-            $schedule->command('allnation:products')
-                ->twiceDaily(2, 13);
+            //$schedule->command('allnation:products')
+                //->twiceDaily(2, 13);
         });
     }
 
