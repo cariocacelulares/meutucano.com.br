@@ -116,7 +116,7 @@
                             {
                                 title: 'Entrada',
                                 icon: 'fa-arrow-up',
-                                sref: $state.href('app.estoque.enrada.index')
+                                sref: $state.href('app.estoque.entrada.index')
                             },
                             {
                                 title: 'Baixa',
