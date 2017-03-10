@@ -2,7 +2,6 @@
     <page-title icon="fa-mobile" title="Gerenciamento do produto" description="Aqui é possível visualizar e alterar todas as informações do produto"></page-title>
     <div class="col-md-6 button-bar">
         <a ng-click="ProdutoForm.save()" title="Salvar produto" class="btn-success"><i class="fa-save"></i>&nbsp; Salvar</a>
-        <button ng-if="ProdutoForm.produto.sku" class="btn-info" ng-click="ProdutoForm.openImeiForm()"><i class="fa-barcode"></i>&nbsp; Entrada</button>
         <button class="btn-danger" confirm="ProdutoForm.destroy()"><i class="fa-trash"></i>&nbsp; Excluir</button>
         <a onclick="history.back()" title="Voltar para a página anterior" class="btn-default"><i class="fa-reply"></i>&nbsp; Voltar</a>
     </div>

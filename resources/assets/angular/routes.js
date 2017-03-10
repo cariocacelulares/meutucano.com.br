@@ -471,6 +471,23 @@
                     controller: 'RetiradaEstoqueFormController as RetiradaEstoqueForm'
                 })
 
+                .state('app.estoque.entrada', {
+                    url: '/entradas',
+                    templateUrl: 'views/layouts/default.html',
+                })
+
+                .state('app.estoque.entrada.index', {
+                    url: '/list',
+                    templateUrl: 'views/estoque/entrada/list.html',
+                    controller: 'EntradaEstoqueListController as EntradaEstoqueList'
+                })
+
+                .state('app.estoque.entrada.form', {
+                    url: '/form',
+                    templateUrl: 'views/estoque/entrada/form.html',
+                    controller: 'EntradaEstoqueFormController as EntradaEstoqueForm'
+                })
+
                 .state('app.estoque.baixa', {
                     url: '/baixas',
                     templateUrl: 'views/layouts/default.html',

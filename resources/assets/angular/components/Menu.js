@@ -114,6 +114,11 @@
                                 sref: $state.href('app.estoque.retirada.index')
                             },
                             {
+                                title: 'Entrada',
+                                icon: 'fa-arrow-up',
+                                sref: $state.href('app.estoque.enrada.index')
+                            },
+                            {
                                 title: 'Baixa',
                                 icon: 'fa-arrow-down',
                                 sref: $state.href('app.estoque.baixa.index')

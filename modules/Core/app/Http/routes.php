@@ -162,7 +162,6 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::group(['prefix' => 'produto-estoque', 'namespace' => 'Produto'], function () {
         Route::get('list/{sku}', 'ProductStockController@listBySku');
         Route::get('slug/{slug}', 'ProductStockController@listBySlug');
-        Route::post('entry', 'ProductStockController@entry');
         Route::post('refresh', 'ProductStockController@refresh');
         Route::get('adicionar/{sku}', 'ProductStockController@addOptions');
         Route::get('transferencia/{id}', 'ProductStockController@transferOptions');
