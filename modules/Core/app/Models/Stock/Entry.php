@@ -28,6 +28,7 @@ class Entry extends Model
     protected $fillable = [
         'user_id',
         'supplier_id',
+        'description',
         'confirmed_at',
     ];
 

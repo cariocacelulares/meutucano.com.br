@@ -16,6 +16,24 @@ class StockProvider
      * @param  string $stock
      * @return int
      */
+    public function getObjects($sku, $stock = 'default')
+    {
+        $productStock = ProductStock::with('stock')
+            ->where('product_sku', $sku);
+
+        if ($stock) {
+            $productStock->where('stock_slug', $stock);
+        }
+
+        return $productStock->get();
+    }
+
+    /**
+     * Get stock quantity
+     * @param  int $sku
+     * @param  string $stock
+     * @return int
+     */
     public function get($sku, $stock = 'default')
     {
         return ProductStock::where('product_sku', $sku)

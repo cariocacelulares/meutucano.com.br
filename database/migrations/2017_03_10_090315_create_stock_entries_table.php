@@ -17,7 +17,8 @@ class CreateStockEntriesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id')->index();
             $table->unsignedInteger('supplier_id')->index();
-            $table->string('confirmed_at')->dateTime();
+            $table->text('description', 65535);
+            $table->dateTime('confirmed_at');
             $table->softDeletes();
 			$table->timestamps();
 

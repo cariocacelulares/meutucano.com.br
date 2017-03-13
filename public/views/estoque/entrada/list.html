@@ -1,7 +1,7 @@
 <div id="page-header" class="row">
-    <page-title icon="fa fa-arrow-down" title="Baixas de estoque" description="Lista todas as baixas de estoque."></page-title>
+    <page-title icon="fa fa-arrow-down" title="Baixas de estoque" description="Lista todas as entradas de estoque."></page-title>
     <div class="col-md-6 button-bar">
-        <a ui-sref="app.estoque.baixa.form" class="btn-success">
+        <a ui-sref="app.estoque.entrada.form" class="btn-success">
             <i class="fa-plus">&nbsp;</i> Adicionar
         </a>
     </div>
@@ -15,7 +15,7 @@
             <th class="text-center" width="160">Data</th>
             <th width="75"></th>
         </tr>
-        <tr class="table-filter" static-include="views/estoque/baixa/list_filter.html"></tr>
+        <tr class="table-filter" static-include="views/estoque/entrada/list_filter.html"></tr>
     </thead>
     <tbody ng-if="EntradaEstoqueList.tableData.data && !EntradaEstoqueList.loading">
         <tr ng-repeat="issue in EntradaEstoqueList.tableData.data">
@@ -31,7 +31,7 @@
             <td class="text-center">{{ issue.created_at }}</td>
             <td class="text-center">
                 <button confirm="EntradaEstoqueList.destroy(issue)" type="button" class="btn-danger"
-                    tooltips tooltip-template="Excluir baixa / Retornar estoque">
+                    tooltips tooltip-template="Excluir entrada / Retornar estoque">
                     <i class="fa-undo"></i>
                 </button>
             </td>

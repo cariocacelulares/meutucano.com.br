@@ -210,6 +210,23 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::resource('estoque/baixa', 'Stock\IssueController');
 
     /**
+     * Stock entry
+     */
+    Route::group(['prefix' => 'estoque/entrada', 'namespace' => 'Stock'], function () {
+        Route::get('list', 'EntryController@tableList');
+    });
+    Route::resource('estoque/entrada', 'Stock\EntryController');
+
+    /**
+     * Stock entry invoice
+     */
+    Route::group(['prefix' => 'estoque/entrada/nota', 'namespace' => 'Stock\Entry'], function () {
+        Route::get('list', 'InvoiceController@tableList');
+        Route::post('upload', 'InvoiceController@upload');
+    });
+    Route::resource('estoque/entrada/nota', 'Stock\InvoiceController');
+
+    /**
      * Product defect
      */
     Route::group(['prefix' => 'produto/defeito', 'namespace' => 'Produto'], function () {

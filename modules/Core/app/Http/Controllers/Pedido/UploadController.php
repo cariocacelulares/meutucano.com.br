@@ -48,7 +48,7 @@ class UploadController extends Controller
     {
         try {
             $cfop = (int) $this->getProducts()[0]->prod->CFOP;
-            $key  = $this->protNfe->infProt->chNFe;
+            $key  = (string) $this->protNfe->infProt->chNFe;
 
             if (!in_array($cfop, Config::get('core.notas.venda'))) {
                 return 'CFOP da nota não é compatível com essa operação!';

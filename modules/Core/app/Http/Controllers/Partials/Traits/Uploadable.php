@@ -63,7 +63,7 @@ trait Uploadable
             $message = 'Formato de arquivo inválido!';
 
             return [
-                'pedido'  => null,
+                'object'  => null,
                 'file'    => [
                     'full' => $fileName,
                     'min'  => substr($fileName, -12),
@@ -108,7 +108,7 @@ trait Uploadable
             }
 
             return [
-                'pedido'  => $upload,
+                'object'  => $upload,
                 'file'    => [
                     'full' => $fileName,
                     'min'  => substr($fileName, -12),
@@ -131,7 +131,7 @@ trait Uploadable
 
     /**
      * Get product list from XML
-     * 
+     *
      * @return array
      */
     public function getProducts()

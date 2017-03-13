@@ -11,6 +11,8 @@ class TitleVariation extends Model
 {
     protected $table = 'product_title_variations';
 
+    public $timestamps = false;
+
     /**
      * @var array
      */

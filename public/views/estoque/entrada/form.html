@@ -1,14 +1,15 @@
 <div id="page-header" class="row">
-    <page-title icon="fa-arrow-down" title="Baixa de estoque" description="Dar baixa em produtos via imei"></page-title>
+    <page-title icon="fa-arrow-up" title="Entrada de estoque" description="Gerenciar uma entrada de estoque"></page-title>
     <div class="col-md-6 button-bar">
-        <a ng-click="EntradaEstoqueForm.save()" title="Salvar produto" class="btn-success"><i class="fa-save"></i>&nbsp; Salvar</a>
+        <a ng-click="EntradaEstoqueForm.save()" class="btn-success"><i class="fa-save"></i>&nbsp; Salvar</a>
+        <button ngf-select ngf-change="EntradaEstoqueForm.upload($files)" class="btn-info" type="button"><i class="fa-upload"></i>&nbsp; Upload XML</button>
         <a onclick="history.back()" title="Voltar para a página anterior" class="btn-default"><i class="fa-reply"></i>&nbsp; Voltar</a>
     </div>
 </div>
 
 <form ng-submit="EntradaEstoqueForm.save()" novalidate="novalidate" class="form-default" id="formProduto">
     <validation errors="EntradaEstoqueForm.validationErrors"></validation>
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-md-6 form-group">
             <label for="imei">Serial</label>
             <input ng-model="EntradaEstoqueForm.baixa.imei" id="imei" placeholder="Imei do produto" required />
@@ -22,10 +23,144 @@
             </select>
         </div>
     </div>
+    -->
     <div class="row">
+        <div class="col-md-3 form-group">
+            <label for="cnpj">CNPJ</label>
+            <input ng-change="EntradaEstoqueForm.cnpjChanged()" ng-model="EntradaEstoqueForm.entry.supplier.cnpj" id="cnpj" placeholder="CNPJ" required ui-br-cnpj-mask>
+        </div>
+        <div class="col-md-3 form-group">
+            <label for="ie">Inscrição Estadual</label>
+            <input ng-model="EntradaEstoqueForm.entry.supplier.ie" id="ie" placeholder="Em branco para isento" ui-br-ie-mask>
+        </div>
+        <div class="col-md-3 form-group">
+            <label for="fone">Telefone</label>
+            <input ng-model="EntradaEstoqueForm.entry.supplier.fone" id="fone" placeholder="Núm. telefone" required ui-br-phone-number>
+        </div>
+        <div class="col-md-3 form-group">
+            <label for="crt">CRT</label>
+            <input ng-model="EntradaEstoqueForm.entry.supplier.crt" id="crt" placeholder="Código de Regime Tributário">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 form-group">
+            <label for="company_name">Fornecedor</label>
+            <input ng-model="EntradaEstoqueForm.entry.supplier.company_name" id="company_name" placeholder="Razão social" required>
+        </div>
+        <div class="col-md-6 form-group">
+            <label for="name">Nome fantasia</label>
+            <input ng-model="EntradaEstoqueForm.entry.supplier.name" id="name" placeholder="Nome da empresa" required>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 form-group">
+            <label for="cep">CEP</label>
+            <input ng-change="EntradaEstoqueForm.cepChanged()" ng-model="EntradaEstoqueForm.entry.supplier.cep" id="cep" placeholder="CEP" required ui-br-cep-mask>
+        </div>
+        <div class="col-md-5 form-group">
+            <label for="street">Rua</label>
+            <input ng-model="EntradaEstoqueForm.entry.supplier.street" id="street" placeholder="Ex. Avenida Oscar Barcelos" required>
+        </div>
+        <div class="col-md-2 form-group">
+            <label for="number">Número</label>
+            <input ng-model="EntradaEstoqueForm.entry.supplier.number" id="number" placeholder="Número da Rua">
+        </div>
+        <div class="col-md-3 form-group">
+            <label for="complement">Complemento</label>
+            <input ng-model="EntradaEstoqueForm.entry.supplier.complement" id="complement" placeholder="Ex. Ao lado da praça">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3 form-group">
+            <label for="neighborhood">Bairro</label>
+            <input ng-model="EntradaEstoqueForm.entry.supplier.neighborhood" id="neighborhood" placeholder="Ex. Centro" required>
+        </div>
+        <div class="col-md-3 form-group">
+            <label for="city">Cidade</label>
+            <input ng-model="EntradaEstoqueForm.entry.supplier.city" id="city" placeholder="Ex. Rio do Sul" required>
+        </div>
+        <div class="col-md-3 form-group">
+            <label for="uf">UF</label>
+            <input ng-model="EntradaEstoqueForm.entry.supplier.uf" id="uf" placeholder="Ex. SC" required ng-maxlength="3">
+        </div>
+        <div class="col-md-3 form-group">
+            <label for="country">País</label>
+            <input ng-model="EntradaEstoqueForm.entry.supplier.country" id="country" placeholder="Ex. Brasil" required>
+        </div>
+    </div>
+    <div ng-if="EntradaEstoqueForm.entry.invoice.key" class="row">
+        <div class="col-md-3 form-group">
+            <label for="key">Chave da nota</label>
+            <input ng-model="EntradaEstoqueForm.entry.invoice.key" id="key" required>
+        </div>
+        <div class="col-md-3 form-group">
+            <label for="series">Série</label>
+            <input ng-model="EntradaEstoqueForm.entry.invoice.series" id="series" required>
+        </div>
+        <div class="col-md-3 form-group">
+            <label for="number">Número</label>
+            <input ng-model="EntradaEstoqueForm.entry.invoice.number" id="number" required>
+        </div>
+        <div class="col-md-3 form-group">
+            <label for="model">Modelo</label>
+            <input ng-model="EntradaEstoqueForm.entry.invoice.model" id="model" required>
+        </div>
+        <div class="col-md-3 form-group">
+            <label for="cfop">CFOP</label>
+            <input ng-model="EntradaEstoqueForm.entry.invoice.cfop" id="cfop" required>
+        </div>
+        <div class="col-md-3 form-group">
+            <label for="total">Total</label>
+            <input ng-model="EntradaEstoqueForm.entry.invoice.total" id="total" required ui-money-mask>
+        </div>
+        <div class="col-md-3 form-group">
+            <label for="emission">Data de emisssão</label>
+            <input ng-model="EntradaEstoqueForm.entry.invoice.emission" id="emission" required>
+        </div>
+    </div>
+    <div class="row">
+        <button ng-click="EntradaEstoqueForm" type="button" class="btn-info pull-right">
+            <i class="fa-plus">&nbsp;</i> Adicionar produto
+        </button>
+    </div>
+    <div class="row">
+        <div ng-if="EntradaEstoqueForm.entry.products.length" class="row">
+            <div class="col-md-12">
+                <table class="table-products">
+                    <thead>
+                        <th>SKU</th>
+                        <th>Título</th>
+                        <th>EAN</th>
+                        <th>NCM</th>
+                        <th>Estoque</th>
+                        <th>Qtd</th>
+                        <th>ICMS</th>
+                        <th>PIS</th>
+                        <th>IPI</th>
+                        <th>COFINS</th>
+                        <th>Valor</th>
+                        <th>Total</th>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="produto in EntradaEstoqueForm.entry.products">
+                            <td class="text-center">{{ produto.sku }}</td>
+                            <td class="text-left">{{ produto.titulo }}</td>
+                            <td class="text-center form-group">
+                                <input type="number" ng-model="produto.qtd" min="0" required>
+                            </td>
+                            <td class="text-center form-group">
+                                <input ng-model="produto.valor" placeholder="R$" ui-money-mask required ng-change="PedidoForm.updateTotal()">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div ng-if="modified" class="row">
         <div class="col-md-12 form-group">
             <label for="description">Descrição / Observação</label>
-            <textarea ng-model="EntradaEstoqueForm.baixa.description" id="description" rows="8" placeholder="Descreva o motivo da baixa ou deixe uma observação" ng-minlength="5" required></textarea>
+            <textarea ng-model="EntradaEstoqueForm.entry.description" id="description" rows="8" placeholder="Descreva o motivo das alterações" ng-minlength="5" required></textarea>
         </div>
     </div>
 </form>
