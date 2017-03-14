@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nfeProc xmlns="http://www.portalfiscal.inf.br/nfe" versao="3.10">
+    <NFe>
+        <infNFe Id="NFe35170203987645000310550030001167211001568772" versao="3.10">
+            <ide>
+                <cUF>35</cUF>
+                <cNF>00156877</cNF>
+                <natOp>VENDA PROD. IMPORTAD</natOp>
+                <indPag>1</indPag>
+                <mod>55</mod>
+                <serie>3</serie>
+                <nNF>116721</nNF>
+                <dhEmi>2017-02-23T09:10:00-02:00</dhEmi>
+                <tpNF>1</tpNF>
+                <idDest>2</idDest>
+                <cMunFG>3550308</cMunFG>
+                <tpImp>1</tpImp>
+                <tpEmis>1</tpEmis>
+                <cDV>2</cDV>
+                <tpAmb>1</tpAmb>
+                <finNFe>1</finNFe>
+                <indFinal>0</indFinal>
+                <indPres>9</indPres>
+                <procEmi>0</procEmi>
+                <verProc>2.53</verProc>
+            </ide>
+            <emit>
+                <CNPJ>03987645000310</CNPJ>
+                <xNome>AXT TELECOMUNICACOES LTDA</xNome>
+                <xFant>02 - AXT - SP</xFant>
+                <enderEmit>
+                    <xLgr>R JOSE DE OLIVEIRA COUTINHO</xLgr>
+                    <nro>70</nro>
+                    <xCpl>MEZANINO L.06 Q.VII</xCpl>
+                    <xBairro>BARRA FUNDA</xBairro>
+                    <cMun>3550308</cMun>
+                    <xMun>SAO PAULO</xMun>
+                    <UF>SP</UF>
+                    <CEP>01144020</CEP>
+                    <cPais>1058</cPais>
+                    <xPais>BRASIL</xPais>
+                    <fone>1133044000</fone>
+                </enderEmit>
+                <IE>147320670112</IE>
+                <CRT>3</CRT>
+            </emit>
+            <dest>
+                <CNPJ>14619408000150</CNPJ>
+                <xNome>CARIOCA CELULARES ONLINE LTDA</xNome>
+                <enderDest>
+                    <xLgr>OSCAR BARCELOS</xLgr>
+                    <nro>SN</nro>
+                    <xBairro>SANTANA</xBairro>
+                    <cMun>4214805</cMun>
+                    <xMun>RIO DO SUL</xMun>
+                    <UF>SC</UF>
+                    <CEP>89160314</CEP>
+                    <cPais>1058</cPais>
+                    <xPais>BRASIL</xPais>
+                    <fone>4735213280</fone>
+                </enderDest>
+                <indIEDest>1</indIEDest>
+                <IE>257538828</IE>
+                <email>administrativo@cariocacelulares.com.br</email>
+            </dest>
+            <det nItem="1">
+                <prod>
+                    <cProd>115046</cProd>
+                    <cEAN>7898927017668</cEAN>
+                    <xProd>TEL S/ FIO LYRIX 550 MRD2 DECT DIG EXP C/ ID E VV</xProd>
+                    <NCM>85171100</NCM>
+                    <CFOP>6102</CFOP>
+                    <uCom>UN</uCom>
+                    <qCom>200.0000</qCom>
+                    <vUnCom>51.81000000</vUnCom>
+                    <vProd>10362.00</vProd>
+                    <cEANTrib>7898927017668</cEANTrib>
+                    <uTrib>UN</uTrib>
+                    <qTrib>200.0000</qTrib>
+                    <vUnTrib>51.81000000</vUnTrib>
+                    <indTot>1</indTot>
+                </prod>
+                <imposto>
+                    <ICMS>
+                        <ICMS00>
+                            <orig>1</orig>
+                            <CST>00</CST>
+                            <modBC>3</modBC>
+                            <vBC>10362.00</vBC>
+                            <pICMS>4.0000</pICMS>
+                            <vICMS>414.48</vICMS>
+                        </ICMS00>
+                    </ICMS>
+                    <IPI>
+                        <cEnq>999</cEnq>
+                        <IPITrib>
+                            <CST>50</CST>
+                            <vBC>10362.00</vBC>
+                            <pIPI>10.0000</pIPI>
+                            <vIPI>1036.20</vIPI>
+                        </IPITrib>
+                    </IPI>
+                    <PIS>
+                        <PISAliq>
+                            <CST>01</CST>
+                            <vBC>10362.00</vBC>
+                            <pPIS>1.6500</pPIS>
+                            <vPIS>170.97</vPIS>
+                        </PISAliq>
+                    </PIS>
+                    <COFINS>
+                        <COFINSAliq>
+                            <CST>01</CST>
+                            <vBC>10362.00</vBC>
+                            <pCOFINS>7.6000</pCOFINS>
+                            <vCOFINS>787.51</vCOFINS>
+                        </COFINSAliq>
+                    </COFINS>
+                </imposto>
+            </det>
+            <det nItem="2">
+                <prod>
+                    <cProd>110621</cProd>
+                    <cEAN>7898950234339</cEAN>
+                    <xProd>TEL S/ FIO MOTO6000 DECT DIGITAL C/ ID E VV</xProd>
+                    <NCM>85171100</NCM>
+                    <CFOP>6102</CFOP>
+                    <uCom>UN</uCom>
+                    <qCom>80.0000</qCom>
+                    <vUnCom>85.45000000</vUnCom>
+                    <vProd>6836.00</vProd>
+                    <cEANTrib>7898950234339</cEANTrib>
+                    <uTrib>UN</uTrib>
+                    <qTrib>80.0000</qTrib>
+                    <vUnTrib>85.45000000</vUnTrib>
+                    <indTot>1</indTot>
+                </prod>
+                <imposto>
+                    <ICMS>
+                        <ICMS00>
+                            <orig>1</orig>
+                            <CST>00</CST>
+                            <modBC>3</modBC>
+                            <vBC>6836.00</vBC>
+                            <pICMS>4.0000</pICMS>
+                            <vICMS>273.44</vICMS>
+                        </ICMS00>
+                    </ICMS>
+                    <IPI>
+                        <cEnq>999</cEnq>
+                        <IPITrib>
+                            <CST>50</CST>
+                            <vBC>6836.00</vBC>
+                            <pIPI>10.0000</pIPI>
+                            <vIPI>683.60</vIPI>
+                        </IPITrib>
+                    </IPI>
+                    <PIS>
+                        <PISAliq>
+                            <CST>01</CST>
+                            <vBC>6836.00</vBC>
+                            <pPIS>1.6500</pPIS>
+                            <vPIS>112.80</vPIS>
+                        </PISAliq>
+                    </PIS>
+                    <COFINS>
+                        <COFINSAliq>
+                            <CST>01</CST>
+                            <vBC>6836.00</vBC>
+                            <pCOFINS>7.6000</pCOFINS>
+                            <vCOFINS>519.54</vCOFINS>
+                        </COFINSAliq>
+                    </COFINS>
+                </imposto>
+            </det>
+            <total>
+                <ICMSTot>
+                    <vBC>17198.00</vBC>
+                    <vICMS>687.92</vICMS>
+                    <vICMSDeson>0</vICMSDeson>
+                    <vFCPUFDest>0</vFCPUFDest>
+                    <vICMSUFDest>0</vICMSUFDest>
+                    <vICMSUFRemet>0</vICMSUFRemet>
+                    <vBCST>0</vBCST>
+                    <vST>0</vST>
+                    <vProd>17198.00</vProd>
+                    <vFrete>0</vFrete>
+                    <vSeg>0</vSeg>
+                    <vDesc>0</vDesc>
+                    <vII>0</vII>
+                    <vIPI>1719.80</vIPI>
+                    <vPIS>283.77</vPIS>
+                    <vCOFINS>1307.05</vCOFINS>
+                    <vOutro>0</vOutro>
+                    <vNF>18917.80</vNF>
+                </ICMSTot>
+            </total>
+            <transp>
+                <modFrete>0</modFrete>
+                <transporta>
+                    <CNPJ>23864838001281</CNPJ>
+                    <xNome>MERIDIONAL CARGAS</xNome>
+                    <IE>082672679</IE>
+                    <xEnder>ROD BR 101, 262 KM 10,5 GALPAO P-29</xEnder>
+                    <xMun>VIANA</xMun>
+                    <UF>ES</UF>
+                </transporta>
+                <vol>
+                    <qVol>70</qVol>
+                    <esp>CX</esp>
+                    <pesoL>84.800</pesoL>
+                    <pesoB>199.000</pesoB>
+                </vol>
+            </transp>
+            <cobr>
+                <dup>
+                    <nDup>3  116721</nDup>
+                    <dVenc>2017-05-24</dVenc>
+                    <vDup>18917.80</vDup>
+                </dup>
+            </cobr>
+            <infAdic>
+                <infCpl>Mercadoria saindo de Armazem-geral: SPFLY TRANSPORTES E LOGISTICA EIRELI ME - CNPJ.: 17.567.346/0001-79 - I.E.: 796.070.794.110, Avenida Monteiro Lobato, 4550 Doca 63/64, Bairro: Cumbica - Guarulhos - SP Cep: 07180-000. AUT POR HENRIQUE CON REGIME ESPECIAL N.155000000063391   - Numero do Pedido: 094885  - Vendedor: CAMILA MAMEDE</infCpl>
+            </infAdic>
+        </infNFe>
+        <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+            <SignedInfo>
+                <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+                <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+                <Reference URI="#NFe35170203987645000310550030001167211001568772">
+                    <Transforms>
+                        <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+                        <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+                    </Transforms>
+                    <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+                    <DigestValue>V1MIzoBrTFFUy0ia4OGUEbxnph8=</DigestValue>
+                </Reference>
+            </SignedInfo>
+            <SignatureValue>a7QXYj6XO41XGDazzxGNJbI4ijCAMOCxKADcFUy43x7UxIwikBKo4oLBaDtTssvbSDBSrDYQOTOwnROJzlTH6YzkhqmJmhVjlVbYcOKbw4/tLG1wsSji3DZziCGzwSl+DLSVyN9pPnHX47WDR2UBOhWLNTJN/u6SIi4yIst9FAggGRdKvGkyYAh9Hz00/goHELaAJi6bRwR2NUc2GFYqqDoQSPOuO3Re+MmmmbjjasWujLPIIVbsO32GO2q9AsfsEWfJDcVgfP77o6Iurwmu6SYkIB88QKNaQMEsyjkGsbdDPwgXHr0mUup6KmHeicaP9QsCGeRVdMwWuPOhOjgalw==</SignatureValue>
+            <KeyInfo>
+                <X509Data>
+                    <X509Certificate>MIIIWDCCBkCgAwIBAgIQH9QU3M4xMIAMX+yVCjqL9jANBgkqhkiG9w0BAQsFADB4MQswCQYDVQQGEwJCUjETMBEGA1UEChMKSUNQLUJyYXNpbDE2MDQGA1UECxMtU2VjcmV0YXJpYSBkYSBSZWNlaXRhIEZlZGVyYWwgZG8gQnJhc2lsIC0gUkZCMRwwGgYDVQQDExNBQyBDZXJ0aXNpZ24gUkZCIEc0MB4XDTE2MDYwMzAwMDAwMFoXDTE3MDYwMjIzNTk1OVowgf0xCzAJBgNVBAYTAkJSMRMwEQYDVQQKFApJQ1AtQnJhc2lsMQswCQYDVQQIEwJCQTEPMA0GA1UEBxQGSUxIRVVTMTYwNAYDVQQLFC1TZWNyZXRhcmlhIGRhIFJlY2VpdGEgRmVkZXJhbCBkbyBCcmFzaWwgLSBSRkIxFjAUBgNVBAsUDVJGQiBlLUNOUEogQTExODA2BgNVBAsUL0F1dGVudGljYWRvIHBvciBDZXJ0aXNpZ24gQ2VydGlmaWNhZG9yYSBEaWdpdGFsMTEwLwYDVQQDEyhBWFQgVEVMRUNPTVVOSUNBQ09FUyBMVERBOjAzOTg3NjQ1MDAwMTU4MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtUkByr+mogryg75fSrGljIp7q5tiw90WOtT41rK+gUBTrh0kUybjPXPAGbgTSlrrNM+RrRKnxKGbgZPTE2lMpl4qLkwVdE9DcRVT4mBkPpudWUiA3qaZbAh/KanAu+nibjcsGRAZ0vIV6mkavFv37SsnwKEDWAkpce6ZdeELUSymulF2NsJKvQnNrYeV2VePgT590zW4pC4lVFjNxziRDlJsJjXrqiw8KTIdBrlwypYFkc/urfkyOsbfy1olY2jcbjreZwlKWFcCVUILblo2orw6qHs5UiA7zWgfqwqLfa6qEd9aM7Z8/+0SGGZSbZMjY+x4iFvVS8R/l2ifznAg+QIDAQABo4IDVjCCA1IwgbsGA1UdEQSBszCBsKA9BgVgTAEDBKA0BDIwNTAxMTkzNTY0MTA1OTg5MDQ5MDAwMDAwMDAwMDAwMDAwMDkwMzg5NTg4NzNTSlNSU6AeBgVgTAEDAqAVBBNBTUVMSUEgTUFSU09OIFRVUlJBoBkGBWBMAQMDoBAEDjAzOTg3NjQ1MDAwMTU4oBcGBWBMAQMHoA4EDDAwMDAwMDAwMDAwMIEbZmlzY2FsbWR4QG1keHRlbGVjb20uY29tLmJyMAkGA1UdEwQCMAAwHwYDVR0jBBgwFoAULpHq1m3lslmC3DiFKXY0FlY80D4wDgYDVR0PAQH/BAQDAgXgMH8GA1UdIAR4MHYwdAYGYEwBAgEMMGowaAYIKwYBBQUHAgEWXGh0dHA6Ly9pY3AtYnJhc2lsLmNlcnRpc2lnbi5jb20uYnIvcmVwb3NpdG9yaW8vZHBjL0FDX0NlcnRpc2lnbl9SRkIvRFBDX0FDX0NlcnRpc2lnbl9SRkIucGRmMIIBFgYDVR0fBIIBDTCCAQkwV6BVoFOGUWh0dHA6Ly9pY3AtYnJhc2lsLmNlcnRpc2lnbi5jb20uYnIvcmVwb3NpdG9yaW8vbGNyL0FDQ2VydGlzaWduUkZCRzQvTGF0ZXN0Q1JMLmNybDBWoFSgUoZQaHR0cDovL2ljcC1icmFzaWwub3V0cmFsY3IuY29tLmJyL3JlcG9zaXRvcmlvL2xjci9BQ0NlcnRpc2lnblJGQkc0L0xhdGVzdENSTC5jcmwwVqBUoFKGUGh0dHA6Ly9yZXBvc2l0b3Jpby5pY3BicmFzaWwuZ292LmJyL2xjci9DZXJ0aXNpZ24vQUNDZXJ0aXNpZ25SRkJHNC9MYXRlc3RDUkwuY3JsMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDCBmwYIKwYBBQUHAQEEgY4wgYswXwYIKwYBBQUHMAKGU2h0dHA6Ly9pY3AtYnJhc2lsLmNlcnRpc2lnbi5jb20uYnIvcmVwb3NpdG9yaW8vY2VydGlmaWNhZG9zL0FDX0NlcnRpc2lnbl9SRkJfRzQucDdjMCgGCCsGAQUFBzABhhxodHRwOi8vb2NzcC5jZXJ0aXNpZ24uY29tLmJyMA0GCSqGSIb3DQEBCwUAA4ICAQAfhh6g0AV57SWA7PX09tYYGSGl4QX6+oSMApNCAPoIRljuRmJLQ5C761/dJ6vnoDZrpNz1iwODyVdZu9EVvlPG4UF2lxdBSWzYe51vtBFmcxRtszgCzKGqUiYiw+8DOE3DWcTIC48dgOSL2aULUOZ6d+WTlprWi960diFmQvyViBbWwE1NpTecliorBi6YBZE37KGo+8kwfzV5/rGLqVpQDkxe7vq5kEy6V2pXag6rOmKbkGBqQ/enzfZoLuBttIE16GIwG6qZFTVXXTdS2egJQBLc+x/+/bd/tA8h9/iN+8JvAlE7KuYKMuEJFCxguMt+biSeEcNhLM7gXbtYwjl1Z+ytdJe4rxeqfIl48V/hNAppqyrprhg4WPwrpC0l0oeSoqxzgfbxvCAXbUkBm2hdgOlI2rtPAd74nNSMpqJPe5mkh84pi0DOqcqpEqrPNY5ycZqWL8LUcDOq5QHS9F0cvYDsEb4LvRojX4dOg6YfqnIZp3+wgl06y26BWOlBFwmpWkLeQ2rs4dcBfTl6VLulepxFsMhorsGMb20F0a3N2X+w7YKxRg+T4ZETSaYNNopTvv+12PUbjlyJv0Gh71OKzns/Cckc6nOQTjMCwWErTcDymYxPjKNJBMYFzwzk5IORxjQ+lzsxPpDE9x409fvBD5W9Cl3IhFpcjJHNWom+Kw==</X509Certificate>
+                </X509Data>
+            </KeyInfo>
+        </Signature>
+    </NFe>
+    <protNFe versao="3.10">
+        <infProt Id="Id135170119228543">
+            <tpAmb>1</tpAmb>
+            <verAplic>SP_NFE_PL_008i2</verAplic>
+            <chNFe>35170203987645000310550030001167211001568772</chNFe>
+            <dhRecbto>2017-02-23T09:13:12-03:00</dhRecbto>
+            <nProt>135170119228543</nProt>
+            <digVal>V1MIzoBrTFFUy0ia4OGUEbxnph8=</digVal>
+            <cStat>100</cStat>
+            <xMotivo>Autorizado o uso da NF-e</xMotivo>
+        </infProt>
+    </protNFe>
+</nfeProc>

@@ -5,12 +5,15 @@
         .module('MeuTucano')
         .controller('EntradaEstoqueFormController', EntradaEstoqueFormController);
 
-    function EntradaEstoqueFormController($state, envService, toaster, ValidationErrors, Upload, Cep, StockEntry) {
+    function EntradaEstoqueFormController($state, envService, toaster,
+            ValidationErrors, Upload, Cep, SelectProductHelper, ProductStock, StockEntry) {
         var vm = this;
 
         vm.validationErrors = [];
         vm.searchAddress    = true;
+        vm.originalProducts = [];
 
+        vm.taxes    = false;
         vm.modified = false;
         vm.loading  = false;
         vm.entry    = {
@@ -18,6 +21,45 @@
             invoice : {},
             products: []
         };
+
+        vm.selectProductHelper = SelectProductHelper;
+
+        /**
+         * Add new empty product to the list
+         */
+        vm.addProduct = function() {
+            vm.entry.products.push([]);
+        }
+
+        /**
+         * Open modal to select a product
+         * @param {[type]} product [description]
+         */
+        vm.setProduct = function(product) {
+            vm.selectProductHelper.open().then(function(data) {
+                var produto = data.value;
+
+                if (produto) {
+                    product.product = produto;
+                    product.product_sku = produto.sku;
+
+                    if (product.title == '' || !product.title) {
+                        product.title = produto.titulo;
+                    }
+
+                    ProductStock.listBySku(product.product_sku).then(function(stocks) {
+                        product.stocks = stocks;
+                    });
+                }
+            });
+        }
+
+        /**
+         * Show/hide taxes from products table
+         */
+        vm.toggleTaxes = function() {
+            vm.taxes = !vm.taxes;
+        }
 
         /**
          * If not set, search supplier by cnpj
@@ -77,8 +119,9 @@
                         vm.entry.products = response.object.products || null;
                         vm.entry.supplier = response.object.supplier || null;
 
-                        vm.searchAddress = false;
-                        console.log(vm.entry);
+                        vm.originalProducts = angular.copy(vm.entry.products);
+                        vm.modified         = false;
+                        vm.searchAddress    = false;
                     }
                 }).error(function() {
                     toaster.pop('error', 'Erro no upload!', 'Erro ao enviar arquivos, tente novamente!');
@@ -86,7 +129,16 @@
             }
         };
 
+        /**
+         * Check if description is needded and saves
+         */
         vm.save = function() {
+            vm.modified = !angular.equals(vm.entry.products, vm.originalProducts);
+
+            if (vm.modified && (typeof vm.entry.description == 'undefined' || !vm.entry.description.length)) {
+                return;
+            }
+
             vm.validationErrors = [];
 
             StockEntry.save(vm.entry).then(

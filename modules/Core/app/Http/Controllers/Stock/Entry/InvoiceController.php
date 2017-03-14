@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Core\Http\Controllers\Partials\Traits\Uploadable;
 use Core\Models\Stock\Entry\Invoice;
 use Core\Models\Supplier;
+use Core\Models\Produto;
 
 /**
  * Class InvoiceController
@@ -19,6 +20,11 @@ class InvoiceController extends Controller
 
     const MODEL = Entry::class;
 
+    /**
+     * Call trait method to prepare and wrap upload
+     * 
+     * @return Response
+     */
     public function upload()
     {
         return $this->uploadOnce(Input::file('file'));
@@ -66,6 +72,7 @@ class InvoiceController extends Controller
                 $sku            = $titleVariation ? $titleVariation->product_sku : null;
                 $stocks         = $sku ? \Stock::getObjects($sku) : [];
                 $productStockId = isset($stocks[0]) ? $stocks[0]->id : null;
+                $produto        = $sku ? Produto::find($sku) : null;
 
                 $products[] = [
                     'ean'                        => $ean,
@@ -79,6 +86,7 @@ class InvoiceController extends Controller
                     'pis'                        => (float) $product->imposto->PIS->PISAliq->pPIS,
                     'cofins'                     => (float) $product->imposto->COFINS->COFINSAliq->pCOFINS,
                     'product_sku'                => $sku,
+                    'product'                    => $produto,
                     'product_stock_id'           => $productStockId,
                     'product_title_variation_id' => $titleVariationId,
                     'stocks'                     => $stocks,
@@ -86,6 +94,7 @@ class InvoiceController extends Controller
             }
 
             $invoice = [
+                'file'     => 'app/public/nota/' . $fileName,
                 'key'      => $key,
                 'series'   => (string) $this->nfe->ide->serie,
                 'number'   => (string) $this->nfe->ide->nNF,

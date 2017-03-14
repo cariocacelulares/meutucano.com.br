@@ -30,6 +30,7 @@ class Invoice extends Model
         'model',
         'cfop',
         'total',
+        'file',
         'emission',
     ];
 

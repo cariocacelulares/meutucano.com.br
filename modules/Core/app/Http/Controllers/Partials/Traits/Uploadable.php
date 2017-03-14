@@ -55,7 +55,7 @@ trait Uploadable
         $message = false;
         $error   = false;
 
-        $fileName = $file->getClientOriginalName();
+        $fileName = str_slug($file->getClientOriginalName() . '-' . date('YmdHis'));
 
         // Arquivo XML
         if (strstr($file->getMimetype(), 'xml') === false) {
