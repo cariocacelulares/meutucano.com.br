@@ -483,7 +483,7 @@
                 })
 
                 .state('app.estoque.entrada.form', {
-                    url: '/form',
+                    url: '/form/{id}',
                     templateUrl: 'views/estoque/entrada/form.html',
                     controller: 'EntradaEstoqueFormController as EntradaEstoqueForm'
                 })

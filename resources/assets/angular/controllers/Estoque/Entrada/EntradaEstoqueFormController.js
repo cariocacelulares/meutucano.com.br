@@ -135,7 +135,7 @@
                         vm.entry.products = response.object.products || null;
                         vm.entry.supplier = response.object.supplier || null;
 
-                        vm.originalProducts = angular.copy(vm.entry.products);
+                        vm.originalProducts = angular.copy(vm.entry.products) || null;
                         vm.modified         = false;
                         vm.searchAddress    = false;
                     }

@@ -5,6 +5,8 @@ use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Usuario\Usuario;
 use Core\Models\Supplier;
+use Core\Models\Stock\Entry\Product;
+use Core\Models\Stock\Entry\Invoice;
 
 /**
  * Entry model
@@ -48,5 +50,23 @@ class Entry extends Model
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);
+    }
+
+    /**
+     * Invoice
+     * @return Invoice
+     */
+    public function invoice()
+    {
+        return $this->hasOne(Invoice::class, 'stock_entry_id', 'id');
+    }
+
+    /**
+     * Product
+     * @return Product
+     */
+    public function products()
+    {
+        return $this->hasOne(Product::class, 'stock_entry_id', 'id');
     }
 }

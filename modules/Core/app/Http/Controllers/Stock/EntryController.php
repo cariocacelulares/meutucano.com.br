@@ -25,7 +25,10 @@ class EntryController extends Controller
     public function tableList()
     {
         $list = (self::MODEL)
-            ::orderBy('created_at', 'DESC');
+            ::with(['supplier', 'invoice', 'products', 'user'])
+            ->join('stock_entry_invoices', 'stock_entry_invoices.stock_entry_id', 'stock_entries.id')
+            ->join('suppliers', 'stock_entries.supplier_id', 'suppliers.id')
+            ->orderBy('created_at', 'DESC');
 
         $list = $this->handleRequest($list);
 
