@@ -57,6 +57,7 @@ return [
         Spatie\FailedJobMonitor\FailedJobMonitorServiceProvider::class,
         Sofa\Eloquence\ServiceProvider::class,
         Milon\Barcode\BarcodeServiceProvider::class,
+        Livepixel\MercadoLivre\MeliServiceProvider::class
     ],
 
 

@@ -376,6 +376,12 @@
                     controller: 'RelatorioRetiradaEstoqueController as RetiradaEstoque'
                 })
 
+                .state('app.relatorios.inventario', {
+                    url: '/inventario',
+                    templateUrl: 'views/relatorio/inventario.html',
+                    controller: 'RelatorioInventarioController as RelatorioInventario'
+                })
+
                 /**
                  * Gamification
                  */
@@ -526,6 +532,29 @@
                     url: '/gerar',
                     templateUrl: 'views/estoque/imei/gerar.html',
                     controller: 'GerarImeiController as GerarImei'
+                })
+
+                .state('app.estoque.imei.consultar', {
+                    url: '/consultar',
+                    templateUrl: 'views/estoque/imei/consultar.html',
+                    controller: 'ConsultarImeiController as ConsultarImei'
+                })
+
+                .state('app.estoque.defeitos', {
+                    url: '/defeitos',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.estoque.defeitos.index', {
+                    url: '/list',
+                    templateUrl: 'views/estoque/defeito/list.html',
+                    controller: 'DefeitoListController as DefeitoList'
+                })
+
+                .state('app.estoque.defeitos.form', {
+                    url: '/form/{id}',
+                    templateUrl: 'views/estoque/defeito/form.html',
+                    controller: 'DefeitoFormController as DefeitoForm'
                 })
             ;
         });

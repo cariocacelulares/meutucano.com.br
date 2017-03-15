@@ -25,6 +25,7 @@
 
                 /**
                  * Parse imeis and return product info
+                 *
                  * @param  {string}  imeis a list of imeis separated by newline
                  * @return {Object}        a list of product info
                  */
@@ -32,6 +33,16 @@
                     return Restangular.one(rest.baseUrl + '/parse').customPOST({
                         imeis: imeis
                     });
+                },
+
+                /**
+                 * Return a history list by imei
+                 *
+                 * @param  {string} imei
+                 * @return {Object}
+                 */
+                history: function(imei) {
+                    return Restangular.one(rest.baseUrl + '/historico', imei).customGET();
                 }
             });
 

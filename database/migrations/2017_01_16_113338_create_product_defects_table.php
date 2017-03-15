@@ -15,15 +15,23 @@ class CreateProductDefectsTable extends Migration
     {
         Schema::create('product_defects', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('product_imei_id');
+            $table->integer('product_sku')->unsigned()->index();;
+            $table->integer('product_imei_id')->unsigned()->index();;
             $table->string('description', 500);
 			$table->timestamps();
+
+            $table
+                ->foreign('product_sku', 'ProductDefectsProductSku')
+                ->references('sku')
+                ->on('produtos')
+                ->onDelete('NO ACTION')
+                ->onUpdate('CASCADE');
 
             $table
                 ->foreign('product_imei_id', 'ProductDefectsProductImeisId')
                 ->references('id')
                 ->on('product_imeis')
-                ->onDelete('NO ACTION')
+                ->onDelete('CASCADE')
                 ->onUpdate('CASCADE');
         });
     }

@@ -362,6 +362,10 @@ class UploadController extends Controller
         }
 
         if (!$pedido) {
+            $pedido = Pedido::find($idMarketplace);
+        }
+
+        if (!$pedido) {
             throw new \Exception('O pedido não existe no tucano!', 7);
         }
 
@@ -521,7 +525,7 @@ class UploadController extends Controller
 
             $pedidoRastreio = Rastreio::where('pedido_id', '!=', $pedido->id)->where('rastreio', '=', $rastreio)->first();
             if ($pedidoRastreio) {
-                throw new \Exception('O código de rastreio já está sendo utilizado por outra.', 7);
+                throw new \Exception('O código de rastreio já está sendo utilizado.', 7);
             }
 
             $pedidoRastreio             = Rastreio::firstOrNew([
@@ -595,8 +599,11 @@ class UploadController extends Controller
 
         foreach ($produtoImei as $sku => $imeis) {
             foreach ($imeis as $imei) {
-                $imei = 'dasdasdsada';
                 $productImei = ProductImei::where('imei', '=', $imei)->first();
+
+                if (!$productImei) {
+                    throw new \Exception("O imei {$imei} não foi encontrado.", 7);
+                }
 
                 $removalProducts = RemovalProduct
                     ::join('stock_removals', 'stock_removals.id', 'stock_removal_products.stock_removal_id')
@@ -695,26 +702,35 @@ class UploadController extends Controller
                         }
                     }
                 }
-                $imeis = ($imeis) ? implode(', ', $imeis) : null;
+                $imeis = ($imeis) ?: [];//implode(', ', $imeis) : null;
 
-                // Se acabou de ser criado, seta os valores
-                if ($pedidoProduto->wasRecentlyCreated) {
-                    $pedidoProduto->pedido_id   = $pedido->id;
-                    $pedidoProduto->produto_sku = $sku;
-                    $pedidoProduto->valor       = $item['valor'];
-                    $pedidoProduto->quantidade  = $item['quantidade'];
-                } elseif ($pedidoProduto->getOriginal('quantidade') < $item['quantidade']) {
-                    // Se o pedidoProduto já exisita e tinha menos qtd que na nota, atualiza a qtd
-                    $pedidoProduto->quantidade = $item['quantidade'];
-                }
+                for ($i=0; $i < $item['quantidade']; $i++) {
+                    // Se acabou de ser criado, seta os valores
+                    if ($pedidoProduto->wasRecentlyCreated) {
+                        $pedidoProduto->pedido_id   = $pedido->id;
+                        $pedidoProduto->produto_sku = $sku;
+                        $pedidoProduto->valor       = $item['valor'];
+                    /*} elseif ($pedidoProduto->getOriginal('quantidade') < $item['quantidade']) {
+                        // Se o pedidoProduto já exisita e tinha menos qtd que na nota, atualiza a qtd
+                        $pedidoProduto->quantidade = $item['quantidade'];*/
+                    }
 
-                $pedidoProduto->imei = $imeis;
+                    if (isset($imeis[0])) {
+                        $productImei = ProductImei::where('imei', '=', $imeis[0])->first();
+                        unset($imeis[0]);
+                        $imeis = array_values($imeis);
 
-                if ($pedidoProduto->save()) {
-                    $utilizados[] = $pedidoProduto->id;
-                    Log::info('Pedido Produto importado ' . $sku . ' / ' . $pedido->id);
-                } else {
-                    Log::warning('Não foi possível importar o Pedido Produto ' . $sku . ' / ' . $pedido->id);
+                        if ($productImei) {
+                            $pedidoProduto->product_imei_id = $productImei->id;
+                        }
+                    }
+
+                    if ($pedidoProduto->save()) {
+                        $utilizados[] = $pedidoProduto->id;
+                        Log::info('Pedido Produto importado ' . $sku . ' / ' . $pedido->id);
+                    } else {
+                        Log::warning('Não foi possível importar o Pedido Produto ' . $sku . ' / ' . $pedido->id);
+                    }
                 }
             }
         }
@@ -730,9 +746,9 @@ class UploadController extends Controller
 
                 $parsedValue = currencyNumbers($pedidoProduto->valor);
                 if (isset($produtosExistentes[$pedidoProduto->produto_sku][$parsedValue])) {
-                    $produtosExistentes[$pedidoProduto->produto_sku][$parsedValue] = $produtosExistentes[$pedidoProduto->produto_sku][$parsedValue] + $pedidoProduto->quantidade;
+                    $produtosExistentes[$pedidoProduto->produto_sku][$parsedValue] = $produtosExistentes[$pedidoProduto->produto_sku][$parsedValue] + 1;
                 } else {
-                    $produtosExistentes[$pedidoProduto->produto_sku][$parsedValue] = $pedidoProduto->quantidade;
+                    $produtosExistentes[$pedidoProduto->produto_sku][$parsedValue] = 1;
                 }
             }
 

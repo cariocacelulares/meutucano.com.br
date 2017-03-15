@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Core\Models\Pedido\PedidoProduto;
+use Core\Models\Stock\RemovalProduct;
+use Core\Models\Stock\Issue;
 
 /**
  * Class ProductImei
@@ -52,5 +54,23 @@ class ProductImei extends Model
     public function lastOrderProduct()
     {
         return $this->pedidoProdutos()->orderBy('created_at', 'desc')->first();
+    }
+
+    /**
+     * RemovalProduct
+     * @return RemovalProduct
+     */
+    public function removalProducts()
+    {
+        return $this->hasMany(RemovalProduct::class);
+    }
+
+    /**
+     * Issue
+     * @return Issue
+     */
+    public function issue()
+    {
+        return $this->hasOne(Issue::class);
     }
 }

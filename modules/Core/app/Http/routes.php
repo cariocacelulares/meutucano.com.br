@@ -174,6 +174,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
      */
     Route::group(['prefix' => 'produto-imei', 'namespace' => 'Produto'], function () {
         Route::get('list/{sku}', 'ProductImeiController@listBySku');
+        Route::get('historico/{imei}', 'ProductImeiController@history');
         Route::post('parse', 'ProductImeiController@parseImeis');
     });
     Route::resource('produto-imei', 'Produto\ProductImeiController');
@@ -208,6 +209,14 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::resource('estoque/baixa', 'Stock\IssueController');
 
     /**
+     * Product defect
+     */
+    Route::group(['prefix' => 'produto/defeito', 'namespace' => 'Produto'], function () {
+        Route::get('list', 'DefectController@tableList');
+    });
+    Route::resource('produto/defeito', 'Produto\DefectController');
+
+    /**
      * Partials
      */
     Route::group(['namespace' => 'Partials'], function () {
@@ -237,5 +246,9 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         // Produtos genérico
         Route::post('retirada-estoque', 'ProdutoController@retiradaEstoque');
         Route::get('retirada-estoque/{return_type}', 'ProdutoController@retiradaEstoque');
+
+        // Inventário
+        Route::post('inventario', 'InventarioController@relatorio');
+        Route::get('inventario/{return_type}', 'InventarioController@relatorio');
     });
 });

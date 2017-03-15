@@ -23,7 +23,7 @@
         "stavarengo/php-sigep": "dev-master",
         "stavarengo/php-sigep-fpdf": "dev-master",
         "itbz/fpdf": "^1.7",
-        "nfephp-org/nfephp": "dev-carioca",
+        "nfephp-org/nfephp": "dev-master",
         "zizaco/entrust": "5.2.x-dev",
         "sunra/php-simple-html-dom-parser": "^1.5",
         "guzzlehttp/guzzle": "~6.0",
@@ -39,7 +39,8 @@
         "spatie/laravel-failed-job-monitor": "^2.1",
         "sofa/eloquence": "~5.3",
         "milon/barcode": "^5.3",
-        "dompdf/dompdf": "^0.8.0"
+        "dompdf/dompdf": "^0.8.0",
+        "livepixel/mercado-livre": "^1.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -112,7 +113,7 @@
         },
         "nfephp": {
             "type": "git",
-            "url": "git@github.com:diego3g/nfephp.git"
+            "url": "git@github.com:cariocacelulares/nfephp.git"
         }
     }
 }
