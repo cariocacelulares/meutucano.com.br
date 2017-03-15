@@ -2,9 +2,9 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
-use Core\Models\Stock;
 use Core\Models\Stock\Entry;
 use Core\Models\Produto;
+use Core\Models\Produto\ProductStock;
 use Core\Models\Produto\TitleVariation;
 
 /**
@@ -41,6 +41,15 @@ class Product extends Model
     ];
 
     /**
+     * @var array
+     */
+    protected $appends = [
+        'ean',
+        'ncm',
+        'title',
+    ];
+
+    /**
      * Entry
      * @return Entry
      */
@@ -50,21 +59,21 @@ class Product extends Model
     }
 
     /**
-     * Stock
-     * @return Stock
+     * ProductStock
+     * @return ProductStock
      */
-    public function stock()
+    public function productStock()
     {
-        return $this->belongsTo(Stock::class);
+        return $this->belongsTo(ProductStock::class, 'product_stock_id', 'id');
     }
 
     /**
      * Produto
      * @return Produto
      */
-    public function produto()
+    public function product()
     {
-        return $this->belongsTo(Produto::class);
+        return $this->belongsTo(Produto::class, 'product_sku', 'sku');
     }
 
     /**
@@ -78,12 +87,39 @@ class Product extends Model
 
     /**
      * Decode imeis from json
-     * 
+     *
      * @param  string  $imeis imeis json encoded
      * @return array|null
      */
     public function getImeisAttribute($imeis)
     {
         return json_decode($imeis);
+    }
+
+    /**
+     * Get product title
+     * @return string
+     */
+    public function getTitleAttribute()
+    {
+        return $this->product->titulo;
+    }
+
+    /**
+     * Get product ncm
+     * @return string
+     */
+    public function getNcmAttribute()
+    {
+        return $this->product->ncm;
+    }
+
+    /**
+     * Get product ean
+     * @return string
+     */
+    public function getEanAttribute()
+    {
+        return $this->product->ean;
     }
 }

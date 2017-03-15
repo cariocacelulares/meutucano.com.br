@@ -39,7 +39,7 @@ trait Uploadable
             Log::alert(logMessage($exception, 'Não foi possível fazer upload do(s) arquivo(s)'));
 
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }

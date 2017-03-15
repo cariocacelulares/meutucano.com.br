@@ -61,7 +61,7 @@ class UsuarioController extends Controller
 
             return $this->showResponse($data);
         } catch (\Exception $exception) {
-            $data = ['exception' => $exception->getMessage()];
+            $data = ['exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()];
 
             return $this->clientErrorResponse($data);
         }
@@ -93,7 +93,7 @@ class UsuarioController extends Controller
 
             return $this->createdResponse($data);
         } catch (\Exception $exception) {
-            $data = ['exception' => $exception->getMessage()];
+            $data = ['exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()];
 
             return $this->clientErrorResponse($data);
         }

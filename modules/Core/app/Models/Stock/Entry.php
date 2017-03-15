@@ -67,6 +67,6 @@ class Entry extends Model
      */
     public function products()
     {
-        return $this->hasOne(Product::class, 'stock_entry_id', 'id');
+        return $this->hasMany(Product::class, 'stock_entry_id', 'id');
     }
 }

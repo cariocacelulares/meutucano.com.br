@@ -3,7 +3,7 @@
         <page-title icon="fa-arrow-up" title="Entrada de estoque" description="Gerenciar uma entrada de estoque"></page-title>
         <div class="col-md-6 button-bar">
             <button type="submit" class="btn-success"><i class="fa-save"></i>&nbsp; Salvar</button>
-            <button ngf-select ngf-change="EntradaEstoqueForm.upload($files)" class="btn-info" type="button"><i class="fa-upload"></i>&nbsp; Upload XML</button>
+            <button ng-if="!EntradaEstoqueForm.entry.id" ngf-select ngf-change="EntradaEstoqueForm.upload($files)" class="btn-info" type="button"><i class="fa-upload"></i>&nbsp; Upload XML</button>
             <a onclick="history.back()" title="Voltar para a página anterior" class="btn-default"><i class="fa-reply"></i>&nbsp; Voltar</a>
         </div>
     </div>

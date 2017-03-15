@@ -42,7 +42,7 @@ class NotaController extends Controller
             \Log::error(logMessage($exception, 'Erro ao excluir recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }

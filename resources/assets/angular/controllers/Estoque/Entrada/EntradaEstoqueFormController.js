@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('EntradaEstoqueFormController', EntradaEstoqueFormController);
 
-    function EntradaEstoqueFormController($state, envService, toaster,
+    function EntradaEstoqueFormController($state, $stateParams, envService, toaster,
             ValidationErrors, Upload, Cep, SelectProductHelper, ProductStock, StockEntry) {
         var vm = this;
 
@@ -17,12 +17,23 @@
         vm.modified = false;
         vm.loading  = false;
         vm.entry    = {
+            id: $stateParams.id || null,
             supplier: {},
             invoice : {},
             products: []
         };
 
         vm.selectProductHelper = SelectProductHelper;
+
+        vm.load = function() {
+            if (vm.entry.id) {
+                StockEntry.get(vm.entry.id).then(function(entry) {
+                    vm.entry = entry;
+                });
+            }
+        }
+
+        vm.load();
 
         /**
          * Set stock prop when product stock changed

@@ -86,7 +86,7 @@ class ClienteController extends Controller
             \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
@@ -121,7 +121,7 @@ class ClienteController extends Controller
             \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
@@ -144,7 +144,7 @@ class ClienteController extends Controller
             return $this->showResponse($data);
         } catch (\Exception $exception) {
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }

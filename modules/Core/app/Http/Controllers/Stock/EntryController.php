@@ -7,6 +7,7 @@ use Core\Models\Stock\Entry;
 use Core\Models\Stock\Entry\Invoice;
 use Core\Models\Stock\Entry\Product;
 use Core\Models\Supplier;
+use Core\Transformers\EntryTransformer;
 
 /**
  * Class EntryController
@@ -33,6 +34,39 @@ class EntryController extends Controller
         $list = $this->handleRequest($list);
 
         return $this->listResponse($list);
+    }
+
+    /**
+     * Returns a unique resource
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function show($id)
+    {
+        try {
+            $entry = (self::MODEL)
+                ::with([
+                    'supplier',
+                    'invoice',
+                    'user',
+                    'products',
+                    'products.product',
+                    'products.product.productStocks',
+                    'products.product.productStocks.stock',
+                    'products.productStock',
+                    'products.productStock.stock',
+                ])
+                ->findOrFail($id);
+
+            return $this->showResponse(EntryTransformer::show($entry));
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao obter recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -120,6 +154,10 @@ class EntryController extends Controller
     {
         $return = [];
         foreach ($products as $product) {
+            if (is_null(\TitleVariation::getExact($product['title'], $product['ean'], $product['ncm']))) {
+                \TitleVariation::set($product['product_sku'], $product['title'], $product['ean'], $product['ncm']);
+            }
+
             $return[] = Product::create([
                 'stock_entry_id'             => $entryId,
                 'product_sku'                => $product['product_sku'],

@@ -71,7 +71,7 @@ class RastreioController extends Controller
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
-            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
+            return $this->clientErrorResponse(['exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()]);
         }
     }
 
@@ -100,7 +100,7 @@ class RastreioController extends Controller
             \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
@@ -126,7 +126,7 @@ class RastreioController extends Controller
             \Log::error(logMessage($exception, 'Erro ao excluir recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
@@ -179,7 +179,7 @@ class RastreioController extends Controller
             return $this->showResponse($rastreio);
         } catch (\Exception $exception) {
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
@@ -244,7 +244,7 @@ class RastreioController extends Controller
             return $rastreio;
         } catch (\Exception $exception) {
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }

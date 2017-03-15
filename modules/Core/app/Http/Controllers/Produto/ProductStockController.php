@@ -58,7 +58,7 @@ class ProductStockController extends Controller
             \Log::error('Erro ao tentar atualizar as informações de estoque');
 
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
@@ -82,7 +82,7 @@ class ProductStockController extends Controller
             return $this->listResponse($productStocks);
         } catch (\Exception $exception) {
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
@@ -107,7 +107,7 @@ class ProductStockController extends Controller
             return $this->listResponse(ProductStockTransformer::listBySlug($productStocks));
         } catch (\Exception $exception) {
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
@@ -140,7 +140,7 @@ class ProductStockController extends Controller
             \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }

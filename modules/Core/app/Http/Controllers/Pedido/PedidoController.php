@@ -89,7 +89,7 @@ class PedidoController extends Controller
             return $this->showResponse($pedido);
         } catch (\Exception $exception) {
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
@@ -112,7 +112,7 @@ class PedidoController extends Controller
             return $this->showResponse($pedido);
         } catch (\Exception $exception) {
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
@@ -163,7 +163,7 @@ class PedidoController extends Controller
             \Log::error(logMessage($exception, 'Erro ao alterar status do pedido'));
 
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
@@ -549,7 +549,7 @@ class PedidoController extends Controller
             return $this->listResponse($list);
         } catch (\Exception $exception) {
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
@@ -625,7 +625,7 @@ class PedidoController extends Controller
             Log::debug('Transaction - rollback');
 
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
