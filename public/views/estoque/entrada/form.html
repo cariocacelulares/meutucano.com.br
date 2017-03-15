@@ -10,21 +10,7 @@
 
     <div class="form-default" >
         <validation errors="EntradaEstoqueForm.validationErrors"></validation>
-        <!-- <div class="row">
-            <div class="col-md-6 form-group">
-                <label for="imei">Serial</label>
-                <input ng-model="EntradaEstoqueForm.baixa.imei" id="imei" placeholder="Imei do produto" required />
-            </div>
-            <div class="col-md-6 form-group">
-                <label for="reason">Motivo</label>
-                <select ng-model="EntradaEstoqueForm.baixa.reason" id="reason" required>
-                    <option value="Outro">Outro</option>
-                    <option value="Ajuste">Ajuste</option>
-                    <option value="Perda">Perda</option>
-                </select>
-            </div>
-        </div>
-        -->
+
         <div class="row">
             <div class="col-md-3 form-group">
                 <label for="cnpj">CNPJ</label>
@@ -36,7 +22,7 @@
             </div>
             <div class="col-md-3 form-group">
                 <label for="fone">Telefone</label>
-                <input ng-model="EntradaEstoqueForm.entry.supplier.fone" id="fone" placeholder="Núm. telefone" required ui-br-phone-number>
+                <input ng-model="EntradaEstoqueForm.entry.supplier.fone" id="fone" placeholder="Núm. telefone" ui-br-phone-number>
             </div>
             <div class="col-md-3 form-group">
                 <label for="crt">CRT</label>
@@ -145,12 +131,12 @@
                             <th width="60" ng-if="EntradaEstoqueForm.taxes">COFINS</th>
                             <th width="100">Valor</th>
                             <th width="120">Total</th>
-                            <th width="45"></th>
+                            <th width="170">Imeis</th>
                         </thead>
                         <tbody>
                             <tr ng-repeat="product in EntradaEstoqueForm.entry.products track by $index">
                                 <td class="form-group">
-                                    <input class="text-center" ng-model="product.product_sku" readonly>
+                                    <input ng-click="EntradaEstoqueForm.setProduct(product)" class="text-center" ng-model="product.product_sku" readonly>
                                 </td>
                                 <td class="form-group">
                                     <input ng-model="product.title" readonly>
@@ -162,7 +148,7 @@
                                     <input class="text-center" ng-model="product.ncm">
                                 </td>
                                 <td class="form-group">
-                                    <select ng-model="product.product_stock_id">
+                                    <select ng-model="product.product_stock_id" ng-change="EntradaEstoqueForm.stockChanged(product)">
                                         <option ng-repeat="productStock in product.stocks" ng-value="{{ productStock.id }}">{{ productStock.stock.title }}</option>
                                     </select>
                                 </td>
@@ -187,10 +173,9 @@
                                 <td class="form-group">
                                     <input ng-model="product.total_value" ui-money-mask>
                                 </td>
-                                <td>
-                                    <a ng-click="EntradaEstoqueForm.setProduct(product)" class="btn-default" tooltips tooltip-tempate="Alterar produto">
-                                        <i class="fa-pencil"></i>
-                                    </a>
+                                <td class="form-group">
+                                    <textarea ng-if="product.stock.serial_enabled" ng-model="product.imeis" style="line-height:1.2;height:35px;min-height:35px;padding:0 15px"></textarea>
+                                    <input ng-if="!product.stock.serial_enabled" value="Sem controle serial" disabled readonly>
                                 </td>
                             </tr>
                         </tbody>

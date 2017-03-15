@@ -20,7 +20,7 @@ class CreateSupplierTable extends Migration
             $table->string('cnpj', 20);
             $table->string('ie', 20)->nullable();
             $table->tinyInteger('crt')->unsigned();
-            $table->string('fone', 100);
+            $table->string('fone', 100)->nullable();
             $table->string('street', 100);
             $table->string('number', 20)->default('s/n');
             $table->string('complement', 100);

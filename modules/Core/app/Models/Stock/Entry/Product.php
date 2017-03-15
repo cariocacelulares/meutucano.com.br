@@ -37,6 +37,7 @@ class Product extends Model
         'ipi',
         'pis',
         'cofins',
+        'imeis',
     ];
 
     /**
@@ -73,5 +74,16 @@ class Product extends Model
     public function titleVariation()
     {
         return $this->belongsTo(TitleVariation::class);
+    }
+
+    /**
+     * Decode imeis from json
+     * 
+     * @param  string  $imeis imeis json encoded
+     * @return array|null
+     */
+    public function getImeisAttribute($imeis)
+    {
+        return json_decode($imeis);
     }
 }

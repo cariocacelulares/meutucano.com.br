@@ -26,6 +26,7 @@ class CreateStockEntryProductsTable extends Migration
             $table->decimal('ipi', 10)->nullable();
 			$table->decimal('pis', 10)->nullable();
 			$table->decimal('cofins', 10)->nullable();
+            $table->text('imeis', 65535)->nullable();
 			$table->timestamps();
 
             $table

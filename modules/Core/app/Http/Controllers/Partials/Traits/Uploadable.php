@@ -72,6 +72,7 @@ trait Uploadable
                 'error'   => true
             ];
         } else {
+            $fileName .= '.xml';
             $file->move(storage_path('app/public/nota'), $fileName);
 
             try {

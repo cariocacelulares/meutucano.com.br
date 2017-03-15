@@ -25,6 +25,22 @@
         vm.selectProductHelper = SelectProductHelper;
 
         /**
+         * Set stock prop when product stock changed
+         *
+         * @param  {Object} product
+         * @return {void}
+         */
+        vm.stockChanged = function(product) {
+            for (var key in product.stocks) {
+                if (product.stocks[key].id == product.product_stock_id) {
+                    product.stock = product.stocks[key];
+
+                    break;
+                }
+            }
+        }
+
+        /**
          * Add new empty product to the list
          */
         vm.addProduct = function() {
@@ -39,7 +55,7 @@
             vm.selectProductHelper.open().then(function(data) {
                 var produto = data.value;
 
-                if (produto) {
+                if (produto && typeof produto.sku != 'undefined' && produto.sku) {
                     product.product = produto;
                     product.product_sku = produto.sku;
 

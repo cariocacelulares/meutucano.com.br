@@ -46,6 +46,10 @@ class EntryController extends Controller
             $products    = Input::get('products');
             $description = Input::get('description');
 
+            // Abre um transaction no banco de dados
+            \DB::beginTransaction();
+            \Log::debug('Transaction - begin');
+
             $supplier = $this->importSupplier($supplier);
 
             $entry = (self::MODEL)
@@ -59,8 +63,15 @@ class EntryController extends Controller
             $invoice  = $this->importInvoice($invoice, $entry->id);
             $products = $this->importProducts($products, $entry->id);
 
+            // Fecha a transação e comita as alterações
+            \DB::commit();
+            \Log::debug('Transaction - commit');
+
             return $this->createdResponse($entry);
         } catch (\Exception $exception) {
+            \DB::rollBack();
+            \Log::debug('Transaction - rollback');
+
             \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
@@ -118,6 +129,7 @@ class EntryController extends Controller
                 'ipi'                        => $product['ipi'],
                 'pis'                        => $product['pis'],
                 'cofins'                     => $product['cofins'],
+                'imeis'                      => isset($product['imeis']) ? json_encode($product['imeis']) : null,
             ]);
         }
 

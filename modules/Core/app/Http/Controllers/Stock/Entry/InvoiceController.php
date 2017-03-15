@@ -22,7 +22,7 @@ class InvoiceController extends Controller
 
     /**
      * Call trait method to prepare and wrap upload
-     * 
+     *
      * @return Response
      */
     public function upload()
@@ -89,6 +89,7 @@ class InvoiceController extends Controller
                     'product'                    => $produto,
                     'product_stock_id'           => $productStockId,
                     'product_title_variation_id' => $titleVariationId,
+                    'stock'                      => isset($stocks[0]) ? $stocks[0] : null,
                     'stocks'                     => $stocks,
                 ];
             }
