@@ -16,7 +16,7 @@
                  * @param  {string} cnpj
                  * @return {Object}
                  */
-                seach: function(string) {
+                search: function(cnpj) {
                     return Restangular.one(this.baseUrl + '/search', cnpj).customGET();
                 }
             });

@@ -6,7 +6,7 @@
         .controller('EntradaEstoqueFormController', EntradaEstoqueFormController);
 
     function EntradaEstoqueFormController($state, $stateParams, envService, toaster,
-            ValidationErrors, Upload, Cep, SelectProductHelper, ProductStock, StockEntry) {
+            ValidationErrors, Upload, Cep, SelectProductHelper, Supplier, ProductStock, StockEntry) {
         var vm = this;
 
         vm.validationErrors = [];
@@ -55,7 +55,25 @@
          * Add new empty product to the list
          */
         vm.addProduct = function() {
-            vm.entry.products.push([]);
+            vm.entry.products.push({
+                cofins                    : null,
+                ean                       : null,
+                icms                      : null,
+                imeis                     : null,
+                ipi                       : null,
+                ncm                       : null,
+                pis                       : null,
+                product                   : null,
+                product_sku               : null,
+                product_stock_id          : null,
+                quantity                  : null,
+                stock                     : null,
+                stock_entry_id            : null,
+                stocks                    : null,
+                title                     : null,
+                total_value               : null,
+                unitary_value             : null
+            });
         }
 
         /**
@@ -72,6 +90,14 @@
 
                     if (product.title == '' || !product.title) {
                         product.title = produto.titulo;
+                    }
+
+                    if (product.ean == '' || !product.ean) {
+                        product.ean = produto.ean;
+                    }
+
+                    if (product.ncm == '' || !product.ncm) {
+                        product.ncm = produto.ncm;
                     }
 
                     ProductStock.listBySku(product.product_sku).then(function(stocks) {
@@ -94,6 +120,7 @@
         vm.cnpjChanged = function() {
             if ((typeof vm.entry.supplier.id == 'undefined' || !vm.entry.supplier) && vm.entry.supplier.cnpj.length === 14) {
                 Supplier.search(vm.entry.supplier.cnpj).then(function(supplier) {
+                    if (supplier)
                     vm.entry.supplier = supplier;
                 });
             }
@@ -160,23 +187,40 @@
          * Check if description is needded and saves
          */
         vm.save = function() {
-            vm.modified = !angular.equals(vm.entry.products, vm.originalProducts);
-
-            if (vm.modified && (typeof vm.entry.description == 'undefined' || !vm.entry.description.length)) {
-                return;
-            }
-
             vm.validationErrors = [];
+            vm.modified         = !angular.equals(vm.entry.products, vm.originalProducts);
 
-            StockEntry.save(vm.entry).then(
-                function() {
-                    toaster.pop('success', 'Sucesso!', 'Entrada salva com sucesso!');
-                    $state.go('app.estoque.entrada.index');
-                },
-                function(error) {
-                    vm.validationErrors = ValidationErrors.handle(error);
-                }
-            );
+            if (!(vm.modified && (typeof vm.entry.description == 'undefined' || !vm.entry.description))) {
+                StockEntry.save(vm.entry, vm.entry.id).then(
+                    function() {
+                        toaster.pop('success', 'Sucesso!', 'Entrada salva com sucesso!');
+                        $state.go('app.estoque.entrada.index');
+                    },
+                    function(error) {
+                        vm.validationErrors = ValidationErrors.handle(error);
+                    }
+                );
+            }
+        };
+
+        /**
+         * Destroy a stock entry
+         */
+        vm.destroy = function() {
+            StockEntry.delete(entry.id).then(function() {
+                toaster.pop('success', 'Sucesso!', 'Entrada excluida com sucesso!');
+                vm.load();
+            });
+        };
+
+        /**
+         * Confirm a stock entry
+         */
+        vm.confirm = function() {
+            StockEntry.confirm(entry.id).then(function() {
+                toaster.pop('success', 'Sucesso!', 'Entrada confirmada com sucesso!');
+                $state.go('app.estoque.entrada.index');
+            });
         };
     }
 })();

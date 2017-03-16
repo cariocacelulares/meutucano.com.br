@@ -25,6 +25,7 @@ class ProductTransformer
                 'estado'             => $product['estado'],
                 'estado_description' => ProductParser::getEstadoDescription($product['estado']),
                 'ean'                => $product['ean'],
+                'ncm'                => $product['ncm'],
                 'referencia'         => $product['referencia'],
             ];
         }
@@ -73,6 +74,7 @@ class ProductTransformer
             'estado'             => $product->estado,
             'estado_description' => ProductParser::getEstadoDescription($product->estado),
             'ncm'                => $product->ncm,
+            'ean'                => $product->ean,
             'titulo'             => $product->titulo,
             'valor'              => $product['valor'],
             'estoque'            => $product->estoque,

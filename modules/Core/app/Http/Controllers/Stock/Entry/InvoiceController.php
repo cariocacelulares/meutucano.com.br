@@ -88,7 +88,6 @@ class InvoiceController extends Controller
                     'product_sku'                => $sku,
                     'product'                    => $produto,
                     'product_stock_id'           => $productStockId,
-                    'product_title_variation_id' => $titleVariationId,
                     'stock'                      => isset($stocks[0]) ? $stocks[0] : null,
                     'stocks'                     => $stocks,
                 ];
@@ -102,7 +101,7 @@ class InvoiceController extends Controller
                 'model'    => (string) $this->nfe->ide->mod,
                 'cfop'     => (string) $this->getProducts()[0]->prod->CFOP,
                 'total'    => (float) $this->nfe->total->ICMSTot->vNF,
-                'emission' => \DateTime::createFromFormat('Y-m-d\TH:i:sP', (string) $this->nfe->ide->dhEmi)->format('Y-m-d H:i:s'),
+                'emission' => \DateTime::createFromFormat('Y-m-d\TH:i:sP', (string) $this->nfe->ide->dhEmi)->format('d/m/Y H:i:s'),
             ];
 
             return [

@@ -23,7 +23,7 @@ class CreateStockEntryInvoicesTable extends Migration
             $table->string('cfop', 4);
 			$table->decimal('total', 10);
             $table->string('file', 250)->nullable();
-            $table->string('emission')->dateTime();
+            $table->timestamp('emission');
 			$table->timestamps();
 
             $table

@@ -17,8 +17,9 @@ class EntryTransformer
             $stocks = [];
             foreach ($product->product->productStocks as $productStock) {
                 $stocks[] = [
-                    'id'    => $productStock->id,
-                    'stock' => [
+                    'id'             => $productStock->id,
+                    'serial_enabled' => $productStock->serial_enabled,
+                    'stock'          => [
                         'slug'  => $productStock->stock->slug,
                         'title' => $productStock->stock->title,
                     ]
@@ -33,7 +34,6 @@ class EntryTransformer
                 'stock_entry_id'             => $product->stock_entry_id,
                 'product_sku'                => $product->product_sku,
                 'product_stock_id'           => $product->product_stock_id,
-                'product_title_variation_id' => $product->product_title_variation_id,
                 'quantity'                   => $product->quantity,
                 'unitary_value'              => $product->unitary_value,
                 'total_value'                => $product->total_value,
@@ -50,8 +50,9 @@ class EntryTransformer
                 ],
                 'stocks'                     => $stocks,
                 'stock'                      => [
-                    'id'    => $product->productStock->id,
-                    'stock' => [
+                    'id'             => $product->productStock->id,
+                    'serial_enabled' => $product->productStock->serial_enabled,
+                    'stock'          => [
                         'slug'  => $product->productStock->stock->slug,
                         'title' => $product->productStock->stock->title,
                     ],
@@ -63,7 +64,8 @@ class EntryTransformer
             'id'           => $entry->id,
             'user_id'      => $entry->user_id,
             'supplier_id'  => $entry->supplier_id,
-            'description'  => dateConvert($entry->description),
+            'description'  => $entry->description,
+            'created_at'   => dateConvert($entry->created_at),
             'confirmed_at' => !is_null($entry->confirmed_at) ? dateConvert($entry->confirmed_at) : null,
             'supplier'     => [
                 'id'           => $entry->supplier->id,
@@ -86,7 +88,7 @@ class EntryTransformer
                 'id'   => $entry->user->id,
                 'name' => $entry->user->name,
             ],
-            'invoice'      => [
+            'invoice'      => !$entry->invoice ? null : [
                 'id'             => $entry->invoice->id,
                 'stock_entry_id' => $entry->invoice->stock_entry_id,
                 'key'            => $entry->invoice->key,
@@ -96,7 +98,7 @@ class EntryTransformer
                 'cfop'           => $entry->invoice->cfop,
                 'total'          => $entry->invoice->total,
                 'file'           => $entry->invoice->file,
-                'emission'       => $entry->invoice->emission,
+                'emission'       => dateConvert($entry->invoice->emission),
             ],
             'products'     => $products,
         ];

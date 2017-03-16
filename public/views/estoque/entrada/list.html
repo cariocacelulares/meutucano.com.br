@@ -23,10 +23,10 @@
         <tr ng-repeat="entry in EntradaEstoqueList.tableData.data">
             <td class="text-center">
                 <a ui-sref="app.estoque.entrada.form({id: entry.id})">
-                    {{ entry.invoice.key }}
+                    {{ entry.invoice.key || 'Sem nota' }}
                 </a>
             </td>
-            <td class="text-center">{{ entry.invoice.number }}</td>
+            <td class="text-center">{{ entry.invoice.number || '-' }}</td>
             <td class="text-center">{{ entry.supplier.name }}</td>
             <td class="text-center">{{ entry.invoice.created_at }}</td>
             <td class="text-center">
@@ -34,8 +34,8 @@
                 <span ng-if="!entry.invoice.confirmed_at" class="label label-info">Em aberto</span>
             </td>
             <td class="text-center">
-                <button confirm="EntradaEstoqueList.destroy(entry)" type="button" class="btn-danger">
-                    <i class="fa-trash"></i>
+                <button ui-sref="app.estoque.entrada.form({id: entry.id})" type="button" class="btn-info">
+                    <i class="fa-pencil"></i>
                 </button>
             </td>
         </tr>

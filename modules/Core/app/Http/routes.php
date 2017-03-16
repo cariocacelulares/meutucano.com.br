@@ -210,10 +210,16 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::resource('estoque/baixa', 'Stock\IssueController');
 
     /**
+     * Supplier
+     */
+    Route::get('supplier/search/{term}', 'Supplier\SupplierController@search');
+
+    /**
      * Stock entry
      */
     Route::group(['prefix' => 'estoque/entrada', 'namespace' => 'Stock'], function () {
         Route::get('list', 'EntryController@tableList');
+        Route::post('confirm/{id}', 'EntryController@confirm');
     });
     Route::resource('estoque/entrada', 'Stock\EntryController');
 

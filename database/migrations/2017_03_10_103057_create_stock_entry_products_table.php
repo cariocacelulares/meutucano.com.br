@@ -18,7 +18,6 @@ class CreateStockEntryProductsTable extends Migration
             $table->unsignedInteger('stock_entry_id')->index();
             $table->unsignedInteger('product_sku')->index();
             $table->unsignedInteger('product_stock_id')->index();
-            $table->unsignedInteger('product_title_variation_id')->index();
             $table->double('quantity');
 			$table->decimal('unitary_value', 10);
 			$table->decimal('total_value', 10);
@@ -47,13 +46,6 @@ class CreateStockEntryProductsTable extends Migration
                 ->foreign('product_stock_id', 'StockEntryProductsProductStock')
                 ->references('id')
                 ->on('product_stocks')
-                ->onDelete('NO ACTION')
-                ->onUpdate('CASCADE');
-
-            $table
-                ->foreign('product_title_variation_id', 'StockEntryProductsProductTitleVariations')
-                ->references('id')
-                ->on('product_title_variations')
                 ->onDelete('NO ACTION')
                 ->onUpdate('CASCADE');
         });

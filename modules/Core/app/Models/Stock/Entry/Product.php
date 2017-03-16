@@ -5,7 +5,6 @@ use Venturecraft\Revisionable\RevisionableTrait;
 use Core\Models\Stock\Entry;
 use Core\Models\Produto;
 use Core\Models\Produto\ProductStock;
-use Core\Models\Produto\TitleVariation;
 
 /**
  * Product model
@@ -29,7 +28,6 @@ class Product extends Model
         'stock_entry_id',
         'product_sku',
         'product_stock_id',
-        'product_title_variation_id',
         'quantity',
         'unitary_value',
         'total_value',
@@ -47,6 +45,16 @@ class Product extends Model
         'ean',
         'ncm',
         'title',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'icms'   => 'float',
+        'ipi'    => 'float',
+        'pis'    => 'float',
+        'cofins' => 'float',
     ];
 
     /**
@@ -77,15 +85,6 @@ class Product extends Model
     }
 
     /**
-     * TitleVariation
-     * @return TitleVariation
-     */
-    public function titleVariation()
-    {
-        return $this->belongsTo(TitleVariation::class);
-    }
-
-    /**
      * Decode imeis from json
      *
      * @param  string  $imeis imeis json encoded
@@ -93,7 +92,11 @@ class Product extends Model
      */
     public function getImeisAttribute($imeis)
     {
-        return json_decode($imeis);
+        if (!$imeis) {
+            return null;
+        }
+        
+        return implode(PHP_EOL, json_decode($imeis));
     }
 
     /**

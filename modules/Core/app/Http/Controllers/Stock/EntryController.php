@@ -1,5 +1,6 @@
 <?php namespace Core\Http\Controllers\Stock;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
@@ -27,13 +28,33 @@ class EntryController extends Controller
     {
         $list = (self::MODEL)
             ::with(['supplier', 'invoice', 'products', 'user'])
-            ->join('stock_entry_invoices', 'stock_entry_invoices.stock_entry_id', 'stock_entries.id')
+            ->leftJoin('stock_entry_invoices', 'stock_entry_invoices.stock_entry_id', 'stock_entries.id')
             ->join('suppliers', 'stock_entries.supplier_id', 'suppliers.id')
-            ->orderBy('created_at', 'DESC');
+            ->orderBy('stock_entries.created_at', 'DESC');
 
         $list = $this->handleRequest($list);
 
         return $this->listResponse($list);
+    }
+
+    /**
+     * Confirm entry
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function confirm($id)
+    {
+        $entry = (self::MODEL)::findOrFail($id);
+        $entry->confirmed_at = Carbon::now();
+
+        if ($entry->save()) {
+            return $this->showResponse($entry);
+        } else {
+            return $this->clientErrorResponse([
+                'Erro ao confirmar entrada de estoque'
+            ]);
+        }
     }
 
     /**
@@ -118,6 +139,51 @@ class EntryController extends Controller
     }
 
     /**
+     * Update a resource
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function update($id)
+    {
+        try {
+            $supplier    = Input::get('supplier');
+            $invoice     = Input::get('invoice');
+            $products    = Input::get('products');
+            $description = Input::get('description');
+            $confirm     = Input::get('confirm');
+
+            // Abre um transaction no banco de dados
+            \DB::beginTransaction();
+            \Log::debug('Transaction - begin');
+
+            $supplier = $this->importSupplier($supplier);
+
+            $entry = (self::MODEL)::findOrFail($id);
+            $entry->description  = $description;
+            $entry->confirmed_at = $confirm ? Carbon::now() : null;
+            $entry->user_id      = getCurrentUserId();
+            $entry->supplier_id  = $supplier ? $supplier->id : null;
+            $entry->save();
+
+            $invoice  = $this->importInvoice($invoice, $entry->id);
+            $products = $this->importProducts($products, $entry->id);
+
+            // Fecha a transação e comita as alterações
+            \DB::commit();
+            \Log::debug('Transaction - commit');
+
+            return $this->showResponse($entry);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
      * Check if exists and saves invoice
      *
      * @param  array $invoiceData
@@ -126,9 +192,17 @@ class EntryController extends Controller
      */
     private function importInvoice($invoiceData, $entryId)
     {
-        $invoice = Invoice::firstOrNew([
-            'key' => $invoiceData['key'],
-        ]);
+        if (!$invoiceData) {
+            return null;
+        }
+
+        $invoice = null;
+
+        if (isset($invoiceData['id'])) {
+            $invoice = Invoice::find($invoiceData['id']);
+        }
+
+        $invoice = $invoice ?: new Invoice;
 
         $invoice->stock_entry_id = $entryId;
         $invoice->key            = $invoiceData['key'];
@@ -138,7 +212,7 @@ class EntryController extends Controller
         $invoice->cfop           = $invoiceData['cfop'];
         $invoice->total          = $invoiceData['total'];
         $invoice->file           = $invoiceData['file'];
-        $invoice->emission       = $invoiceData['emission'];
+        $invoice->emission       = dateConvert("{$invoiceData['emission']}:00", 'd/m/Y H:i:s', 'Y-m-d H:i:s');
 
         return $invoice->save() ? $invoice : null;
     }
@@ -153,25 +227,44 @@ class EntryController extends Controller
     private function importProducts($products, $entryId)
     {
         $return = [];
-        foreach ($products as $product) {
-            if (is_null(\TitleVariation::getExact($product['title'], $product['ean'], $product['ncm']))) {
-                \TitleVariation::set($product['product_sku'], $product['title'], $product['ean'], $product['ncm']);
+        foreach ($products as $productData) {
+            if (!isset($productData['product_sku']) || !$productData['product_sku']) {
+                continue;
             }
 
-            $return[] = Product::create([
-                'stock_entry_id'             => $entryId,
-                'product_sku'                => $product['product_sku'],
-                'product_stock_id'           => $product['product_stock_id'],
-                'product_title_variation_id' => $product['product_title_variation_id'],
-                'quantity'                   => $product['quantity'],
-                'unitary_value'              => $product['unitary_value'],
-                'total_value'                => $product['total_value'],
-                'icms'                       => $product['icms'],
-                'ipi'                        => $product['ipi'],
-                'pis'                        => $product['pis'],
-                'cofins'                     => $product['cofins'],
-                'imeis'                      => isset($product['imeis']) ? json_encode($product['imeis']) : null,
-            ]);
+            if (isset($productData['title']) && is_null(\TitleVariation::getExact($productData['title'], $productData['ean'], $productData['ncm']))) {
+                \TitleVariation::set($productData['product_sku'], $productData['title'], $productData['ean'], $productData['ncm']);
+            }
+
+            $product = null;
+
+            if (isset($productData['id'])) {
+                $product = Product::find($productData['id']);
+            }
+
+            $product = $product ?: new Product;
+
+            if (isset($productData['imeis'])) {
+                $imeis = json_encode(explode(PHP_EOL, $productData['imeis']));
+            } else {
+                $imeis = null;
+            }
+
+            $product->stock_entry_id   = $entryId;
+            $product->product_sku      = $productData['product_sku'];
+            $product->product_stock_id = $productData['product_stock_id'];
+            $product->quantity         = $productData['quantity'];
+            $product->unitary_value    = $productData['unitary_value'];
+            $product->total_value      = $productData['total_value'];
+            $product->icms             = $productData['icms'];
+            $product->ipi              = $productData['ipi'];
+            $product->pis              = $productData['pis'];
+            $product->cofins           = $productData['cofins'];
+            $product->imeis            = $imeis;
+
+            $product->save();
+
+            $return[] = $product;
         }
 
         return $return;
@@ -185,9 +278,17 @@ class EntryController extends Controller
      */
     private function importSupplier($supplierData)
     {
-        $supplier = Supplier::firstOrNew([
-            'cnpj' => $supplierData['cnpj'],
-        ]);
+        $supplier = null;
+
+        if (isset($supplierData['id'])) {
+            $supplier = Supplier::find($supplierData['id']);
+        }
+
+        if (!$supplier) {
+            $supplier = Supplier::firstOrNew([
+                'cnpj' => $supplierData['cnpj'],
+            ]);
+        }
 
         $supplier->company_name = $supplierData['company_name'];
         $supplier->name         = $supplierData['name'];

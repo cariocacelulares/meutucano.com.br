@@ -41,13 +41,6 @@
         };
 
         vm.load();
-
-        vm.destroy = function(entry) {
-            StockEntry.delete(entry.id).then(function() {
-                toaster.pop('success', 'Sucesso!', 'Entrada excluida com sucesso!');
-                vm.load();
-            });
-        };
     }
 
 })();
