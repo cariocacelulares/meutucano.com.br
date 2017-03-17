@@ -12,6 +12,30 @@ use Rastreio\Transformers\Parsers\RastreioParser;
 class RastreioTransformer
 {
     /**
+     * @param  object $rastreio
+     * @return array
+     */
+    public static function show($rastreio)
+    {
+        return [
+            'id'                  => $rastreio->id,
+            'prazo'               => $rastreio->prazo,
+            'rastreio_url'        => RastreioParser::getRastreioUrl($rastreio->rastreio),
+            'rastreio'            => $rastreio->rastreio,
+            'status'              => $rastreio->status,
+            'status_description'  => RastreioParser::getStatusDescription($rastreio->status),
+            'data_envio'          => $rastreio->data_envio,
+            'data_envio_readable' => dateConvert($rastreio->data_envio, 'Y-m-d', 'd/m/Y'),
+            'prazo_date'          => RastreioParser::getPrazoDate($rastreio->data_envio, $rastreio['prazo']),
+            'pedido_id'           => $rastreio->pedido_id,
+            'servico'             => $rastreio->servico,
+            'valor'               => $rastreio->valor,
+            'imagem_historico'    => $rastreio->imagem_historico,
+            'delete_note'         => $rastreio->delete_note,
+        ];
+    }
+
+    /**
      * @param  object $rastreios
      * @return array
      */

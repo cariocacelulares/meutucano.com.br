@@ -57,6 +57,27 @@ class RastreioController extends Controller
     }
 
     /**
+     * Returns a unique resource
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function show($id)
+    {
+        try {
+            $rastreio = (self::MODEL)::findOrFail($id);
+
+            return $this->showResponse(RastreioTransformer::show($rastreio));
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao obter recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
      * Cria novo recurso
      *
      * @param Request $request

@@ -19,21 +19,22 @@ class PiTransformer
     public static function show($pi)
     {
         return [
-            'id'                  => $pi->id,
-            'rastreio_id'         => $pi->rastreio_id,
-            'codigo_pi'           => $pi->codigo_pi,
-            'motivo_status'       => $pi->motivo_status,
-            'status'              => $pi->status,
-            'data_pagamento'      => $pi->data_pagamento,
-            'valor_pago'          => $pi->valor_pago,
-            'acao'                => $pi->acao,
-            'pago_cliente'        => $pi->pago_cliente,
-            'observacoes'         => $pi->observacoes,
-            'pago_cliente'        => $pi->pago_cliente,
-            'acao'                => $pi->acao,
-            'protocolo'           => RastreioParser::getProtocolo($pi),
-            'imagem_cancelamento' => RastreioParser::getImagemCancelamento($pi),
-            'rastreio'            => [
+            'id'                      => $pi->id,
+            'rastreio_id'             => $pi->rastreio_id,
+            'codigo_pi'               => $pi->codigo_pi,
+            'motivo_status'           => $pi->motivo_status,
+            'status'                  => $pi->status,
+            'data_pagamento'          => $pi->data_pagamento,
+            'data_pagamento_readable' => dateConvert($pi->data_pagamento, 'Y-m-d', 'd/m/Y'),
+            'valor_pago'              => $pi->valor_pago,
+            'acao'                    => $pi->acao,
+            'pago_cliente'            => $pi->pago_cliente,
+            'observacoes'             => $pi->observacoes,
+            'pago_cliente'            => $pi->pago_cliente,
+            'acao'                    => $pi->acao,
+            'protocolo'               => RastreioParser::getProtocolo($pi),
+            'imagem_cancelamento'     => RastreioParser::getImagemCancelamento($pi),
+            'rastreio'                => [
                 'id'     => $pi->rastreio->id,
                 'pedido' => [
                     'id'          => $pi->rastreio->pedido->id,
