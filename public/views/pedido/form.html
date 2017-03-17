@@ -59,7 +59,7 @@
                         <td class="text-center">{{ produto.sku }}</td>
                         <td class="text-left">{{ produto.titulo }}</td>
                         <td class="text-center form-group">
-                            <input type="number" ng-model="produto.qtd" min="0" required>
+                            <input type="number" ng-model="produto.qtd" min="0" required ng-change="PedidoForm.updateTotal()">
                         </td>
                         <td class="text-center form-group">
                             <input ng-model="produto.valor" placeholder="R$" ui-money-mask required ng-change="PedidoForm.updateTotal()">

@@ -73,12 +73,9 @@
          * Update total order value
          */
         vm.updateTotal = function() {
-            var total = 0;
-            for (var key in vm.order.products) {
-                total += parseFloat(vm.order.products[key].valor);
-            }
-
-            vm.order.total = total;
+            vm.order.total = vm.order.products.reduce(function(sum, item) {
+                return sum + (parseFloat(item.valor) * item.qtd);
+            }, 0);
         }
 
         vm.save = function() {
