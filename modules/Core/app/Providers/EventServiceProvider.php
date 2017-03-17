@@ -6,6 +6,7 @@ use Core\Events\Handlers\SetRefund;
 use Core\Events\Handlers\UpdateStock;
 use Core\Events\Handlers\DeleteProductImei;
 use Core\Events\Handlers\RestoreProductImei;
+use Core\Events\Handlers\ConvertEntryImeis;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,7 @@ class EventServiceProvider extends ServiceProvider
         SetRefund::class,
         DeleteProductImei::class,
         RestoreProductImei::class,
+        ConvertEntryImeis::class,
     ];
 
     /**

@@ -200,3 +200,70 @@ $factory->define(Core\Models\Pedido\FaturamentoCodigo::class, function () use ($
          'description' => $faker->text(50),
      ];
  });
+
+/**
+ * Stock Entry
+ */
+ $factory->define(Core\Models\Stock\Entry::class, function () use ($faker) {
+     return [
+         'description' => $faker->text(50),
+     ];
+ });
+
+/**
+ * Supplier
+ */
+ $factory->define(Core\Models\Supplier::class, function () use ($faker) {
+     return [
+         'company_name' => $faker->company,
+         'name'         => $faker->company,
+         'cnpj'         => $faker->cnpj(false),
+         'ie'           => $faker->randomNumber(6),
+         'crt'          => 3,
+         'fone'         => $faker->areaCode . str_replace('-', '', $faker->cellphone),
+         'street'       => $faker->streetName,
+         'number'       => $faker->buildingNumber,
+         'complement'   => $faker->secondaryAddress,
+         'neighborhood' => $faker->citySuffix,
+         'city'         => $faker->city,
+         'uf'           => $faker->regionAbbr,
+         'cep'          => $faker->randomNumber(8),
+         'country'      => $faker->country,
+     ];
+ });
+
+/**
+ * Entry Invoice
+ */
+ $factory->define(Core\Models\Stock\Entry\Invoice::class, function () use ($faker) {
+     return [
+         'key'      => $faker->numerify('##########################################'),
+         'series'   => rand(1,9),
+         'number'   => $faker->randomNumber(6),
+         'model'    => 55,
+         'cfop'     => $faker->randomNumber(4),
+         'total'    => $faker->randomFloat(2, 100, 1000000),
+         'file'     => $faker->userName . '.xml',
+         'emission' => $faker->date('Y-m-d H:i:s', 'now'),
+     ];
+ });
+
+/**
+ * Entry Product
+ */
+$factory->define(Core\Models\Stock\Entry\Product::class, function () use ($faker) {
+    $qty     = rand(1, 9);
+    $unitary = $faker->randomFloat(2, 10, 500);
+    $total   = ($unitary * $qty);
+
+    return [
+        'quantity'      => $qty,
+        'unitary_value' => $unitary,
+        'total_value'   => $total,
+        'icms'          => rand(1, 9),
+        'ipi'           => rand(1, 9),
+        'pis'           => rand(1, 9),
+        'cofins'        => rand(1, 9),
+        'imeis'         => null,
+    ];
+});

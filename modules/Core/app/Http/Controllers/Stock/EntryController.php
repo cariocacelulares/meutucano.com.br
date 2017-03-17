@@ -99,9 +99,10 @@ class EntryController extends Controller
     public function store()
     {
         try {
+            $userId      = Input::get('user_id') ?: getCurrentUserId();
             $supplier    = Input::get('supplier');
             $invoice     = Input::get('invoice');
-            $products    = Input::get('products');
+            $products    = Input::get('products') ?: [];
             $description = Input::get('description');
 
             // Abre um transaction no banco de dados
@@ -114,7 +115,7 @@ class EntryController extends Controller
                 ::create([
                     'description'  => $description,
                     'confirmed_at' => null,
-                    'user_id'      => getCurrentUserId(),
+                    'user_id'      => $userId,
                     'supplier_id'  => $supplier ? $supplier->id : null,
                 ]);
 
@@ -147,6 +148,7 @@ class EntryController extends Controller
     public function update($id)
     {
         try {
+            $userId      = Input::get('user_id') ?: getCurrentUserId();
             $supplier    = Input::get('supplier');
             $invoice     = Input::get('invoice');
             $products    = Input::get('products');
@@ -162,7 +164,7 @@ class EntryController extends Controller
             $entry = (self::MODEL)::findOrFail($id);
             $entry->description  = $description;
             $entry->confirmed_at = $confirm ? Carbon::now() : null;
-            $entry->user_id      = getCurrentUserId();
+            $entry->user_id      = $userId;
             $entry->supplier_id  = $supplier ? $supplier->id : null;
             $entry->save();
 

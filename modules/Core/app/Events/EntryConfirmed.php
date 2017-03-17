@@ -14,7 +14,7 @@ class EntryConfirmed extends \Event
      *
      * @return void
      */
-    public function __construct(Defect $entry)
+    public function __construct(Entry $entry)
     {
         \Log::debug('Evento EntryConfirmed disparado');
         $this->entry = $entry;

@@ -39,8 +39,9 @@ class ConvertEntryImeis
                 $imeis = json_decode($imeis);
 
                 foreach ($imeis as $imei) {
-                    $imei = ProductImei::findOrCreate([
-                        'imei' => $imei
+                    $imei = ProductImei::firstOrCreate([
+                        'product_stock_id' => $product->product_stock_id,
+                        'imei'             => $imei
                     ]);
 
                     $entryImei = Imei::create([
