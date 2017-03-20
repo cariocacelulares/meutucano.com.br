@@ -18,7 +18,9 @@
         <tr ng-repeat="pi in PiPendenteList.tableData.data">
             <td class="text-center fs-11">
                 <strong>{{ pi.rastreio.pedido.marketplace }}</strong><br>
-                {{ pi.rastreio.pedido.codigo_marketplace || 'Sem código' }}
+                <a ui-sref="app.pedidos.detalhe({id: pi.rastreio.pedido.id})">
+                    {{ pi.rastreio.pedido.codigo_marketplace || 'Sem código' }}
+                </a>
             </td>
             <td>
                 <strong>{{ pi.rastreio.pedido.cliente.nome | uppercase }}</strong>

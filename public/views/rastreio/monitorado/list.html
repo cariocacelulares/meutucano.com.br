@@ -18,7 +18,9 @@
         <tr ng-repeat="monitorado in RastreioMonitoradoList.tableData.data">
             <td class="text-center fs-11">
                 <strong>{{ monitorado.rastreio.pedido.marketplace }}</strong><br>
-                {{ monitorado.rastreio.pedido.codigo_marketplace || 'Sem código' }}
+                <a ui-sref="app.pedidos.detalhe({id: monitorado.rastreio.pedido.id})">
+                    {{ monitorado.rastreio.pedido.codigo_marketplace || 'Sem código' }}
+                </a>
             </td>
             <td>
                 <strong>{{ monitorado.rastreio.pedido.cliente.nome | uppercase }}</strong>
