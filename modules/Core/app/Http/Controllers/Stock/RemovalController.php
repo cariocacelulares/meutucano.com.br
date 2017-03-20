@@ -46,6 +46,7 @@ class RemovalController extends Controller
             $openRemoval = (self::MODEL)
                 ::where('user_id', '=', Input::get('user_id'))
                 ->whereNull('closed_at')
+                ->where('is_continuous', '=', false)
                 ->first();
 
             if ($openRemoval) {

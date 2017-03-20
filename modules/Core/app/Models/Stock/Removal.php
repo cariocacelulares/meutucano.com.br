@@ -24,6 +24,7 @@ class Removal extends Model
      */
     protected $fillable = [
         'user_id',
+        'is_continuous',
         'closed_at',
     ];
 

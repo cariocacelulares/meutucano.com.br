@@ -19,6 +19,7 @@ class StockRemovalTransformer
 
         return [
             'id'               => $removal->id,
+            'is_continuous'    => $removal->is_continuous,
             'user_id'          => $removal->user_id ? (string) $removal->user_id : null,
             'created_at'       => dateConvert($removal->created_at),
             'closed_at'        => dateConvert($removal->closed_at),
@@ -41,11 +42,12 @@ class StockRemovalTransformer
 
         foreach ($removals as $removal) {
             $transformed[] = [
-                'id'               => $removal->id,
-                'user_id'          => $removal->user_id ? (string) $removal->user_id : null,
-                'created_at'       => dateConvert($removal->created_at),
-                'closed_at'        => dateConvert($removal->closed_at),
-                'user'             => [
+                'id'            => $removal->id,
+                'is_continuous' => $removal->is_continuous,
+                'user_id'       => $removal->user_id ? (string) $removal->user_id : null,
+                'created_at'    => dateConvert($removal->created_at),
+                'closed_at'     => dateConvert($removal->closed_at),
+                'user'          => [
                     'id'   => $removal->user->id,
                     'name' => $removal->user->name,
                 ],

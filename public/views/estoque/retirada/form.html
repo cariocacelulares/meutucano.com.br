@@ -16,14 +16,21 @@
             <label for="user_id">Retirado por</label>
             <input ng-model="RetiradaEstoqueForm.stockRemoval.user.name" readonly />
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label for="created_at">Retirado em</label>
             <input ng-model="RetiradaEstoqueForm.stockRemoval.created_at" id="created_at" readonly />
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label for="closed_at">Fechado em</label>
             <input ng-model="RetiradaEstoqueForm.stockRemoval.closed_at" ng-if="RetiradaEstoqueForm.stockRemoval.closed_at" id="closed_at" readonly />
             <input ng-if="!RetiradaEstoqueForm.stockRemoval.closed_at" value="Em aberto" readonly />
+        </div>
+        <div class="col-md-2">
+            <label for="closed_at">Continua</label>
+            <select ng-model="RetiradaEstoqueForm.stockRemoval.is_continuous">
+                <option ng-value="1">Sim</option>
+                <option ng-value="0">Não</option>
+            </select>
         </div>
     </div>
     <div ng-if="!RetiradaEstoqueForm.stockRemoval.id" class="row form-group">
@@ -32,6 +39,13 @@
             <select ng-model="RetiradaEstoqueForm.stockRemoval.user_id" id="user_id" required>
                 <option value="" disabled selected hidden>Quem fez a retirada</option>
                 <option ng-repeat="user in RetiradaEstoqueForm.users.data" value="{{ user.id }}">{{ user.name }}</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="closed_at">Continua</label>
+            <select ng-model="RetiradaEstoqueForm.stockRemoval.is_continuous">
+                <option ng-value="1">Sim</option>
+                <option ng-value="0">Não</option>
             </select>
         </div>
     </div>
@@ -48,7 +62,8 @@
             <button ng-if="!RetiradaEstoqueForm.stockRemoval.id" ng-click="RetiradaEstoqueForm.add()" class="btn-info pull-right" type="button">
                 <i class="fa-plus"></i>&nbsp; Adicionar
             </button>
-            <button ng-if="(RetiradaEstoqueForm.stockRemoval.id && !RetiradaEstoqueForm.stockRemoval.closed_at) && currentUser.id == RetiradaEstoqueForm.stockRemoval.user.id" ng-click="RetiradaEstoqueForm.confirm()" class="btn-info pull-right" type="button">
+            <button ng-if="(RetiradaEstoqueForm.stockRemoval.id && !RetiradaEstoqueForm.stockRemoval.closed_at) && currentUser.id == RetiradaEstoqueForm.stockRemoval.user.id" 
+                ng-click="RetiradaEstoqueForm.confirm()" class="btn-info pull-right" type="button">
                 <i class="fa-check"></i>&nbsp; Confirmar
             </button>
             <button ng-if="RetiradaEstoqueForm.stockRemoval.id && !RetiradaEstoqueForm.stockRemoval.closed_at" ng-click="RetiradaEstoqueForm.return()" class="btn-info pull-right m-r-10" type="button">

@@ -15,6 +15,7 @@
         vm.registered   = [];
         vm.stockRemoval = {
             id              : parseInt($stateParams.id) || null,
+            is_continuous   : 0,
             removal_products: []
         };
 
@@ -45,9 +46,7 @@
                     vm.loading = false;
                 });
             }
-        };
-
-        vm.load();
+        }();
 
         /**
          * Add new products to stock removal by imeis
