@@ -84,17 +84,17 @@ trait RastreioTrait
                     if (in_array(strtolower($pedido->marketplace), ['site', 'mercadolivre'])) {
                         $pedido->protocolo = $protocol;
 
-                        if (!$this->rawCancel($obj, $pedido->id)) {
+                        /*if (!$this->rawCancel($obj, $pedido->id)) {
                             $pedido->status = 5;
-                        }
+                        }*/
 
                         $pedido->save();
                     } elseif ($protocol) {
                         $pedido->protocolo = $protocol;
 
-                        if (!$this->rawCancel($obj, $pedido->id)) {
+                        /*if (!$this->rawCancel($obj, $pedido->id)) {
                             $pedido->status = 5;
-                        }
+                        }*/
 
                         if ($imagem) {
                             $name = substr(str_slug($protocol . '-' . $imagem->getClientOriginalName()), 0, 200) . '.' . $imagem->extension();
