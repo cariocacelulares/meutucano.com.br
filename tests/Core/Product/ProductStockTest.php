@@ -1,4 +1,4 @@
-<?php namespace Tests\Core;
+<?php namespace Tests\Core\Product;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -6,7 +6,7 @@ use Tests\TestCase;
 use Tests\Core\Create\Stock;
 use Tests\Core\Create\Produto;
 use Tests\Core\Create\Pedido;
-use Tests\Core\Create\ProductStock;
+use Tests\Core\Create\Product\ProductStock;
 use Core\Models\Produto\ProductStock as ProductStockModel;
 use Core\Models\Produto as ProdutoModel;
 

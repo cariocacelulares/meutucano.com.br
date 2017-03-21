@@ -1,8 +1,10 @@
-<?php namespace Tests\Core\Create;
+<?php namespace Tests\Core\Create\Stock;
 
 use Tests\CreateUsuario;
-use Tests\Core\Create\Entry\Invoice;
-use Tests\Core\Create\Entry\Product;
+use Tests\Core\Create\Supplier;
+use Tests\Core\Create\Stock\Entry;
+use Tests\Core\Create\Stock\Entry\Invoice;
+use Tests\Core\Create\Stock\Entry\Product;
 use Core\Models\Stock\Entry as EntryModel;
 
 class Entry

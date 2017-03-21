@@ -1,7 +1,7 @@
-<?php namespace Tests\Core\Create\Entry;
+<?php namespace Tests\Core\Create\Stock\Entry;
 
 use Tests\CreateUsuario;
-use Tests\Core\Create\Entry;
+use Tests\Core\Create\Stock\Entry;
 use Core\Models\Stock\Entry\Invoice as InvoiceModel;
 
 class Invoice

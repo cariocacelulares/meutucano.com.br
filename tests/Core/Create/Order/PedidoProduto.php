@@ -1,11 +1,11 @@
-<?php namespace Tests\Core\Create;
+<?php namespace Tests\Core\Create\Order;
 
 use Core\Models\Pedido\PedidoProduto as PedidoProdutoModel;
 use Core\Models\Produto\ProductStock as ProductStockModel;
 use Tests\Core\Create\Pedido;
 use Tests\Core\Create\Produto;
-use Tests\Core\Create\ProductImei;
-use Tests\Core\Create\ProductStock;
+use Tests\Core\Create\Product\ProductImei;
+use Tests\Core\Create\Product\ProductStock;
 
 class PedidoProduto
 {

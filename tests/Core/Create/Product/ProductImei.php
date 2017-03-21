@@ -1,4 +1,4 @@
-<?php namespace Tests\Core\Create;
+<?php namespace Tests\Core\Create\Product;
 
 use Core\Models\Produto\ProductImei as ProductImeiModel;
 

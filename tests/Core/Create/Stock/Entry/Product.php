@@ -1,9 +1,9 @@
-<?php namespace Tests\Core\Create\Entry;
+<?php namespace Tests\Core\Create\Stock\Entry;
 
 use Tests\CreateUsuario;
-use Tests\Core\Create\Entry;
 use Tests\Core\Create\Produto;
-use Tests\Core\Create\ProductStock;
+use Tests\Core\Create\Product\ProductStock;
+use Tests\Core\Create\Stock\Entry;
 use Core\Models\Stock\Entry\Product as EntryProductModel;
 
 class Product

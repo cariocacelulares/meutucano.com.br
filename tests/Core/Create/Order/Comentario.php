@@ -1,4 +1,4 @@
-<?php namespace Tests\Core\Create;
+<?php namespace Tests\Core\Create\Order;
 
 use Core\Models\Pedido\Comentario as ComentarioModel;
 use Tests\CreateUsuario;

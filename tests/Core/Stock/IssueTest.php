@@ -1,13 +1,13 @@
-<?php namespace Tests\Core;
+<?php namespace Tests\Core\Stock;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Tests\CreateUsuario;
-use Tests\Core\Create\Issue;
-use Tests\Core\Create\ProductImei;
+use Tests\Core\Create\Stock\Issue;
+use Tests\Core\Create\Product\ProductImei;
 
-class StockIssueTest extends TestCase
+class IssueTest extends TestCase
 {
     use WithoutMiddleware,
         DatabaseTransactions;

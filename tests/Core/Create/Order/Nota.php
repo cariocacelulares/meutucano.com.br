@@ -1,6 +1,7 @@
-<?php namespace Tests\Core\Create;
+<?php namespace Tests\Core\Create\Order;
 
 use Tests\CreateUsuario;
+use Tests\Core\Create\Pedido;
 use Core\Models\Pedido\Nota as NotaModel;
 
 class Nota

@@ -4,9 +4,9 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Tests\Core\Create\Pedido;
+use Tests\Core\Create\Order\FaturamentoCodigo;
 use Tests\Core\Create\Cliente;
-use Tests\Core\Create\Endereco;
-use Tests\Core\Create\FaturamentoCodigo;
+use Tests\Core\Create\Cliente\Endereco;
 
 class PedidoTest extends TestCase
 {

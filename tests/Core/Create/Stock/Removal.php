@@ -1,4 +1,4 @@
-<?php namespace Tests\Core\Create;
+<?php namespace Tests\Core\Create\Stock;
 
 use Tests\CreateUsuario;
 use Core\Models\Stock\Removal as RemovalModel;

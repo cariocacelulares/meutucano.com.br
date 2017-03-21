@@ -1,6 +1,7 @@
-<?php namespace Tests\Core\Create;
+<?php namespace Tests\Core\Create\Stock;
 
 use Tests\CreateUsuario;
+use Tests\Core\Create\Product\ProductImei;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Core\Models\Produto\ProductImei as ProductImeiModel;
 use Core\Models\Stock\RemovalProduct as RemovalProductModel;

@@ -1,9 +1,9 @@
-<?php namespace Tests\Core;
+<?php namespace Tests\Core\Order;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
-use Tests\Core\Create\FaturamentoCodigo;
+use Tests\Core\Create\Order\FaturamentoCodigo;
 
 class FaturamentoCodigoTest extends TestCase
 {

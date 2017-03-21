@@ -1,10 +1,10 @@
 <?php namespace Tests\Core\Create;
 
 use Core\Models\Pedido as PedidoModel;
-use Tests\Core\Create\FaturamentoCodigo;
 use Tests\Core\Create\Cliente;
-use Tests\Core\Create\Endereco;
-use Tests\Core\Create\PedidoProduto;
+use Tests\Core\Create\Cliente\Endereco;
+use Tests\Core\Create\Order\PedidoProduto;
+use Tests\Core\Create\Order\FaturamentoCodigo;
 
 class Pedido
 {

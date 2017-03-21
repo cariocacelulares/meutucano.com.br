@@ -1,10 +1,10 @@
-<?php namespace Tests\Core;
+<?php namespace Tests\Core\Cliente;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Tests\Core\Create\Cliente;
-use Tests\Core\Create\Endereco;
+use Tests\Core\Create\Cliente\Endereco;
 
 class EnderecoTest extends TestCase
 {

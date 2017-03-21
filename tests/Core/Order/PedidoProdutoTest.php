@@ -1,13 +1,13 @@
-<?php namespace Tests\Core;
+<?php namespace Tests\Core\Order;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Tests\Core\Create\Pedido;
+use Tests\Core\Create\Order\PedidoProduto;
 use Tests\Core\Create\Produto;
-use Tests\Core\Create\ProductImei;
-use Tests\Core\Create\ProductStock;
-use Tests\Core\Create\PedidoProduto;
+use Tests\Core\Create\Product\ProductImei;
+use Tests\Core\Create\Product\ProductStock;
 
 class PedidoProdutoTest extends TestCase
 {

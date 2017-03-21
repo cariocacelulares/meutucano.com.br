@@ -1,4 +1,4 @@
-<?php namespace Tests\Core;
+<?php namespace Tests\Core\Stock;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -7,11 +7,11 @@ use Tests\TestCase;
 use Tests\CreateUsuario;
 use Tests\Core\Create\Supplier;
 use Tests\Core\Create\Produto;
-use Tests\Core\Create\Entry;
-use Tests\Core\Create\Entry\Invoice;
-use Tests\Core\Create\Entry\Product as EntryProduct;
+use Tests\Core\Create\Stock\Entry;
+use Tests\Core\Create\Stock\Entry\Invoice;
+use Tests\Core\Create\Stock\Entry\Product as EntryProduct;
 
-class StockEntryTest extends TestCase
+class EntryTest extends TestCase
 {
     use WithoutMiddleware,
     DatabaseTransactions;

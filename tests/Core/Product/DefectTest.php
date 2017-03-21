@@ -1,10 +1,10 @@
-<?php namespace Tests\Core;
+<?php namespace Tests\Core\Product;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
-use Tests\Core\Create\Defect;
-use Tests\Core\Create\ProductImei;
+use Tests\Core\Create\Product\Defect;
+use Tests\Core\Create\Product\ProductImei;
 
 class DefectTest extends TestCase
 {

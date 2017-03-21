@@ -128,10 +128,10 @@ class NotaController extends Controller
                     return $this->showResponse(['send' => false]);
                 }
             }
-        } catch (\Exception $e) {
-            \Log::warning('Falha ao tentar enviar um e-mail de venda', [$id]);
+        } catch (\Exception $exception) {
+            \Log::warning(logMessage($exception, 'Falha ao tentar enviar um e-mail de venda', [$id]));
 
-            return $this->clientErrorResponse();
+            return $this->clientErrorResponse('Falha ao tentar enviar um e-mail de venda');
         }
 
         return $this->notFoundResponse();

@@ -1,12 +1,12 @@
-<?php namespace Tests\Core;
+<?php namespace Tests\Core\Order;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use MailThief\Testing\InteractsWithMail;
 use Tests\TestCase;
-use Tests\Core\Create\Nota;
+use Tests\Core\Create\Order\Nota;
 
-class PedidoNotaTest extends TestCase
+class NotaTest extends TestCase
 {
     use WithoutMiddleware,
         DatabaseTransactions,
@@ -44,7 +44,7 @@ class PedidoNotaTest extends TestCase
     */
     public function test__it_should_be_able_to_generate_danfe()
     {
-        $response = $this->json('GET', "/api/notas/danfe/{$this->invoice->id}/S")
+        $response = $this->json('GET', "/api/notas/danfe/{$this->invoice->id}/0/S")
             ->seeStatusCode(200);
     }
 

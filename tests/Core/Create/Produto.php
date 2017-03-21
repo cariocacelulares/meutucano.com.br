@@ -2,6 +2,7 @@
 
 use Core\Models\Produto as ProdutoModel;
 use Core\Models\Produto\ProductStock as ProductStockModel;
+use Tests\Core\Create\Product\ProductStock;
 
 class Produto
 {

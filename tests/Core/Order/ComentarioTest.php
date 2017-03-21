@@ -1,10 +1,10 @@
-<?php namespace Tests\Core;
+<?php namespace Tests\Core\Order;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Tests\Core\Create\Pedido;
-use Tests\Core\Create\Comentario;
+use Tests\Core\Create\Order\Comentario;
 
 class ComentarioTest extends TestCase
 {

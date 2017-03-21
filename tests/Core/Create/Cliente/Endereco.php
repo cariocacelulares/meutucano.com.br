@@ -1,6 +1,7 @@
-<?php namespace Tests\Core\Create;
+<?php namespace Tests\Core\Create\Cliente;
 
 use Core\Models\Cliente\Endereco as EnderecoModel;
+use Tests\Core\Create\Cliente;
 
 class Endereco
 {

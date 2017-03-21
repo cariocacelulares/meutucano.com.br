@@ -1,6 +1,8 @@
-<?php namespace Tests\Core\Create;
+<?php namespace Tests\Core\Create\Product;
 
 use Core\Models\Produto\ProductStock as ProductStockModel;
+use Tests\Core\Create\Produto;
+use Tests\Core\Create\Stock;
 
 class ProductStock
 {
@@ -43,7 +45,7 @@ class ProductStock
 
     /**
      * Creates a ProductStock without serial enabled
-     * 
+     *
      * @param  array $data
      * @return Core\Models\Produto\ProductStock
      */
