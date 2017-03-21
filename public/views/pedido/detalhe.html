@@ -126,6 +126,11 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="panel-title"><i class="fa-barcode"></i>&nbsp; Nota fiscal</div>
+                        <div class="panel-controls">
+                            <button ngf-select ngf-change="PedidoDetalhe.notaHelper.uploadDevolucao($files)" ngf-multiple="false" class="btn-default" type="button">
+                                <i class="fa-upload">&nbsp;</i> Devolução
+                            </button>
+                        </div>
                     </div>
                     <div class="panel-body">
                         <div class="col-md-12 no-results" ng-if="!PedidoDetalhe.pedido.notas.length">
@@ -157,7 +162,7 @@
                                             </a>
                                         </li>
                                         <li ng-if="nota.devolucao">
-                                            <a ng-click="PedidoDetalhe.notaHelper.printDanfe(nota.devolucao.id)">
+                                            <a ng-click="PedidoDetalhe.notaHelper.printDanfe(nota.devolucao.id, true)">
                                                 <i class="fa-print"></i>&nbsp; DANFE Devolução
                                             </a>
                                         </li>

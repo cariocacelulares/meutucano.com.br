@@ -143,13 +143,14 @@ class NotaController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function danfe($id, $retorno = 'I', $caminhoArquivo = false)
+    public function danfe($id, $devolucao = false, $retorno = 'I', $caminhoArquivo = false)
     {
         try {
-            $model = self::MODEL;
-            $nota = $model::find($id);
-
-            $nota = $nota ?: Devolucao::find($id);
+            if ((boolean) $devolucao) {
+                $nota = Devolucao::find($id);
+            } else {
+                $nota = (self::MODEL)::find($id);
+            }
 
             if ($nota) {
                 $file_path = storage_path('app/public/nota/'. $nota->arquivo);

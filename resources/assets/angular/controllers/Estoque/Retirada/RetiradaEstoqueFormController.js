@@ -107,7 +107,7 @@
                         if (typeof data.count !== 'undefined') {
                             if (data.count > 0) {
                                 toaster.pop('success', data.count + ' itens confirmados!', '');
-                                vm.load();
+                                $state.reload();
                             }
                         }
                     });
@@ -151,7 +151,7 @@
                         if (typeof data.count !== 'undefined') {
                             if (data.count > 0) {
                                 toaster.pop('success', data.count + ' itens retornados!', '');
-                                vm.load();
+                                $state.reload();
                             }
                         }
                     });

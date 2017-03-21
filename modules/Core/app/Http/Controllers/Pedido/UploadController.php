@@ -107,7 +107,7 @@ class UploadController extends Controller
      */
     private function importProducts($order)
     {
-        $reenvio  = strstr($this->nfe->infAdic->infCpl, 'REENVIO') ? true : false;
+        $reenvio = strstr($this->nfe->infAdic->infCpl, 'REENVIO') ? true : false;
 
         // Pega as posicoes dos seriais no rodape da nota
         $lastPos   = 0;

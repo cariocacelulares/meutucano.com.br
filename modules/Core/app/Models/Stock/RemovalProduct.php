@@ -7,7 +7,7 @@ use Core\Models\Produto\ProductImei;
 
 /**
  * RemovalProduct model
- * @package Core\Models
+ * @package Core\Models\Stock
  */
 class RemovalProduct extends Model
 {
@@ -59,6 +59,6 @@ class RemovalProduct extends Model
      */
     public function productImei()
     {
-        return $this->belongsTo(ProductImei::class);
+        return $this->belongsTo(ProductImei::class)->withTrashed();
     }
 }

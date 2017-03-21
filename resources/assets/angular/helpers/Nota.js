@@ -3,7 +3,8 @@
 
     angular
         .module('MeuTucano')
-        .service('NotaHelper', function($httpParamSerializer, $window, SweetAlert, envService, ngDialog, Restangular, toaster) {
+        .service('NotaHelper', function($state, $httpParamSerializer, $window,
+                SweetAlert, envService, ngDialog, Restangular, toaster, Upload) {
             var vm;
 
             return {
@@ -69,19 +70,31 @@
                         token: localStorage.getItem("satellizer_token")
                     };
 
-                    $window.open(envService.read('apiUrl') + '/notas/xml/' + nota_id + '/' + devolucao+ '?' + $httpParamSerializer(auth), 'xml');
+                    $window.open(
+                        envService.read('apiUrl') +
+                        '/notas/xml/' + nota_id +
+                        '/' + devolucao +
+                        '?' + $httpParamSerializer(auth),
+                        'xml'
+                    );
                 },
 
                 /**
                  * Generate DANFE
                  * @param nota_id
                  */
-                printDanfe: function(nota_id) {
+                printDanfe: function(nota_id, devolucao) {
                     var auth = {
                         token: localStorage.getItem("satellizer_token")
                     };
 
-                    $window.open(envService.read('apiUrl') + '/notas/danfe/' + nota_id + '?' + $httpParamSerializer(auth), 'danfe');
+                    $window.open(
+                        envService.read('apiUrl') +
+                        '/notas/danfe/' +
+                        nota_id +
+                        '/' + (devolucao ? 1 : 0) +
+                        '?' + $httpParamSerializer(auth), 'danfe'
+                    );
                 },
 
                 /**
@@ -96,6 +109,47 @@
                             toaster.pop('error', 'Falha!', 'Não foi possível enviar o e-mail ao cliente');
                         }
                     });
+                },
+
+                uploadDevolucao: function(files) {
+                    if (files.length && typeof files[0] !== 'undefined') {
+                        var file = files[0];
+                    } else {
+                        toaster.pop('error', 'Arquivo inválido!', 'Não foi possível importar o arquivo');
+                        return;
+                    }
+
+                    if (file) {
+                        Upload.upload({
+                            url: envService.read('apiUrl') + '/notas/devolucao/upload',
+                            headers: {Authorization: 'Bearer '+ localStorage.getItem("satellizer_token")},
+                            data: {
+                                file: file
+                            }
+                        }).success(function(response) {
+                            if (response.error) {
+                                toaster.pop('error', 'Ocorreu um erro!', response.message);
+                            } else if (!response.object.devolucao) {
+                                toaster.pop('error', '', 'Ocorreu um erro desconhecido, tente novamente.');
+                            } else {
+                                ngDialog.open({
+                                    template: 'views/nota/devolucao/form.html',
+                                    controller: 'NotaDevolucaoFormController',
+                                    controllerAs: 'NotaDevolucaoForm',
+                                    data: {
+                                        devolucao: response.object.devolucao,
+                                        products : response.object.products
+                                    },
+                                    className: 'ngdialog-theme-default ngdialog-extra-big',
+                                    closeByDocument: false
+                                }).closePromise.then(function(data) {
+                                    if (data) {
+                                        $state.reload();
+                                    }
+                                });
+                            }
+                        });
+                    }
                 }
             };
         });

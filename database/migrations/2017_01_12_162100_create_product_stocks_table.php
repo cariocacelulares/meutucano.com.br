@@ -21,7 +21,7 @@ class CreateProductStocksTable extends Migration
             $table->increments('id');
             $table->string('stock_slug', 100)->default('default');
             $table->unsignedInteger('product_sku');
-            $table->unsignedInteger('quantity')->default(0);
+            $table->integer('quantity')->default(0);
 			$table->timestamps();
 
             $table

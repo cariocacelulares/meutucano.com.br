@@ -33,9 +33,15 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     */
     Route::group(['prefix' => 'notas', 'namespace' => 'Pedido'], function () {
         Route::get('xml/{id}/{devolucao}', 'NotaController@xml');
-        Route::get('danfe/{id}/{retorno?}', 'NotaController@danfe');
+        Route::get('danfe/{id}/{devolucao}/{retorno?}', 'NotaController@danfe');
         Route::post('email/{id}', 'NotaController@email');
     });
+
+    /**
+     * Devolucao
+     */
+     Route::post('notas/devolucao/upload', 'Pedido\Nota\DevolucaoController@upload');
+     Route::post('notas/devolucao/proceed/{id}', 'Pedido\Nota\DevolucaoController@proceed');
 
     /**
     * Pedido Produto
@@ -230,7 +236,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::get('list', 'InvoiceController@tableList');
         Route::post('upload', 'InvoiceController@upload');
     });
-    Route::resource('estoque/entrada/nota', 'Stock\InvoiceController');
+    Route::resource('estoque/entrada/nota', 'Stock\Entry\InvoiceController');
 
     /**
      * Product defect
