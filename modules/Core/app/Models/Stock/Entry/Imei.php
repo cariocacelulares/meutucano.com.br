@@ -24,16 +24,16 @@ class Imei extends Model
      */
     protected $fillable = [
         'stock_entry_product_id',
-        'product_imei',
+        'product_imei_id',
     ];
 
     /**
      * Product
      * @return Product
      */
-    public function product()
+    public function entryProduct()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'stock_entry_product_id', 'id');
     }
 
     /**

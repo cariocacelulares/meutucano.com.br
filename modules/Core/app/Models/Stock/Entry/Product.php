@@ -63,7 +63,7 @@ class Product extends Model
      */
     public function entry()
     {
-        return $this->belongsTo(Entry::class);
+        return $this->belongsTo(Entry::class, 'stock_entry_id', 'id');
     }
 
     /**
@@ -95,7 +95,7 @@ class Product extends Model
         if (!$imeis) {
             return null;
         }
-        
+
         return implode(PHP_EOL, json_decode($imeis));
     }
 

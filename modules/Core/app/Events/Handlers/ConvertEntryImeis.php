@@ -36,6 +36,11 @@ class ConvertEntryImeis
         try {
             foreach ($entry->products as $product) {
                 $imeis = $product->getOriginal('imeis');
+
+                if (!$imeis) {
+                    continue;
+                }
+
                 $imeis = json_decode($imeis);
 
                 foreach ($imeis as $imei) {
@@ -46,7 +51,7 @@ class ConvertEntryImeis
 
                     $entryImei = Imei::create([
                         'stock_entry_product_id' => $product->id,
-                        'product_imei'           => $imei->id,
+                        'product_imei_id'        => $imei->id,
                     ]);
 
                     Log::info("Relação {$entryImei->id} criada entre o imei {$imei->id} [{$imei->imei}] e o produto {$product->id} da entrada {$entry->id}");

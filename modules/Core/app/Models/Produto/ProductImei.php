@@ -7,6 +7,7 @@ use Core\Models\Pedido\PedidoProduto;
 use Core\Models\Stock\RemovalProduct;
 use Core\Models\Stock\Issue;
 use Core\Models\Produto\Defect;
+use Core\Models\Stock\Entry\Imei;
 
 /**
  * Class ProductImei
@@ -82,5 +83,14 @@ class ProductImei extends Model
     public function defect()
     {
         return $this->hasOne(Defect::class);
+    }
+
+    /**
+     * Imei
+     * @return Imei
+     */
+    public function entryImeis()
+    {
+        return $this->hasMany(Imei::class);
     }
 }

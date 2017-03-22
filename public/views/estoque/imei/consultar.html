@@ -13,6 +13,36 @@
         </form>
     </div>
 </div>
+
+<div ng-if="ConsultarImei.info.title" class="row m-b-20">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading separator">
+                <div class="panel-title">
+                    <span>{{ ConsultarImei.info.title }}</span>
+                    <span class="pull-right">{{ ConsultarImei.info.value | currency }}</span>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <b>EAN</b>: {{ ConsultarImei.info.ean }}
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <b>NCM</b>: {{ ConsultarImei.info.ncm }}
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <b>Estoque</b>: {{ ConsultarImei.info.stock }}
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <b>Entrada</b>: {{ ConsultarImei.info.entry_value | currency  }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <table ng-if="ConsultarImei.imei" class="table info-style table-hover">
     <thead class="table-header">
         <tr>

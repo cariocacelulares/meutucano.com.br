@@ -98,4 +98,27 @@ class DefectController extends Controller
             ]);
         }
     }
+
+    /**
+     * Returns a unique resource
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function show($id)
+    {
+        try {
+            $defect = (self::MODEL)
+                ::with('productImei')
+                ->findOrFail($id);
+
+            return $this->showResponse($defect);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao obter recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
 }

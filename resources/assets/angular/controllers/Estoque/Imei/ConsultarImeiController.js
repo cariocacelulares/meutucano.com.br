@@ -11,12 +11,14 @@
         vm.loading = false;
         vm.imei    = null;
         vm.acoes   = [];
+        vm.info    = {};
 
         vm.load = function() {
             vm.loading = true;
 
             ProductImei.history(vm.imei).then(function (response) {
-                vm.acoes = response;
+                vm.acoes = response.history;
+                vm.info  = response.info;
                 vm.loading = false;
             });
         }
@@ -34,6 +36,7 @@
                 case 'Defect'      : return 'bug';
                 case 'Removal'     : return 'cart-arrow-down';
                 case 'Pedido'      : return 'cubes';
+                case 'Entry'       : return 'arrow-up';
             }
 
             return 'cube';

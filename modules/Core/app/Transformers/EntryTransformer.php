@@ -17,13 +17,13 @@ class EntryTransformer
 
         foreach ($entries as $entry) {
             $transformed[] = [
-                'id'       => $entry['id'],
+                'id'           => $entry['id'],
+                'created_at'   => dateConvert($entry['created_at']),
+                'confirmed_at' => dateConvert($entry['confirmed_at']),
                 'invoice'  => [
                     'id'           => $entry['invoice']['id'],
                     'key'          => $entry['invoice']['key'],
                     'number'       => $entry['invoice']['number'],
-                    'created_at'   => dateConvert($entry['invoice']['created_at']),
-                    'confirmed_at' => dateConvert($entry['invoice']['confirmed_at']),
                 ],
                 'supplier' => [
                     'id'   => $entry['supplier']['id'],

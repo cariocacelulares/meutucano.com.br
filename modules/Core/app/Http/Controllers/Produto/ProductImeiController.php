@@ -167,6 +167,7 @@ class ProductImeiController extends Controller
                 $defect          = $productImei->defect;
                 $removalProducts = $productImei->removalProducts;
                 $pedidoProdutos  = $productImei->pedidoProdutos;
+                $entryImeis      = $productImei->entryImeis;
 
                 $imeiCreated = null;
                 $firstStock  = false;
@@ -314,7 +315,29 @@ class ProductImeiController extends Controller
                     }
                 }
 
+                $entryValue = null;
+                foreach ($entryImeis as $entryImei) {
+                    $entryProduct = $entryImei->entryProduct;
+                    $entry        = $entryProduct->entry;
 
+                    $entryValue = $entryProduct->unitary_value;
+
+                    if ($entry->confirmed_at) {
+                        $actions[strtotime($entry->confirmed_at)][] = [
+                            'model' => 'Entry',
+                            'desc'  => "Serial confirmado em uma entrada de de estoque",
+                            'date'  => dateConvert($entry->confirmed_at),
+                            'user'  => $entry->user_id ? Usuario::find($entry->user_id)->name : null,
+                        ];
+                    } else {
+                        $actions[strtotime($entry->created_at)][] = [
+                            'model' => 'Entry',
+                            'desc'  => "Serial registrado em uma entrada de de estoque",
+                            'date'  => dateConvert($entry->created_at),
+                            'user'  => $entry->user_id ? Usuario::find($entry->user_id)->name : null,
+                        ];
+                    }
+                }
 
                 ksort($actions);
 
@@ -325,7 +348,21 @@ class ProductImeiController extends Controller
                     }
                 }
 
-                return $this->showResponse($history);
+                $productStock = $productImei->productStock;
+
+                $info = [
+                    'title'       => $productStock->product->titulo,
+                    'ean'         => $productStock->product->ean,
+                    'ncm'         => $productStock->product->ncm,
+                    'value'       => $productStock->product->valor,
+                    'stock'       => $productStock->stock->title,
+                    'entry_value' => $entryValue,
+                ];
+
+                return $this->showResponse([
+                    'info'    => $info,
+                    'history' => $history,
+                ]);
             } catch (\Exception $exception) {
                 \Log::error(logMessage($exception, 'Erro ao consultar histórico de imei'));
 

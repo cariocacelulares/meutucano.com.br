@@ -17,6 +17,7 @@
             if (vm.defect.id) {
                 ProductDefect.get(vm.defect.id).then(function (response) {
                     vm.defect = response;
+                    vm.imei   = vm.defect.product_imei.imei;
                 });
             }
         };

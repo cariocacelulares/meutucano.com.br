@@ -253,7 +253,7 @@
          * Confirm a stock entry
          */
         vm.confirm = function() {
-            StockEntry.confirm(entry.id).then(function() {
+            StockEntry.confirm(vm.entry.id).then(function() {
                 toaster.pop('success', 'Sucesso!', 'Entrada confirmada com sucesso!');
                 $state.go('app.estoque.entrada.index');
             });

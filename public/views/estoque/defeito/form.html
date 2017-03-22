@@ -18,6 +18,12 @@
             <input ng-model="DefeitoForm.defect.imei" id="imei" placeholder="Imei do produto" required />
         </div>
     </div>
+    <div ng-if="DefeitoForm.defect.id" class="row">
+        <div class="col-md-6 form-group">
+            <label for="imei">Serial</label>
+            <input ng-model="DefeitoForm.imei" id="imei" disabled readonly />
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-12 form-group">
             <label for="description">Descrição</label>
