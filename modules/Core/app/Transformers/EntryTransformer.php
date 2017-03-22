@@ -98,7 +98,7 @@ class EntryTransformer
                 'cfop'           => $entry->invoice->cfop,
                 'total'          => $entry->invoice->total,
                 'file'           => $entry->invoice->file,
-                'emission'       => dateConvert($entry->invoice->emission),
+                'emission'       => dateConvert($entry->invoice->emission, 'Y-m-d H:i:s', 'd/m/Y H:i:s'),
             ],
             'products'     => $products,
         ];

@@ -60,6 +60,7 @@ class CoreServiceProvider extends ServiceProvider
         \App::register(ConfigServiceProvider::class);
         \App::register(StockServiceProvider::class);
         \App::register(TitleVariationServiceProvider::class);
+        \App::register(InvoiceServiceProvider::class);
     }
 
     /**

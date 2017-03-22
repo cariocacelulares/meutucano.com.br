@@ -48,35 +48,31 @@ class NotaController extends Controller
     }
 
     /**
-     * Gera o XML da nota fiscal
+     * Generate invoice XML
      *
      * @param $id
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function xml($id, $devolucao)
+    public function xml($id)
     {
-        if ($devolucao) {
-            $nota = Devolucao::find($id);
-        } else {
-            $model = self::MODEL;
-            $nota = $model::find($id);
-        }
+        $invoice = (self::MODEL)::findOrFail($id);
 
-        // Nota fiscal não existe
-        if ($nota) {
-            $file_path = storage_path('app/public/nota/' . $nota->arquivo);
+        return \Invoice::xml($invoice->arquivo);
+    }
 
-            // Arquivo físico não existe
-            if (!file_exists($file_path)) {
-                return $this->notFoundResponse();
-            }
+    /**
+     * Generate DANFe PDF file
+     *
+     * @param  $id
+     * @param  string  $returnType I-borwser, S-retorna o arquivo, D-força download, F-salva em arquivo local
+     * @param  string  $dir        path dir i $returnType is F
+     * @return Response
+     */
+    public function danfe($id, $returnType = 'I', $path = false)
+    {
+        $invoice = (self::MODEL)::findOrFail($id);
 
-            return response()
-                ->make(file_get_contents($file_path), '200')
-                ->header('Content-Type', 'text/xml');
-        }
-
-        return $this->notFoundResponse();
+        return \Invoice::danfe($invoice->arquivo, $returnType, $path);
     }
 
     /**
@@ -88,8 +84,7 @@ class NotaController extends Controller
     public function email($id)
     {
         try {
-            $model = self::MODEL;
-            $nota = $model::find($id);
+            $nota = (self::MODEL)::find($id);
 
             if ($nota) {
                 $dataHora = date('His');
@@ -98,8 +93,8 @@ class NotaController extends Controller
 
                 if ($email) {
                     if (\Config::get('core.email_send_enabled')) {
-                        $mail = Mail::send('emails.danfe', [], function ($message) use ($id, $email, $arquivo) {
-                            with(new NotaController())->danfe($id, false, 'F', $arquivo);
+                        $mail = Mail::send('emails.danfe', [], function ($message) use ($nota, $email, $arquivo) {
+                            \Invoice::danfe($nota->arquivo, 'F', $arquivo);
 
                             $message
                                 ->attach($arquivo, ['as' => 'nota.pdf', 'mime' => 'application/pdf'])
@@ -132,54 +127,6 @@ class NotaController extends Controller
             \Log::warning(logMessage($exception, 'Falha ao tentar enviar um e-mail de venda', [$id]));
 
             return $this->clientErrorResponse('Falha ao tentar enviar um e-mail de venda');
-        }
-
-        return $this->notFoundResponse();
-    }
-
-    /**
-     * Gera o arquivo PDF da DANFe
-     *
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function danfe($id, $devolucao = false, $retorno = 'I', $caminhoArquivo = false)
-    {
-        try {
-            if ((boolean) $devolucao) {
-                $nota = Devolucao::find($id);
-            } else {
-                $nota = (self::MODEL)::find($id);
-            }
-
-            if ($nota) {
-                $file_path = storage_path('app/public/nota/'. $nota->arquivo);
-
-                if (file_exists($file_path)) {
-                    $xml = file_get_contents($file_path);
-
-                    $danfe = new Danfe(
-                        $xml,
-                        'P',
-                        'A4',
-                        public_path('assets/img/logocarioca.jpg'),
-                        public_path('assets/img/watermark.jpg'),
-                        $retorno,
-                        ''
-                    );
-
-                    $nomeDanfe = ($caminhoArquivo) ?: substr($nota->arquivo, 0, -4) . '.pdf';
-
-                    $danfe->montaDANFE('P', 'A4', 'L');
-                    $danfe->printDANFE($nomeDanfe, $retorno);
-
-                    return $this->showResponse([]);
-                }
-            }
-        } catch (\Exception $exception) {
-            \Log::warning(logMessage($exception, 'Falha ao tentar imprimir DANFe'), [$id]);
-
-            return $this->clientErrorResponse('Falha ao tentar imprimir DANFe');
         }
 
         return $this->notFoundResponse();

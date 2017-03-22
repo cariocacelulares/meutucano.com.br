@@ -33,7 +33,7 @@ class NotaTest extends TestCase
     */
     public function test__it_should_be_able_to_generate_xml()
     {
-        $response = $this->json('GET', "/api/notas/xml/{$this->invoice->id}/0")
+        $response = $this->json('GET', "/api/notas/xml/{$this->invoice->id}")
             ->seeStatusCode(200);
     }
 
@@ -44,7 +44,7 @@ class NotaTest extends TestCase
     */
     public function test__it_should_be_able_to_generate_danfe()
     {
-        $response = $this->json('GET', "/api/notas/danfe/{$this->invoice->id}/0/S")
+        $response = $this->json('GET', "/api/notas/danfe/{$this->invoice->id}/S")
             ->seeStatusCode(200);
     }
 

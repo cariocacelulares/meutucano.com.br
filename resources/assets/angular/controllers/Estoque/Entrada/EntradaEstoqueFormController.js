@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('EntradaEstoqueFormController', EntradaEstoqueFormController);
 
-    function EntradaEstoqueFormController($state, $stateParams, envService, toaster,
+    function EntradaEstoqueFormController($window, $state, $stateParams, $httpParamSerializer, envService, toaster,
             ValidationErrors, Upload, Cep, SelectProductHelper, Supplier, ProductStock, StockEntry) {
         var vm = this;
 
@@ -31,9 +31,45 @@
                     vm.entry = entry;
                 });
             }
+        }();
+
+        /**
+         * Generate XML
+         *
+         * @param invoiceId
+         */
+        vm.printXML = function() {
+            var auth = {
+                token: localStorage.getItem("satellizer_token")
+            };
+
+            $window.open(
+                envService.read('apiUrl') +
+                '/estoque/entrada/nota/xml/' +
+                vm.entry.invoice.id + '?' +
+                $httpParamSerializer(auth),
+                'xml'
+            );
         }
 
-        vm.load();
+        /**
+         * Generate DANFE
+         *
+         * @param invoiceId
+         */
+        vm.printDanfe = function() {
+            var auth = {
+                token: localStorage.getItem("satellizer_token")
+            };
+
+            $window.open(
+                envService.read('apiUrl') +
+                '/estoque/entrada/nota/danfe/' +
+                vm.entry.invoice.id + '?' +
+                $httpParamSerializer(auth),
+                'danfe'
+            );
+        }
 
         /**
          * Set stock prop when product stock changed

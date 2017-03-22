@@ -56,44 +56,51 @@
 
                 /**
                  * Generate XML
-                 * @param nota_id
-                 * @param devolucao
+                 * @param invoiceId
+                 * @param devolucao if invoice is devolution
                  */
-                printXML: function(nota_id, devolucao) {
-                    if (typeof devolucao != 'undefined') {
-                        devolucao = devolucao ? 1 : 0;
-                    } else {
-                        devolucao = 0;
-                    }
-
+                printXML: function(invoiceId, devolucao) {
                     var auth = {
                         token: localStorage.getItem("satellizer_token")
                     };
 
+                    if (typeof devolucao !== 'undefined' && devolucao) {
+                        devolucao = '/devolucao';
+                    } else {
+                        devolucao = '';
+                    }
+
                     $window.open(
                         envService.read('apiUrl') +
-                        '/notas/xml/' + nota_id +
-                        '/' + devolucao +
-                        '?' + $httpParamSerializer(auth),
+                        '/notas' + devolucao + '/xml/' +
+                        invoiceId + '?' +
+                        $httpParamSerializer(auth),
                         'xml'
                     );
                 },
 
                 /**
                  * Generate DANFE
-                 * @param nota_id
+                 * @param invoiceId
+                 * @param devolucao if invoice is devolution
                  */
-                printDanfe: function(nota_id, devolucao) {
+                printDanfe: function(invoiceId, devolucao) {
                     var auth = {
                         token: localStorage.getItem("satellizer_token")
                     };
 
+                    if (typeof devolucao !== 'undefined' && devolucao) {
+                        devolucao = '/devolucao';
+                    } else {
+                        devolucao = '';
+                    }
+
                     $window.open(
                         envService.read('apiUrl') +
-                        '/notas/danfe/' +
-                        nota_id +
-                        '/' + (devolucao ? 1 : 0) +
-                        '?' + $httpParamSerializer(auth), 'danfe'
+                        '/notas' + devolucao + '/danfe/' +
+                        invoiceId + '?' +
+                        $httpParamSerializer(auth),
+                        'danfe'
                     );
                 },
 

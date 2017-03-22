@@ -83,7 +83,17 @@
 
         <fieldset ng-if="EntradaEstoqueForm.entry.invoice.key" >
             <legend>Nota</legend>
-            <div class="row">
+
+            <div class="fieldset-actions row">
+                <button ng-click="EntradaEstoqueForm.printXML()" type="button" class="btn-default pull-right">
+                    <i class="fa-file-code-o">&nbsp;</i> XML
+                </button>
+                <button ng-click="EntradaEstoqueForm.printDanfe()" type="button" class="btn-default pull-right m-r-10">
+                    <i class="fa-print">&nbsp;</i> DANFe
+                </button>
+            </div>
+
+            <div class="row m-t-0">
                 <div class="col-md-4 form-group">
                     <label for="key">Chave da nota</label>
                     <input ng-model="EntradaEstoqueForm.entry.invoice.key" id="key" required>

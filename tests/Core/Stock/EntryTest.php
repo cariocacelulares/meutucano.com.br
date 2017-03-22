@@ -40,7 +40,7 @@ class EntryTest extends TestCase
                 'cfop'     => 5102,
                 'total'    => 800,
                 'file'     => 'teste.xml',
-                'emission' => date('d/m/Y H:i'),
+                'emission' => date('d/m/Y H:i:s'),
             ],
             'products'     => [
                 [
@@ -89,7 +89,7 @@ class EntryTest extends TestCase
         ]);
 
         $this->seeInDatabase('stock_entry_invoices', array_merge($data['invoice'], [
-            'emission' => dateConvert("{$data['invoice']['emission']}:00", 'd/m/Y H:i:s', 'Y-m-d H:i:s'),
+            'emission' => dateConvert("{$data['invoice']['emission']}", 'd/m/Y H:i:s', 'Y-m-d H:i:s'),
         ]));
 
         foreach ($data['products'] as $product) {
@@ -181,7 +181,7 @@ class EntryTest extends TestCase
         $data['description'] = 'Modified description';
 
         $data['invoice']['key'] = '38816152805945204136213659189873198829821981';
-        $data['invoice']['emission'] = date('d/m/Y H:i');
+        $data['invoice']['emission'] = date('d/m/Y H:i:s');
 
         $data['supplier']['name'] = 'modified name';
         $data['supplier']['neighborhood'] = 'whatever';

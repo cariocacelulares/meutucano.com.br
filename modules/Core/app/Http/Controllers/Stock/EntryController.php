@@ -214,7 +214,7 @@ class EntryController extends Controller
         $invoice->cfop           = $invoiceData['cfop'];
         $invoice->total          = $invoiceData['total'];
         $invoice->file           = $invoiceData['file'];
-        $invoice->emission       = dateConvert("{$invoiceData['emission']}:00", 'd/m/Y H:i:s', 'Y-m-d H:i:s');
+        $invoice->emission       = dateConvert($invoiceData['emission'], 'd/m/Y H:i:s', 'Y-m-d H:i:s');
 
         return $invoice->save() ? $invoice : null;
     }

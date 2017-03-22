@@ -18,7 +18,35 @@ class InvoiceController extends Controller
     use RestControllerTrait,
         Uploadable;
 
-    const MODEL = Entry::class;
+    const MODEL = Invoice::class;
+
+    /**
+     * Generate invoice XML
+     *
+     * @param $id
+     * @return Response
+     */
+    public function xml($id)
+    {
+        $invoice = (self::MODEL)::findOrFail($id);
+
+        return \Invoice::xml($invoice->file);
+    }
+
+    /**
+     * Generate DANFe PDF file
+     *
+     * @param  $id
+     * @param  string  $returnType I-borwser, S-retorna o arquivo, D-força download, F-salva em arquivo local
+     * @param  string  $dir        path dir i $returnType is F
+     * @return Response
+     */
+    public function danfe($id, $returnType = 'I', $path = false)
+    {
+        $invoice = (self::MODEL)::findOrFail($id);
+
+        return \Invoice::danfe($invoice->file, $returnType, $path, true);
+    }
 
     /**
      * Call trait method to prepare and wrap upload
@@ -94,7 +122,7 @@ class InvoiceController extends Controller
             }
 
             $invoice = [
-                'file'     => 'app/public/nota/' . $fileName,
+                'file'     => $fileName,
                 'key'      => $key,
                 'series'   => (string) $this->nfe->ide->serie,
                 'number'   => (string) $this->nfe->ide->nNF,
@@ -110,7 +138,9 @@ class InvoiceController extends Controller
                 'products' => $products,
             ];
         } catch (\Exception $exception) {
-            dd($exception);
+            $this->clientErrorResponse([
+                'Ocorreu um erro ao tentar fazer upload da nota de entrada'
+            ]);
         }
     }
 }

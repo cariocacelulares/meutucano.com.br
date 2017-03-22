@@ -27,6 +27,34 @@ class DevolucaoController extends Controller
     const MODEL = Devolucao::class;
 
     /**
+     * Generate invoice XML
+     *
+     * @param $id
+     * @return Response
+     */
+    public function xml($id)
+    {
+        $invoice = (self::MODEL)::findOrFail($id);
+
+        return \Invoice::xml($invoice->arquivo);
+    }
+
+    /**
+     * Generate DANFe PDF file
+     *
+     * @param  $id
+     * @param  string  $returnType I-borwser, S-retorna o arquivo, D-força download, F-salva em arquivo local
+     * @param  string  $dir        path dir i $returnType is F
+     * @return Response
+     */
+    public function danfe($id, $returnType = 'I', $path = false)
+    {
+        $invoice = (self::MODEL)::findOrFail($id);
+
+        return \Invoice::danfe($invoice->arquivo, $returnType, $path);
+    }
+
+    /**
      * Proceed with upload (created defects and change order status)
      *
      * @param  int  $id Devolucao
