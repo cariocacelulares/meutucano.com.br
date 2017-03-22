@@ -35,7 +35,7 @@ class StockRemovalTransformer
      * @param  object $removal
      * @return Removal
      */
-    public static function list($removals)
+    public static function tableList($removals)
     {
         $pagination  = $removals->toArray();
         $transformed = [];

@@ -63,7 +63,7 @@ class ProdutoController extends Controller
             ];
         }
 
-        return $this->listResponse(ProductTransformer::list($list));
+        return $this->listResponse(ProductTransformer::tableList($list));
     }
 
     /**

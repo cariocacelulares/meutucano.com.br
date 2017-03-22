@@ -10,7 +10,7 @@ class StockIssueTransformer
      * @param  object $issue
      * @return Removal
      */
-    public static function list($issues)
+    public static function tableList($issues)
     {
         $pagination  = $issues->toArray();
         $transformed = [];

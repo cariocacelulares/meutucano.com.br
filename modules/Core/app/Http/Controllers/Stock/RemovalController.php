@@ -31,7 +31,7 @@ class RemovalController extends Controller
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse(StockRemovalTransformer::list($list));
+        return $this->listResponse(StockRemovalTransformer::tableList($list));
     }
 
     /**

@@ -35,7 +35,7 @@ class DefectController extends Controller
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse(ProductDefectTransformer::list($list));
+        return $this->listResponse(ProductDefectTransformer::tableList($list));
     }
 
     /**

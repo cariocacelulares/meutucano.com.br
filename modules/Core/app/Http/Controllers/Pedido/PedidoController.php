@@ -36,7 +36,7 @@ class PedidoController extends Controller
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse(OrderTransformer::list($list));
+        return $this->listResponse(OrderTransformer::tableList($list));
     }
 
     /**

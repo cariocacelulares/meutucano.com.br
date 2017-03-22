@@ -10,7 +10,7 @@ class ProductDefectTransformer
      * @param  object $defect
      * @return Removal
      */
-    public static function list($defects)
+    public static function tableList($defects)
     {
         $pagination  = $defects->toArray();
         $transformed = [];

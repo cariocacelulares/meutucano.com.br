@@ -28,7 +28,7 @@ class LigacaoController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return $this->listResponse(LigacaoTransformer::list($data));
+        return $this->listResponse(LigacaoTransformer::tableList($data));
     }
 
     /**

@@ -27,7 +27,7 @@ class ComentarioController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return $this->listResponse(CommentTransformer::list($data));
+        return $this->listResponse(CommentTransformer::tableList($data));
     }
 
     /**

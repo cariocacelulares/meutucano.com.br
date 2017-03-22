@@ -132,7 +132,7 @@ class OrderTransformer
      * @param  object $orders
      * @return array
      */
-    public static function list($orders)
+    public static function tableList($orders)
     {
         $pagination  = $orders->toArray();
         $transformed = [];

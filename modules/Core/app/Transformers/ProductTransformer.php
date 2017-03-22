@@ -37,7 +37,7 @@ class ProductTransformer
      * @param  object $products
      * @return array
      */
-    public static function list($products)
+    public static function tableList($products)
     {
         $pagination  = $products->toArray();
         $transformed = [];

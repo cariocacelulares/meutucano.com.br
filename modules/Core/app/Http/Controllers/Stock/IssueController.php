@@ -37,7 +37,7 @@ class IssueController extends Controller
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse(StockIssueTransformer::list($list));
+        return $this->listResponse(StockIssueTransformer::tableList($list));
     }
 
     /**

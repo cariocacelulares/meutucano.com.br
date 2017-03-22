@@ -28,7 +28,7 @@ class ClienteController extends Controller
         $list = (self::MODEL)::orderBy('clientes.created_at', 'DESC');
         $list = $this->handleRequest($list);
 
-        return $this->listResponse(ClientTransformer::list($list));
+        return $this->listResponse(ClientTransformer::tableList($list));
     }
 
     /**

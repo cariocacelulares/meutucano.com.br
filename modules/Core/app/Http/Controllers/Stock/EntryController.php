@@ -34,7 +34,7 @@ class EntryController extends Controller
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse($list);
+        return $this->listResponse(EntryTransformer::tableList($list));
     }
 
     /**

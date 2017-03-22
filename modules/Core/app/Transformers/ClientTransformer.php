@@ -77,7 +77,7 @@ class ClientTransformer
      * @param  object $clients
      * @return array
      */
-    public static function list($clients)
+    public static function tableList($clients)
     {
         $pagination  = $clients->toArray();
         $transformed = [];

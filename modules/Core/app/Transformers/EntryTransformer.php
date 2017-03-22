@@ -7,6 +7,37 @@
 class EntryTransformer
 {
     /**
+     * @param  object $entries
+     * @return array
+     */
+    public static function tableList($entries)
+    {
+        $pagination  = $entries->toArray();
+        $transformed = [];
+
+        foreach ($entries as $entry) {
+            $transformed[] = [
+                'id'       => $entry['id'],
+                'invoice'  => [
+                    'id'           => $entry['invoice']['id'],
+                    'key'          => $entry['invoice']['key'],
+                    'number'       => $entry['invoice']['number'],
+                    'created_at'   => dateConvert($entry['invoice']['created_at']),
+                    'confirmed_at' => dateConvert($entry['invoice']['confirmed_at']),
+                ],
+                'supplier' => [
+                    'id'   => $entry['supplier']['id'],
+                    'name' => $entry['supplier']['name'],
+                ],
+            ];
+        }
+
+        $pagination['data'] = $transformed;
+
+        return $pagination;
+    }
+
+    /**
      * @param  object $entry
      * @return array
      */
