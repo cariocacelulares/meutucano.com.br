@@ -99,7 +99,7 @@ class NotaController extends Controller
                 if ($email) {
                     if (\Config::get('core.email_send_enabled')) {
                         $mail = Mail::send('emails.danfe', [], function ($message) use ($id, $email, $arquivo) {
-                            with(new NotaController())->danfe($id, 'F', $arquivo);
+                            with(new NotaController())->danfe($id, false, 'F', $arquivo);
 
                             $message
                                 ->attach($arquivo, ['as' => 'nota.pdf', 'mime' => 'application/pdf'])

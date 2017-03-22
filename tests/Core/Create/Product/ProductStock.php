@@ -1,8 +1,8 @@
 <?php namespace Tests\Core\Create\Product;
 
-use Core\Models\Produto\ProductStock as ProductStockModel;
 use Tests\Core\Create\Produto;
 use Tests\Core\Create\Stock;
+use Core\Models\Produto\ProductStock as ProductStockModel;
 
 class ProductStock
 {

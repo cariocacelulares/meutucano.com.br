@@ -4,6 +4,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Usuario\Usuario;
 use Core\Models\Pedido\Nota;
 
+
 /**
  * Class Devolucao
  * @package Core\Models\Pedido\Nota
@@ -18,6 +19,7 @@ class Devolucao extends \Eloquent
      * @var array
      */
     protected $fillable = [
+        'usuario_id',
         'nota_id',
         'chave',
         'arquivo',

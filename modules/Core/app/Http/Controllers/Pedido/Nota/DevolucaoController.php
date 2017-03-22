@@ -51,6 +51,40 @@ class DevolucaoController extends Controller
 
             $products = Input::get('products');
             foreach ($products as $product) {
+                // Find product
+                if (!Produto::find($product['sku'])) {
+                    return $this->validationFailResponse([
+                        "O SKU {$product['sku']} não foi encontrado"
+                    ]);
+                }
+
+                // Find imei
+                $productImei = ProductImei
+                    ::where('imei', '=', $product['imei'])
+                    ->withTrashed()
+                    ->first();
+
+                if (!$productImei) {
+                    return $this->validationFailResponse([
+                        "O serial {$product['imei']} não foi encontrado"
+                    ]);
+                }
+
+                // get or create removal
+                $removal = Removal::firstOrCreate([
+                    'user_id'       => getCurrentUserId(),
+                    'is_continuous' => true,
+                    'closed_at'     => null,
+                ]);
+
+                RemovalProduct::create([
+                    'stock_removal_id' => $removal->id,
+                    'product_stock_id' => $productImei->productStock->id,
+                    'product_imei_id'  => $productImei->id,
+                    'status'           => 1,
+                ]);
+
+                // create defect
                 if ($product['defect']) {
                     if (!$product['desc']) {
                         return $this->validationFailResponse([
@@ -58,40 +92,10 @@ class DevolucaoController extends Controller
                         ]);
                     }
 
-                    if (!Produto::find($product['sku'])) {
-                        return $this->validationFailResponse([
-                            "O SKU {$product['sku']} não foi encontrado"
-                        ]);
-                    }
-
-                    $productImei = ProductImei
-                        ::where('imei', '=', $product['imei'])
-                        ->withTrashed()
-                        ->first();
-
-                    if (!$productImei) {
-                        return $this->validationFailResponse([
-                            "O serial {$product['imei']} não foi encontrado"
-                        ]);
-                    }
-
                     Defect::create([
                         'product_sku'     => $product['sku'],
                         'product_imei_id' => $productImei->id,
                         'description'     => $product['desc'],
-                    ]);
-
-                    $removal = Removal::firstOrCreate([
-                        'user_id'       => getCurrentUserId(),
-                        'is_continuous' => true,
-                        'closed_at'     => null,
-                    ]);
-
-                    RemovalProduct::create([
-                        'stock_removal_id' => $removal->id,
-                        'product_stock_id' => $productImei->productStock->id,
-                        'product_imei_id'  => $productImei->id,
-                        'status'           => 1,
                     ]);
                 }
             }

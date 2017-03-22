@@ -16,7 +16,7 @@ class CreateStockRemovalsTable extends Migration
 		Schema::create('stock_removals', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('user_id')->unsigned()->index();
+			$table->integer('user_id')->unsigned()->nullable()->index();
 			$table->boolean('is_continuous')->default(false);
 			$table->dateTime('closed_at')->nullable();
 			$table->timestamps();

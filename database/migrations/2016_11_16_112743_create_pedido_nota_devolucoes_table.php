@@ -15,7 +15,7 @@ class CreatePedidoNotaDevolucoesTable extends Migration {
 		Schema::create('pedido_nota_devolucoes', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('usuario_id')->unsigned()->index('PedidoNotaDevolucaoUsuario');
+			$table->integer('usuario_id')->unsigned()->nullable()->index('PedidoNotaDevolucaoUsuario');
 			$table->integer('nota_id')->unsigned()->nullable()->index('PedidoNotaDevolucaoNota');
 			$table->string('chave', 50);
 			$table->string('arquivo', 250)->nullable();

@@ -13,8 +13,10 @@ class Removal
     public static function create($data = [])
     {
         if (!isset($data['user_id'])) {
-            $user = CreateUsuario::create();
-            $data['user_id'] = $user->id;
+            if (isset($data['user_id']) && is_null($data['user_id'])) {
+                $user = CreateUsuario::create();
+                $data['user_id'] = $user->id;
+            }
         }
 
         return factory(RemovalModel::class)->create($data);
