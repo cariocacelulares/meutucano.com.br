@@ -1,2 +1,0 @@
-[17-Mar-2017 16:18:32 America/Sao_Paulo] PHP Fatal error:  Trait 'Mercadolivre\Http\Controllers\RestControllerTrait' not found in /vagrant/dev/tucanov3/modules/Mercadolivre/app/Http/Controllers/AdsController.php on line 10
-[20-Mar-2017 15:54:21 America/Sao_Paulo] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 20480 bytes) in /vagrant/dev/tucanov3/vendor/guzzlehttp/guzzle/src/functions.php on line 68

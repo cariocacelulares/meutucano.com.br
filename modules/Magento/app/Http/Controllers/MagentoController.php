@@ -300,19 +300,30 @@ class MagentoController extends Controller
             }
 
             foreach ($order['items'] as $s_produto) {
-                for ($i=0; $i < $s_produto['qty_ordered']; $i++) {
-                    $pedidoProduto = PedidoProduto::firstOrNew([
-                        'pedido_id'   => $pedido->id,
-                        'produto_sku' => $s_produto['sku'],
-                        'valor'       => $s_produto['price'],
-                    ]);
+                $count = PedidoProduto
+                    ::where('pedido_id', '=', $pedido->id)
+                    ->where('produto_sku', '=', $s_produto['sku'])
+                    ->where('valor', '=', $s_produto['price'])
+                    ->count();
 
-                    if ($pedidoProduto->save()) {
-                        Log::info('PedidoProduto ' . $s_produto['sku'] . ' importado no pedido ' . $order['increment_id']);
+                for ($i=0; $i < $s_produto['qty_ordered']; $i++) {
+                    if ($count < $s_produto['qty_ordered']) {
+                        $pedidoProduto = new PedidoProduto([
+                            'pedido_id'   => $pedido->id,
+                            'produto_sku' => $s_produto['sku'],
+                            'valor'       => $s_produto['price'],
+                        ]);
+
+                        if ($pedidoProduto->save()) {
+                            $count++;
+                            Log::info('PedidoProduto ' . $s_produto['sku'] . ' importado no pedido ' . $order['increment_id']);
+                        } else {
+                            Log::warning('Não foi possível importar o PedidoProduto ' . $s_produto['sku'] . ' / ' . $order['increment_id']);
+                        }
                     } else {
-                        Log::warning('Não foi possível importar o PedidoProduto ' . $s_produto['sku'] . ' / ' . $order['increment_id']);
+                        Log::info("O produto {$s_produto['sku']} no pedido {$pedido->id} possui {$s_produto['qty_ordered']} quantidades e existem {$count} registrados (não foi criado)");
                     }
-                }
+                } // for
             }
 
             // Fecha a transação e comita as alterações
