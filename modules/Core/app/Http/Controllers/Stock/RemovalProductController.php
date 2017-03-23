@@ -137,22 +137,15 @@ class RemovalProductController extends Controller
             }
 
             $removalProduct = RemovalProduct
-                ::where('product_imei_id', '=', $productImei->id)
+                ::where('stock_removal_id', '=', $stockRemovalId)
+                ->where('product_imei_id', '=', $productImei->id)
                 ->where('status', '!=', 3)
                 ->first();
 
             if (!$removalProduct) {
                 return $this->listResponse([
                     'icon'    => 'times',
-                    'message' => 'Serial não registrado em uma retirada!',
-                    'ok'      => false,
-                ]);
-            }
-
-            if ($removalProduct->stock_removal_id != $stockRemovalId) {
-                return $this->listResponse([
-                    'icon'    => 'exclamation',
-                    'message' => 'O serial não está registrado nesta retirada!',
+                    'message' => 'Serial não registrado nesta retirada!',
                     'ok'      => false,
                 ]);
             }
@@ -185,25 +178,27 @@ class RemovalProductController extends Controller
         $stockRemoval = Removal::findOrFail($stockRemovalId);
         $itens        = Input::get('itens');
 
-        try {
-            if ($itens) {
-                if (!is_array($itens)) {
-                    $itens = [$itens];
-                }
+        if (($status == 1 && $stockRemoval->user_id == getCurrentUserId()) || $status != 1) {
+            try {
+                if ($itens) {
+                    if (!is_array($itens)) {
+                        $itens = [$itens];
+                    }
 
-                $update = (self::MODEL)
-                    ::whereIn('id', $itens)
-                    ->where('stock_removal_id', '=', $stockRemoval->id)
-                    ->update([
-                        'status' => $status
+                    $update = (self::MODEL)
+                        ::whereIn('id', $itens)
+                        ->where('stock_removal_id', '=', $stockRemoval->id)
+                        ->update([
+                            'status' => $status
+                        ]);
+
+                    return $this->listResponse([
+                        'count' => $update
                     ]);
-
-                return $this->listResponse([
-                    'count' => $update
-                ]);
+                }
+            } catch (\Exception $exception) {
+                \Log::error(logMessage($exception, 'Não foi possível alterar o status dos produtos da retirada ' . $stockRemoval->id), [$itens]);
             }
-        } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Não foi possível alterar o status dos produtos da retirada ' . $stockRemoval->id), [$itens]);
         }
 
         return $this->listResponse([

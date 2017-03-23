@@ -39,6 +39,13 @@ class StockIssueTest extends TestCase
                     'description',
                 ]
             ]);
+
+         $this->seeInDatabase('stock_issues', [
+             'user_id'         => $user->id,
+             'product_imei_id' => $productImei->id,
+             'reason'          => 'Outro',
+             'description'     => 'Caiu da janela'
+         ]);
     }
 
     /**
@@ -58,5 +65,26 @@ class StockIssueTest extends TestCase
         $productStock = $productStock->fresh();
 
         $this->assertEquals(($oldStock - 1), $productStock->quantity);
+    }
+
+    /**
+     * Test if stock increase when issue is deleted, by restoring product imei
+     */
+    public function test__it_should_be_increase_stock_when_stock_issue_is_deleted()
+    {
+        $productImei  = ProductImei::create();
+        $productStock = $productImei->productStock->fresh();
+
+        $oldStock = $productStock->quantity;
+
+        $issue = Issue::create([
+            'product_imei_id' => $productImei->id
+        ]);
+
+        $issue->delete();
+
+        $productStock = $productStock->fresh();
+
+        $this->assertEquals($oldStock, $productStock->quantity);
     }
 }

@@ -39,7 +39,21 @@ class PedidoTest extends TestCase
         ];
 
         $this->json('POST', '/api/pedidos', $data)
-            ->seeStatusCode(201);
+            ->seeStatusCode(201)
+            ->seeJsonStructure([
+                'data' => [
+                    'id',
+                    'cliente_id',
+                    'cliente_endereco_id',
+                    'frete_valor',
+                    'frete_metodo',
+                    'pagamento_metodo',
+                    'marketplace',
+                    'operacao',
+                    'total',
+                    'status',
+                ]
+            ]);
 
         $this->seeInDatabase('pedidos', $data);
     }
@@ -66,7 +80,21 @@ class PedidoTest extends TestCase
         ];
 
         $this->json('PUT', "/api/pedidos/{$order->id}", $data)
-            ->seeStatusCode(200);
+            ->seeStatusCode(200)
+            ->seeJsonStructure([
+                'data' => [
+                    'id',
+                    'cliente_id',
+                    'cliente_endereco_id',
+                    'frete_valor',
+                    'frete_metodo',
+                    'pagamento_metodo',
+                    'marketplace',
+                    'operacao',
+                    'total',
+                    'status',
+                ]
+            ]);
 
         $this->seeInDatabase('pedidos', array_merge($data, [
             'frete_metodo'        => $order->frete_metodo,

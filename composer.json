@@ -40,7 +40,8 @@
         "sofa/eloquence": "~5.3",
         "milon/barcode": "^5.3",
         "dompdf/dompdf": "^0.8.0",
-        "livepixel/mercado-livre": "^1.1"
+        "livepixel/mercado-livre": "^1.1",
+        "doctrine/dbal": "^2.5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -64,7 +65,6 @@
             "Bootstrap\\": "bootstrap/",
             "Core\\": "modules/Core/app",
             "Gamification\\": "modules/Gamification/app",
-            "InspecaoTecnica\\": "modules/InspecaoTecnica/app",
             "Magento\\": "modules/Magento/app",
             "Marketing\\": "modules/Marketing/app",
             "Meta\\": "modules/Meta/app",

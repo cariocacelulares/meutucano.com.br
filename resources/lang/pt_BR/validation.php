@@ -105,6 +105,20 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'sku'    => 'SKU',
+        'titulo' => 'Título',
+        'weight' => 'Peso',
+        'width'  => 'Largura',
+        'height' => 'Altura',
+        'length' => 'Comprimento',
+        'valor'  => 'Preço',
+
+        'title'           => "Título",
+        'price'           => "Preço",
+        'category_id'     => "Categoria",
+        'template_id'     => 'Template',
+        'template_custom' => 'Template personalizada'
+    ],
 
 ];

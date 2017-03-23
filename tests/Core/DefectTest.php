@@ -34,6 +34,12 @@ class DefectTest extends TestCase
                     'description',
                 ]
             ]);
+
+        $this->seeInDatabase('product_defects', [
+            'product_sku'     => $productImei->productStock->product_sku,
+            'product_imei_id' => $productImei->id,
+            'description'     => $data['description'],
+        ]);
     }
 
     /**
@@ -53,5 +59,26 @@ class DefectTest extends TestCase
         $productStock = $productStock->fresh();
 
         $this->assertEquals(($oldStock - 1), $productStock->quantity);
+    }
+
+    /**
+     * Test if stock increase when defect is deleted, by restoring product imei
+     */
+    public function test__it_should_be_increase_stock_when_defect_is_deleted()
+    {
+        $productImei = ProductImei::create();
+        $productStock = $productImei->productStock->fresh();
+
+        $oldStock = $productStock->quantity;
+
+        $defect = Defect::create([
+            'product_imei_id' => $productImei->id
+        ]);
+
+        $defect->delete();
+
+        $productStock = $productStock->fresh();
+
+        $this->assertEquals($oldStock, $productStock->quantity);
     }
 }

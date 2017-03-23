@@ -33,7 +33,6 @@ class OrderTransformer
                         'sku'    => $orderProduct->produto->sku,
                         'titulo' => $orderProduct->produto->titulo,
                     ],
-                    'inspecoes'   => $orderProduct->inspecoes,
                 ];
             }
 
@@ -231,15 +230,6 @@ class OrderTransformer
 
         $produtos = [];
         foreach ($order->produtos as $produto) {
-            $inspecoes = [];
-            foreach ($produto->inspecoes as $inspecao) {
-                $inspecoes[] = [
-                    'id'          => $inspecao->id,
-                    'revisado_at' => dateConvert($inspecao->revisado_at),
-                    'priorizado'  => $inspecao->priorizado,
-                ];
-            }
-
             $productImei = !$produto->productImei ? null : [
                 'id'   => $produto->productImei->id,
                 'imei' => $produto->productImei->imei,
@@ -254,7 +244,6 @@ class OrderTransformer
                     'estado' => $produto->produto->estado,
                 ],
                 'productImei' => $productImei,
-                'inspecoes'   => $inspecoes,
             ];
         }
 

@@ -4,11 +4,11 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
-use InspecaoTecnica\Models\InspecaoTecnica;
 use Core\Models\Produto;
 use Core\Models\Pedido\PedidoProduto;
 use Core\Http\Requests\ProdutoRequest as Request;
 use Core\Transformers\ProductTransformer;
+use Core\Models\Produto\Image;
 
 /**
  * Class ProdutoController
@@ -30,8 +30,7 @@ class ProdutoController extends Controller
         $list = (self::MODEL)
             // ::with('linha')
             // ->with('marca')
-            ::where('produtos.ativo', true)
-            ->orderBy('produtos.created_at', 'DESC');
+            ::orderBy('produtos.created_at', 'DESC');
 
         $list = $this->handleRequest($list);
 
@@ -87,80 +86,20 @@ class ProdutoController extends Controller
     }
 
     /**
-     * Generates a new sku
-     *
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function gerenateSku($oldSku = null)
-    {
-        try {
-            if (!$oldSku) {
-                $data = new Produto();
-            } else {
-                $data = (self::MODEL)::find($oldSku);
-                if (!$data) {
-                    return $this->notFoundResponse();
-                }
-
-                $last = Produto::orderBy('sku', 'DESC')->take(1)->first();
-
-                if ($last && $last->sku) {
-                    $last = (int)$last->sku;
-                    $last++;
-                } else {
-                    throw new \Exception('Não foi possível encontrar o último SKU válido!', 1);
-                }
-                $data->sku = $last;
-
-                DB::unprepared('ALTER TABLE ' . $data->getTable() . ' AUTO_INCREMENT = ' . ($last + 1) . ';');
-            }
-
-            $data->save();
-
-            return $this->showResponse($data);
-        } catch (\Exception $exception) {
-            return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
-            ]);
-        }
-    }
-
-    /**
-     * Check if sku exists
-     *
-     * @param  int $sku
-     * @return bool      if exists
-     */
-    public function checkSku($sku)
-    {
-        try {
-            if ($produto = Produto::find($sku)) {
-                return $this->showResponse(['exists' => true]);
-            }
-        } catch (\Exception $exception) {
-        }
-
-        return $this->showResponse([
-            'exists' => false
-        ]);
-    }
-
-    /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function store(Request $request)
     {
         try {
-            $data = (self::MODEL)::create(Input::all());
+            $product = (self::MODEL)::create(Input::all());
 
-            return $this->createdResponse($data);
+            return $this->createdResponse($product);
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
@@ -169,38 +108,22 @@ class ProdutoController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function update($id)
+    public function update(Request $request, $id)
     {
-        if (!$data = (self::MODEL)::find($id)) {
+        if (!$product = (self::MODEL)::find($id)) {
             return $this->notFoundResponse();
         }
 
         try {
-            $data->fill(Input::except(['atributos']));
-            $data->save();
+            $product->fill(Input::all());
+            $product->save();
 
-            /*$attrs = Input::get('atributos');
-            if ($attrs) {
-                $data->atributos()->detach();
-
-                $atributos = [];
-                foreach ($attrs as $attr) {
-                    $atributos[] = [
-                        'produto_sku' => (isset($attr['pivot']['produto_sku']) && $attr['pivot']['produto_sku']) ? $attr['pivot']['produto_sku'] : $data->sku,
-                        'atributo_id' => (isset($attr['pivot']['atributo_id']) && $attr['pivot']['atributo_id']) ? $attr['pivot']['atributo_id'] : $attr['id'],
-                        'opcao_id'    => (isset($attr['pivot']['opcao_id']) && $attr['pivot']['opcao_id']) ? $attr['pivot']['opcao_id']          : null,
-                        'valor'       => (isset($attr['pivot']['valor']) && $attr['pivot']['valor']) ? $attr['pivot']['valor']                   : null
-                    ];
-                }
-                $data->atributos()->attach($atributos);
-            }*/
-
-            return $this->showResponse($data);
+            return $this->showResponse($product);
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
@@ -266,5 +189,55 @@ class ProdutoController extends Controller
         return $this->showResponse([
             'produto' => []
         ]);
+    }
+
+    /**
+     * Upload image files
+     *
+     * @return Response
+     */
+    public function upload()
+    {
+        $files = Input::file('files');
+
+        try {
+            $return = [];
+            foreach ($files as $file) {
+                if (in_array($file->getMimetype(), ['image/jpeg']) === false) {
+                    $return['error'][] = [
+                        'file'    => $file->getClientOriginalName(),
+                        'message' => 'O arquivo precisa estar no formato JPG'
+                    ];
+
+                    continue;
+                }
+
+                if (($file->getSize() / 1000) > 800) {
+                    $return['error'][] = [
+                        'file'    => $file->getClientOriginalName(),
+                        'message' => 'O arquivo precisa ter menos de 800KB'
+                    ];
+
+                    continue;
+                }
+
+                $fileName = str_slug(
+                    substr($file->getClientOriginalName(), 0, -3)
+                ) . uniqid('_') . '.jpg';
+                $file->move(storage_path('app/public/produto'), $fileName);
+
+                $return['success'][] = [
+                    'file' => $fileName
+                ];
+            }
+
+            return $this->createdResponse($return);
+        } catch (\Exception $e) {
+            return $this->clientErrorResponse([
+                'error'   => true,
+                'message' => 'Não foi possível fazer upload dos arquivos, tente novamente!',
+                'exception' => $e->getMessage() . '  ' . $e->getLine()
+            ]);
+        }
     }
 }

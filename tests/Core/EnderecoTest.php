@@ -29,7 +29,20 @@ class EnderecoTest extends TestCase
         ];
 
         $this->json('POST', '/api/enderecos', $data)
-            ->seeStatusCode(201);
+            ->seeStatusCode(201)
+            ->seeJsonStructure([
+                'data' => [
+                    'id',
+                    'cliente_id',
+                    'cep',
+                    'rua',
+                    'numero',
+                    'complemento',
+                    'bairro',
+                    'cidade',
+                    'uf',
+                ]
+            ]);
 
         $this->seeInDatabase('cliente_enderecos', $data);
     }
@@ -54,8 +67,23 @@ class EnderecoTest extends TestCase
         ];
 
         $this->json('PUT', "/api/enderecos/{$address->id}", $data)
-            ->seeStatusCode(200);
+            ->seeStatusCode(200)
+            ->seeJsonStructure([
+                'data' => [
+                    'id',
+                    'cliente_id',
+                    'cep',
+                    'rua',
+                    'numero',
+                    'complemento',
+                    'bairro',
+                    'cidade',
+                    'uf',
+                ]
+            ]);
 
-        $this->seeInDatabase('cliente_enderecos', $data);
+        $this->seeInDatabase('cliente_enderecos', array_merge($data, [
+            'id' => $address->id
+        ]));
     }
 }

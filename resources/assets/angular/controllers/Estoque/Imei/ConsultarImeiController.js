@@ -31,9 +31,12 @@
             switch (model) {
                 case 'ProductImei' : return 'barcode';
                 case 'Issue'       : return 'arrow-down';
+                case 'Defect'      : return 'bug';
                 case 'Removal'     : return 'cart-arrow-down';
                 case 'Pedido'      : return 'cubes';
             }
+
+            return 'cube';
         }
     }
 })();

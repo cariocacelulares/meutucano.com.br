@@ -266,6 +266,45 @@
                     controller: 'ProdutoDetalheController as ProdutoDetalhe'
                 })
 
+                .state('app.produtos.mercadolivre', {
+                    url: '/mercadolivre',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.produtos.mercadolivre.ads', {
+                    url: '/ads',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.produtos.mercadolivre.ads.index', {
+                    url: '/list',
+                    templateUrl: 'views/produto/mercadolivre/ads/list.html',
+                    controller: 'AdListController as AdList',
+                })
+
+                .state('app.produtos.mercadolivre.ads.form', {
+                    url: '/{sku}/{id}',
+                    templateUrl: 'views/produto/mercadolivre/ads/form.html',
+                    controller: 'AdFormController as AdForm',
+                })
+
+                .state('app.produtos.mercadolivre.templates', {
+                    url: '/templates',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.produtos.mercadolivre.templates.index', {
+                    url: '/list',
+                    templateUrl: 'views/produto/mercadolivre/templates/list.html',
+                    controller: 'TemplateListController as TemplateList',
+                })
+
+                .state('app.produtos.mercadolivre.templates.form', {
+                    url: '/{id}',
+                    templateUrl: 'views/produto/mercadolivre/templates/form.html',
+                    controller: 'TemplateFormController as TemplateForm',
+                })
+
                 /**
                  * Linhas
                  */
@@ -310,41 +349,6 @@
                     url: '/{id}',
                     templateUrl: 'views/produto/marca/form.html',
                     controller: 'MarcaFormController as MarcaForm'
-                })
-
-                /**
-                 * Inspeção técnica
-                 */
-                .state('app.inspecao', {
-                    url: '/inspecao',
-                    templateUrl: 'views/layouts/default.html'
-                })
-
-                .state('app.inspecao.realizada', {
-                    url: '/realizada',
-                    templateUrl: 'views/inspecao/realizada/list.html',
-                    controller: 'InspecaoRealizadaListController as InspecaoRealizadaList',
-                    data: {
-                        roles: ['admin', 'tecnico']
-                    }
-                })
-
-                .state('app.inspecao.fila', {
-                    url: '/fila',
-                    templateUrl: 'views/inspecao/fila/list.html',
-                    controller: 'InspecaoFilaListController as InspecaoFilaList',
-                    data: {
-                        roles: ['admin', 'tecnico']
-                    }
-                })
-
-                .state('app.inspecao.solicitada', {
-                    url: '/solicitada',
-                    templateUrl: 'views/inspecao/solicitada/list.html',
-                    controller: 'InspecaoSolicitadaListController as InspecaoSolicitadaList',
-                    data: {
-                        roles: ['admin', 'gestor', 'tecnico', 'atendimento']
-                    }
                 })
 
                 /**
@@ -504,6 +508,23 @@
                     url: '/form/{id}',
                     templateUrl: 'views/estoque/retirada/form.html',
                     controller: 'RetiradaEstoqueFormController as RetiradaEstoqueForm'
+                })
+
+                .state('app.estoque.entrada', {
+                    url: '/entradas',
+                    templateUrl: 'views/layouts/default.html',
+                })
+
+                .state('app.estoque.entrada.index', {
+                    url: '/list',
+                    templateUrl: 'views/estoque/entrada/list.html',
+                    controller: 'EntradaEstoqueListController as EntradaEstoqueList'
+                })
+
+                .state('app.estoque.entrada.form', {
+                    url: '/form/{id}',
+                    templateUrl: 'views/estoque/entrada/form.html',
+                    controller: 'EntradaEstoqueFormController as EntradaEstoqueForm'
                 })
 
                 .state('app.estoque.baixa', {

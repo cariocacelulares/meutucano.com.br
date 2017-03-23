@@ -10,7 +10,8 @@
     ],
     "aliases":{
         "T": "Core\\Facades\\Config",
-        "Stock": "Core\\Facades\\Stock"
+        "Stock": "Core\\Facades\\Stock",
+        "TitleVariation": "Core\\Facades\\TitleVariation"
     },
     "files": [
         "bootstrap.php",

@@ -68,13 +68,19 @@
                     {
                         title: 'Produtos',
                         icon: 'fa-dropbox',
-                        sref: $state.href('app.produtos.index'),
-                        //sub: [
-                            // { title: 'Produtos', icon: 'fa-list', sref: $state.href('app.produtos.index') },
-                            // { title: 'Linhas', icon: 'fa-list-alt', sref: $state.href('app.produtos.linhas.index') },
-                            // { title: 'Marcas', icon: 'fa-list-alt', sref: $state.href('app.produtos.marcas.index') },
-                            // { title: 'Assistência', icon: 'fa-wrench' },
-                        //],
+                        sub: [
+                            { title: 'Produtos', icon: 'fa-list', sref: $state.href('app.produtos.index') },
+                            { title: 'Linhas', icon: 'fa-list-alt', sref: $state.href('app.produtos.linhas.index') },
+                            { title: 'Marcas', icon: 'fa-list-alt', sref: $state.href('app.produtos.marcas.index') },
+                            {
+                                title: 'Mercado Livre',
+                                icon: 'fa-share-alt',
+                                sub: [
+                                    { title: 'Anúncios', icon: 'fa-list', sref: $state.href('app.produtos.mercadolivre.ads.index') },
+                                    { title: 'Templates', icon: 'fa-list', sref: $state.href('app.produtos.mercadolivre.templates.index') }
+                                ]
+                            },
+                        ],
                         roles: ['admin', 'gestor']
                     },
                     // {
@@ -112,6 +118,11 @@
                                 title: 'Retirada',
                                 icon: 'fa-cart-arrow-down',
                                 sref: $state.href('app.estoque.retirada.index')
+                            },
+                            {
+                                title: 'Entrada',
+                                icon: 'fa-arrow-up',
+                                sref: $state.href('app.estoque.entrada.index')
                             },
                             {
                                 title: 'Baixa',
@@ -224,30 +235,6 @@
                             }
                         ],
                         roles: ['admin']
-                    },
-                    {
-                        title: 'Inspeção técnica',
-                        icon: 'fa-bug',
-                        sub: [
-                            {
-                                title: 'Inspeções Realizadas',
-                                icon: 'fa-bug',
-                                sref: $state.href('app.inspecao.realizada'),
-                                roles: ['admin', 'tecnico']
-                            },
-                            {
-                                title: 'Fila de Inspeção',
-                                icon: 'fa-cogs',
-                                sref: $state.href('app.inspecao.fila'),
-                                roles: ['admin', 'tecnico']
-                            },
-                            {
-                                title: 'Solicitar Inspeção',
-                                icon: 'fa-cogs',
-                                sref: $state.href('app.inspecao.solicitada'),
-                                roles: ['admin', 'atendimento', 'faturamento']
-                            }
-                        ]
                     },
                     {
                         title: 'Interno',

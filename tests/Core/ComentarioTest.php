@@ -20,16 +20,20 @@ class ComentarioTest extends TestCase
     {
         $pedido = Pedido::create();
 
-        Comentario::create([
+        $data = [
             'comentario' => 'Teste de comentário',
             'pedido_id'  => $pedido->id
-        ]);
+        ];
+
+        Comentario::create($data);
 
         $this->json('GET', "/api/comentarios/{$pedido->id}")
             ->seeStatusCode(200)
             ->seeJsonStructure([
                 'data'
             ]);
+
+        $this->seeInDatabase('pedido_comentarios', $data);
     }
 
     /**
@@ -39,14 +43,22 @@ class ComentarioTest extends TestCase
     */
     public function test__it_should_create_comment()
     {
-        $this->json('POST', '/api/comentarios', [
+        $data = [
             'comentario' => 'Teste de comentário',
             'pedido_id'  => Pedido::create()->id
-        ])->seeStatusCode(201);
+        ];
 
-        $this->seeInDatabase('pedido_comentarios', [
-            'comentario' => 'Teste de comentário'
-        ]);
+        $this->json('POST', '/api/comentarios', $data)
+            ->seeStatusCode(201)
+            ->seeJsonStructure([
+                'data' => [
+                    'id',
+                    'comentario',
+                    'pedido_id',
+                ]
+            ]);
+
+        $this->seeInDatabase('pedido_comentarios', $data);
     }
 
     /**

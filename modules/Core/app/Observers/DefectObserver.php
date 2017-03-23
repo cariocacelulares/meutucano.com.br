@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Event;
 use Core\Events\DefectCreated;
+use Core\Events\DefectDeleted;
 use Core\Models\Produto\Defect;
 
 class DefectObserver
@@ -15,5 +16,16 @@ class DefectObserver
     public function created(Defect $defect)
     {
         Event::fire(new DefectCreated($defect));
+    }
+
+    /**
+     * Listen to the Defect deleted event.
+     *
+     * @param  Defect $defect
+     * @return void
+     */
+    public function deleted(Defect $defect)
+    {
+        Event::fire(new DefectDeleted($defect));
     }
 }

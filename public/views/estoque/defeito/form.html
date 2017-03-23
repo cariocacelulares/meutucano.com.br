@@ -1,7 +1,8 @@
 <div id="page-header" class="row">
     <page-title icon="fa-bug" title="Defeito no produto" description="Identificar serial como defeito"></page-title>
     <div class="col-md-6 button-bar">
-        <a ng-click="DefeitoForm.save()" title="Salvar produto" class="btn-success"><i class="fa-save"></i>&nbsp; Salvar</a>
+        <a ng-click="DefeitoForm.save()" title="Salvar defeito" class="btn-success"><i class="fa-save"></i>&nbsp; Salvar</a>
+        <a confirm="DefeitoForm.destroy()" title="Excluir produto" class="btn-danger"><i class="fa-trash"></i>&nbsp; Excluir</a>
         <a onclick="history.back()" title="Voltar para a página anterior" class="btn-default"><i class="fa-reply"></i>&nbsp; Voltar</a>
     </div>
 </div>

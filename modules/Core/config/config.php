@@ -48,12 +48,13 @@ return [
      * Operações fiscais
      */
     'notas' => [
-        'operacoes' => [5102, 5405, 6102, 6108, 6910],
-        'devolucao' => [1202, 2202, 1411],
-        'estorno' => [1949, 2949],
-
+        'venda'         => [5102, 5405, 6102, 6108, 6910, 6949],
         'venda_interna' => 5102,
         'venda_externa' => 6108,
+        'devolucao'     => [1202, 2202, 1411],
+        'estorno'       => [1949, 2949],
+        'extravio'      => [5927, 6927],
+        'compra'        => [1102, 2102],
     ],
 
     /**

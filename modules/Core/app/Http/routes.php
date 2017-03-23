@@ -94,6 +94,8 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
 
         Route::put('prioridade/{pedido_id}', 'PedidoController@prioridade');
         Route::put('segurar/{pedido_id}', 'PedidoController@segurar');
+
+        Route::post('upload', 'UploadController@upload');
     });
     Route::resource('pedidos', 'Pedido\PedidoController');
 
@@ -106,6 +108,8 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::get('list', 'ProdutoController@tableList');
         Route::get('search/{term}', 'ProdutoController@search');
         Route::get('get-stocks/{sku}', 'ProdutoController@getStocks');
+
+        Route::post('upload', 'ProdutoController@upload');
     });
     Route::resource('produtos', 'Produto\ProdutoController');
 
@@ -160,7 +164,6 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::group(['prefix' => 'produto-estoque', 'namespace' => 'Produto'], function () {
         Route::get('list/{sku}', 'ProductStockController@listBySku');
         Route::get('slug/{slug}', 'ProductStockController@listBySlug');
-        Route::post('entry', 'ProductStockController@entry');
         Route::post('refresh', 'ProductStockController@refresh');
         Route::get('adicionar/{sku}', 'ProductStockController@addOptions');
         Route::get('transferencia/{id}', 'ProductStockController@transferOptions');
@@ -209,6 +212,23 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::resource('estoque/baixa', 'Stock\IssueController');
 
     /**
+     * Stock entry
+     */
+    Route::group(['prefix' => 'estoque/entrada', 'namespace' => 'Stock'], function () {
+        Route::get('list', 'EntryController@tableList');
+    });
+    Route::resource('estoque/entrada', 'Stock\EntryController');
+
+    /**
+     * Stock entry invoice
+     */
+    Route::group(['prefix' => 'estoque/entrada/nota', 'namespace' => 'Stock\Entry'], function () {
+        Route::get('list', 'InvoiceController@tableList');
+        Route::post('upload', 'InvoiceController@upload');
+    });
+    Route::resource('estoque/entrada/nota', 'Stock\Entry\InvoiceController');
+
+    /**
      * Product defect
      */
     Route::group(['prefix' => 'produto/defeito', 'namespace' => 'Produto'], function () {
@@ -220,11 +240,6 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
      * Partials
      */
     Route::group(['namespace' => 'Partials'], function () {
-        Route::post('upload', [
-            'middleware' => ['role:admin|gestor|atendimento|faturamento'],
-            'uses' => 'UploadController@upload'
-        ]);
-
         Route::get('search', 'SearchController@search');
     });
 

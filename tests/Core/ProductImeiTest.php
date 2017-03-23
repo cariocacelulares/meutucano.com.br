@@ -23,7 +23,14 @@ class ProductImeiTest extends TestCase
         ];
 
         $this->json('POST', '/api/produto-imei', $data)
-           ->seeStatusCode(201);
+           ->seeStatusCode(201)
+           ->seeJsonStructure([
+               'data' => [
+                   'id',
+                   'imei',
+                   'product_stock_id',
+               ]
+           ]);
 
         $this->seeInDatabase('product_imeis', $data);
     }
@@ -42,7 +49,14 @@ class ProductImeiTest extends TestCase
         ];
 
         $this->json('PUT', "/api/produto-imei/{$productImei->id}", $data)
-            ->seeStatusCode(200);
+            ->seeStatusCode(200)
+            ->seeJsonStructure([
+                'data' => [
+                    'id',
+                    'imei',
+                    'product_stock_id',
+                ]
+            ]);
 
         $this->seeInDatabase('product_imeis', array_merge($data, [
             'id' => $productImei->id,

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Event;
 use Core\Events\Handlers\SetRefund;
 use Core\Events\Handlers\UpdateStock;
 use Core\Events\Handlers\DeleteProductImei;
+use Core\Events\Handlers\RestoreProductImei;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -21,6 +22,7 @@ class EventServiceProvider extends ServiceProvider
         UpdateStock::class,
         SetRefund::class,
         DeleteProductImei::class,
+        RestoreProductImei::class,
     ];
 
     /**

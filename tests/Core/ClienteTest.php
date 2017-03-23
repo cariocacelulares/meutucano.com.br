@@ -25,7 +25,16 @@ class ClienteTest extends TestCase
         ];
 
         $this->json('POST', '/api/clientes', $data)
-            ->seeStatusCode(201);
+            ->seeStatusCode(201)
+            ->seeJsonStructure([
+                'data' => [
+                    'taxvat',
+                    'tipo',
+                    'nome',
+                    'fone',
+                    'email',
+                ]
+            ]);
 
         $this->seeInDatabase('clientes', $data);
     }
@@ -47,8 +56,19 @@ class ClienteTest extends TestCase
         ];
 
         $this->json('PUT', "/api/clientes/{$client->id}", $data)
-            ->seeStatusCode(200);
+            ->seeStatusCode(200)
+            ->seeJsonStructure([
+                'data' => [
+                    'taxvat',
+                    'tipo',
+                    'nome',
+                    'fone',
+                    'email',
+                ]
+            ]);
 
-        $this->seeInDatabase('clientes', $data);
+        $this->seeInDatabase('clientes', array_merge($data, [
+            'id' => $client->id
+        ]));
     }
 }

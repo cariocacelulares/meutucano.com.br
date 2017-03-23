@@ -1,0 +1,93 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-mobile" title="Gerenciamento do anúncio" description="Aqui é possível visualizar e alterar todas as informações do anúncio no Mercado Livre"></page-title>
+    <div class="col-md-6 button-bar">
+        <a ng-click="AdForm.save()" title="Salvar anúncio" class="btn-success"><i class="fa-save"></i>&nbsp; Salvar</a>
+        <button ng-if="AdForm.editedId" class="btn-danger" confirm="AdForm.destroy()"><i class="fa-trash"></i>&nbsp; Excluir</button>
+        <a onclick="history.back()" title="Voltar para a página anterior" class="btn-default"><i class="fa-reply"></i>&nbsp; Voltar</a>
+    </div>
+</div>
+
+<form ng-submit="AdForm.save()" novalidate="novalidate" class="form-default form-vertical">
+    <validation errors="AdForm.validationErrors"></validation>
+    <div class="row form-group">
+        <div class="col-md-2 a-right">
+            <label for="mercadolivre.title">Título</label>
+        </div>
+        <div class="col-md-10">
+            <input ng-model="AdForm.ad.title" id="mercadolivre.title" maxlength="{{ AdForm.ad.max_length || 100 }}" />
+            <small class="hint-text">
+                Por padrão, o título original do produto será utilizado.
+                <span class="pull-right">Tamanho máximo do título: {{ AdForm.ad.max_length || 100 }}</span>
+            </small>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-2 a-right">
+            <label for="mercadolivre.price">Preço</label>
+        </div>
+        <div class="col-md-3">
+            <input ng-model="AdForm.ad.price" id="mercadolivre.price" ui-money-mask required />
+            <small class="hint-text">Por padrão, o preço original do produto será utilizado.</small>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-2 a-right">
+            <label for="mercadolivre.type">Tipo de anúncio</label>
+        </div>
+        <div class="col-md-3">
+            <select ng-model="AdForm.ad.type" id="type" required>
+                <option value="0">Clássico</option>
+                <option value="1">Premium</option>
+            </select>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-2 a-right">
+            <label for="mercadolivre.shipping">Frete grátis</label>
+        </div>
+        <div class="col-md-3">
+            <select ng-model="AdForm.ad.shipping" id="shipping" required>
+                <option value="0">Não</option>
+                <option value="1">Sim, todo o Brasil</option>
+            </select>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-2 a-right">
+            <label for="mercadolivre.category">Categoria</label>
+        </div>
+        <div class="col-md-10">
+            <script type="text/ng-template" id="subcategories.html">
+                <a ng-click="AdForm.openSub(category)">
+                    <i ng-if="!category.children && (category.id != AdForm.ad.category_id)" class="fa fa-folder"></i>
+                    <i ng-if="category.children && (category.id != AdForm.ad.category_id)" class="fa fa-folder-open"></i>
+                    <i ng-if="category.id == AdForm.ad.category_id" class="fa fa-check-circle"></i>
+                    &nbsp;{{ category.title }}&nbsp;
+                    <i ng-if="category.loading" class="fa fa-spinner fa-spin"></i>
+                </a>
+                <ul ng-if="category.children">
+                    <li ng-repeat="category in category.children" ng-include="'subcategories.html'"></li>
+                </ul>
+            </script>
+
+            <ul ng-if="!AdForm.editedId && !AdForm.loadingCategories" class="folder-tree">
+                <li ng-repeat="category in AdForm.categories" ng-include="'subcategories.html'"></li>
+            </ul>
+            <div ng-if="AdForm.loadingCategories" class="folder-tree text-center fz-20">
+                <i class="fa fa-spinner fa-spin"></i>&nbsp; Carregando
+            </div>
+            <input ng-if="AdForm.editedId" disabled ng-model="AdForm.ad.category_id" />
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-2 a-right">
+            <label for="mercadolivre.template">Template</label>
+        </div>
+        <div class="col-md-10">
+            <select style="margin-bottom:10px;" ng-options="template.id as template.title for template in AdForm.templates" ng-model="AdForm.ad.template_id" id="template">
+                <option value="">Personalizada</option>
+            </select>
+            <text-angular ng-if="!AdForm.ad.template" ng-model="AdForm.ad.template_custom"></text-angular>
+        </div>
+    </div>
+</form>

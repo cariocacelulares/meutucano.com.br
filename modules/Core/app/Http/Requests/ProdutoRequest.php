@@ -25,21 +25,9 @@ class ProdutoRequest extends FormRequest
     public function rules()
     {
         return [
-            'titulo'  => 'required|min:2',
-            'sku'     => 'required',
-            'estoque' => 'required',
-        ];
-    }
-
-    /**
-     * Set custom names to the attributes from request.
-     *
-     * @return array
-     */
-    public function attributes()
-    {
-        return [
-            'titulo' => 'título',
+            'sku'    => "required|unique:produtos,sku,{$this->originalSku},sku",
+            'titulo' => "required|min:2",
+            'valor'  => "required"
         ];
     }
 }

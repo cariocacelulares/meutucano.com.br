@@ -43,6 +43,17 @@ class RemovalController extends Controller
     public function store(Request $request)
     {
         try {
+            $openRemoval = (self::MODEL)
+                ::where('user_id', '=', Input::get('user_id'))
+                ->whereNull('closed_at')
+                ->first();
+
+            if ($openRemoval) {
+                return $this->validationFailResponse([
+                    'Este usuário possui uma retirada em aberto!'
+                ]);
+            }
+
             $removal = (self::MODEL)
                 ::create(Input::except('removal_products'));
 
@@ -62,7 +73,7 @@ class RemovalController extends Controller
             \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
@@ -96,7 +107,7 @@ class RemovalController extends Controller
             \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
@@ -127,7 +138,7 @@ class RemovalController extends Controller
             \Log::error(logMessage($exception, 'Erro ao obter recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }

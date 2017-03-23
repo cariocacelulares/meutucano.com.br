@@ -58,7 +58,7 @@ class ProductStockController extends Controller
             \Log::error('Erro ao tentar atualizar as informações de estoque');
 
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
@@ -82,7 +82,7 @@ class ProductStockController extends Controller
             return $this->listResponse($productStocks);
         } catch (\Exception $exception) {
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
@@ -107,98 +107,9 @@ class ProductStockController extends Controller
             return $this->listResponse(ProductStockTransformer::listBySlug($productStocks));
         } catch (\Exception $exception) {
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
-    }
-
-    /**
-     * Stock entry
-     *
-     * @return response
-     */
-    public function entry()
-    {
-        try {
-            $sku        = Input::get('sku');
-            $stock_slug = Input::get('stock_slug');
-
-            if ($sku && $stock_slug) {
-                $quantity = Input::get('quantity');
-                $imeis    = Input::get('imeis');
-
-                $productStock = ProductStock
-                    ::where('product_sku', '=', $sku)
-                    ->where('stock_slug', '=', $stock_slug)
-                    ->first();
-
-                if ($productStock->serial_enabled) {
-                    if ($imeis) {
-                        $productImeis = [];
-                        $imeis        = explode(PHP_EOL, $imeis);
-                        foreach ($imeis as $imei) {
-                            $imei = trim($imei);
-
-                            if (!$imei) {
-                                continue;
-                            }
-
-                            $productImeis[] = new ProductImei([
-                                'imei' => $imei,
-                            ]);
-                        }
-
-                        $productStock->productImeis()->saveMany($productImeis);
-                    } else {
-                        return $this->validationFailResponse([
-                            'O estoque que você selecionou possui controle de serial e os seriais não foram informados.'
-                        ]);
-                    }
-                } elseif (!$productStock->serial_enabled) {
-                    if ($quantity) {
-                        $productStock->quantity = $productStock->quantity + $quantity;
-                        $productStock->save();
-                    } else {
-                        return $this->validationFailResponse([
-                            'A quantidade não foi informada.'
-                        ]);
-                    }
-                }
-            } else {
-                return $this->validationFailResponse([
-                    'Não foi possível encontrar os identificadores do produto e do estoque.'
-                ]);
-            }
-
-            return $this->showResponse([
-                'saved' => true
-            ]);
-        } catch (\Illuminate\Database\QueryException $exception) {
-            // Tenta encontrar o imei que violou a unique key e informa ao usuario
-            if (strstr($exception->getMessage(), 'Duplicate entry')) {
-                if ($pos = strpos($exception->getMessage(), 'Duplicate entry')) {
-                    $substring = substr($exception->getMessage(), ($pos + 17));
-
-                    if ($pos = strpos($substring, "'")) {
-                        $duplicado = substr($substring, 0, $pos);
-
-                        if ($duplicado) {
-                            return $this->validationFailResponse([
-                                "O serial {$duplicado} já foi utilizado!"
-                            ]);
-                        }
-                    }
-                }
-            }
-        } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Erro ao dar entrada no estoque'));
-
-            return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
-            ]);
-        }
-
-        return $this->notFoundResponse();
     }
 
     /**
@@ -229,7 +140,7 @@ class ProductStockController extends Controller
             \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }

@@ -1,3 +1,16 @@
+.table-fit {
+    tbody {
+        tr,
+        td {
+            padding: 0 !important;
+        }
+
+        tr:not(:last-child) input {
+            border-bottom: 0;
+        }
+    }
+}
+
 tr.warn {
     td,
     input {
@@ -81,6 +94,14 @@ tr.warn {
             height: 50px;
             padding: 0 15px;
             background-color: $color-white;
+
+            &:focus, &:active {
+                background-color: $color-white !important;
+            }
+        }
+
+        label {
+            line-height: 20px;
         }
 
         td {
@@ -287,6 +308,22 @@ tr.warn {
 
     [class*='btn-'] {
         margin: 0;
+    }
+}
+
+.sub-table {
+    > td {
+        padding: 0 !important;
+        border: 0 !important;
+
+        &.empty {
+            padding: 12px !important;
+            border-bottom: 1px solid rgba(230,230,230,.7) !important;
+        }
+    }
+
+    table td {
+        background: #fafafa !important;
     }
 }
 

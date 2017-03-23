@@ -1,0 +1,24 @@
+<h1>Selecionar produto</h1>
+
+<form ng-submit="SelectProduct.save()" novalidate="novalidate">
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <label for="product">Produto</label>
+            <ui-select ng-model="SelectProduct.product" theme="selectize" id="product" on-select="SelectProduct.productSelected()">
+                <ui-select-match placeholder="Selecione um produto">{{ $select.selected.sku + ': ' + $select.selected.titulo }}</ui-select-match>
+                <ui-select-choices repeat="product in SelectProduct.products | propsFilter: {titulo: $select.search, sku: $select.search}"
+                    refresh="SelectProduct.searchProduct($select.search)" refresh-delay="300">
+                    <div ng-bind-html="product.titulo | highlight: $select.search"></div>
+                    <small>SKU: <span ng-bind-html="''+product.sku | highlight: $select.search"></span></small>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="pull-right">
+            <button type="button" ng-click="closeThisDialog(false)" class="btn btn-default m-r-10">Cancelar</button>
+            <button type="button" ng-click="closeThisDialog(SelectProduct.product)" class="btn btn-primary">Salvar</button>
+        </div>
+    </div>
+</form>

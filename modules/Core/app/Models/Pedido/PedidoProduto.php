@@ -1,7 +1,6 @@
 <?php namespace Core\Models\Pedido;
 
 use Venturecraft\Revisionable\RevisionableTrait;
-use InspecaoTecnica\Models\InspecaoTecnica;
 use Core\Models\Produto;
 use Core\Models\Produto\ProductImei;
 use Core\Models\Pedido;
@@ -68,15 +67,5 @@ class PedidoProduto extends \Eloquent
     public function productStock()
     {
         return $this->belongsTo(ProductStock::class);
-    }
-
-    /**
-     * InspecaoTecnica
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\belongsToMany
-     */
-    public function inspecoes()
-    {
-        return $this->hasMany(InspecaoTecnica::class, 'pedido_produtos_id', 'id');
     }
 }

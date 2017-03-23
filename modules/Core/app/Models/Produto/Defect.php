@@ -6,7 +6,7 @@ use Core\Models\Produto;
 
 /**
  * Class Defect
- * @package Core\Models\Pedido
+ * @package Core\Models\Produto
  */
 class Defect extends Model
 {

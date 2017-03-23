@@ -2,57 +2,95 @@
     <page-title icon="fa-mobile" title="Gerenciamento do produto" description="Aqui é possível visualizar e alterar todas as informações do produto"></page-title>
     <div class="col-md-6 button-bar">
         <a ng-click="ProdutoForm.save()" title="Salvar produto" class="btn-success"><i class="fa-save"></i>&nbsp; Salvar</a>
-        <button ng-if="ProdutoForm.produto.sku" class="btn-info" ng-click="ProdutoForm.openImeiForm()"><i class="fa-barcode"></i>&nbsp; Entrada</button>
-        <button class="btn-danger" confirm="ProdutoForm.destroy()"><i class="fa-trash"></i>&nbsp; Excluir</button>
+        <button ng-if="ProdutoForm.editedSku" class="btn-danger" confirm="ProdutoForm.destroy()"><i class="fa-trash"></i>&nbsp; Excluir</button>
         <a onclick="history.back()" title="Voltar para a página anterior" class="btn-default"><i class="fa-reply"></i>&nbsp; Voltar</a>
     </div>
 </div>
 
-<form ng-submit="ProdutoForm.save()" novalidate="novalidate" class="form-default" id="formProduto">
+<form ng-submit="ProdutoForm.save()" novalidate="novalidate" class="form-default form-vertical" id="formProduto">
     <validation errors="ProdutoForm.validationErrors"></validation>
     <tabs>
         <tab name="infosProduto" title="Informações do produto">
-            <div class="row">
-                <div class="col-md-5 form-group">
+            <div class="row form-group">
+                <div class="col-md-2 a-right">
+                    <label for="sku">SKU</label>
+                </div>
+                <div class="col-md-2">
+                    <input ng-model="ProdutoForm.produto.sku" type="number" id="sku" placeholder="SKU do produto" required />
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-2 a-right">
+                    <label for="ean">EAN</label>
+                </div>
+                <div class="col-md-3">
+                    <input ng-model="ProdutoForm.produto.ean" id="ean" placeholder="EAN do produto" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-2 a-right">
                     <label for="titulo">Título</label>
+                </div>
+                <div class="col-md-9">
                     <input type="text" ng-model="ProdutoForm.produto.titulo" id="titulo" placeholder="Título do produto" required />
                 </div>
-                <div class="col-md-2 form-group">
-                    <label for="estado">Estado</label>
-                    <select ng-model="ProdutoForm.produto.estado" name="estado" id="estado">
-                        <option value="0">Novo</option>
-                        <option value="1">Seminovo</option>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-2 a-right">
+                    <label for="linha">Linha</label>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-control" id="linha" ng-options="linha.id as linha.titulo for linha in ProdutoForm.linhas" ng-model="ProdutoForm.produto.linha_id">
+                        <option value="">Selecione uma opção</option>
                     </select>
                 </div>
-                <div class="col-md-2 form-group">
-                    <label for="sku">SKU</label>
-                    <div class="input-group">
-                        <input ng-model="ProdutoForm.produto.sku" type="number" id="sku" placeholder="SKU do produto" required />
-                        <span class="input-group-btn">
-                            <a ng-click="ProdutoForm.generateSku()" class="btn btn-complete" title="Gerar novo SKU">
-                                <i class="fa-key"></i>
-                            </a>
-                        </span>
-                    </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-2 a-right">
+                    <label for="marca">Marca</label>
                 </div>
-                <div class="col-md-2 form-group">
+                <div class="col-md-3">
+                    <select class="form-control" id="marca" ng-options="marca.id as marca.titulo for marca in ProdutoForm.marcas" ng-model="ProdutoForm.produto.marca_id">
+                        <option value="">Selecione uma opção</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-2 a-right">
+                    <label for="estado">Condição</label>
+                </div>
+                <div class="col-md-2">
+                    <select ng-model="ProdutoForm.produto.estado" name="estado" id="estado">
+                        <option value="0">Novo</option>
+                        <option value="1">Usado</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-2 a-right">
                     <label for="valor">Preço</label>
+                </div>
+                <div class="col-md-2">
                     <input ng-model="ProdutoForm.produto.valor" id="valor" placeholder="R$" ui-money-mask required />
                 </div>
-                <div class="col-md-1 form-group">
-                    <label for="estoque">Estoque</label>
-                    <input type="number" ng-model="ProdutoForm.produto.estoque" id="estoque" placeholder="Qtd" readonly />
+            </div>
+            <div class="row form-group">
+                <div class="col-md-2 a-right">
+                    <label for="warranty">Garantia</label>
+                </div>
+                <div class="col-md-3">
+                    <input ng-model="ProdutoForm.produto.warranty" id="warranty" placeholder="Garantia" />
                 </div>
             </div>
         </tab>
-        <tab ng-if="ProdutoForm.produto.sku" name="estoques" title="Estoques" ng-if="ProdutoForm.productStocks">
+        <tab ng-if="ProdutoForm.editedSku && ProdutoForm.productStocks" name="estoques" title="Estoques">
             <table class="table-alt table-hover no-padding">
                 <thead>
                     <tr>
                         <th>Estoque</th>
                         <th>Incluir</th>
                         <th>Ordem</th>
-                        <th>Ctrl Serial</th>
+                        <th>Controle de Serial</th>
                         <th>Estoque</th>
                         <th width="46"></th>
                     </tr>
