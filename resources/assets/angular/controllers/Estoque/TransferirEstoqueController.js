@@ -79,8 +79,11 @@
          vm.focusLast = function() {
              setTimeout(function () {
                  var inputs = document.getElementsByClassName('input-imei');
-                 inputs = angular.element(inputs);
-                 inputs[inputs.length - 1].focus();
+
+                 if (inputs.length) {
+                     inputs = angular.element(inputs);
+                     inputs[inputs.length - 1].focus();
+                 }
              }, 200);
          };
 

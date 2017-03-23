@@ -355,7 +355,7 @@ class ProductImeiController extends Controller
                     'ean'         => $productStock->product->ean,
                     'ncm'         => $productStock->product->ncm,
                     'value'       => $productStock->product->valor,
-                    'cost'        => $productStock->product->getCost(),
+                    'cost'        => $productStock->product->cost,
                     'stock'       => $productStock->stock->title,
                     'entry_value' => $entryValue,
                 ];
