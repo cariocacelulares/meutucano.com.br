@@ -61,7 +61,7 @@ class AdController extends Controller
             return $this->clientErrorResponse([
                 'error'     => true,
                 'message'   => 'Não foi possível salvar o anúncio!',
-                'exception' => $e->getMessage() . '  ' . $e->getLine()
+                'exception' => $e->getMessage() . ' ' . $e->getLine()
             ]);
         }
     }
@@ -72,7 +72,7 @@ class AdController extends Controller
      * @param  Ad     $ad
      * @return array|bool
      */
-    public function publishAd(Api $api, Ad $ad)
+    protected function publishAd(Api $api, Ad $ad)
     {
         try {
             $mercadolivreAd = [
@@ -260,11 +260,61 @@ class AdController extends Controller
         }
     }
 
-    public function testStock(Api $api)
+    /**
+     * Update ad status
+     *
+     * @param  Api    $api
+     * @param  string $id
+     * @param  string $status
+     * @return boolean
+     */
+    protected function updateAdStatus(Api $api, $id, $status)
     {
-        $r = $api->syncStock('MLB852348421', 5);
-        dd($r);
+        try {
+            $ad = Ad::findOrFail($id);
+
+            if (!$api->syncStatus($ad->code, $status)) {
+                throw new \Exception("Não foi alterar o status do anúncio para {$status}");
+            }
+
+            $ad->status = ($status == 'active') ? 1 : 2;
+            $ad->save();
+
+            return $this->showResponse($ad);
+        } catch (\Exception $e) {
+            \Log::error(logMessage($e, 'Erro ao atualizar status do anúncio'));
+            return $this->clientErrorResponse([
+                'error' => true,
+                'message' => 'Erro ao atualizar status do anúncio',
+                'exception' => $e->getMessage() . ' ' . $e->getLine()
+            ]);
+        }
     }
+
+    /**
+     * Set ad as paused
+     *
+     * @param  Api    $api
+     * @param  string $id
+     * @return void
+     */
+    public function pauseAd(Api $api, $id)
+    {
+        return $this->updateAdStatus($api, $id, 'paused');
+    }
+
+    /**
+     * Set ad as active
+     *
+     * @param  Api    $api
+     * @param  string $id
+     * @return void
+     */
+    public function activateAd(Api $api, $id)
+    {
+        return $this->updateAdStatus($api, $id, 'active');
+    }
+
 
     /**
      * Sync full ad information with Mercado Livre

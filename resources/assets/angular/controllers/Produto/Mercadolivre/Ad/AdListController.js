@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('AdListController', AdListController);
 
-    function AdListController(Filter, TableHeader, Ad) {
+    function AdListController(Filter, TableHeader, Ad, toaster) {
         var vm = this;
 
         /**
@@ -17,7 +17,7 @@
             'produtos.titulo' : 'LIKE'
         });
 
-        /** 
+        /**
          * Cabeçalho da tabela
          * @type {TableHeader}
          */
@@ -38,5 +38,19 @@
         };
 
         vm.load();
+
+        vm.pause = function(id) {
+            Ad.pause(id).then(function(response) {
+                toaster.pop('success', 'Sucesso!', 'Anúncio pausado com sucesso!');
+                vm.load();
+            });
+        }
+
+        vm.activate = function(id) {
+            Ad.activate(id).then(function(response) {
+                toaster.pop('success', 'Sucesso!', 'Anúncio ativado com sucesso!');
+                vm.load();
+            });
+        }
     }
 })();

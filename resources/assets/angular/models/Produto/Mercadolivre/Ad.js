@@ -18,7 +18,25 @@
                 groupedByProduct: function(params) {
                     var params = this.parseParams(params);
 
-                    return Restangular.one(this.baseUrl + '/grouped').customGET('', params || null);
+                    return Restangular.one(this.baseUrl).customGET('grouped', params || null);
+                },
+
+                /**
+                 * Set status ad to paused
+                 *
+                 * @return {Object}
+                 */
+                pause: function(id) {
+                    return Restangular.one(this.baseUrl, id).one('pause').customPUT();
+                },
+
+                /**
+                 * Set status ad to active
+                 *
+                 * @return {Object}
+                 */
+                activate: function(id) {
+                    return Restangular.one(this.baseUrl, id).one('activate').customPUT();
                 }
             });
 
