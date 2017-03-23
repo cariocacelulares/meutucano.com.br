@@ -154,7 +154,7 @@ class Produto extends Model
      *
      * @return float
      */
-    public function getCost()
+    public function getCostAttribute()
     {
         $qty = 0;
         $sum = 0;
@@ -166,6 +166,6 @@ class Produto extends Model
             }
         }
 
-        return ($sum / $qty);
+        return $qty ? ($sum / $qty) : $sum;
     }
 }

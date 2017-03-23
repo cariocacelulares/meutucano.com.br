@@ -13,8 +13,8 @@
                 },
                 vars: {
                     development: {
-                        apiUrl   : 'https://tucano.app/api',
-                        assetUrl : 'https://tucano.app/'
+                        apiUrl   : 'http://tucano.app/api',
+                        assetUrl : 'http://tucano.app/'
                     },
                     production: {
                         apiUrl   : 'http://192.168.2.170/meutucano/public/index.php/api',
@@ -67,7 +67,7 @@
                 }
             });
         })
- 
+
         /**
          * REST
          */
