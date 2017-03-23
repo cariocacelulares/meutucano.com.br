@@ -29,12 +29,17 @@
                 <table width="100%">
                     <tbody>
                         <tr ng-repeat="ad in produto.ads">
-                            <td width="150" class="text-center"><a target="_blank" ng-href="{{ ad.permalink }}">{{ ad.code }}</a></td>
-                            <td class="text-left">
-                                {{ ad.title || produto.titulo }} <br>
-                                <small>Anúncio: {{ ad.type }}</small>
+                            <td width="150" class="text-center">
+                                <a href="" class="btn btn-danger btn-xs"><i class="fa fa-pause"></i>&nbsp; Pausar</a>
                             </td>
-                            <td width="160" class="text-center">Frete grátis:<br>{{ ad.shipping }}</td>
+                            <td class="text-left">
+                                {{ ad.title || produto.titulo }}<br>
+                                <small>
+                                    <a target="_blank" ng-href="{{ ad.permalink }}">{{ ad.code }}</a> /
+                                    Anúncio: {{ ad.type }} /
+                                    Frete grátis: {{ ad.shipping }}
+                                </small>
+                            </td>
                             <td width="160" class="text-center"><strong>{{ ad.price | currency }}</strong></td>
                             <td width="160" class="text-center">
                                 <span class="label {{ ad.status == 1 ? 'label-success' : '' }} m-b-0">

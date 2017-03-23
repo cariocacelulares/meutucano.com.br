@@ -215,14 +215,41 @@ class AdController extends Controller
     }
 
     /**
+     * Deletes a resource
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function destroy(Api $api, $id)
+    {
+        try {
+            $ad = Ad::findOrFail($id);
+
+            if (!$api->syncStatus($ad->code, 'paused')) {
+                throw new \Exception("Não foi possível pausar o anúncio");
+            }
+
+            $ad->delete();
+            return $this->deletedResponse();
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao excluir recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
      * Update stock based on product SKU
      *
      * @param  Api    $api
      * @param  int $sku
      * @return boolean
      */
-    public function updateStockByProduct(Api $api, $sku)
+    public function updateStockByProduct($product)
     {
+        // dd($product);
         try {
             $product = Produto::findOrFail($sku);
 
@@ -235,7 +262,7 @@ class AdController extends Controller
 
     public function testStock(Api $api)
     {
-        $r = $api->syncStock('MLB852105848', 1);
+        $r = $api->syncStock('MLB852348421', 5);
         dd($r);
     }
 

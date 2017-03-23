@@ -76,7 +76,7 @@ class ProductTransformer
             'ean'                => $product->ean,
             'ncm'                => $product->ncm,
             'cost'               => $product->getCost(),
-            'warranty'           => $product->warranty
+            'warranty'           => $product->warranty,
             'valor'              => $product->valor,
             'estado'             => $product->estado,
             'estado_description' => ProductParser::getEstadoDescription($product->estado),

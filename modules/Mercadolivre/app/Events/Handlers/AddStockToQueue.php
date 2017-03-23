@@ -1,8 +1,8 @@
-<?php namespace Magento\Events\Handlers;
+<?php namespace Mercadolivre\Events\Handlers;
 
 use Illuminate\Events\Dispatcher;
 use Core\Events\ProductStockUpdated;
-use Magento\Jobs\SendStockInfo;
+use Mercadolivre\Jobs\SendStockInfo;
 
 class AddStockToQueue
 {
@@ -16,7 +16,7 @@ class AddStockToQueue
     {
         $events->listen(
             ProductStockUpdated::class,
-            '\Magento\Events\Handlers\AddStockToQueue@onProductStockUpdated'
+            '\Mercadolivre\Events\Handlers\AddStockToQueue@onProductStockUpdated'
         );
     }
 
@@ -28,7 +28,7 @@ class AddStockToQueue
      */
     public function onProductStockUpdated(ProductStockUpdated $event)
     {
-        \Log::debug('Handler Magentl:AddStockToQueue acionado!', [$event->product]);
+        \Log::debug('Handler Mercadolivre:AddStockToQueue acionado!', [$event->product]);
         dispatch(with(new SendStockInfo($event->product))->onQueue('high'));
     }
 }

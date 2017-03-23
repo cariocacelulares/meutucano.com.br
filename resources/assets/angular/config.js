@@ -11,7 +11,7 @@
                     production : ['192.168.2.170'],
                     aws        : ['www.meutucano.com.br', 'meutucano.com.br']
                 },
-                vars: {
+                vars: { 
                     development: {
                         apiUrl   : 'https://tucano.app/api',
                         assetUrl : 'https://tucano.app/'
@@ -67,7 +67,7 @@
                 }
             });
         })
- 
+
         /**
          * REST
          */

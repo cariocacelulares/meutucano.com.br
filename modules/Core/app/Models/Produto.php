@@ -166,6 +166,6 @@ class Produto extends Model
             }
         }
 
-        return ($sum / $qty);
+        return $qty ? ($sum / $qty) : $sum;
     }
 }

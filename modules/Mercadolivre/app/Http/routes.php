@@ -10,6 +10,9 @@ Route::group([
     'namespace' => 'Mercadolivre\Http\Controllers'
 ], function () {
     Route::get('ads/grouped', 'AdController@groupedList');
+    Route::get('ads/grouped', 'AdController@groupedList');
+    Route::put('ads/{code}/pause', 'AdController@pauseAd');
+    Route::put('ads/{code}/activate', 'AdController@activateAd');
     Route::resource('ads', 'AdController');
 
     Route::get('templates/list', 'TemplateController@tableList');

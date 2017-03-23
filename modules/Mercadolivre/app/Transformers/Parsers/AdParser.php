@@ -15,12 +15,10 @@ class AdParser
     public static function getShippingDescription($shipping)
     {
         switch ($shipping) {
-            case '0':
+            case '0': 
                 return 'Não';
             case '1':
-                return 'Sim, todo o Brasil';
-            case '2':
-                return 'Sim, exceto Norte/Nordeste';
+                return 'Sim';
             default: return;
         }
     }

@@ -151,19 +151,16 @@ class Api
      *
      * @param  string $code
      * @param  int $stock
-     * @return array
+     * @return array|boolean
      */
     public function syncStock($code, $stock)
     {
         try {
             $response = $this->api->put("/items/{$code}", [
-                'available_quantity' => ($stock > 0) ? $stock : 1,
-                'status'             => ($stock > 0) ? 'active' : 'paused'
+                'available_quantity' => ($stock > 0) ? $stock : 1
             ], [
                 'access_token' => t('mercadolivre.access_token')
             ]);
-
-            dd($response);
 
             if ($response['httpCode'] !== 200) {
                 throw new \Exception((is_object($response['body'])) ? $response['body']->message : 'Erro desconhecido');
@@ -177,11 +174,38 @@ class Api
     }
 
     /**
+     * Sync ad status
+     *
+     * @param  string $code
+     * @param  string $status
+     * @return array|boolean
+     */
+    public function syncStatus($code, $status)
+    {
+        try {
+            $response = $this->api->put("/items/{$code}", [
+                'status' => $status
+            ], [
+                'access_token' => t('mercadolivre.access_token')
+            ]);
+
+            if ($response['httpCode'] !== 200) {
+                throw new \Exception((is_object($response['body'])) ? $response['body']->message : 'Erro desconhecido');
+            }
+
+            return $response;
+        } catch (\Exception $e) {
+            Log::error('Não foi possível atualizar o status do anúncio no Mercado Livre: ' . $e->getMessage() . $e->getLine());
+            return false;
+        }
+    }
+
+    /**
      * Sync ad type
      *
      * @param  string $code
      * @param  string $type
-     * @return array
+     * @return array|boolean
      */
     public function syncType($code, $type)
     {
