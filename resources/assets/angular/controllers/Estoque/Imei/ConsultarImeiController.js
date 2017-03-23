@@ -8,19 +8,30 @@
     function ConsultarImeiController(ProductImei) {
         var vm = this;
 
-        vm.loading = false;
-        vm.imei    = null;
-        vm.acoes   = [];
-        vm.info    = {};
+        vm.loading  = false;
+        vm.imei     = null;
+        vm.acoes    = [];
+        vm.info     = {};
+        vm.searched = false;
 
         vm.load = function() {
             vm.loading = true;
 
             ProductImei.history(vm.imei).then(function (response) {
-                vm.acoes = response.history;
-                vm.info  = response.info;
-                vm.loading = false;
+                vm.acoes    = response.history;
+                vm.info     = response.info;
+                vm.loading  = false;
+                vm.searched = true;
             });
+        }
+
+        /**
+         * On change imei
+         */
+        vm.changed = function() {
+            vm.acoes    = [];
+            vm.info     = {};
+            vm.searched = false;
         }
 
         /**

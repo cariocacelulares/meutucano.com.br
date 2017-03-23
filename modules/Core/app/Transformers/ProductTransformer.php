@@ -51,6 +51,7 @@ class ProductTransformer
                 'estoque'            => $product['estoque'],
                 'valor'              => $product['valor'],
                 'estado'             => $product['estado'],
+                'cost'               => $product->getCost(),
                 'estado_description' => ProductParser::getEstadoDescription($product['estado']),
                 'attachedProducts'   => $product['attachedProducts'],
             ];
@@ -77,6 +78,7 @@ class ProductTransformer
             'ean'                => $product->ean,
             'titulo'             => $product->titulo,
             'valor'              => $product['valor'],
+            'cost'               => $product->getCost(),
             'estoque'            => $product->estoque,
         ];
     }

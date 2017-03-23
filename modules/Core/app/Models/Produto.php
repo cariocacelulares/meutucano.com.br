@@ -5,6 +5,7 @@ use Sofa\Eloquence\Eloquence;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Core\Models\Pedido\PedidoProduto;
 use Core\Models\Produto\ProductStock;
+use Core\Models\Stock\Entry\Product as EntryProduct;
 
 /**
  * Class Produto
@@ -66,12 +67,21 @@ class Produto extends Model
     }
 
     /**
-     * ProductStock
-     * @return ProductStock
+     * PedidoProduto
+     * @return PedidoProduto
      */
     public function pedidoProdutos()
     {
         return $this->hasMany(PedidoProduto::class, 'produto_sku', 'sku');
+    }
+
+    /**
+     * EntryProduct
+     * @return EntryProduct
+     */
+    public function entryProducts()
+    {
+        return $this->hasMany(EntryProduct::class, 'product_sku', 'sku');
     }
 
     /**
@@ -150,4 +160,24 @@ class Produto extends Model
 
         return parent::newPivot($parent, $attributes, $table, $exists);
     }*/
+
+    /**
+     * Get product average cost
+     * 
+     * @return float
+     */
+    public function getCost()
+    {
+        $qty = 0;
+        $sum = 0;
+
+        foreach ($this->entryProducts as $entryProduct) {
+            if (!is_null($entryProduct->entry->confirmed_at)) {
+                $qty += $entryProduct->quantity;
+                $sum += ($entryProduct->unitary_value * $entryProduct->quantity);
+            }
+        }
+
+        return ($sum / $qty);
+    }
 }

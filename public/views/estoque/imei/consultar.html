@@ -3,7 +3,8 @@
     <div class="col-md-6 button-bar">
         <form class="form-default form-clean form-group" ng-submit="ConsultarImei.load()">
             <div class="input-group">
-                <input ng-model="ConsultarImei.imei" class="bg-white" placeholder="Código serial" required>
+                <input ng-model="ConsultarImei.imei" ng-change="ConsultarImei.changed()"
+                    class="bg-white" placeholder="Código serial" required>
                 <div class="input-group-btn">
                     <button class="btn-primary" type="submit">
                         <i class="fa fa-search"></i>
@@ -14,28 +15,32 @@
     </div>
 </div>
 
-<div ng-if="ConsultarImei.info.title" class="row m-b-20">
+<div ng-if="ConsultarImei.imei && ConsultarImei.info.title" class="row m-b-20">
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading separator">
                 <div class="panel-title">
                     <span>{{ ConsultarImei.info.title }}</span>
-                    <span class="pull-right">{{ ConsultarImei.info.value | currency }}</span>
+                    <span class="pull-right"><b>Estoque</b>: {{ ConsultarImei.info.stock }}</span>
                 </div>
             </div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-md-3 text-center">
+                    <div class="col-md-2 text-center">
                         <b>EAN</b>: {{ ConsultarImei.info.ean }}
                     </div>
-                    <div class="col-md-3 text-center">
+                    <div class="col-md-2 text-center">
                         <b>NCM</b>: {{ ConsultarImei.info.ncm }}
                     </div>
-                    <div class="col-md-3 text-center">
-                        <b>Estoque</b>: {{ ConsultarImei.info.stock }}
+                    <div class="col-md-2 text-center"></div>
+                    <div class="col-md-2 text-center">
+                        <b>Valor</b>: {{ ConsultarImei.info.value | currency }}
                     </div>
-                    <div class="col-md-3 text-center">
+                    <div class="col-md-2 text-center">
                         <b>Entrada</b>: {{ ConsultarImei.info.entry_value | currency  }}
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <b>Custo Médio</b>: {{ ConsultarImei.info.cost | currency  }}
                     </div>
                 </div>
             </div>
@@ -43,7 +48,7 @@
     </div>
 </div>
 
-<table ng-if="ConsultarImei.imei" class="table info-style table-hover">
+<table ng-if="ConsultarImei.imei && ConsultarImei.searched" class="table info-style table-hover">
     <thead class="table-header">
         <tr>
             <th width="46"></th>

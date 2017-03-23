@@ -236,6 +236,8 @@
                         vm.validationErrors = ValidationErrors.handle(error);
                     }
                 );
+            } else {
+                toaster.pop('warning', '', 'Descreva o motivo de suas alterações');
             }
         };
 
