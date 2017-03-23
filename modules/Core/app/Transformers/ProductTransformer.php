@@ -19,14 +19,14 @@ class ProductTransformer
 
         foreach ($products as $product) {
             $transformed[] = [
-                'sku'                => $product['sku'],
-                'titulo'             => $product['titulo'],
-                'estoque'            => $product['estoque'],
-                'estado'             => $product['estado'],
-                'estado_description' => ProductParser::getEstadoDescription($product['estado']),
-                'ean'                => $product['ean'],
-                'ncm'                => $product['ncm'],
-                'referencia'         => $product['referencia'],
+                'sku'                => $product->sku,
+                'titulo'             => $product->titulo,
+                'estoque'            => $product->estoque,
+                'estado'             => $product->estado,
+                'estado_description' => ProductParser::getEstadoDescription($product->estado),
+                'ean'                => $product->ean,
+                'ncm'                => $product->ncm,
+                'referencia'         => $product->referencia,
             ];
         }
 
@@ -44,16 +44,16 @@ class ProductTransformer
 
         foreach ($products as $product) {
             $transformed[] = [
-                'sku'                => $product['sku'],
-                'titulo'             => $product['titulo'],
-                'linha'              => $product['linha'],
-                'marca'              => $product['marca'],
-                'estoque'            => $product['estoque'],
-                'valor'              => $product['valor'],
-                'estado'             => $product['estado'],
+                'sku'                => $product->sku,
+                'titulo'             => $product->titulo,
+                'linha'              => $product->linha,
+                'marca'              => $product->marca,
+                'estoque'            => $product->estoque,
+                'valor'              => $product->valor,
                 'cost'               => $product->getCost(),
-                'estado_description' => ProductParser::getEstadoDescription($product['estado']),
-                'attachedProducts'   => $product['attachedProducts'],
+                'estado'             => $product->estado,
+                'estado_description' => ProductParser::getEstadoDescription($product->estado),
+                'attachedProducts'   => $product->attachedProducts,
             ];
         }
 
@@ -70,16 +70,16 @@ class ProductTransformer
     {
         return [
             'sku'                => $product->sku,
-            'unidade'            => $product->unidade,
-            'ativo'              => $product->ativo,
+            'linha_id'           => $product->linha_id,
+            'marca_id'           => $product->marca_id,
+            'titulo'             => $product->titulo,
+            'ean'                => $product->ean,
+            'ncm'                => $product->ncm,
+            'cost'               => $product->getCost(),
+            'warranty'           => $product->warranty
+            'valor'              => $product->valor,
             'estado'             => $product->estado,
             'estado_description' => ProductParser::getEstadoDescription($product->estado),
-            'ncm'                => $product->ncm,
-            'ean'                => $product->ean,
-            'titulo'             => $product->titulo,
-            'valor'              => $product['valor'],
-            'cost'               => $product->getCost(),
-            'estoque'            => $product->estoque,
         ];
     }
 }

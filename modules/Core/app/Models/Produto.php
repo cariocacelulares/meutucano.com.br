@@ -1,11 +1,14 @@
 <?php namespace Core\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Sofa\Eloquence\Eloquence;
-use Venturecraft\Revisionable\RevisionableTrait;
+use Mercadolivre\Models\Ad;
+use Core\Models\Produto\Linha;
+use Core\Models\Produto\Marca;
+use Core\Models\Produto\Image;
 use Core\Models\Pedido\PedidoProduto;
 use Core\Models\Produto\ProductStock;
 use Core\Models\Stock\Entry\Product as EntryProduct;
+use Illuminate\Database\Eloquent\Model;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
  * Class Produto
@@ -13,7 +16,7 @@ use Core\Models\Stock\Entry\Product as EntryProduct;
  */
 class Produto extends Model
 {
-    use RevisionableTrait, Eloquence;
+    use RevisionableTrait;
 
     /**
      * @var boolean
@@ -35,18 +38,15 @@ class Produto extends Model
         'titulo',
         'ncm',
         'ean',
-        'referencia',
         'valor',
-        'unidade',
         'estado',
-        'ativo',
+        'warranty'
     ];
 
     /**
      * @var array
      */
     protected $casts = [
-        'ativo'  => 'string',
         'estado' => 'string',
     ];
 
@@ -55,6 +55,14 @@ class Produto extends Model
      */
     protected $appends = [
         'estoque',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $with = [
+        'linha',
+        'marca',
     ];
 
     /**
@@ -82,6 +90,15 @@ class Produto extends Model
     public function entryProducts()
     {
         return $this->hasMany(EntryProduct::class, 'product_sku', 'sku');
+    }
+
+    /**
+     * Mercado Livre Ads
+     * @return void
+     */
+    public function mercadolivreAds()
+    {
+        return $this->hasMany(Ad::class, 'product_sku', 'sku');
     }
 
     /**
@@ -113,57 +130,28 @@ class Produto extends Model
     }
 
     /**
-     * @var array
-     */
-    /*protected $with = [
-        'linha',
-        'marca',
-        'atributos',
-    ];*/
-
-    /**
      * Linha
      *
      * @return \Illuminate\Database\Eloquent\Relations\belongsTo
      */
-    /*public function linha()
+    public function linha()
     {
         return $this->belongsTo(Linha::class);
-    }*/
+    }
 
     /**
      * Marca
      *
      * @return \Illuminate\Database\Eloquent\Relations\belongsTo
      */
-    /*public function marca()
+    public function marca()
     {
         return $this->belongsTo(Marca::class);
-    }*/
-
-    /**
-     * Atributos
-     * @return Object
-     */
-    /*public function atributos()
-    {
-        return $this
-            ->belongsToMany(Atributo::class, 'produto_atributo', 'produto_sku', 'atributo_id')
-            ->withPivot('opcao_id', 'valor');
     }
-
-    public function newPivot(Model $parent, array $attributes, $table, $exists)
-    {
-        if ($parent instanceof Atributo) {
-            return new ProdutoAtributoPivot($parent, $attributes, $table, $exists);
-        }
-
-        return parent::newPivot($parent, $attributes, $table, $exists);
-    }*/
 
     /**
      * Get product average cost
-     * 
+     *
      * @return float
      */
     public function getCost()

@@ -273,8 +273,7 @@ class EntryTest extends TestCase
         $user     = CreateUsuario::create();
         $supplier = Supplier::create();
         $product  = Produto::create(['serial_enabled' => true]);
-
-        $entry = Entry::create();
+        $entry    = Entry::create();
 
         $entryProduct = EntryProduct::create([
             'stock_entry_id'   => $entry->id,

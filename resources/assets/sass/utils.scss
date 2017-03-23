@@ -73,6 +73,9 @@
 }
 
 // Texto e fonte
+.a-right { text-align: right; }
+.a-left { text-align: left; }
+.a-center { text-align: center; }
 .font-alt { font-family: $font-alt }
 .bg-white { background-color: $color-white !important }
 .bg-gray { background: $color-info !important }

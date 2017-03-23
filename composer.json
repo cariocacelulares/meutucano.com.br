@@ -39,7 +39,9 @@
         "spatie/laravel-failed-job-monitor": "^2.1",
         "sofa/eloquence": "~5.3",
         "milon/barcode": "^5.3",
-        "dompdf/dompdf": "^0.8.0"
+        "dompdf/dompdf": "^0.8.0",
+        "livepixel/mercado-livre": "^1.1",
+        "doctrine/dbal": "^2.5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -69,7 +71,8 @@
             "Rastreio\\": "modules/Rastreio/app",
             "Skyhub\\": "modules/Skyhub/app",
             "Sugestao\\": "modules/Sugestao/app",
-            "Allnation\\": "modules/Allnation/app"
+            "Allnation\\": "modules/Allnation/app",
+            "Mercadolivre\\": "modules/Mercadolivre/app"
         },
         "files": [
             "app/helpers.php"

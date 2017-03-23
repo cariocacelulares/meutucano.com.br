@@ -1,0 +1,56 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-mobile" title="Mercado Livre" description="Todos os anúncios no Mercado Livre"></page-title>
+</div>
+<table table-list="AdList">
+    <thead>
+        <tr>
+            <th width="150" class="text-center">SKU</th>
+            <th>Título</th>
+            <th width="160" class="text-center">Estado</th>
+            <th width="150"></th>
+        </tr>
+        <tr class="table-filter" static-include="views/produto/mercadolivre/ads/list_filter.html"></tr>
+    </thead>
+    <tbody ng-if="AdList.tableData.data && !AdList.loading">
+        <tr ng-repeat-start="produto in AdList.tableData.data">
+            <td class="text-center">{{ produto.sku }}</td>
+            <td>
+                <strong>{{ produto.titulo }}</strong>
+            </td>
+            <td class="text-center">
+                {{ produto.estado_description }}
+            </td>
+            <td class="text-center">
+                <a class="btn btn-success" ui-sref="app.produtos.mercadolivre.ads.form({sku: produto.sku})"><i class="fa-plus"></i>&nbsp; Novo</a>
+            </td>
+        </tr>
+        <tr class="sub-table" ng-repeat-end>
+            <td ng-if="produto.ads.length" colspan="4">
+                <table width="100%">
+                    <tbody>
+                        <tr ng-repeat="ad in produto.ads">
+                            <td width="150" class="text-center"><a target="_blank" ng-href="{{ ad.permalink }}">{{ ad.code }}</a></td>
+                            <td class="text-left">
+                                {{ ad.title || produto.titulo }} <br>
+                                <small>Anúncio: {{ ad.type }}</small>
+                            </td>
+                            <td width="160" class="text-center">Frete grátis:<br>{{ ad.shipping }}</td>
+                            <td width="160" class="text-center"><strong>{{ ad.price | currency }}</strong></td>
+                            <td width="160" class="text-center">
+                                <span class="label {{ ad.status == 1 ? 'label-success' : '' }} m-b-0">
+                                    {{ ad.status_description }}
+                                </span>
+                            </td>
+                            <td width="150" class="text-center">
+                                <a class="btn btn-info" ui-sref="app.produtos.mercadolivre.ads.form({sku: produto.sku, id: ad.id})"><i class="fa-edit"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td ng-if="!produto.ads.length" class="text-center empty" colspan="4">
+                Nenhum anúncio no Mercado Livre criado
+            </td>
+        </tr>
+    </tbody>
+</table>

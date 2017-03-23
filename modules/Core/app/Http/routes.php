@@ -116,6 +116,8 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::get('list', 'ProdutoController@tableList');
         Route::get('search/{term}', 'ProdutoController@search');
         Route::get('get-stocks/{sku}', 'ProdutoController@getStocks');
+
+        Route::post('upload', 'ProdutoController@upload');
     });
     Route::resource('produtos', 'Produto\ProdutoController');
 

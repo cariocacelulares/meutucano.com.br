@@ -266,6 +266,45 @@
                     controller: 'ProdutoDetalheController as ProdutoDetalhe'
                 })
 
+                .state('app.produtos.mercadolivre', {
+                    url: '/mercadolivre',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.produtos.mercadolivre.ads', {
+                    url: '/ads',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.produtos.mercadolivre.ads.index', {
+                    url: '/list',
+                    templateUrl: 'views/produto/mercadolivre/ads/list.html',
+                    controller: 'AdListController as AdList',
+                })
+
+                .state('app.produtos.mercadolivre.ads.form', {
+                    url: '/{sku}/{id}',
+                    templateUrl: 'views/produto/mercadolivre/ads/form.html',
+                    controller: 'AdFormController as AdForm',
+                })
+
+                .state('app.produtos.mercadolivre.templates', {
+                    url: '/templates',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.produtos.mercadolivre.templates.index', {
+                    url: '/list',
+                    templateUrl: 'views/produto/mercadolivre/templates/list.html',
+                    controller: 'TemplateListController as TemplateList',
+                })
+
+                .state('app.produtos.mercadolivre.templates.form', {
+                    url: '/{id}',
+                    templateUrl: 'views/produto/mercadolivre/templates/form.html',
+                    controller: 'TemplateFormController as TemplateForm',
+                })
+
                 /**
                  * Linhas
                  */
