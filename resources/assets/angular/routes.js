@@ -389,6 +389,26 @@
                 /**
                  * Gamification
                  */
+                .state('app.suppliers', {
+                    url: '/fornecedores',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.suppliers.index', {
+                    url: '/list',
+                    templateUrl: 'views/supplier/list.html',
+                    controller: 'SupplierListController as SupplierList'
+                })
+
+                .state('app.suppliers.form', {
+                    url: '/{id}',
+                    templateUrl: 'views/supplier/form.html',
+                    controller: 'SupplierFormController as SupplierForm'
+                })
+
+                /**
+                 * Gamification
+                 */
                 .state('app.gamification', {
                     url: '/gamification',
                     templateUrl: 'views/layouts/default.html'
@@ -556,7 +576,7 @@
                 })
 
                 .state('app.estoque.imei.consultar', {
-                    url: '/consultar',
+                    url: '/consultar/{imei}',
                     templateUrl: 'views/estoque/imei/consultar.html',
                     controller: 'ConsultarImeiController as ConsultarImei'
                 })

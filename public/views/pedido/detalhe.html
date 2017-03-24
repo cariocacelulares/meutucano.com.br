@@ -76,6 +76,7 @@
                         <i ng-if="PedidoDetalhe.pedido.pagamento_metodo_readable" class="fa-money"></i>&nbsp;
                         {{ PedidoDetalhe.pedido.pagamento_metodo_readable }}
                         <small ng-if="!PedidoDetalhe.pedido.pagamento_metodo_readable" class="hint-text">Nenhum método de pagamento</small>
+                        <span ng-if="PedidoDetalhe.pedido.parcelas">({{ PedidoDetalhe.pedido.parcelas }}x)</span>
                     </div>
                 </div>
             </div>

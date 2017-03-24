@@ -83,6 +83,7 @@ $factory->define(\Core\Models\Pedido::class, function () use ($faker) {
         'frete_valor'         => $faker->randomFloat(2, 10, 40),
         'frete_metodo'        => $faker->randomElement(['pac', 'sedex']),
         'pagamento_metodo'    => 'boleto',
+        'parcelas'            => 1,
         'marketplace'         => $faker->randomElement(['B2W', 'CNOVA', 'MERCADOLIVRE', 'SITE', 'WALMART']),
         'operacao'            => '6108',
         'total'               => $faker->randomFloat(2, 800, 3000),

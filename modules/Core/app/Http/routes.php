@@ -222,7 +222,11 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     /**
      * Supplier
      */
+    Route::group(['prefix' => 'supplier', 'namespace' => 'Supplier'], function () {
+        Route::get('list', 'SupplierController@tableList');
+    });
     Route::get('supplier/search/{term}', 'Supplier\SupplierController@search');
+    Route::resource('supplier', 'Supplier\SupplierController');
 
     /**
      * Stock entry

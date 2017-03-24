@@ -78,7 +78,7 @@
             <label for="frete_valor">Valor do frete</label>
             <input ng-model="PedidoForm.order.frete_valor" id="frete_valor" placeholder="R$" ui-money-mask required>
         </div>
-        <div class="col-md-3 form-group">
+        <div class="col-md-2 form-group">
             <label for="frete_metodo">Método de frete</label>
             <select ng-model="PedidoForm.order.frete_metodo" id="frete_metodo" required>
                 <option value="" disabled selected hidden>Forma de envio</option>
@@ -91,12 +91,30 @@
             <label for="pagamento_metodo">Método de pagamento</label>
             <select ng-model="PedidoForm.order.pagamento_metodo" id="pagamento_metodo" required>
                 <option value="" disabled selected hidden>Forma de pagamento</option>
+                <option value="mercadopago">Mercado Pago</option>
                 <option value="boleto">Boleto bancário</option>
                 <option value="credito">Cartão de crédito</option>
                 <option value="debito">Cartão de débito</option>
                 <option value="transferencia">Transferencia</option>
                 <option value="deposito">Depósito</option>
+                <option value="cheque">Cheque</option>
                 <option value="outro">Outro</option>
+            </select>
+        </div>
+        <div class="col-md-1 form-group">
+            <label for="parcelas">Parcelas</label>
+            <select ng-model="PedidoForm.order.parcelas" id="parcelas" required>
+                <option value="" disabled hidden>Parcelas</option>
+                <option value="1">1x</option>
+                <option value="2">2x</option>
+                <option value="3">3x</option>
+                <option value="4">4x</option>
+                <option value="5">5x</option>
+                <option value="6">6x</option>
+                <option value="7">7x</option>
+                <option value="8">8x</option>
+                <option value="9">9x</option>
+                <option value="10">10x</option>
             </select>
         </div>
     </div>

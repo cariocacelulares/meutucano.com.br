@@ -21,6 +21,9 @@
             <div class="panel-heading separator">
                 <div class="panel-title">
                     <span>{{ ConsultarImei.info.title }}</span>
+                    <a ui-sref="app.produtos.detalhe({sku: ConsultarImei.info.sku})">
+                        <i class="fa-external-link"></i>
+                    </a>
                     <span class="pull-right"><b>Estoque</b>: {{ ConsultarImei.info.stock }}</span>
                 </div>
             </div>
@@ -32,15 +35,20 @@
                     <div class="col-md-2 text-center">
                         <b>NCM</b>: {{ ConsultarImei.info.ncm }}
                     </div>
-                    <div class="col-md-2 text-center"></div>
                     <div class="col-md-2 text-center">
                         <b>Valor</b>: {{ ConsultarImei.info.value | currency }}
                     </div>
                     <div class="col-md-2 text-center">
-                        <b>Entrada</b>: {{ ConsultarImei.info.entry_value | currency  }}
+                        <b>Custo Médio</b>: {{ ConsultarImei.info.cost | currency  }}
                     </div>
                     <div class="col-md-2 text-center">
-                        <b>Custo Médio</b>: {{ ConsultarImei.info.cost | currency  }}
+                        <b>Custo</b>: {{ ConsultarImei.info.entry_value | currency  }}
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <a ui-sref="app.estoque.entrada.form({id: ConsultarImei.info.entry_id})">
+                            <b>Entrada</b>:
+                        </a>
+                        {{ ConsultarImei.info.entry_date }}
                     </div>
                 </div>
             </div>

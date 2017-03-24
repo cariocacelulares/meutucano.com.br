@@ -12,7 +12,8 @@
         vm.products = [];
         vm.product  = null;
         vm.order    = {
-            products: []
+            products: [],
+            parcelas: '1'
         };
 
         /**

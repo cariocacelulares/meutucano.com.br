@@ -147,6 +147,12 @@
                         ]
                     },
                     {
+                        title: 'Fornecedores',
+                        icon: 'fa-building',
+                        sref: $state.href('app.suppliers.index'),
+                        roles: ['admin', 'gestor'],
+                    },
+                    {
                         title: 'Rastreios',
                         icon: 'fa-truck',
                         roles: ['admin', 'atendimento'],

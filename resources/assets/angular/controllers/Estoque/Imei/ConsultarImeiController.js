@@ -5,11 +5,11 @@
         .module('MeuTucano')
         .controller('ConsultarImeiController', ConsultarImeiController);
 
-    function ConsultarImeiController(ProductImei) {
+    function ConsultarImeiController($state, $stateParams, ProductImei) {
         var vm = this;
 
         vm.loading  = false;
-        vm.imei     = null;
+        vm.imei     = $stateParams.imei || null;
         vm.acoes    = [];
         vm.info     = {};
         vm.searched = false;
@@ -17,12 +17,22 @@
         vm.load = function() {
             vm.loading = true;
 
+            $state.go(
+                'app.estoque.imei.consultar',
+                {imei: vm.imei},
+                {notify: false}
+            );
+
             ProductImei.history(vm.imei).then(function (response) {
                 vm.acoes    = response.history;
                 vm.info     = response.info;
                 vm.loading  = false;
                 vm.searched = true;
             });
+        }
+
+        if (vm.imei) {
+            vm.load();
         }
 
         /**

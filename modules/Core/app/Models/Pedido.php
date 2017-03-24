@@ -33,6 +33,7 @@ class Pedido extends \Eloquent
         'frete_valor',
         'frete_metodo',
         'pagamento_metodo',
+        'parcelas',
         'codigo_marketplace',
         'marketplace',
         'operacao',

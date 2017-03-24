@@ -131,5 +131,5 @@ return [
         1 => 'Confirmado',
         2 => 'Faturado',
         3 => 'Retornado',
-    ]
+    ],
 ];
