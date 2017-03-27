@@ -24,14 +24,20 @@ class PedidoProduto
             $data['produto_sku'] = Produto::create()->sku;
         }
 
+        $productImei = null;
         if (!isset($data['product_imei_id'])) {
-            $data['product_imei_id'] = ProductImei::create()->id;
+            $productImei = ProductImei::create();
+            $data['product_imei_id'] = $productImei->id;
         }
 
         if (!isset($data['product_stock_id'])) {
-            $productStock = ProductStockModel
-                ::where('product_sku', '=', $data['produto_sku'])
-                ->first();
+            $productStock = $productImei ? $productImei->productStock : null;
+
+            if (!$productStock) {
+                $productStock = ProductStockModel
+                    ::where('product_sku', '=', $data['produto_sku'])
+                    ->first();
+            }
 
             if (!$productStock) {
                 $productStock = ProductStock::create([

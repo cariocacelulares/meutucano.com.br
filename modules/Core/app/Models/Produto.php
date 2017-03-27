@@ -39,6 +39,7 @@ class Produto extends Model
         'ncm',
         'ean',
         'valor',
+        'cost',
         'estado',
         'warranty'
     ];
@@ -147,25 +148,5 @@ class Produto extends Model
     public function marca()
     {
         return $this->belongsTo(Marca::class);
-    }
-
-    /**
-     * Get product average cost
-     *
-     * @return float
-     */
-    public function getCostAttribute()
-    {
-        $qty = 0;
-        $sum = 0;
-
-        foreach ($this->entryProducts as $entryProduct) {
-            if (!is_null($entryProduct->entry->confirmed_at)) {
-                $qty += $entryProduct->quantity;
-                $sum += ($entryProduct->unitary_value * $entryProduct->quantity);
-            }
-        }
-
-        return $qty ? ($sum / $qty) : $sum;
     }
 }

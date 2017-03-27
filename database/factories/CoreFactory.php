@@ -70,8 +70,11 @@ $factory->define(\Core\Models\Produto\ProductImei::class, function () use ($fake
 $factory->define(\Core\Models\Produto::class, function () use ($faker) {
     return [
         'titulo' => 'Smartphone ' . $faker->randomNumber(2),
-        'ean'    => $faker->isbn10,
-        'estado' => 0
+        'ean'    => $faker->ean8,
+        'estado' => 0,
+        'ncm'    => $faker->isbn10,
+        'valor'  => $faker->randomFloat(2, 500, 1000),
+        'cost'   => 0,
     ];
 });
 
