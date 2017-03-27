@@ -6,12 +6,14 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Core\Models\Produto;
+use Core\Models\Produto\ProductStock;
 use Magento\Http\Controllers\MagentoController;
 
 class SendStockInfo implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $productStock;
     protected $product;
 
     /**
@@ -19,10 +21,11 @@ class SendStockInfo implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Produto $product)
+    public function __construct(ProductStock $productStock)
     {
-        \Log::debug('Job SendStockInfo criado', [$product]);
-        $this->product = $product;
+        \Log::debug('Job SendStockInfo criado', [$productStock]);
+        $this->productStock = $productStock;
+        $this->product = Produto::find($productStock->product_sku);
     }
 
     /**
@@ -32,7 +35,7 @@ class SendStockInfo implements ShouldQueue
      */
     public function handle()
     {
-        \Log::debug('Job SendStockInfo executado', [$this->product]);
+        \Log::debug('Job SendStockInfo executado', [$this->productStock, $this->product]);
         with(new MagentoController())->updateStock($this->product);
     }
 
@@ -44,6 +47,6 @@ class SendStockInfo implements ShouldQueue
      */
     public function failed(Exception $exception)
     {
-        \Log::critical(logMessage($exception, 'Erro ao executar Job SendStockInfo'), [$this->product]);
+        \Log::critical(logMessage($exception, 'Erro ao executar Job SendStockInfo'), [$this->productStock, $this->product]);
     }
 }

@@ -29,6 +29,7 @@ class ProductImei extends Model
     protected $fillable = [
         'product_stock_id',
         'imei',
+        'cost',
     ];
 
     /**
@@ -92,5 +93,29 @@ class ProductImei extends Model
     public function entryImeis()
     {
         return $this->hasMany(Imei::class);
+    }
+
+    /**
+     * Check if imei is in stock
+     *
+     * @return boolean
+     */
+    public function inStock()
+    {
+        if (!is_null($this->deleted_at)) {
+            return false;
+        }
+
+        $lastOrderProduct = $this->lastOrderProduct();
+
+        if (!$lastOrderProduct) {
+            return true;
+        }
+
+        if (in_array($lastOrderProduct->pedido->status, [2, 3])) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -5,6 +5,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
 use Core\Models\Stock\Entry;
 use Core\Models\Produto;
 use Core\Models\Produto\ProductStock;
+use Core\Models\Stock\Entry\Imei as EntryImei;
 
 /**
  * Product model
@@ -82,6 +83,15 @@ class Product extends Model
     public function product()
     {
         return $this->belongsTo(Produto::class, 'product_sku', 'sku');
+    }
+
+    /**
+     * EntryImei
+     * @return EntryImei
+     */
+    public function entryImeis()
+    {
+        return $this->hasMany(EntryImei::class, 'stock_entry_product_id', 'id');
     }
 
     /**

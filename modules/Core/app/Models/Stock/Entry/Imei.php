@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
-use Core\Models\Produto\ProductIei;
+use Core\Models\Produto\ProductImei;
 
 /**
  * Imei model

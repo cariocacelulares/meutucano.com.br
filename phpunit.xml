@@ -37,7 +37,6 @@
         <env name="QUEUE_DRIVER" value="sync" />
         <env name="EMAIL_SEND_ENABLED" value="true" />
         <env name="DB_CONNECTION" value="tests" />
-        <env name="SKYHUB_ENABLED" value="false" />
         <env name="MAGENTO_ENABLED" value="false" />
         <env name="TUCANOMG_ENABLED" value="false" />
         <env name="FAILED_JOB_SLACK_WEBHOOK_URL" value="" />

@@ -4,7 +4,7 @@
         <div class="col-md-6 button-bar">
             <button type="submit" class="btn-success"><i class="fa-save"></i>&nbsp; Salvar</button>
             <button ng-if="!EntradaEstoqueForm.entry.id" ngf-select ngf-change="EntradaEstoqueForm.upload($files)" class="btn-info" type="button"><i class="fa-upload"></i>&nbsp; Upload XML</button>
-            <button ng-if="EntradaEstoqueForm.entry.id" confirm="EntradaEstoqueForm.confirm()" type="button" class="btn-primary"><i class="fa-check">&nbsp;</i> Confirmar</button>
+            <button ng-if="EntradaEstoqueForm.entry.id && !EntradaEstoqueForm.entry.confirmed_at" confirm="EntradaEstoqueForm.confirm()" type="button" class="btn-primary"><i class="fa-check">&nbsp;</i> Confirmar</button>
             <button ng-if="EntradaEstoqueForm.entry.id" confirm="EntradaEstoqueForm.destroy()" type="button" class="btn-danger"><i class="fa-trash">&nbsp;</i> Excluir</button>
             <a onclick="history.back()" title="Voltar para a página anterior" class="btn-default"><i class="fa-reply"></i>&nbsp; Voltar</a>
         </div>
@@ -84,7 +84,7 @@
         <fieldset ng-if="EntradaEstoqueForm.entry.invoice.key" >
             <legend>Nota</legend>
 
-            <div class="fieldset-actions row">
+            <div ng-if="EntradaEstoqueForm.entry.id" class="fieldset-actions row">
                 <button ng-click="EntradaEstoqueForm.printXML()" type="button" class="btn-default pull-right">
                     <i class="fa-file-code-o">&nbsp;</i> XML
                 </button>

@@ -53,6 +53,7 @@ class OrderParser
             return null;
         }
 
+
         switch ($metodo) {
             case 'credito':
                 $metodo = 'cartão de crédito';
@@ -62,6 +63,18 @@ class OrderParser
                 break;
             case 'boleto':
                 $metodo = 'boleto';
+                break;
+            case 'mercadopago':
+                $metodo = 'mercado pago';
+                break;
+            case 'transferencia':
+                $metodo = 'transferência';
+                break;
+            case 'deposito':
+                $metodo = 'depósito';
+                break;
+            case 'cheque':
+                $metodo = 'cheque';
                 break;
             default:
                 $metodo = 'outro meio';

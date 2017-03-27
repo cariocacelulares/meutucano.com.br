@@ -316,13 +316,17 @@ class ProductImeiController extends Controller
                 }
 
                 $entryValue = null;
+                $entryDate  = null;
+                $entryId    = null;
                 foreach ($entryImeis as $entryImei) {
                     $entryProduct = $entryImei->entryProduct;
                     $entry        = $entryProduct->entry;
 
-                    $entryValue = $entryProduct->unitary_value;
-
                     if ($entry->confirmed_at) {
+                        $entryValue = $entryProduct->unitary_value;
+                        $entryDate  = dateConvert($entry->created_at);
+                        $entryId    = $entry->id;
+
                         $actions[strtotime($entry->confirmed_at)][] = [
                             'model' => 'Entry',
                             'desc'  => "Serial confirmado em uma entrada de de estoque",
@@ -351,13 +355,17 @@ class ProductImeiController extends Controller
                 $productStock = $productImei->productStock;
 
                 $info = [
+                    'sku'         => $productStock->product->sku,
                     'title'       => $productStock->product->titulo,
                     'ean'         => $productStock->product->ean,
                     'ncm'         => $productStock->product->ncm,
                     'value'       => $productStock->product->valor,
-                    'cost'        => $productStock->product->cost,
+                    'productCost' => $productStock->product->cost,
                     'stock'       => $productStock->stock->title,
+                    'cost'        => $productImei->cost,
                     'entry_value' => $entryValue,
+                    'entry_date'  => $entryDate,
+                    'entry_id'    => $entryId,
                 ];
 
                 return $this->showResponse([

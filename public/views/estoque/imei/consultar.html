@@ -20,27 +20,41 @@
         <div class="panel panel-default">
             <div class="panel-heading separator">
                 <div class="panel-title">
-                    <span>{{ ConsultarImei.info.title }}</span>
-                    <span class="pull-right"><b>Estoque</b>: {{ ConsultarImei.info.stock }}</span>
+                    <div class="pull-left">
+                        <span>{{ ConsultarImei.info.title }}</span>
+                        <a ui-sref="app.produtos.detalhe({sku: ConsultarImei.info.sku})">
+                            <i class="fa-external-link"></i>
+                        </a>
+                        <br/>
+                        <small class="hint-text display-block"><b>Estoque</b>: {{ ConsultarImei.info.stock }}</small>
+                    </div>
+                    <div class="pull-right">
+                        Entrada em: {{ ConsultarImei.info.entry_date }}
+                        <a ui-sref="app.estoque.entrada.form({id: ConsultarImei.info.entry_id})">
+                            <i class="fa-external-link"></i>
+                        </a>
+                        <br/>
+                        <small class="hint-text pull-right">Por {{ ConsultarImei.info.entry_value | currency  }}</small>
+                    </div>
+                    <div class="clear clearfix"></div>
                 </div>
             </div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-md-2 text-center">
+                    <div class="col-md-{{ ConsultarImei.info.cost ? 2 : 3 }} text-center">
                         <b>EAN</b>: {{ ConsultarImei.info.ean }}
                     </div>
-                    <div class="col-md-2 text-center">
+                    <div class="col-md-{{ ConsultarImei.info.cost ? 2 : 3 }} text-center">
                         <b>NCM</b>: {{ ConsultarImei.info.ncm }}
                     </div>
-                    <div class="col-md-2 text-center"></div>
-                    <div class="col-md-2 text-center">
+                    <div class="col-md-{{ ConsultarImei.info.cost ? 2 : 3 }} text-center">
                         <b>Valor</b>: {{ ConsultarImei.info.value | currency }}
                     </div>
-                    <div class="col-md-2 text-center">
-                        <b>Entrada</b>: {{ ConsultarImei.info.entry_value | currency  }}
+                    <div class="col-md-{{ ConsultarImei.info.cost ? 3 : 3 }} text-center">
+                        <b>Custo Médio</b>: {{ ConsultarImei.info.productCost | currency  }}
                     </div>
-                    <div class="col-md-2 text-center">
-                        <b>Custo Médio</b>: {{ ConsultarImei.info.cost | currency  }}
+                    <div ng-if="ConsultarImei.info.cost" class="col-md-3 text-center">
+                        <b>Custo (na venda)</b>: {{ ConsultarImei.info.cost | currency  }}
                     </div>
                 </div>
             </div>

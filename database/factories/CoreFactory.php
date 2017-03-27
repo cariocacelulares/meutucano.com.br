@@ -61,6 +61,7 @@ $factory->define(\Core\Models\Produto\ProductStock::class, function () use ($fak
 $factory->define(\Core\Models\Produto\ProductImei::class, function () use ($faker) {
     return [
         'imei' => str_random(15),
+        'cost' => null,
     ];
 });
 
@@ -70,8 +71,11 @@ $factory->define(\Core\Models\Produto\ProductImei::class, function () use ($fake
 $factory->define(\Core\Models\Produto::class, function () use ($faker) {
     return [
         'titulo' => 'Smartphone ' . $faker->randomNumber(2),
-        'ean'    => $faker->isbn10,
-        'estado' => 0
+        'ean'    => $faker->ean8,
+        'estado' => 0,
+        'ncm'    => $faker->isbn10,
+        'valor'  => $faker->randomFloat(2, 500, 1000),
+        'cost'   => 0,
     ];
 });
 
@@ -83,6 +87,7 @@ $factory->define(\Core\Models\Pedido::class, function () use ($faker) {
         'frete_valor'         => $faker->randomFloat(2, 10, 40),
         'frete_metodo'        => $faker->randomElement(['pac', 'sedex']),
         'pagamento_metodo'    => 'boleto',
+        'parcelas'            => 1,
         'marketplace'         => $faker->randomElement(['B2W', 'CNOVA', 'MERCADOLIVRE', 'SITE', 'WALMART']),
         'operacao'            => '6108',
         'total'               => $faker->randomFloat(2, 800, 3000),
