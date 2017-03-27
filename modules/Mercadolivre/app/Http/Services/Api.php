@@ -21,12 +21,26 @@ class Api
      */
     public function __construct()
     {
-        $this->api = new Meli(
-            config('mercadolivre.api.app_id'),
-            config('mercadolivre.api.secret'),
-            t('mercadolivre.access_token'),
-            t('mercadolivre.refresh_token')
-        );
+        if (config('mercadolivre.enabled')) {
+            $this->api = new Meli(
+                config('mercadolivre.api.app_id'),
+                config('mercadolivre.api.secret'),
+                t('mercadolivre.access_token'),
+                t('mercadolivre.refresh_token')
+            );
+        }
+    }
+
+    private function checkApi()
+    {
+        if (env('APP_ENV') === 'testing')
+            return false;
+
+        if (!$this->api) {
+            throw new \Exception('Mercadolivre: Api/sessão não iniciada ou inválida');
+        }
+
+        return true;
     }
 
     /**
@@ -36,6 +50,8 @@ class Api
      */
      public function getRefreshToken()
      {
+         if (!$this->checkApi()) return null;
+
          try {
  			return $this->api->refreshAccessToken();
  		} catch (\Exception $e) {
@@ -50,6 +66,8 @@ class Api
      */
     public function getAuthUrl()
     {
+        if (!$this->checkApi()) return null;
+
         try {
             return $this->api->getAuthUrl(
                 config('mercadolivre.api.callback_url'),
@@ -67,6 +85,8 @@ class Api
      */
     public function getTokenFromCallbackCode($code)
     {
+        if (!$this->checkApi()) return null;
+
         try {
             return $this->api->authorize(
                 $code,
@@ -85,6 +105,8 @@ class Api
      */
     public function publishAd($ad)
     {
+        if (!$this->checkApi()) return null;
+
         try {
             return $this->api->post('/items', $ad, [
                 'access_token' => t('mercadolivre.access_token')
@@ -103,6 +125,8 @@ class Api
      */
     public function syncAd($code, $ad)
     {
+        if (!$this->checkApi()) return null;
+
         try {
             $response = $this->api->put("/items/{$code}", $ad, [
                 'access_token' => t('mercadolivre.access_token')
@@ -128,6 +152,8 @@ class Api
      */
     public function syncDescription($code, $description)
     {
+        if (!$this->checkApi()) return null;
+
         try {
             $response = $this->api->put("/items/{$code}/description", [
                 'text' => $description
@@ -155,6 +181,8 @@ class Api
      */
     public function syncStock($code, $stock)
     {
+        if (!$this->checkApi()) return null;
+
         try {
             $response = $this->api->put("/items/{$code}", [
                 'available_quantity' => ($stock > 0) ? $stock : 1
@@ -182,6 +210,8 @@ class Api
      */
     public function syncStatus($code, $status)
     {
+        if (!$this->checkApi()) return null;
+
         try {
             $response = $this->api->put("/items/{$code}", [
                 'status' => $status
@@ -209,6 +239,8 @@ class Api
      */
     public function syncType($code, $type)
     {
+        if (!$this->checkApi()) return null;
+
         try {
             $response = $this->api->post("/items/{$code}/listing_type", [
                 'id' => $type

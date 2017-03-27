@@ -719,6 +719,42 @@ class MagentoController extends Controller
     }
 
     /**
+     * Get product URL from magento
+     *
+     * @param  int $sku
+     * @return string|boolean
+     */
+    public function getProductUrl($sku)
+    {
+        try {
+            $product = $this->api->catalogProductInfo($this->session, $sku, null, null, 'sku');
+
+            return config('magento.url') . '/'  . $product->url_path;
+        } catch (\Exception $exception) {
+            Log::error(logMessage($exception, 'Não foi possível buscar o produto no magento!'));
+            return false;
+        }
+    }
+
+    /**
+     * Get product images from magento
+     *
+     * @param  int $sku
+     * @return array
+     */
+    public function getProductImages($sku)
+    {
+        try {
+            $images = $this->api->catalogProductAttributeMediaList($this->session, $sku, null, 'sku');
+
+            return array_column($images, 'url');
+        } catch (\Exception $exception) {
+            Log::error(logMessage($exception, 'Não foi possível buscar o produto no magento!'));
+            return false;
+        }
+    }
+
+    /**
      * Create product in Magento
      *
      * @param  array  $data Product parameters

@@ -14,10 +14,10 @@
             <label for="mercadolivre.title">Título</label>
         </div>
         <div class="col-md-10">
-            <input ng-model="AdForm.ad.title" id="mercadolivre.title" maxlength="{{ AdForm.ad.max_length || 100 }}" />
+            <input ng-model="AdForm.ad.title" id="mercadolivre.title" maxlength="{{ AdForm.ad.max_length || 60 }}" />
             <small class="hint-text">
                 Por padrão, o título original do produto será utilizado.
-                <span class="pull-right">Tamanho máximo do título: {{ AdForm.ad.max_length || 100 }}</span>
+                <span class="pull-right">Tamanho máximo do título: {{ AdForm.ad.max_length || 60 }}</span>
             </small>
         </div>
     </div>
@@ -28,6 +28,16 @@
         <div class="col-md-3">
             <input ng-model="AdForm.ad.price" id="mercadolivre.price" ui-money-mask required />
             <small class="hint-text">Por padrão, o preço original do produto será utilizado.</small>
+        </div>
+    </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-2 a-right">
+            <label for="mercadolivre.video">Código do vídeo</label>
+        </div>
+        <div class="col-md-3">
+            <input ng-model="AdForm.ad.video" id="mercadolivre.video" />
+            <small class="hint-text">Utilize apenas o código no fim da URL <br> Ex.: youtube.com/<b>D78GMh4dCbk</b></small>
         </div>
     </div>
     <div class="row form-group">
@@ -87,7 +97,7 @@
             <select style="margin-bottom:10px;" ng-options="template.id as template.title for template in AdForm.templates" ng-model="AdForm.ad.template_id" id="template">
                 <option value="">Personalizada</option>
             </select>
-            <text-angular ng-if="!AdForm.ad.template" ng-model="AdForm.ad.template_custom"></text-angular>
+            <text-angular ng-if="!AdForm.ad.template_id" ng-model="AdForm.ad.template_custom"></text-angular>
         </div>
     </div>
 </form>

@@ -22,6 +22,15 @@
                 },
 
                 /**
+                 * Publish pending ad
+                 *
+                 * @return {Object}
+                 */
+                publish: function(id) {
+                    return Restangular.one(this.baseUrl, id).one('publish').customPOST();
+                },
+
+                /**
                  * Set status ad to paused
                  *
                  * @return {Object}

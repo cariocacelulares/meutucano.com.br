@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('AdListController', AdListController);
 
-    function AdListController(Filter, TableHeader, Ad, toaster) {
+    function AdListController(Filter, TableHeader, Ad, toaster, MercadolivreAuth) {
         var vm = this;
 
         /**
@@ -38,6 +38,17 @@
         };
 
         vm.load();
+
+        MercadolivreAuth.authUrl().then(function(response) {
+            vm.authUrl = response.url;
+        });
+
+        vm.publish = function(id) {
+            Ad.publish(id).then(function(response) {
+                toaster.pop('success', 'Sucesso!', 'Anúncio publicado com sucesso!');
+                vm.load();
+            });
+        }
 
         vm.pause = function(id) {
             Ad.pause(id).then(function(response) {

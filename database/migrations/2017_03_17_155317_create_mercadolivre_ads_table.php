@@ -20,6 +20,7 @@ class CreateMercadolivreAdsTable extends Migration
             $table->string('code', 20)->nullable();
             $table->string('permalink', 255)->nullable();
             $table->string('title')->nullable();
+            $table->string('video', 30)->nullable();
             $table->decimal('price', 10, 2);
             $table->string('category_id', 30);
             $table->tinyInteger('type')->default(0);

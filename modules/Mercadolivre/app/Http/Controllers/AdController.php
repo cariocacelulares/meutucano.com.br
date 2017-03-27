@@ -7,8 +7,10 @@ use Illuminate\Routing\Controller;
 use Mercadolivre\Http\Services\Api;
 use Illuminate\Support\Facades\Input;
 use Mercadolivre\Transformers\AdTransformer;
+use Magento\Http\Controllers\MagentoController;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use Mercadolivre\Http\Requests\AdRequest as Request;
+use Mercadolivre\Http\Controllers\TemplateController;
 use Mercadolivre\Http\Controllers\Traits\CheckExpiredToken;
 
 class AdController extends Controller
@@ -67,6 +69,41 @@ class AdController extends Controller
     }
 
     /**
+     * Publish an ad
+     *
+     * @param  Api    $api
+     * @param  integer $id
+     * @return Response
+     */
+    public function publish(Api $api, $id)
+    {
+        try {
+            $ad = Ad::findOrFail($id);
+
+            if ($mercadolivreAd = $this->publishAd($api, $ad)) {
+                $ad->status    = 1;
+                $ad->code      = $mercadolivreAd['code'];
+                $ad->permalink = $mercadolivreAd['permalink'];
+                $ad->save();
+
+                if ($ad->product->estoque < 1) {
+                    $api->syncStock($ad->code, 0);
+                }
+            }
+
+            return $this->createdResponse($ad);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao publicar anúncio'));
+
+            return $this->clientErrorResponse([
+                'error'     => true,
+                'message'   => 'Não foi possível publicar o anúncio!',
+                'exception' => $e->getMessage() . ' ' . $e->getLine()
+            ]);
+        }
+    }
+
+    /**
      * Publish Ad to Mercado Livre
      *
      * @param  Ad     $ad
@@ -84,8 +121,8 @@ class AdController extends Controller
                 "buying_mode"        => "buy_it_now",
                 "listing_type_id"    => ($ad->type == 0) ? 'gold_special' : 'gold_pro',
                 "condition"          => ($ad->product->estado == 0) ? 'new' : 'used',
-                "description"        => "Teste Tucano", // TODO: Template
-                "video_id"           => "D78GMh4dCbk", //TODO: Vídeo
+                "description"        => $this->getAdDescription($ad),
+                "video_id"           => $ad->video, //TODO: Vídeo
                 "warranty"           => $ad->product->warranty,
                 "shipping"           => [
                     "mode"          => "me2",
@@ -101,11 +138,7 @@ class AdController extends Controller
                         ]
                     ] : []
                 ],
-                "pictures"           => [
-                    ["source" => "https://s3-sa-east-1.amazonaws.com/cariocacelulares/catalog/product/s/m/smartphone_apple_iphone_5_e_5s_cinza_16gb_32gb_4g_ios_8mp_tela_4_2.jpg"],
-                    ["source" => "https://s3-sa-east-1.amazonaws.com/cariocacelulares/catalog/product/s/m/smartphone_apple_iphone_5_e_5s_cinza_16gb_32gb_4g_ios_8mp_tela_4a_2.jpg"],
-                    ["source" => "https://s3-sa-east-1.amazonaws.com/cariocacelulares/catalog/product/s/m/smartphone_apple_iphone_5_e_5s_cinza_16gb_32gb_4g_ios_8mp_tela_4a_2.jpg"]
-                ] // TODO: Imagens
+                "pictures" => $this->getAdImages($ad)
             ];
 
             $response = $api->publishAd($mercadolivreAd);
@@ -139,7 +172,7 @@ class AdController extends Controller
                 "title"              => $ad->title,
                 "price"              => $ad->price,
                 "condition"          => ($ad->product->estado == 0) ? 'new' : 'used',
-                "video_id"           => "D78GMh4dCbk", //TODO: Vídeo
+                "video_id"           => $ad->video,
                 "warranty"           => $ad->product->warranty,
                 "shipping"           => [
                     "mode"          => "me2",
@@ -155,11 +188,7 @@ class AdController extends Controller
                         ]
                     ] : []
                 ],
-                "pictures"           => [
-                    ["source" => "https://s3-sa-east-1.amazonaws.com/cariocacelulares/catalog/product/s/m/smartphone_apple_iphone_5_e_5s_cinza_16gb_32gb_4g_ios_8mp_tela_4_2.jpg"],
-                    ["source" => "https://s3-sa-east-1.amazonaws.com/cariocacelulares/catalog/product/s/m/smartphone_apple_iphone_5_e_5s_cinza_16gb_32gb_4g_ios_8mp_tela_4a_2.jpg"],
-                    ["source" => "https://s3-sa-east-1.amazonaws.com/cariocacelulares/catalog/product/s/m/smartphone_apple_iphone_5_e_5s_cinza_16gb_32gb_4g_ios_8mp_tela_4a_2.jpg"]
-                ] // TODO: Imagens
+                "pictures" => $this->getAdImages($ad)
             ];
 
             $response = $api->syncAd($ad->code, $mercadolivreAd);
@@ -184,21 +213,23 @@ class AdController extends Controller
             $ad = Ad::findOrFail($id);
             $ad->fill(Input::all());
 
-            if (!$this->syncAd($api, $ad)) {
-                throw new \Exception("Não foi possível atualizar o anúncio");
-            }
-
-            if ($ad->isDirty('type')) {
-                sleep(1);
-                if (!$api->syncType($ad->code, $ad->type_description)) {
-                    throw new \Exception("Não foi possível atualizar o tipo do anúncio");
+            if ($ad->code) {
+                if (!$this->syncAd($api, $ad)) {
+                    throw new \Exception("Não foi possível atualizar o anúncio");
                 }
-            }
 
-            if ($ad->isDirty('template_id') || $ad->isDirty('template_custom')) {
-                sleep(1);
-                if (!$api->syncDescription($ad->code, $this->getAdDescription($ad))) {
-                    throw new \Exception("Não foi possível atualizar a descrição do anúncio");
+                if ($ad->isDirty('type')) {
+                    sleep(1);
+                    if (!$api->syncType($ad->code, $ad->type_description)) {
+                        throw new \Exception("Não foi possível atualizar o tipo do anúncio");
+                    }
+                }
+
+                if ($ad->isDirty('template_id') || $ad->isDirty('template_custom')) {
+                    sleep(1);
+                    if (!$api->syncDescription($ad->code, $this->getAdDescription($ad))) {
+                        throw new \Exception("Não foi possível atualizar a descrição do anúncio");
+                    }
                 }
             }
 
@@ -225,8 +256,10 @@ class AdController extends Controller
         try {
             $ad = Ad::findOrFail($id);
 
-            if (!$api->syncStatus($ad->code, 'paused')) {
-                throw new \Exception("Não foi possível pausar o anúncio");
+            if ($ad->code) {
+                if (!$api->syncStatus($ad->code, 'paused')) {
+                    throw new \Exception("Não foi possível pausar o anúncio");
+                }
             }
 
             $ad->delete();
@@ -336,6 +369,27 @@ class AdController extends Controller
      */
     protected function getAdDescription(Ad $ad)
     {
-        return $ad->template_custom;
+        return ($ad->template_id)
+            ? with(new TemplateController())->generateTemplate($ad->id)
+            : $ad->template_custom;
+    }
+
+    /**
+     * Return images ad
+     *
+     * @param  Ad     $ad
+     * @return array
+     */
+    protected function getAdImages(Ad $ad)
+    {
+        $images = with (new MagentoController())
+            ->getProductImages($ad->product->sku);
+
+        $adImages = [];
+        foreach ($images as $image) {
+            $adImages[] = ['source' => $image];
+        }
+
+        return $adImages;
     }
 }
