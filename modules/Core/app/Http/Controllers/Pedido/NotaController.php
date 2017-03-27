@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Mail;
 use NFePHP\Extras\Danfe;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
-use Skyhub\Http\Controllers\SkyhubController;
+use Core\Http\Controllers\Pedido\PedidoController;
 use Core\Models\Pedido\Nota;
 use Core\Models\Pedido\Nota\Devolucao;
 use Core\Http\Requests\Nota\DeleteRequest;
@@ -133,13 +133,13 @@ class NotaController extends Controller
     }
 
     /**
-     * Envia os dados de faturamento para a Skyhub
+     * Envia os dados de faturamento
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function faturar($pedido_id)
     {
-        return with(new SkyhubController())->orderInvoice($pedido_id);
+        return with(new PedidoController())->faturar($pedido_id);
     }
 }

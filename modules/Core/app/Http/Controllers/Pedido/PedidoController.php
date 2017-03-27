@@ -236,7 +236,7 @@ class PedidoController extends Controller
     }
 
     /**
-     * Envia informações de entrega e nota para o Magento / Skyhub
+     * Envia informações de entrega e nota
      *
      * @param  int $pedido_id
      * @return void

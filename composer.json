@@ -69,7 +69,6 @@
             "Marketing\\": "modules/Marketing/app",
             "Meta\\": "modules/Meta/app",
             "Rastreio\\": "modules/Rastreio/app",
-            "Skyhub\\": "modules/Skyhub/app",
             "Sugestao\\": "modules/Sugestao/app",
             "Allnation\\": "modules/Allnation/app",
             "Mercadolivre\\": "modules/Mercadolivre/app"
