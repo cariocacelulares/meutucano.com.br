@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Core\Models\Produto;
 use Core\Models\Pedido\PedidoProduto;
 use Core\Http\Controllers\Traits\RelatorioTrait;
+use Core\Transformers\Parsers\ProductParser;
 
 /**
  * Class ProdutoController
@@ -27,17 +28,18 @@ class ProdutoController extends Controller
         // Pega todos os parametros
         if (Input::get('params')) {
             $params = json_decode(Input::get('params'), true);
+            
             $this->relation = $params['relation'];
-            $this->fields = $params['fields'];
-            $this->filter = $params['filter'];
-            $this->group = $params['group'];
-            $this->order = $params['order'];
+            $this->fields   = $params['fields'];
+            $this->filter   = $params['filter'];
+            $this->group    = $params['group'];
+            $this->order    = $params['order'];
         } else {
             $this->relation = Input::get('relation');
-            $this->fields = Input::get('fields');
-            $this->filter = Input::get('filter');
-            $this->group = Input::get('group');
-            $this->order = Input::get('order');
+            $this->fields   = Input::get('fields');
+            $this->filter   = Input::get('filter');
+            $this->group    = Input::get('group');
+            $this->order    = Input::get('order');
         }
 
         // Relações - joins e with
@@ -125,7 +127,6 @@ class ProdutoController extends Controller
         $getFields = ['produtos.*'];
         if (isset($this->relation['pedido']) && $this->relation['pedido']) {
             $getFields[] = DB::raw('pedido_produtos.id AS \'pedido_produtos.id\'');
-            $getFields[] = DB::raw('pedido_produtos.quantidade AS \'pedido_produtos.quantidade\'');
             $getFields[] = DB::raw('pedido_produtos.valor AS \'pedido_produtos.valor\'');
 
             $getFields[] = DB::raw('pedidos.id AS \'pedidos.id\'');
@@ -155,21 +156,20 @@ class ProdutoController extends Controller
 
             // pra cada campo selecionado
             foreach ($this->fields as $field) {
-                if ($field['name'] == 'estado') {
-                    $field['name'] = 'estado_description';
-                }
-
                 // se o campo existir, adiciona
                 if (array_key_exists($field['name'], $produto)) {
                     if ($field['name'] == 'pedidos.created_at' && is_string($produto['pedidos.created_at']) && \DateTime::createFromFormat('Y-m-d H:i:s', $produto['pedidos.created_at']) !== false) {
                         $clearedOrder[$field['label']] = Carbon::createFromFormat('Y-m-d H:i:s', $produto['pedidos.created_at'])->format('d/m/Y H:i');
                     } elseif ($field['name'] == 'pedidos.estimated_delivery' && is_string($produto['pedidos.estimated_delivery']) && \DateTime::createFromFormat('Y-m-d', $produto['pedidos.estimated_delivery']) !== false) {
                         $clearedOrder[$field['label']] = Carbon::createFromFormat('Y-m-d', $produto['pedidos.estimated_delivery'])->format('d/m/Y');
+                    } elseif ($field['name'] == 'estado') {
+                        $clearedOrder[$field['label']] = ProductParser::getEstadoDescription($produto[$field['name']]);
                     } else {
                         $clearedOrder[$field['label']] = $produto[$field['name']];
                     }
                 }
             }
+
             $this->model[$key] = $clearedOrder;
         }
 
@@ -231,7 +231,8 @@ class ProdutoController extends Controller
     {
         try {
             $model = PedidoProduto
-                ::join('produtos', 'produtos.sku', '=', 'pedido_produtos.produto_sku')
+                ::selectRaw('produtos.sku, produtos.titulo, COUNT(pedido_produtos.produto_sku) as quantidade')
+                ->join('produtos', 'produtos.sku', '=', 'pedido_produtos.produto_sku')
                 ->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
                 ->groupBy('produto_sku')
                 ->orderBy(DB::raw('quantidade'), 'DESC');
@@ -254,15 +255,15 @@ class ProdutoController extends Controller
             }
 
             if (isset($filters['estado']) && $filters['estado']) {
-                $estado = $model->where('produtos.estado', '=', $filters['estado']);
+                $model = $model->where('produtos.estado', '=', $filters['estado']);
             }
 
             if (isset($filters['pedidos.marketplace']) && $filters['pedidos.marketplace']) {
-                $estado = $model->whereIn('pedidos.marketplace', $filters['pedidos.marketplace']);
+                $model = $model->whereIn('pedidos.marketplace', $filters['pedidos.marketplace']);
             }
 
             if (isset($filters['pedidos.status']) && $filters['pedidos.status']) {
-                $estado = $model->whereIn('pedidos.status', $filters['pedidos.status']);
+                $model = $model->whereIn('pedidos.status', $filters['pedidos.status']);
             }
 
             $model = $model->get(['produtos.sku', 'produtos.titulo', DB::raw('SUM(pedido_produtos.quantidade) as quantidade')]);

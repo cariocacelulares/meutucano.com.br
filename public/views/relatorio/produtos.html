@@ -19,35 +19,23 @@
     <fieldset class="form-group no-validate">
         <legend>Filtros</legend>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-5">
                 <label for="titulo">Título</label>
                 <input ng-model="RelatorioProdutos.params.filter.titulo.value" placeholder="Título do produto" id="titulo" />
             </div>
-            <div class="col-md-1">
+            <div class="col-md-2">
                 <label for="sku">SKU</label>
                 <input ng-model="RelatorioProdutos.params.filter.sku.value" placeholder="Código do produto" type="number" id="sku" />
-            </div>
-            <div class="col-md-2">
-                <label for="imei">IMEI</label>
-                <input ng-model="RelatorioProdutos.params.filter['pedido_produtos.imei'].value" placeholder="Serial do produto" type="number" id="imei" />
-            </div>
-            <div class="col-md-2">
-                <label for="estoque">Estoque</label>
-                <div class="between-group">
-                    <input class="big" ng-model="RelatorioProdutos.params.filter.estoque.value.from" placeholder="De" type="number" id="estoque" />
-                    <span>/</span>
-                    <input class="big" ng-model="RelatorioProdutos.params.filter.estoque.value.to" placeholder="Até" type="number" />
-                </div>
             </div>
             <div class="col-md-2">
                 <label for="estado">estado</label>
                 <select ng-model="RelatorioProdutos.params.filter.estado.value" id="estado">
                     <option value="">Todos</option>
                     <option value="0">Novo</option>
-                    <option value="1">Seminovo</option>
+                    <option value="1">Usado</option>
                 </select>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label for="created_at">Data de criação produto</label>
                 <div class="between-group">
                     <div class="date-picker">
@@ -95,7 +83,7 @@
             </div>
         </div>
         <div ng-if="RelatorioProdutos.params.relation.pedido" class="row">
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label for="total">Valor total do pedido</label>
                 <div class="between-group">
                     <input class="big" ng-model="RelatorioProdutos.params.filter['pedidos.total'].value.from" placeholder="De" type="number" id="total" />
@@ -139,15 +127,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-2">
-                <label for="quantidade">Quantidade do produto</label>
-                <div class="between-group">
-                    <input class="big" ng-model="RelatorioProdutos.params.filter['pedido_produtos.quantidade'].value.from" placeholder="De" type="number" id="quantidade" />
-                    <span>/</span>
-                    <input class="big" ng-model="RelatorioProdutos.params.filter['pedido_produtos.quantidade'].value.to" placeholder="Até" type="number" />
-                </div>
-            </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label for="valor">Valor do produto</label>
                 <div class="between-group">
                     <input class="big" ng-model="RelatorioProdutos.params.filter['pedido_produtos.valor'].value.from" placeholder="De" type="number" id="valor" />
@@ -179,7 +159,7 @@
                 <select ng-model="RelatorioProdutos.setOrder" ng-change="RelatorioProdutos.addOrder()">
                     <option value="">Selecione</option>
                     <optgroup label="Produto">
-                        <option ng-repeat="(key, field) in RelatorioProdutos.list.fields.produto" value="{{ key }}">{{ field }}</option>
+                        <option ng-if="key != 'estoque'" ng-repeat="(key, field) in RelatorioProdutos.list.fields.produto" value="{{ key }}">{{ field }}</option>
                     </optgroup>
                     <optgroup ng-if="RelatorioProdutos.params.relation.pedido"  label="Pedido">
                         <option ng-repeat="(key, field) in RelatorioProdutos.list.fields.pedido" value="{{ key }}">{{ field }}</option>

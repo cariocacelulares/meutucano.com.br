@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestResponseTrait;
 use Core\Models\Pedido;
 use Core\Http\Controllers\Traits\RelatorioTrait;
+use Core\Transformers\Parsers\OrderParser;
+use Core\Transformers\Parsers\ProductParser;
 
 /**
  * Class PedidoController
@@ -26,17 +28,18 @@ class PedidoController extends Controller
         // Pega todos os parametros
         if (Input::get('params')) {
             $params = json_decode(Input::get('params'), true);
+
             $this->relation = $params['relation'];
-            $this->fields = $params['fields'];
-            $this->filter = $params['filter'];
-            $this->group = $params['group'];
-            $this->order = $params['order'];
+            $this->fields   = $params['fields'];
+            $this->filter   = $params['filter'];
+            $this->group    = $params['group'];
+            $this->order    = $params['order'];
         } else {
             $this->relation = Input::get('relation');
-            $this->fields = Input::get('fields');
-            $this->filter = Input::get('filter');
-            $this->group = Input::get('group');
-            $this->order = Input::get('order');
+            $this->fields   = Input::get('fields');
+            $this->filter   = Input::get('filter');
+            $this->group    = Input::get('group');
+            $this->order    = Input::get('order');
         }
 
         // Relações - joins e with
@@ -127,7 +130,7 @@ class PedidoController extends Controller
                 $groupOrder = DB::raw('MONTH(pedidos.created_at)');
             } elseif ($this->group == 'produtos.estado') {
                 $groupOrder = $this->group;
-                $this->group = 'produtos.estado_description';
+                $this->group = 'produtos.estado';
             } else {
                 $groupOrder = $this->group;
             }
@@ -171,21 +174,21 @@ class PedidoController extends Controller
 
             // pra cada campo selecionado
             foreach ($this->fields as $field) {
-                if ($field['name'] == 'status') {
-                    $field['name'] = 'status_description';
-                } elseif ($field['name'] == 'marketplace') {
-                    $field['name'] = 'marketplace_readable';
-                } elseif ($field['name'] == 'pagamento_metodo') {
-                    $field['name'] = 'pagamento_metodo_readable';
-                } elseif ($field['name'] == 'frete_metodo') {
-                    $field['name'] = 'frete_metodo_readable';
-                } elseif ($field['name'] == 'produtos.estado') {
-                    $field['name'] = 'produtos.estado_description';
-                }
-
                 // se o campo existir, adiciona
                 if (array_key_exists($field['name'], $pedido)) {
-                    $clearedOrder[$field['label']] = $pedido[$field['name']];
+                    if ($field['name'] == 'status') {
+                        $clearedOrder[$field['label']] = OrderParser::getStatusDescription($pedido[$field['name']]);
+                    } elseif ($field['name'] == 'marketplace') {
+                        $clearedOrder[$field['label']] = OrderParser::getMarketplaceReadable($pedido[$field['name']]);
+                    } elseif ($field['name'] == 'pagamento_metodo') {
+                        $clearedOrder[$field['label']] = OrderParser::getPagamentoMetodoReadable($pedido[$field['name']]);
+                    } elseif ($field['name'] == 'frete_metodo') {
+                        $clearedOrder[$field['label']] = OrderParser::getFreteMetodoReadable($pedido[$field['name']]);
+                    } elseif ($field['name'] == 'estimated_delivery') {
+                        $clearedOrder[$field['label']] = dateConvert($pedido[$field['name']], 'Y-m-d', 'd/m/Y');
+                    } else {
+                        $clearedOrder[$field['label']] = $pedido[$field['name']];
+                    }
                 } elseif (strstr($field['name'], '.')) {
                     $pieces = explode('.', $field['name']);
 
@@ -201,8 +204,8 @@ class PedidoController extends Controller
                             // se for titulo ou estado, pega do produto e nao do pedido produto
                             if ($pieces[1] == 'titulo') {
                                 $clearedOrder['produtos'][$pedidoProduto['id']][$field['label']] = $pedidoProduto['produto'][$pieces[1]];
-                            } elseif ($pieces[1] == 'estado_description') {
-                                $clearedOrder['produtos'][$pedidoProduto['id']][$field['label']] = $pedidoProduto['produto'][$pieces[1]];
+                            } elseif ($pieces[1] == 'estado') {
+                                $clearedOrder['produtos'][$pedidoProduto['id']][$field['label']] = ProductParser::getEstadoDescription($pedidoProduto['produto'][$pieces[1]]);
                             } else {
                                 $clearedOrder['produtos'][$pedidoProduto['id']][$field['label']] = $pedidoProduto[$pieces[1]];
                             }
@@ -212,6 +215,7 @@ class PedidoController extends Controller
                     }
                 }
             }
+
             $this->model[$key] = $clearedOrder;
         }
 

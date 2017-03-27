@@ -18,7 +18,7 @@ class ProductParser
            case '0':
                return 'Novo';
            case '1':
-               return 'Seminovo';
+               return 'Usado';
            default:
                return 'Novo';
        }
