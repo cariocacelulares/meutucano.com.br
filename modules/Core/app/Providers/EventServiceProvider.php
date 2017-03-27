@@ -8,6 +8,7 @@ use Core\Events\Handlers\DeleteProductImei;
 use Core\Events\Handlers\RestoreProductImei;
 use Core\Events\Handlers\ConvertEntryImeis;
 use Core\Events\Handlers\SetProductCost;
+use Core\Events\Handlers\SetProductImeiCost;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -27,6 +28,7 @@ class EventServiceProvider extends ServiceProvider
         RestoreProductImei::class,
         ConvertEntryImeis::class,
         SetProductCost::class,
+        SetProductImeiCost::class,
     ];
 
     /**

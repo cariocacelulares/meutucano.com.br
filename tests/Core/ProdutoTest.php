@@ -106,7 +106,6 @@ class ProdutoTest extends TestCase
         $order = $order->fresh();
         $order->status = 3;
         $order->save();
-        
         /* fim entry 1 */
 
         /* entry 2 */

@@ -29,6 +29,7 @@ class ProductImei extends Model
     protected $fillable = [
         'product_stock_id',
         'imei',
+        'cost',
     ];
 
     /**
