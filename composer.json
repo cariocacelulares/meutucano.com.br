@@ -70,7 +70,6 @@
             "Meta\\": "modules/Meta/app",
             "Rastreio\\": "modules/Rastreio/app",
             "Sugestao\\": "modules/Sugestao/app",
-            "Allnation\\": "modules/Allnation/app",
             "Mercadolivre\\": "modules/Mercadolivre/app"
         },
         "files": [

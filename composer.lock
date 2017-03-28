@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6c072a5b53e6045adf50927239623f0b",
+    "hash": "2303a6ed1d91fcda85ef6f5c83136779",
     "content-hash": "4a2560d9222322dccaadda3ef969ca2b",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.24.7",
+            "version": "3.24.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "f062d7ea2123fe2aefef91da855c10ef8ff3af1c"
+                "reference": "a7ce54bffdb1a759fb2f6f6e4bf2927148583c80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/f062d7ea2123fe2aefef91da855c10ef8ff3af1c",
-                "reference": "f062d7ea2123fe2aefef91da855c10ef8ff3af1c",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a7ce54bffdb1a759fb2f6f6e4bf2927148583c80",
+                "reference": "a7ce54bffdb1a759fb2f6f6e4bf2927148583c80",
                 "shasum": ""
             },
             "require": {
@@ -85,7 +85,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2017-03-23 22:17:20"
+            "time": "2017-03-27 22:54:11"
         },
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -1689,16 +1689,16 @@
         },
         {
             "name": "maatwebsite/excel",
-            "version": "2.1.12",
+            "version": "2.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Maatwebsite/Laravel-Excel.git",
-                "reference": "46f1f9168202877d2d9c570042af315567b268c0"
+                "reference": "655def96b5e98d1fe0974d9c4e2ec5f2b591a322"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/46f1f9168202877d2d9c570042af315567b268c0",
-                "reference": "46f1f9168202877d2d9c570042af315567b268c0",
+                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/655def96b5e98d1fe0974d9c4e2ec5f2b591a322",
+                "reference": "655def96b5e98d1fe0974d9c4e2ec5f2b591a322",
                 "shasum": ""
             },
             "require": {
@@ -1753,7 +1753,7 @@
                 "import",
                 "laravel"
             ],
-            "time": "2017-03-24 12:44:02"
+            "time": "2017-03-28 10:47:04"
         },
         {
             "name": "milon/barcode",

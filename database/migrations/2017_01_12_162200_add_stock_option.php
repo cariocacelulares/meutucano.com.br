@@ -21,13 +21,6 @@ class AddStockOption extends Migration
             ->max('priority');
 
         DB::table('stocks')->insert([
-            'slug'     => 'allnation',
-            'title'    => 'CD Allnation',
-            'priority' => ((int) $priority + 1),
-            'include'  => 1,
-        ]);
-
-        DB::table('stocks')->insert([
             'slug'     => 'claro-rio-do-sul',
             'title'    => 'Claro Rio do Sul',
             'priority' => ((int) $priority + 2),
@@ -43,8 +36,7 @@ class AddStockOption extends Migration
     public function down()
     {
         DB::table('stocks')
-            ->where('slug', '=', 'allnation')
-            ->orWhere('slug', '=', 'claro-rio-do-sul')
+            ->where('slug', '=', 'claro-rio-do-sul')
             ->delete();
     }
 }
