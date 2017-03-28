@@ -247,10 +247,7 @@ class PedidoController extends Controller
 
         if ($pedido = Pedido::find($pedido_id)) {
             $pedido->status = 2;
-
-            if ($pedido->save()) {
-                \Event::fire(new \Gamification\Events\TarefaRealizada('fature-um-pedido'));
-            }
+            $pedido->save();
         }
     }
 
