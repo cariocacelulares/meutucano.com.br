@@ -338,4 +338,30 @@ class Api
             return false;
         }
     }
+
+    /**
+     * Get item details from Mercado Livre
+     *
+     * @param  int $itemId
+     * @return array/boolean
+     */
+    public function getItem($itemId)
+    {
+        if (!$this->checkApi()) return null;
+
+        try {
+            $response = $this->api->get("/items/{$itemId}", [
+                'access_token' => t('mercadolivre.access_token')
+            ]);
+
+            if ($response['httpCode'] !== 200) {
+                throw new \Exception((is_object($response['body'])) ? $response['body']->message : 'Erro desconhecido');
+            }
+
+            return $response['body'];
+        } catch (\Exception $e) {
+            Log::error('Não foi possível buscar o item no Mercado Livre: ' . $e->getMessage() . $e->getLine());
+            return false;
+        }
+    }
 }

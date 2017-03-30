@@ -63,5 +63,12 @@
                 vm.load();
             });
         }
+
+        vm.manualSync = function(sku, code) {
+            Ad.manualSync(sku, code).then(function(response) {
+                toaster.pop('success', 'Sucesso!', 'Anúncio sincronizado com sucesso!');
+                vm.load();
+            });
+        }
     }
 })();

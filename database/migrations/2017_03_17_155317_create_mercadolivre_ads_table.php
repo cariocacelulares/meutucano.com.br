@@ -17,7 +17,7 @@ class CreateMercadolivreAdsTable extends Migration
             $table->increments('id');
             $table->integer('product_sku')->unsigned()->index();
             $table->integer('template_id')->unsigned()->index()->nullable();
-            $table->string('code', 20)->nullable();
+            $table->string('code', 20)->nullable()->unique();
             $table->string('permalink', 255)->nullable();
             $table->string('title')->nullable();
             $table->string('video', 30)->nullable();

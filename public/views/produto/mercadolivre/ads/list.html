@@ -10,6 +10,7 @@
             <th width="150" class="text-center">SKU</th>
             <th>Título</th>
             <th width="160" class="text-center">Estado</th>
+            <th width="250"></th>
             <th width="150"></th>
         </tr>
         <tr class="table-filter" static-include="views/produto/mercadolivre/ads/list_filter.html"></tr>
@@ -23,12 +24,20 @@
             <td class="text-center">
                 {{ produto.estado_description }}
             </td>
+            <td>
+                <div class="input-group">
+                    <input class="form-control" ng-model="AdList.manualSyncCode">
+                    <span class="input-group-btn">
+                        <a class="btn btn-primary" ng-click="AdList.manualSync(produto.sku, AdList.manualSyncCode)"><i class="fa-plug"></i></a>
+                    </span>
+                </div>
+            </td>
             <td class="text-center">
                 <a class="btn btn-success" ui-sref="app.produtos.mercadolivre.ads.form({sku: produto.sku})"><i class="fa-plus"></i>&nbsp; Novo</a>
             </td>
         </tr>
         <tr class="sub-table" ng-repeat-end>
-            <td ng-if="produto.ads.length" colspan="4">
+            <td ng-if="produto.ads.length" colspan="5">
                 <table width="100%">
                     <tbody>
                         <tr ng-repeat="ad in produto.ads">
@@ -58,7 +67,7 @@
                     </tbody>
                 </table>
             </td>
-            <td ng-if="!produto.ads.length" class="text-center empty" colspan="4">
+            <td ng-if="!produto.ads.length" class="text-center empty" colspan="5">
                 Nenhum anúncio no Mercado Livre criado
             </td>
         </tr>

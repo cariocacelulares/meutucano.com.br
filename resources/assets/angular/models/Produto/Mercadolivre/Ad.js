@@ -46,6 +46,15 @@
                  */
                 activate: function(id) {
                     return Restangular.one(this.baseUrl, id).one('activate').customPUT();
+                },
+
+                /**
+                 * Synchronize ad by its code
+                 *
+                 * @return {Object}
+                 */
+                manualSync: function(sku, code) {
+                    return Restangular.one(this.baseUrl, sku).one('sync', code).customPOST();
                 }
             });
 

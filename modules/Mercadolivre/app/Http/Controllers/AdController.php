@@ -365,6 +365,51 @@ class AdController extends Controller
     }
 
     /**
+     * Synchronize ad by its code
+     *
+     * @param  Api    $api
+     * @param  int    $sku
+     * @param  string $code
+     * @return Response
+     */
+    public function manualSync(Api $api, $sku, $code)
+    {
+        try {
+            $code = (substr($code, 0, 3) == 'MLB') ? $code : ('MLB' . $code);
+
+            $item = $api->getItem($code);
+
+            $ad = Ad::firstOrNew(['code' => $code]);
+            $ad->product_sku = $sku;
+            $ad->permalink   = $item->permalink;
+            $ad->title       = $item->title;
+            $ad->price       = $item->price;
+            $ad->video       = $item->video_id;
+            $ad->category_id = $item->category_id;
+            $ad->type        = ($item->listing_type_id == 'gold_special') ? 0 : 1;
+            $ad->shipping    = ($item->shipping->free_shipping) ? 1 : 0;
+            $ad->status      = ($item->status == 'active') ? 1 : 2;
+
+            if ($ad->save()) {
+                \Log::info("ML: Item {$item->id} sincronizado manualmente para o anúncio {$ad->id}");
+            } else {
+                \Log::warning("ML: Não foi possivel sincronizar o item {$item->id} para o anúncio {$ad->id}");
+                throw new \Exception("Não foi possivel sincronizar o item");
+            }
+
+            return $this->showResponse($ad);
+        } catch (\Exception $e) {
+            \Log::error(logMessage($e, 'Erro ao sincronizar anúncio manualmente'));
+
+            return $this->clientErrorResponse([
+                'error' => true,
+                'message' => 'Erro ao atualizar status do anúncio',
+                'exception' => $e->getMessage() . ' ' . $e->getLine()
+            ]);
+        }
+    }
+
+    /**
      * Return ideal description from ad
      *
      * @param  Ad     $ad
