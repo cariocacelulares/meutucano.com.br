@@ -1,12 +1,14 @@
 <?php
 
-Route::get('api/produto/{sku}', 'Magento\Http\Controllers\MagentoController@getProductImages');
 Route::get('mercadolivre/auth/callback', 'Mercadolivre\Http\Controllers\AuthController@callback');
+Route::post('mercadolivre/notification', 'Mercadolivre\Http\Controllers\NotificationController@notification');
+Route::get('mercadolivre/notification', 'Mercadolivre\Http\Controllers\NotificationController@notification');
+Route::get('mercadolivre/shipment', 'Mercadolivre\Http\Controllers\NotificationController@testShipment');
 
 Route::group([
     'middleware' => ['jwt.auth'],
-    'prefix' => 'api/mercadolivre',
-    'namespace' => 'Mercadolivre\Http\Controllers'
+    'prefix'     => 'api/mercadolivre',
+    'namespace'  => 'Mercadolivre\Http\Controllers'
 ], function () {
     Route::get('auth/url', 'AuthController@authUrl');
 

@@ -190,6 +190,8 @@ class Api
                 'access_token' => t('mercadolivre.access_token')
             ]);
 
+            if ($stock < 1) $this->syncStatus($code, 'paused');
+
             if ($response['httpCode'] !== 200) {
                 throw new \Exception((is_object($response['body'])) ? $response['body']->message : 'Erro desconhecido');
             }
@@ -255,6 +257,84 @@ class Api
             return $response;
         } catch (\Exception $e) {
             Log::error('Não foi possível atualizar o tipo do anúncio no Mercado Livre: ' . $e->getMessage() . $e->getLine());
+            return false;
+        }
+    }
+
+    /**
+     * Get order details from Mercado Livre
+     *
+     * @param  int $orderId
+     * @return array/boolean
+     */
+    public function getOrder($orderId)
+    {
+        if (!$this->checkApi()) return null;
+
+        try {
+            $response = $this->api->get("/orders/{$orderId}", [
+                'access_token' => t('mercadolivre.access_token')
+            ]);
+
+            if ($response['httpCode'] !== 200) {
+                throw new \Exception((is_object($response['body'])) ? $response['body']->message : 'Erro desconhecido');
+            }
+
+            return $response['body'];
+        } catch (\Exception $e) {
+            Log::error('Não foi possível buscar o pedido no Mercado Livre: ' . $e->getMessage() . $e->getLine());
+            return false;
+        }
+    }
+
+    /**
+     * Get shipment details from Mercado Livre
+     *
+     * @param  int $shipmentId
+     * @return array/boolean
+     */
+    public function getShipment($shipmentId)
+    {
+        if (!$this->checkApi()) return null;
+
+        try {
+            $response = $this->api->get("/shipments/{$shipmentId}", [
+                'access_token' => t('mercadolivre.access_token')
+            ]);
+
+            if ($response['httpCode'] !== 200) {
+                throw new \Exception((is_object($response['body'])) ? $response['body']->message : 'Erro desconhecido');
+            }
+
+            return $response['body'];
+        } catch (\Exception $e) {
+            Log::error('Não foi possível buscar o envio no Mercado Livre: ' . $e->getMessage() . $e->getLine());
+            return false;
+        }
+    }
+
+    /**
+     * Get user details from Mercado Livre
+     *
+     * @param  int $userId
+     * @return array/boolean
+     */
+    public function getUser($userId)
+    {
+        if (!$this->checkApi()) return null;
+
+        try {
+            $response = $this->api->get("/users/{$userId}", [
+                'access_token' => t('mercadolivre.access_token')
+            ]);
+
+            if ($response['httpCode'] !== 200) {
+                throw new \Exception((is_object($response['body'])) ? $response['body']->message : 'Erro desconhecido');
+            }
+
+            return $response['body'];
+        } catch (\Exception $e) {
+            Log::error('Não foi possível buscar o usuário no Mercado Livre: ' . $e->getMessage() . $e->getLine());
             return false;
         }
     }

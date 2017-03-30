@@ -276,17 +276,20 @@ class AdController extends Controller
     /**
      * Update stock based on product SKU
      *
-     * @param  Api    $api
-     * @param  int $sku
+     * @param  Api     $api
+     * @param  Produto $product
      * @return boolean
      */
-    public function updateStockByProduct($product)
+    public function updateStockByProduct(Produto $product)
     {
-        // dd($product);
         try {
-            $product = Produto::findOrFail($sku);
+            $api = new Api();
 
+            foreach ($product->mercadolivreAds as $ad) {
+                $api->syncStock($ad->code, $product->estoque);
+            }
 
+            return true;
         } catch (\Exception $e) {
             \Log::error(logMessage($e, 'Erro ao atualizar estoque do anúncio'));
             return false;

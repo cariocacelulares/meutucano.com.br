@@ -9,8 +9,10 @@ trait CheckExpiredToken {
      *
      * @param Api $api
      */
-    public function __construct(Api $api)
+    public function __construct()
     {
+        $api = new Api();
+
         $expireTime = t('mercadolivre.expires');
         if ($expireTime && $expireTime < time()) {
             $this->refresh($api);

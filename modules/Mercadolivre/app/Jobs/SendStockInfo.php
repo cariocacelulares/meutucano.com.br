@@ -2,6 +2,7 @@
 
 use Core\Models\Produto;
 use Illuminate\Bus\Queueable;
+use Core\Models\Produto\ProductStock;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -14,18 +15,25 @@ class SendStockInfo implements ShouldQueue
         InteractsWithQueue;
 
     /**
-     * @var Produto
+     * @var Stock
      */
-    protected $product;
+     protected $productStock;
+
+     /**
+      * @var Product
+      */
+     protected $product;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Produto $product)
+    public function __construct(ProductStock $productStock)
     {
-        $this->product = $product;
+        \Log::debug('Job SendStockInfo criado', [$productStock]);
+        $this->productStock = $productStock;
+        $this->product = Produto::find($productStock->product_sku);
     }
 
     /**
@@ -45,7 +53,7 @@ class SendStockInfo implements ShouldQueue
      * @param  Exception  $exception
      * @return void
      */
-    public function failed(Exception $exception)
+    public function failed(\Exception $exception)
     {
         \Log::critical(logMessage($exception, 'Erro ao executar Job Mercadolivre:SendStockInfo'), [$this->product]);
     }
