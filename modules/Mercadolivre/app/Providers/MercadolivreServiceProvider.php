@@ -32,7 +32,7 @@ class MercadolivreServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        \App::register(EventServiceProvider::class);
     }
 
     /**

@@ -21,6 +21,10 @@ class AuthController extends Controller
      */
     public function authUrl(Api $api)
     {
+        if (t('mercadolivre.access_token')) {
+            return $this->showResponse(['url' => false]);
+        }
+
         return $this->showResponse(['url' => $api->getAuthUrl()]);
     }
 
@@ -38,6 +42,6 @@ class AuthController extends Controller
         t('mercadolivre.refresh_token', $token['body']->refresh_token);
         t('mercadolivre.expires',       time() + $token['body']->expires_in);
 
-        //TODO: Redirect back to tucano front
+        return redirect()->to(config('mercadolivre.api.redirect_url'));
     }
 }

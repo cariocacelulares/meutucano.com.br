@@ -32,6 +32,7 @@ class Ad extends Model
         'permalink',
         'title',
         'price',
+        'video',
         'type',
         'category_id',
         'shipping',
@@ -52,7 +53,7 @@ class Ad extends Model
      */
     public function template()
     {
-        return $this->hasOne(Template::class);
+        return $this->belongsTo(Template::class);
     }
 
     /**

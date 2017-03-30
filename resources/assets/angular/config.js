@@ -7,9 +7,9 @@
         .config(function(envServiceProvider) {
             envServiceProvider.config({
                 domains: {
-                    development: ['tucano.app'],
-                    production : ['192.168.2.170'],
-                    aws        : ['www.meutucano.com.br', 'meutucano.com.br']
+                    development:    ['tucano.app'],
+                    production :    ['192.168.2.170'],
+                    aws        :    ['www.meutucano.com.br', 'meutucano.com.br']
                 },
                 vars: {
                     development: {

@@ -1,5 +1,8 @@
 <div id="page-header" class="row">
     <page-title icon="fa-mobile" title="Mercado Livre" description="Todos os anúncios no Mercado Livre"></page-title>
+    <div class="col-md-6 button-bar">
+        <a ng-if="AdList.authUrl" ng-href="{{ AdList.authUrl }}" class="btn-primary"><i class="fa-sign-in"></i>&nbsp; Autenticar</a>
+    </div>
 </div>
 <table table-list="AdList">
     <thead>
@@ -7,6 +10,7 @@
             <th width="150" class="text-center">SKU</th>
             <th>Título</th>
             <th width="160" class="text-center">Estado</th>
+            <th width="250"></th>
             <th width="150"></th>
         </tr>
         <tr class="table-filter" static-include="views/produto/mercadolivre/ads/list_filter.html"></tr>
@@ -20,21 +24,36 @@
             <td class="text-center">
                 {{ produto.estado_description }}
             </td>
+            <td>
+                <div class="input-group">
+                    <input class="form-control" ng-model="AdList.manualSyncCode">
+                    <span class="input-group-btn">
+                        <a class="btn btn-primary" ng-click="AdList.manualSync(produto.sku, AdList.manualSyncCode)"><i class="fa-plug"></i></a>
+                    </span>
+                </div>
+            </td>
             <td class="text-center">
                 <a class="btn btn-success" ui-sref="app.produtos.mercadolivre.ads.form({sku: produto.sku})"><i class="fa-plus"></i>&nbsp; Novo</a>
             </td>
         </tr>
         <tr class="sub-table" ng-repeat-end>
-            <td ng-if="produto.ads.length" colspan="4">
+            <td ng-if="produto.ads.length" colspan="5">
                 <table width="100%">
                     <tbody>
                         <tr ng-repeat="ad in produto.ads">
-                            <td width="150" class="text-center"><a target="_blank" ng-href="{{ ad.permalink }}">{{ ad.code }}</a></td>
-                            <td class="text-left">
-                                {{ ad.title || produto.titulo }} <br>
-                                <small>Anúncio: {{ ad.type }}</small>
+                            <td width="150" class="text-center">
+                                <a ng-if="ad.status == 1" ng-click="AdList.pause(ad.id)" class="btn btn-danger btn-xs"><i class="fa fa-pause"></i>&nbsp; Pausar</a>
+                                <a ng-if="ad.status == 2" ng-click="AdList.activate(ad.id)" class="btn btn-success btn-xs"><i class="fa fa-play"></i>&nbsp; Ativar</a>
+                                <a ng-if="ad.status == 0" ng-click="AdList.publish(ad.id)" class="btn btn-success btn-xs"><i class="fa fa-upload"></i>&nbsp; Publicar</a>
                             </td>
-                            <td width="160" class="text-center">Frete grátis:<br>{{ ad.shipping }}</td>
+                            <td class="text-left">
+                                {{ ad.title || produto.titulo }}<br>
+                                <small>
+                                    <a target="_blank" ng-href="{{ ad.permalink }}">{{ ad.code }}</a> /
+                                    Anúncio: {{ ad.type }} /
+                                    Frete grátis: {{ ad.shipping }}
+                                </small>
+                            </td>
                             <td width="160" class="text-center"><strong>{{ ad.price | currency }}</strong></td>
                             <td width="160" class="text-center">
                                 <span class="label {{ ad.status == 1 ? 'label-success' : '' }} m-b-0">
@@ -48,7 +67,7 @@
                     </tbody>
                 </table>
             </td>
-            <td ng-if="!produto.ads.length" class="text-center empty" colspan="4">
+            <td ng-if="!produto.ads.length" class="text-center empty" colspan="5">
                 Nenhum anúncio no Mercado Livre criado
             </td>
         </tr>
