@@ -5,7 +5,7 @@
         .module('MeuTucano')
         .controller('PedidoDetalheController', PedidoDetalheController);
 
-    function PedidoDetalheController($rootScope, $state, $stateParams, ngDialog, SweetAlert, toaster, Pedido, RastreioHelper, NotaHelper, ClienteEnderecoHelper, PedidoHelper, ClienteHelper, InspecaoTecnicaHelper, PedidoProduto) {
+    function PedidoDetalheController($rootScope, $state, $stateParams, ngDialog, SweetAlert, toaster, Pedido, RastreioHelper, NotaHelper, ClienteEnderecoHelper, PedidoHelper, ClienteHelper, PedidoProduto) {
         var vm = this;
 
         vm.pedido_id   = $stateParams.id;
@@ -38,11 +38,6 @@
          */
         vm.clienteHelper = ClienteHelper.init(vm);
 
-        /**
-         * @type {Object}
-         */
-        vm.inspecaoTecnicaHelper = InspecaoTecnicaHelper.init(vm);
-
         vm.load = function() {
             vm.loading = true;
 
@@ -57,9 +52,16 @@
                     }
                 }
             });
-        };
+        }();
 
-        vm.load();
+        /**
+         * Set order as invoiced
+         */
+        vm.invoice = function() {
+            Pedido.status(vm.pedido_id, {status: 2}).then(function (response) {
+                vm.load();
+            });
+        }
 
         /**
          * Abre formulario para atualizar ou inserir produtos no pedido

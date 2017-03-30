@@ -3,10 +3,9 @@
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestResponseTrait;
 use App\Http\Controllers\Controller;
-use Core\Models\Pedido\Pedido;
-use Core\Models\Produto\Produto;
-use Core\Models\Cliente\Cliente;
-use Rastreio\Models;
+use Core\Models\Pedido;
+use Core\Models\Produto;
+use Core\Models\Cliente;
 use Core\Transformers\ClientTransformer;
 use Core\Transformers\OrderTransformer;
 use Core\Transformers\ProductTransformer;
@@ -99,11 +98,14 @@ class SearchController extends Controller
     private function products($term)
     {
         return Produto
-            ::where('sku',          'LIKE', "%{$term}%")
-            ->orWhere('titulo',     'LIKE', "%{$term}%")
-            ->orWhere('ncm',        'LIKE', "%{$term}%")
-            ->orWhere('ean',        'LIKE', "%{$term}%")
-            ->orWhere('referencia', 'LIKE', "%{$term}%")
+            ::join('product_stocks', 'product_stocks.product_sku', 'sku')
+            ->join('product_imeis', 'product_imeis.product_stock_id', 'product_stocks.id')
+            ->where('product_imeis.imei', 'LIKE', "%{$term}%")
+            ->orWhere('sku',              'LIKE', "%{$term}%")
+            ->orWhere('titulo',           'LIKE', "%{$term}%")
+            ->orWhere('ncm',              'LIKE', "%{$term}%")
+            ->orWhere('ean',              'LIKE', "%{$term}%")
+            ->orWhere('referencia',       'LIKE', "%{$term}%")
             ->groupBy('sku')
             ->orderBy('titulo', 'ASC');
     }

@@ -1,12 +1,22 @@
 <?php namespace Core\Providers;
 
-use Core\Models\Pedido\Pedido;
+use Illuminate\Support\ServiceProvider;
+use Core\Models\Pedido;
 use Core\Models\Pedido\PedidoProduto;
-use Core\Models\Produto\Produto;
+use Core\Models\Produto;
+use Core\Models\Produto\ProductStock;
+use Core\Models\Produto\ProductImei;
+use Core\Models\Produto\Defect;
+use Core\Models\Stock\Issue;
+use Core\Models\Stock\Entry;
 use Core\Observers\PedidoObserver;
 use Core\Observers\PedidoProdutoObserver;
 use Core\Observers\ProdutoObserver;
-use Illuminate\Support\ServiceProvider;
+use Core\Observers\ProductStockObserver;
+use Core\Observers\ProductImeiObserver;
+use Core\Observers\DefectObserver;
+use Core\Observers\EntryObserver;
+use Core\Observers\StockIssueObserver;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -31,6 +41,11 @@ class CoreServiceProvider extends ServiceProvider
         Produto::observe(ProdutoObserver::class);
         Pedido::observe(PedidoObserver::class);
         PedidoProduto::observe(PedidoProdutoObserver::class);
+        ProductStock::observe(ProductStockObserver::class);
+        ProductImei::observe(ProductImeiObserver::class);
+        Defect::observe(DefectObserver::class);
+        Entry::observe(EntryObserver::class);
+        Issue::observe(StockIssueObserver::class);
     }
 
     /**
@@ -43,6 +58,9 @@ class CoreServiceProvider extends ServiceProvider
         \App::register(EventServiceProvider::class);
         \App::register(ScheduleServiceProvider::class);
         \App::register(ConfigServiceProvider::class);
+        \App::register(StockServiceProvider::class);
+        \App::register(TitleVariationServiceProvider::class);
+        \App::register(InvoiceServiceProvider::class);
     }
 
     /**

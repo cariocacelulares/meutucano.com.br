@@ -1,7 +1,7 @@
 <div id="page-header" class="row">
     <page-title icon="fa-first-order" title="Pedido {{ PedidoDetalhe.pedido.codigo_marketplace }}" description="Pedido realizado em {{ PedidoDetalhe.pedido.marketplace_readable || 'Site' }}"></page-title>
     <div roles="admin|gestor|atendimento" class="col-md-6 button-bar">
-        <button class="btn-complete" ng-click="PedidoDetalhe.inspecaoTecnicaHelper.requestInspection(PedidoDetalhe.pedido.id)" ng-if="PedidoDetalhe.hasSeminovo"><i class="fa-bug"></i>&nbsp; Solicitar inspeção</button>
+        <button roles="admin|gestor|faturamento" ng-if="PedidoDetalhe.pedido.status == 1 && PedidoDetalhe.pedido.notas.length" class="btn-success" ng-click="PedidoDetalhe.pedidoHelper.faturar(PedidoDetalhe.pedido.id, true)"><i class="fa-check"></i>&nbsp; Faturar</button>
         <button class="btn-primary" ng-click="PedidoDetalhe.togglePriority()" ng-if="PedidoDetalhe.pedido.can_prioritize"><i class="fa-arrow-{{ PedidoDetalhe.pedido.priorizado ? 'down' : 'up' }}"></i>&nbsp; {{ PedidoDetalhe.pedido.priorizado ? 'Remover prioridade' : 'Priorizar' }}</button>
         <button class="btn-info" ng-click="PedidoDetalhe.toggleHold()" ng-if="PedidoDetalhe.pedido.can_hold || PedidoDetalhe.pedido.segurado"><i class="fa-{{ PedidoDetalhe.pedido.segurado ? 'unlock' : 'lock' }}"></i>&nbsp; {{ PedidoDetalhe.pedido.segurado ? 'Liberar' : 'Segurar' }}</button>
         <button class="btn-danger" ng-click="PedidoDetalhe.pedidoHelper.cancel(PedidoDetalhe.pedido, 'app.pedidos.index')" ng-if="PedidoDetalhe.pedido.can_cancel"><i class="fa-close"></i>&nbsp; Cancelar</button>
@@ -76,6 +76,7 @@
                         <i ng-if="PedidoDetalhe.pedido.pagamento_metodo_readable" class="fa-money"></i>&nbsp;
                         {{ PedidoDetalhe.pedido.pagamento_metodo_readable }}
                         <small ng-if="!PedidoDetalhe.pedido.pagamento_metodo_readable" class="hint-text">Nenhum método de pagamento</small>
+                        <span ng-if="PedidoDetalhe.pedido.parcelas">({{ PedidoDetalhe.pedido.parcelas }}x)</span>
                     </div>
                 </div>
             </div>
@@ -126,6 +127,11 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="panel-title"><i class="fa-barcode"></i>&nbsp; Nota fiscal</div>
+                        <div class="panel-controls">
+                            <button ngf-select ngf-change="PedidoDetalhe.notaHelper.uploadDevolucao($files)" ngf-multiple="false" class="btn-default" type="button">
+                                <i class="fa-upload">&nbsp;</i> Devolução
+                            </button>
+                        </div>
                     </div>
                     <div class="panel-body">
                         <div class="col-md-12 no-results" ng-if="!PedidoDetalhe.pedido.notas.length">
@@ -137,7 +143,7 @@
                                 <p class="pull-left bold" ng-class="{ deleted: nota.deleted_at }">{{ nota.data }}</p>
                                 <button ng-if="nota.deleted_at" ng-click="PedidoDetalhe.notaHelper.showNote(nota.delete_note)"
                                     class="btn-default btn-xs pull-right">
-                                    Motivo 
+                                    Motivo
                                 </button>
                                 <div class="pull-right" ng-if="!nota.deleted_at">
                                     <dropdown size="xs">
@@ -157,7 +163,7 @@
                                             </a>
                                         </li>
                                         <li ng-if="nota.devolucao">
-                                            <a ng-click="PedidoDetalhe.notaHelper.printDanfe(nota.devolucao.id)">
+                                            <a ng-click="PedidoDetalhe.notaHelper.printDanfe(nota.devolucao.id, true)">
                                                 <i class="fa-print"></i>&nbsp; DANFE Devolução
                                             </a>
                                         </li>
@@ -299,7 +305,6 @@
             <thead>
                 <th width="100">SKU</th>
                 <th class="text-left">Nome</th>
-                <th width="60">Qtd</th>
                 <th width="160">Valor</th>
             </thead>
             <tbody ng-if="!PedidoDetalhe.pedido.produtos">
@@ -311,38 +316,29 @@
                 <tr ng-if="PedidoDetalhe.pedido.produtos" ng-repeat="produto in PedidoDetalhe.pedido.produtos">
                     <td class="text-center">
                         <i class="fa-refresh m-r-10" roles="admin|atendimento|faturamento|gestor" tooltips tooltip-template="Atualizar informações" ng-click="PedidoDetalhe.openOrderProductForm(produto)"></i>
-                        <a ui-sref="app.produtos.form({sku: produto.produto_sku})" title="Visualizar produto {{ produto.produto.titulo }}">
+                        <a ui-sref="app.produtos.detalhe({sku: produto.produto_sku})" title="Visualizar produto {{ produto.produto.titulo }}">
                             {{ produto.produto_sku }}
                         </a>
                     </td>
                     <td class="text-left">
                         <b>{{ produto.produto.titulo }}</b><br>
-                        <span ng-repeat="inspecao in produto.inspecoes" ng-class="{ 'label-success': inspecao.revisado_at }" class="label m-r-10">{{ inspecao.id }}</span>
-                        <a ng-if="!produto.inspecoes[0].revisado_at && produto.produto.estado == '1' && produto.inspecoes.length"
-                            ng-click="PedidoDetalhe.inspecaoTecnicaHelper.alterarPrioridade(produto.id, true)" class="btn-xs btn-primary">
-                                <i class="fa-arrow-{{ produto.inspecoes[0].priorizado ? 'down' : 'up' }}"></i>&nbsp; {{ produto.inspecoes[0].priorizado ? 'Remover prioridade da' : 'Priorizar' }} inspeção
-                        </a>
-                        <small class="hint-text">{{ produto.imei }}</small>
+                        <small class="hint-text">{{ produto.productImei.imei }}</small>
                     </td>
-                    <td class="text-center">{{ produto.quantidade }}</td>
                     <td class="text-center">{{ produto.valor | currency }}</td>
                 </tr>
                 <tr ng-if="PedidoDetalhe.pedido.desconto != null" class="total">
                     <td></td>
-                    <td></td>
-                    <td class="bold">Desconto</td>
+                    <td class="bold text-right">Desconto</td>
                     <td>{{ PedidoDetalhe.pedido.desconto }}%</td>
                 </tr>
                 <tr ng-if="PedidoDetalhe.pedido.frete_valor != null" class="total">
                     <td></td>
-                    <td></td>
-                    <td class="bold">Frete</td>
+                    <td class="bold text-right">Frete</td>
                     <td>{{ PedidoDetalhe.pedido.frete_valor | currency }}</td>
                 </tr>
                 <tr ng-if="PedidoDetalhe.pedido.total" class="total">
                     <td><span roles="admin|atendimento|faturamento|gestor" ng-click="PedidoDetalhe.openOrderProductForm()" class="btn-info btn-xs"><i class="fa-plus">&nbsp;</i>Adicionar produto</span></td>
-                    <td></td>
-                    <td class="bold">TOTAL</td>
+                    <td class="bold text-right">TOTAL</td>
                     <td>{{ PedidoDetalhe.pedido.total | currency }}</td>
                 </tr>
             </tbody>

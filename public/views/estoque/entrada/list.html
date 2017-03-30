@@ -1,0 +1,43 @@
+<div id="page-header" class="row">
+    <page-title icon="fa fa-arrow-up" title="Entradas de estoque" description="Lista todas as entradas de estoque"></page-title>
+    <div class="col-md-6 button-bar">
+        <a ui-sref="app.estoque.entrada.form" class="btn-success">
+            <i class="fa-plus">&nbsp;</i> Adicionar
+        </a>
+    </div>
+</div>
+
+<table table-list="EntradaEstoqueList">
+    <thead>
+        <tr>
+            <th class="text-center">Chave</th>
+            <th class="text-center">Número</th>
+            <th class="text-center">Fornecedor</th>
+            <th class="text-center" width="160">Data</th>
+            <th class="text-center" width="160">Confirmação</th>
+            <th width="75"></th>
+        </tr>
+        <tr class="table-filter" static-include="views/estoque/entrada/list_filter.html"></tr>
+    </thead>
+    <tbody ng-if="EntradaEstoqueList.tableData.data && !EntradaEstoqueList.loading">
+        <tr ng-repeat="entry in EntradaEstoqueList.tableData.data">
+            <td class="text-center">
+                <a ui-sref="app.estoque.entrada.form({id: entry.id})">
+                    {{ entry.invoice.key || 'Sem nota' }}
+                </a>
+            </td>
+            <td class="text-center">{{ entry.invoice.number || '-' }}</td>
+            <td class="text-center">{{ entry.supplier.name }}</td>
+            <td class="text-center">{{ entry.created_at }}</td>
+            <td class="text-center">
+                <span ng-if="entry.confirmed_at">{{ entry.confirmed_at }}</span>
+                <span ng-if="!entry.confirmed_at" class="label label-info">Em aberto</span>
+            </td>
+            <td class="text-center">
+                <button ui-sref="app.estoque.entrada.form({id: entry.id})" type="button" class="btn-info">
+                    <i class="fa-pencil"></i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>

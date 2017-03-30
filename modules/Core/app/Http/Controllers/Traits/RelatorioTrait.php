@@ -8,13 +8,11 @@ trait RelatorioTrait
 {
     /**
      * Lista que será retornada
-     * @var array
      */
     private $list;
 
     /**
      * Collection que é manipulada e prepara a $list
-     * @var [type]
      */
     private $model;
 
@@ -29,7 +27,7 @@ trait RelatorioTrait
     private $fields;
 
     /**
-     * FIltros, wheres
+     * Filtros, wheres
      */
     private $filter;
 

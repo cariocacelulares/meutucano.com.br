@@ -1,7 +1,7 @@
 <?php namespace Magento\Console\Commands;
 
 use Illuminate\Console\Command;
-use Core\Models\Produto\Produto;
+use Core\Models\Produto;
 use Magento\Http\Controllers\MagentoController;
 
 class RefreshMagentoStock extends Command

@@ -1,0 +1,35 @@
+<div id="page-header" class="row">
+    <page-title icon="fa fa-bug" title="Produtos com defeito" description="Lista todos os produtos com defeito"></page-title>
+    <div class="col-md-6 button-bar">
+        <a ui-sref="app.estoque.defeitos.form" class="btn-success">
+            <i class="fa-plus">&nbsp;</i> Adicionar
+        </a>
+    </div>
+</div>
+<table table-list="DefeitoList">
+    <thead>
+        <tr>
+            <th>Defeito</th>
+            <th class="text-center">Produto</th>
+            <th class="text-center" width="200">Imei</th>
+            <th class="text-center" width="160">Data</th>
+            <th width="75"></th>
+        </tr>
+        <tr class="table-filter" static-include="views/estoque/defeito/list_filter.html"></tr>
+    </thead>
+    <tbody ng-if="DefeitoList.tableData.data && !DefeitoList.loading">
+        <tr ng-repeat="defect in DefeitoList.tableData.data">
+            <td>{{ defect.description }}</td>
+            <td class="text-center">
+                <a ui-sref="app.produtos.detalhe({sku: defect.product.sku})">{{ defect.product.sku }}</a>: {{ defect.product.titulo }}
+            </td>
+            <td class="text-center">{{ defect.productImei.imei }}</td>
+            <td class="text-center">{{ defect.created_at }}</td>
+            <td class="text-center">
+                <button ui-sref="app.estoque.defeitos.form({id: defect.id})" type="button" class="btn-info">
+                    <i class="fa-pencil"></i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestResponseTrait;
-use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido;
 use Core\Models\Pedido\PedidoProduto;
 use Meta\Models\MetaMes;
 use Meta\Models\MetaAno;
@@ -98,8 +98,9 @@ class MetaController extends Controller
             }
 
             return $this->showResponse($response);
-        } catch (\Exception $e) {
-            echo $e->getMessage() . $e->getLine();
+        } catch (\Exception $exception) {
+            echo $exception->getMessage() . $exception->getLine();
+
             return $this->notFoundResponse();
         }
     }

@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use Rastreio\Http\Controllers\Traits\RastreioTrait;
-use InspecaoTecnica\Http\Controllers\Traits\InspecaoTecnicaTrait;
 use Rastreio\Models\Rastreio;
 use Rastreio\Models\Devolucao;
 use Rastreio\Http\Requests\DevolucaoRequest as Request;
@@ -17,8 +16,7 @@ use Rastreio\Transformers\DevolucaoTransformer;
 class DevolucaoController extends Controller
 {
     use RestControllerTrait,
-        RastreioTrait,
-        InspecaoTecnicaTrait;
+        RastreioTrait;
 
     const MODEL = Devolucao::class;
 
@@ -43,7 +41,7 @@ class DevolucaoController extends Controller
 
             return $this->showResponse([
                 'rastreio_id' => $data->id,
-                'rastreio' => $data
+                'rastreio'    => $data
             ]);
         }
 
@@ -81,8 +79,6 @@ class DevolucaoController extends Controller
     public function store(Request $request)
     {
         try {
-            $this->aplicarDevolucao(Input::get(['inspecoes']));
-
             $devolucao = (self::MODEL)::create(Input::except(['protocolo', 'imagem']));
 
             $rastreio = Rastreio::find(Input::get('rastreio_id'));
@@ -95,7 +91,9 @@ class DevolucaoController extends Controller
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
-            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
+            return $this->clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
         }
     }
 
@@ -108,8 +106,6 @@ class DevolucaoController extends Controller
     public function update($id, Request $request)
     {
         try {
-            $this->aplicarDevolucao(Input::get(['inspecoes']));
-
             $devolucao = (self::MODEL)::findOrFail($id);
             $devolucao->fill(Input::except(['protocolo']));
             $devolucao->save();
@@ -121,9 +117,7 @@ class DevolucaoController extends Controller
             \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => strstr(get_class($exception), 'ModelNotFoundException')
-                    ? 'Recurso nao encontrado'
-                    : $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }

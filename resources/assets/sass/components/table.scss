@@ -1,9 +1,41 @@
+.table-fit {
+    tbody {
+        tr,
+        td {
+            padding: 0 !important;
+        }
+
+        tr:not(:last-child) input {
+            border-bottom: 0;
+        }
+    }
+}
+
+tr.warn {
+    td,
+    input {
+        background-color: #ffe8e8 !important;
+    }
+}
+
 .table-alt {
     width: 100%;
     max-width: 100%;
     border-radius: 4px;
     border: 1px solid $color-master-lighter;
     border-right: 0;
+
+    &.table-no-button {
+        tbody td:last-child {
+            border-left: 1px solid $color-master-lighter !important;
+        }
+
+        thead tr th:first-child,
+        thead tr th:last-child {
+            padding-left: 8px !important;
+            padding-right: 8px !important;
+        }
+    }
 
     &.bordered {
         border-right: 1px solid $color-master-lighter;
@@ -62,6 +94,14 @@
             height: 50px;
             padding: 0 15px;
             background-color: $color-white;
+
+            &:focus, &:active {
+                background-color: $color-white !important;
+            }
+        }
+
+        label {
+            line-height: 20px;
         }
 
         td {
@@ -268,6 +308,22 @@
 
     [class*='btn-'] {
         margin: 0;
+    }
+}
+
+.sub-table {
+    > td {
+        padding: 0 !important;
+        border: 0 !important;
+
+        &.empty {
+            padding: 12px !important;
+            border-bottom: 1px solid rgba(230,230,230,.7) !important;
+        }
+    }
+
+    table td {
+        background: #fafafa !important;
     }
 }
 

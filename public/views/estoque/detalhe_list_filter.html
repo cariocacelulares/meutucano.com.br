@@ -1,0 +1,29 @@
+<th>
+    <input class="form-control big" ng-model="EstoqueDetalhe.filter['produtos.sku']" placeholder="SKU" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <input class="form-control big" ng-model="EstoqueDetalhe.filter['produtos.titulo']" placeholder="Título" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <select class="form-control big" ng-model="EstoqueDetalhe.filter['serial_enabled']" ng-model-options="{debounce:500}">
+        <option value="">Ambos</option>
+        <option value="1">Sim</option>
+        <option value="0">Não</option>
+    </select>
+</th>
+<th>
+    <input class="form-control big" ng-model="EstoqueDetalhe.filter['quantity']" placeholder="Qtd" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <div class="date-picker">
+        <input class="form-control" ng-model="EstoqueDetalhe.filter['updated_at']" placeholder="Data da alteração" ng-model-options="{debounce:500}" />
+        <div class="picker-wrap">
+            <date-picker ng-model="EstoqueDetalhe.filter['updated_at']" ng-model-options="{debounce:500}"></date-picker>
+        </div>
+    </div>
+</th>
+<th class="item-button">
+    <a title="Limpar filtros" class="btn-danger btn-reset-filter" ng-click="EstoqueDetalhe.filterList.clear()">
+        <i class="fa-eraser"></i>
+    </a>
+</th>

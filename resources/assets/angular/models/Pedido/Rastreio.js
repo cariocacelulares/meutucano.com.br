@@ -79,16 +79,6 @@
                 },
 
                 /**
-                 * Retorna os dados necessários
-                 *
-                 * @param  {int} rastreio_id
-                 * @return {Object}
-                 */
-                getInspecaoData: function(rastreio_id) {
-                    return Restangular.one('rastreios/inspecao-tecnica', rastreio_id).customGET();
-                },
-
-                /**
                  * Verfica se existem produtos seminovos
                  *
                  * @param  {int} rastreio_id

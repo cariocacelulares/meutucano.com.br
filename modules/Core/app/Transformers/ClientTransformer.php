@@ -14,11 +14,43 @@ class ClientTransformer
      * @param  object $clients
      * @return array
      */
+    public static function directSearch($clients)
+    {
+        $transformed = [];
+        foreach ($clients as $client) {
+            $enderecos = [];
+
+            foreach ($client->enderecos as $endereco) {
+                $enderecos[] = [
+                    'id'     => (string) $endereco['id'],
+                    'cep'    => AddressParser::getCepReadable($endereco['cep']),
+                    'cidade' => $endereco['cidade'],
+                    'uf'     => $endereco['uf'],
+                    'rua'    => $endereco['rua'],
+                    'numero' => $endereco['numero'],
+                ];
+            }
+
+            $transformed[] = [
+                'id'              => (string) $client['id'],
+                'nome'            => $client['nome'],
+                'taxvat'          => $client['taxvat'],
+                'taxvat_readable' => ClientParser::getTaxvatReadable($client['taxvat'], $client['tipo']),
+                'enderecos'       => $enderecos,
+            ];
+        }
+
+        return $transformed;
+    }
+    /**
+     * @param  object $clients
+     * @return array
+     */
     public static function search($clients)
     {
         $transformed = [];
         foreach ($clients as $client) {
-            $lastEndereco = (!$client->enderecos) ? [] : [
+            $lastEndereco = (!isset($client->enderecos[0])) ? [] : [
                 'cep'          => $client->enderecos[0]['cep'],
                 'cep_readable' => AddressParser::getCepReadable($client->enderecos[0]['cep']),
                 'cidade'       => $client->enderecos[0]['cidade'],
@@ -45,13 +77,13 @@ class ClientTransformer
      * @param  object $clients
      * @return array
      */
-    public static function list($clients)
+    public static function tableList($clients)
     {
         $pagination  = $clients->toArray();
         $transformed = [];
 
         foreach ($clients as $client) {
-            $lastEndereco = (!$client->enderecos) ? [] : [
+            $lastEndereco = (!isset($client->enderecos[0])) ? [] : [
                 'cep'          => $client->enderecos[0]['cep'],
                 'cep_readable' => AddressParser::getCepReadable($client->enderecos[0]['cep']),
                 'cidade'       => $client->enderecos[0]['cidade'],

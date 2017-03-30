@@ -1,16 +1,14 @@
 <?php namespace Core\Http\Controllers\Produto;
 
-use App\Http\Controllers\Rest\RestControllerTrait;
-use App\Http\Controllers\Controller;
-use Core\Models\Produto\Produto;
-use Core\Models\Pedido\PedidoProduto;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
-use InspecaoTecnica\Models\InspecaoTecnica;
+use App\Http\Controllers\Rest\RestControllerTrait;
+use App\Http\Controllers\Controller;
+use Core\Models\Produto;
+use Core\Models\Pedido\PedidoProduto;
 use Core\Http\Requests\ProdutoRequest as Request;
 use Core\Transformers\ProductTransformer;
-use Core\Transformers\Parsers\ProductParser;
-use Core\Transformers\Parsers\OrderParser;
+use Core\Models\Produto\Image;
 
 /**
  * Class ProdutoController
@@ -29,13 +27,10 @@ class ProdutoController extends Controller
      */
     public function tableList()
     {
-        $m = self::MODEL;
-
-        $list = $m
+        $list = (self::MODEL)
             // ::with('linha')
             // ->with('marca')
-            ::where('produtos.ativo', true)
-            ->orderBy('produtos.created_at', 'DESC');
+            ::orderBy('produtos.created_at', 'DESC');
 
         $list = $this->handleRequest($list);
 
@@ -45,7 +40,7 @@ class ProdutoController extends Controller
         }
 
         $reservados = PedidoProduto
-            ::select('pedido_produtos.produto_sku', 'pedidos.status', DB::raw('SUM(pedido_produtos.quantidade) as quantidade'))
+            ::select('pedido_produtos.produto_sku', 'pedidos.status', DB::raw('COUNT(*) as count'))
             ->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
             ->with(['pedido'])
             ->whereIn('pedido_produtos.produto_sku', $ids)
@@ -58,7 +53,7 @@ class ProdutoController extends Controller
 
         $attachedProducts = [];
         foreach ($reservados as $item) {
-            $attachedProducts[$item['produto_sku']][$item['status']] = $item['quantidade'];
+            $attachedProducts[$item['produto_sku']][$item['status']] = $item['count'];
         }
 
         foreach ($list as $item) {
@@ -68,7 +63,7 @@ class ProdutoController extends Controller
             ];
         }
 
-        return $this->listResponse(ProductTransformer::list($list));
+        return $this->listResponse(ProductTransformer::tableList($list));
     }
 
     /**
@@ -79,108 +74,15 @@ class ProdutoController extends Controller
      */
     public function show($id)
     {
-        $data = (self::MODEL)::find($id);
+        $product = (self::MODEL)
+            ::where('produtos.sku', '=', $id)
+            ->first();
 
-        $pedidoProdutos = PedidoProduto
-            ::with('pedido')
-            ->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
-            ->where('produto_sku', '=', $data->sku)
-            ->whereIn('pedidos.status', [0,1])
-            ->orderBy('pedidos.status', 'ASC')
-            ->get(['pedido_produtos.*'])
-            ->toArray();
-
-        $attachedProducts = [];
-        foreach ($pedidoProdutos as $pedidoProduto) {
-            if (!isset($attachedProducts[$pedidoProduto['pedido']['status']])) {
-                $attachedProducts[$pedidoProduto['pedido']['status']] = $pedidoProduto['quantidade'];
-            } else {
-                $attachedProducts[$pedidoProduto['pedido']['status']] += $pedidoProduto['quantidade'];
-            }
-
-            $attachedProducts['data'][] = [
-                'id'                 => $pedidoProduto['pedido']['id'],
-                'status'             => $pedidoProduto['pedido']['status'],
-                'status_description' => OrderParser::getStatusDescription($pedidoProduto['pedido']['status']),
-                'codigo_marketplace' => $pedidoProduto['pedido']['codigo_marketplace'],
-                'marketplace'        => $pedidoProduto['pedido']['marketplace'],
-                'quantidade'         => $pedidoProduto['quantidade'],
-                'valor'              => $pedidoProduto['valor'],
-            ];
+        if (!$product) {
+            return $this->notFoundResponse();
         }
 
-        $data->attachedProducts = $attachedProducts;
-
-        if ($data) {
-            $revisoes = InspecaoTecnica
-                ::where('produto_sku', '=', $data->sku)
-                ->whereNull('pedido_produtos_id')
-                ->whereNotNull('revisado_at')
-                ->get(['id']);
-
-            $data->revisoes = $revisoes ?: [];
-
-            return $this->showResponse(ProductTransformer::show($data));
-        }
-
-        return $this->notFoundResponse();
-    }
-
-    /**
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function gerenateSku($oldSku = null)
-    {
-        $m = self::MODEL;
-
-        try {
-            if (!$oldSku) {
-                $data = new Produto();
-            } else {
-                $data = $m::find($oldSku);
-                if (!$data) {
-                    return $this->notFoundResponse();
-                }
-
-                $last = Produto::orderBy('sku', 'DESC')->take(1)->first();
-
-                if ($last && $last->sku) {
-                    $last = (int)$last->sku;
-                    $last++;
-                } else {
-                    throw new \Exception('Não foi possível encontrar o último SKU válido!', 1);
-                }
-                $data->sku = $last;
-
-                DB::unprepared('ALTER TABLE ' . $data->getTable() . ' AUTO_INCREMENT = ' . ($last + 1) . ';');
-            }
-
-            $data->save();
-
-            return $this->showResponse($data);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
-        }
-    }
-
-    /**
-     * Check if sku exists
-     *
-     * @param  int $sku
-     * @return bool      if exists
-     */
-    public function checkSku($sku)
-    {
-        try {
-            if ($produto = Produto::find($sku)) {
-                return $this->showResponse(['exists' => true]);
-            }
-        } catch (\Exception $e) {
-        }
-
-        return $this->showResponse(['exists' => false]);
+        return $this->showResponse(ProductTransformer::show($product));
     }
 
     /**
@@ -189,16 +91,16 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        $m = self::MODEL;
-
         try {
-            $data = $m::create(Input::all());
+            $product = (self::MODEL)::create(Input::all());
 
-            return $this->createdResponse($data);
+            return $this->createdResponse($product);
         } catch (\Exception $exception) {
-            \Log::error(logMessage($exception));
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
-            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
+            return $this->clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
         }
     }
 
@@ -206,38 +108,23 @@ class ProdutoController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function update($id)
+    public function update(Request $request, $id)
     {
-        $m = self::MODEL;
-
-        if (!$data = $m::find($id)) {
+        if (!$product = (self::MODEL)::find($id)) {
             return $this->notFoundResponse();
         }
 
         try {
-            $data->fill(Input::except(['atributos']));
-            $data->save();
+            $product->fill(Input::all());
+            $product->save();
 
-            $attrs = Input::get('atributos');
-            if ($attrs) {
-                $data->atributos()->detach();
+            return $this->showResponse($product);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
-                $atributos = [];
-                foreach ($attrs as $attr) {
-                    $atributos[] = [
-                        'produto_sku' => (isset($attr['pivot']['produto_sku']) && $attr['pivot']['produto_sku']) ? $attr['pivot']['produto_sku'] : $data->sku,
-                        'atributo_id' => (isset($attr['pivot']['atributo_id']) && $attr['pivot']['atributo_id']) ? $attr['pivot']['atributo_id'] : $attr['id'],
-                        'opcao_id' => (isset($attr['pivot']['opcao_id']) && $attr['pivot']['opcao_id']) ? $attr['pivot']['opcao_id'] : null,
-                        'valor' => (isset($attr['pivot']['valor']) && $attr['pivot']['valor']) ? $attr['pivot']['valor'] : null
-                    ];
-                }
-                $data->atributos()->attach($atributos);
-            }
-
-            return $this->showResponse($data);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
         }
     }
 
@@ -260,11 +147,103 @@ class ProdutoController extends Controller
                 $list = Produto::where('titulo', 'LIKE', "%{$term}%")->orWhere('sku', 'LIKE', "%{$term}%");
             }
 
-            $list = $list->get(['produtos.sku', 'produtos.titulo'])->toArray();
+            $list = $list->get([
+                'produtos.sku',
+                'produtos.titulo',
+                'produtos.valor',
+                'produtos.ean',
+                'produtos.ncm',
+            ])->toArray();
 
             return $this->listResponse($list);
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             return $this->listResponse([]);
+        }
+    }
+
+    /**
+     * Get produto info and stocks by sku
+     *
+     * @param  int $sku
+     * @return Response
+     */
+    public function getStocks($sku)
+    {
+        $product = Produto
+            ::where('sku', '=', $sku)
+            ->with([
+                'productStocks',
+                'productStocks.stock',
+            ])
+            ->first();
+
+        if ($product) {
+            try {
+                $product = [
+                    'sku'           => $product->sku,
+                    'title'         => $product->titulo,
+                    'productStocks' => $product->productStocks,
+                ];
+
+                return $this->showResponse([
+                    'produto' => $product
+                ]);
+            } catch (\Exception $exception) {
+            }
+        }
+
+        return $this->showResponse([
+            'produto' => []
+        ]);
+    }
+
+    /**
+     * Upload image files
+     *
+     * @return Response
+     */
+    public function upload()
+    {
+        $files = Input::file('files');
+
+        try {
+            $return = [];
+            foreach ($files as $file) {
+                if (in_array($file->getMimetype(), ['image/jpeg']) === false) {
+                    $return['error'][] = [
+                        'file'    => $file->getClientOriginalName(),
+                        'message' => 'O arquivo precisa estar no formato JPG'
+                    ];
+
+                    continue;
+                }
+
+                if (($file->getSize() / 1000) > 800) {
+                    $return['error'][] = [
+                        'file'    => $file->getClientOriginalName(),
+                        'message' => 'O arquivo precisa ter menos de 800KB'
+                    ];
+
+                    continue;
+                }
+
+                $fileName = str_slug(
+                    substr($file->getClientOriginalName(), 0, -3)
+                ) . uniqid('_') . '.jpg';
+                $file->move(storage_path('app/public/produto'), $fileName);
+
+                $return['success'][] = [
+                    'file' => $fileName
+                ];
+            }
+
+            return $this->createdResponse($return);
+        } catch (\Exception $e) {
+            return $this->clientErrorResponse([
+                'error'   => true,
+                'message' => 'Não foi possível fazer upload dos arquivos, tente novamente!',
+                'exception' => $e->getMessage() . '  ' . $e->getLine()
+            ]);
         }
     }
 }

@@ -122,6 +122,15 @@
                     controller: 'PedidoListController as PedidoList'
                 })
 
+                .state('app.pedidos.form', {
+                    url: '/form',
+                    templateUrl: 'views/pedido/form.html',
+                    controller: 'PedidoFormController as PedidoForm',
+                    data: {
+                        roles: ['admin', 'gestor']
+                    }
+                })
+
                 .state('app.pedidos.detalhe', {
                     url: '/{id}',
                     templateUrl: 'views/pedido/detalhe.html',
@@ -144,9 +153,15 @@
                 })
 
                 .state('app.clientes.detalhe', {
-                    url: '/{id}',
+                    url: '/detalhe/{id}',
                     templateUrl: 'views/cliente/detalhe.html',
                     controller: 'ClienteDetalheController as ClienteDetalhe'
+                })
+
+                .state('app.clientes.form', {
+                    url: '/{id}',
+                    templateUrl: 'views/cliente/form.html',
+                    controller: 'ClienteFormController as ClienteForm'
                 })
 
                 /**
@@ -245,6 +260,51 @@
                     controller: 'ProdutoFormController as ProdutoForm'
                 })
 
+                .state('app.produtos.detalhe', {
+                    url: '/detalhe/{sku}',
+                    templateUrl: 'views/produto/detalhe.html',
+                    controller: 'ProdutoDetalheController as ProdutoDetalhe'
+                })
+
+                .state('app.produtos.mercadolivre', {
+                    url: '/mercadolivre',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.produtos.mercadolivre.ads', {
+                    url: '/ads',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.produtos.mercadolivre.ads.index', {
+                    url: '/list',
+                    templateUrl: 'views/produto/mercadolivre/ads/list.html',
+                    controller: 'AdListController as AdList',
+                })
+
+                .state('app.produtos.mercadolivre.ads.form', {
+                    url: '/{sku}/{id}',
+                    templateUrl: 'views/produto/mercadolivre/ads/form.html',
+                    controller: 'AdFormController as AdForm',
+                })
+
+                .state('app.produtos.mercadolivre.templates', {
+                    url: '/templates',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.produtos.mercadolivre.templates.index', {
+                    url: '/list',
+                    templateUrl: 'views/produto/mercadolivre/templates/list.html',
+                    controller: 'TemplateListController as TemplateList',
+                })
+
+                .state('app.produtos.mercadolivre.templates.form', {
+                    url: '/{id}',
+                    templateUrl: 'views/produto/mercadolivre/templates/form.html',
+                    controller: 'TemplateFormController as TemplateForm',
+                })
+
                 /**
                  * Linhas
                  */
@@ -292,41 +352,6 @@
                 })
 
                 /**
-                 * Inspeção técnica
-                 */
-                .state('app.inspecao', {
-                    url: '/inspecao',
-                    templateUrl: 'views/layouts/default.html'
-                })
-
-                .state('app.inspecao.realizada', {
-                    url: '/realizada',
-                    templateUrl: 'views/inspecao/realizada/list.html',
-                    controller: 'InspecaoRealizadaListController as InspecaoRealizadaList',
-                    data: {
-                        roles: ['admin', 'tecnico']
-                    }
-                })
-
-                .state('app.inspecao.fila', {
-                    url: '/fila',
-                    templateUrl: 'views/inspecao/fila/list.html',
-                    controller: 'InspecaoFilaListController as InspecaoFilaList',
-                    data: {
-                        roles: ['admin', 'tecnico']
-                    }
-                })
-
-                .state('app.inspecao.solicitada', {
-                    url: '/solicitada',
-                    templateUrl: 'views/inspecao/solicitada/list.html',
-                    controller: 'InspecaoSolicitadaListController as InspecaoSolicitadaList',
-                    data: {
-                        roles: ['admin', 'gestor', 'tecnico', 'atendimento']
-                    }
-                })
-
-                /**
                  * Relatórios
                  */
                 .state('app.relatorios', {
@@ -353,6 +378,32 @@
                     url: '/retirada-estoque',
                     templateUrl: 'views/relatorio/retirada-estoque.html',
                     controller: 'RelatorioRetiradaEstoqueController as RetiradaEstoque'
+                })
+
+                .state('app.relatorios.inventario', {
+                    url: '/inventario',
+                    templateUrl: 'views/relatorio/inventario.html',
+                    controller: 'RelatorioInventarioController as RelatorioInventario'
+                })
+
+                /**
+                 * Gamification
+                 */
+                .state('app.suppliers', {
+                    url: '/fornecedores',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.suppliers.index', {
+                    url: '/list',
+                    templateUrl: 'views/supplier/list.html',
+                    controller: 'SupplierListController as SupplierList'
+                })
+
+                .state('app.suppliers.form', {
+                    url: '/{id}',
+                    templateUrl: 'views/supplier/form.html',
+                    controller: 'SupplierFormController as SupplierForm'
                 })
 
                 /**
@@ -406,31 +457,117 @@
                 })
 
                 /**
-                 * Allnation
+                 * Estoque
                  */
-                .state('app.allnation', {
-                    url: '/allnation',
+                .state('app.estoque', {
+                    url: '/estoque',
                     templateUrl: 'views/layouts/default.html',
                     data: {
-                        roles: ['admin']
+                        roles: ['admin', 'gestor']
                     }
                 })
 
-                .state('app.allnation.products', {
-                    url: '/products',
+                .state('app.estoque.index', {
+                    url: '/list',
+                    templateUrl: 'views/estoque/list.html',
+                    controller: 'EstoqueListController as EstoqueList'
+                })
+
+                .state('app.estoque.form', {
+                    url: '/form/{slug}',
+                    templateUrl: 'views/estoque/form.html',
+                    controller: 'EstoqueFormController as EstoqueForm'
+                })
+
+                .state('app.estoque.detalhe', {
+                    url: '/detalhe/{slug}',
+                    templateUrl: 'views/estoque/detalhe.html',
+                    controller: 'EstoqueDetalheController as EstoqueDetalhe'
+                })
+
+                .state('app.estoque.retirada', {
+                    url: '/retiradas',
                     templateUrl: 'views/layouts/default.html',
                 })
 
-                .state('app.allnation.products.index', {
+                .state('app.estoque.retirada.index', {
                     url: '/list',
-                    templateUrl: 'views/allnation/product/list.html',
-                    controller: 'AllnationProductListController as AllnationProductList'
+                    templateUrl: 'views/estoque/retirada/list.html',
+                    controller: 'RetiradaEstoqueListController as RetiradaEstoqueList'
                 })
 
-                .state('app.allnation.products.form', {
-                    url: '/{id}',
-                    templateUrl: 'views/allnation/product/form.html',
-                    controller: 'AllnationProductFormController as AllnationProductForm'
+                .state('app.estoque.retirada.form', {
+                    url: '/form/{id}',
+                    templateUrl: 'views/estoque/retirada/form.html',
+                    controller: 'RetiradaEstoqueFormController as RetiradaEstoqueForm'
+                })
+
+                .state('app.estoque.entrada', {
+                    url: '/entradas',
+                    templateUrl: 'views/layouts/default.html',
+                })
+
+                .state('app.estoque.entrada.index', {
+                    url: '/list',
+                    templateUrl: 'views/estoque/entrada/list.html',
+                    controller: 'EntradaEstoqueListController as EntradaEstoqueList'
+                })
+
+                .state('app.estoque.entrada.form', {
+                    url: '/form/{id}',
+                    templateUrl: 'views/estoque/entrada/form.html',
+                    controller: 'EntradaEstoqueFormController as EntradaEstoqueForm'
+                })
+
+                .state('app.estoque.baixa', {
+                    url: '/baixas',
+                    templateUrl: 'views/layouts/default.html',
+                })
+
+                .state('app.estoque.baixa.index', {
+                    url: '/list',
+                    templateUrl: 'views/estoque/baixa/list.html',
+                    controller: 'BaixaEstoqueListController as BaixaEstoqueList'
+                })
+
+                .state('app.estoque.baixa.form', {
+                    url: '/form',
+                    templateUrl: 'views/estoque/baixa/form.html',
+                    controller: 'BaixaEstoqueFormController as BaixaEstoqueForm'
+                })
+
+                .state('app.estoque.imei', {
+                    url: '/imei',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.estoque.imei.gerar', {
+                    url: '/gerar',
+                    templateUrl: 'views/estoque/imei/gerar.html',
+                    controller: 'GerarImeiController as GerarImei'
+                })
+
+                .state('app.estoque.imei.consultar', {
+                    url: '/consultar/{imei}',
+                    templateUrl: 'views/estoque/imei/consultar.html',
+                    controller: 'ConsultarImeiController as ConsultarImei'
+                })
+
+                .state('app.estoque.defeitos', {
+                    url: '/defeitos',
+                    templateUrl: 'views/layouts/default.html'
+                })
+
+                .state('app.estoque.defeitos.index', {
+                    url: '/list',
+                    templateUrl: 'views/estoque/defeito/list.html',
+                    controller: 'DefeitoListController as DefeitoList'
+                })
+
+                .state('app.estoque.defeitos.form', {
+                    url: '/form/{id}',
+                    templateUrl: 'views/estoque/defeito/form.html',
+                    controller: 'DefeitoFormController as DefeitoForm'
                 })
             ;
         });

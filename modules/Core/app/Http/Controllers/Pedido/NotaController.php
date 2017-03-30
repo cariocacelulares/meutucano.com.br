@@ -1,13 +1,12 @@
 <?php namespace Core\Http\Controllers\Pedido;
 
-use App\Http\Controllers\Rest\RestControllerTrait;
-use App\Http\Controllers\Controller;
-use Skyhub\Http\Controllers\SkyhubController;
-use Core\Models\Pedido\Nota;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Mail;
 use NFePHP\Extras\Danfe;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Http\Controllers\Rest\RestControllerTrait;
+use App\Http\Controllers\Controller;
+use Core\Http\Controllers\Pedido\PedidoController;
+use Core\Models\Pedido\Nota;
 use Core\Models\Pedido\Nota\Devolucao;
 use Core\Http\Requests\Nota\DeleteRequest;
 
@@ -30,11 +29,10 @@ class NotaController extends Controller
     public function destroy($id, DeleteRequest $request)
     {
         try {
-            $note = Input::get('delete_note');
+            $model = self::MODEL;
+            $nota = $model::findOrFail($id);
 
-            $nota = (self::MODEL)::findOrFail($id);
-
-            $nota->delete_note = $note;
+            $nota->delete_note = Input::get('delete_note');
             $nota->save();
 
             $nota->delete();
@@ -44,44 +42,37 @@ class NotaController extends Controller
             \Log::error(logMessage($exception, 'Erro ao excluir recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
 
     /**
-     * Gera o XML da nota fiscal
+     * Generate invoice XML
      *
      * @param $id
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function xml($id, $devolucao)
+    public function xml($id)
     {
-        $model = self::MODEL;
+        $invoice = (self::MODEL)::findOrFail($id);
 
-        //TODO: Separar devolução de nota comum, mantendo um método para
-        //imprimir mas dois métodos chamando
-        if ($devolucao) {
-            $nota = Devolucao::find($id);
-        } else {
-            $nota = $model::find($id);
-        }
+        return \Invoice::xml($invoice->arquivo);
+    }
 
-        // Nota fiscal não existe
-        if ($nota) {
-            $file_path = storage_path('app/public/nota/' . $nota->arquivo);
+    /**
+     * Generate DANFe PDF file
+     *
+     * @param  $id
+     * @param  string  $returnType I-borwser, S-retorna o arquivo, D-força download, F-salva em arquivo local
+     * @param  string  $dir        path dir i $returnType is F
+     * @return Response
+     */
+    public function danfe($id, $returnType = 'I', $path = false)
+    {
+        $invoice = (self::MODEL)::findOrFail($id);
 
-            // Arquivo físico não existe
-            if (!file_exists($file_path)) {
-                return $this->notFoundResponse();
-            }
-
-            return response()
-                ->make(file_get_contents($file_path), '200')
-                ->header('Content-Type', 'text/xml');
-        }
-
-        return $this->notFoundResponse();
+        return \Invoice::danfe($invoice->arquivo, $returnType, $path);
     }
 
     /**
@@ -92,18 +83,18 @@ class NotaController extends Controller
      */
     public function email($id)
     {
-        $model = self::MODEL;
-
         try {
-            if ($nota = $model::find($id)) {
+            $nota = (self::MODEL)::find($id);
+
+            if ($nota) {
                 $dataHora = date('His');
-                $arquivo = storage_path('app/public/' . $dataHora . '.pdf');
-                $email = $nota->pedido->cliente->email;
+                $arquivo  = storage_path('app/public/' . $dataHora . '.pdf');
+                $email    = $nota->pedido->cliente->email;
 
                 if ($email) {
                     if (\Config::get('core.email_send_enabled')) {
-                        $mail = Mail::send('emails.danfe', [], function ($message) use ($id, $email, $arquivo) {
-                            with(new NotaController())->danfe($id, 'F', $arquivo);
+                        $mail = Mail::send('emails.danfe', [], function ($message) use ($nota, $email, $arquivo) {
+                            \Invoice::danfe($nota->arquivo, 'F', $arquivo);
 
                             $message
                                 ->attach($arquivo, ['as' => 'nota.pdf', 'mime' => 'application/pdf'])
@@ -119,73 +110,36 @@ class NotaController extends Controller
 
                     if ($mail) {
                         \Log::debug('E-mail de venda enviado para: ' . $email);
+
                         return $this->showResponse(['send' => true]);
                     } else {
                         \Log::warning('Falha ao enviar e-mail de venda para: ' . $email);
+
                         return $this->showResponse(['send' => false]);
                     }
                 } else {
                     Log::warning('Falha ao enviar e-mail de venda, email inválido');
+
                     return $this->showResponse(['send' => false]);
                 }
             }
-        } catch (\Exception $e) {
-            \Log::warning('Falha ao tentar enviar um e-mail de venda', [$id]);
-            return $this->clientErrorResponse();
+        } catch (\Exception $exception) {
+            \Log::warning(logMessage($exception, 'Falha ao tentar enviar um e-mail de venda', [$id]));
+
+            return $this->clientErrorResponse('Falha ao tentar enviar um e-mail de venda');
         }
 
         return $this->notFoundResponse();
     }
 
     /**
-     * Gera o arquivo PDF da DANFe
-     *
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function danfe($id, $retorno = 'I', $caminhoArquivo = false)
-    {
-        $model = self::MODEL;
-
-        $nota = $model::find($id);
-        $nota = $nota ?: Devolucao::find($id);
-
-        if ($nota) {
-            $file_path = storage_path('app/public/nota/'. $nota->arquivo);
-
-            if (file_exists($file_path)) {
-                $xml = file_get_contents($file_path);
-
-                $danfe = new Danfe(
-                    $xml,
-                    'P',
-                    'A4',
-                    public_path('assets/img/logocarioca.jpg'),
-                    public_path('assets/img/watermark.jpg'),
-                    $retorno,
-                    ''
-                );
-
-                $nomeDanfe = ($caminhoArquivo) ?: substr($nota->arquivo, 0, -4) . '.pdf';
-
-                $danfe->montaDANFE('P', 'A4', 'L');
-                $danfe->printDANFE($nomeDanfe, $retorno);
-
-                return $this->showResponse([]);
-            }
-        }
-
-        return $this->notFoundResponse();
-    }
-
-    /**
-     * Envia os dados de faturamento para a Skyhub
+     * Envia os dados de faturamento
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function faturar($pedido_id)
     {
-        return with(new SkyhubController())->orderInvoice($pedido_id);
+        return with(new PedidoController())->faturar($pedido_id);
     }
 }

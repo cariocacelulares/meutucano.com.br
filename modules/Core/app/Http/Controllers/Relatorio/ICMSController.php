@@ -1,14 +1,14 @@
 <?php namespace Core\Http\Controllers\Relatorio;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Core\Models\Pedido\Nota;
-use Core\Models\Pedido\Nota\Devolucao;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use NFePHP\Extras\Danfe;
+use App\Http\Requests;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestControllerTrait;
+use Core\Models\Pedido\Nota;
+use Core\Models\Pedido\Nota\Devolucao;
 
 /**
  * Class ICMSController

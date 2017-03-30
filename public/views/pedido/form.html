@@ -1,0 +1,121 @@
+<div id="page-header" class="row">
+    <page-title icon="fa-mobile" title="Criar pedido" description="Adicionar informações e criar um novo pedido"></page-title>
+    <div class="col-md-6 button-bar">
+        <a ng-click="PedidoForm.save()" title="Salvar pedido" class="btn-success"><i class="fa-save"></i>&nbsp; Salvar</a>
+        <a onclick="history.back()" title="Voltar para a página anterior" class="btn-default"><i class="fa-reply"></i>&nbsp; Voltar</a>
+    </div>
+</div>
+
+<form ng-submit="PedidoForm.save()" novalidate="novalidate" class="form-default" id="formPedido">
+    <validation errors="PedidoForm.validationErrors"></validation>
+
+    <div class="row">
+        <div class="col-md-4 form-group">
+            <label for="cliente">Cliente</label>
+            <ui-select ng-model="PedidoForm.order.cliente" theme="selectize" id="cliente" on-select="PedidoForm.clientSelected()">
+                <ui-select-match placeholder="Selecione um cliente">{{ $select.selected.nome + ' - ' + $select.selected.taxvat_readable }}</ui-select-match>
+                <ui-select-choices repeat="cliente in PedidoForm.clients | propsFilter: {nome: $select.search, taxvat: $select.search}"
+                    refresh="PedidoForm.searchClient($select.search)" refresh-delay="300">
+                    <div ng-bind-html="cliente.nome | highlight: $select.search"></div>
+                    <small ng-bind-html="cliente.taxvat | highlight: $select.search"></small>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="col-md-8 form-group">
+            <label for="endereco">Endereço</label>
+            <select ng-model="PedidoForm.order.cliente_endereco_id" id="endereco" required>
+                <option value="" disabled selected hidden>Selecione um cliente</option>
+                <option ng-repeat="endereco in PedidoForm.order.cliente.enderecos" value="{{ endereco.id }}">
+                    {{ endereco.rua + ', ' + endereco.numero + ' - ' + endereco.cep + ' - ' + endereco.cidade + '/' + endereco.uf }}
+                </option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 form-group">
+            <label for="produto">Produto</label>
+            <ui-select ng-model="PedidoForm.product" theme="selectize" id="produto" on-select="PedidoForm.productSelected()">
+                <ui-select-match placeholder="Selecione um produto">{{ $select.selected.sku + ': ' + $select.selected.titulo }}</ui-select-match>
+                <ui-select-choices repeat="produto in PedidoForm.products | propsFilter: {titulo: $select.search, sku: $select.search}"
+                    refresh="PedidoForm.searchProduct($select.search)" refresh-delay="300">
+                    <div ng-bind-html="produto.titulo | highlight: $select.search"></div>
+                    <small>SKU: <span ng-bind-html="''+produto.sku | highlight: $select.search"></span></small>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </div>
+    <div ng-if="PedidoForm.order.products.length" class="row">
+        <div class="col-md-12">
+            <table class="table-products">
+                <thead>
+                    <th width="100">SKU</th>
+                    <th class="text-left">Nome</th>
+                    <th width="160">Qtd</th>
+                    <th width="160">Valor</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="produto in PedidoForm.order.products">
+                        <td class="text-center">{{ produto.sku }}</td>
+                        <td class="text-left">{{ produto.titulo }}</td>
+                        <td class="text-center form-group">
+                            <input type="number" ng-model="produto.qtd" min="0" required ng-change="PedidoForm.updateTotal()">
+                        </td>
+                        <td class="text-center form-group">
+                            <input ng-model="produto.valor" placeholder="R$" ui-money-mask required ng-change="PedidoForm.updateTotal()">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3 form-group">
+            <label for="total">Valor total</label>
+            <input ng-model="PedidoForm.order.total" id="total" placeholder="R$" ui-money-mask required>
+        </div>
+        <div class="col-md-3 form-group">
+            <label for="frete_valor">Valor do frete</label>
+            <input ng-model="PedidoForm.order.frete_valor" id="frete_valor" placeholder="R$" ui-money-mask required>
+        </div>
+        <div class="col-md-2 form-group">
+            <label for="frete_metodo">Método de frete</label>
+            <select ng-model="PedidoForm.order.frete_metodo" id="frete_metodo" required>
+                <option value="" disabled selected hidden>Forma de envio</option>
+                <option value="PAC">PAC</option>
+                <option value="SEDEX">SEDEX</option>
+                <option value="Outro">Outro</option>
+            </select>
+        </div>
+        <div class="col-md-3 form-group">
+            <label for="pagamento_metodo">Método de pagamento</label>
+            <select ng-model="PedidoForm.order.pagamento_metodo" id="pagamento_metodo" required>
+                <option value="" disabled selected hidden>Forma de pagamento</option>
+                <option value="mercadopago">Mercado Pago</option>
+                <option value="boleto">Boleto bancário</option>
+                <option value="credito">Cartão de crédito</option>
+                <option value="debito">Cartão de débito</option>
+                <option value="transferencia">Transferencia</option>
+                <option value="deposito">Depósito</option>
+                <option value="cheque">Cheque</option>
+                <option value="outro">Outro</option>
+            </select>
+        </div>
+        <div class="col-md-1 form-group">
+            <label for="parcelas">Parcelas</label>
+            <select ng-model="PedidoForm.order.parcelas" id="parcelas" required>
+                <option value="" disabled hidden>Parcelas</option>
+                <option value="1">1x</option>
+                <option value="2">2x</option>
+                <option value="3">3x</option>
+                <option value="4">4x</option>
+                <option value="5">5x</option>
+                <option value="6">6x</option>
+                <option value="7">7x</option>
+                <option value="8">8x</option>
+                <option value="9">9x</option>
+                <option value="10">10x</option>
+            </select>
+        </div>
+    </div>
+</form>

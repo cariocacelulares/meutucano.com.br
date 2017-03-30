@@ -1,11 +1,12 @@
 <?php namespace Core\Http\Controllers\Cliente;
 
+use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
-use Core\Models\Cliente\Cliente;
+use Core\Models\Cliente;
 use Core\Models\Cliente\Endereco;
-use Illuminate\Support\Facades\Input;
 use Core\Transformers\ClientTransformer;
+use Core\Http\Requests\ClientRequest as Request;
 
 /**
  * Class ClienteController
@@ -27,7 +28,7 @@ class ClienteController extends Controller
         $list = (self::MODEL)::orderBy('clientes.created_at', 'DESC');
         $list = $this->handleRequest($list);
 
-        return $this->listResponse(ClientTransformer::list($list));
+        return $this->listResponse(ClientTransformer::tableList($list));
     }
 
     /**
@@ -36,8 +37,7 @@ class ClienteController extends Controller
      */
     public function detail($id)
     {
-        $m = self::MODEL;
-        $data = $m::with(['pedidos', 'enderecos'])->find($id);
+        $data = (self::MODEL)::with(['pedidos', 'enderecos'])->find($id);
 
         if ($data) {
             return $this->showResponse(ClientTransformer::show($data));
@@ -47,14 +47,57 @@ class ClienteController extends Controller
     }
 
     /**
+     * Cria novo recurso
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function store(Request $request)
+    {
+        try {
+            $data = Input::except(['enderecos']);
+
+            if (isset($data['taxvat'])) {
+                $data['taxvat'] = numbers($data['taxvat']);
+
+                if (strlen($data['taxvat']) > 11) {
+                    $data['tipo'] = 1;
+                } else {
+                    $data['tipo'] = 0;
+                }
+            }
+
+            $cliente = (self::MODEL)::create($data);
+
+            $enderecos = [];
+            foreach ((Input::get('enderecos') ?: []) as $endereco) {
+                $enderecos[] = new Endereco($endereco);
+            }
+
+            $cliente->enderecos()->saveMany($enderecos);
+
+            $cliente = (self::MODEL)
+                ::where('id', '=', $cliente->id)
+                ->with('enderecos')
+                ->first();
+
+            return $this->createdResponse($cliente);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function update($id)
+    public function update($id, Request $request)
     {
-        $m = self::MODEL;
-
-        if (!$data = $m::find($id)) {
+        if (!$data = (self::MODEL)::find($id)) {
             return $this->notFoundResponse();
         }
 
@@ -74,9 +117,12 @@ class ClienteController extends Controller
             }
 
             return $this->showResponse($data);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
+
+            return $this->clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
         }
     }
 
@@ -88,19 +134,39 @@ class ClienteController extends Controller
      */
     public function changeEmail($cliente_id)
     {
-        $m = self::MODEL;
-
         try {
             $email = \Request::get('email');
 
-            $data = $m::find($cliente_id);
+            $data = (self::MODEL)::find($cliente_id);
             $data->email = $email;
             $data->save();
 
             return $this->showResponse($data);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+        } catch (\Exception $exception) {
+            return $this->clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Search clients by taxvat and name based on term
+     *
+     * @param  string $term
+     * @return Object
+     */
+    public function search($term)
+    {
+        try {
+            $list = (self::MODEL)
+                ::with('enderecos')
+                ->where('nome', 'LIKE', "%{$term}%")
+                ->orWhere('taxvat', 'LIKE', "%{$term}%")
+                ->get();
+
+            return $this->listResponse(ClientTransformer::directSearch($list));
+        } catch (\Exception $exception) {
+            return $this->listResponse([]);
         }
     }
 }

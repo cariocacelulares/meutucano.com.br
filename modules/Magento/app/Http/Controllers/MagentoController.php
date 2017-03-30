@@ -1,16 +1,15 @@
 <?php namespace Magento\Http\Controllers;
 
 use Carbon\Carbon;
-use Core\Models\Pedido\Pedido;
-use Core\Models\Produto\Produto;
-use Core\Models\Cliente\Cliente;
-use Core\Models\Cliente\Endereco;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Magento\Models\MagentoCategory;
-use App\Http\Controllers\Controller;
-use Core\Models\Pedido\PedidoProduto;
 use Illuminate\Support\Facades\Config;
+use App\Http\Controllers\Controller;
+use Core\Models\Produto;
+use Core\Models\Pedido;
+use Core\Models\Pedido\PedidoProduto;
+use Core\Models\Cliente;
+use Core\Models\Cliente\Endereco;
 
 /**
  * Class MagentoController
@@ -46,10 +45,10 @@ class MagentoController extends Controller
                                 'user_agent' => 'PHPSoapClient'
                             ]
                         ]),
-                        'trace' => true,
-                        'exceptions' => true,
+                        'trace'              => true,
+                        'exceptions'         => true,
                         'connection_timeout' => 20,
-                        'cache_wsdl' => WSDL_CACHE_NONE
+                        'cache_wsdl'         => WSDL_CACHE_NONE
                     ]
                 );
 
@@ -169,7 +168,7 @@ class MagentoController extends Controller
             } else {
                 $client = new \GuzzleHttp\Client([
                     'base_uri' => \Config::get('magento.tucanomg.host'),
-                    'headers' => [
+                    'headers'  => [
                         "Accept"         => "application/json",
                         "Content-type"   => "application/json",
                         "X-Access-Token" => \Config::get('magento.tucanomg.token')
@@ -182,6 +181,7 @@ class MagentoController extends Controller
             }
         } catch (\Exception $e) {
             Log::warning(logMessage($e, 'Não foi possível fazer a requisição para: ' . $url . ', com o method: ' . $method));
+
             return false;
         }
     }
@@ -272,10 +272,10 @@ class MagentoController extends Controller
 
             $pedido->status = $this->parseStatus((isset($order['state'])) ? $order['state'] : ((isset($order['status'])) ? $order['status'] : null));
 
-            // Se o status do pedido for pendente, verifica se o mercado pago não rejeitou (salvo em call_for_authorize)
+            // Se o status do pedido for pendente, verifica se o mercado pago não rejeitou
             $cancelOrder = false;
             if ($pedido->status == 0 && isset($order['status_history']) && isset($order['status_history'][0]) && isset($order['status_history'][0]['comment'])) {
-                if (strstr($order['status_history'][0]['comment'], 'Status: rejected') !== false && strstr($order['status_history'][0]['comment'], 'cc_rejected_call_for_authorize') === false) {
+                if (strstr($order['status_history'][0]['comment'], 'Status: rejected') !== false) {
                     $pedido->status = 5;
                     $cancelOrder = true;
                 }
@@ -300,22 +300,36 @@ class MagentoController extends Controller
             }
 
             foreach ($order['items'] as $s_produto) {
-                $pedidoProduto = PedidoProduto::firstOrNew([
-                    'pedido_id'   => $pedido->id,
-                    'produto_sku' => $s_produto['sku'],
-                    'valor' => $s_produto['price'],
-                    'quantidade'  => $s_produto['qty_ordered']
-                ]);
-                if ($pedidoProduto->save()) {
-                    Log::info('PedidoProduto ' . $s_produto['sku'] . ' importado no pedido ' . $order['increment_id']);
-                } else {
-                    Log::warning('Não foi possível importar o PedidoProduto ' . $s_produto['sku'] . ' / ' . $order['increment_id']);
-                }
+                $count = PedidoProduto
+                    ::where('pedido_id', '=', $pedido->id)
+                    ->where('produto_sku', '=', $s_produto['sku'])
+                    ->where('valor', '=', $s_produto['price'])
+                    ->count();
+
+                for ($i=0; $i < $s_produto['qty_ordered']; $i++) {
+                    if ($count < $s_produto['qty_ordered']) {
+                        $pedidoProduto = new PedidoProduto([
+                            'pedido_id'   => $pedido->id,
+                            'produto_sku' => $s_produto['sku'],
+                            'valor'       => $s_produto['price'],
+                        ]);
+
+                        if ($pedidoProduto->save()) {
+                            $count++;
+                            Log::info('PedidoProduto ' . $s_produto['sku'] . ' importado no pedido ' . $order['increment_id']);
+                        } else {
+                            Log::warning('Não foi possível importar o PedidoProduto ' . $s_produto['sku'] . ' / ' . $order['increment_id']);
+                        }
+                    } else {
+                        Log::info("O produto {$s_produto['sku']} no pedido {$pedido->id} possui {$s_produto['qty_ordered']} quantidades e existem {$count} registrados (não foi criado)");
+                    }
+                } // for
             }
 
             // Fecha a transação e comita as alterações
             DB::commit();
             Log::debug('Transaction - commit');
+
             return true;
         } catch (\Exception $e) {
             // Fecha a trasação e cancela as alterações
@@ -324,6 +338,7 @@ class MagentoController extends Controller
 
             Log::critical(logMessage($e, 'Pedido ' . $order['increment_id'] . ' não importado'), $order);
             reportError('Pedido ' . $order['increment_id'] . ' não importado: ' . $e->getMessage() . ' - ' . $e->getLine());
+
             return false;
         }
     }
@@ -424,11 +439,18 @@ class MagentoController extends Controller
             return null;
         }
 
-        $qty = [];
+        $qty      = [];
+        $products = [];
+
         foreach ($order->produtos as $produto) {
+            $sku = $produto->produto->sku;
+            $products[$sku] = (isset($products[$sku])) ? ($products[$sku] + 1) : 1;
+        }
+
+        foreach ($products as $sku => $qtd) {
             $qty[] = [
-                'order_item_id' => $produto->produto->sku,
-                'qty' => $produto->quantidade
+                'order_item_id' => $sku,
+                'qty'           => $qtd,
             ];
         }
 
@@ -456,11 +478,13 @@ class MagentoController extends Controller
 
             if ($request) {
                 Log::notice("Dados de nota atualizados do pedido {$order->id} / {$order->codigo_api} no Magento", [$request]);
+
                 return true;
             }
         } catch (\Exception $e) {
             Log::critical(logMessage($e, 'Pedido não faturado no Magento (nota)'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);
             reportError('Pedido não faturado no Magento (nota) ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $order->id);
+
             return false;
         }
 
@@ -495,11 +519,13 @@ class MagentoController extends Controller
 
             if ($shipmentId) {
                 Log::notice("Dados de envio atualizados do pedido {$order->id} / {$order->codigo_api} no Magento", [$shipmentId, $request]);
+
                 return true;
             }
         } catch (\Exception $e) {
             Log::critical(logMessage($e, 'Pedido não faturado no Magento (rastreio)'), ['id' => $order->id, 'codigo_api' => $order->codigo_api]);
             reportError('Pedido não faturado no Magento (rastreio) ' . $e->getMessage() . ' - ' . $e->getLine() . ' - ' . $order->id);
+
             return false;
         }
 
@@ -700,6 +726,42 @@ class MagentoController extends Controller
         } catch (\Exception $e) {
             Log::warning(logMessage($e, 'Erro ao sincronizar os produtos do magento para o tucano'));
             reportError('Erro ao sincronizar os produtos do magento para o tucano' . $e->getMessage() . ' - ' . $e->getLine());
+        }
+    }
+
+    /**
+     * Get product URL from magento
+     *
+     * @param  int $sku
+     * @return string|boolean
+     */
+    public function getProductUrl($sku)
+    {
+        try {
+            $product = $this->api->catalogProductInfo($this->session, $sku, null, null, 'sku');
+
+            return config('magento.url') . '/'  . $product->url_path;
+        } catch (\Exception $exception) {
+            Log::error(logMessage($exception, 'Não foi possível buscar o produto no magento!'));
+            return false;
+        }
+    }
+
+    /**
+     * Get product images from magento
+     *
+     * @param  int $sku
+     * @return array
+     */
+    public function getProductImages($sku)
+    {
+        try {
+            $images = $this->api->catalogProductAttributeMediaList($this->session, $sku, null, 'sku');
+
+            return array_column($images, 'url');
+        } catch (\Exception $exception) {
+            Log::error(logMessage($exception, 'Não foi possível buscar o produto no magento!'));
+            return false;
         }
     }
 

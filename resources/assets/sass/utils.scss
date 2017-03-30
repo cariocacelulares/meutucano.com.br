@@ -5,6 +5,11 @@
     text-overflow: ellipsis;
 }
 
+.scroll-wrapper {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 // Posicionamento, comportamento e espaçamento
 .deleted { opacity: 0.3 }
 .affix { position: fixed }
@@ -68,6 +73,9 @@
 }
 
 // Texto e fonte
+.a-right { text-align: right; }
+.a-left { text-align: left; }
+.a-center { text-align: center; }
 .font-alt { font-family: $font-alt }
 .bg-white { background-color: $color-white !important }
 .bg-gray { background: $color-info !important }

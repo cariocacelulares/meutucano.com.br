@@ -34,6 +34,7 @@ class SenhaController extends Controller
     public function currentUserPassword()
     {
         $id = JWTAuth::parseToken()->authenticate()->id;
+
         return $this->listResponse($this->listPasswords($id));
     }
 
@@ -45,8 +46,8 @@ class SenhaController extends Controller
      */
     private function listPasswords($user_id)
     {
-        $m = self::MODEL;
-        $list = $m::where('usuario_id', $user_id);
+        $list = (self::MODEL)::where('usuario_id', $user_id);
+
         return $this->handleRequest($list);
     }
 }

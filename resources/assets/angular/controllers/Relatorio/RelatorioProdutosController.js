@@ -122,7 +122,6 @@
             };
 
             vm.list.fields.pedido = {
-                'pedido_produtos.quantidade': 'Quantidade',
                 'pedido_produtos.valor': 'Valor do produto',
                 'pedidos.codigo_marketplace': 'Código marketplace',
                 'pedidos.marketplace': 'Marketplace',
@@ -138,11 +137,9 @@
             vm.params.filter = {
                 sku: {operator: 'LIKE'},
                 titulo: {operator: 'LIKE'},
-                estoque: {operator: 'BETWEEN'},
                 estado: {operator: '='},
                 'produtos.created_at': {operator: 'BETWEEN'},
                 'pedido_produtos.imei': {operator: 'LIKE'},
-                'pedido_produtos.quantidade': {operator: 'BETWEEN'},
                 'pedido_produtos.valor': {operator: 'BETWEEN'},
                 'pedidos.marketplace': {operator: 'IN', value: {}},
                 'pedidos.status': {operator: 'IN', value: {}},
@@ -177,7 +174,6 @@
         // Dispara ao alterar uma relacao, limpando os paramtros da relacao antiga
         vm.changeRelation = function() {
             if (vm.params.relation.pedido !== true) {
-                vm.params.filter['pedido_produtos.quantidade'] = {operator: 'BETWEEN'};
                 vm.params.filter['pedido_produtos.valor'] = {operator: 'BETWEEN'};
                 vm.params.filter['pedidos.marketplace'] = {operator: 'IN', value: {}};
                 vm.params.filter['pedidos.status'] = {operator: 'IN', value: {}};

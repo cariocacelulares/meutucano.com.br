@@ -1,5 +1,7 @@
 <?php namespace Core\Models\Pedido;
 
+use Core\Models\Pedido;
+
 /**
  * Class Imposto
  * @package Core\Models\Pedido
@@ -26,7 +28,9 @@ class Imposto extends \Eloquent
     /**
      * @var array
      */
-    protected $fillable = ['*'];
+    protected $fillable = [
+        '*'
+    ];
 
     /**
      * Pedido

@@ -155,8 +155,6 @@
                 'produtos.titulo': 'Título',
                 'produtos.estado': 'Estado',
                 'pedido_produtos.produto_sku': 'SKU',
-                'pedido_produtos.imei': 'IMEI',
-                'pedido_produtos.quantidade': 'Quantidade',
                 'pedido_produtos.valor': 'Valor'
             };
 
@@ -175,7 +173,6 @@
                 'cliente_enderecos.cidade': '',
                 'pedido_produtos.produto_sku': {operator: 'LIKE'},
                 'pedido_produtos.imei': {operator: 'LIKE'},
-                'pedido_produtos.quantidade': {operator: 'BETWEEN'},
                 'pedido_produtos.valor': {operator: 'BETWEEN'},
                 'produtos.estado': {operator: '='}
             };
@@ -224,7 +221,6 @@
             if (vm.params.relation.produtos !== true) {
                 vm.params.filter['pedido_produtos.produto_sku'] = {operator: 'LIKE'};
                 vm.params.filter['pedido_produtos.imei'] = {operator: 'LIKE'};
-                vm.params.filter['pedido_produtos.quantidade'] = {operator: 'BETWEEN'};
                 vm.params.filter['pedido_produtos.valor'] = {operator: 'BETWEEN'};
             }
         };

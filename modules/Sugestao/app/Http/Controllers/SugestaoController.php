@@ -56,7 +56,7 @@ class SugestaoController extends Controller
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao salvar recurso'));
 
-            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
+            return $this->clientErrorResponse(['exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()]);
         }
     }
 
@@ -92,8 +92,10 @@ class SugestaoController extends Controller
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
-            $data = ['form_validations' => $v->errors(), 'exception' => $exception->getMessage()];
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse([
+                'form_validations' => $v->errors(),
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
         }
     }
 }

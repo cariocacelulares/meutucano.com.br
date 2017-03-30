@@ -4,6 +4,11 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Event;
 use Core\Events\Handlers\SetRefund;
 use Core\Events\Handlers\UpdateStock;
+use Core\Events\Handlers\DeleteProductImei;
+use Core\Events\Handlers\RestoreProductImei;
+use Core\Events\Handlers\ConvertEntryImeis;
+use Core\Events\Handlers\SetProductCost;
+use Core\Events\Handlers\SetProductImeiCost;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -19,6 +24,11 @@ class EventServiceProvider extends ServiceProvider
     protected $subscribe = [
         UpdateStock::class,
         SetRefund::class,
+        DeleteProductImei::class,
+        RestoreProductImei::class,
+        ConvertEntryImeis::class,
+        SetProductCost::class,
+        SetProductImeiCost::class,
     ];
 
     /**

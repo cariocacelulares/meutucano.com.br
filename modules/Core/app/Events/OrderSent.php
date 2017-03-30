@@ -1,7 +1,7 @@
 <?php namespace Core\Events;
 
 use Illuminate\Queue\SerializesModels;
-use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido;
 
 class OrderSent extends \Event
 {
@@ -18,5 +18,7 @@ class OrderSent extends \Event
     {
         \Log::debug('Evento OrderSent disparado');
         $this->order = $order;
+
+        \Event::fire(new \Gamification\Events\TarefaRealizada('fature-um-pedido'));
     }
 }

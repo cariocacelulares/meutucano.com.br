@@ -2,11 +2,11 @@
 
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\File;
-use Core\Models\Pedido\Ligacao;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestControllerTrait;
-use Core\Http\Requests\LigacaoRequest as Request;
+use Core\Models\Pedido\Ligacao;
 use Core\Transformers\LigacaoTransformer;
+use Core\Http\Requests\LigacaoRequest as Request;
 
 /**
  * Class LigacaoController
@@ -28,7 +28,7 @@ class LigacaoController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return $this->listResponse(LigacaoTransformer::list($data));
+        return $this->listResponse(LigacaoTransformer::tableList($data));
     }
 
     /**
@@ -62,9 +62,11 @@ class LigacaoController extends Controller
 
             return $this->createdResponse($data);
         } catch (\Exception $exception) {
-            $data = ['exception' => $exception->getMessage()];
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
         }
     }
 
@@ -89,9 +91,7 @@ class LigacaoController extends Controller
             \Log::error(logMessage($exception, 'Erro ao excluir recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => strstr(get_class($exception), 'ModelNotFoundException')
-                    ? 'Recurso nao encontrado'
-                    : $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }

@@ -26,7 +26,6 @@
             'as.sortable',
             'ngSanitize',
             'ui.select',
-            'ngRaven',
             'textAngular',
             'ui.utils.masks'
         ]);

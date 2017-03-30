@@ -1,7 +1,7 @@
 <?php namespace Core\Events;
 
 use Illuminate\Queue\SerializesModels;
-use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido;
 
 class OrderCreated extends \Event
 {

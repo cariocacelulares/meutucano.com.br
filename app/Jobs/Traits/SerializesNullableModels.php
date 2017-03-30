@@ -1,7 +1,6 @@
 <?php namespace App\Jobs\Traits;
 
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Database\ModelIdentifier;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 trait SerializesNullableModels

@@ -1,8 +1,6 @@
 <?php namespace Rastreio\Models;
 
-use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
-use Core\Models\Pedido\Pedido;
 
 /**
  * Class Logistica
@@ -24,7 +22,6 @@ class Logistica extends \Eloquent
      */
     protected $fillable = [
         'rastreio_id',
-        'usuario_id',
         'autorizacao',
         'motivo',
         'acao',
@@ -47,16 +44,5 @@ class Logistica extends \Eloquent
     public function rastreio()
     {
         return $this->belongsTo(Rastreio::class);
-    }
-
-
-    /**
-     * Rastreio Ref
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function rastreioRef()
-    {
-        return $this->hasOne(PedidoRastreio::class, 'rastreio_ref_id');
     }
 }

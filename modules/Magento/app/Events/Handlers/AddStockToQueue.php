@@ -1,7 +1,7 @@
 <?php namespace Magento\Events\Handlers;
 
-use Core\Events\ProductStockUpdated;
 use Illuminate\Events\Dispatcher;
+use Core\Events\ProductStockUpdated;
 use Magento\Jobs\SendStockInfo;
 
 class AddStockToQueue
@@ -28,7 +28,7 @@ class AddStockToQueue
      */
     public function onProductStockUpdated(ProductStockUpdated $event)
     {
-        \Log::debug('Handler AddStockToQueue acionado!', [$event->product]);
-        dispatch(with(new SendStockInfo($event->product))->onQueue('high'));
+        \Log::debug('Handler AddStockToQueue acionado!', [$event->productStock]);
+        dispatch(with(new SendStockInfo($event->productStock))->onQueue('high'));
     }
 }

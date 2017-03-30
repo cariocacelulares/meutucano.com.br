@@ -34,21 +34,21 @@
 </th>
 <th class="between-group">
     <div class="date-picker">
-        <input class="form-control" ng-model="InspecaoTecnicaList.filter['inspecao_tecnica.created_at'].from" placeholder="De" ng-model-options="{debounce:500}" />
+        <input class="form-control" ng-model="SugestaoList.filter['sugestoes.created_at'].from" placeholder="De" ng-model-options="{debounce:500}" />
         <div class="picker-wrap">
-            <date-picker ng-model="InspecaoTecnicaList.filter['inspecao_tecnica.created_at'].from" ng-model-options="{debounce:500}"></date-picker>
+            <date-picker ng-model="SugestaoList.filter['sugestoes.created_at'].from" ng-model-options="{debounce:500}"></date-picker>
         </div>
     </div>
     <span>/</span>
     <div class="date-picker">
-        <input class="form-control" ng-model="InspecaoTecnicaList.filter['inspecao_tecnica.created_at'].to" placeholder="Até" ng-model-options="{debounce:500}" />
+        <input class="form-control" ng-model="SugestaoList.filter['sugestoes.created_at'].to" placeholder="Até" ng-model-options="{debounce:500}" />
         <div class="picker-wrap">
-            <date-picker ng-model="InspecaoTecnicaList.filter['inspecao_tecnica.created_at'].to" ng-model-options="{debounce:500}"></date-picker>
+            <date-picker ng-model="SugestaoList.filter['sugestoes.created_at'].to" ng-model-options="{debounce:500}"></date-picker>
         </div>
     </div>
 </th>
 <th class="item-button">
-    <a title="Limpar filtros" class="btn-danger" ng-click="InspecaoTecnicaList.filterList.clear()">
+    <a title="Limpar filtros" class="btn-danger" ng-click="SugestaoList.filterList.clear()">
         <i class="fa-eraser"></i>
     </a>
 </th>

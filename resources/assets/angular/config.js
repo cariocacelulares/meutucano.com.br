@@ -7,9 +7,9 @@
         .config(function(envServiceProvider) {
             envServiceProvider.config({
                 domains: {
-                    development: ['tucano.app'],
-                    production : ['192.168.2.170'],
-                    aws        : ['www.meutucano.com.br', 'meutucano.com.br']
+                    development:    ['tucano.app'],
+                    production :    ['192.168.2.170'],
+                    aws        :    ['www.meutucano.com.br', 'meutucano.com.br']
                 },
                 vars: {
                     development: {
@@ -57,12 +57,6 @@
                     $rootScope.authenticated = true;
                     $rootScope.currentUser = user;
 
-                    Raven.setUserContext({
-                        id: user.id,
-                        username: user.username,
-                        email: user.email
-                    });
-
                     if(toState.name === 'login') {
                         event.preventDefault();
                         $state.go('app.dashboard');
@@ -95,13 +89,16 @@
                 if (response.status === 401) { // Atualiza token expirado
                     $http.get(envService.read('apiUrl') + '/token', {
                         headers: {Authorization: 'Bearer '+ localStorage.getItem('satellizer_token')}
-                    }).error(function() {
-                        localStorage.removeItem('user');
-                        $state.go('login');
-                    }).then(function(tokenResponse) {
-                        localStorage.setItem('satellizer_token', tokenResponse.data.token);
-                        $http(response.config).then(responseHandler, deferred.reject);
-                    });
+                    }).then(
+                        function(tokenResponse) {
+                            localStorage.setItem('satellizer_token', tokenResponse.data.token);
+                            $http(response.config).then(responseHandler, deferred.reject);
+                        },
+                        function() {
+                            localStorage.removeItem('user');
+                            $state.go('login');
+                        }
+                    );
 
                     return false;
                 } else if (response.data.status == 'ValidationFail') { // Erros de Validação

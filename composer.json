@@ -23,7 +23,7 @@
         "stavarengo/php-sigep": "dev-master",
         "stavarengo/php-sigep-fpdf": "dev-master",
         "itbz/fpdf": "^1.7",
-        "nfephp-org/nfephp": "dev-carioca",
+        "nfephp-org/nfephp": "dev-master",
         "zizaco/entrust": "5.2.x-dev",
         "sunra/php-simple-html-dom-parser": "^1.5",
         "guzzlehttp/guzzle": "~6.0",
@@ -31,15 +31,17 @@
         "venturecraft/revisionable": "1.*",
         "spatie/browsershot": "^1.5",
         "maatwebsite/excel": "~2.1.0",
-        "dompdf/dompdf": "~0.6.1",
         "vinelab/cdn": "^1.4",
-        "sentry/sentry-laravel": "^0.4.1",
         "jenssegers/mongodb": "^3.1",
         "nwidart/laravel-modules": "1.14.*",
         "predis/predis": "~1.0",
         "spatie/laravel-backup": "^4.3",
         "spatie/laravel-failed-job-monitor": "^2.1",
-        "sofa/eloquence": "~5.3"
+        "sofa/eloquence": "~5.3",
+        "milon/barcode": "^5.3",
+        "dompdf/dompdf": "^0.8.0",
+        "livepixel/mercado-livre": "^1.1",
+        "doctrine/dbal": "^2.5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -63,14 +65,12 @@
             "Bootstrap\\": "bootstrap/",
             "Core\\": "modules/Core/app",
             "Gamification\\": "modules/Gamification/app",
-            "InspecaoTecnica\\": "modules/InspecaoTecnica/app",
             "Magento\\": "modules/Magento/app",
             "Marketing\\": "modules/Marketing/app",
             "Meta\\": "modules/Meta/app",
             "Rastreio\\": "modules/Rastreio/app",
-            "Skyhub\\": "modules/Skyhub/app",
             "Sugestao\\": "modules/Sugestao/app",
-            "Allnation\\": "modules/Allnation/app"
+            "Mercadolivre\\": "modules/Mercadolivre/app"
         },
         "files": [
             "app/helpers.php"
@@ -111,7 +111,7 @@
         },
         "nfephp": {
             "type": "git",
-            "url": "git@github.com:diego3g/nfephp.git"
+            "url": "git@github.com:cariocacelulares/nfephp.git"
         }
     }
 }

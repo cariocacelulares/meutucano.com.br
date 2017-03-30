@@ -1,0 +1,143 @@
+<form ng-submit="SupplierForm.save()" novalidate="novalidate">
+    <div id="page-header" class="row">
+        <page-title icon="fa-building" title="{{ SupplierForm.supplier.name || 'Adicionando fornecedor' }}" description="Todas as informações do fornecedor"></page-title>
+        <div class="col-md-6 button-bar">
+            <button title="Salvar informações" class="btn-success" type="submit"><i class="fa-save"></i>&nbsp; Salvar</button>
+            <a confirm="SupplierForm.destroy()" ng-if="SupplierForm.supplier.id" title="Salvar informações" class="btn-danger"><i class="fa-trash"></i>&nbsp; Excluir</a>
+            <a onclick="history.back()" title="Voltar para a página anterior" class="btn-default"><i class="fa-reply"></i>&nbsp; Voltar</a>
+        </div>
+    </div>
+
+    <div class="form-default form-vertical form-box">
+        <validation errors="SupplierForm.validationErrors"></validation>
+
+        <div class="row form-group">
+            <div class="col-md-2 a-right">
+                <label for="cnpj">CNPJ</label>
+            </div>
+            <div class="col-md-3">
+                <input ng-model="SupplierForm.supplier.cnpj" id="cnpj" placeholder="CNPJ" required ui-br-cnpj-mask>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-2 a-right">
+                <label for="company_name">Fornecedor</label>
+            </div>
+            <div class="col-md-6">
+                <input ng-model="SupplierForm.supplier.company_name" id="company_name" placeholder="Razão social" required>
+                <small class="hint-text">Razão social</small>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-2 a-right">
+                <label for="name">Nome fantasia</label>
+            </div>
+            <div class="col-md-6">
+                <input ng-model="SupplierForm.supplier.name" id="name" placeholder="Nome da empresa" required>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-2 a-right">
+                <label for="ie">Inscrição Estadual</label>
+            </div>
+            <div class="col-md-3">
+                <input ng-model="SupplierForm.supplier.ie" id="ie" placeholder="Em branco para isento">
+                <small class="hint-text">Deixe em branco para ISENTO</small>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-2 a-right">
+                <label for="fone">Telefone</label>
+            </div>
+            <div class="col-md-3">
+                <input ng-model="SupplierForm.supplier.fone" id="fone" placeholder="Núm. telefone" ui-br-phone-number>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-2 a-right">
+                <label for="crt">CRT</label>
+            </div>
+            <div class="col-md-3">
+                <input ng-model="SupplierForm.supplier.crt" id="crt" placeholder="Código de Regime Tributário">
+                <small class="hint-text">Código de Regime Tributário</small>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-2 a-right">
+                <label for="cep">CEP</label>
+            </div>
+            <div class="col-md-2">
+                <input ng-change="SupplierForm.cepChanged()" ng-model="SupplierForm.supplier.cep" id="cep" placeholder="CEP" required ui-br-cep-mask>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-2 a-right">
+                <label for="street">Rua</label>
+            </div>
+            <div class="col-md-5">
+                <input ng-model="SupplierForm.supplier.street" id="street" placeholder="Ex. Avenida Oscar Barcelos" required>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-2 a-right">
+                <label for="number">Número</label>
+            </div>
+            <div class="col-md-2">
+                <input ng-model="SupplierForm.supplier.number" id="number" placeholder="Número da Rua">
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-2 a-right">
+                <label for="complement">Complemento</label>
+            </div>
+            <div class="col-md-3">
+                <input ng-model="SupplierForm.supplier.complement" id="complement" placeholder="Ex. Ao lado da praça">
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-2 a-right">
+                <label for="neighborhood">Bairro</label>
+            </div>
+            <div class="col-md-3">
+                <input ng-model="SupplierForm.supplier.neighborhood" id="neighborhood" placeholder="Ex. Centro" required>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-2 a-right">
+                <label for="city">Cidade</label>
+            </div>
+            <div class="col-md-3">
+                <input ng-model="SupplierForm.supplier.city" id="city" placeholder="Ex. Rio do Sul" required>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-2 a-right">
+                <label for="uf">UF</label>
+            </div>
+            <div class="col-md-3">
+                <input ng-model="SupplierForm.supplier.uf" id="uf" placeholder="Ex. SC" required ng-maxlength="3">
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-2 a-right">
+                <label for="country">País</label>
+            </div>
+            <div class="col-md-3">
+                <input ng-model="SupplierForm.supplier.country" id="country" placeholder="Ex. Brasil" required>
+            </div>
+        </div>
+    </div>
+</form>

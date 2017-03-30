@@ -4,10 +4,10 @@
             <span class="m-r-10">Página {{ tableList.tableData.current_page || '1' }} de {{ tableList.tableData.last_page || '1' }}</span>
 
             <div class="btn-group">
-                <button ng-click="tableList.tableHeader.prev()" class="btn btn-default" ng-disabled="tableList.tableData.current_page === 1">
+                <button type="button" ng-click="tableList.tableHeader.prev()" class="btn btn-default" ng-disabled="tableList.tableData.current_page === 1">
                     <i class="fa fa-angle-left"></i>
                 </button>
-                <button ng-click="tableList.tableHeader.next()" class="btn btn-default" ng-disabled="tableList.tableData.current_page >= tableList.tableData.last_page">
+                <button type="button" ng-click="tableList.tableHeader.next()" class="btn btn-default" ng-disabled="tableList.tableData.current_page >= tableList.tableData.last_page">
                     <i class="fa fa-angle-right"></i>
                 </button>
             </div>
@@ -26,7 +26,7 @@
                 {{ tableList.tableData.total }} {{ (tableList.tableData.total === 1) ? 'registro encontrado' : 'registros encontrados' }}
             </div>
 
-            <button ng-click="tableList.load()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i></button>
+            <button type="button" ng-click="tableList.load()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i></button>
         </td>
     </tr>
 </thead>

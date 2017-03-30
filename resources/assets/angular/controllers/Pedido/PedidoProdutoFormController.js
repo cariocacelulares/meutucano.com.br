@@ -39,6 +39,10 @@
             vm.load();
         }
 
+        /**
+         * Search products and fill select list
+         * @param  {String} term term to be searched
+         */
         vm.search = function(term) {
             if (term) {
                 Produto.search(term).then(function(response) {
@@ -46,6 +50,13 @@
                 });
             }
         };
+
+        /**
+         * When product is selected
+         */
+        vm.selected = function () {
+            vm.pedidoProduto.valor = vm.pedidoProduto.produto.valor;
+        }
 
         /**
          * Salva o pedidoProduto

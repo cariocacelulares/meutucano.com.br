@@ -1,8 +1,6 @@
 <?php namespace Rastreio\Models;
 
-use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
-use Core\Models\Pedido\Pedido;
 
 /**
  * Class Pi
@@ -24,7 +22,6 @@ class Pi extends \Eloquent
      */
     protected $fillable = [
         'rastreio_id',
-        'usuario_id',
         'codigo_pi',
         'motivo_status',
         'status',

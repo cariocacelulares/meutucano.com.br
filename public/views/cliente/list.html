@@ -1,5 +1,10 @@
 <div id="page-header" class="row">
     <page-title icon="fa-group" title="Clientes" description="Todos os clientes da loja."></page-title>
+    <div class="col-md-6 button-bar">
+        <a ui-sref="app.clientes.form" class="btn-success">
+            <i class="fa-user-plus">&nbsp;</i> Adicionar
+        </a>
+    </div>
 </div>
 <table table-list="ClienteList">
     <thead>
@@ -27,9 +32,14 @@
             </td>
             <td class="text-center">{{ cliente.created_at }}</td>
             <td class="text-center">
-                <a class="btn-info" ui-sref="app.clientes.detalhe({id: cliente.id})">
-                    <i class="fa-eye"></i>
-                </a>
+                <dropdown>
+                        <li>
+                            <a ui-sref="app.clientes.detalhe({id: cliente.id})"><i class="fa-eye"></i>&nbsp; Detalhes</a>
+                        </li>
+                        <li roles="admin|gestor">
+                            <a ui-sref="app.clientes.form({id: cliente.id})"><i class="fa-pencil"></i>&nbsp; Editar</a>
+                        </li>
+                </dropdown>
             </td>
         </tr>
     </tbody>

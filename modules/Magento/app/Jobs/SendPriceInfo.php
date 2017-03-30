@@ -1,11 +1,11 @@
 <?php namespace Magento\Jobs;
 
-use Core\Models\Produto\Produto;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Core\Models\Produto;
 use Magento\Http\Controllers\MagentoController;
 
 class SendPriceInfo implements ShouldQueue
@@ -35,7 +35,7 @@ class SendPriceInfo implements ShouldQueue
         \Log::debug('Job SendPriceInfo executado', [$this->product]);
         $action = with(new MagentoController())->updatePrice($this->product);
 
-        if ($action !== true) {
+        if ($action !== true && app('env') !== 'testing') {
             if (get_class($action) == 'Exception') {
                 throw new Exception($action->getMessage(), $action->getCode(), $action);
             } else {

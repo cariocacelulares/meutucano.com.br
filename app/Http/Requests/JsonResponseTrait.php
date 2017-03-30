@@ -15,8 +15,8 @@ trait JsonResponseTrait
     {
         return with(new Response([
                 'status' => 'ValidationFail',
-                'code' => 400,
-                'data' => $validator->errors()->getMessages()
+                'code'   => 400,
+                'data'   => $validator->errors()->getMessages()
             ], 400))
             ->header('Content-Type', 'application/json')
             ->throwResponse();

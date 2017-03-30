@@ -1,0 +1,40 @@
+<div class="row">
+    <div ng-if="ProdutoDetalhe.pedidoProdutos[0] || ProdutoDetalhe.pedidoProdutos[1]" class="col-md-12">
+        <p>
+            <span>Produtos reservados: </span>
+            <span ng-if="ProdutoDetalhe.pedidoProdutos[0]"><b>{{ ProdutoDetalhe.pedidoProdutos[0] }}</b> pendente(s)</span>
+            <span ng-if="ProdutoDetalhe.pedidoProdutos[0] && ProdutoDetalhe.pedidoProdutos[1]"> e </span>
+            <span ng-if="ProdutoDetalhe.pedidoProdutos[1]"><b>{{ ProdutoDetalhe.pedidoProdutos[1] }}</b> pago(s)</span>.
+        </p>
+    </div>
+</div>
+<div class="row m-t-0">
+    <div class="col-md-12">
+        <table class="table info-style small first-col-normal table-scroll no-padding">
+            <thead>
+                <tr>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Código</th>
+                    <th class="text-center">Marketplace</th>
+                    <th class="text-center">Valor</th>
+                </tr>
+            </thead>
+            <tbody style="height:250px">
+                <tr ng-repeat="pedido in ProdutoDetalhe.pedidoProdutos.data track by $index">
+                    <td class="text-center">
+                        <span class="label label-{{ ProdutoDetalhe.pedidoHelper.parseStatusClass(pedido.status) }} m-b-0">
+                            {{ pedido.status_description }}
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <a ui-sref="app.pedidos.detalhe({id: pedido.id})">
+                            {{ pedido.codigo_marketplace }}
+                        </a>
+                    </td>
+                    <td class="text-center">{{ pedido.marketplace }}</td>
+                    <td class="text-center">{{ pedido.valor }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

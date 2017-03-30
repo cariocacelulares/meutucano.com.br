@@ -1,18 +1,16 @@
 <?php namespace Core\Http\Controllers\Pedido;
 
-use App\Http\Controllers\Rest\RestControllerTrait;
-use App\Http\Controllers\Controller;
-use Core\Models\Pedido\Pedido;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
-use Carbon\Carbon;
-use Skyhub\Http\Controllers\SkyhubController;
-use Magento\Http\Controllers\MagentoController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Sugestao\Models\Sugestao;
-use Nwidart\Modules\Facades\Module;
+use App\Http\Controllers\Rest\RestControllerTrait;
+use App\Http\Controllers\Controller;
+use Core\Models\Pedido;
+use Core\Models\Pedido\PedidoProduto;
 use Core\Transformers\OrderTransformer;
+use Core\Http\Requests\PedidoRequest as Request;
 
 /**
  * Class PedidoController
@@ -31,16 +29,14 @@ class PedidoController extends Controller
      */
     public function tableList()
     {
-        $m = self::MODEL;
-
-        $list = $m::with(['cliente', 'endereco'])
+        $list = (self::MODEL)::with(['cliente', 'endereco'])
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
             ->leftJoin('pedido_notas', 'pedido_notas.pedido_id', '=', 'pedidos.id')
             ->orderBy('pedidos.created_at', 'DESC');
 
         $list = $this->handleRequest($list);
 
-        return $this->listResponse(OrderTransformer::list($list));
+        return $this->listResponse(OrderTransformer::tableList($list));
     }
 
     /**
@@ -50,19 +46,13 @@ class PedidoController extends Controller
      */
     public function faturamento()
     {
-        $m = self::MODEL;
-
-        $list = $m::with([
+        $list = (self::MODEL)::with([
                 'cliente',
                 'endereco',
                 'notas',
                 'rastreios',
                 'produtos',
                 'produtos.produto',
-                'produtos.inspecoes' => function ($query) {
-                    $query->orderBy('priorizado', 'DESC');
-                    $query->orderBy('id', 'ASC');
-                },
                 'comentarios'
             ])
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
@@ -88,20 +78,19 @@ class PedidoController extends Controller
      */
     public function prioridade($pedido_id)
     {
-        $m = self::MODEL;
-
         try {
             $prioridade = Input::get('priorizado');
             $prioridade = (int)$prioridade ? 1 : null;
 
-            $pedido = $m::find($pedido_id);
+            $pedido = (self::MODEL)::find($pedido_id);
             $pedido->priorizado = $prioridade;
             $pedido->save();
 
             return $this->showResponse($pedido);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+        } catch (\Exception $exception) {
+            return $this->clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
         }
     }
 
@@ -112,20 +101,19 @@ class PedidoController extends Controller
      */
     public function segurar($pedido_id)
     {
-        $m = self::MODEL;
-
         try {
             $segurar = Input::get('segurar');
             $segurar = (int)$segurar ? 1 : 0;
 
-            $pedido = $m::find($pedido_id);
+            $pedido = (self::MODEL)::find($pedido_id);
             $pedido->segurado = $segurar;
             $pedido->save();
 
             return $this->showResponse($pedido);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+        } catch (\Exception $exception) {
+            return $this->clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
         }
     }
 
@@ -138,8 +126,6 @@ class PedidoController extends Controller
      */
     public function alterarStatus($pedido_id)
     {
-        $m = self::MODEL;
-
         try {
             $status    = Input::get('status');
             $protocolo = Input::get('protocolo');
@@ -148,9 +134,9 @@ class PedidoController extends Controller
                 throw new \Exception('Campo de status obrigatório', 1);
             }
 
-            $pedido = $m::find($pedido_id);
+            $pedido = (self::MODEL)::find($pedido_id);
 
-            if (in_array($pedido->marketplace, \Config::get('core.required_protocolo')) && $status === 5 && !$protocolo) {
+            if ($status === 5 && !$protocolo && in_array($pedido->marketplace, \Config::get('core.required_protocolo'))) {
                 throw new \Exception('Protocolo obrigatório para cancelar pedidos nesse marketplace.', 422);
             }
 
@@ -165,19 +151,20 @@ class PedidoController extends Controller
                 $pedido->imagem_cancelamento = $name;
             }
 
+            if ($status == 2 && !$pedido->rastreios) {
+                $status = 3;
+            }
+
             $pedido->status = $status;
             $pedido->save();
 
             return $this->showResponse($pedido);
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao alterar status do pedido'));
-            $data = ['exception' => $exception->getMessage()];
 
-            if ($exception->getCode() == 422) {
-                return $this->clientErrorResponse($data);
-            } else {
-                return $this->clientErrorResponse($data);
-            }
+            return $this->clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
         }
     }
 
@@ -187,26 +174,19 @@ class PedidoController extends Controller
      */
     public function show($id)
     {
-        $m = self::MODEL;
-
         try {
-            $data = $m::with([
+            $data = (self::MODEL)::with([
                 'cliente',
                 'endereco',
-                'notas' => function ($query)
-                {
+                'notas' => function ($query) {
                     $query->withTrashed();
                 },
-                'rastreios' => function ($query)
-                {
+                'rastreios' => function ($query) {
                     $query->withTrashed();
                 },
                 'produtos',
                 'produtos.produto',
-                'produtos.inspecoes' => function ($query) {
-                    $query->orderBy('priorizado', 'DESC');
-                    $query->orderBy('id', 'ASC');
-                },
+                'produtos.productImei',
                 'comentarios',
                 'rastreios.devolucao',
                 'rastreios.pi',
@@ -217,11 +197,11 @@ class PedidoController extends Controller
             if ($data) {
                 return $this->showResponse(OrderTransformer::show($data));
             }
-        } catch (\Exception $e) {
-            if ($e->getPrevious()) {
-                throw $e->getPrevious();
+        } catch (\Exception $exception) {
+            if ($exception->getPrevious()) {
+                throw $exception->getPrevious();
             } else {
-                throw $e;
+                throw $exception;
             }
         }
 
@@ -256,7 +236,7 @@ class PedidoController extends Controller
     }
 
     /**
-     * Envia informações de entrega e nota para o Magento / Skyhub
+     * Envia informações de entrega e nota
      *
      * @param  int $pedido_id
      * @return void
@@ -267,10 +247,7 @@ class PedidoController extends Controller
 
         if ($pedido = Pedido::find($pedido_id)) {
             $pedido->status = 2;
-
-            if ($pedido->save()) {
-                \Event::fire(new \Gamification\Events\TarefaRealizada('fature-um-pedido'));
-            }
+            $pedido->save();
         }
     }
 
@@ -282,10 +259,8 @@ class PedidoController extends Controller
      */
     public function shopsystem($codigo_pedido)
     {
-        $m = self::MODEL;
-
         try {
-            if ($pedido = $m::where('codigo_marketplace', '=', $codigo_pedido)->first()) {
+            if ($pedido = (self::MODEL)::where('codigo_marketplace', '=', $codigo_pedido)->first()) {
                 $rastreio = $pedido->rastreios()->orderBy('created_at', 'DESC')->first();
                 $codigo   = ($rastreio) ? $rastreio->rastreio : null;
 
@@ -319,9 +294,9 @@ class PedidoController extends Controller
      */
     public function totalOrdersByStatus()
     {
-        $ano = date('Y');
-        $mes = date('m');
-        $dia = date('d');
+        $ano       = date('Y');
+        $mes       = date('m');
+        $dia       = date('d');
         $inicioMes = "{$ano}-{$mes}-01 00:00:00";
 
         $pedidos = Pedido
@@ -418,7 +393,7 @@ class PedidoController extends Controller
 
         if (!isset($mes[0])) {
             $mes[] = [
-                'mes' => $data['mes'],
+                'mes'   => $data['mes'],
                 'count' => 0
             ];
         }
@@ -426,14 +401,14 @@ class PedidoController extends Controller
         if (count($mes) == 1) {
             if ($data['mes'] == $mes[0]['mes']) {
                 $mes[] = [
-                    'mes' => $data['mes'] - 1,
+                    'mes'   => $data['mes'] - 1,
                     'count' => 0
                 ];
             } elseif (($data['mes'] - 1) == $mes[0]['mes']) {
                 $mes[] = $mes[0];
 
                 $mes[0] = [
-                    'mes' => $data['mes'],
+                    'mes'   => $data['mes'],
                     'count' => 0
                 ];
             }
@@ -450,7 +425,7 @@ class PedidoController extends Controller
                 ->get()->toArray();
 
             $mes[1]['count'] = $mes[1]['count'][0]['count'];
-            $mes[1]['mes'] = 12;
+            $mes[1]['mes']   = 12;
         }
 
         $dia = Pedido
@@ -465,7 +440,7 @@ class PedidoController extends Controller
 
         if (!isset($dia[0])) {
             $dia[] = [
-                'dia' => $data['dia'],
+                'dia'   => $data['dia'],
                 'count' => 0
             ];
         }
@@ -473,14 +448,14 @@ class PedidoController extends Controller
         if (count($dia) == 1) {
             if ($data['dia'] == $dia[0]['dia']) {
                 $dia[] = [
-                    'dia' => $data['dia'] - 1,
+                    'dia'   => $data['dia'] - 1,
                     'count' => 0
                 ];
             } elseif (($data['dia'] - 1) == $dia[0]['dia']) {
                 $dia[] = $dia[0];
 
                 $dia[0] = [
-                    'dia' => $data['dia'],
+                    'dia'   => $data['dia'],
                     'count' => 0
                 ];
             }
@@ -518,7 +493,7 @@ class PedidoController extends Controller
         $atual = false;
 
         if ($mes === null) {
-            $mes = (int)date('m');
+            $mes   = (int)date('m');
             $atual = true;
         }
 
@@ -543,8 +518,8 @@ class PedidoController extends Controller
         }
 
         $list = [
-            'mes' => $mes,
-            'ano' => $ano,
+            'mes'  => $mes,
+            'ano'  => $ano,
             'name' => Config::get('core.meses')[$mes],
             'data' => array_values($list)
         ];
@@ -568,19 +543,17 @@ class PedidoController extends Controller
                 $list[$key] = ucwords(strtolower(array_values(array_intersect_key($item, ['cidade' => '']))[0]));
             }
 
-            // arsort($list);
             return $this->listResponse($list);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+        } catch (\Exception $exception) {
+            return $this->clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
         }
     }
 
     public function imagemCancelamento($id)
     {
-        $model = self::MODEL;
-
-        if ($pedido = $model::find($id)) {
+        if ($pedido = (self::MODEL)::find($id)) {
             $file_path = storage_path('app/public/cancelamento/' . $pedido->imagem_cancelamento);
 
             if (file_exists($file_path)) {
@@ -589,5 +562,68 @@ class PedidoController extends Controller
         }
 
         return $this->notFoundResponse();
+    }
+
+    /**
+     * Create a new resource
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function store(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            Log::debug('Transaction - begin');
+
+            $order = (self::MODEL)::create(Input::except([
+                'cliente',
+                'products',
+            ]));
+
+            $orderProducts = Input::get('products');
+            if ($orderProducts) {
+                $products   = [];
+                $quantities = [];
+                foreach ($orderProducts as $orderProduct) {
+                    for ($i=0; $i < $orderProduct['qtd']; $i++) {
+                        $products[] = $orderProduct;
+                        $quantities[$orderProduct['sku']] = isset($quantities[$orderProduct['sku']]) ? $quantities[$orderProduct['sku']] +1 : 1;
+                    }
+                }
+
+                foreach ($quantities as $sku => $qtd) {
+                    $stock = \Stock::get($sku)[0];
+
+                    if ($stock < $qtd) {
+                        return $this->validationFailResponse([
+                            "Você está solicitando {$qtd} quantidades do produto {$sku}, mas existem apenas {$stock} em estoque."
+                        ]);
+                    }
+                }
+
+                foreach ($products as $orderProduct) {
+                    PedidoProduto::create([
+                        'pedido_id'        => $order->id,
+                        'produto_sku'      => $orderProduct['sku'],
+                        'valor'            => $orderProduct['valor'],
+                    ]);
+                }
+            }
+
+            DB::commit();
+            Log::debug('Transaction - commit');
+
+            return $this->createdResponse($order);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
+
+            DB::rollBack();
+            Log::debug('Transaction - rollback');
+
+            return $this->clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
     }
 }

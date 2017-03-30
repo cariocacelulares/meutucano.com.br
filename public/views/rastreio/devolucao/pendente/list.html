@@ -17,7 +17,9 @@
         <tr ng-repeat="devolucao in DevolucaoList.tableData.data">
             <td class="text-center fs-11">
                 <strong>{{ devolucao.rastreio.pedido.marketplace }}</strong><br>
-                {{ devolucao.rastreio.pedido.codigo_marketplace || 'Sem código' }}
+                <a ui-sref="app.pedidos.detalhe({id: devolucao.rastreio.pedido.id})">
+                    {{ devolucao.rastreio.pedido.codigo_marketplace || 'Sem código' }}
+                </a>
             </td>
             <td>
                 <strong ng-bind="devolucao.rastreio.pedido.cliente.nome"></strong>

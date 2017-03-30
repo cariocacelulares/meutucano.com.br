@@ -1,9 +1,9 @@
 <?php namespace Core\Models\Pedido\Nota;
 
-use Carbon\Carbon;
 use Venturecraft\Revisionable\RevisionableTrait;
 use App\Models\Usuario\Usuario;
 use Core\Models\Pedido\Nota;
+
 
 /**
  * Class Devolucao
@@ -19,6 +19,7 @@ class Devolucao extends \Eloquent
      * @var array
      */
     protected $fillable = [
+        'usuario_id',
         'nota_id',
         'chave',
         'arquivo',
@@ -30,7 +31,7 @@ class Devolucao extends \Eloquent
      * @var array
      */
     protected $appends = [
-        'tipo_readable'
+        'tipo_readable',
     ];
 
     /**

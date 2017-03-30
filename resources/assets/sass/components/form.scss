@@ -28,9 +28,11 @@
 }
 
 .form-default {
-    padding: 20px;
-    border: 1px solid $color-master-light;
-    background: $color-white;
+    &:not(.style-form-box) {
+        padding: 20px;
+        border: 1px solid $color-master-light;
+        background: $color-white;
+    }
 
     &.form-clean {
         padding: 0;
@@ -48,11 +50,13 @@
         }
     }
 
-    .tabs-wrapper {
-        .tabs .tab a {
-            padding-left: 0;
-        }
+    .form-box {
+        padding: 20px;
+        border: 1px solid $color-master-light;
+        background: $color-white;
+    }
 
+    .tabs-wrapper {
         .tabs-container {
             padding-right: 0;
         }
@@ -87,6 +91,8 @@
         border: 1px solid $color-master-light;
         background-image: none;
         background-color: $color-master-lightest;
+        -webkit-appearance: none;
+        -webkit-border-radius: 0px;
 
         &:focus {
             color: darken($color-master, 20%);
@@ -176,5 +182,16 @@
                 margin-left: 0;
             }
         }
+    }
+
+    .hint-text {
+        margin-top: 5px;
+        display: block;
+    }
+}
+
+.form-vertical {
+    label {
+        line-height: 35px;
     }
 }

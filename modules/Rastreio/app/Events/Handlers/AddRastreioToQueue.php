@@ -1,8 +1,8 @@
 <?php namespace Rastreio\Events\Handlers;
 
-use Core\Events\OrderSent;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;
+use Core\Events\OrderSent;
 use Rastreio\Events\RastreioSaved;
 use Rastreio\Jobs\GetScreenshot;
 use Rastreio\Jobs\SetDeadline;
@@ -39,7 +39,7 @@ class AddRastreioToQueue
     {
         Log::debug('Handler AddRastreioToQueue/onRastreioSaved acionado!', [$event]);
 
-        $rastreio = $event->rastreio;
+        $rastreio  = $event->rastreio;
         $oldStatus = ($rastreio->getOriginal('status') === null) ? null : (int) $rastreio->getOriginal('status');
         $newStatus = ($rastreio->status === null) ? null : (int) $rastreio->status;
 
@@ -56,7 +56,7 @@ class AddRastreioToQueue
      */
     public function onOrderSent(OrderSent $event)
     {
-        $order = $event->order;
+        $order    = $event->order;
         $rastreio = (isset($order->rastreios[0])) ? $order->rastreios[0] : null;
 
         if (!is_null($rastreio)) {

@@ -1,9 +1,9 @@
 <?php namespace Marketing\Http\Controllers;
 
-use App\Http\Controllers\Rest\RestResponseTrait;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Sunra\PhpSimple\HtmlDomParser;
+use App\Http\Controllers\Rest\RestResponseTrait;
+use App\Http\Controllers\Controller;
 
 class TemplatemlController extends Controller
 {

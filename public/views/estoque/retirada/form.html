@@ -1,0 +1,113 @@
+<div id="page-header" class="row">
+    <page-title icon="fa fa-cart-arrow-down" title="Retirada de estoque {{ RetiradaEstoqueForm.stockRemoval.id ? '#' + RetiradaEstoqueForm.stockRemoval.id : '' }}" description="Controla todas as retiradas de estoque."></page-title>
+    <div ng-if="RetiradaEstoqueForm.stockRemoval.id && !RetiradaEstoqueForm.stockRemoval.closed_at" class="col-md-6 button-bar">
+        <a ng-click="RetiradaEstoqueForm.close()" class="btn-danger"><i class="fa-times">&nbsp;</i> Fechar</a>
+    </div>
+    <div ng-if="!RetiradaEstoqueForm.stockRemoval.id" class="col-md-6 button-bar">
+        <a ng-if="RetiradaEstoqueForm.stockRemoval.removal_products.length"
+        ng-click="RetiradaEstoqueForm.save()" class="btn-success"><i class="fa-save">&nbsp;</i> Salvar</a>
+    </div>
+</div>
+
+<form ng-submit="RetiradaEstoqueForm.save()" novalidate="novalidate" class="form-default" id="formProduto">
+    <validation errors="RetiradaEstoqueForm.validationErrors"></validation>
+    <div ng-if="RetiradaEstoqueForm.stockRemoval.id" class="row form-group">
+        <div class="col-md-4">
+            <label for="user_id">Retirado por</label>
+            <input ng-model="RetiradaEstoqueForm.stockRemoval.user.name" readonly />
+        </div>
+        <div class="col-md-3">
+            <label for="created_at">Retirado em</label>
+            <input ng-model="RetiradaEstoqueForm.stockRemoval.created_at" id="created_at" readonly />
+        </div>
+        <div class="col-md-3">
+            <label for="closed_at">Fechado em</label>
+            <input ng-model="RetiradaEstoqueForm.stockRemoval.closed_at" ng-if="RetiradaEstoqueForm.stockRemoval.closed_at" id="closed_at" readonly />
+            <input ng-if="!RetiradaEstoqueForm.stockRemoval.closed_at" value="Em aberto" readonly />
+        </div>
+        <div class="col-md-2">
+            <label for="closed_at">Continua</label>
+            <select ng-model="RetiradaEstoqueForm.stockRemoval.is_continuous">
+                <option ng-value="1">Sim</option>
+                <option ng-value="0">Não</option>
+            </select>
+        </div>
+    </div>
+    <div ng-if="!RetiradaEstoqueForm.stockRemoval.id" class="row form-group">
+        <div class="col-md-4">
+            <label for="user_id">Retirado por</label>
+            <select ng-model="RetiradaEstoqueForm.stockRemoval.user_id" id="user_id" required>
+                <option value="" disabled selected hidden>Quem fez a retirada</option>
+                <option ng-repeat="user in RetiradaEstoqueForm.users.data" value="{{ user.id }}">{{ user.name }}</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="closed_at">Continua</label>
+            <select ng-model="RetiradaEstoqueForm.stockRemoval.is_continuous">
+                <option ng-value="1">Sim</option>
+                <option ng-value="0">Não</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <hr>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h4 class="m-t-0">Produtos da retirada</h4>
+        </div>
+
+        <!-- Informar itens para retirada -->
+        <div class="col-md-6">
+            <button ng-if="!RetiradaEstoqueForm.stockRemoval.id" ng-click="RetiradaEstoqueForm.add()" class="btn-info pull-right" type="button">
+                <i class="fa-plus"></i>&nbsp; Adicionar
+            </button>
+            <button ng-if="(RetiradaEstoqueForm.stockRemoval.id && !RetiradaEstoqueForm.stockRemoval.closed_at) && currentUser.id == RetiradaEstoqueForm.stockRemoval.user.id" 
+                ng-click="RetiradaEstoqueForm.confirm()" class="btn-info pull-right" type="button">
+                <i class="fa-check"></i>&nbsp; Confirmar
+            </button>
+            <button ng-if="RetiradaEstoqueForm.stockRemoval.id && !RetiradaEstoqueForm.stockRemoval.closed_at" ng-click="RetiradaEstoqueForm.return()" class="btn-info pull-right m-r-10" type="button">
+                <i class="fa-retweet"></i>&nbsp; Retornar
+            </button>
+        </div>
+
+        <table class="table-alt table-hover no-padding" ng-if="RetiradaEstoqueForm.stockRemoval.removal_products.length">
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>SKU</th>
+                    <th>Estoque</th>
+                    <th>Serial</th>
+                    <th ng-if="RetiradaEstoqueForm.stockRemoval.id" class="text-center">Status</th>
+                    <th ng-if="!RetiradaEstoqueForm.stockRemoval.id" width="46"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="product.imei" ng-repeat="product in RetiradaEstoqueForm.stockRemoval.removal_products track by $index">
+                    <td class="form-group">
+                        <input ng-model="product.title" readonly />
+                    </td>
+                    <td class="form-group">
+                        <input ng-model="product.sku" readonly />
+                    </td>
+                    <td class="form-group">
+                        <input ng-model="product.stock" readonly />
+                    </td>
+                    <td class="form-group">
+                        <input ng-model="product.imei" readonly />
+                    </td>
+                    <td ng-if="RetiradaEstoqueForm.stockRemoval.id" class="text-center">
+                        <span class="label label-{{ RetiradaEstoqueForm.parseStatusClass(product.status) }}">
+                            {{ product.status_description }}
+                        </span>
+                    </td>
+                    <td ng-if="!RetiradaEstoqueForm.stockRemoval.id" class="form-group p-r-15">
+                        <button confirm="RetiradaEstoqueForm.removeProduct($index)" type="button" class="btn-danger btn-block">
+                            <i class="fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</form>

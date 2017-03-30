@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namespace' => 'Rastreio\Http\Controllers'], function () {
+Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'Rastreio\Http\Controllers'], function () {
     /**
      * Rastreios
      */
@@ -11,7 +11,6 @@ Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api', 'namesp
             Route::get('important', 'RastreioController@important');
             Route::get('historico/{id}', 'RastreioController@imagemHistorico');
             Route::get('pi/{id}', 'RastreioController@pi');
-            Route::get('inspecao-tecnica/{id}', 'RastreioController@getPedidoProdutoInspecao');
             Route::get('busca-seminovos/{id}', 'RastreioController@existsSeminovos');
 
             Route::put('refresh_all', 'RastreioController@refreshAll');

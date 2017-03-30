@@ -3,7 +3,7 @@
 /**
  * Module routes
  */
-Route::group(['middleware' => ['sentry', 'jwt.auth'], 'prefix' => 'api/gamification', 'namespace' => 'Gamification\Http\Controllers'], function () {
+Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api/gamification', 'namespace' => 'Gamification\Http\Controllers'], function () {
     Route::post('upload', 'UploadController@upload');
     Route::post('avatar/{gamification_id}', 'GamificationController@avatar');
 

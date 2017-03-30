@@ -1,0 +1,44 @@
+<th>
+    <input class="form-control big" ng-model="EntradaEstoqueList.filter['stock_entry_invoices.key']" placeholder="Chave da nota" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <input class="form-control big" ng-model="EntradaEstoqueList.filter['stock_entry_invoices.number']" placeholder="Número da nota" ng-model-options="{debounce:500}" />
+</th>
+<th>
+    <input class="form-control big" ng-model="EntradaEstoqueList.filter['suppliers.name']" placeholder="Nome do fornecedor" ng-model-options="{debounce:500}" />
+</th>
+<th class="between-group">
+    <div class="date-picker">
+        <input class="form-control" ng-model="EntradaEstoqueList.filter['stock_entries.created_at'].from" placeholder="De" ng-model-options="{debounce:500}" />
+        <div class="picker-wrap">
+            <date-picker ng-model="EntradaEstoqueList.filter['stock_entries.created_at'].from" ng-model-options="{debounce:500}"></date-picker>
+        </div>
+    </div>
+    <span>/</span>
+    <div class="date-picker">
+        <input class="form-control" ng-model="EntradaEstoqueList.filter['stock_entries.created_at'].to" placeholder="Até" ng-model-options="{debounce:500}" />
+        <div class="picker-wrap">
+            <date-picker ng-model="EntradaEstoqueList.filter['stock_entries.created_at'].to" ng-model-options="{debounce:500}"></date-picker>
+        </div>
+    </div>
+</th>
+<th class="between-group">
+    <div class="date-picker">
+        <input class="form-control" ng-model="EntradaEstoqueList.filter['stock_entries.confirmed_at'].from" placeholder="De" ng-model-options="{debounce:500}" />
+        <div class="picker-wrap">
+            <date-picker ng-model="EntradaEstoqueList.filter['stock_entries.confirmed_at'].from" ng-model-options="{debounce:500}"></date-picker>
+        </div>
+    </div>
+    <span>/</span>
+    <div class="date-picker">
+        <input class="form-control" ng-model="EntradaEstoqueList.filter['stock_entries.confirmed_at'].to" placeholder="Até" ng-model-options="{debounce:500}" />
+        <div class="picker-wrap">
+            <date-picker ng-model="EntradaEstoqueList.filter['stock_entries.confirmed_at'].to" ng-model-options="{debounce:500}"></date-picker>
+        </div>
+    </div>
+</th>
+<th class="item-button">
+    <a title="Limpar filtros" class="btn-danger btn-reset-filter" ng-click="EntradaEstoqueList.filterList.clear()">
+        <i class="fa-eraser"></i>
+    </a>
+</th>

@@ -1,9 +1,10 @@
 <?php namespace Core\Http\Controllers\Pedido;
 
+use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
 use Core\Models\Pedido\PedidoProduto;
-use Illuminate\Support\Facades\Input;
+use Core\Transformers\OrderProductTransformer;
 
 /**
  * Class PedidoProdutoController
@@ -16,6 +17,25 @@ class PedidoProdutoController extends Controller
     const MODEL = PedidoProduto::class;
 
     /**
+     * Lists pending orders by sku
+     *
+     * @param  int $sku
+     * @return response
+     */
+    public function listBySku($sku)
+    {
+        $orderProducts = (self::MODEL)
+            ::with(['pedido'])
+            ->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
+            ->where('produto_sku', '=', $sku)
+            ->whereIn('pedidos.status', [0,1])
+            ->orderBy('pedidos.status', 'ASC')
+            ->get();
+
+        return $this->listResponse(OrderProductTransformer::listBySku($orderProducts));
+    }
+
+    /**
      * Retorna um único recurso
      *
      * @param $id
@@ -23,9 +43,7 @@ class PedidoProdutoController extends Controller
      */
     public function show($id)
     {
-        $m = self::MODEL;
-
-        $data = $m::with('produto')->where('id', '=', $id)->first();
+        $data = (self::MODEL)::with('produto')->where('id', '=', $id)->first();
 
         if ($data) {
             return $this->showResponse($data);
@@ -42,24 +60,21 @@ class PedidoProdutoController extends Controller
      */
     public function update($id)
     {
-        $m = self::MODEL;
-
-        if (!$data = $m::find($id)) {
-            return $this->notFoundResponse();
-        }
-
         try {
+            $data = (self::MODEL)::findOrFail($id);
+
             $data->fill(Input::all());
             $data->save();
 
-            $data = $m::with('produto')->where('id', '=', $data->id)->first();
+            $data = (self::MODEL)::with('produto')->where('id', '=', $data->id)->first();
 
             return $this->showResponse($data);
-        } catch (\Exception $ex) {
-            \Log::error(logMessage($ex, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
-            $data = ['exception' => $ex->getMessage()];
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
         }
     }
 }

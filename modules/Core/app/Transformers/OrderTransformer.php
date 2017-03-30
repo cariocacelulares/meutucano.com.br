@@ -28,13 +28,11 @@ class OrderTransformer
                 $produtos[] = [
                     'id'          => $orderProduct->id,
                     'produto_sku' => $orderProduct->produto_sku,
-                    'quantidade'  => $orderProduct->quantidade,
                     'valor'       => $orderProduct->valor,
                     'produto'     => [
                         'sku'    => $orderProduct->produto->sku,
                         'titulo' => $orderProduct->produto->titulo,
                     ],
-                    'inspecoes'   => $orderProduct->inspecoes,
                 ];
             }
 
@@ -134,7 +132,7 @@ class OrderTransformer
      * @param  object $orders
      * @return array
      */
-    public static function list($orders)
+    public static function tableList($orders)
     {
         $pagination  = $orders->toArray();
         $transformed = [];
@@ -232,26 +230,20 @@ class OrderTransformer
 
         $produtos = [];
         foreach ($order->produtos as $produto) {
-            $inspecoes = [];
-            foreach ($produto->inspecoes as $inspecao) {
-                $inspecoes[] = [
-                    'id'          => $inspecao->id,
-                    'revisado_at' => dateConvert($inspecao->revisado_at),
-                    'priorizado'  => $inspecao->priorizado,
-                ];
-            }
+            $productImei = !$produto->productImei ? null : [
+                'id'   => $produto->productImei->id,
+                'imei' => $produto->productImei->imei,
+            ];
 
             $produtos[] = [
                 'produto_sku' => $produto->produto_sku,
                 'id'          => $produto->id,
-                'imei'        => $produto->imei,
-                'quantidade'  => $produto->quantidade,
                 'valor'       => $produto->valor,
                 'produto'     => [
                     'titulo' => $produto->produto->titulo,
                     'estado' => $produto->produto->estado,
                 ],
-                'inspecoes'   => $inspecoes,
+                'productImei' => $productImei,
             ];
         }
 
@@ -273,6 +265,7 @@ class OrderTransformer
             'frete_valor'               => $order->frete_valor,
             'total'                     => $order->total,
             'pagamento_metodo_readable' => OrderParser::getPagamentoMetodoReadable($order->pagamento_metodo),
+            'parcelas'                  => $order->parcelas,
             'estimated_delivery'        => dateConvert($order->estimated_delivery, 'Y-m-d', 'd/m/Y'),
             'created_at'                => dateConvert($order->created_at),
             'desconto'                  => $order->getDesconto(),

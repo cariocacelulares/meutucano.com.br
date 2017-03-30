@@ -1,0 +1,39 @@
+<h1>Adicionar estoque</h1>
+<validation errors="AdicionarEstoque.validationErrors"></validation>
+<form ng-submit="AdicionarEstoque.save()" novalidate="novalidate" class="form-default">
+    <div ng-if="!AdicionarEstoque.loading && !AdicionarEstoque.stocks.length" class="row">
+        <div class="col-md-12">
+            <div class="alert alert-warning m-b-20">
+                <i class="fa fa-exclamation-triangle"></i>&nbsp; Este produto já possui todos os registros de estoque.
+            </div>
+        </div>
+    </div>
+    <div ng-if="!AdicionarEstoque.loading && AdicionarEstoque.stocks.length" class="row">
+        <div class="col-md-12 form-group">
+            <label for="productStock">Estoque</label>
+            <select ng-model="AdicionarEstoque.productStock.stock_slug" id="productStock" ng-change="AdicionarEstoque.stockSelected()" required>
+                <option value="" disabled selected hidden>Selecione o estoque</option>
+                <option ng-repeat="stock in AdicionarEstoque.stocks" ng-value="stock.slug">{{ stock.title }}</option>
+            </select>
+        </div>
+    </div>
+    <div ng-if="AdicionarEstoque.productStock.stock_slug" class="row">
+        <div class="col-md-12 form-group">
+            <label for="serial_enabled" class="full-width">Controle serial</label>
+            <div class="radio radio-success pull-left m-l-15">
+                <input id="serial_enabled-true" type="radio" ng-model="AdicionarEstoque.productStock.serial_enabled" ng-value="true">
+                <label for="serial_enabled-true">Sim</label>
+            </div>
+            <div class="radio radio-success pull-left m-t-10">
+                <input id="serial_enabled-false" type="radio" ng-model="AdicionarEstoque.productStock.serial_enabled" ng-value="false">
+                <label for="serial_enabled-false">Não</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="pull-right">
+            <button type="button" ng-click="closeThisDialog(false)" class="btn btn-default m-r-10">Cancelar</button>
+            <button ng-if="!AdicionarEstoque.loading && AdicionarEstoque.stocks.length" busy="Salvando..." type="submit" class="btn btn-success">Salvar</button>
+        </div>
+    </div>
+</form>

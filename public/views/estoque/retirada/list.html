@@ -1,0 +1,35 @@
+<div id="page-header" class="row">
+    <page-title icon="fa fa-cart-arrow-down" title="Retirada de estoque" description="Controla todas as retiradas de estoque."></page-title>
+    <div class="col-md-6 button-bar">
+        <a ui-sref="app.estoque.retirada.form" class="btn-success">
+            <i class="fa-plus">&nbsp;</i> Adicionar
+        </a>
+    </div>
+</div>
+<table table-list="RetiradaEstoqueList">
+    <thead>
+        <tr>
+            <th class="text-center">Código</th>
+            <th class="text-center">Pessoa</th>
+            <th class="text-center">Continua</th>
+            <th class="text-center" width="200">Abertura</th>
+            <th class="text-center" width="200">Fechamento</th>
+            <th width="75"></th>
+        </tr>
+        <tr class="table-filter" static-include="views/estoque/retirada/list_filter.html"></tr>
+    </thead>
+    <tbody ng-if="RetiradaEstoqueList.tableData.data && !RetiradaEstoqueList.loading">
+        <tr ng-repeat="estoque in RetiradaEstoqueList.tableData.data">
+            <td class="text-center">#{{ estoque.id }}</td>
+            <td class="text-center">{{ estoque.user.name }}</td>
+            <td class="text-center">{{ estoque.is_continuous ? 'Sim' : 'Não' }}</td>
+            <td class="text-center">{{ estoque.created_at }}</td>
+            <td class="text-center">{{ estoque.closed_at }}</td>
+            <td class="text-center">
+                <a class="btn-info" ui-sref="app.estoque.retirada.form({id: estoque.id})">
+                    <i class="fa-eye"></i>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>

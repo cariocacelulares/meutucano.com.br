@@ -15,10 +15,8 @@ class ProductParser
     public static function getEstadoDescription($estado)
     {
        switch ($estado) {
-           case '0':
-               return 'Novo';
            case '1':
-               return 'Seminovo';
+               return 'Usado';
            default:
                return 'Novo';
        }

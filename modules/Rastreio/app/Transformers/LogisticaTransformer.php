@@ -23,6 +23,13 @@ class LogisticaTransformer
             'observacoes'         => $logistica->observacoes,
             'protocolo'           => RastreioParser::getProtocolo($logistica),
             'imagem_cancelamento' => RastreioParser::getImagemCancelamento($logistica),
+            'rastreio'            => [
+                'id'     => $logistica->rastreio->id,
+                'pedido' => [
+                    'id'          => $logistica->rastreio->pedido->id,
+                    'marketplace' => $logistica->rastreio->pedido->marketplace,
+                ],
+            ],
         ];
     }
 }

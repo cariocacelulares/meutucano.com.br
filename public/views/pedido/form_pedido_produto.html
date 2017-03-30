@@ -3,7 +3,8 @@
     <div class="row">
         <div class="col-md-12 form-group">
             <label for="produto">Produto</label>
-            <ui-select ng-model="PedidoProdutoForm.pedidoProduto.produto" theme="selectize" id="produto">
+            <input ng-if="PedidoProdutoForm.pedidoProduto.id" ng-model="PedidoProdutoForm.pedidoProduto.produto.titulo" readonly />
+            <ui-select ng-if="!PedidoProdutoForm.pedidoProduto.id" ng-model="PedidoProdutoForm.pedidoProduto.produto" theme="selectize" id="produto" on-select="PedidoProdutoForm.selected()">
                 <ui-select-match placeholder="Selecione um produto">{{ $select.selected.titulo }}</ui-select-match>
                 <ui-select-choices repeat="produto in PedidoProdutoForm.produtos | propsFilter: {titulo: $select.search, sku: $select.search}"
                     refresh="PedidoProdutoForm.search($select.search)" refresh-delay="300">
@@ -14,13 +15,9 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6 form-group">
-            <label for="quantidade">Quantidade</label>
-            <input ng-model="PedidoProdutoForm.pedidoProduto.quantidade" type="number" id="quantidade" placeholder="Qtd do produto" min="0" ng-minlength="0" required />
-        </div>
-        <div class="col-md-6 form-group">
+        <div class="col-md-12 form-group">
             <label for="valor">Valor unitário</label>
-            <input ng-model="PedidoProdutoForm.pedidoProduto.valor" id="valor" placeholder="Valor do produto" required />
+            <input ng-model="PedidoProdutoForm.pedidoProduto.valor" id="valor" placeholder="Valor do produto em R$" ui-money-mask required />
         </div>
     </div>
     <div class="row">

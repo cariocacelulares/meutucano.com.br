@@ -1,0 +1,50 @@
+<h1>Excluir nota</h1>
+<div class="alert alert-success m-b-10"><i class="fa fa-check">&nbsp;</i> Devolução importada com sucesso!</div>
+<form ng-submit="NotaDevolucaoForm.save()" novalidate="novalidate" class="form-default">
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <div class="checkbox check-success">
+                <input id="cancelar-pedido" type="checkbox" ng-model="NotaDevolucaoForm.cancelOrder" ng-true-value="true">
+                <label for="cancelar-pedido">Cancelar pedido</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <p>Os produtos abaixo foram adicionados em uma retirada de estoque, selecione e descreva quais possuem defeitos.</p>
+            <table class="table-products table-fit table info-style">
+                <thead>
+                    <tr>
+                        <th class="check-col"></th>
+                        <th class="text-center">SKU</th>
+                        <th class="text-center">Produto</th>
+                        <th class="text-center">Imei</th>
+                        <th class="text-center" style="margin-left:8px;margin-right:8px">Defeito</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="product in NotaDevolucaoForm.products">
+                        <td class="check-col">
+                            <div class="checkbox check-success">
+                                <input id="check-{{ $index }}" type="checkbox" ng-model="product.defect" ng-true-value="true">
+                                <label for="check-{{ $index }}"></label>
+                            </div>
+                        </td>
+                        <td>{{ product.sku }}</td>
+                        <td>{{ product.titulo }}</td>
+                        <td>{{ product.imei }}</td>
+                        <td>
+                            <textarea ng-model="product.desc" placeholder="Descrição do defeito" rows="2" ng-required="product.defect" ng-disabled="!product.defect" ng-readonly="!product.defect" style="min-height:50px"></textarea>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="pull-right">
+            <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
+            <button busy="Salvando..." type="submit" class="btn btn-success">Salvar</button>
+        </div>
+    </div>
+</form>

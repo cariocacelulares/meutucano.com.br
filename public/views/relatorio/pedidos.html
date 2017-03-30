@@ -149,24 +149,12 @@
                 <label for="sku">SKU</label>
                 <input ng-model="RelatorioPedidos.params.filter['pedido_produtos.produto_sku'].value" placeholder="Código do produto" type="number" id="sku" />
             </div>
-            <div class="col-md-3">
-                <label for="imei">IMEI</label>
-                <input ng-model="RelatorioPedidos.params.filter['pedido_produtos.imei'].value" placeholder="Serial do produto" type="number" id="imei" />
-            </div>
-            <div class="col-md-2">
-                <label for="quantidade">Quantidade do produto</label>
-                <div class="between-group">
-                    <input class="big" ng-model="RelatorioPedidos.params.filter['pedido_produtos.quantidade'].value.from" placeholder="De" type="number" id="quantidade" />
-                    <span>/</span>
-                    <input class="big" ng-model="RelatorioPedidos.params.filter['pedido_produtos.quantidade'].value.to" placeholder="Até" type="number" />
-                </div>
-            </div>
             <div class="col-md-2">
                 <label for="estado">estado</label>
                 <select ng-model="RelatorioPedidos.params.filter['produtos.estado'].value" id="estado">
                     <option value="">Todos</option>
                     <option value="0">Novo</option>
-                    <option value="1">Seminovo</option>
+                    <option value="1">Usado</option>
                 </select>
             </div>
             <div class="col-md-2">

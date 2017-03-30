@@ -62,7 +62,7 @@
             <td ng-bind="nota.pedido.cliente.nome"></td>
             <td class="text-center" ng-bind="nota.pedido.rastreios[0].rastreio"></td>
             <td align="right">
-                <button ng-if="nota.pedido.codigo_skyhub" ng-click="Faturamento.faturar(nota.pedido_id)" type="button" class="btn btn-primary m-r-10"><i class="fa fa-barcode"></i>&nbsp; Faturar</button>
+                <button ng-if="nota.pedido.codigo_marketplace" ng-click="Faturamento.faturar(nota.pedido_id)" type="button" class="btn btn-primary m-r-10"><i class="fa fa-barcode"></i>&nbsp; Faturar</button>
                 <button ng-click="App.printDanfe(nota.pedido_id); App.printEtiqueta(nota.pedido.rastreios[0].id);" type="button" class="btn btn-info m-r-10"><i class="fa fa-print"></i></button>
                 <div class="dropdown" style="display: inline-block">
                     <button class="btn btn-info dropdown-toggle" type="button">

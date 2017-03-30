@@ -3,35 +3,35 @@
 $faker = \Faker\Factory::create('pt_BR');
 
 /**
- * Usuario
- */
+* Usuario
+*/
 $factory->define(App\Models\Usuario\Usuario::class, function () use ($faker) {
-  return [
-    'name'           => $faker->name,
-    'email'          => $faker->safeEmail,
-    'username'       => $faker->userName,
-    'password'       => bcrypt(str_random(10)),
-    'remember_token' => str_random(10),
-  ];
+    return [
+        'name'           => $faker->name,
+        'email'          => $faker->safeEmail,
+        'username'       => $faker->userName,
+        'password'       => bcrypt(str_random(10)),
+        'remember_token' => str_random(10),
+    ];
 });
 
 /**
- * Role
- */
+* Role
+*/
 $factory->define(App\Models\Usuario\Role::class, function () use ($faker) {
-  return [
-    'name' => $faker->word,
-  ];
+    return [
+        'name' => $faker->word,
+    ];
 });
 
 /**
- * Senha
- */
+* Senha
+*/
 $factory->define(App\Models\Usuario\Senha::class, function () use ($faker) {
-  return [
-    'site'    => $faker->name,
-    'url'     => $faker->url,
-    'usuario' => $faker->userName,
-    'senha'   => str_random(10)
-  ];
+    return [
+        'site'    => $faker->name,
+        'url'     => $faker->url,
+        'usuario' => $faker->userName,
+        'senha'   => str_random(10)
+    ];
 });

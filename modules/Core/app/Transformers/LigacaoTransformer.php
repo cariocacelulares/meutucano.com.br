@@ -12,7 +12,7 @@ class LigacaoTransformer
      * @param  object $orders
      * @return array
      */
-    public static function list($orders)
+    public static function tableList($orders)
     {
         $data = [];
         foreach ($orders as $order) {

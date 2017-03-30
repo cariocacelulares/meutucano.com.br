@@ -1,8 +1,8 @@
 <?php namespace Rastreio\Http\Controllers;
 
+use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Input;
 use Rastreio\Models\Rastreio;
 use Rastreio\Models\Monitorado;
 use Rastreio\Transformers\RastreioTransformer;
@@ -67,21 +67,22 @@ class MonitoradoController extends Controller
 
         try {
             $rastreio_id = Input::get('rastreio_id');
-            $usuario_id = getCurrentUserId();
+            $usuario_id  = getCurrentUserId();
 
             if (!$data = $m::where('rastreio_id', '=', $rastreio_id)->where('usuario_id', '=', $usuario_id)->first()) {
                 $data = $m::create([
                     'rastreio_id' => $rastreio_id,
-                    'usuario_id' => $usuario_id
+                    'usuario_id'  => $usuario_id
                 ]);
             }
 
             return $this->createdResponse($data);
-        } catch (\Exception $ex) {
-            $data = ['exception' => $ex->getMessage()];
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
-            \Log::error(logMessage($ex, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
-            return $this->clientErrorResponse($data);
+            return $this->clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
         }
     }
 

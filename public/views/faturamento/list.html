@@ -1,29 +1,36 @@
 <div id="page-header" class="row">
     <page-title icon="fa-barcode" title="Faturamento" description="Todos pedidos prontos para serem faturados."></page-title>
     <div class="col-md-6 button-bar">
-        <form class="form-default form-clean" ng-submit="FaturamentoList.rastreioHelper.generateCode()">
-            <div class="col-md-4 col-md-offset-2 form-group">
-                <div class="input-group">
-                    <select ng-model="FaturamentoList.rastreioHelper.codigo.servico" ng-init="FaturamentoList.rastreioHelper.codigo.servico = '0'" class="bg-white">
-                        <option value="0">PAC</option>
-                        <option value="1">SEDEX</option>
-                    </select>
-                    <div class="input-group-btn">
-                        <button class="btn btn-primary" type="submit">Gerar</button>
+        <div class="row">
+            <form class="form-default form-clean col-md-9" ng-submit="FaturamentoList.rastreioHelper.generateCode()" style="padding-top:3px">
+                <div class="col-md-6 p-l-0 form-group" ng-class="{ 'pull-right': !FaturamentoList.rastreioHelper.codigo.rastreio }">
+                    <div class="input-group">
+                        <select ng-model="FaturamentoList.rastreioHelper.codigo.servico" ng-init="FaturamentoList.rastreioHelper.codigo.servico = '0'" class="bg-white">
+                            <option value="0">PAC</option>
+                            <option value="1">SEDEX</option>
+                        </select>
+                        <div class="input-group-btn">
+                            <button class="btn btn-primary" type="submit">Gerar</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6 form-group p-r-0">
-                <div class="input-group">
-                    <input type="text" ng-model="FaturamentoList.rastreioHelper.codigo.rastreio" class="bg-white" readonly>
-                    <div class="input-group-btn">
-                        <button clipboard text="FaturamentoList.rastreioHelper.codigo.rastreio" on-copied="FaturamentoList.rastreioHelper.codeCopied()" class="btn-success" type="button">
-                            <i class="fa fa-copy"></i>
-                        </button>
+                <div class="col-md-6 form-group p-r-0" ng-if="FaturamentoList.rastreioHelper.codigo.rastreio">
+                    <div class="input-group">
+                        <input type="text" ng-model="FaturamentoList.rastreioHelper.codigo.rastreio" class="bg-white" readonly>
+                        <div class="input-group-btn">
+                            <button clipboard text="FaturamentoList.rastreioHelper.codigo.rastreio" on-copied="FaturamentoList.rastreioHelper.codeCopied()" class="btn-success" type="button">
+                                <i class="fa fa-copy"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
+            </form>
+            <div class="upload col-md-3" ng-controller="FaturamentoUploadController as FaturamentoUpload">
+                <button title="Fazer upload de notas" ngf-select ngf-change="FaturamentoUpload.upload($files)" ngf-multiple="true" class="btn-success btn-cons">
+                    <i class="fa-upload"></i>&nbsp; Upload
+                </button>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 <table table-list="FaturamentoList">
@@ -68,17 +75,16 @@
             </td>
             <td class="text-center">
                 <p ng-if="pedido.desconto" class="m-b-0">Desconto: <strong>{{ pedido.desconto }}%</strong></p>
-                <span ng-repeat="produto in pedido.produtos">
-                    <small ng-if="!pedido.desconto">
+                <p ng-repeat="produto in pedido.produtos" class="m-b-0">
+                    <span ng-if="!pedido.desconto">
                         <strong tooltips tooltip-template="{{ produto.produto.titulo }}">{{ produto.produto_sku }}</strong>
-                        <small>: {{ produto.quantidade }}x {{ produto.valor | currency }}</small>
-                    </small>
-                    <small ng-if="pedido.desconto">
+                        <span>: {{ produto.valor | currency }}</span>
+                    </span>
+                    <span ng-if="pedido.desconto">
                         <strong tooltips tooltip-template="{{ produto.produto.titulo }}">{{ produto.produto_sku }}</strong>
-                        <small tooltips tooltip-template="Desconto: {{ (produto.valor - (produto.valor - ((produto.valor * pedido.desconto) / 100))) | currency }}">: {{ produto.quantidade }}x {{ produto.valor | currency }}</small>
-                    </small>
-                    <span ng-repeat="inspecao in produto.inspecoes" ng-class="{ 'label-success': inspecao.revisado_at, 'm-r-10': !$last }" class="label">{{ inspecao.id }}</span>
-                </span><br>
+                        <span tooltips tooltip-template="Desconto: {{ (produto.valor - (produto.valor - ((produto.valor * pedido.desconto) / 100))) | currency }}">: {{ produto.valor | currency }}</span>
+                    </span>
+                </p>
             </td>
             <td class="text-center">{{ pedido.estimated_delivery }}</td>
             <td class="text-center">{{ pedido.created_at }}</td>

@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use Rastreio\Http\Controllers\Traits\RastreioTrait;
-use InspecaoTecnica\Http\Controllers\Traits\InspecaoTecnicaTrait;
 use Rastreio\Models\Rastreio;
 use Rastreio\Models\Logistica;
 use Rastreio\Http\Requests\LogisticaRequest as Request;
@@ -16,7 +15,7 @@ use Rastreio\Transformers\LogisticaTransformer;
  */
 class LogisticaController extends Controller
 {
-    use RestControllerTrait, RastreioTrait, InspecaoTecnicaTrait;
+    use RestControllerTrait, RastreioTrait;
 
     const MODEL = Logistica::class;
 
@@ -55,8 +54,6 @@ class LogisticaController extends Controller
     public function store(Request $request)
     {
         try {
-            $this->aplicarDevolucao(Input::get(['inspecoes']));
-
             $logistica = (self::MODEL)::create(Input::except(['protocolo', 'imagem']));
 
             if (Input::has('acao')) {
@@ -71,7 +68,9 @@ class LogisticaController extends Controller
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
-            return $this->clientErrorResponse(['exception' => $exception->getMessage()]);
+            return $this->clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
         }
     }
 
@@ -84,8 +83,6 @@ class LogisticaController extends Controller
     public function update($id, Request $request)
     {
         try {
-            $this->aplicarDevolucao(Input::get(['inspecoes']));
-
             $logistica = (self::MODEL)::findOrFail($id);
             $logistica->fill(Input::except(['protocolo']));
             $logistica->save();
@@ -97,9 +94,7 @@ class LogisticaController extends Controller
             \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
             return $this->clientErrorResponse([
-                'exception' => strstr(get_class($exception), 'ModelNotFoundException')
-                    ? 'Recurso nao encontrado'
-                    : $exception->getMessage()
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }

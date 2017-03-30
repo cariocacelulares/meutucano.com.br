@@ -1,8 +1,9 @@
 <?php namespace Core\Models\Pedido;
 
 use Venturecraft\Revisionable\RevisionableTrait;
-use Core\Models\Produto\Produto;
-use InspecaoTecnica\Models\InspecaoTecnica;
+use Core\Models\Produto;
+use Core\Models\Produto\ProductImei;
+use Core\Models\Pedido;
 
 /**
  * Class PedidoProduto
@@ -23,31 +24,19 @@ class PedidoProduto extends \Eloquent
     protected $fillable = [
         'pedido_id',
         'produto_sku',
+        'product_imei_id',
+        'product_stock_id',
         'valor',
-        'quantidade',
-        'imei',
-    ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
-     * @var array
-     */
-    protected $appends = [
-        'total',
     ];
 
     /**
      * Produto
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function produto()
     {
-        return $this->hasOne(Produto::class, 'sku', 'produto_sku');
+        return $this->belongsTo(Produto::class, 'produto_sku', 'sku');
     }
 
     /**
@@ -61,22 +50,22 @@ class PedidoProduto extends \Eloquent
     }
 
     /**
-     * InspecaoTecnica
+     * ProductImei
      *
-     * @return \Illuminate\Database\Eloquent\Relations\belongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function inspecoes()
+    public function productImei()
     {
-        return $this->hasMany(InspecaoTecnica::class, 'pedido_produtos_id', 'id');
+        return $this->belongsTo(ProductImei::class);
     }
 
     /**
-     * Return readable created_at
+     * ProductStock
      *
-     * @return string
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    protected function getTotalAttribute()
+    public function productStock()
     {
-        return $this->valor * $this->quantidade;
+        return $this->belongsTo(ProductStock::class);
     }
 }

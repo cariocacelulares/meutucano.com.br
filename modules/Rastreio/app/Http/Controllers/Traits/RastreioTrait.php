@@ -1,7 +1,7 @@
 <?php namespace Rastreio\Http\Controllers\Traits;
 
 use Illuminate\Support\Facades\DB;
-use Core\Models\Pedido\Pedido;
+use Core\Models\Pedido;
 use Rastreio\Models\Rastreio;
 use Rastreio\Models\Logistica;
 use Rastreio\Models\Devolucao;
@@ -33,7 +33,7 @@ trait RastreioTrait
             }
 
             return !!$query;
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
         }
 
         \Log::warning('Não foi possível cancelar o pedido diretamente, corrija o estoque!', ['pedido' => $id]);
@@ -55,11 +55,11 @@ trait RastreioTrait
 
         $raw = false;
         if ($obj instanceof Logistica || strstr(get_class($obj), 'Logistica')) {
-            $raw = ((int)$obj->motivo === 0); // defeito
+            $raw = ((int) $obj->motivo === 0); // defeito
         } elseif ($obj instanceof Devolucao || strstr(get_class($obj), 'Devolucao')) {
-            $raw = ((int)$obj->motivo === 5); // defeito
+            $raw = ((int) $obj->motivo === 5); // defeito
         } elseif ($obj instanceof Pi || strstr(get_class($obj), 'Pi')) {
-            $raw = ((int)$obj->motivo_status === 3); // extravio
+            $raw = ((int) $obj->motivo_status === 3); // extravio
         }
 
         if ($raw) {
@@ -84,17 +84,17 @@ trait RastreioTrait
                     if (in_array(strtolower($pedido->marketplace), ['site', 'mercadolivre'])) {
                         $pedido->protocolo = $protocol;
 
-                        if (!$this->rawCancel($obj, $pedido->id)) {
+                        /*if (!$this->rawCancel($obj, $pedido->id)) {
                             $pedido->status = 5;
-                        }
+                        }*/
 
                         $pedido->save();
                     } elseif ($protocol) {
                         $pedido->protocolo = $protocol;
 
-                        if (!$this->rawCancel($obj, $pedido->id)) {
+                        /*if (!$this->rawCancel($obj, $pedido->id)) {
                             $pedido->status = 5;
-                        }
+                        }*/
 
                         if ($imagem) {
                             $name = substr(str_slug($protocol . '-' . $imagem->getClientOriginalName()), 0, 200) . '.' . $imagem->extension();

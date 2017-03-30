@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'name' => 'Core',
+    'name'               => 'Core',
     'email_send_enabled' => env('EMAIL_SEND_ENABLED', true),
-    'report_email' => env('REPORT_EMAIL', 'dev@cariocacelulares.com.br'),
+    'report_email'       => env('REPORT_EMAIL', 'dev@cariocacelulares.com.br'),
 
     /**
      * CEP Padrão de envio
@@ -48,12 +48,13 @@ return [
      * Operações fiscais
      */
     'notas' => [
-        'operacoes' => [5102, 5405, 6102, 6108, 6910],
-        'devolucao' => [1202, 2202, 1411],
-        'estorno' => [1949, 2949],
-
+        'venda'         => [5102, 5405, 6102, 6108, 6910, 6949],
         'venda_interna' => 5102,
         'venda_externa' => 6108,
+        'devolucao'     => [1202, 2202, 1411],
+        'estorno'       => [1949, 2949],
+        'extravio'      => [5927, 6927],
+        'compra'        => [1102, 2102],
     ],
 
     /**
@@ -120,5 +121,15 @@ return [
     'required_protocolo' => [
         'b2w',
         'cnova'
+    ],
+
+    /**
+     * Status da retirada de estoque
+     */
+    'stock_removal_status' => [
+        0 => 'Retirado',
+        1 => 'Confirmado',
+        2 => 'Faturado',
+        3 => 'Retornado',
     ],
 ];
