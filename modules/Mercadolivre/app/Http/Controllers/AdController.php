@@ -122,7 +122,7 @@ class AdController extends Controller
                 "listing_type_id"    => ($ad->type == 0) ? 'gold_special' : 'gold_pro',
                 "condition"          => ($ad->product->estado == 0) ? 'new' : 'used',
                 "description"        => $this->getAdDescription($ad),
-                "video_id"           => $ad->video, //TODO: Vídeo
+                "video_id"           => $ad->video,
                 "warranty"           => $ad->product->warranty,
                 "shipping"           => [
                     "mode"          => "me2",

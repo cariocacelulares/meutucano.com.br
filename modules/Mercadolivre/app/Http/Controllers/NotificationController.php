@@ -46,18 +46,21 @@ class NotificationController extends Controller
             $orderId     = substr($resource, strrpos($resource, '/') + 1);
             $importOrder = $api->getOrder($orderId);
 
-            if (!$this->checkProducts($importOrder))
-                throw new \Exception("Um ou mais produtos do pedido não estão cadastrados no Tucano");
-
             $order = Pedido::where('codigo_marketplace', '=', $importOrder->id)
                 ->first();
 
             if (in_array('paid', $importOrder->tags)) {
                 if (!$order) {
+                    if (!$this->checkProducts($importOrder))
+                        throw new \Exception("Um ou mais produtos do pedido não estão cadastrados no Tucano");
+
                     $order = $this->importOrder($api, $importOrder);
                 }
             } elseif (in_array('not_paid', $importOrder->tags)) {
                 if (!$order) {
+                    if (!$this->checkProducts($importOrder))
+                        throw new \Exception("Um ou mais produtos do pedido não estão cadastrados no Tucano");
+
                     $order = $this->importOrder($api, $importOrder);
                 } else {
                     $order->status = 5;
