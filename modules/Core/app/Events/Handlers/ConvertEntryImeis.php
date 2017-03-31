@@ -55,7 +55,7 @@ class ConvertEntryImeis
 
                     $imei = ProductImei
                         ::where($attrs)
-                        ->withTrashed()->first() ?: Entity::create($attrs);
+                        ->withTrashed()->first() ?: ProductImei::create($attrs);
 
                     if (!$imei->wasRecentlyCreated && !is_null($imei->deleted_at)) {
                         $imei->restore();
