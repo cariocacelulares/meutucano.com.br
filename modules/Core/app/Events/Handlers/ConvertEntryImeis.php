@@ -42,9 +42,6 @@ class ConvertEntryImeis
                 $imeis = $product->getOriginal('imeis');
 
                 if (!$imeis) {
-                    \Log::info('AAAAAAAA', [$product->toArray()]);
-                    \Log::info('BBBBBBBB', [$product->productStock]);
-
                     \Stock::add(
                         $product->product_sku,
                         $product->quantity,
