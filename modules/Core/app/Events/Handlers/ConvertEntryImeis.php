@@ -53,7 +53,7 @@ class ConvertEntryImeis
                         'imei'             => $imei
                     ])->withTrashed();
 
-                    if (!$imei->wasRecentlyCreated && !is_null($imei->deleted_at)) {
+                    if (!isset($imei->wasRecentlyCreated) && !is_null($imei->deleted_at)) {
                         $imei->restore();
                     }
 
