@@ -48,12 +48,16 @@ class ConvertEntryImeis
                 $imeis = json_decode($imeis);
 
                 foreach ($imeis as $imei) {
-                    $imei = ProductImei::firstOrCreate([
+                    $attrs = [
                         'product_stock_id' => $product->product_stock_id,
                         'imei'             => $imei
-                    ])->withTrashed();
+                    ];
 
-                    if (!isset($imei->wasRecentlyCreated) && !is_null($imei->deleted_at)) {
+                    $imei = ProductImei
+                        ::where($attrs)
+                        ->withTrashed()->first() ?: Entity::create($attrs);
+
+                    if (!$imei->wasRecentlyCreated && !is_null($imei->deleted_at)) {
                         $imei->restore();
                     }
 
