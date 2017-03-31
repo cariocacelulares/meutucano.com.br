@@ -49,8 +49,7 @@ class ConvertEntryImeis
 
                 foreach ($imeis as $imei) {
                     $attrs = [
-                        'product_stock_id' => $product->product_stock_id,
-                        'imei'             => $imei
+                        'imei' => $imei
                     ];
 
                     $imei = ProductImei
@@ -59,6 +58,11 @@ class ConvertEntryImeis
 
                     if (!$imei->wasRecentlyCreated && !is_null($imei->deleted_at)) {
                         $imei->restore();
+                    }
+
+                    if ($imei->product_stock_id != $product->product_stock_id) {
+                        $imei->product_stock_id = $product->product_stock_id;
+                        $imei->save();
                     }
 
                     $entryImei = Imei::create([
@@ -73,7 +77,7 @@ class ConvertEntryImeis
             // Fecha a transação e comita as alterações
             \DB::commit();
             Log::debug('Transaction - commit');
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             \DB::rollBack();
             Log::debug('Transaction - rollback');
 
