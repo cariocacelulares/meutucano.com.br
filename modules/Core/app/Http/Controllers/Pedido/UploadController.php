@@ -221,7 +221,15 @@ class UploadController extends Controller
                     ->whereNotIn('id', $utilizados)
                     ->first();
 
-                if (!$this->isMarketplace && !$orderProduct) {
+                if ($this->isMarketplace && !$orderProduct) {
+                   $orderProduct = PedidoProduto::create([
+                       'pedido_id'   => $order->id,
+                       'produto_sku' => $product->sku,
+                       'valor'       => $produtoNota['valor'],
+                   ]);
+               }
+
+                if (!$orderProduct) {
                     throw new \Exception("O produto {$sku} está com valor ou quantidade divergente", 1);
                 }
 
@@ -236,7 +244,7 @@ class UploadController extends Controller
                 unset($imeis[$sku][0]);
                 $imeis[$sku] = array_values($imeis[$sku]);
 
-            if ($orderProduct->save()) {
+                if ($orderProduct->save()) {
                     $utilizados[] = $orderProduct->id;
                     $cadastrados[$sku][currencyNumbers($produtoNota['valor'])] = isset($cadastrados[$sku][currencyNumbers($produtoNota['valor'])]) ? ($cadastrados[$sku][currencyNumbers($produtoNota['valor'])] + 1) : 1;
                     Log::info('Pedido Produto importado ' . $sku . ' / ' . $order->id);
