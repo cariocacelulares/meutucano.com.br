@@ -221,7 +221,7 @@ class UploadController extends Controller
                     ->whereNotIn('id', $utilizados)
                     ->first();
 
-                if (!$orderProduct) {
+                if (!$this->isMarketplace && !$orderProduct) {
                     throw new \Exception("O produto {$sku} está com valor ou quantidade divergente", 1);
                 }
 
@@ -282,7 +282,7 @@ class UploadController extends Controller
             $arquivo = storage_path('app/public/' . date('His') . '.pdf');
 
             if (\Config::get('core.email_send_enabled')) {
-                $mail = Mail::send('emails.compra', [
+                $mail = \Mail::send('emails.compra', [
                     'nome'     => $this->nfe->dest->xNome,
                     'produtos' => $this->getProducts(),
                     'rastreio' => $rastreio->rastreio
