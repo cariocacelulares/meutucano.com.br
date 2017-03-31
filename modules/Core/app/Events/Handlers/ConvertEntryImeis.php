@@ -34,6 +34,10 @@ class ConvertEntryImeis
         $entry = $event->entry;
 
         try {
+            // Abre um transaction no banco de dados
+            \DB::beginTransaction();
+            \Log::debug('Transaction - begin');
+
             foreach ($entry->products as $product) {
                 $imeis = $product->getOriginal('imeis');
 
@@ -47,7 +51,11 @@ class ConvertEntryImeis
                     $imei = ProductImei::firstOrCreate([
                         'product_stock_id' => $product->product_stock_id,
                         'imei'             => $imei
-                    ]);
+                    ])->withTrashed();
+
+                    if (!$imei->wasRecentlyCreated && !is_null($imei->deleted_at)) {
+                        $imei->restore();
+                    }
 
                     $entryImei = Imei::create([
                         'stock_entry_product_id' => $product->id,
@@ -57,7 +65,14 @@ class ConvertEntryImeis
                     Log::info("Relação {$entryImei->id} criada entre o imei {$imei->id} [{$imei->imei}] e o produto {$product->id} da entrada {$entry->id}");
                 }
             }
+
+            // Fecha a transação e comita as alterações
+            \DB::commit();
+            \Log::debug('Transaction - commit');
         } catch (Exception $exception) {
+            \DB::rollBack();
+            \Log::debug('Transaction - rollback');
+
             Log::warning(logMessage($exception, 'Ocorreu um erro ao transferir imeis (ConvertEntryImeis/onEntryConfirmed/onEntryConfirmed)'), [$entry]);
         }
     }
