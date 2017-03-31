@@ -69,9 +69,21 @@ class StockProvider
     {
         \Log::notice("Adicionando {$quantity} quantidade no estoque '{$stock}' do produto {$sku}");
 
-        return ProductStock::where('product_sku', $sku)
+        $productStocks = ProductStock
+            ::where('product_sku', $sku)
             ->where('stock_slug', $stock)
-            ->increment('quantity', $quantity);
+            ->get();
+
+        $i = 0;
+        foreach ($productStocks as $productStock) {
+            $productStock->quantity = ($productStock->quantity + $quantity);
+
+            if ($productStock->save()) {
+                $i++;
+            }
+        }
+
+        return $i;
     }
 
     /**
@@ -85,9 +97,21 @@ class StockProvider
     {
         \Log::notice("Subtraindo {$quantity} quantidade no estoque '{$stock}' do produto {$sku}");
 
-        return ProductStock::where('product_sku', $sku)
+        $productStocks = ProductStock
+            ::where('product_sku', $sku)
             ->where('stock_slug', $stock)
-            ->decrement('quantity', $quantity);
+            ->get();
+
+        $i = 0;
+        foreach ($productStocks as $productStock) {
+            $productStock->quantity = ($productStock->quantity - $quantity);
+
+            if ($productStock->save()) {
+                $i++;
+            }
+        }
+
+        return $i;
     }
 
     /**
