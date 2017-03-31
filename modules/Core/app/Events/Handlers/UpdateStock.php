@@ -46,10 +46,10 @@ class UpdateStock
             '\Core\Events\Handlers\UpdateStock@onOrderProductCreated'
         );
 
-        $events->listen(
+        /*$events->listen(
             OrderCanceled::class,
             '\Core\Events\Handlers\UpdateStock@onOrderCanceled'
-        );
+        );*/
     }
 
     /**
@@ -164,7 +164,7 @@ class UpdateStock
      * @param  OrderCanceled  $event
      * @return void
      */
-    public function onOrderCanceled(OrderCanceled $event)
+    /*public function onOrderCanceled(OrderCanceled $event)
     {
         Log::debug('Handler UpdateStock/onOrderCanceled acionado!', [$event]);
 
@@ -179,5 +179,5 @@ class UpdateStock
                 \Stock::add($orderProduct->produto_sku, 1, $stock);
             }
         }
-    }
+    }*/
 }
