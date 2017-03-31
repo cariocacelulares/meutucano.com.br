@@ -105,7 +105,7 @@ class SearchController extends Controller
             ->orWhere('titulo',           'LIKE', "%{$term}%")
             ->orWhere('ncm',              'LIKE', "%{$term}%")
             ->orWhere('ean',              'LIKE', "%{$term}%")
-            ->orWhere('referencia',       'LIKE', "%{$term}%")
+            // ->orWhere('referencia',       'LIKE', "%{$term}%");
             ->groupBy('sku')
             ->orderBy('titulo', 'ASC');
     }

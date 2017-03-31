@@ -42,37 +42,44 @@ class ConvertEntryImeis
                 $imeis = $product->getOriginal('imeis');
 
                 if (!$imeis) {
-                    continue;
-                }
+                    \Log::info('AAAAAAAA', [$product->toArray()]);
+                    \Log::info('BBBBBBBB', [$product->productStock]);
 
-                $imeis = json_decode($imeis);
+                    \Stock::add(
+                        $product->product_sku,
+                        $product->quantity,
+                        $product->productStock->stock_slug
+                    );
+                } else {
+                    $imeis = json_decode($imeis);
 
-                foreach ($imeis as $imei) {
-                    $attrs = [
-                        'imei' => $imei
-                    ];
+                    foreach ($imeis as $imei) {
+                        $attrs = [
+                            'imei' => $imei
+                        ];
 
-                    $imei = ProductImei
-                        ::where($attrs)
-                        ->withTrashed()->first() ?: ProductImei::create(array_merge($attrs, [
-                            'product_stock_id' => $product->product_stock_id,
-                        ]));
+                        $imei = ProductImei
+                            ::where($attrs)
+                            ->withTrashed()->first() ?: ProductImei::create(array_merge($attrs, [
+                                'product_stock_id' => $product->product_stock_id,
+                            ]));
 
-                    if (!$imei->wasRecentlyCreated && !is_null($imei->deleted_at)) {
-                        $imei->restore();
+                        if (!$imei->wasRecentlyCreated && !is_null($imei->deleted_at)) {
+                            $imei->restore();
+                        }
+
+                        if ($imei->product_stock_id != $product->product_stock_id) {
+                            $imei->product_stock_id = $product->product_stock_id;
+                            $imei->save();
+                        }
+
+                        $entryImei = Imei::create([
+                            'stock_entry_product_id' => $product->id,
+                            'product_imei_id'        => $imei->id,
+                        ]);
+
+                        Log::info("Relação {$entryImei->id} criada entre o imei {$imei->id} [{$imei->imei}] e o produto {$product->id} da entrada {$entry->id}");
                     }
-
-                    if ($imei->product_stock_id != $product->product_stock_id) {
-                        $imei->product_stock_id = $product->product_stock_id;
-                        $imei->save();
-                    }
-
-                    $entryImei = Imei::create([
-                        'stock_entry_product_id' => $product->id,
-                        'product_imei_id'        => $imei->id,
-                    ]);
-
-                    Log::info("Relação {$entryImei->id} criada entre o imei {$imei->id} [{$imei->imei}] e o produto {$product->id} da entrada {$entry->id}");
                 }
             }
 

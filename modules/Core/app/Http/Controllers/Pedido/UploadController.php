@@ -29,6 +29,11 @@ class UploadController extends Controller
         Uploadable;
 
     /**
+     * If order invoice is from a marketplace
+     */
+    protected $isMarketplace;
+
+    /**
      * Call trait method to prepare upload
      *
      * @return Response
@@ -59,6 +64,12 @@ class UploadController extends Controller
             // Abre um transaction no banco de dados
             DB::beginTransaction();
             Log::debug('Transaction - begin');
+
+            if (strstr(strtolower($this->nfe->infAdic->infCpl), 'b2w') || strstr(strtolower($this->nfe->infAdic->infCpl), 'cnova')) {
+                $this->isMarketplace = true;
+            } else {
+                $this->isMarketplace = false;
+            }
 
             $order    = $this->importOrder($key, $cfop);
             $invoice  = $this->importInvoice($key, $order, $fileName, $dateTime);
@@ -476,9 +487,12 @@ class UploadController extends Controller
             $order = Pedido::find($idMarketplace);
         }
 
-
         if (!$order) {
-            throw new \Exception('O pedido não existe no tucano!', 7);
+            if ($this->isMarketplace) {
+                $order = new Pedido;
+            } else {
+                throw new \Exception('O pedido não existe no tucano!', 7);
+            }
         }
 
         // Cliente
@@ -530,8 +544,8 @@ class UploadController extends Controller
 
         $taxvat = (string) $taxvat;
 
-        if (!strstr($taxvat, $order->cliente->taxvat)) {
-            // throw new \Exception('O documento do cliente na nota não bate com o cadastrado!', 7);
+        if (!$this->isMarketplace && !strstr($taxvat, $order->cliente->taxvat)) {
+            throw new \Exception('O documento do cliente na nota não bate com o cadastrado!', 7);
         }
 
         $client = Cliente::firstOrCreate(['taxvat' => $taxvat]);
