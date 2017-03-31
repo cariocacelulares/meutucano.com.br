@@ -36,7 +36,7 @@ class ConvertEntryImeis
         try {
             // Abre um transaction no banco de dados
             \DB::beginTransaction();
-            \Log::debug('Transaction - begin');
+            Log::debug('Transaction - begin');
 
             foreach ($entry->products as $product) {
                 $imeis = $product->getOriginal('imeis');
@@ -68,10 +68,14 @@ class ConvertEntryImeis
 
             // Fecha a transação e comita as alterações
             \DB::commit();
-            \Log::debug('Transaction - commit');
+            Log::debug('Transaction - commit');
         } catch (Exception $exception) {
             \DB::rollBack();
-            \Log::debug('Transaction - rollback');
+            Log::debug('Transaction - rollback');
+
+            $entry->confirmed_at = null;
+            $entry->save();
+            Log::info('Tirado confirmação de retirada de estoque: erro ao registrar seriais');
 
             Log::warning(logMessage($exception, 'Ocorreu um erro ao transferir imeis (ConvertEntryImeis/onEntryConfirmed/onEntryConfirmed)'), [$entry]);
         }
