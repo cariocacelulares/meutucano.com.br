@@ -61,16 +61,16 @@ class ConvertEntryImeis
                                 'product_stock_id' => $product->product_stock_id,
                             ]));
 
-                        if (!$imei->wasRecentlyCreated && !is_null($imei->deleted_at)) {
-                            $imei->restore();
-                        }
-
                         if ($imei->product_stock_id != $product->product_stock_id) {
                             $imei->product_stock_id = $product->product_stock_id;
                             $imei->save();
                         }
 
-                        $entryImei = Imei::create([
+                        if (!$imei->wasRecentlyCreated && !is_null($imei->deleted_at)) {
+                            $imei->restore();
+                        }
+
+                        $entryImei = Imei::firstOrCreate([
                             'stock_entry_product_id' => $product->id,
                             'product_imei_id'        => $imei->id,
                         ]);
