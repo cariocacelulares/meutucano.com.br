@@ -29,6 +29,10 @@
             if (vm.entry.id) {
                 StockEntry.get(vm.entry.id).then(function(entry) {
                     vm.entry = entry;
+
+                    for (var key in vm.entry.products) {
+                        vm.imeisUpdated(vm.entry.products[key]);
+                    }
                 });
             }
         }();
@@ -114,7 +118,6 @@
 
         /**
          * Open modal to select a product
-         * @param {[type]} product [description]
          */
         vm.setProduct = function(product) {
             vm.selectProductHelper.open().then(function(data) {
@@ -124,16 +127,22 @@
                     product.product = produto;
                     product.product_sku = produto.sku;
 
-                    if (product.title == '' || !product.title) {
+                    if (!vm.entry.invoice || vm.entry.invoice == 'undefined' || typeof vm.entry.invoice.id == 'undefined') { // nao tem xml
                         product.title = produto.titulo;
-                    }
-
-                    if (product.ean == '' || !product.ean) {
                         product.ean = produto.ean;
-                    }
-
-                    if (product.ncm == '' || !product.ncm) {
                         product.ncm = produto.ncm;
+                    } else { // tem xml
+                        if (product.title == '' || !product.title) {
+                            product.title = produto.titulo;
+                        }
+
+                        if (product.ean == '' || !product.ean) {
+                            product.ean = produto.ean;
+                        }
+
+                        if (product.ncm == '' || !product.ncm) {
+                            product.ncm = produto.ncm;
+                        }
                     }
 
                     ProductStock.listBySku(product.product_sku).then(function(stocks) {
@@ -141,6 +150,33 @@
                     });
                 }
             });
+        }
+
+        /**
+         * Remove product from list
+         * @param  {object} index array index
+         */
+        vm.removeProduct = function(product) {
+            var index = vm.entry.products.indexOf(product);
+            if (index >= 0) {
+                vm.entry.products.splice(index, 1);
+            }
+        }
+
+        /**
+         * Update total_value of a product
+         * @param  {object} product
+         */
+        vm.updateTotal = function(product) {
+            product.total_value = product.unitary_value * product.quantity;
+        }
+
+        /**
+         * Update qty_imeis of a product
+         * @param  {object} product
+         */
+        vm.imeisUpdated = function(product) {
+            product.qty_imeis = product.imeis.split('\n').length;
         }
 
         /**

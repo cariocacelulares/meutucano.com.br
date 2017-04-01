@@ -155,6 +155,7 @@
                                 <th width="100">Valor</th>
                                 <th width="120">Total</th>
                                 <th width="170">Imeis</th>
+                                <th width="45"></th>
                             </thead>
                             <tbody>
                                 <tr ng-repeat="product in EntradaEstoqueForm.entry.products track by $index">
@@ -176,7 +177,7 @@
                                         </select>
                                     </td>
                                     <td class="form-group">
-                                        <input class="text-center" ng-model="product.quantity" type="number">
+                                        <input class="text-center" ng-model="product.quantity" ng-change="EntradaEstoqueForm.updateTotal(product)" type="number">
                                     </td>
                                     <td ng-if="EntradaEstoqueForm.taxes" class="form-group">
                                         <input class="text-center" ng-model="product.icms" type="number" step="0.01">
@@ -191,14 +192,19 @@
                                         <input class="text-center" ng-model="product.cofins" type="number" step="0.01">
                                     </td>
                                     <td class="form-group">
-                                        <input ng-model="product.unitary_value" ui-money-mask>
+                                        <input ng-model="product.unitary_value" ng-change="EntradaEstoqueForm.updateTotal(product)" ui-money-mask>
                                     </td>
                                     <td class="form-group">
                                         <input ng-model="product.total_value" ui-money-mask>
                                     </td>
                                     <td class="form-group">
-                                        <textarea ng-if="product.stock.serial_enabled" ng-model="product.imeis" style="line-height:1.2;height:35px;min-height:35px;padding:0 15px"></textarea>
+                                        <textarea ng-if="product.stock.serial_enabled" ng-model="product.imeis"
+                                            ng-change="EntradaEstoqueForm.imeisUpdated(product)" tooltips tooltip-template="{{ product.qty_imeis || 0 }} seriais"
+                                            style="line-height:1.2;height:35px;min-height:35px;padding:0 15px"></textarea>
                                         <input ng-if="!product.stock.serial_enabled" value="Sem controle serial" disabled readonly>
+                                    </td>
+                                    <td>
+                                        <button ng-click="EntradaEstoqueForm.removeProduct(product)" title="Excluir" type="button" class="btn-default"><i class="fa-trash"></i></button>
                                     </td>
                                 </tr>
                             </tbody>
