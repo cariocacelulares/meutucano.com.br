@@ -85,6 +85,7 @@
                     {label: 'SKU', name: 'sku'},
                     {label: 'Estoque', name: 'estoque'},
                     {label: 'Estado', name: 'estado'},
+                    {label: 'Preço de venda', name: 'valor'},
                     {label: 'Data de criação', name: 'created_at'}
                 ],
                 order: [],
@@ -118,6 +119,7 @@
                 sku: 'SKU',
                 estoque: 'Estoque',
                 estado: 'Estado',
+                valor: 'Preço de venda',
                 created_at: 'Data de criação'
             };
 
