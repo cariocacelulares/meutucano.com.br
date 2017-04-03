@@ -226,7 +226,6 @@ class UploadController extends Controller
                        'pedido_id'   => $order->id,
                        'produto_sku' => $product->sku,
                        'valor'       => $produtoNota['valor'],
-                       'status'      => 1,
                    ]);
                }
 
@@ -499,6 +498,7 @@ class UploadController extends Controller
         if (!$order) {
             if ($this->isMarketplace) {
                 $order = new Pedido;
+                $order->status = 1;
             } else {
                 throw new \Exception('O pedido não existe no tucano!', 7);
             }
