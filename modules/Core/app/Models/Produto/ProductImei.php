@@ -33,6 +33,15 @@ class ProductImei extends Model
     ];
 
     /**
+     * Set the imei
+     * @param string $imei upper and trim
+     */
+    public function setImeiAttribute($imei)
+    {
+        $this->attributes['imei'] = mb_strtoupper(trim($imei));
+    }
+
+    /**
      * ProductStock
      * @return ProductStock
      */

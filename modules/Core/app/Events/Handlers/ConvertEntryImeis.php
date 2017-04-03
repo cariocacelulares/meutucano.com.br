@@ -51,6 +51,8 @@ class ConvertEntryImeis
                     $imeis = json_decode($imeis);
 
                     foreach ($imeis as $imei) {
+                        $imei = mb_strtoupper(trim($imei));
+
                         $attrs = [
                             'imei' => $imei
                         ];
