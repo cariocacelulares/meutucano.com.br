@@ -226,6 +226,7 @@ class UploadController extends Controller
                        'pedido_id'   => $order->id,
                        'produto_sku' => $product->sku,
                        'valor'       => $produtoNota['valor'],
+                       'status'      => 1,
                    ]);
                }
 
