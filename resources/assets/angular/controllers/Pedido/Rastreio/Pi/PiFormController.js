@@ -21,10 +21,14 @@
             vm.validationErrors = [];
 
             var data = vm.pi.data_pagamento_readable;
-            data = data.split('/'); // d/m/Y
-            data = new Date(data[2], (parseInt(data[1]) - 1), data[0]);
-            data = data.getFullYear() + '-' + (data.getMonth() + 1) + '-' + data.getDate();
-            vm.pi.data_pagamento = data;
+            if (typeof data != 'undefined' && data.indexOf('/') >= 0) {
+                data = data.split('/'); // d/m/Y
+                data = new Date(data[2], (parseInt(data[1]) - 1), data[0]);
+                data = data.getFullYear() + '-' + (data.getMonth() + 1) + '-' + data.getDate();
+                vm.pi.data_pagamento = data;
+            } else {
+                vm.pi.data_pagamento = null;
+            }
 
             Pi.save(vm.pi, vm.pi.id || null).then(
                 function() {
