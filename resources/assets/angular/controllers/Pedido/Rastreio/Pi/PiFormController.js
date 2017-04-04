@@ -21,7 +21,7 @@
             vm.validationErrors = [];
 
             var data = vm.pi.data_pagamento_readable;
-            if (typeof data != 'undefined' && data.indexOf('/') >= 0) {
+            if (typeof data != 'undefined' && data && data.indexOf('/') >= 0) {
                 data = data.split('/'); // d/m/Y
                 data = new Date(data[2], (parseInt(data[1]) - 1), data[0]);
                 data = data.getFullYear() + '-' + (data.getMonth() + 1) + '-' + data.getDate();
