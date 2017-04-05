@@ -133,7 +133,7 @@ class Api
             ]);
 
             if ($response['httpCode'] !== 200) {
-                throw new \Exception((is_object($response['body'])) ? $response['body']->message : 'Erro desconhecido');
+                throw new \Exception((is_object($response['body'])) ? json_encode($response['body']) : 'Erro desconhecido');
             }
 
             return $response;
@@ -162,7 +162,7 @@ class Api
             ]);
 
             if ($response['httpCode'] !== 200) {
-                throw new \Exception((is_object($response['body'])) ? $response['body']->message : 'Erro desconhecido');
+                throw new \Exception((is_object($response['body'])) ? json_encode($response['body']) : 'Erro desconhecido');
             }
 
             return $response;
@@ -193,7 +193,7 @@ class Api
             if ($stock < 1) $this->syncStatus($code, 'paused');
 
             if ($response['httpCode'] !== 200) {
-                throw new \Exception((is_object($response['body'])) ? $response['body']->message : 'Erro desconhecido');
+                throw new \Exception((is_object($response['body'])) ? json_encode($response['body']) : 'Erro desconhecido');
             }
 
             return $response;
@@ -222,7 +222,7 @@ class Api
             ]);
 
             if ($response['httpCode'] !== 200) {
-                throw new \Exception((is_object($response['body'])) ? $response['body']->message : 'Erro desconhecido');
+                throw new \Exception((is_object($response['body'])) ? json_encode($response['body']) : 'Erro desconhecido');
             }
 
             return $response;
@@ -251,7 +251,7 @@ class Api
             ]);
 
             if ($response['httpCode'] !== 200) {
-                throw new \Exception((is_object($response['body'])) ? $response['body']->message : 'Erro desconhecido');
+                throw new \Exception((is_object($response['body'])) ? json_encode($response['body']) : 'Erro desconhecido');
             }
 
             return $response;
@@ -277,7 +277,7 @@ class Api
             ]);
 
             if ($response['httpCode'] !== 200) {
-                throw new \Exception((is_object($response['body'])) ? $response['body']->message : 'Erro desconhecido');
+                throw new \Exception((is_object($response['body'])) ? json_encode($response['body']) : 'Erro desconhecido');
             }
 
             return $response['body'];
@@ -303,7 +303,7 @@ class Api
             ]);
 
             if ($response['httpCode'] !== 200) {
-                throw new \Exception((is_object($response['body'])) ? $response['body']->message : 'Erro desconhecido');
+                throw new \Exception((is_object($response['body'])) ? json_encode($response['body']) : 'Erro desconhecido');
             }
 
             return $response['body'];
@@ -329,7 +329,7 @@ class Api
             ]);
 
             if ($response['httpCode'] !== 200) {
-                throw new \Exception((is_object($response['body'])) ? $response['body']->message : 'Erro desconhecido');
+                throw new \Exception((is_object($response['body'])) ? json_encode($response['body']) : 'Erro desconhecido');
             }
 
             return $response['body'];
@@ -355,7 +355,7 @@ class Api
             ]);
 
             if ($response['httpCode'] !== 200) {
-                throw new \Exception((is_object($response['body'])) ? $response['body']->message : 'Erro desconhecido');
+                throw new \Exception((is_object($response['body'])) ? json_encode($response['body']) : 'Erro desconhecido');
             }
 
             return $response['body'];
