@@ -171,7 +171,6 @@ class AdController extends Controller
             $mercadolivreAd = [
                 "title"              => $ad->title,
                 "price"              => $ad->price,
-                "condition"          => ($ad->product->estado == 0) ? 'new' : 'used',
                 "video_id"           => $ad->video,
                 "warranty"           => $ad->product->warranty,
                 "shipping"           => [
