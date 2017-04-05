@@ -389,7 +389,7 @@ class UploadController extends Controller
     private function importRastreio($order, $dateTime)
     {
         $codRastreio = null;
-        preg_match('/([A-Za-z]{2}[0-9]{9})\w+/', $this->nfe->infAdic->infCpl, $codPost);
+        preg_match('/([A-Za-z]{2}[0-9]{9}BR)\w+/', $this->nfe->infAdic->infCpl, $codPost);
         if ($codPost) {
             $codRastreio = strtoupper(substr($codPost[0], 0, 13));
         }
