@@ -417,7 +417,7 @@ class AdController extends Controller
     protected function getAdDescription(Ad $ad)
     {
         return ($ad->template_id)
-            ? with(new TemplateController())->generateTemplate($ad->id)
+            ? with(new TemplateController())->generateTemplate($ad)
             : $ad->template_custom;
     }
 

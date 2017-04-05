@@ -35,14 +35,12 @@ class TemplateController extends Controller
     /**
      * Generate template content from template id
      *
-     * @param  int $id
+     * @param  Ad $ad
      * @return string|boolean
      */
-    public function generateTemplate($id)
+    public function generateTemplate($ad)
     {
         try {
-            $ad = Ad::findOrFail($id);
-
             $url = with(new MagentoController())->getProductUrl($ad->product->sku);
 
             $dom = HtmlDomParser::file_get_html($url);
