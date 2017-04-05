@@ -27,7 +27,7 @@
         <div class="form-group" ng-class="{'col-md-12': PiForm.pi.motivo_status == '0', 'col-md-3': PiForm.pi.motivo_status !== '0'}">
             <label for="status">Status</label>
             <select ng-model="PiForm.pi.status" id="status" class="form-control">
-                <option value="" disabled selected hidden>Procedência</option>
+                <option ng-if="!PiForm.pi.status && PiForm.pi.status !== 0" value="" disabled selected hidden>Procedência</option>
                 <option value="0">Improcedente</option>
                 <option value="1">Procedente</option>
             </select>

@@ -8,9 +8,9 @@
             <input id="autorizacao" class="form-control" ng-model="Logistica.logistica.autorizacao" placeholder="Código da autorização" required>
         </div>
         <div class="col-md-6 form-group">
-            <label for="motivo">Motivo</label>
+            <label for="motivo" class="{{ Logistica.logistica.motivo }}">Motivo</label>
             <select ng-model="Logistica.logistica.motivo" id="motivo" class="form-control" required>
-                <option value="" disabled selected hidden>Motivo</option>
+                <option ng-if="!Logistica.logistica.motivo && Logistica.logistica.motivo !== 0" value="" disabled selected hidden>Motivo</option>
                 <option value="0">Defeito</option>
                 <option value="1">Arrependimento</option>
                 <option value="2">Duplicidade</option>
@@ -26,7 +26,7 @@
         <div class="col-md-12 form-group">
             <label for="acao">Ação realizada</label>
             <select ng-model="Logistica.logistica.acao" id="acao" class="form-control" ng-change="Logistica.verifySeminovos()">
-                <option value="" disabled selected hidden>Ação realizada</option>
+                <option ng-if="!Logistica.logistica.acao && Logistica.logistica.acao !== 0" value="" disabled selected hidden>Ação realizada</option>
                 <option value="0">Reenvio</option>
                 <option value="1">Cancelamento</option>
             </select>

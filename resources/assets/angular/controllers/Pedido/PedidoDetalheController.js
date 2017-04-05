@@ -52,7 +52,9 @@
                     }
                 }
             });
-        }();
+        };
+
+        vm.load();
 
         /**
          * Set order as invoiced
