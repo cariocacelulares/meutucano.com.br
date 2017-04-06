@@ -11,6 +11,14 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-md-12 form-group">
+            <div class="checkbox check-success">
+                <input id="check" type="checkbox" ng-model="DeleteNota.returnStock" ng-true-value="true">
+                <label for="check">Retonar o estoque de TODOS os produtos do pedido?</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="pull-right">
             <button type="button" ng-click="closeThisDialog()" class="btn btn-default m-r-10">Cancelar</button>
             <button busy="Salvando..." type="submit" class="btn btn-danger">Excluir</button>

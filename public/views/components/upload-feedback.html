@@ -1,7 +1,7 @@
 <h1>Importação de notas</h1>
 <div ng-if="NotaUpload.total == 1 && NotaUpload.success == 1" class="row">
     <div class="col-md-12 text-center">
-        <p class="alert alert-success fz-14"><i class="fa-info-circle"></i>&nbsp; A nota do pedido <a ui-sref="app.objects.detalhe({id: NotaUpload.retorno[0].object.id})" target="_blank">{{ NotaUpload.retorno[0].object.codigo_marketplace || NotaUpload.retorno[0].object.id }}</a> foi importada com sucesso!</p>
+        <p class="alert alert-success fz-14"><i class="fa-info-circle"></i>&nbsp; A nota do pedido <a ui-sref="app.pedidos.detalhe({id: NotaUpload.retorno[0].object.id})" target="_blank">{{ NotaUpload.retorno[0].object.codigo_marketplace || NotaUpload.retorno[0].object.id }}</a> foi importada com sucesso!</p>
         <p class="fz-14"><b>Cliente</b>: {{ NotaUpload.retorno[0].object.cliente }}</p>
     </div>
     <div class="col-md-12 text-center m-t-15">
@@ -51,7 +51,7 @@
                     </td>
                     <td ng-if="retorno.error && !retorno.object.id" colspan="50" class="text-left p-l-0">{{ retorno.message }}</td>
                     <td ng-if="!retorno.error && retorno.object.id" class="text-center">
-                        <a ui-sref="app.objects.detalhe({id: retorno.object.id})" target="_blank">
+                        <a ui-sref="app.pedidos.detalhe({id: retorno.object.id})" target="_blank">
                             {{ retorno.object.codigo_marketplace || retorno.object.id }}
                         </a>
                     </td>

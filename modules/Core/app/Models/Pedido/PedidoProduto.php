@@ -4,6 +4,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
 use Core\Models\Produto;
 use Core\Models\Produto\ProductImei;
 use Core\Models\Pedido;
+use Core\Models\Produto\ProductStock;
 
 /**
  * Class PedidoProduto

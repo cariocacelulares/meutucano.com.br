@@ -29,13 +29,26 @@ class NotaController extends Controller
     public function destroy($id, DeleteRequest $request)
     {
         try {
-            $model = self::MODEL;
-            $nota = $model::findOrFail($id);
+            $nota = (self::MODEL)::findOrFail($id);
 
             $nota->delete_note = Input::get('delete_note');
             $nota->save();
 
             $nota->delete();
+
+            \Log::info('return_stock', [Input::get('return_stock')]);
+
+            if (Input::get('return_stock')) {
+                $orderProducts = $nota->pedido->produtos;
+                \Log::info('$orderProducts', [$orderProducts]);
+
+                foreach ($orderProducts as $orderProduct) {
+                    \Log::info('$orderProduct', [$orderProduct]);
+                    $stock = $orderProduct->productStock->stock_slug;
+                    \Log::info('$stock', [$stock]);
+                    \Stock::add($orderProduct->produto_sku, 1, $stock);
+                }
+            }
 
             return $this->deletedResponse();
         } catch (\Exception $exception) {

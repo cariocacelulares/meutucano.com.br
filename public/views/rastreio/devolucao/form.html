@@ -6,7 +6,7 @@
         <div class="col-md-12 form-group">
             <label for="motivo">Motivo</label>
             <select ng-model="DevolucaoForm.devolucao.motivo" id="motivo" class="form-control" required>
-                <option value="" disabled selected hidden>Motivo</option>
+                <option ng-if="!DevolucaoForm.devolucao.motivo && DevolucaoForm.devolucao.motivo !== 0" value="" disabled selected hidden>Motivo</option>
                 <option value="0">Endereço insuficiente</option>
                 <option value="1">Não procurado (Retirada)</option>
                 <option value="2">Endereço incorreto</option>
@@ -22,7 +22,7 @@
         <div class="col-md-12 form-group">
             <label for="acao">Ação realizada</label>
             <select ng-model="DevolucaoForm.devolucao.acao" id="acao" class="form-control">
-                <option value="">Ação realizada</option>
+                <option ng-if="!DevolucaoForm.devolucao.acao && DevolucaoForm.devolucao.acao !== 0" value="">Ação realizada</option>
                 <option value="0">Reenvio</option>
                 <option value="1">Cancelamento</option>
             </select>
