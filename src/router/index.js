@@ -1,9 +1,9 @@
-import Vue from 'vue';
-import Router from 'vue-router';
+import Vue from 'vue'
+import Router from 'vue-router'
 import routes from './routes';
 import authorize from './authorize';
 
-Vue.use(Router);
+Vue.use(Router)
 
 const router = new Router({
   routes,

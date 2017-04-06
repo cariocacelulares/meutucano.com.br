@@ -1,7 +1,7 @@
 <template>
   <div class="login-wrapper">
     <div class="login-box">
-      <h1>Bem-vindo ao Nexus</h1>
+      <h1>Tucano :)</h1>
 
       <form action="" @submit.prevent="onSignIn">
         <input type="text"
@@ -24,7 +24,7 @@
 </template>
 
 <script type="text/babel">
-import { mapActions } from 'vuex';
+// import { mapActions } from 'vuex';
 
 export default {
   data() {
@@ -35,7 +35,7 @@ export default {
   },
 
   methods: {
-    ...mapActions({
+    /*...mapActions({
       signIn: 'sign/ON_LOGIN',
     }),
 
@@ -46,7 +46,7 @@ export default {
       };
 
       this.signIn({ ...credentials });
-    },
+  },*/
   },
 };
 </script>

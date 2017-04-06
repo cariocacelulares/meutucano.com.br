@@ -15,7 +15,7 @@ export default (to, from, next) => {
         next({ name: 'app.main' });
       }
     }
-
-    next();
   }
+
+  next();
 };
