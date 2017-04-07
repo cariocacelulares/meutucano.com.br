@@ -1,25 +1,15 @@
 <template>
   <div class="login-wrapper">
-    <div class="login-box">
-      <h1>Tucano :)</h1>
+    <form>
+      <img src="/static/images/logo.png" alt="Meu Tucano">
 
-      <form action="" @submit.prevent="onSignIn">
-        <input type="text"
-          placeholder="Digite seu usuário"
-          v-model="email">
+      <input type="text" v-model="user" placeholder="Digite seu usuário">
+      <input type="password" v-model="password" placeholder="Digite sua senha">
 
-        <input type="password"
-          placeholder="Digite sua senha"
-          v-model="password">
-
-        <button class="btn btn-block btn-large btn-primary" type="submit">
-          <i class="fa fa-sign-in"></i>&nbsp;
-          Entrar
-        </button>
-      </form>
+      <button type="submit">Entrar</button>
 
       <router-link class="forgot-link" :to="{ name: 'auth.forgot' }">Esqueci minha senha</router-link>
-    </div>
+    </form>
   </div>
 </template>
 
@@ -29,7 +19,7 @@ import { mapActions } from 'vuex';
 export default {
   data() {
     return {
-      email: null,
+      user: null,
       password: null,
     };
   },
@@ -41,7 +31,7 @@ export default {
 
     onSignIn() {
       const credentials = {
-        email: this.email,
+        user: this.user,
         password: this.password,
       };
 
@@ -52,47 +42,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .login-wrapper {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+.login-wrapper {
+  width: 100%;
+  height: 100%;
+  background-color: #F5F5F5;
 
-        .login-box {
-            max-width: 350px;
-            text-align: center;
-            margin: 0 30px;
+  form {
+    width: 350px;
+    height: 370px;
+    background-color: #FFF;
 
-            h1 {
-                margin: 30px 0;
-                color: #FFF;
-            }
-
-            form {
-                margin-top: 10px;
-
-                input[type="text"], input[type="password"] {
-                    padding: 15px 20px;
-                    color: #333;
-                    font-size: 14px;
-                    width: 100%;
-                    border: 1px solid #ddd;
-                    margin-bottom: 10px;
-                    border-radius: 3px;
-                }
-            }
-
-            .forgot-link {
-                color: #999;
-                text-decoration: none;
-                font-size: 14px;
-                margin-top: 20px;
-                display: inline-block;
-
-                &:hover {
-                    color: #FFF;
-                }
-            }
-        }
+    img {
+      width: 96px;
+      height: 61px;
     }
+  }
+}
 </style>

@@ -1,6 +1,6 @@
 # tucano
 
-> A Vue.js project
+> Software de gestão de e-commerce
 
 ## Build Setup
 
