@@ -23,8 +23,8 @@
   </div>
 </template>
 
-<script type="text/babel">
-// import { mapActions } from 'vuex';
+<script>
+import { mapActions } from 'vuex';
 
 export default {
   data() {
@@ -35,7 +35,7 @@ export default {
   },
 
   methods: {
-    /*...mapActions({
+    ...mapActions({
       signIn: 'sign/ON_LOGIN',
     }),
 
@@ -46,13 +46,13 @@ export default {
       };
 
       this.signIn({ ...credentials });
-  },*/
+    },
   },
 };
 </script>
 
-<style scoped>
-    /*.login-wrapper {
+<style lang="scss" scoped>
+    .login-wrapper {
         flex: 1;
         display: flex;
         justify-content: center;
@@ -94,5 +94,5 @@ export default {
                 }
             }
         }
-    }*/
+    }
 </style>
