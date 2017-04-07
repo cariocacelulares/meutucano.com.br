@@ -19,7 +19,7 @@
     </thead>
     <tbody ng-if="PedidoList.tableData.data.length && !PedidoList.loading">
         <tr ng-repeat="pedido in PedidoList.tableData.data">
-            <td class="text-center">{{ pedido.codigo_marketplace || 'Sem código' }}</td>
+            <td class="text-center">{{ pedido.codigo_marketplace || pedido.id }}</td>
             <td class="text-center bold">{{ pedido.marketplace_readable }}</td>
             <td>
                 <strong>{{ pedido.cliente.nome | uppercase }}</strong>

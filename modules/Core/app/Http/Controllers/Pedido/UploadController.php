@@ -468,7 +468,7 @@ class UploadController extends Controller
         $order         = null;
         $idMarketplace = null;
 
-        $marketplace = 'Site';
+        $marketplace = 'Venda direta';
         if (strstr(strtoupper($this->nfe->infAdic->infCpl), 'B2W') !== false) {
             $marketplace = 'B2W';
         } elseif (strstr(strtoupper($this->nfe->infAdic->infCpl), 'CNOVA') !== false) {
@@ -479,6 +479,8 @@ class UploadController extends Controller
             $marketplace = 'WALMART';
         } elseif (strstr(strtoupper($this->nfe->infAdic->infCpl), 'GROUPON') !== false) {
             $marketplace = 'GROUPON';
+        } elseif (strstr(strtoupper($this->nfe->infAdic->infCpl), 'SITE') !== false) {
+            $marketplace = 'Site';
         }
 
         preg_match('/PEDIDO [0-9]{2,}\-?([0-9]{6,})?\w+/', $this->nfe->infAdic->infCpl, $codPedido);
