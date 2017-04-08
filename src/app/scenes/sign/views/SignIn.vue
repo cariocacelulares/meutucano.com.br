@@ -48,13 +48,22 @@ export default {
   background-color: #F5F5F5;
 
   form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
     width: 350px;
     height: 370px;
     background-color: #FFF;
+    transform: translate(-50%, -50%);
+    text-align: center;
 
     img {
       width: 96px;
       height: 61px;
+    }
+
+    a {
+      display: block;
     }
   }
 }

@@ -1,0 +1,44 @@
+* {
+  margin: 0;
+  padding: 0;
+
+  &:after,
+  &:before {
+    box-sizing: border-box;
+  }
+
+  &:after:focus,
+  &:before:focus,
+  &:focus {
+    outline: 0
+  }
+}
+
+body, html, #app {
+  height: 100%;
+}
+
+body {
+  position: relative;
+  z-index: 1;
+
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+  font-size: 16px;
+}
+
+::selection {
+  background: #292B37;
+  color: #FFF;
+  text-shadow: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:focus,
+a:hover {
+  text-decoration: underline;
+}
