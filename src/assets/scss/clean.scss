@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
 
+  &,
   &:after,
   &:before {
     box-sizing: border-box;
@@ -25,6 +26,8 @@ body {
   font-family: 'Roboto', sans-serif;
   font-style: normal;
   font-size: 16px;
+  font-weight: 400;
+  letter-spacing: .01em;
 }
 
 ::selection {

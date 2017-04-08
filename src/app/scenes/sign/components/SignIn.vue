@@ -6,17 +6,24 @@
       <input type="text" v-model="user" placeholder="Digite seu usuário">
       <input type="password" v-model="password" placeholder="Digite sua senha">
 
-      <button type="submit">Entrar</button>
+      <Button :type="'submit'" :text="'Entrar'"></Button>
 
-      <router-link class="forgot-link" :to="{ name: 'auth.forgot' }">Esqueci minha senha</router-link>
+      <router-link class="forgot-link" :to="{ name: 'auth.forgot' }">esqueci minha senha</router-link>
     </form>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
+import {
+  Button
+} from 'common/components/Button';
 
 export default {
+  components: {
+    Button
+  },
+
   data() {
     return {
       user: null,
@@ -53,9 +60,14 @@ export default {
     left: 50%;
     width: 350px;
     height: 370px;
+    padding: 40px 20px;
     background-color: #FFF;
     transform: translate(-50%, -50%);
     text-align: center;
+
+    @media all and (max-width: 350px) {
+      width: 100%;
+    }
 
     img {
       width: 96px;
@@ -64,6 +76,8 @@ export default {
 
     a {
       display: block;
+      font-size: 12px;
+      color: #535353;
     }
   }
 }

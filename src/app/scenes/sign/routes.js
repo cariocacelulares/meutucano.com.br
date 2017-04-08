@@ -1,6 +1,6 @@
-import SignIn from './views/SignIn'
-import ResetPassword from './views/ResetPassword'
-import ForgotPassword from './views/ForgotPassword'
+import SignIn from './components/SignIn'
+import ResetPassword from './components/ResetPassword'
+import ForgotPassword from './components/ForgotPassword'
 
 export default [
     { path: '/',       component: SignIn,         name: 'auth.signin' },
