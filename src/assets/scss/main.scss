@@ -4,6 +4,11 @@
 @import 'libs/normalize';
 
 /**
+ * Vars
+ */
+@import 'vars';
+
+/**
  * Fonts
  */
 @import 'fonts';
@@ -12,3 +17,8 @@
  * Clean/fix/update browser defaults
  */
 @import 'clean';
+
+/**
+ * Spacing: margin, padding helpers
+ */
+@import 'spacing';

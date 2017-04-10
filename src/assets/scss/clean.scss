@@ -23,9 +23,10 @@ body {
   position: relative;
   z-index: 1;
 
+  color: #232323;
   font-family: 'Roboto', sans-serif;
   font-style: normal;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
   letter-spacing: .01em;
 }
@@ -44,4 +45,15 @@ a {
 a:focus,
 a:hover {
   text-decoration: underline;
+}
+
+input,
+textarea,
+button {
+  border: none;
+  outline: none;
+}
+
+textarea {
+  resize: vertical;
 }

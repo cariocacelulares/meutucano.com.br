@@ -1,12 +1,16 @@
 <template>
   <div class="login-wrapper">
-    <form>
+    <form @submit.prevent="onSignIn">
       <img src="/static/images/logo.png" alt="Meu Tucano">
 
-      <input type="text" v-model="user" placeholder="Digite seu usuário">
-      <input type="password" v-model="password" placeholder="Digite sua senha">
+      <TInput :value="user" :required="true" :placeholder="'Digite seu usuário'"
+        :block="true" :size="'big'" :class="'m-v-10'" />
+      <TInput :type="'password'" :value="password" :required="true" :placeholder="'Digite sua senha'"
+        :block="true" :size="'big'" />
 
-      <Button :type="'submit'" :text="'Entrar'"></Button>
+      <TButon :type="'submit'" :text="'Entrar'" :color="'info'" :block="true" :size="'big'"
+          :class="'m-t-20 m-b-15'"
+      ></TButon>
 
       <router-link class="forgot-link" :to="{ name: 'auth.forgot' }">esqueci minha senha</router-link>
     </form>
@@ -15,13 +19,13 @@
 
 <script>
 import { mapActions } from 'vuex';
-import {
-  Button
-} from 'common/components/Button';
+import TButon from 'common/components/TButon';
+import TInput from 'common/components/TInput';
 
 export default {
   components: {
-    Button
+    TButon,
+    TInput,
   },
 
   data() {
@@ -59,11 +63,11 @@ export default {
     top: 50%;
     left: 50%;
     width: 350px;
-    height: 370px;
     padding: 40px 20px;
     background-color: #FFF;
     transform: translate(-50%, -50%);
     text-align: center;
+    box-shadow: 0px 0px 10px rgba(204, 204, 204, 0.5);
 
     @media all and (max-width: 350px) {
       width: 100%;
@@ -72,6 +76,7 @@ export default {
     img {
       width: 96px;
       height: 61px;
+      margin-bottom: 10px;
     }
 
     a {
