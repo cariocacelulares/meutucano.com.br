@@ -1,72 +1,86 @@
 <template>
   <div class="login-wrapper">
-    <div class="login-box">
-      <h1>Esqueci minha senha</h1>
+    <form @submit.prevent="onSignIn">
+      <img src="/static/images/logo.png" alt="Meu Tucano">
 
-      <form action="">
-        <input type="text" placeholder="Digite seu usuário">
+      <TInput v-model="email" :required="true" placeholder="Digite seu e-mail"
+        :block="true" size="big" class="m-v-10" type="email" />
 
-        <button class="btn btn-block btn-large btn-primary" type="submit">
-          <i class="fa fa-mail"></i>&nbsp;
-          Recuperar
-        </button>
-      </form>
+      <TButon type="submit" text="Recuperar senha" color="info" :block="true" size="big"
+          class="m-t-20 m-b-15" />
 
-      <router-link class="forgot-link" :to="{ name: 'auth.signin' }">Voltar ao login</router-link>
-    </div>
+      <router-link class="back-link" :to="{ name: 'auth.signin' }">
+        voltar
+      </router-link>
+    </form>
   </div>
 </template>
 
-<script type="text/babel">
-  export default {
-    methods: {
+<script>
+import { mapActions } from 'vuex';
+import TButon from 'common/components/TButon';
+import TInput from 'common/components/TInput';
 
+export default {
+  components: {
+    TButon,
+    TInput,
+  },
+
+  data() {
+    return {
+      email: null,
+    };
+  },
+
+  methods: {
+    ...mapActions({
+      signIn: 'sign/ON_LOGIN',
+    }),
+
+    onSignIn() {
+      const credentials = {
+        email: this.email,
+      };
+
+      this.signIn({ ...credentials });
     },
-  };
+  },
+};
 </script>
 
-<style scoped>
-    /*.login-wrapper {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+<style lang="scss" scoped>
+.login-wrapper {
+  width: 100%;
+  height: 100%;
+  background-color: #F5F5F5;
 
-        .login-box {
-            max-width: 350px;
-            text-align: center;
-            margin: 0 30px;
+  form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 350px;
+    padding: 40px 20px;
+    background-color: #FFF;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    box-shadow: 0px 0px 10px rgba(204, 204, 204, 0.5);
 
-            h1 {
-                margin: 30px 0;
-                color: #FFF;
-            }
+    @media all and (max-width: 350px) {
+      width: 100%;
+    }
 
-            form {
-                margin-top: 10px;
+    img {
+      width: 96px;
+      height: 61px;
+      margin-bottom: 10px;
+    }
 
-                input[type="text"], input[type="password"] {
-                    padding: 15px 20px;
-                    color: #333;
-                    font-size: 14px;
-                    width: 100%;
-                    border: 1px solid #ddd;
-                    margin-bottom: 10px;
-                    border-radius: 3px;
-                }
-            }
-
-            .forgot-link {
-                color: #999;
-                text-decoration: none;
-                font-size: 14px;
-                margin-top: 20px;
-                display: inline-block;
-
-                &:hover {
-                    color: #FFF;
-                }
-            }
-        }
-    }*/
+    .back-link {
+      display: block;
+      font-size: 12px;
+      color: #535353;
+    }
+  }
+}
 </style>

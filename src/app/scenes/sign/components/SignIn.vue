@@ -3,16 +3,17 @@
     <form @submit.prevent="onSignIn">
       <img src="/static/images/logo.png" alt="Meu Tucano">
 
-      <TInput :value="user" :required="true" :placeholder="'Digite seu usuário'"
-        :block="true" :size="'big'" :class="'m-v-10'" />
-      <TInput :type="'password'" :value="password" :required="true" :placeholder="'Digite sua senha'"
-        :block="true" :size="'big'" />
+      <TInput v-model="email" :required="true" placeholder="Digite seu e-mail"
+        :block="true" size="big" class="m-v-10" type="email" />
+      <TInput v-model="password" type="password" :required="true" :block="true"
+        placeholder="Digite sua senha" size="big" />
 
-      <TButon :type="'submit'" :text="'Entrar'" :color="'info'" :block="true" :size="'big'"
-          :class="'m-t-20 m-b-15'"
-      ></TButon>
+      <TButon type="submit" text="Entrar" color="info" :block="true" size="big"
+          class="m-t-20 m-b-15" />
 
-      <router-link class="forgot-link" :to="{ name: 'auth.forgot' }">esqueci minha senha</router-link>
+      <router-link class="forgot-link" :to="{ name: 'auth.forgot' }">
+        esqueci minha senha
+      </router-link>
     </form>
   </div>
 </template>
@@ -30,7 +31,7 @@ export default {
 
   data() {
     return {
-      user: null,
+      email: null,
       password: null,
     };
   },
@@ -42,7 +43,7 @@ export default {
 
     onSignIn() {
       const credentials = {
-        user: this.user,
+        email: this.email,
         password: this.password,
       };
 
@@ -79,7 +80,7 @@ export default {
       margin-bottom: 10px;
     }
 
-    a {
+    .forgot-link {
       display: block;
       font-size: 12px;
       color: #535353;

@@ -1,6 +1,7 @@
 <template>
   <input v-bind:type="type" v-bind:class="classes" v-bind:required="required"
-    v-bind:placeholder="placeholder" v-bind:value="value" />
+    v-bind:placeholder="placeholder" :value="value"
+    @input="updateValue($event.target.value)"/>
 </template>
 
 <script>
@@ -54,7 +55,10 @@ export default {
     }
   },
   methods: {
-
+    updateValue(value) {
+      // validação aqui?
+      this.$emit('input', value);
+    }
   }
 }
 </script>

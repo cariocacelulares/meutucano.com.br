@@ -5,7 +5,7 @@ export default {
 
     [types.ON_LOGIN] (context, request) {
         const credentials = {
-            email:    request.email,
+            email: request.email,
             password: request.password
         }
 
