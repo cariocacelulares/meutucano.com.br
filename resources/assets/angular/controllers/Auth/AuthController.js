@@ -8,11 +8,11 @@
     function AuthController($auth, $http, $state, $rootScope, focus, envService) {
         var vm = this;
 
-        vm.username = localStorage.getItem('lastUser');
-        if (vm.username) {
+        vm.email = localStorage.getItem('lastUser');
+        if (vm.email) {
             focus('password');
         } else {
-            focus('username');
+            focus('email');
         }
 
         /**
@@ -21,9 +21,9 @@
         vm.login = function() {
             vm.loading = true;
 
-            localStorage.setItem('lastUser', vm.username);
+            localStorage.setItem('lastUser', vm.email);
             var credentials = {
-                username: vm.username,
+                email: vm.email,
                 password: vm.password
             };
 
