@@ -178,6 +178,8 @@ class RemovalProductController extends Controller
         $stockRemoval = Removal::findOrFail($stockRemovalId);
         $itens        = Input::get('itens');
 
+        dd($itens);
+
         if (($status == 1 && $stockRemoval->user_id == getCurrentUserId()) || $status != 1) {
             try {
                 if ($itens) {
