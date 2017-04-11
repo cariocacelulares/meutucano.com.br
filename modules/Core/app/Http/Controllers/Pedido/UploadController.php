@@ -142,7 +142,7 @@ class UploadController extends Controller
 
             // verifica cada imei, se realmente pertece ao produto e se está adequado para ser faturado
             foreach (explode(',', $imei) as $imei) {
-                $imei = trim($imei);
+                $imei = trim(str_replace([',', '.', '|', '/'], '', $imei));
 
                 $productImei = ProductImei::where('imei', '=', $imei)->first();
 
