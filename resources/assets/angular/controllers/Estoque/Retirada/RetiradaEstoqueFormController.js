@@ -37,8 +37,8 @@
                         for (var key in vm.stockRemoval.removal_products) {
                             var current = vm.stockRemoval.removal_products[key];
 
-                            if (vm.registered.indexOf(current.imei) < 0) {
-                                vm.registered.push(current.imei);
+                            if (vm.registered.indexOf(current.imei.toUpperCase()) < 0) {
+                                vm.registered.push(current.imei.toUpperCase());
                             }
                         }
                     }
@@ -62,9 +62,9 @@
                     data = data.value.products;
 
                     for (var key in data) {
-                        if (vm.registered.indexOf(data[key].imei) < 0) {
+                        if (vm.registered.indexOf(data[key].imei.toUpperCase()) < 0) {
                             vm.stockRemoval.removal_products.push(data[key]);
-                            vm.registered.push(data[key].imei);
+                            vm.registered.push(data[key].imei.toUpperCase());
                         }
                     }
                 }
@@ -91,7 +91,7 @@
                     for (var key in data) {
                         var item = data[key];
                         if (item.ok && item.imei) {
-                            var index = vm.registered.indexOf(data[key].imei);
+                            var index = vm.registered.indexOf(data[key].imei.toUpperCase());
 
                             if (index >= 0) {
                                 item = vm.stockRemoval.removal_products[index];
@@ -135,7 +135,7 @@
                     for (var key in data) {
                         var item = data[key];
                         if (item.ok && item.imei) {
-                            var index = vm.registered.indexOf(item.imei);
+                            var index = vm.registered.indexOf(item.imei.toUpperCase());
 
                             if (index >= 0) {
                                 item = vm.stockRemoval.removal_products[index];
