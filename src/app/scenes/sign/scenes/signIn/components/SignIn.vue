@@ -48,7 +48,7 @@ export default {
       }
 
       return {
-        name: 'auth.forgot'
+        name: 'dashboard'
       }
     }
   },

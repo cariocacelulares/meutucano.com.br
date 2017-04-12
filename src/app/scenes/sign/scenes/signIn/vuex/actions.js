@@ -1,6 +1,5 @@
 import * as types from './types'
-import { Sign } from '../services'
-import { User } from '../services'
+import { Sign, User } from '../services'
 
 export default {
   [types.LOGIN_ATTEMPT] (context, request) {
@@ -23,16 +22,6 @@ export default {
     return User.get()
       .then(response => {
         context.commit(types.USER_RECEIVED, response.data.user);
-      })
-      .catch(error => {
-        console.log(error);
-      })
-  },
-
-  [types.FORGOT_PASSWORD] (context, email) {
-    return Sign.forgotPassword(email)
-      .then(response => {
-        console.log(response);
       })
       .catch(error => {
         console.log(error);

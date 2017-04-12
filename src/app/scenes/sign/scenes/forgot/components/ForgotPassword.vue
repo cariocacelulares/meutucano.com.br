@@ -17,8 +17,7 @@
 </template>
 
 <script>
-import * as types from '../vuex/types'
-import { mapActions } from 'vuex';
+import { Forgot } from '../services'
 import TButon from 'common/components/TButon';
 import TInput from 'common/components/TInput';
 
@@ -35,12 +34,14 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      sendNewPass: types.FORGOT_PASSWORD,
-    }),
-
     forgotPassword() {
-      this.sendNewPass(this.email);
+      Forgot.forgotPassword(this.email)
+        .then(response => {
+          console.log(response);
+        })
+        .catch(error => {
+          console.log(error);
+        })
     },
   },
 };

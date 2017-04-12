@@ -1,7 +1,7 @@
-import SignIn from './components/SignIn'
-import ForgotPassword from './components/ForgotPassword'
+import { routes as forgot } from './scenes/forgot'
+import { routes as signIn } from './scenes/signIn'
 
 export default [
-    { path: '/',       component: SignIn,         name: 'auth.signin' },
-    { path: '/forgot', component: ForgotPassword, name: 'auth.forgot' },
-]
+  ...forgot,
+  ...signIn,
+];

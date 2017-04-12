@@ -1,12 +1,11 @@
 // scene name
-const namespace = 'sign';
+const namespace = 'sign/signIn';
 
 /**
  * Actions
  */
 export const LOGIN_ATTEMPT = `${namespace}/SIGN_IN`
 export const FETCH_USER = `${namespace}/FETCH_USER`
-export const FORGOT_PASSWORD = `${namespace}/FORGOT_PASSWORD`
 
 /**
  * Mutations
