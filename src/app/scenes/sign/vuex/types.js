@@ -1,16 +1,21 @@
-/**
- * Mutations
- */
-export const TOKEN = 'sign/TOKEN'
-export const USER  = 'sign/USER'
-
-/**
- * Getters
- */
-export const GET_USER = 'sign/GET_USER'
+// scene name
+const namespace = 'sign';
 
 /**
  * Actions
  */
-export const ON_LOGIN  = 'sign/ON_LOGIN'
-export const ON_LOGOUT = 'sign/ON_LOGOUT'
+export const LOGIN_ATTEMPT = `${namespace}/SIGN_IN`
+export const FETCH_USER = `${namespace}/FETCH_USER`
+export const FORGOT_PASSWORD = `${namespace}/FORGOT_PASSWORD`
+
+/**
+ * Mutations
+ */
+export const TOKEN_RECEIVED = `${namespace}/STORE_TOKEN`
+export const USER_RECEIVED = `${namespace}/STORE_USER`
+
+/**
+ * Getters
+ */
+export const GET_USER = `${namespace}/GET_USER`
+export const IS_AUTH = `${namespace}/IS_AUTH`

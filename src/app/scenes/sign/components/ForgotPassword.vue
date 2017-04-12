@@ -1,6 +1,6 @@
 <template>
-  <div class="login-wrapper">
-    <form @submit.prevent="onSignIn">
+  <div class="forgot-wrapper">
+    <form @submit.prevent="forgotPassword">
       <img src="/static/images/logo.png" alt="Meu Tucano">
 
       <TInput v-model="email" :required="true" placeholder="Digite seu e-mail"
@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import * as types from '../vuex/types'
 import { mapActions } from 'vuex';
 import TButon from 'common/components/TButon';
 import TInput from 'common/components/TInput';
@@ -35,38 +36,36 @@ export default {
 
   methods: {
     ...mapActions({
-      signIn: 'sign/ON_LOGIN',
+      sendNewPass: types.FORGOT_PASSWORD,
     }),
 
-    onSignIn() {
-      const credentials = {
-        email: this.email,
-      };
-
-      this.signIn({ ...credentials });
+    forgotPassword() {
+      this.sendNewPass(this.email);
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.login-wrapper {
+.forgot-wrapper {
+  display: flex;
+  justify-content: center;
   width: 100%;
   height: 100%;
   background-color: #F5F5F5;
 
+  $formWidth: 350px;
+
   form {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 350px;
+    align-self: center;
+    width: $formWidth;
     padding: 40px 20px;
     background-color: #FFF;
-    transform: translate(-50%, -50%);
     text-align: center;
+    border-radius: 3px;
     box-shadow: 0px 0px 10px rgba(204, 204, 204, 0.5);
 
-    @media all and (max-width: 350px) {
+    @media all and (max-width: $formWidth) {
       width: 100%;
     }
 

@@ -1,6 +1,6 @@
 <template>
   <div class="login-wrapper">
-    <form @submit.prevent="onSignIn">
+    <form @submit.prevent="signIn">
       <img src="/static/images/logo.png" alt="Meu Tucano">
 
       <TInput v-model="email" :required="true" placeholder="Digite seu e-mail"
@@ -19,9 +19,10 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import TButon from 'common/components/TButon';
-import TInput from 'common/components/TInput';
+import * as types from '../vuex/types'
+import { mapActions, mapGetters } from 'vuex'
+import TButon from 'common/components/TButon'
+import TInput from 'common/components/TInput'
 
 export default {
   components: {
@@ -33,44 +34,72 @@ export default {
     return {
       email: null,
       password: null,
-    };
+    }
+  },
+
+  computed: {
+    ...mapGetters({
+      isLoggedIn: types.IS_AUTH,
+    }),
+
+    redirectTo () {
+      if (this.$route.query.reditect_to) {
+        return this.$route.query.redirect_to
+      }
+
+      return {
+        name: 'auth.forgot'
+      }
+    }
   },
 
   methods: {
     ...mapActions({
-      signIn: 'sign/ON_LOGIN',
+      authenticate: types.LOGIN_ATTEMPT,
     }),
 
-    onSignIn() {
-      const credentials = {
+    redirectIfAuth() {
+      if (this.isLoggedIn) {
+        this.$router.push(this.redirectTo)
+      }
+    },
+
+    signIn() {
+      this.authenticate({
         email: this.email,
         password: this.password,
-      };
-
-      this.signIn({ ...credentials });
+      }).then(() => {
+        this.redirectIfAuth()
+      });
     },
   },
+
+  beforeMount() {
+    this.redirectIfAuth()
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .login-wrapper {
+  display: flex;
+  justify-content: center;
   width: 100%;
   height: 100%;
   background-color: #F5F5F5;
 
+  $formWidth: 350px;
+
   form {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 350px;
+    align-self: center;
+    width: $formWidth;
     padding: 40px 20px;
     background-color: #FFF;
-    transform: translate(-50%, -50%);
     text-align: center;
+    border-radius: 3px;
     box-shadow: 0px 0px 10px rgba(204, 204, 204, 0.5);
 
-    @media all and (max-width: 350px) {
+    @media all and (max-width: $formWidth) {
       width: 100%;
     }
 

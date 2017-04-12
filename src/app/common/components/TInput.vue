@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { isEmpty } from 'lodash'
+
 export default {
   props: {
     value: {
@@ -56,8 +58,9 @@ export default {
   },
   methods: {
     updateValue(value) {
-      // validação aqui?
-      this.$emit('input', value);
+      if (!isEmpty(value)) {
+        this.$emit('input', value);
+      }
     }
   }
 }
