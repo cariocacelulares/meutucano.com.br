@@ -1,5 +1,5 @@
 <template>
-  <div class="login-wrapper">
+  <Background>
     <form @submit.prevent="signIn">
       <img src="/static/images/logo.png" alt="Meu Tucano">
 
@@ -15,17 +15,19 @@
         esqueci minha senha
       </router-link>
     </form>
-  </div>
+  </Background>
 </template>
 
 <script>
 import * as types from '../vuex/types'
 import { mapActions, mapGetters } from 'vuex'
+import Background from '../../../components/Background';
 import TButon from 'common/components/TButon'
 import TInput from 'common/components/TInput'
 
 export default {
   components: {
+    Background,
     TButon,
     TInput,
   },
@@ -81,39 +83,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.login-wrapper {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  background-color: #F5F5F5;
+img {
+  width: 96px;
+  height: 61px;
+  margin-bottom: 10px;
+}
 
-  $formWidth: 350px;
-
-  form {
-    align-self: center;
-    width: $formWidth;
-    padding: 40px 20px;
-    background-color: #FFF;
-    text-align: center;
-    border-radius: 3px;
-    box-shadow: 0px 0px 10px rgba(204, 204, 204, 0.5);
-
-    @media all and (max-width: $formWidth) {
-      width: 100%;
-    }
-
-    img {
-      width: 96px;
-      height: 61px;
-      margin-bottom: 10px;
-    }
-
-    .forgot-link {
-      display: block;
-      font-size: 12px;
-      color: #535353;
-    }
-  }
+.forgot-link {
+  display: block;
+  font-size: 12px;
+  color: #535353;
 }
 </style>
