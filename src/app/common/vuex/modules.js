@@ -1,3 +1,3 @@
-import { vuex as app } from 'app';
+import { vuex as app } from 'app'
 
-export default { ...app };
+export default { ...app }

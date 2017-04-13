@@ -8,8 +8,9 @@
       <TInput v-model="password" type="password" :required="true" :block="true"
         placeholder="Digite sua senha" size="big" />
 
-      <TButon type="submit" text="Entrar" color="info" :block="true" size="big"
-          class="m-t-20 m-b-15" />
+      <TButon type="submit" color="info" :block="true" size="big" class="m-t-20 m-b-15">
+        Entrar
+      </TButon>
 
       <router-link class="forgot-link" :to="{ name: 'auth.forgot' }">
         esqueci minha senha
@@ -19,13 +20,14 @@
 </template>
 
 <script>
-import * as types from '../vuex/types'
 import { mapActions, mapGetters } from 'vuex'
 import Background from '../../../components/Background';
 import TButon from 'common/components/TButon'
 import TInput from 'common/components/TInput'
 
 export default {
+  extend: Background,
+
   components: {
     Background,
     TButon,
@@ -39,45 +41,19 @@ export default {
     }
   },
 
-  computed: {
-    ...mapGetters({
-      isLoggedIn: types.IS_AUTH,
-    }),
-
-    redirectTo () {
-      if (this.$route.query.reditect_to) {
-        return this.$route.query.redirect_to
-      }
-
-      return {
-        name: 'dashboard'
-      }
-    }
-  },
-
   methods: {
     ...mapActions({
-      authenticate: types.LOGIN_ATTEMPT,
+      authenticate: 'sign/LOGIN_ATTEMPT',
     }),
-
-    redirectIfAuth() {
-      if (this.isLoggedIn) {
-        this.$router.push(this.redirectTo)
-      }
-    },
 
     signIn() {
       this.authenticate({
         email: this.email,
         password: this.password,
       }).then(() => {
-        this.redirectIfAuth()
+        this.$root.$emit('authAttemp');
       });
     },
-  },
-
-  beforeMount() {
-    this.redirectIfAuth()
   }
 };
 </script>

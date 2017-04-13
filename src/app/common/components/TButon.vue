@@ -1,6 +1,7 @@
 <template>
-  <button v-bind:type="type" v-bind:class="classes"
-    >{{ text }}</button>
+  <button :type="type" :class="classes" @click="buttonClicked">
+    <slot></slot>
+  </button>
 </template>
 
 <script>
@@ -9,10 +10,6 @@ export default {
     type: {
       type: String,
       default: 'button'
-    },
-    text: {
-      type: String,
-      required: true
     },
     block: {
       type: Boolean,
@@ -47,7 +44,9 @@ export default {
     }
   },
   methods: {
-
+    buttonClicked() {
+      this.$root.$emit('buttonClicked')
+    }
   }
 }
 </script>

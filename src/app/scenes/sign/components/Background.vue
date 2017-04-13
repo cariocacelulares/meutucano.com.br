@@ -5,7 +5,44 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
+  computed: {
+    ...mapGetters({
+      isLoggedIn: 'global/IS_AUTH',
+    }),
+
+    redirectTo () {
+      if (this.$route.query.reditect_to) {
+        return this.$route.query.redirect_to
+      }
+
+      return {
+        name: 'dashboard'
+      }
+    }
+  },
+
+  methods: {
+    redirectIfAuth() {
+      if (this.isLoggedIn) {
+        this.$router.push(this.redirectTo)
+      }
+    },
+  },
+
+  mounted() {
+    this.$root.$on('authAttemp', () => this.redirectIfAuth())
+  },
+
+  beforeDestroy () {
+    this.$root.$off('authAttemp')
+  },
+
+  beforeMount() {
+    this.redirectIfAuth()
+  }
 }
 </script>
 

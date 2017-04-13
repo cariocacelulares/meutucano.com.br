@@ -6,8 +6,9 @@
       <TInput v-model="email" :required="true" placeholder="Digite seu e-mail"
         :block="true" size="big" class="m-v-10" type="email" />
 
-      <TButon type="submit" text="Recuperar senha" color="info" :block="true" size="big"
-          class="m-t-20 m-b-15" />
+      <TButon type="submit" color="info" :block="true" size="big" class="m-t-20 m-b-15">
+        Recuperar senha
+      </TButon>
 
       <router-link class="back-link" :to="{ name: 'auth.signin' }">
         voltar
