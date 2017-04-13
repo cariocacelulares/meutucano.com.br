@@ -19,7 +19,7 @@ export default {
       }
 
       return {
-        name: 'app.main'
+        name: 'app.dashboard'
       }
     }
   },

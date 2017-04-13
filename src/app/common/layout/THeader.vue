@@ -12,9 +12,9 @@
 </template>
 
 <script>
-import GlobalSearch from './GlobalSearch'
-import TMenu from './TMenu'
-import UserProfile from './UserProfile'
+import GlobalSearch from './header/GlobalSearch'
+import TMenu from './header/TMenu'
+import UserProfile from './header/UserProfile'
 
 export default {
   components: {
@@ -34,6 +34,7 @@ header {
   height: 60px;
   padding: 0 20px;
   background-color: $white;
+  box-shadow: 0px 0px 10px $default;
 
   .logo {
     height: 26px;

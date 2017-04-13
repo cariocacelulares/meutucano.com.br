@@ -1,6 +1,7 @@
 <template>
   <div class="app">
     <THeader />
+    <TopBar />
 
     <slot></slot>
 
@@ -10,12 +11,14 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import THeader from './header/THeader'
+import THeader from './/THeader'
+import TopBar from './TopBar'
 import TFooter from './TFooter'
 
 export default {
   components: {
     THeader,
+    TopBar,
     TFooter,
   },
 

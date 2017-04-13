@@ -74,7 +74,12 @@ input {
   display: inline-block;
   border-radius: 3px;
   border: 1px solid $default;
+  color: $darker;
   background-color: $white;
+
+  &::placeholder {
+    color: $dark;
+  }
 
   &:hover {
     background-color: darken($white, 1);

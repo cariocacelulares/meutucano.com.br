@@ -12,7 +12,7 @@ export default (to, from, next) => {
       const permissions = store.getters['global/GET_USER'].permissions
 
       if (!find(permissions, permission => permission === requirePermission)) {
-        next({ name: 'app.main' })
+        next({ name: 'app.dashboard' })
       }
     }
   }
