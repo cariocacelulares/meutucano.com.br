@@ -45,6 +45,7 @@ export default {
     classes() {
       let classes = [];
 
+      classes.push('TInput');
       classes.push(this.class);
       classes.push(this.color);
       classes.push(this.size);
@@ -67,7 +68,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~style/vars.scss';
+@import '~style/vars';
 
 input {
   display: inline-block;

@@ -1,7 +1,7 @@
+import App from './common/layout/App'
 import { routes as sign } from './scenes/sign'
-import { routes as dashboard } from './scenes/dashboard'
 
 export default [
+  { path: '/dashboard', component: App, name: 'app.main', meta: { auth: true } },
   ...sign,
-  ...dashboard,
 ];
