@@ -25,13 +25,27 @@ EOF
 #components - $2
 cat > src/app/scenes/$1/components/$2.vue << EOF
 <template>
+  <App>
+    <PageHeader>
+    </PageHeader>
+    <ContentBox>
+    </ContentBox>
+  </App>
 </template>
 
 <script>
-import * as types from '../vuex/types'
+import App from 'common/layout/App'
+import PageHeader from 'common/layout/PageHeader'
+import ContentBox from 'common/layout/ContentBox'
 import { mapActions } from 'vuex';
 
 export default {
+  components: {
+    App,
+    PageHeader,
+    ContentBox,
+  },
+
   data() {
     return {
       //
@@ -70,8 +84,6 @@ EOF
 
 #vuex - actions
 cat > src/app/scenes/$1/vuex/actions.js << EOF
-import * as types from './types'
-
 export default {
 }
 
@@ -79,8 +91,6 @@ EOF
 
 #vuex - getters
 cat > src/app/scenes/$1/vuex/getters.js << EOF
-import * as types from './types'
-
 export default {
 }
 
@@ -88,8 +98,6 @@ EOF
 
 #vuex - mutations
 cat > src/app/scenes/$1/vuex/mutations.js << EOF
-import * as types from './types'
-
 export default {
 }
 
@@ -99,25 +107,5 @@ EOF
 cat > src/app/scenes/$1/vuex/state.js << EOF
 export default {
 }
-
-EOF
-
-#vuex - types
-cat > src/app/scenes/$1/vuex/types.js << EOF
-// scene name
-const namespace = '$1';
-
-/**
- * Actions
- */
-export const LOGIN_ATTEMPT = \`\${namespace}/EXAMPLE\`
-
-/**
- * Mutations
- */
-
-/**
- * Getters
- */
 
 EOF

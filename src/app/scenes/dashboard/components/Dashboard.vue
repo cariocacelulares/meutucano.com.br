@@ -2,22 +2,22 @@
   <App>
     <PageHeader>
     </PageHeader>
-    <TContent>
-    </TContent>
+    <ContentBox>
+    </ContentBox>
   </App>
 </template>
 
 <script>
 import App from 'common/layout/App'
 import PageHeader from 'common/layout/PageHeader'
-import TContent from 'common/layout/TContent'
+import ContentBox from 'common/layout/ContentBox'
 import { mapActions } from 'vuex';
 
 export default {
   components: {
     App,
     PageHeader,
-    TContent,
+    ContentBox,
   },
 
   data() {
