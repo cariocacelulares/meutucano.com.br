@@ -6,9 +6,9 @@
       <TInput v-model="email" :required="true" placeholder="Digite seu e-mail"
         :block="true" size="big" class="m-v-10" type="email" />
 
-      <TButon type="submit" color="info" :block="true" size="big" class="m-t-20 m-b-15">
+      <TButton type="submit" color="info" :block="true" size="big" class="m-t-20 m-b-15">
         Recuperar senha
-      </TButon>
+      </TButton>
 
       <router-link class="back-link" :to="{ name: 'auth.signin' }">
         voltar
@@ -19,14 +19,16 @@
 
 <script>
 import { Forgot } from '../services'
-import Background from '../../../components/Background';
-import TButon from 'common/components/TButon';
-import TInput from 'common/components/TInput';
+import Background from '../../../components/Background'
+import {
+  TButton,
+  TInput
+} from 'common/components'
 
 export default {
   components: {
     Background,
-    TButon,
+    TButton,
     TInput,
   },
 

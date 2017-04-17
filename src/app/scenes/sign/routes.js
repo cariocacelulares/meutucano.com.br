@@ -4,4 +4,4 @@ import { routes as signIn } from './scenes/signIn'
 export default [
   ...forgot,
   ...signIn,
-];
+]

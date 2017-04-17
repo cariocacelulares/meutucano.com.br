@@ -90,8 +90,7 @@ button {
   // sizes
   &.big {
     height: 50px;
-    line-height: 50px;
-    padding: 0 30px;
+    padding: 0 20px;
   }
 }
 </style>

@@ -1,0 +1,58 @@
+<template>
+  <div class="FeaturedValue">
+    <span class="label">{{ label }}</span>
+    <span :class="classes">{{ value }}</span>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    label: {
+      type: String,
+      default: null
+    },
+    value: {
+      type: String,
+      required: true
+    },
+    color: {
+      type: String,
+      dafault: 'primary'
+    },
+  },
+
+  computed: {
+    classes() {
+      return `value ${this.color}`
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+@import '~style/vars';
+
+.FeaturedValue {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .label {
+    font-size: 12px;
+    color: $dark;
+  }
+
+  .value {
+    font-size: 18px;
+
+    // colors
+    @each $name, $color in $colors {
+      &.#{$name} {
+        color: $color;
+        transition: color linear 150ms;
+      }
+    }
+  }
+}
+</style>

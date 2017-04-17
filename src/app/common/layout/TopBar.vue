@@ -3,15 +3,17 @@
     <Breadcrumbs />
 
     <a href="#">
-      <Icon name="question" :circular="true" size="small" />
-      Ajuda?
+      <Icon name="question-circle" size="normal" />
+      &nbsp;Ajuda?
     </a>
   </div>
 </template>
 
 <script>
-import Icon from 'common/components/Icon'
-import Breadcrumbs from 'common/components/Breadcrumbs'
+import {
+  Icon,
+  Breadcrumbs
+} from 'common/components'
 
 export default {
   components: {
@@ -40,6 +42,7 @@ export default {
   a:hover,
   a:focus {
     color: $darker;
+    text-decoration: none;
   }
 }
 </style>

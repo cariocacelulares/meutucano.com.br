@@ -12,11 +12,21 @@ export default {
 <style lang="scss" scope>
 @import '~style/vars';
 
+$height: 80px;
+$padding: 20px;
+
 .page-header {
-  height: 80px;
-  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: $height;
+  padding: $padding;
   margin-bottom: 20px;
   background-color: $white;
   box-shadow: 0px 0px 10px rgba(204, 204, 204, 0.5);
+
+  > * {
+    max-height: $height - ($padding * 2);
+  }
 }
 </style>

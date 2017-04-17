@@ -1,22 +1,28 @@
 <template>
   <ul>
     <li>
-      <Icon name="home" />
       <router-link :to="{ path: 'dashboard' }">
+        <Icon name="home" />
         Início
       </router-link>
     </li>
     <li>
-      <Icon name="list" />
-      <a href="#">Pedidos</a>
+      <a href="#">
+        <Icon name="list" />
+        Pedidos
+      </a>
     </li>
     <li>
-      <Icon name="group" />
-      <a href="#">Clientes</a>
+      <a href="#">
+        <Icon name="group" />
+        Clientes
+      </a>
     </li>
     <li>
-      <Icon name="futbol-o" />
-      <a href="#">Produtos</a>
+      <router-link :to="{ name: 'products.list' }">
+        <Icon name="futbol-o" />
+        Produtos
+      </router-link>
     </li>
   </ul>
 </template>
@@ -44,13 +50,15 @@ ul {
     padding: 0 12px;
   }
 
+  .Icon {
+    margin-right: 5px;
+  }
+
   a {
     font-weight: 700;
-    margin-left: 5px;
     transition: color linear 100ms;
   }
 
-  li.current,
   li:hover,
   li:focus {
     color: $primary;
@@ -58,6 +66,13 @@ ul {
     a {
       text-decoration: none;
     }
+  }
+
+  a.active,
+  a:hover,
+  a:focus {
+    color: $primary;
+    text-decoration: none;
   }
 }
 </style>

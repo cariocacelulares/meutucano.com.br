@@ -35,6 +35,10 @@ export default {
     circular: {
       type: Boolean,
       default: false
+    },
+    spin: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -50,6 +54,10 @@ export default {
 
       if (this.circular) {
         classes.push('circular')
+      }
+
+      if (this.spin) {
+        classes.push('fa-spin')
       }
 
       classes = classes.filter((item) => {
@@ -77,6 +85,8 @@ export default {
   }
 
   &.small { font-size: 10px }
+
+  &.normal { font-size: 14px }
 
   &.big { font-size: 16px }
 

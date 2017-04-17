@@ -11,7 +11,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import THeader from './/THeader'
+import THeader from './THeader'
 import TopBar from './TopBar'
 import TFooter from './TFooter'
 

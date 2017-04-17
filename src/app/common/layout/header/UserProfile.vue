@@ -119,7 +119,6 @@ export default {
       float: left;
       border-radius: 50%;
       overflow: hidden;
-      box-shadow: 0 0 2px 2px $ligther;
 
       img {
         height: 36px;
@@ -137,7 +136,6 @@ export default {
     background-color: $ligther;
     border-radius: 3px;
     color: $darker;
-    box-shadow: 0px 2px 2px 0 #CCC;
   }
 }
 </style>

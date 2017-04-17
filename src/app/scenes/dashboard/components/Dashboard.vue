@@ -7,15 +7,15 @@
 </template>
 
 <script>
-import App from 'common/layout/App'
-import PageHeader from 'common/layout/PageHeader'
-import ContentBox from 'common/layout/ContentBox'
 import { mapActions } from 'vuex';
+import {
+  App,
+  ContentBox
+} from 'common/layout/'
 
 export default {
   components: {
     App,
-    PageHeader,
     ContentBox,
   },
 

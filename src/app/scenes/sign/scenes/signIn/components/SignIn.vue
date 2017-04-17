@@ -8,9 +8,9 @@
       <TInput v-model="password" type="password" :required="true" :block="true"
         placeholder="Digite sua senha" size="big" />
 
-      <TButon type="submit" color="info" :block="true" size="big" class="m-t-20 m-b-15">
+      <TButton type="submit" color="info" :block="true" size="big" class="m-t-20 m-b-15">
         Entrar
-      </TButon>
+      </TButton>
 
       <router-link class="forgot-link" :to="{ name: 'auth.forgot' }">
         esqueci minha senha
@@ -21,16 +21,18 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import Background from '../../../components/Background';
-import TButon from 'common/components/TButon'
-import TInput from 'common/components/TInput'
+import Background from '../../../components/Background'
+import {
+  TButton,
+  TInput
+} from 'common/components'
 
 export default {
   extend: Background,
 
   components: {
     Background,
-    TButon,
+    TButton,
     TInput,
   },
 

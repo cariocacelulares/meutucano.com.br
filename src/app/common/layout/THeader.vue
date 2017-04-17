@@ -12,9 +12,11 @@
 </template>
 
 <script>
-import GlobalSearch from './header/GlobalSearch'
-import TMenu from './header/TMenu'
-import UserProfile from './header/UserProfile'
+import {
+  GlobalSearch,
+  TMenu,
+  UserProfile
+} from './header'
 
 export default {
   components: {
