@@ -1,6 +1,6 @@
 <template>
   <form class="global-search" @submit.prevent="search">
-    <Icon name="search" class="m-r-15" />
+    <Icon name="search" class="m-r-10" />
 
     <TInput type="search" v-model="term" placeholder="Busca global no tucano"/>
   </form>
@@ -34,7 +34,7 @@ export default {
 @import '~style/vars';
 
 .TInput {
-  width: 138px;
+  width: 140px;
   font-size: 13px;
   border: none;
   border-radius: 0;

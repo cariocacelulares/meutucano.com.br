@@ -16,7 +16,7 @@
     </div>
 
     <div class="profile">
-      Perfil: <span>Carioca Celulares</span> <Icon />
+      Perfil: <span>Carioca Celulares</span> &nbsp; <Icon name="angle-down" />
     </div>
   </div>
 </template>

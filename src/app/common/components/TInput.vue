@@ -1,6 +1,6 @@
 <template>
-  <input v-bind:type="type" v-bind:class="classes" v-bind:required="required"
-    v-bind:placeholder="placeholder" :value="value"
+  <input :type="type" :class="classes" :required="required"
+    :placeholder="placeholder" :value="value"
     @input="updateValue($event.target.value)"/>
 </template>
 
@@ -38,23 +38,29 @@ export default {
     },
     class: {
       type: String,
-      default: ''
+      default: null
     }
   },
   computed: {
     classes() {
-      let classes = [];
+      let classes = []
 
-      classes.push('TInput');
-      classes.push(this.class);
-      classes.push(this.color);
-      classes.push(this.size);
+      classes.push('TInput')
+      classes.push(this.class)
+      classes.push(this.color)
+      classes.push(this.size)
 
       if (this.block) {
-        classes.push('block');
+        classes.push('block')
       }
 
-      return classes.join(' ');
+      classes = classes.filter((item) => {
+        if (typeof(item) === 'boolean' || !isEmpty(item)) {
+          return item
+        }
+      });
+
+      return classes.join(' ')
     }
   },
   methods: {

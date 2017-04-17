@@ -1,19 +1,21 @@
 <template>
   <ul>
     <li>
-      <Icon />
-      <a href="#">Início</a>
+      <Icon name="home" />
+      <router-link :to="{ path: 'dashboard' }">
+        Início
+      </router-link>
     </li>
     <li>
-      <Icon />
+      <Icon name="list" />
       <a href="#">Pedidos</a>
     </li>
     <li>
-      <Icon />
+      <Icon name="group" />
       <a href="#">Clientes</a>
     </li>
     <li>
-      <Icon />
+      <Icon name="futbol-o" />
       <a href="#">Produtos</a>
     </li>
   </ul>
@@ -43,7 +45,8 @@ ul {
   }
 
   a {
-    margin-left: 10px;
+    font-weight: 700;
+    margin-left: 5px;
     transition: color linear 100ms;
   }
 

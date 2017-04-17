@@ -3,7 +3,7 @@
     <Breadcrumbs />
 
     <a href="#">
-      <Icon />
+      <Icon name="question" :circular="true" size="small" />
       Ajuda?
     </a>
   </div>

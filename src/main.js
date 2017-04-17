@@ -3,6 +3,7 @@ import axios from 'axios'
 import store from 'common/vuex';
 import router from './router'
 import Wrapper from './Wrapper'
+import VueBreadcrumbs  from 'vue2-breadcrumbs'
 
 /**
  * Globals
@@ -19,6 +20,11 @@ window.axios = axios.create({
     'Content-Type': 'application/json',
   }
 })
+
+/**
+ * Breadcrumbs
+ */
+Vue.use(VueBreadcrumbs)
 
 /* eslint-disable no-new */
 new Vue({

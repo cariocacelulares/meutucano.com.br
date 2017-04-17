@@ -1,8 +1,7 @@
 <template>
   <App>
-    <PageHeader>
-    </PageHeader>
     <ContentBox>
+      <h1>Bem vindo ao <code>MeuTucano</code>!</h1>
     </ContentBox>
   </App>
 </template>

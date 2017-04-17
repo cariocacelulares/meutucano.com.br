@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { isEmpty } from 'lodash'
+
 export default {
   props: {
     type: {
@@ -25,23 +27,29 @@ export default {
     },
     class: {
       type: String,
-      default: ''
+      default: null
     }
   },
   computed: {
     classes() {
-      let classes = [];
+      let classes = []
 
-      classes.push('TButton');
-      classes.push(this.class);
-      classes.push(this.color);
-      classes.push(this.size);
+      classes.push('TButton')
+      classes.push(this.class)
+      classes.push(this.color)
+      classes.push(this.size)
 
       if (this.block) {
-        classes.push('block');
+        classes.push('block')
       }
 
-      return classes.join(' ');
+      classes = classes.filter((item) => {
+        if (typeof(item) === 'boolean' || !isEmpty(item)) {
+          return item
+        }
+      });
+
+      return classes.join(' ')
     }
   },
   methods: {
