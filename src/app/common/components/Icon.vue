@@ -17,20 +17,16 @@ export default {
       required: true
     },
     size: {
-      type: String,
-      default: null
+      type: String
     },
     fontSize: {
-      type: Number,
-      default: null
+      type: Number
     },
     color: {
-      type: String,
-      default: null
+      type: String
     },
     class: {
-      type: String,
-      default: null
+      type: String
     },
     circular: {
       type: Boolean,
@@ -48,9 +44,12 @@ export default {
       classes.push('Icon')
       classes.push(this.lib)
       classes.push(this.class)
-      classes.push(this.color)
       classes.push(this.size)
       classes.push(`${this.lib}-${this.name}`)
+
+      if (this.color) {
+        classes.push(`text-${this.color}`)
+      }
 
       if (this.circular) {
         classes.push('circular')

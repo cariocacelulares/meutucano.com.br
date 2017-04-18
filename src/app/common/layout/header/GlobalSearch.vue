@@ -1,8 +1,8 @@
 <template>
   <form class="global-search" @submit.prevent="search">
-    <Icon name="search" class="m-r-10" />
+    <Icon name="search" class="m-r-10" color="darker" />
 
-    <TInput type="search" v-model="term" placeholder="Busca global no tucano"/>
+    <TInput type="search" v-model="term" placeholder="Busca global no tucano" :discrete="true" />
   </form>
 </template>
 
@@ -32,21 +32,6 @@ export default {
 
 <style lang="scss" scoped>
 @import '~style/vars';
-
-.TInput {
-  width: 140px;
-  font-size: 13px;
-  border: none;
-  border-radius: 0;
-  padding: 0;
-  margin: 0;
-  background-color: transparent;
-
-  &:hover,
-  &:focus {
-    background-color: transparent;
-  }
-}
 
 .global-search {
   margin: 0 30px 0 20px;

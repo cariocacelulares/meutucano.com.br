@@ -1,5 +1,5 @@
 <template>
-  <button :type="type" :class="classes" @click="buttonClicked">
+  <button :type="type" :class="classes" @click="click">
     <slot></slot>
   </button>
 </template>
@@ -34,8 +34,7 @@ export default {
       default: 'normal'
     },
     class: {
-      type: String,
-      default: null
+      type: String
     }
   },
   computed: {
@@ -66,8 +65,10 @@ export default {
     }
   },
   methods: {
-    buttonClicked() {
-      this.$root.$emit('buttonClicked')
+    click() {
+      if (!this.disabled) {
+        this.$emit('click')
+      }
     }
   }
 }

@@ -45,6 +45,7 @@ export default {
 
   .value {
     font-size: 18px;
+    font-weight: 900;
   }
 }
 </style>

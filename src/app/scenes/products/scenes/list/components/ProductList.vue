@@ -5,6 +5,7 @@
         <Dropdown placeholder="Linha de produtos"
           :itens="lines" name="productLines"/>
         <div class="separator">
+          <VSeparator :spacing="20" :height="40" />
           <FeaturedValue label="Em estoque (144)"
           value="R$133.619,00" color="success" />
         </div>
@@ -16,66 +17,7 @@
       </TButton>
     </PageHeader>
     <ContentBox>
-      <div class="ListActions">
-        <div class="pagination">
-          <span>Página 1 de 1200</span>
-          <TButton size="small" color="light" text="darker" :disabled="true"><Icon name="angle-double-left" /></TButton>
-          <TButton size="small" color="light" text="darker"><Icon name="angle-left" /></TButton>
-          <TButton size="small" color="light" text="darker"><Icon name="angle-right" /></TButton>
-          <TButton size="small" color="light" text="darker"><Icon name="angle-double-right" /></TButton>
-          <span>|</span>
-          <TSelect v-model="perPage" :options="options" size="small" />
-          por página
-          <span>|</span>
-          Total de 5230 registros
-        </div>
-        <div class="actions">
-          <TInput size="small" placeholder="Pesquisar nos produtos" />
-          <TButton size="small" color="info">
-            <Icon name="refresh" />&nbsp; Atualizar
-          </TButton>
-        </div>
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>SKU</th>
-            <th>EAN</th>
-            <th>Produto</th>
-            <th>Custo</th>
-            <th>Valor</th>
-            <th>Estado</th>
-            <th>Estoque</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td colspan="50">Nenhum registro foi encontrado!</td>
-          </tr>
-        </tbody>
-        <tbody>
-          <tr>
-            <td colspan="50"><Icon name="refresh" :spin="true" /></td>
-          </tr>
-        </tbody>
-        <tbody>
-          <tr>
-            <td>384</td>
-            <td>9182736098231</td>
-            <td>Telefone sem Fio Vtech LYRIX 550 DECT com Ramal</td>
-            <td>R$943,70</td>
-            <td>R$1999,90</td>
-            <td>Novo</td>
-            <td><span class="badge">1</span> 23</td>
-            <td>
-              <router-link :to="{ name: 'products.list' }">
-                <Icon name="eye" />
-              </router-link>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <TableList />
     </ContentBox>
   </App>
 </template>
@@ -83,12 +25,12 @@
 <script>
 import { App, PageHeader, ContentBox } from 'common/layout'
 import {
-  Icon,
-  TButton,
-  TInput,
-  TSelect,
   Dropdown,
-  FeaturedValue
+  FeaturedValue,
+  TButton,
+  Icon,
+  VSeparator,
+  TableList,
 } from 'common/components'
 
 export default {
@@ -96,30 +38,15 @@ export default {
     App,
     PageHeader,
     ContentBox,
-    Icon,
-    TButton,
-    TInput,
-    TSelect,
     Dropdown,
     FeaturedValue,
-  },
-
-  data() {
-    return {
-      perPage: 10
-    }
+    TButton,
+    Icon,
+    VSeparator,
+    TableList,
   },
 
   computed: {
-    options() {
-      return [
-        { text: '10', value: 10 },
-        { text: '30', value: 30 },
-        { text: '50', value: 50 },
-        { text: '100', value: 100 },
-      ]
-    },
-
     lines() {
       return [
         {
@@ -156,19 +83,8 @@ export default {
 
 .page-header {
   .separator {
-    float: left;
-    margin: 4px 0 0 20px;
-    padding-left: 20px;
-    border-left: 1px solid $default;
+    display: flex;
+    align-items: center;
   }
-}
-
-.pagination {
-  color: $darker;
-  font-size: 12px;
-}
-
-table {
-  display: none;
 }
 </style>

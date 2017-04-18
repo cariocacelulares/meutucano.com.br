@@ -1,3 +1,7 @@
-.pull-left { float: left }
-.pull-right { float: right }
-.hide { display: none }
+.pull-left { float: left !important }
+.pull-right { float: right !important }
+.hide { display: none !important }
+.text-center { text-align: center !important }
+.text-left { text-align: left !important }
+.text-right { text-align: right !important }
+.text-justify { text-align: justify !important }

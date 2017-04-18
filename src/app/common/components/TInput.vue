@@ -1,13 +1,24 @@
 <template>
-  <input :type="type" :class="classes" :required="required"
-    :placeholder="placeholder" :value="value"
-    @input="updateValue($event.target.value)"/>
+  <label :for="`input-${_uid}`" :class="wrapperClasses">
+    <Icon v-if="leftIcon" :name="leftIcon" class="leftIcon" :size="size" color="darker" />
+    <input :id="`input-${_uid}`" :type="type" :class="classes" :required="required"
+      :placeholder="placeholder" :value="value"
+      @input="updateValue($event.target.value)"/>
+    <Icon v-if="rightIcon" :name="rightIcon" class="rightIcon" :size="size" color="darker" />
+  </label>
 </template>
 
 <script>
 import { isEmpty } from 'lodash'
+import {
+  Icon,
+} from 'common/components'
 
 export default {
+  components: {
+    Icon,
+  },
+
   props: {
     value: {
       type: String
@@ -21,8 +32,7 @@ export default {
       default: false
     },
     placeholder: {
-      type: String,
-      default: null
+      type: String
     },
     block: {
       type: Boolean,
@@ -37,33 +47,65 @@ export default {
       default: 'normal'
     },
     class: {
-      type: String,
-      default: null
-    }
+      type: String
+    },
+    leftIcon: {
+      type: String
+    },
+    rightIcon: {
+      type: String
+    },
+    discrete: {
+      type: Boolean,
+      default: false
+    },
   },
+
   computed: {
+    wrapperClasses() {
+      let classes = []
+
+      classes.push('inputWrapper')
+      classes.push(this.size)
+
+      return this.notEmpty(classes).join(' ')
+    },
+
     classes() {
       let classes = []
 
       classes.push('TInput')
       classes.push(this.class)
       classes.push(this.color)
-      classes.push(this.size)
 
       if (this.block) {
         classes.push('block')
       }
 
-      classes = classes.filter((item) => {
+      if (this.leftIcon) {
+        classes.push('space-left')
+      }
+
+      if (this.rightIcon) {
+        classes.push('space-right')
+      }
+
+      if (this.discrete) {
+        classes.push('discrete')
+      }
+
+      return this.notEmpty(classes).join(' ')
+    }
+  },
+  methods: {
+    notEmpty(array) {
+      return array.filter((item) => {
         if (typeof(item) === 'boolean' || !isEmpty(item)) {
           return item
         }
       });
+    },
 
-      return classes.join(' ')
-    }
-  },
-  methods: {
     updateValue(value) {
       if (!isEmpty(value)) {
         this.$emit('input', value);
@@ -76,6 +118,62 @@ export default {
 <style lang="scss" scoped>
 @import '~style/vars';
 
+$big: 20px;
+$small: 12px;
+
+.inputWrapper {
+  position: relative;
+
+  &.big {
+    .leftIcon { left: $big }
+    .rightIcon { right: $big }
+  }
+
+  &.small {
+    .leftIcon { left: $small }
+    .rightIcon { right: $small }
+  }
+
+  .leftIcon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .rightIcon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+// sizes
+.big input {
+  height: 50px;
+  padding: 0 $big;
+
+  &.space-left {
+    padding-left: ($big * 2) + 9px;
+  }
+
+  &.space-right {
+    padding-right: ($big * 2) + 9px;
+  }
+}
+
+.small input {
+  height: 30px;
+  padding: 0 $small;
+
+  &.space-left {
+    padding-left: ($small * 2) + 9px;
+  }
+
+  &.space-right {
+    padding-right: ($small * 2) + 9px;
+  }
+}
+
 input {
   display: inline-block;
   border-radius: 3px;
@@ -85,6 +183,19 @@ input {
 
   &::placeholder {
     color: $dark;
+  }
+
+  &.discrete {
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+
+    &:hover,
+    &:focus {
+      background-color: transparent;
+    }
   }
 
   &:hover {
@@ -100,13 +211,6 @@ input {
   &.block {
     display: block;
     width: 100%;
-  }
-
-  // sizes
-  &.big {
-    height: 50px;
-    line-height: 50px;
-    padding: 0 20px;
   }
 }
 </style>
