@@ -1,7 +1,12 @@
 <template>
-  <button :type="type" :class="classes" @click="buttonClicked">
-    <slot></slot>
-  </button>
+  <select :class="classes" :required="required"
+    :placeholder="placeholder" :value="value"
+    @input="updateValue($event.target.value)">
+    <option v-if="!value && placeholder" selected disabled value="">{{ placeholder }}</option>
+    <option v-for="option in options" :value="option.value">
+      {{ option.text }}
+    </option>
+  </select>
 </template>
 
 <script>
@@ -9,23 +14,26 @@ import { isEmpty } from 'lodash'
 
 export default {
   props: {
-    type: {
+    value: {
+      type: String | Number
+    },
+    options: {
+      type: Array,
+      required: true
+    },
+    required: {
+      type: Boolean,
+      default: false
+    },
+    placeholder: {
       type: String,
-      default: 'button'
+      default: null
     },
     block: {
       type: Boolean,
       default: false
     },
-    disabled: {
-      type: Boolean,
-      default: false
-    },
     color: {
-      type: String,
-      default: 'default'
-    },
-    text: {
       type: String,
       default: 'white'
     },
@@ -42,18 +50,13 @@ export default {
     classes() {
       let classes = []
 
-      classes.push('TButton')
+      classes.push('TSelect')
       classes.push(this.class)
-      classes.push(`text-${this.text}`)
-      classes.push(`bg-${this.color}`)
+      classes.push(this.color)
       classes.push(this.size)
 
       if (this.block) {
         classes.push('block')
-      }
-
-      if (this.disabled) {
-        classes.push('disabled')
       }
 
       classes = classes.filter((item) => {
@@ -66,8 +69,10 @@ export default {
     }
   },
   methods: {
-    buttonClicked() {
-      this.$root.$emit('buttonClicked')
+    updateValue(value) {
+      if (!isEmpty(value)) {
+        this.$emit('input', value)
+      }
     }
   }
 }
@@ -76,25 +81,30 @@ export default {
 <style lang="scss" scoped>
 @import '~style/vars';
 
-button {
+.TSelect {
   display: inline-block;
   border-radius: 3px;
-  cursor: pointer;
-  transition: opacity linear 100ms;
+  border: 1px solid $default;
+  color: $darker;
+  background-color: $white;
 
-  &:not(.disabled):focus,
-  &:not(.disabled):hover {
-    opacity: .8;
+  &::placeholder {
+    color: $dark;
+  }
+
+  &:hover {
+    background-color: darken($white, 1);
+    border-color: darken($default, 1);
+  }
+
+  &:focus {
+    background-color: darken($white, 3);
+    border-color: darken($default, 3);
   }
 
   &.block {
     display: block;
     width: 100%;
-  }
-
-  &.disabled {
-    cursor: not-allowed;
-    opacity: .3;
   }
 
   // sizes

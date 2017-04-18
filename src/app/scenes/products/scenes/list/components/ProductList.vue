@@ -19,15 +19,12 @@
       <div class="ListActions">
         <div class="pagination">
           <span>Página 1 de 1200</span>
-          <TButton size="small"><Icon name="angle-left" /></TButton>
-          <TButton size="small"><Icon name="angle-right" /></TButton>
+          <TButton size="small" color="light" text="darker" :disabled="true"><Icon name="angle-double-left" /></TButton>
+          <TButton size="small" color="light" text="darker"><Icon name="angle-left" /></TButton>
+          <TButton size="small" color="light" text="darker"><Icon name="angle-right" /></TButton>
+          <TButton size="small" color="light" text="darker"><Icon name="angle-double-right" /></TButton>
           <span>|</span>
-          <select>
-            <option value="10">10</option>
-            <option value="30">30</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-          </select>
+          <TSelect v-model="perPage" :options="options" size="small" />
           por página
           <span>|</span>
           Total de 5230 registros
@@ -35,7 +32,7 @@
         <div class="actions">
           <TInput size="small" placeholder="Pesquisar nos produtos" />
           <TButton size="small" color="info">
-            <Icon name="refresh" />&nbsp;Atualizar
+            <Icon name="refresh" />&nbsp; Atualizar
           </TButton>
         </div>
       </div>
@@ -89,6 +86,7 @@ import {
   Icon,
   TButton,
   TInput,
+  TSelect,
   Dropdown,
   FeaturedValue
 } from 'common/components'
@@ -101,11 +99,27 @@ export default {
     Icon,
     TButton,
     TInput,
+    TSelect,
     Dropdown,
     FeaturedValue,
   },
 
+  data() {
+    return {
+      perPage: 10
+    }
+  },
+
   computed: {
+    options() {
+      return [
+        { text: '10', value: 10 },
+        { text: '30', value: 30 },
+        { text: '50', value: 50 },
+        { text: '100', value: 100 },
+      ]
+    },
+
     lines() {
       return [
         {
@@ -147,6 +161,11 @@ export default {
     padding-left: 20px;
     border-left: 1px solid $default;
   }
+}
+
+.pagination {
+  color: $darker;
+  font-size: 12px;
 }
 
 table {

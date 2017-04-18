@@ -24,7 +24,7 @@ export default {
 
   computed: {
     classes() {
-      return `value ${this.color}`
+      return `value text-${this.color}`
     }
   }
 }
@@ -45,14 +45,6 @@ export default {
 
   .value {
     font-size: 18px;
-
-    // colors
-    @each $name, $color in $colors {
-      &.#{$name} {
-        color: $color;
-        transition: color linear 150ms;
-      }
-    }
   }
 }
 </style>
