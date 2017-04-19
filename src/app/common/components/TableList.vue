@@ -1,82 +1,28 @@
 <template>
   <div class="TableList">
     <div class="ListActions">
-      <Pagination :rows="data.length" />
-      <div class="actions">
-        <TInput size="small" placeholder="Pesquisar nos produtos" leftIcon="search" />
-        <TButton size="small" color="info">
+      <Pagination :rows="data.length" @pageChanged="pageChanged" />
+      <form @submit.prevent="search" class="actions">
+        <TInput v-model="searchTerm" size="small" :placeholder="searchText" leftIcon="search" />
+        <TButton size="small" color="info" type="submit">
           <Icon name="refresh" />&nbsp; Atualizar
         </TButton>
-      </div>
+      </form>
     </div>
 
     <table border="0" align="center">
-      <thead>
-        <tr>
-          <th>SKU</th>
-          <th>EAN</th>
-          <th class="text-left">Produto</th>
-          <th>Custo</th>
-          <th>Valor</th>
-          <th>Estado</th>
-          <th>Estoque</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody class="no-results">
+      <slot name="head"></slot>
+      <tbody v-if="!data.length && !loading" class="no-results">
         <tr>
           <td colspan="50">Nenhum registro foi encontrado!</td>
         </tr>
       </tbody>
-      <tbody class="loading">
+      <tbody v-if="loading" class="loading">
         <tr>
           <td colspan="50"><Icon name="refresh" :spin="true" /></td>
         </tr>
       </tbody>
-      <tbody>
-        <tr>
-          <td>384</td>
-          <td>9182736098231</td>
-          <td class="text-left">Telefone sem Fio Vtech LYRIX 550 DECT com Ramal</td>
-          <td>R$943,70</td>
-          <td>R$1999,90</td>
-          <td>Novo</td>
-          <td><span class="badge">1</span> 23</td>
-          <td>
-            <router-link :to="{ name: 'products.list' }">
-              <Icon name="eye" />
-            </router-link>
-          </td>
-        </tr>
-        <tr>
-          <td>384</td>
-          <td>9182736098231</td>
-          <td class="text-left">Telefone sem Fio Vtech LYRIX 550 DECT com Ramal</td>
-          <td>R$943,70</td>
-          <td>R$1999,90</td>
-          <td>Novo</td>
-          <td><span class="badge">1</span> 23</td>
-          <td>
-            <router-link :to="{ name: 'products.list' }">
-              <Icon name="eye" />
-            </router-link>
-          </td>
-        </tr>
-        <tr>
-          <td>384</td>
-          <td>9182736098231</td>
-          <td class="text-left">Telefone sem Fio Vtech LYRIX 550 DECT com Ramal</td>
-          <td>R$943,70</td>
-          <td>R$1999,90</td>
-          <td>Novo</td>
-          <td><span class="badge">1</span> 23</td>
-          <td>
-            <router-link :to="{ name: 'products.list' }">
-              <Icon name="eye" />
-            </router-link>
-          </td>
-        </tr>
-      </tbody>
+      <slot v-if="data.length && !loading" name="body"></slot>
     </table>
   </div>
 </template>
@@ -85,8 +31,6 @@
 import {
   TButton,
   Icon,
-  VSeparator,
-  TSelect,
   TInput,
 } from './'
 import {
@@ -101,40 +45,40 @@ export default {
     Pagination,
   },
 
+  props: {
+    loading: {
+      type: Boolean,
+      required: true
+    },
+    data: {
+      type: Array,
+      required: true
+    },
+    searchText: {
+      type: String,
+      default: 'Pesquisar'
+    }
+  },
+
   data() {
     return {
-      loading: false,
-      data: [],
+      searchTerm: null
     }
   },
 
   methods: {
-    load() {
-      this.loading = true
+    search() {
+      this.$emit('search', this.searchTerm)
+    },
 
-      var promise = new Promise(resolve => {
-        setTimeout(() => {
-          resolve({
-            data: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]
-          })
-        }, 1000)
-      });
-
-      return promise
+    pageChanged(pageAttrs) {
+      this.$emit('pageChanged', pageAttrs)
     }
-  },
-
-  mounted() {
-    this.load().then((response) => {
-      this.data = response.data
-    }).catch((error) => {
-      console.log(error)
-    })
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '~style/vars';
 
 .ListActions {

@@ -1,5 +1,5 @@
 <template>
-  <span :class="classes" :style="{
+  <span :class="classList" :style="{
     height: `${height}px`,
     width: `${width}px`,
     margin: `0 ${spacing}px`,
@@ -33,25 +33,26 @@ export default {
       type: String,
       default: 'default'
     },
-    class: {
-      type: String
+    classes: {
+      type: String,
+      default: null
     },
   },
   computed: {
-    classes() {
-      let classes = []
+    classList() {
+      let classList = []
 
-      classes.push('VSeparator')
-      classes.push(this.class)
-      classes.push(`bg-${this.color}`)
+      classList.push('VSeparator')
+      classList.push(this.classes)
+      classList.push(`bg-${this.color}`)
 
-      classes = classes.filter((item) => {
+      classList = classList.filter((item) => {
         if (typeof(item) === 'boolean' || !isEmpty(item)) {
           return item
         }
       });
 
-      return classes.join(' ')
+      return classList.join(' ')
     }
   }
 }

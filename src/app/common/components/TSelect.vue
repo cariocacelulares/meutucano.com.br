@@ -1,5 +1,5 @@
 <template>
-  <select :class="classes" :required="required"
+  <select :class="classList" :required="required"
     :placeholder="placeholder" :value="value"
     @input="updateValue($event.target.value)">
     <option v-if="!value && placeholder" selected disabled value="">{{ placeholder }}</option>
@@ -41,31 +41,31 @@ export default {
       type: String,
       default: 'normal'
     },
-    class: {
+    classes: {
       type: String,
       default: null
     }
   },
   computed: {
-    classes() {
-      let classes = []
+    classList() {
+      let classList = []
 
-      classes.push('TSelect')
-      classes.push(this.class)
-      classes.push(this.color)
-      classes.push(this.size)
+      classList.push('TSelect')
+      classList.push(this.classes)
+      classList.push(this.color)
+      classList.push(this.size)
 
       if (this.block) {
-        classes.push('block')
+        classList.push('block')
       }
 
-      classes = classes.filter((item) => {
+      classList = classList.filter((item) => {
         if (typeof(item) === 'boolean' || !isEmpty(item)) {
           return item
         }
       });
 
-      return classes.join(' ')
+      return classList.join(' ')
     }
   },
   methods: {

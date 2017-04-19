@@ -1,5 +1,5 @@
 <template>
-  <button :type="type" :class="classes" @click="click">
+  <button :type="type" :class="classList" @click="click">
     <slot></slot>
   </button>
 </template>
@@ -33,35 +33,36 @@ export default {
       type: String,
       default: 'normal'
     },
-    class: {
-      type: String
+    classes: {
+      type: String,
+      default: null
     }
   },
   computed: {
-    classes() {
-      let classes = []
+    classList() {
+      let classList = []
 
-      classes.push('TButton')
-      classes.push(this.class)
-      classes.push(`text-${this.text}`)
-      classes.push(`bg-${this.color}`)
-      classes.push(this.size)
+      classList.push('TButton')
+      classList.push(this.classes)
+      classList.push(`text-${this.text}`)
+      classList.push(`bg-${this.color}`)
+      classList.push(this.size)
 
       if (this.block) {
-        classes.push('block')
+        classList.push('block')
       }
 
       if (this.disabled) {
-        classes.push('disabled')
+        classList.push('disabled')
       }
 
-      classes = classes.filter((item) => {
+      classList = classList.filter((item) => {
         if (typeof(item) === 'boolean' || !isEmpty(item)) {
           return item
         }
       });
 
-      return classes.join(' ')
+      return classList.join(' ')
     }
   },
   methods: {

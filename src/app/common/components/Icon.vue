@@ -1,5 +1,5 @@
 <template>
-  <i :class="classes" :style="{ color: color, fontSize: `${fontSize}px` }"></i>
+  <i :class="classList" :style="{ color: color, fontSize: `${fontSize}px` }"></i>
 </template>
 
 <script>
@@ -25,8 +25,9 @@ export default {
     color: {
       type: String
     },
-    class: {
-      type: String
+    classes: {
+      type: String,
+      default: null
     },
     circular: {
       type: Boolean,
@@ -38,34 +39,34 @@ export default {
     }
   },
   computed: {
-    classes() {
-      let classes = []
+    classList() {
+      let classList = []
 
-      classes.push('Icon')
-      classes.push(this.lib)
-      classes.push(this.class)
-      classes.push(this.size)
-      classes.push(`${this.lib}-${this.name}`)
+      classList.push('Icon')
+      classList.push(this.lib)
+      classList.push(this.classes)
+      classList.push(this.size)
+      classList.push(`${this.lib}-${this.name}`)
 
       if (this.color) {
-        classes.push(`text-${this.color}`)
+        classList.push(`text-${this.color}`)
       }
 
       if (this.circular) {
-        classes.push('circular')
+        classList.push('circular')
       }
 
       if (this.spin) {
-        classes.push('fa-spin')
+        classList.push('fa-spin')
       }
 
-      classes = classes.filter((item) => {
+      classList = classList.filter((item) => {
         if (typeof(item) === 'boolean' || !isEmpty(item)) {
           return item
         }
       });
 
-      return classes.join(' ')
+      return classList.join(' ')
     }
   }
 }

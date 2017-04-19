@@ -4,11 +4,11 @@
       <img src="/static/images/logo.png" alt="Meu Tucano">
 
       <TInput v-model="email" :required="true" placeholder="Digite seu e-mail"
-        :block="true" size="big" class="m-v-10" type="email" />
+        :block="true" size="big" classes="m-v-10" type="email" />
       <TInput v-model="password" type="password" :required="true" :block="true"
         placeholder="Digite sua senha" size="big" />
 
-      <TButton type="submit" color="info" :block="true" size="big" class="m-t-20 m-b-15">
+      <TButton type="submit" color="info" :block="true" size="big" classes="m-t-20 m-b-15">
         Entrar
       </TButton>
 

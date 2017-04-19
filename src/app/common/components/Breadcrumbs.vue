@@ -10,11 +10,11 @@
         <router-link :to="{ path: 'dashboard' }" class="home">
           <Icon name="home" />
         </router-link>
-        <Icon name="angle-right" class="right-icon" />
+        <Icon name="angle-right" classes="right-icon" />
       </li>
       <li v-for="(crumb, i) in $breadcrumbs">
         <router-link :to="{ path: crumb.path }">{{ crumb.meta.breadcrumb }}</router-link>
-        <Icon v-if="crumb.path != $route.path" name="angle-right" class="right-icon" />
+        <Icon v-if="crumb.path != $route.path" name="angle-right" classes="right-icon" />
       </li>
     </ul>
   </nav>

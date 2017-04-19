@@ -22,10 +22,10 @@
     <VSeparator :height="30" />
     Mostrar
     <TSelect v-model="perPage" :options="options"
-      size="small" class="m-h-10" @input="perPageChanged" />
+      size="small" classes="m-h-10" @input="perPageChanged" />
     por página
     <VSeparator :height="30" />
-    Total de {{ rows }} registros
+    Total de {{ rows }} registro{{ (rows !== 1) ? 's' : '' }}
   </div>
 </template>
 
@@ -82,33 +82,45 @@ export default {
   methods: {
     configPagination() {
       this.page.total = Math.ceil(this.rows / this.perPage)
+      this.pageChanged()
     },
 
     firstPage() {
       this.page.current = 1
+      this.pageChanged()
     },
 
     prevPage() {
       this.page.current = (this.page.current - 1)
+      this.pageChanged()
     },
 
     nextPage() {
       this.page.current = (this.page.current + 1)
+      this.pageChanged()
     },
 
     lastPage() {
       this.page.current = this.page.total
+      this.pageChanged()
     },
 
     perPageChanged(value) {
       this.perPage = value
       this.configPagination()
+    },
+
+    pageChanged() {
+      this.$emit('pageChanged', {
+        page: this.page.current,
+        perPage: this.perPage
+      })
     }
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '~style/vars';
 
 .Pagination {

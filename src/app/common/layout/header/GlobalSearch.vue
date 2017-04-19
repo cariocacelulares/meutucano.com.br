@@ -1,6 +1,6 @@
 <template>
   <form class="global-search" @submit.prevent="search">
-    <Icon name="search" class="m-r-10" color="darker" />
+    <Icon name="search" classes="m-r-10" color="darker" />
 
     <TInput type="search" v-model="term" placeholder="Busca global no tucano" :discrete="true" />
   </form>

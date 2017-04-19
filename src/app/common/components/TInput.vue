@@ -1,10 +1,10 @@
 <template>
   <label :for="`input-${_uid}`" :class="wrapperClasses">
-    <Icon v-if="leftIcon" :name="leftIcon" class="leftIcon" :size="size" color="darker" />
-    <input :id="`input-${_uid}`" :type="type" :class="classes" :required="required"
+    <Icon v-if="leftIcon" :name="leftIcon" classes="leftIcon" :size="size" color="darker" />
+    <input :id="`input-${_uid}`" :type="type" :class="classList" :required="required"
       :placeholder="placeholder" :value="value"
       @input="updateValue($event.target.value)"/>
-    <Icon v-if="rightIcon" :name="rightIcon" class="rightIcon" :size="size" color="darker" />
+    <Icon v-if="rightIcon" :name="rightIcon" classes="rightIcon" :size="size" color="darker" />
   </label>
 </template>
 
@@ -46,8 +46,9 @@ export default {
       type: String,
       default: 'normal'
     },
-    class: {
-      type: String
+    classes: {
+      type: String,
+      default: null
     },
     leftIcon: {
       type: String
@@ -63,40 +64,41 @@ export default {
 
   computed: {
     wrapperClasses() {
-      let classes = []
+      let classList = []
 
-      classes.push('inputWrapper')
-      classes.push(this.size)
+      classList.push('inputWrapper')
+      classList.push(this.size)
 
-      return this.notEmpty(classes).join(' ')
+      return this.notEmpty(classList).join(' ')
     },
 
-    classes() {
-      let classes = []
+    classList() {
+      let classList = []
 
-      classes.push('TInput')
-      classes.push(this.class)
-      classes.push(this.color)
+      classList.push('TInput')
+      classList.push(this.classes)
+      classList.push(this.color)
 
       if (this.block) {
-        classes.push('block')
+        classList.push('block')
       }
 
       if (this.leftIcon) {
-        classes.push('space-left')
+        classList.push('space-left')
       }
 
       if (this.rightIcon) {
-        classes.push('space-right')
+        classList.push('space-right')
       }
 
       if (this.discrete) {
-        classes.push('discrete')
+        classList.push('discrete')
       }
 
-      return this.notEmpty(classes).join(' ')
+      return this.notEmpty(classList).join(' ')
     }
   },
+
   methods: {
     notEmpty(array) {
       return array.filter((item) => {
