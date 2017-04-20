@@ -76,7 +76,7 @@ class UploadController extends Controller
             $rastreio = $this->importRastreio($order, $dateTime);
             $taxation = $this->importTaxation($order, $dateTime);
             $products = $this->importProducts($order);
-            $this->sendEmailNotification($products, $order, $rastreio, $invoice);
+            $this->sendEmailNotification($rastreio, $invoice);
 
             // Fecha a transação e comita as alterações
             DB::commit();
@@ -276,12 +276,11 @@ class UploadController extends Controller
     /**
      * Send email notification to customer with danfe
      *
-     * @param  Pedido $order
      * @param  Rastreio $rastreio
      * @param  Nota $invoice
      * @return void
      */
-    private function sendEmailNotification($order, $rastreio, $invoice)
+    private function sendEmailNotification($rastreio, $invoice)
     {
         if ($this->nfe->dest->email) {
             $nome    = (string) $this->nfe->dest->xNome;
