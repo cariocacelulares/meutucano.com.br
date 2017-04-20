@@ -6,6 +6,6 @@ import getters from './getters'
 import modules from './modules'
 import mutations from './mutations'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 export default new Vuex.Store({ state, mutations, actions, getters, modules })

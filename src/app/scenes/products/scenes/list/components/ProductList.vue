@@ -1,6 +1,6 @@
 <template>
   <App>
-    <PageHeader>
+    <!-- <PageHeader>
       <div>
         <Dropdown placeholder="Linha de produtos"
           :itens="lines" name="productLines"/>
@@ -15,11 +15,9 @@
         <Icon name="plus" />
         &nbsp; Novo produto
       </TButton>
-    </PageHeader>
+    </PageHeader> -->
     <ContentBox>
-      <TableList :data="tableData" :loading="loading.table"
-        @search="search" searchText="Pesquisar nos produtos"
-        @pageChanged="pageChanged">
+      <TableList :namespace="namespace" searchText="Pesquisar nos produtos">
         <thead slot="head">
           <tr>
             <th>SKU</th>
@@ -33,7 +31,7 @@
           </tr>
         </thead>
         <tbody slot="body">
-          <tr v-for="produto in tableData">
+          <tr v-for="produto in products">
             <td>{{ produto.sku }}</td>
             <td>{{ produto.ean }}</td>
             <td class="text-left">{{ produto.titulo }}</td>
@@ -58,6 +56,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 import { App, PageHeader, ContentBox } from 'common/layout'
 import {
   Dropdown,
@@ -85,16 +84,27 @@ export default {
 
   data() {
     return {
-      loading: {
-        table: false,
-        header: false
-      },
-      tableData: []
+      namespace: 'products/list'
     }
   },
 
   computed: {
-    lines() {
+    /*...mapGetters({
+      products: 'products/list/GET',
+      page: 'products/list/GET_PAGE',
+      // products: `${this.namespace}/GET`,
+      // page: `${this.namespace}/GET_PAGE`,
+    }),*/
+
+    products() {
+      return this.$store.getters[`${this.namespace}/GET`]
+    },
+
+    page() {
+      return this.$store.getters['global/tableList/GET_PAGE']
+    },
+
+    /*lines() {
       return [
         {
           label: 'Item a',
@@ -109,94 +119,30 @@ export default {
           value: 3
         },
       ]
-    }
+    }*/
   },
 
   mounted() {
-    this.load().then((response) => {
-      this.tableData = response.data
-    }).catch((error) => {
-      console.log(error)
-    })
+    this.load()
 
-    this.$root.$on('dropdownChanged.productLines', (item) => {
+    /*this.$root.$on('dropdownChanged.productLines', (item) => {
       // alguma ação pra quando troca a linha dos produtos
       console.log(item);
-    })
+    })*/
   },
 
-  beforeDestroy () {
+  /*beforeDestroy() {
     this.$root.$off('dropdownChanged.productLines')
-  },
+  },*/
 
   methods: {
-    search(term) {
-      console.log('search', term);
-    },
-
-    pageChanged(page) {
-      console.log('pageChanged', page);
-    },
+    /*...mapActions({
+      load: 'products/list/FETCH',
+    }),*/
 
     load() {
-      this.loading.table = true
-
-      var promise = new Promise(resolve => {
-        setTimeout(() => {
-          this.loading.table = false
-
-          let data = [
-            {
-              sku: 384,
-              ean: 9182736098231,
-              titulo: 'Telefone sem Fio Vtech LYRIX 550 DECT com Ramal',
-              custo: 943.70,
-              valor: 1999.90,
-              estado: 'Novo',
-              estoque: {
-                pago: 2,
-                pendente: 1,
-                disponivel: 40
-              },
-            },
-            {
-              sku: 453,
-              ean: 9185976398231,
-              titulo: 'Alcatel Pixi4 Colors Azul',
-              custo: 400.22,
-              valor: 449.90,
-              estado: 'Usado',
-              estoque: {
-                pago: 0,
-                pendente: 5,
-                disponivel: 200
-              },
-            },
-          ]
-
-          data = data.map((item) => {
-            item.custo = formatter.format(item.custo)
-            item.valor = formatter.format(item.valor)
-
-            return item
-          })
-
-          data = data
-            .concat(data)
-            .concat(data)
-            .concat(data)
-            .concat(data)
-            .concat(data)
-            .concat(data)
-
-          resolve({
-            data: data
-          })
-        }, 1000)
-      });
-
-      return promise
-    }
+      return this.$store.dispatch(`${this.namespace}/FETCH`)
+    },
   },
 };
 </script>

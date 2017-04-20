@@ -2,19 +2,19 @@
   <div class="Pagination">
     <span>Página {{ page.current }} de {{ page.total }}</span>
     <div class="controls">
-      <TButton @click="firstPage" :disabled="page.current == 1 || page.current == 2"
+      <TButton @click="firstPage" :disabled="loading || (page.current == 1 || page.current == 2)"
         size="small" color="light" text="darker">
         <Icon name="angle-double-left" />
       </TButton>
-      <TButton @click="prevPage" :disabled="page.current == 1"
+      <TButton @click="prevPage" :disabled="loading || (page.current == 1)"
         size="small" color="light" text="darker">
         <Icon name="angle-left" />
       </TButton>
-      <TButton @click="nextPage" :disabled="page.current == page.total"
+      <TButton @click="nextPage" :disabled="loading || (page.current == page.total)"
         size="small" color="light" text="darker">
         <Icon name="angle-right" />
       </TButton>
-      <TButton @click="lastPage" :disabled="page.current == page.total || page.current == (page.total - 1)"
+      <TButton @click="lastPage" :disabled="loading || (page.current == page.total || page.current == (page.total - 1))"
         size="small" color="light" text="darker">
         <Icon name="angle-double-right" />
       </TButton>
@@ -22,7 +22,7 @@
     <VSeparator :height="30" />
     Mostrar
     <TSelect v-model="perPage" :options="options"
-      size="small" classes="m-h-10" @input="perPageChanged" />
+      size="small" classes="m-h-10" @input="changePerPage" />
     por página
     <VSeparator :height="30" />
     Total de {{ rows }} registro{{ (rows !== 1) ? 's' : '' }}
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 import {
   TButton,
   Icon,
@@ -46,23 +47,35 @@ export default {
   },
 
   props: {
-    rows: {
-      type: Number,
+    namespace: {
+      type: String,
       required: true
-    }
-  },
-
-  data() {
-    return {
-      page: {
-        current: 1,
-        total: 1,
-      },
-      perPage: 10
-    }
+    },
   },
 
   computed: {
+    /*...mapGetters({
+      rows: 'products/list/GET_ROWS',
+      page: 'products/list/GET_PAGE',
+      perPage: 'products/list/GET_PERPAGE',
+    }),*/
+
+    loading() {
+      return this.$store.getters['global/tableList/GET_LOADING']
+    },
+
+    rows() {
+      return this.$store.getters['global/tableList/GET_ROWS']
+    },
+
+    page() {
+      return this.$store.getters['global/tableList/GET_PAGE']
+    },
+
+    perPage() {
+      return this.$store.getters[`${this.namespace}/GET_PERPAGE`]
+    },
+
     options() {
       return [
         { text: '10', value: 10 },
@@ -73,49 +86,38 @@ export default {
     },
   },
 
-  watch: {
-    rows() {
-      this.configPagination()
-    }
-  },
-
   methods: {
-    configPagination() {
-      this.page.total = Math.ceil(this.rows / this.perPage)
-      this.pageChanged()
-    },
+    /*...mapActions({
+      firstPage: 'products/list/FIRST_PAGE',
+      prevPage: 'products/list/PREV_PAGE',
+      nextPage: 'products/list/NEXT_PAGE',
+      lastPage: 'products/list/LAST_PAGE',
+      changePerPage: 'products/list/CHANGE_PERPAGE',
+    }),*/
 
     firstPage() {
-      this.page.current = 1
-      this.pageChanged()
+      return this.$store.dispatch('global/tableList/FIRST_PAGE')
     },
 
     prevPage() {
-      this.page.current = (this.page.current - 1)
-      this.pageChanged()
+      return this.$store.dispatch('global/tableList/PREV_PAGE')
     },
 
     nextPage() {
-      this.page.current = (this.page.current + 1)
-      this.pageChanged()
+      return this.$store.dispatch('global/tableList/NEXT_PAGE')
     },
 
     lastPage() {
-      this.page.current = this.page.total
-      this.pageChanged()
+      return this.$store.dispatch('global/tableList/LAST_PAGE')
     },
 
-    perPageChanged(value) {
-      this.perPage = value
-      this.configPagination()
+    changePerPage(amount) {
+      return this.$store.dispatch(`${this.namespace}/CHANGE_PERPAGE`, amount)
     },
 
-    pageChanged() {
-      this.$emit('pageChanged', {
-        page: this.page.current,
-        perPage: this.perPage
-      })
-    }
+    configPagination() {
+      this.page.total = Math.ceil(this.rows / this.perPage)
+    },
   }
 }
 </script>

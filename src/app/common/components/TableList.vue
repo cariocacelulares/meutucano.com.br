@@ -1,7 +1,7 @@
 <template>
   <div class="TableList">
     <div class="ListActions">
-      <Pagination :rows="data.length" @pageChanged="pageChanged" />
+      <Pagination :namespace="namespace" />
       <form @submit.prevent="search" class="actions">
         <TInput v-model="searchTerm" size="small" :placeholder="searchText" leftIcon="search" />
         <TButton size="small" color="info" type="submit">
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 import {
   TButton,
   Icon,
@@ -46,17 +47,36 @@ export default {
   },
 
   props: {
-    loading: {
-      type: Boolean,
-      required: true
-    },
-    data: {
-      type: Array,
+    namespace: {
+      type: String,
       required: true
     },
     searchText: {
       type: String,
       default: 'Pesquisar'
+    }
+  },
+
+  computed: {
+    /*...mapGetters({
+      data: 'products/list/GET',
+      loading: 'products/list/GET_LOADING',
+      // data: `${this.namespace}/GET`,
+      // loading: `${this.namespace}/GET_LOADING`,
+    }),*/
+
+    data() {
+      return this.$store.getters[`${this.namespace}/GET`]
+    },
+
+    loading() {
+      return this.$store.getters['global/tableList/GET_LOADING']
+    },
+  },
+
+  watch: {
+    data(data) {
+      this.changeRows(data.length)
     }
   },
 
@@ -67,13 +87,30 @@ export default {
   },
 
   methods: {
+    /*...mapActions({
+      search: 'products/list/SEARCH',
+      // search: `${this.namespace}/SEARCH`,
+    }),*/
+
+    setNamespace() {
+      return this.$store.dispatch('global/SET_NAMESPACE', this.namespace)
+    },
+
     search() {
-      this.$emit('search', this.searchTerm)
+      return this.$store.dispatch(`${this.namespace}/SEARCH`)
+    },
+
+    changeRows(rows) {
+      return this.$store.dispatch('global/tableList/CHANGE_ROWS', rows)
     },
 
     pageChanged(pageAttrs) {
       this.$emit('pageChanged', pageAttrs)
     }
+  },
+
+  mounted() {
+    this.setNamespace()
   }
 }
 </script>
