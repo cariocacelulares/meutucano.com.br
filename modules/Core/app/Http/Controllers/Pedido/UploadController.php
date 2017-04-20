@@ -377,6 +377,8 @@ class UploadController extends Controller
 
             return false;
         }
+        
+        return $nota;
     }
 
     /**
