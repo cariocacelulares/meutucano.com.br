@@ -7,10 +7,10 @@
       </router-link>
     </li>
     <li>
-      <a href="#">
+      <router-link :to="{ name: 'orders.list' }">
         <Icon name="list" />
         Pedidos
-      </a>
+      </router-link>
     </li>
     <li>
       <a href="#">

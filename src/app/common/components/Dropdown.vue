@@ -77,7 +77,9 @@ export default {
   }
 
   &:hover {
-    border-radius: 3px 3px 0 0;
+    .selection {
+      border-radius: 3px 3px 0 0;
+    }
 
     ul {
       display: block;

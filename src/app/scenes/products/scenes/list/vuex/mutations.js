@@ -2,11 +2,11 @@ export default {
   'products/list/RECEIVED' (state, products) {
     products = products.map((product) => {
       if (typeof(product.custo) == 'number') {
-        product.custo = formatter.format(product.custo)
+        product.custo = monetary.format(product.custo)
       }
 
       if (typeof(product.valor) == 'number') {
-        product.valor = formatter.format(product.valor)
+        product.valor = monetary.format(product.valor)
       }
 
       return product

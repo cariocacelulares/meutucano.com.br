@@ -20,7 +20,7 @@ export default {
     context.commit('global/NAMESPACE_CHANGED', namespace)
   },
 
-  'products/list/CHANGE_PERPAGE' (context, amount) {
+  'global/tableList/CHANGE_PERPAGE' (context, amount) {
     context.commit('global/tableList/PERPAGE_CHANGED', amount)
     context.dispatch('global/tableList/FIRST_PAGE')
   },

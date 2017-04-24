@@ -97,7 +97,7 @@ export default {
     },
 
     changePerPage(amount) {
-      return this.$store.dispatch(`${this.namespace}/CHANGE_PERPAGE`, amount)
+      return this.$store.dispatch('global/tableList/CHANGE_PERPAGE', amount)
     },
 
     configPagination() {

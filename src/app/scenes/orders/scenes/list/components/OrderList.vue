@@ -2,49 +2,53 @@
   <App>
     <PageHeader>
       <div>
-        <Dropdown placeholder="Linha de products"
-          :itens="lines" name="productLines"/>
+        <Dropdown placeholder="Período"
+          :itens="periods" name="orderPeriods"/>
         <div class="separator">
           <VSeparator :spacing="20" :height="40" />
-          <FeaturedValue label="Em estoque (144)"
-            value="R$133.619,00" color="success" />
+          <FeaturedValue label="Cancelados (144)"
+            value="R$8.125,00" color="danger" />
+          <VSeparator :spacing="20" :height="40" />
+          <FeaturedValue label="Aprovados (14)"
+            value="R$3.619,00" color="success" />
+          <VSeparator :spacing="20" :height="40" />
+          <FeaturedValue label="Faturados (89)"
+            value="R$53.923,00" color="primary" />
         </div>
       </div>
 
       <TButton size="big" color="success">
         <Icon name="plus" />
-        &nbsp; Novo product
+        &nbsp; Novo pedidos
       </TButton>
     </PageHeader>
     <ContentBox>
-      <TableList :namespace="namespace" searchText="Pesquisar nos produtos">
+      <TableList :namespace="namespace" searchText="Pesquisar nos pedidos">
         <thead slot="head">
           <tr>
-            <th>SKU</th>
-            <th>EAN</th>
-            <th class="text-left">Produto</th>
-            <th>Custo</th>
+            <th>Código</th>
+            <th>Canal</th>
+            <th class="text-left">Cliente</th>
             <th>Valor</th>
-            <th>Estado</th>
-            <th>Estoque</th>
+            <th>Data</th>
+            <th>Status</th>
             <th></th>
           </tr>
         </thead>
         <tbody slot="body">
-          <tr v-for="product in products">
-            <td>{{ product.sku }}</td>
-            <td>{{ product.ean }}</td>
-            <td class="text-left">{{ product.titulo }}</td>
-            <td>{{ product.custo }}</td>
-            <td>{{ product.valor }}</td>
-            <td>{{ product.estado }}</td>
+          <tr v-for="order in orders">
+            <td>{{ order.codigo_marketplace || order.id }}</td>
+            <td>{{ order.marketplace }}</td>
+            <td class="text-left">{{ order.cliente.nome }}</td>
+            <td>{{ order.valor }}</td>
+            <td>{{ order.data }}</td>
             <td>
-              <Badge color="default" text="darker" v-if="product.estoque.pendente">{{ product.estoque.pendente }}</Badge>
-              <Badge v-if="product.estoque.pago">{{ product.estoque.pago }}</Badge>
-              {{ product.estoque.disponivel }}
+              <TLabel :color="order.status.color" text="white">
+                {{ order.status.description }}
+              </TLabel>
             </td>
             <td>
-              <router-link :to="{ name: 'products.list' }">
+              <router-link :to="{ name: 'orders.list' }">
                 <Icon name="eye" />
               </router-link>
             </td>
@@ -65,6 +69,7 @@ import {
   VSeparator,
   TableList,
   Badge,
+  TLabel,
 } from 'common/components'
 
 export default {
@@ -79,16 +84,17 @@ export default {
     VSeparator,
     TableList,
     Badge,
+    TLabel,
   },
 
   data() {
     return {
-      namespace: 'products/list'
+      namespace: 'orders/list'
     }
   },
 
   computed: {
-    products() {
+    orders() {
       return this.$store.getters[`${this.namespace}/GET`]
     },
 
@@ -96,18 +102,18 @@ export default {
       return this.$store.getters['global/tableList/GET_PAGE']
     },
 
-    lines() {
+    periods() {
       return [
         {
-          label: 'Item a',
+          label: 'Abril/2017',
           value: 1
         },
         {
-          label: 'Item b',
+          label: 'Março/2017',
           value: 2
         },
         {
-          label: 'Item c',
+          label: 'Fevereiro/2017',
           value: 3
         },
       ]
@@ -117,14 +123,14 @@ export default {
   mounted() {
     this.load()
 
-    this.$root.$on('dropdownChanged.productLines', (item) => {
-      // alguma ação pra quando troca a linha dos products
+    this.$root.$on('dropdownChanged.orderPeriods', (item) => {
+      // alguma ação pra quando troca a linha dos pedidos
       console.log(item);
     })
   },
 
   beforeDestroy() {
-    this.$root.$off('dropdownChanged.productLines')
+    this.$root.$off('dropdownChanged.orderPeriods')
   },
 
   methods: {
