@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
 import {
   TButton,
   Icon,
@@ -58,13 +57,6 @@ export default {
   },
 
   computed: {
-    /*...mapGetters({
-      data: 'products/list/GET',
-      loading: 'products/list/GET_LOADING',
-      // data: `${this.namespace}/GET`,
-      // loading: `${this.namespace}/GET_LOADING`,
-    }),*/
-
     data() {
       return this.$store.getters[`${this.namespace}/GET`]
     },
@@ -87,11 +79,6 @@ export default {
   },
 
   methods: {
-    /*...mapActions({
-      search: 'products/list/SEARCH',
-      // search: `${this.namespace}/SEARCH`,
-    }),*/
-
     setNamespace() {
       return this.$store.dispatch('global/SET_NAMESPACE', this.namespace)
     },

@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
 import {
   TButton,
   Icon,
@@ -54,12 +53,6 @@ export default {
   },
 
   computed: {
-    /*...mapGetters({
-      rows: 'products/list/GET_ROWS',
-      page: 'products/list/GET_PAGE',
-      perPage: 'products/list/GET_PERPAGE',
-    }),*/
-
     loading() {
       return this.$store.getters['global/tableList/GET_LOADING']
     },
@@ -73,7 +66,7 @@ export default {
     },
 
     perPage() {
-      return this.$store.getters[`${this.namespace}/GET_PERPAGE`]
+      return this.$store.getters['global/tableList/GET_PERPAGE']
     },
 
     options() {
@@ -87,14 +80,6 @@ export default {
   },
 
   methods: {
-    /*...mapActions({
-      firstPage: 'products/list/FIRST_PAGE',
-      prevPage: 'products/list/PREV_PAGE',
-      nextPage: 'products/list/NEXT_PAGE',
-      lastPage: 'products/list/LAST_PAGE',
-      changePerPage: 'products/list/CHANGE_PERPAGE',
-    }),*/
-
     firstPage() {
       return this.$store.dispatch('global/tableList/FIRST_PAGE')
     },
@@ -118,6 +103,16 @@ export default {
     configPagination() {
       this.page.total = Math.ceil(this.rows / this.perPage)
     },
+  },
+
+  watch: {
+    perPage() {
+      this.configPagination()
+    },
+
+    rows() {
+      this.configPagination()
+    }
   }
 }
 </script>

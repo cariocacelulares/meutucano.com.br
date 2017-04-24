@@ -1,6 +1,6 @@
 <template>
   <App>
-    <!-- <PageHeader>
+    <PageHeader>
       <div>
         <Dropdown placeholder="Linha de produtos"
           :itens="lines" name="productLines"/>
@@ -15,7 +15,7 @@
         <Icon name="plus" />
         &nbsp; Novo produto
       </TButton>
-    </PageHeader> -->
+    </PageHeader>
     <ContentBox>
       <TableList :namespace="namespace" searchText="Pesquisar nos produtos">
         <thead slot="head">
@@ -56,7 +56,6 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
 import { App, PageHeader, ContentBox } from 'common/layout'
 import {
   Dropdown,
@@ -89,13 +88,6 @@ export default {
   },
 
   computed: {
-    /*...mapGetters({
-      products: 'products/list/GET',
-      page: 'products/list/GET_PAGE',
-      // products: `${this.namespace}/GET`,
-      // page: `${this.namespace}/GET_PAGE`,
-    }),*/
-
     products() {
       return this.$store.getters[`${this.namespace}/GET`]
     },
@@ -104,7 +96,7 @@ export default {
       return this.$store.getters['global/tableList/GET_PAGE']
     },
 
-    /*lines() {
+    lines() {
       return [
         {
           label: 'Item a',
@@ -119,27 +111,23 @@ export default {
           value: 3
         },
       ]
-    }*/
+    }
   },
 
   mounted() {
     this.load()
 
-    /*this.$root.$on('dropdownChanged.productLines', (item) => {
+    this.$root.$on('dropdownChanged.productLines', (item) => {
       // alguma ação pra quando troca a linha dos produtos
       console.log(item);
-    })*/
+    })
   },
 
-  /*beforeDestroy() {
+  beforeDestroy() {
     this.$root.$off('dropdownChanged.productLines')
-  },*/
+  },
 
   methods: {
-    /*...mapActions({
-      load: 'products/list/FETCH',
-    }),*/
-
     load() {
       return this.$store.dispatch(`${this.namespace}/FETCH`)
     },
