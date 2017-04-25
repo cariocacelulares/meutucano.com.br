@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Rota padrão para o Agnular
- */
 Route::get('/', function () {
     return view('index');
 });
