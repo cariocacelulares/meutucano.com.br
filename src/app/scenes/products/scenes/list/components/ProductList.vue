@@ -2,7 +2,7 @@
   <App>
     <PageHeader>
       <div>
-        <Dropdown placeholder="Linha de products"
+        <Dropdown placeholder="Linha de produtos"
           :itens="lines" name="productLines"/>
         <div class="separator">
           <VSeparator :spacing="20" :height="40" />
@@ -13,7 +13,7 @@
 
       <TButton size="big" color="success">
         <Icon name="plus" />
-        &nbsp; Novo product
+        &nbsp; Novo produto
       </TButton>
     </PageHeader>
     <ContentBox>
@@ -34,7 +34,7 @@
           <tr v-for="product in products">
             <td>{{ product.sku }}</td>
             <td>{{ product.ean }}</td>
-            <td class="text-left">{{ product.titulo }}</td>
+            <td class="text-left text-bold">{{ product.titulo }}</td>
             <td>{{ product.custo }}</td>
             <td>{{ product.valor }}</td>
             <td>{{ product.estado }}</td>
@@ -45,7 +45,7 @@
             </td>
             <td>
               <router-link :to="{ name: 'products.list' }">
-                <Icon name="eye" />
+                <Icon name="eye" size="big" />
               </router-link>
             </td>
           </tr>

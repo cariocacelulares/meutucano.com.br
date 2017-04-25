@@ -1,10 +1,10 @@
 <template>
   <label :for="`input-${_uid}`" :class="wrapperClasses">
-    <Icon v-if="leftIcon" :name="leftIcon" classes="leftIcon" :size="size" color="darker" />
+    <Icon v-if="leftIcon" :name="leftIcon" classes="leftIcon" :size="size" color="dark" />
     <input :id="`input-${_uid}`" :type="type" :class="classList" :required="required"
       :placeholder="placeholder" :value="value"
       @input="updateValue($event.target.value)"/>
-    <Icon v-if="rightIcon" :name="rightIcon" classes="rightIcon" :size="size" color="darker" />
+    <Icon v-if="rightIcon" :name="rightIcon" classes="rightIcon" :size="size" color="dark" />
   </label>
 </template>
 

@@ -31,7 +31,7 @@ export default {
     },
     color: {
       type: String,
-      default: 'default'
+      default: 'light'
     },
     classes: {
       type: String,

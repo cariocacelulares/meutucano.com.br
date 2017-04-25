@@ -41,6 +41,7 @@ export default {
   .label {
     font-size: 12px;
     color: $dark;
+    padding-bottom: 3px;
   }
 
   .value {

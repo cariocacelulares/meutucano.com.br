@@ -3,7 +3,8 @@
     <div class="ListActions">
       <Pagination :namespace="namespace" />
       <form @submit.prevent="search" class="actions">
-        <TInput v-model="searchTerm" size="small" :placeholder="searchText" leftIcon="search" />
+        <TInput v-model="searchTerm" size="small" :placeholder="searchText"
+          leftIcon="search" classes="m-r-10" />
         <TButton size="small" color="info" type="submit">
           <Icon name="refresh" />&nbsp; Atualizar
         </TButton>
@@ -123,7 +124,7 @@ table {
     border: none;
     border-collapse: collapse;
     height: 52px;
-    padding: 15px;
+    padding: 15px 20px;
     text-align: center;
   }
 

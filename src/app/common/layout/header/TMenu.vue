@@ -55,7 +55,6 @@ ul {
   }
 
   a {
-    font-weight: 700;
     transition: color linear 100ms;
   }
 

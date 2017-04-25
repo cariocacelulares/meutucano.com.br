@@ -70,6 +70,7 @@ export default {
     color: $darker;
     background-color: $ligther;
     border-radius: 3px;
+    font-weight: bold;
 
     span {
       margin-right: 20px;

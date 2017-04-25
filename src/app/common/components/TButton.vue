@@ -80,6 +80,7 @@ export default {
 
 button {
   display: inline-block;
+  font-weight: bold;
   border-radius: 3px;
   cursor: pointer;
   transition: opacity linear 100ms;

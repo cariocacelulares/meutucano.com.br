@@ -16,7 +16,7 @@
     </div>
 
     <div class="profile">
-      Perfil: <span>Carioca Celulares</span> &nbsp; <Icon name="angle-down" />
+      <span>Carioca Celulares</span> &nbsp; <Icon name="angle-down" />
     </div>
   </div>
 </template>
@@ -107,6 +107,7 @@ export default {
         font-size: 12px;
         color: $darker;
         padding-bottom: 2px;
+        font-weight: bold;
       }
 
       .role {
