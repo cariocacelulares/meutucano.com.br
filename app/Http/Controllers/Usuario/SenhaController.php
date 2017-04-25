@@ -46,7 +46,7 @@ class SenhaController extends Controller
      */
     private function listPasswords($user_id)
     {
-        $list = (self::MODEL)::where('usuario_id', $user_id);
+        $list = Senha::where('usuario_id', $user_id);
 
         return $this->handleRequest($list);
     }

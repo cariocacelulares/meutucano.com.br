@@ -1,10 +1,11 @@
 <?php namespace App\Models\Usuario;
 
 use Carbon\Carbon;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Notifications\Notifiable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 use Gamification\Models\Traits\GamificationTrait;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
  * Class Usuario
@@ -32,14 +33,52 @@ class Usuario extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'perms'
     ];
 
     /**
-     * @var array
+     * @return array
      */
-    protected $with = [
-        'roles'
+    protected $appends = [
+        'permissions'
     ];
+
+    /**
+     * User permissions
+     *
+     * @return array
+     */
+    public function perms()
+    {
+        return $this->belongsToMany(Permission::class,
+            config('entrust.permission_user_table'), 'user_id');
+    }
+
+    /**
+     * Get all user and role permissions
+     * @return array
+     */
+    public function getPermissionsAttribute()
+    {
+        $userPrimaryKey = $this->primaryKey;
+        $cacheKey = implode('_', [$this->getTable(), $this->$userPrimaryKey]);
+
+        return Cache::tags('entrust')->remember($cacheKey, config('cache.ttl'), function () {
+            $permissions = [];
+
+            foreach ($this->cachedRoles() as $role) {
+                $permissions = array_merge(
+                    $permissions,
+                    $role->cachedPermissions()->pluck('name')->toArray()
+                );
+            }
+
+            $permissions = array_merge($permissions,
+                $this->perms->pluck('name')->toArray());
+
+            return $permissions;
+        });
+    }
 
     /**
      * Atualiza o password com hash
@@ -52,26 +91,44 @@ class Usuario extends Authenticatable
     }
 
     /**
-     * @return string
+     * Check if user has a permission by its name.
+     *
+     * @param string|array $permission
+     * @param bool         $requireAll
+     *
+     * @return bool
      */
-    public function getCreatedAtAttribute($created_at)
+    public function can($permission, $requireAll = false)
     {
-        if (!$created_at) {
-            return null;
+        if (is_array($permission)) {
+            foreach ($permission as $permName) {
+                $hasPerm = $this->can($permName);
+                if ($hasPerm && !$requireAll) {
+                    return true;
+                } elseif (!$hasPerm && $requireAll) {
+                    return false;
+                }
+            }
+
+            return $requireAll;
+        } else {
+            // Check permissions from role
+            foreach ($this->cachedRoles() as $role) {
+                foreach ($role->cachedPermissions() as $perm) {
+                    if (str_is($permission, $perm->name)) {
+                        return true;
+                    }
+                }
+            }
+
+            // Check permissions from user
+            foreach ($this->permissions as $perm) {
+                if (str_is($permission, $perm)) {
+                    return true;
+                }
+            }
         }
 
-        return Carbon::createFromFormat('Y-m-d H:i:s', $created_at)->format('d/m/Y H:i');
-    }
-
-    /**
-     * @return string
-     */
-    public function getUpdatedAtAttribute($updated_at)
-    {
-        if (!$updated_at) {
-            return null;
-        }
-
-        return Carbon::createFromFormat('Y-m-d H:i:s', $updated_at)->format('d/m/Y H:i');
+        return false;
     }
 }

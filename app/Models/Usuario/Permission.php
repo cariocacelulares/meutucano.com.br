@@ -1,9 +1,9 @@
 <?php namespace App\Models\Usuario;
 
 use Carbon\Carbon;
-use Zizaco\Entrust\EntrustRole;
+use Zizaco\Entrust\EntrustPermission;
 
-class Role extends EntrustRole
+class Permission extends EntrustPermission
 {
     /**
      * @var array
@@ -20,7 +20,6 @@ class Role extends EntrustRole
     protected $visible = [
         'id',
         'name',
-        'display_name',
-        'perms'
+        'display_name'
     ];
 }
