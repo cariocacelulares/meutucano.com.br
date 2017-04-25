@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.25.3",
+            "version": "3.26.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "c5d85fbaaea30e598eab4ff07c4213787b00b080"
+                "reference": "05df1887d7b8cea9fba9ad59e1513c3815e883ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/c5d85fbaaea30e598eab4ff07c4213787b00b080",
-                "reference": "c5d85fbaaea30e598eab4ff07c4213787b00b080",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/05df1887d7b8cea9fba9ad59e1513c3815e883ae",
+                "reference": "05df1887d7b8cea9fba9ad59e1513c3815e883ae",
                 "shasum": ""
             },
             "require": {
@@ -85,7 +85,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2017-04-04 20:52:10"
+            "time": "2017-04-21 20:25:16"
         },
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -854,16 +854,16 @@
         },
         {
             "name": "endroid/qrcode",
-            "version": "1.9.1",
+            "version": "1.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/endroid/QrCode.git",
-                "reference": "ab09b42778ad67cfe850f9c23165f8d08b756680"
+                "reference": "c9644bec2a9cc9318e98d1437de3c628dcd1ef93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/endroid/QrCode/zipball/ab09b42778ad67cfe850f9c23165f8d08b756680",
-                "reference": "ab09b42778ad67cfe850f9c23165f8d08b756680",
+                "url": "https://api.github.com/repos/endroid/QrCode/zipball/c9644bec2a9cc9318e98d1437de3c628dcd1ef93",
+                "reference": "c9644bec2a9cc9318e98d1437de3c628dcd1ef93",
                 "shasum": ""
             },
             "require": {
@@ -910,7 +910,7 @@
                 "qrcode",
                 "symfony"
             ],
-            "time": "2017-01-03 11:02:14"
+            "time": "2017-04-08 09:13:59"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1092,16 +1092,16 @@
         },
         {
             "name": "intervention/image",
-            "version": "2.3.11",
+            "version": "2.3.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Intervention/image.git",
-                "reference": "e8881fd99b9804b29e02d6d1c2c15ee459335cf1"
+                "reference": "15a517f052ee15d373ffa145c9642d5fec7ddf5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Intervention/image/zipball/e8881fd99b9804b29e02d6d1c2c15ee459335cf1",
-                "reference": "e8881fd99b9804b29e02d6d1c2c15ee459335cf1",
+                "url": "https://api.github.com/repos/Intervention/image/zipball/15a517f052ee15d373ffa145c9642d5fec7ddf5c",
+                "reference": "15a517f052ee15d373ffa145c9642d5fec7ddf5c",
                 "shasum": ""
             },
             "require": {
@@ -1150,7 +1150,7 @@
                 "thumbnail",
                 "watermark"
             ],
-            "time": "2017-02-04 10:37:19"
+            "time": "2017-04-23 18:45:36"
         },
         {
             "name": "itbz/fpdf",
@@ -1573,16 +1573,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.37",
+            "version": "1.0.38",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "78b5cc4feb61a882302df4fbaf63b7662e5e4ccd"
+                "reference": "4ba6e13f5116204b21c3afdf400ecf2b9eb1c482"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/78b5cc4feb61a882302df4fbaf63b7662e5e4ccd",
-                "reference": "78b5cc4feb61a882302df4fbaf63b7662e5e4ccd",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/4ba6e13f5116204b21c3afdf400ecf2b9eb1c482",
+                "reference": "4ba6e13f5116204b21c3afdf400ecf2b9eb1c482",
                 "shasum": ""
             },
             "require": {
@@ -1604,12 +1604,12 @@
                 "league/flysystem-azure": "Allows you to use Windows Azure Blob storage",
                 "league/flysystem-cached-adapter": "Flysystem adapter decorator for metadata caching",
                 "league/flysystem-copy": "Allows you to use Copy.com storage",
-                "league/flysystem-dropbox": "Allows you to use Dropbox storage",
                 "league/flysystem-eventable-filesystem": "Allows you to use EventableFilesystem",
                 "league/flysystem-rackspace": "Allows you to use Rackspace Cloud Files",
                 "league/flysystem-sftp": "Allows you to use SFTP server storage via phpseclib",
                 "league/flysystem-webdav": "Allows you to use WebDAV storage",
-                "league/flysystem-ziparchive": "Allows you to use ZipArchive adapter"
+                "league/flysystem-ziparchive": "Allows you to use ZipArchive adapter",
+                "spatie/flysystem-dropbox": "Allows you to use Dropbox storage"
             },
             "type": "library",
             "extra": {
@@ -1652,7 +1652,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2017-03-22 15:43:14"
+            "time": "2017-04-22 18:59:19"
         },
         {
             "name": "livepixel/mercado-livre",
@@ -1757,16 +1757,16 @@
         },
         {
             "name": "milon/barcode",
-            "version": "5.3.3",
+            "version": "5.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/milon/barcode.git",
-                "reference": "df5f63eda9910f9c554a2d8af48e435129739ed9"
+                "reference": "0f211bf93ee1783f1b6e2a1081b45b55af3e7df3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/milon/barcode/zipball/df5f63eda9910f9c554a2d8af48e435129739ed9",
-                "reference": "df5f63eda9910f9c554a2d8af48e435129739ed9",
+                "url": "https://api.github.com/repos/milon/barcode/zipball/0f211bf93ee1783f1b6e2a1081b45b55af3e7df3",
+                "reference": "0f211bf93ee1783f1b6e2a1081b45b55af3e7df3",
                 "shasum": ""
             },
             "require": {
@@ -1786,7 +1786,7 @@
             "authors": [
                 {
                     "name": "Nuruzzaman Milon",
-                    "email": "milon521@gmail.com"
+                    "email": "contact@milon.im"
                 }
             ],
             "description": "Barcode generator like Qr Code , PDF417,C39, C39+,C39E,C39E+,C93,S25,S25+,I25,I25+,C128,C128A,C128B,C128C,2-Digits UPC-Based Extention,5-Digits UPC-Based Extention,EAN 8,EAN 13,UPC-A,UPC-E,MSI (Variation of Plessey code) ",
@@ -1802,28 +1802,25 @@
                 "qr code",
                 "qrcode"
             ],
-            "time": "2017-03-04 02:04:45"
+            "time": "2017-04-21 01:08:30"
         },
         {
             "name": "mongodb/mongodb",
-            "version": "1.1.2",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mongodb/mongo-php-library.git",
-                "reference": "a307dd60e71e1291c60927ea4f3a1905146063f5"
+                "reference": "2f99156b29bc85582415d6a32bc31010d61a0a71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/a307dd60e71e1291c60927ea4f3a1905146063f5",
-                "reference": "a307dd60e71e1291c60927ea4f3a1905146063f5",
+                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/2f99156b29bc85582415d6a32bc31010d61a0a71",
+                "reference": "2f99156b29bc85582415d6a32bc31010d61a0a71",
                 "shasum": ""
             },
             "require": {
-                "ext-mongodb": "^1.2.0",
+                "ext-mongodb": "^1.1.0",
                 "php": ">=5.4"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8"
             },
             "type": "library",
             "autoload": {
@@ -1860,7 +1857,7 @@
                 "mongodb",
                 "persistence"
             ],
-            "time": "2017-02-16 18:40:32"
+            "time": "2017-02-16 18:35:09"
         },
         {
             "name": "monolog/monolog",
@@ -3156,16 +3153,16 @@
         },
         {
             "name": "soundasleep/html2text",
-            "version": "0.3.4",
+            "version": "0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/soundasleep/html2text.git",
-                "reference": "a1f77b8f340c8425b746bef1d1040189e89be334"
+                "reference": "cdb89f6ffa2c4cc78f8ed9ea6ee0594a9133ccad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/soundasleep/html2text/zipball/a1f77b8f340c8425b746bef1d1040189e89be334",
-                "reference": "a1f77b8f340c8425b746bef1d1040189e89be334",
+                "url": "https://api.github.com/repos/soundasleep/html2text/zipball/cdb89f6ffa2c4cc78f8ed9ea6ee0594a9133ccad",
+                "reference": "cdb89f6ffa2c4cc78f8ed9ea6ee0594a9133ccad",
                 "shasum": ""
             },
             "require": {
@@ -3202,7 +3199,7 @@
                 "php",
                 "text"
             ],
-            "time": "2016-06-09 04:56:16"
+            "time": "2017-04-19 22:01:50"
         },
         {
             "name": "spatie/browsershot",
@@ -3260,16 +3257,16 @@
         },
         {
             "name": "spatie/db-dumper",
-            "version": "2.4.1",
+            "version": "2.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/db-dumper.git",
-                "reference": "731a809475b0fab1dc79ded289537de5e66774a4"
+                "reference": "ab73fe5230541438caf1597b585c09f540c7243e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/db-dumper/zipball/731a809475b0fab1dc79ded289537de5e66774a4",
-                "reference": "731a809475b0fab1dc79ded289537de5e66774a4",
+                "url": "https://api.github.com/repos/spatie/db-dumper/zipball/ab73fe5230541438caf1597b585c09f540c7243e",
+                "reference": "ab73fe5230541438caf1597b585c09f540c7243e",
                 "shasum": ""
             },
             "require": {
@@ -3277,7 +3274,7 @@
                 "symfony/process": "^3.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^5.5"
+                "phpunit/phpunit": "^6.0"
             },
             "type": "library",
             "autoload": {
@@ -3306,20 +3303,20 @@
                 "mysqldump",
                 "spatie"
             ],
-            "time": "2016-12-31 10:06:56"
+            "time": "2017-04-13 18:13:10"
         },
         {
             "name": "spatie/laravel-backup",
-            "version": "4.8.0",
+            "version": "4.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-backup.git",
-                "reference": "a28d802b88bd8f4e23fda081b61f27dadba6369b"
+                "reference": "bc68e441eb982a3184137ca8611e15996cb730c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-backup/zipball/a28d802b88bd8f4e23fda081b61f27dadba6369b",
-                "reference": "a28d802b88bd8f4e23fda081b61f27dadba6369b",
+                "url": "https://api.github.com/repos/spatie/laravel-backup/zipball/bc68e441eb982a3184137ca8611e15996cb730c9",
+                "reference": "bc68e441eb982a3184137ca8611e15996cb730c9",
                 "shasum": ""
             },
             "require": {
@@ -3331,7 +3328,7 @@
                 "illuminate/support": "~5.3.28|~5.4.0",
                 "league/flysystem": "^1.0.27",
                 "php": "^7.0",
-                "spatie/db-dumper": "^2.3",
+                "spatie/db-dumper": "^2.5",
                 "spatie/temporary-directory": "^1.1",
                 "symfony/finder": "^3.0"
             },
@@ -3372,7 +3369,7 @@
                 "laravel-backup",
                 "spatie"
             ],
-            "time": "2017-04-02 13:21:44"
+            "time": "2017-04-19 14:06:57"
         },
         {
             "name": "spatie/laravel-failed-job-monitor",
@@ -3532,12 +3529,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/stavarengo/php-sigep-fpdf.git",
-                "reference": "fe32b93f484f6a3da25571d252461496bb90181f"
+                "reference": "28f94e57d61246780ea4b9735f53741d6e9abe17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stavarengo/php-sigep-fpdf/zipball/fe32b93f484f6a3da25571d252461496bb90181f",
-                "reference": "fe32b93f484f6a3da25571d252461496bb90181f",
+                "url": "https://api.github.com/repos/stavarengo/php-sigep-fpdf/zipball/28f94e57d61246780ea4b9735f53741d6e9abe17",
+                "reference": "28f94e57d61246780ea4b9735f53741d6e9abe17",
                 "shasum": ""
             },
             "type": "library",
@@ -3557,7 +3554,7 @@
                 }
             ],
             "description": "Unofficial FPDF library - Cópia do FPDF 1.7 usado pelo projeto stavarengo/php-sigep.",
-            "time": "2015-11-12 15:10:30"
+            "time": "2017-04-05 22:18:20"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
@@ -3609,16 +3606,16 @@
         },
         {
             "name": "swiftmailer/swiftmailer",
-            "version": "v5.4.6",
+            "version": "v5.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "81fdccfaf8bdc5d5d7a1ef6bb3a61bbb1a6c4a3e"
+                "reference": "56db4ed32a6d5c9824c3ecc1d2e538f663f47eb4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/81fdccfaf8bdc5d5d7a1ef6bb3a61bbb1a6c4a3e",
-                "reference": "81fdccfaf8bdc5d5d7a1ef6bb3a61bbb1a6c4a3e",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/56db4ed32a6d5c9824c3ecc1d2e538f663f47eb4",
+                "reference": "56db4ed32a6d5c9824c3ecc1d2e538f663f47eb4",
                 "shasum": ""
             },
             "require": {
@@ -3659,7 +3656,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2017-02-13 07:52:53"
+            "time": "2017-04-20 17:32:18"
         },
         {
             "name": "symfony/class-loader",
@@ -4653,16 +4650,16 @@
         },
         {
             "name": "tymon/jwt-auth",
-            "version": "0.5.10",
+            "version": "0.5.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tymondesigns/jwt-auth.git",
-                "reference": "754448bbedccb1ce5fba16914482c6a6e0871e1d"
+                "reference": "807de0561c40c9a924783d2e30036b635cebf03c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tymondesigns/jwt-auth/zipball/754448bbedccb1ce5fba16914482c6a6e0871e1d",
-                "reference": "754448bbedccb1ce5fba16914482c6a6e0871e1d",
+                "url": "https://api.github.com/repos/tymondesigns/jwt-auth/zipball/807de0561c40c9a924783d2e30036b635cebf03c",
+                "reference": "807de0561c40c9a924783d2e30036b635cebf03c",
                 "shasum": ""
             },
             "require": {
@@ -4712,7 +4709,7 @@
                 "laravel",
                 "tymon"
             ],
-            "time": "2017-01-24 22:20:55"
+            "time": "2017-04-06 19:57:45"
         },
         {
             "name": "venturecraft/revisionable",
@@ -5643,16 +5640,16 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.6.0",
+            "version": "1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "5a5a9fc8025a08d8919be87d6884d5a92520cefe"
+                "reference": "8e6e04167378abf1ddb4d3522d8755c5fd90d102"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/5a5a9fc8025a08d8919be87d6884d5a92520cefe",
-                "reference": "5a5a9fc8025a08d8919be87d6884d5a92520cefe",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/8e6e04167378abf1ddb4d3522d8755c5fd90d102",
+                "reference": "8e6e04167378abf1ddb4d3522d8755c5fd90d102",
                 "shasum": ""
             },
             "require": {
@@ -5681,7 +5678,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2017-01-26 22:05:40"
+            "time": "2017-04-12 18:52:22"
         },
         {
             "name": "php-vcr/php-vcr",
@@ -6990,16 +6987,16 @@
         },
         {
             "name": "tightenco/mailthief",
-            "version": "v0.3.4",
+            "version": "v0.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tightenco/mailthief.git",
-                "reference": "b9ea841ad2c679dcf2aed200aca306f57ca9ea56"
+                "reference": "3269c0baf1b926ee759b5eee6cccca783beecfed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tightenco/mailthief/zipball/b9ea841ad2c679dcf2aed200aca306f57ca9ea56",
-                "reference": "b9ea841ad2c679dcf2aed200aca306f57ca9ea56",
+                "url": "https://api.github.com/repos/tightenco/mailthief/zipball/3269c0baf1b926ee759b5eee6cccca783beecfed",
+                "reference": "3269c0baf1b926ee759b5eee6cccca783beecfed",
                 "shasum": ""
             },
             "require": {
@@ -7028,7 +7025,7 @@
                 }
             ],
             "description": "A fake Mailer for Laravel applications that takes the pain out of testing mail.",
-            "time": "2017-01-30 17:27:29"
+            "time": "2017-04-22 17:42:32"
         },
         {
             "name": "webmozart/assert",
