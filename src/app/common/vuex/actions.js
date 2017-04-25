@@ -1,7 +1,7 @@
 import { User } from '../services'
 
 export default {
-  'global/SIGN_OUT' (context, redirect = null) {
+  'global/SIGN_OUT' (context) {
     context.commit('global/TOKEN_RECEIVED', null);
     context.commit('global/USER_RECEIVED', null);
   },
@@ -14,6 +14,10 @@ export default {
       .catch(error => {
         console.log(error);
       })
+  },
+
+  'global/ADD_TOAST' (context, attrs) {
+    context.commit('global/TOAST_ADDED', attrs)
   },
 
   'global/SET_NAMESPACE' (context, namespace) {

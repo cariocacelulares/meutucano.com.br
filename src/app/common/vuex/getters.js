@@ -13,6 +13,10 @@ export default {
     return !!token
   },
 
+  'global/GET_TOASTS' ({ toasts }) {
+    return toasts
+  },
+
   'global/GET_NAMESPACE' ({ namespace }) {
     return namespace
   },

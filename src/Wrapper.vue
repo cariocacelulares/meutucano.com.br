@@ -1,8 +1,97 @@
 <template>
   <div id="app">
     <router-view></router-view>
+    <vue-progress-bar></vue-progress-bar>
+    <Toaster/>
   </div>
 </template>
+
+<script>
+import { Toaster } from 'common/components'
+
+export default {
+  components: {
+    Toaster
+  },
+
+  created() {
+    const show = (attrs) => {
+      return this.$store.dispatch('global/ADD_TOAST', attrs)
+    }
+
+    Vue.prototype.$toaster = {
+      show: (title, message, type) => {
+        show({
+          title,
+          message,
+          type
+        })
+      },
+      error: (title, message) => {
+        show({
+          title,
+          message,
+          type: 'error'
+        })
+      },
+      warning: (title, message) => {
+        show({
+          title,
+          message,
+          type: 'warning'
+        })
+      },
+      info: (title, message) => {
+        show({
+          title,
+          message,
+          type: 'info'
+        })
+      },
+      success: (title, message) => {
+        show({
+          title,
+          message,
+          type: 'success'
+        })
+      },
+    }
+
+    window.axios.interceptors.request.use(
+      (config) => {
+        this.$Progress.start()
+
+        return config
+      },
+      (error) => {
+        this.$Progress.fail()
+
+        return Promise.reject(error)
+      }
+    )
+
+    axios.interceptors.response.use(
+      (response) => {
+        this.$Progress.finish()
+
+        return response
+      },
+      (error) => {
+        this.$Progress.fail()
+
+        if (error.response.status == 400) {
+          this.$store.dispatch('global/SIGN_OUT')
+          this.$router.push({ name: 'auth.signin' })
+
+          return;
+        }
+
+        return Promise.reject(error);
+      }
+    )
+  },
+}
+</script>
 
 <style lang="scss">
   @import 'assets/scss/main';

@@ -52,9 +52,14 @@ export default {
       this.authenticate({
         email: this.email,
         password: this.password,
-      }).then(() => {
-        this.$root.$emit('authAttemp');
-      });
+      }).then(
+        () => {
+          this.$root.$emit('authAttemp');
+        },
+        (error) => {
+          this.$toaster.error('Falha na autenticação!', error.response.data.msg)
+        }
+      )
     },
   }
 };

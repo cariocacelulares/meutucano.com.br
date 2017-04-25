@@ -50,11 +50,16 @@ a:hover {
   outline: none;
 }
 
+button {
+  cursor: pointer;
+}
+
 input,
 textarea,
 button {
   border: none;
   outline: none;
+  background: transparent;
 }
 
 textarea {

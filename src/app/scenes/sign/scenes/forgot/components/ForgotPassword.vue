@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { Forgot } from '../services'
+import { default as Forgot } from '../services/forgot'
 import Background from '../../../components/Background'
 import {
   TButton,
