@@ -111,8 +111,6 @@ export default {
   },
 
   mounted() {
-    this.load()
-
     this.$root.$on('dropdownChanged.productLines', (item) => {
       // alguma ação pra quando troca a linha dos products
       console.log(item);
@@ -124,9 +122,6 @@ export default {
   },
 
   methods: {
-    load() {
-      return this.$store.dispatch(`${this.namespace}/FETCH`)
-    },
   },
 };
 </script>

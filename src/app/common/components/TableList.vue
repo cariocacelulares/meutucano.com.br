@@ -94,12 +94,18 @@ export default {
 
     pageChanged(pageAttrs) {
       this.$emit('pageChanged', pageAttrs)
-    }
+    },
+
+    load() {
+      return this.$store.dispatch('global/tableList/FETCH')
+    },
   },
 
   mounted() {
     this.setNamespace()
     this.searchTerm = this.stateSearchTerm;
+
+    this.load()
   }
 }
 </script>

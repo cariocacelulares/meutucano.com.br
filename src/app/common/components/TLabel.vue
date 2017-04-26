@@ -46,6 +46,7 @@ export default {
   padding: 0 20px;
   border-radius: 3px;
   font-size: 11px;
+  font-weight: bold;
   text-align: center;
   cursor: default;
 }

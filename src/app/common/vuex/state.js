@@ -3,14 +3,4 @@ export default {
   user: null,
   toasts: [],
   namespace: '',
-  tableList: {
-    rows: 0,
-    perPage: 10,
-    page: {
-      current: 1,
-      total: 1,
-    },
-    searchTerm: '',
-    loading: false,
-  }
 }

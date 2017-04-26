@@ -39,9 +39,9 @@
           <tr v-for="order in orders">
             <td>{{ order.codigo_marketplace || order.id }}</td>
             <td>{{ order.marketplace }}</td>
-            <td class="text-left">{{ order.cliente.nome }}</td>
-            <td>{{ order.valor }}</td>
-            <td>{{ order.data }}</td>
+            <td class="text-left text-bold">{{ order.cliente.nome }}</td>
+            <td>{{ order.total }}</td>
+            <td>{{ order.created_at }}</td>
             <td>
               <TLabel :color="order.status.color" text="white">
                 {{ order.status.description }}
@@ -98,10 +98,6 @@ export default {
       return this.$store.getters[`${this.namespace}/GET`]
     },
 
-    page() {
-      return this.$store.getters['global/tableList/GET_PAGE']
-    },
-
     periods() {
       return [
         {
@@ -121,8 +117,6 @@ export default {
   },
 
   mounted() {
-    this.load()
-
     this.$root.$on('dropdownChanged.orderPeriods', (item) => {
       // alguma ação pra quando troca a linha dos pedidos
       console.log(item);
@@ -134,9 +128,6 @@ export default {
   },
 
   methods: {
-    load() {
-      return this.$store.dispatch(`${this.namespace}/FETCH`)
-    },
   },
 };
 </script>
