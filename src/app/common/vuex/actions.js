@@ -1,5 +1,3 @@
-import { User } from '../services'
-
 export default {
   'global/SIGN_OUT' (context) {
     context.commit('global/TOKEN_RECEIVED', null);
@@ -7,7 +5,7 @@ export default {
   },
 
   'global/FETCH_USER' (context, token) {
-    return User.get()
+    return axios.get('authenticate/user')
       .then(response => {
         context.commit('global/USER_RECEIVED', response.data.user);
       })

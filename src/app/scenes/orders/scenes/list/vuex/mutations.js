@@ -1,4 +1,4 @@
-import { default as OrderTransformer } from '../../../services/transformer'
+import { default as OrderTransformer } from '../../../transformer'
 
 export default {
   'orders/list/RECEIVED' (state, orders) {

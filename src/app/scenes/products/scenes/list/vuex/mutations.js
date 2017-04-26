@@ -1,4 +1,4 @@
-import { default as ProductTransformer } from '../../../services/transformer'
+import { default as ProductTransformer } from '../../../transformer'
 
 export default {
   'products/list/RECEIVED' (state, products) {

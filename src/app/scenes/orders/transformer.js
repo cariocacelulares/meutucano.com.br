@@ -1,4 +1,4 @@
-import { Transformer as CommonTransformer } from 'common/services'
+import { default as CommonTransformer } from 'common/transformer'
 
 const STATUS_COLORS = {
   0: 'dark',

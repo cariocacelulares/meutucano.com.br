@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import { default as Forgot } from '../services/forgot'
 import Background from '../../../components/Background'
 import {
   TButton,
@@ -40,7 +39,7 @@ export default {
 
   methods: {
     forgotPassword() {
-      Forgot.forgotPassword(this.email)
+      axios.post('forgot', this.email)
         .then(response => {
           console.log(response);
         })
