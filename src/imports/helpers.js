@@ -1,15 +1,8 @@
 /**
- * Monetary formatter config
- * Usage: monetary.fomat(9.99) // R$9,99
- *
- * @type {Intl}
+ * Parse params object to url params stromg
+ * @param  {Object} params
+ * @return {String}
  */
-window.monetary = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-  minimumFractionDigits: 2,
-});
-
 window.parseParams = (params) => {
   var parsed = '?';
 

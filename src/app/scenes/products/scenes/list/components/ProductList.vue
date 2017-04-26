@@ -35,7 +35,7 @@
             <td>{{ product.sku }}</td>
             <td>{{ product.ean }}</td>
             <td class="text-left text-bold">{{ product.titulo }}</td>
-            <td>{{ product.custo }}</td>
+            <td>{{ product.cost }}</td>
             <td>{{ product.valor }}</td>
             <td>{{ product.estado }}</td>
             <td>
