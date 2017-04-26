@@ -27,17 +27,6 @@ class NotaTest extends TestCase
     }
 
     /**
-    * Testa se é possível gerar o XML de uma nota fiscal
-    *
-    * @return void
-    */
-    public function test__it_should_be_able_to_generate_xml()
-    {
-        $response = $this->json('GET', "/api/notas/xml/{$this->invoice->id}")
-            ->seeStatusCode(200);
-    }
-
-    /**
     * Testa se é possível gerar o DANFE da nota fiscal
     *
     * @return void
@@ -48,19 +37,6 @@ class NotaTest extends TestCase
             ->seeStatusCode(200);
     }
 
-    /**
-    * Testa se é possível enviar e-mail ao cliente contendo a nota fiscal
-    *
-    * @return void
-    */
-    public function test__it_should_be_able_to_send_email_to_customer()
-    {
-        $response = $this->json('POST', "/api/notas/email/{$this->invoice->id}")
-            ->seeStatusCode(200);
-
-        $this->seeMessageFor($this->invoice->pedido->cliente->email);
-        $this->assertEquals('application/pdf', $this->lastMessage()->attachments[0]['options']['mime']);
-    }
 
     /**
     * Test if has validation when deleting invoice

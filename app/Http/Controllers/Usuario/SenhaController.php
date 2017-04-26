@@ -15,6 +15,15 @@ class SenhaController extends Controller
 
     const MODEL = Senha::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:user_password_list', ['only' => ['index']]);
+        $this->middleware('permission:user_password_show', ['only' => ['show']]);
+        $this->middleware('permission:user_password_create', ['only' => ['store']]);
+        $this->middleware('permission:user_password_update', ['only' => ['update']]);
+        $this->middleware('permission:user_password_delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Return passwords from user
      *
@@ -23,6 +32,8 @@ class SenhaController extends Controller
      */
     public function userPassword($id)
     {
+        $this->middleware('permission:user_password_list');
+
         return $this->listResponse($this->listPasswords($id));
     }
 
@@ -33,6 +44,8 @@ class SenhaController extends Controller
      */
     public function currentUserPassword()
     {
+        $this->middleware('permission:user_password_list_mine');
+
         $id = JWTAuth::parseToken()->authenticate()->id;
 
         return $this->listResponse($this->listPasswords($id));
@@ -46,6 +59,8 @@ class SenhaController extends Controller
      */
     private function listPasswords($user_id)
     {
+        $this->middleware('permission:user_password_list');
+
         $list = Senha::where('usuario_id', $user_id);
 
         return $this->handleRequest($list);

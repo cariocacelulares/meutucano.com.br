@@ -20,14 +20,24 @@ class EntryController extends Controller
 
     const MODEL = Entry::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:entry_list', ['only' => ['index']]);
+        $this->middleware('permission:entry_show', ['only' => ['show']]);
+        $this->middleware('permission:entry_create', ['only' => ['store']]);
+        $this->middleware('permission:entry_update', ['only' => ['update']]);
+        $this->middleware('permission:entry_delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Lista para a tabela
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function tableList()
     {
-        $list = (self::MODEL)
-            ::with(['supplier', 'invoice', 'products', 'user'])
+        $this->middleware('permission:entry_list');
+
+        $list = Entry::with(['supplier', 'invoice', 'products', 'user'])
             ->leftJoin('stock_entry_invoices', 'stock_entry_invoices.stock_entry_id', 'stock_entries.id')
             ->join('suppliers', 'stock_entries.supplier_id', 'suppliers.id')
             ->orderBy('stock_entries.created_at', 'DESC');
@@ -45,7 +55,9 @@ class EntryController extends Controller
      */
     public function confirm($id)
     {
-        $entry = (self::MODEL)::findOrFail($id);
+        $this->middleware('permission:entry_confirm');
+
+        $entry = Entry::findOrFail($id);
         $entry->confirmed_at = Carbon::now();
 
         if ($entry->save()) {
@@ -66,19 +78,17 @@ class EntryController extends Controller
     public function show($id)
     {
         try {
-            $entry = (self::MODEL)
-                ::with([
-                    'supplier',
-                    'invoice',
-                    'user',
-                    'products',
-                    'products.product',
-                    'products.product.productStocks',
-                    'products.product.productStocks.stock',
-                    'products.productStock',
-                    'products.productStock.stock',
-                ])
-                ->findOrFail($id);
+            $entry = Entry::with([
+                'supplier',
+                'invoice',
+                'user',
+                'products',
+                'products.product',
+                'products.product.productStocks',
+                'products.product.productStocks.stock',
+                'products.productStock',
+                'products.productStock.stock',
+            ])->findOrFail($id);
 
             return $this->showResponse(EntryTransformer::show($entry));
         } catch (\Exception $exception) {
@@ -111,13 +121,12 @@ class EntryController extends Controller
 
             $supplier = $this->importSupplier($supplier);
 
-            $entry = (self::MODEL)
-                ::create([
-                    'description'  => $description,
-                    'confirmed_at' => null,
-                    'user_id'      => $userId,
-                    'supplier_id'  => $supplier ? $supplier->id : null,
-                ]);
+            $entry = Entry::create([
+                'description'  => $description,
+                'confirmed_at' => null,
+                'user_id'      => $userId,
+                'supplier_id'  => $supplier ? $supplier->id : null,
+            ]);
 
             $invoice  = $this->importInvoice($invoice, $entry->id);
             $products = $this->importProducts($products, $entry->id);
@@ -155,13 +164,17 @@ class EntryController extends Controller
             $description = Input::get('description');
             $confirm     = Input::get('confirm');
 
+            if (!$invoice) {
+                $this->middleware('permission:entry_manual');
+            }
+
             // Abre um transaction no banco de dados
             \DB::beginTransaction();
             \Log::debug('Transaction - begin');
 
             $supplier = $this->importSupplier($supplier);
 
-            $entry = (self::MODEL)::findOrFail($id);
+            $entry = Entry::findOrFail($id);
             $entry->description  = $description;
             $entry->confirmed_at = $confirm ? Carbon::now() : null;
             $entry->user_id      = $userId;

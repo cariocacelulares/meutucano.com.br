@@ -173,46 +173,6 @@ class ProductStockTest extends TestCase
     }
 
     /**
-     * If stock increment when order is canceled
-     * @return void
-     */
-    public function test__it_should_increase_stock_when_order_canceled()
-    {
-        $order = Pedido::create([
-            'status' => 0
-        ]);
-
-        $productSku = $order->produtos[0]->produto_sku;
-        $stock      = \Stock::choose($productSku);
-        $oldStock   = \Stock::get($productSku, $stock)[0];
-
-        $order->status = 5; // cancelado
-        $order->save();
-
-        $updatedStock = \Stock::get($productSku, $stock)[0];
-
-        $this->assertEquals($oldStock + 1, $updatedStock);
-    }
-
-    /**
-     * If stock not modify when canceled order is created
-     * @return void
-     */
-    public function test__it_should_not_modify_stock_when_canceled_order_is_created()
-    {
-        $product  = Produto::create();
-        $oldStock = $product->estoque;
-
-        Pedido::create([
-            'status' => 5
-        ], $product->sku);
-
-        $product = $product->fresh();
-
-        $this->assertEquals($oldStock, $product->estoque);
-    }
-
-    /**
      * If modify only calculated stock and not the real stock, when a pending order is created
      * @return void
      */

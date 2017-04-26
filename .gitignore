@@ -1,16 +1,7 @@
 .DS_Store
 .env
 clear.sh
-/node_modules
 /vendor
-/public/bower_components
-/public/build
 /.idea
-/media
 /public/php_errors.log
-/public/assets/css/app.min.css
-/public/assets/css/app.min.css.map
-/public/assets/js/app.min.js
-/public/assets/js/app.min.js.map
-/public/images/gamification
 .php_cs.cache

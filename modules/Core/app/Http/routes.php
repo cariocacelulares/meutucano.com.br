@@ -32,9 +32,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     * Notas
     */
     Route::group(['prefix' => 'notas', 'namespace' => 'Pedido'], function () {
-        Route::get('xml/{id}', 'NotaController@xml');
         Route::get('danfe/{id}/{retorno?}', 'NotaController@danfe');
-        Route::post('email/{id}', 'NotaController@email');
     });
 
     /**
@@ -42,7 +40,6 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
      */
      Route::post('notas/devolucao/upload', 'Pedido\Nota\DevolucaoController@upload');
      Route::post('notas/devolucao/proceed/{id}', 'Pedido\Nota\DevolucaoController@proceed');
-     Route::get('notas/devolucao/xml/{id}', 'Pedido\Nota\DevolucaoController@xml');
      Route::get('notas/devolucao/danfe/{id}/{retorno?}', 'Pedido\Nota\DevolucaoController@danfe');
 
     /**
@@ -89,11 +86,6 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
      * Pedidos
      */
     Route::group(['prefix' => 'pedidos', 'namespace' => 'Pedido'], function () {
-        Route::get('cidades/{uf}', 'PedidoController@cidades');
-        Route::get('total-orders-status', 'PedidoController@totalOrdersByStatus');
-        Route::get('total-orders-date', 'PedidoController@totalOrdersByDate');
-        Route::get('total-orders/{mes?}/{ano?}', 'PedidoController@totalOrders');
-        Route::get('cancelamento/{id}', 'PedidoController@imagemCancelamento');
         Route::get('list', 'PedidoController@tableList');
         Route::get('faturamento', 'PedidoController@faturamento');
         Route::get('faturar/{pedido_id}', 'PedidoController@faturar');
@@ -115,9 +107,6 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::get('check-sku/{sku}', 'ProdutoController@checkSku');
         Route::get('list', 'ProdutoController@tableList');
         Route::get('search/{term}', 'ProdutoController@search');
-        Route::get('get-stocks/{sku}', 'ProdutoController@getStocks');
-
-        Route::post('upload', 'ProdutoController@upload');
     });
     Route::resource('produtos', 'Produto\ProdutoController');
 
@@ -144,7 +133,6 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::group(['prefix' => 'clientes', 'namespace' => 'Cliente'], function () {
         Route::get('detail/{cliente_id}', 'ClienteController@detail');
         Route::get('list', 'ClienteController@tableList');
-        Route::put('email/{cliente_id}', 'ClienteController@changeEmail');
         Route::get('search/{term}', 'ClienteController@search');
     });
     Route::resource('clientes', 'Cliente\ClienteController', ['except' => ['create', 'edit']]);
@@ -244,7 +232,6 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::get('list', 'InvoiceController@tableList');
         Route::post('upload', 'InvoiceController@upload');
 
-        Route::get('xml/{id}', 'InvoiceController@xml');
         Route::get('danfe/{id}/{retorno?}', 'InvoiceController@danfe');
     });
     Route::resource('estoque/entrada/nota', 'Stock\Entry\InvoiceController');
@@ -270,18 +257,6 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::group(['middleware' => ['role:admin'], 'namespace' => 'Relatorio', 'prefix' => 'relatorios'], function () {
         // ICMS
         Route::get('icms', 'ICMSController@icms');
-
-        // Pedidos genérico
-        Route::post('pedido', 'PedidoController@run');
-        Route::get('pedido/{return_type}', 'PedidoController@run');
-
-        // Produtos genérico
-        Route::post('produto', 'ProdutoController@run');
-        Route::get('produto/{return_type}', 'ProdutoController@run');
-
-        // Produtos genérico
-        Route::post('retirada-estoque', 'ProdutoController@retiradaEstoque');
-        Route::get('retirada-estoque/{return_type}', 'ProdutoController@retiradaEstoque');
 
         // Inventário
         Route::post('inventario', 'InventarioController@relatorio');

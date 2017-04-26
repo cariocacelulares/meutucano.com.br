@@ -11,10 +11,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'R
             Route::get('important', 'RastreioController@important');
             Route::get('historico/{id}', 'RastreioController@imagemHistorico');
             Route::get('pi/{id}', 'RastreioController@pi');
-            Route::get('busca-seminovos/{id}', 'RastreioController@existsSeminovos');
 
-            Route::put('refresh_all', 'RastreioController@refreshAll');
-            Route::put('refresh_status/{id}', 'RastreioController@refreshStatus');
             Route::put('edit/{id}', 'RastreioController@edit');
             Route::put('historico/{id}', 'RastreioController@forceScreenshot');
         });

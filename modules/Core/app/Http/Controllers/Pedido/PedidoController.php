@@ -1,16 +1,16 @@
 <?php namespace Core\Http\Controllers\Pedido;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Input;
+use Core\Models\Pedido;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
-use Core\Models\Pedido;
 use Core\Models\Pedido\PedidoProduto;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Config;
 use Core\Transformers\OrderTransformer;
 use Core\Http\Requests\PedidoRequest as Request;
+use App\Http\Controllers\Rest\RestControllerTrait;
 
 /**
  * Class PedidoController
@@ -22,6 +22,15 @@ class PedidoController extends Controller
 
     const MODEL = Pedido::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:order_list', ['only' => ['index']]);
+        $this->middleware('permission:order_show', ['only' => ['show']]);
+        $this->middleware('permission:order_create', ['only' => ['store']]);
+        $this->middleware('permission:order_update', ['only' => ['update']]);
+        $this->middleware('permission:order_delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Lista pedidos para a tabela
      *
@@ -29,7 +38,9 @@ class PedidoController extends Controller
      */
     public function tableList()
     {
-        $list = (self::MODEL)::with(['cliente', 'endereco'])
+        $this->middleware('permission:order_list');
+
+        $list = Pedido::with(['cliente', 'endereco'])
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
             ->leftJoin('pedido_notas', 'pedido_notas.pedido_id', '=', 'pedidos.id')
             ->orderBy('pedidos.created_at', 'DESC');
@@ -46,7 +57,9 @@ class PedidoController extends Controller
      */
     public function faturamento()
     {
-        $list = (self::MODEL)::with([
+        $this->middleware('permission:order_list');
+
+        $list = Pedido::with([
                 'cliente',
                 'endereco',
                 'notas',
@@ -78,11 +91,13 @@ class PedidoController extends Controller
      */
     public function prioridade($pedido_id)
     {
+        $this->middleware('permission:order_prioritize');
+
         try {
             $prioridade = Input::get('priorizado');
             $prioridade = (int)$prioridade ? 1 : null;
 
-            $pedido = (self::MODEL)::find($pedido_id);
+            $pedido = Pedido::find($pedido_id);
             $pedido->priorizado = $prioridade;
             $pedido->save();
 
@@ -101,11 +116,13 @@ class PedidoController extends Controller
      */
     public function segurar($pedido_id)
     {
+        $this->middleware('permission:order_hold');
+
         try {
             $segurar = Input::get('segurar');
             $segurar = (int)$segurar ? 1 : 0;
 
-            $pedido = (self::MODEL)::find($pedido_id);
+            $pedido = Pedido::find($pedido_id);
             $pedido->segurado = $segurar;
             $pedido->save();
 
@@ -126,6 +143,8 @@ class PedidoController extends Controller
      */
     public function alterarStatus($pedido_id)
     {
+        $this->middleware('permission:order_update');
+
         try {
             $status    = Input::get('status');
             $protocolo = Input::get('protocolo');
@@ -134,7 +153,7 @@ class PedidoController extends Controller
                 throw new \Exception('Campo de status obrigatório', 1);
             }
 
-            $pedido = (self::MODEL)::find($pedido_id);
+            $pedido = Pedido::find($pedido_id);
 
             if ($status === 5 && !$protocolo && in_array($pedido->marketplace, \Config::get('core.required_protocolo'))) {
                 throw new \Exception('Protocolo obrigatório para cancelar pedidos nesse marketplace.', 422);
@@ -142,13 +161,6 @@ class PedidoController extends Controller
 
             if ($protocolo) {
                 $pedido->protocolo = $protocolo;
-            }
-
-            $imagem = Input::file('imagem');
-            if ($imagem) {
-                $name = substr(str_slug($protocolo . '-' . $imagem->getClientOriginalName()), 0, 200) . '.' . $imagem->extension();
-                $imagem->move(storage_path('app/public/cancelamento'), $name);
-                $pedido->imagem_cancelamento = $name;
             }
 
             if ($status == 2 && !$pedido->rastreios) {
@@ -174,8 +186,10 @@ class PedidoController extends Controller
      */
     public function show($id)
     {
+        $this->middleware('permission:order_show');
+
         try {
-            $data = (self::MODEL)::with([
+            $data = Pedido::with([
                 'cliente',
                 'endereco',
                 'notas' => function ($query) {
@@ -191,8 +205,7 @@ class PedidoController extends Controller
                 'rastreios.devolucao',
                 'rastreios.pi',
                 'rastreios.logistica'
-            ])
-                ->find($id);
+            ])->find($id);
 
             if ($data) {
                 return $this->showResponse(OrderTransformer::show($data));
@@ -260,7 +273,7 @@ class PedidoController extends Controller
     public function shopsystem($codigo_pedido)
     {
         try {
-            if ($pedido = (self::MODEL)::where('codigo_marketplace', '=', $codigo_pedido)->first()) {
+            if ($pedido = Pedido::where('codigo_marketplace', '=', $codigo_pedido)->first()) {
                 $rastreio = $pedido->rastreios()->orderBy('created_at', 'DESC')->first();
                 $codigo   = ($rastreio) ? $rastreio->rastreio : null;
 
@@ -288,283 +301,6 @@ class PedidoController extends Controller
     }
 
     /**
-     * Retorna o total de pedidos por marketplace por status
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function totalOrdersByStatus()
-    {
-        $ano       = date('Y');
-        $mes       = date('m');
-        $dia       = date('d');
-        $inicioMes = "{$ano}-{$mes}-01 00:00:00";
-
-        $pedidos = Pedido
-            ::selectRaw('status, marketplace, COUNT(*) as count')
-            ->whereNotNull('status')
-            ->where('status', '!=', 5)
-            ->where('created_at', '>=', $inicioMes)
-            ->groupBy('status')
-            ->groupBy('marketplace')
-            ->orderBy('status', 'ASC')
-            ->orderBy('marketplace', 'ASC')
-            ->get();
-
-        /**
-         * Organiza os marketplaces
-         */
-        $marketplaces = [];
-        foreach ($pedidos as $pedido) {
-            if (!in_array(strtoupper($pedido->marketplace), $marketplaces)) {
-                $marketplaces[] = strtoupper($pedido->marketplace);
-            }
-        }
-
-        /**
-         * Status possíveis
-         */
-        $status = \Config::get('core.pedido_status');
-
-        /**
-         * Prepara a lista para quando não existir preenche corretamente com 0
-         */
-        $list = [];
-        foreach ($status as $state) {
-            foreach ($marketplaces as $marketplace) {
-                $list[strtolower($state)][] = 0;
-            }
-        }
-
-        /**
-         * Organiza os dados pra mostrar no gráfico
-         */
-        foreach ($pedidos as $pedido) {
-            $list[strtolower($status[$pedido->status])][array_search(strtoupper($pedido->marketplace), $marketplaces)] = $pedido->count;
-        }
-
-        /**
-         * Altera o nome do marketplace
-         */
-        if ($index = array_search('MERCADOLIVRE', $marketplaces)) {
-            $marketplaces[$index] = 'M.LIVRE';
-        }
-
-        $list['marketplaces'] = $marketplaces;
-
-        return $this->listResponse($list);
-    }
-
-    /**
-     * Retorna o total de pedidos pagos, entregues e enviados no dia mes e ano atual, bem como seu anterior imediato
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function totalOrdersByDate()
-    {
-        $data = [
-            'ano' => (int)date('Y'),
-            'mes' => (int)date('m'),
-            'dia' => (int)date('d'),
-        ];
-
-       /*$ano = Pedido
-            ::selectRaw('YEAR(created_at) as ano, COUNT(*) as count')
-            ->whereIn('status', [1,2,3])
-            ->whereIn(DB::raw('YEAR(created_at)'), [$data['ano'], $data['ano'] - 1])
-            ->groupBy(DB::raw('YEAR(created_at)'))
-            ->orderBy(DB::raw('YEAR(created_at)'), 'DESC')
-            ->get()->toArray();
-
-        if (count($ano) == 1 && $data['ano'] == $ano[0]['ano']) {
-            $ano[] = [
-                'ano' => $data['ano'] - 1,
-                'count' => 0
-            ];
-        }*/
-
-       $mes = Pedido
-            ::selectRaw('MONTH(created_at) as mes, COUNT(*) as count')
-            ->whereIn('status', [1,2,3])
-            ->whereIn(DB::raw('MONTH(created_at)'), [$data['mes'], $data['mes'] - 1])
-            ->where(DB::raw('YEAR(created_at)'), '=', $data['ano'])
-            ->groupBy(DB::raw('MONTH(created_at)'))
-            ->orderBy(DB::raw('MONTH(created_at)'), 'DESC')
-            ->get()->toArray();
-
-        if (!isset($mes[0])) {
-            $mes[] = [
-                'mes'   => $data['mes'],
-                'count' => 0
-            ];
-        }
-
-        if (count($mes) == 1) {
-            if ($data['mes'] == $mes[0]['mes']) {
-                $mes[] = [
-                    'mes'   => $data['mes'] - 1,
-                    'count' => 0
-                ];
-            } elseif (($data['mes'] - 1) == $mes[0]['mes']) {
-                $mes[] = $mes[0];
-
-                $mes[0] = [
-                    'mes'   => $data['mes'],
-                    'count' => 0
-                ];
-            }
-        }
-
-        if ($mes[1]['mes'] === 0) {
-           $mes[1]['count'] = Pedido
-                ::selectRaw('MONTH(created_at) as mes, COUNT(*) as count')
-                ->whereIn('status', [1,2,3])
-                ->where(DB::raw('MONTH(created_at)'), '=', 12)
-                ->where(DB::raw('YEAR(created_at)'), '=', ($data['ano'] - 1))
-                ->groupBy(DB::raw('MONTH(created_at)'))
-                ->orderBy(DB::raw('MONTH(created_at)'), 'DESC')
-                ->get()->toArray();
-
-            $mes[1]['count'] = $mes[1]['count'][0]['count'];
-            $mes[1]['mes']   = 12;
-        }
-
-        $dia = Pedido
-            ::selectRaw('DAY(created_at) as dia, COUNT(*) as count')
-            ->whereIn('status', [1,2,3])
-            ->whereIn(DB::raw('DAY(created_at)'), [$data['dia'], $data['dia'] - 1])
-            ->where(DB::raw('MONTH(created_at)'), '=', $data['mes'])
-            ->where(DB::raw('YEAR(created_at)'), '=', $data['ano'])
-            ->groupBy(DB::raw('DAY(created_at)'))
-            ->orderBy(DB::raw('DAY(created_at)'), 'DESC')
-            ->get()->toArray();
-
-        if (!isset($dia[0])) {
-            $dia[] = [
-                'dia'   => $data['dia'],
-                'count' => 0
-            ];
-        }
-
-        if (count($dia) == 1) {
-            if ($data['dia'] == $dia[0]['dia']) {
-                $dia[] = [
-                    'dia'   => $data['dia'] - 1,
-                    'count' => 0
-                ];
-            } elseif (($data['dia'] - 1) == $dia[0]['dia']) {
-                $dia[] = $dia[0];
-
-                $dia[0] = [
-                    'dia'   => $data['dia'],
-                    'count' => 0
-                ];
-            }
-        }
-
-        $mesesExtenso = Config::get('core.meses');
-
-        $pedidos = [
-            /*'ano' => [
-                'atual' => [$ano[0]['ano'], $ano[0]['count']],
-                'ultimo' => [$ano[1]['ano'], $ano[1]['count']],
-            ],*/
-            'mes' => [
-                'atual'  => [$mesesExtenso[(int)$mes[0]['mes']], $mes[0]['count']],
-                'ultimo' => [$mesesExtenso[(int)$mes[1]['mes']], $mes[1]['count']],
-            ],
-            'dia' => [
-                'atual'  => [$dia[0]['dia'], $dia[0]['count']],
-                'ultimo' => [$dia[1]['dia'], $dia[1]['count']],
-            ]
-        ];
-
-        return $this->listResponse($pedidos);
-    }
-
-    /**
-     * Retorna o total de pedidos pagos, enviados e entregues por dia no mês/ano atual ou por parâmetro
-     *
-     * @param  int $mes
-     * @param  int $ano
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function totalOrders($mes = null, $ano = null)
-    {
-        $atual = false;
-
-        if ($mes === null) {
-            $mes   = (int)date('m');
-            $atual = true;
-        }
-
-        if ($ano === null) {
-            $ano = (int)date('Y');
-        }
-
-        $pedidos = Pedido
-            ::selectRaw('DAY(created_at) AS dia, COUNT(*) as total')
-            ->whereIn('status', [1,2,3])
-            ->where(DB::raw('MONTH(created_at)'), '=', $mes)
-            ->where(DB::raw('YEAR(created_at)'), '=', $ano)
-            ->groupBy(DB::raw('DAY(created_at)'))
-            ->orderBy(DB::raw('DAY(created_at)'), 'ASC')
-            ->get()->toArray();
-
-        $lastDay = cal_days_in_month(CAL_GREGORIAN, $mes, $ano);
-        $days = range(1, (($atual) ? date('d') : $lastDay));
-        $list = array_fill_keys(array_keys(array_flip($days)), 0);
-        foreach ($pedidos as $pedido) {
-            $list[$pedido['dia']] = $pedido['total'];
-        }
-
-        $list = [
-            'mes'  => $mes,
-            'ano'  => $ano,
-            'name' => Config::get('core.meses')[$mes],
-            'data' => array_values($list)
-        ];
-
-        return $this->listResponse($list);
-    }
-
-    public function cidades($uf)
-    {
-        try {
-            $list = Pedido
-                ::selectRaw('DISTINCT(cliente_enderecos.cidade)')
-                ->join('cliente_enderecos', 'cliente_enderecos.id', '=', 'pedidos.cliente_endereco_id')
-                ->with('endereco')
-                ->where('cliente_enderecos.uf', '=', $uf)
-                ->orderBy('cliente_enderecos.cidade', 'ASC')
-                ->get()
-                ->toArray();
-
-            foreach ($list as $key => $item) {
-                $list[$key] = ucwords(strtolower(array_values(array_intersect_key($item, ['cidade' => '']))[0]));
-            }
-
-            return $this->listResponse($list);
-        } catch (\Exception $exception) {
-            return $this->clientErrorResponse([
-                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
-            ]);
-        }
-    }
-
-    public function imagemCancelamento($id)
-    {
-        if ($pedido = (self::MODEL)::find($id)) {
-            $file_path = storage_path('app/public/cancelamento/' . $pedido->imagem_cancelamento);
-
-            if (file_exists($file_path)) {
-                return response()->make(file_get_contents($file_path), '200')->header('Content-Type', 'image/' . (pathinfo($file_path, PATHINFO_EXTENSION) ?: 'jpeg'));
-            }
-        }
-
-        return $this->notFoundResponse();
-    }
-
-    /**
      * Create a new resource
      *
      * @param Request $request
@@ -572,11 +308,13 @@ class PedidoController extends Controller
      */
     public function store(Request $request)
     {
+        $this->middleware('permission:order_create');
+
         try {
             DB::beginTransaction();
             Log::debug('Transaction - begin');
 
-            $order = (self::MODEL)::create(Input::except([
+            $order = Pedido::create(Input::except([
                 'cliente',
                 'products',
             ]));

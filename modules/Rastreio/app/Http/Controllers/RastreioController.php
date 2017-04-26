@@ -37,6 +37,15 @@ class RastreioController extends Controller
 
     const MODEL = Rastreio::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:order_shipment_list', ['only' => ['index']]);
+        $this->middleware('permission:order_shipment_show', ['only' => ['show']]);
+        $this->middleware('permission:order_shipment_create', ['only' => ['store']]);
+        $this->middleware('permission:order_shipment_update', ['only' => ['update']]);
+        $this->middleware('permission:order_shipment_delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Retorna os rastreios importantes
      *
@@ -44,7 +53,9 @@ class RastreioController extends Controller
      */
     public function important()
     {
-        $list = (self::MODEL)::with(['pedido', 'pedido.cliente', 'pedido.endereco'])
+        $this->middleware('permission:order_shipment_important_list');
+
+        $list = Rastreio::with(['pedido', 'pedido.cliente', 'pedido.endereco'])
             ->join('pedidos', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
             ->join('cliente_enderecos', 'cliente_enderecos.id', '=', 'pedidos.cliente_endereco_id')
@@ -65,7 +76,7 @@ class RastreioController extends Controller
     public function show($id)
     {
         try {
-            $rastreio = (self::MODEL)::findOrFail($id);
+            $rastreio = Rastreio::findOrFail($id);
 
             return $this->showResponse(RastreioTransformer::show($rastreio));
         } catch (\Exception $exception) {
@@ -86,7 +97,7 @@ class RastreioController extends Controller
     public function store(Request $request)
     {
         try {
-            $data = (self::MODEL)::create(Input::all());
+            $data = Rastreio::create(Input::all());
 
             return $this->createdResponse($data);
         } catch (\Exception $exception) {
@@ -105,7 +116,7 @@ class RastreioController extends Controller
     public function update($id, Request $request)
     {
         try {
-            $rastreio = (self::MODEL)::findOrFail($id);
+            $rastreio = Rastreio::findOrFail($id);
             $rastreio->fill(Input::all());
             $rastreio->save();
 
@@ -135,7 +146,7 @@ class RastreioController extends Controller
     public function destroy($id, DeleteRequest $request)
     {
         try {
-            $rastreio = (self::MODEL)::findOrFail($id);
+            $rastreio = Rastreio::findOrFail($id);
 
             $rastreio->delete_note = Input::get('delete_note');
             $rastreio->save();
@@ -162,8 +173,7 @@ class RastreioController extends Controller
         try {
             $model = self::MODEL;
 
-            $rastreiosML = $model
-                ::join('pedidos', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
+            $rastreiosML = $model::join('pedidos', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
                 ->where('pedido_rastreios.status', '=', 2)
                 ->where('pedidos.marketplace', '=', 'MERCADOLIVRE')
                 ->get();
@@ -180,28 +190,6 @@ class RastreioController extends Controller
         } catch (\Exception $exception) {
             \Log::warning(logMessage($exception, 'Erro ao atualizar os rastreios'));
             reportError('Erro ao atualizar os rastreios ' . $exception->getMessage() . ' - ' . $exception->getLine());
-        }
-    }
-
-    /**
-     * Atualiza o status de um rastreio
-     *
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function refreshStatus($id)
-    {
-        try {
-            $model = self::MODEL;
-
-            $rastreio = $model::findOrFail($id);
-            $rastreio = $this->refresh($rastreio);
-
-            return $this->showResponse($rastreio);
-        } catch (\Exception $exception) {
-            return $this->clientErrorResponse([
-                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
-            ]);
         }
     }
 
@@ -305,6 +293,8 @@ class RastreioController extends Controller
      */
     public function forceScreenshot($rastreio)
     {
+        $this->middleware('permission:order_shipment_image');
+
         if ($rastreio && $rastreio->rastreio) {
             if ($rastreio = $this->screenshot($rastreio)) {
                 $rastreio->save();
@@ -530,6 +520,8 @@ class RastreioController extends Controller
      */
     public function etiqueta($id)
     {
+        $this->middleware('permission:order_shipment_print');
+
         if ($rastreio = Rastreio::find($id)) {
             $accessData = new AccessData(Config::get('rastreio.correios.accessData'));
 
@@ -629,28 +621,5 @@ class RastreioController extends Controller
         }
 
         return $this->notFoundResponse();
-    }
-
-    /**
-     * Busca produtos seminovos
-     *
-     * @param  int $rastreio_id
-     * @return Object
-     */
-    public function existsSeminovos($rastreio_id)
-    {
-        if ($rastreio = Rastreio::find($rastreio_id)) {
-            if ($pedido = Pedido::find($rastreio->pedido_id)) {
-                if ($pedidoProdutos = PedidoProduto::where('pedido_id', '=', $pedido->id)->get()) {
-                    foreach ($pedidoProdutos as $pedidoProduto) {
-                        if ((int)$pedidoProduto->produto->estado == 1) {
-                            return $this->listResponse(['exists' => true]);
-                        }
-                    }
-                }
-            }
-        }
-
-        return $this->listResponse(['exists' => false]);
     }
 }

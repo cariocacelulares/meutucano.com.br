@@ -20,6 +20,15 @@ class ProdutoController extends Controller
 
     const MODEL = Produto::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:product_list', ['only' => ['index']]);
+        $this->middleware('permission:product_show', ['only' => ['show']]);
+        $this->middleware('permission:product_create', ['only' => ['store']]);
+        $this->middleware('permission:product_update', ['only' => ['update']]);
+        $this->middleware('permission:product_delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Lista produtos para a tabela
      *
@@ -27,11 +36,9 @@ class ProdutoController extends Controller
      */
     public function tableList()
     {
-        $list = (self::MODEL)
-            // ::with('linha')
-            // ->with('marca')
-            ::orderBy('produtos.created_at', 'DESC');
+        $this->middleware('permission:product_list');
 
+        $list = Produto::orderBy('produtos.created_at', 'DESC');
         $list = $this->handleRequest($list);
 
         $ids = [];
@@ -39,8 +46,7 @@ class ProdutoController extends Controller
             $ids[] = $item->sku;
         }
 
-        $reservados = PedidoProduto
-            ::select('pedido_produtos.produto_sku', 'pedidos.status', DB::raw('COUNT(*) as count'))
+        $reservados = PedidoProduto::select('pedido_produtos.produto_sku', 'pedidos.status', DB::raw('COUNT(*) as count'))
             ->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
             ->with(['pedido'])
             ->whereIn('pedido_produtos.produto_sku', $ids)
@@ -74,7 +80,7 @@ class ProdutoController extends Controller
      */
     public function show($id)
     {
-        $product = (self::MODEL)
+        $product = Produto
             ::where('produtos.sku', '=', $id)
             ->first();
 
@@ -92,7 +98,7 @@ class ProdutoController extends Controller
     public function store(Request $request)
     {
         try {
-            $product = (self::MODEL)::create(Input::all());
+            $product = Produto::create(Input::all());
 
             return $this->createdResponse($product);
         } catch (\Exception $exception) {
@@ -110,7 +116,7 @@ class ProdutoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (!$product = (self::MODEL)::find($id)) {
+        if (!$product = Produto::find($id)) {
             return $this->notFoundResponse();
         }
 
@@ -136,6 +142,8 @@ class ProdutoController extends Controller
      */
     public function search($term)
     {
+        $this->middleware('permission:product_list');
+
         try {
             $estado = Input::get('estado');
             $estado = $estado ?: false;
@@ -158,92 +166,6 @@ class ProdutoController extends Controller
             return $this->listResponse($list);
         } catch (\Exception $exception) {
             return $this->listResponse([]);
-        }
-    }
-
-    /**
-     * Get produto info and stocks by sku
-     *
-     * @param  int $sku
-     * @return Response
-     */
-    public function getStocks($sku)
-    {
-        $product = Produto
-            ::where('sku', '=', $sku)
-            ->with([
-                'productStocks',
-                'productStocks.stock',
-            ])
-            ->first();
-
-        if ($product) {
-            try {
-                $product = [
-                    'sku'           => $product->sku,
-                    'title'         => $product->titulo,
-                    'productStocks' => $product->productStocks,
-                ];
-
-                return $this->showResponse([
-                    'produto' => $product
-                ]);
-            } catch (\Exception $exception) {
-            }
-        }
-
-        return $this->showResponse([
-            'produto' => []
-        ]);
-    }
-
-    /**
-     * Upload image files
-     *
-     * @return Response
-     */
-    public function upload()
-    {
-        $files = Input::file('files');
-
-        try {
-            $return = [];
-            foreach ($files as $file) {
-                if (in_array($file->getMimetype(), ['image/jpeg']) === false) {
-                    $return['error'][] = [
-                        'file'    => $file->getClientOriginalName(),
-                        'message' => 'O arquivo precisa estar no formato JPG'
-                    ];
-
-                    continue;
-                }
-
-                if (($file->getSize() / 1000) > 800) {
-                    $return['error'][] = [
-                        'file'    => $file->getClientOriginalName(),
-                        'message' => 'O arquivo precisa ter menos de 800KB'
-                    ];
-
-                    continue;
-                }
-
-                $fileName = str_slug(
-                    substr($file->getClientOriginalName(), 0, -3)
-                ) . uniqid('_') . '.jpg';
-                $file->move(storage_path('app/public/produto'), $fileName);
-
-                $return['success'][] = [
-                    'file' => $fileName
-                ];
-            }
-
-            return $this->createdResponse($return);
-        } catch (\Exception $e) {
-            return $this->clientErrorResponse([
-                'error'   => true,
-                'message' => 'Não foi possível fazer upload dos arquivos, tente novamente!',
-                'exception' => $e->getMessage() . '  ' . $e->getLine()
-            ]);
         }
     }
 }

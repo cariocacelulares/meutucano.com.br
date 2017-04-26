@@ -16,15 +16,24 @@ class StockController extends Controller
 
     const MODEL = Stock::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:depot_list', ['only' => ['index']]);
+        $this->middleware('permission:depot_show', ['only' => ['show']]);
+        $this->middleware('permission:depot_create', ['only' => ['store']]);
+        $this->middleware('permission:depot_update', ['only' => ['update']]);
+        $this->middleware('permission:depot_delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Lista para a tabela
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function tableList()
     {
-        $list = (self::MODEL)
-            ::orderBy('priority', 'ASC');
+        $this->middleware('permission:depot_list');
 
+        $list = Stock::orderBy('priority', 'ASC');
         $list = $this->handleRequest($list);
 
         return $this->listResponse($list);
@@ -42,7 +51,7 @@ class StockController extends Controller
             $input = Input::all();
             $input['slug'] = str_slug($input['title']);
 
-            $data = (self::MODEL)::create($input);
+            $data = Stock::create($input);
 
             return $this->createdResponse($data);
         } catch (\Exception $exception) {

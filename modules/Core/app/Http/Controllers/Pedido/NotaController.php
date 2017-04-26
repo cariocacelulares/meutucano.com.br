@@ -20,6 +20,15 @@ class NotaController extends Controller
 
     const MODEL = Nota::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:order_invoice_list', ['only' => ['index']]);
+        $this->middleware('permission:order_invoice_show', ['only' => ['show']]);
+        $this->middleware('permission:order_invoice_create', ['only' => ['store']]);
+        $this->middleware('permission:order_invoice_update', ['only' => ['update']]);
+        $this->middleware('permission:order_invoice_delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Deleta um recurso
      *
@@ -29,7 +38,7 @@ class NotaController extends Controller
     public function destroy($id, DeleteRequest $request)
     {
         try {
-            $nota = (self::MODEL)::findOrFail($id);
+            $nota = Nota::findOrFail($id);
 
             $nota->delete_note = Input::get('delete_note');
             $nota->save();
@@ -61,19 +70,6 @@ class NotaController extends Controller
     }
 
     /**
-     * Generate invoice XML
-     *
-     * @param $id
-     * @return Response
-     */
-    public function xml($id)
-    {
-        $invoice = (self::MODEL)::findOrFail($id);
-
-        return \Invoice::xml($invoice->arquivo);
-    }
-
-    /**
      * Generate DANFe PDF file
      *
      * @param  $id
@@ -83,66 +79,11 @@ class NotaController extends Controller
      */
     public function danfe($id, $returnType = 'I', $path = false)
     {
-        $invoice = (self::MODEL)::findOrFail($id);
+        $this->middleware('permission:order_invoice_print');
+
+        $invoice = Nota::findOrFail($id);
 
         return \Invoice::danfe($invoice->arquivo, $returnType, $path);
-    }
-
-    /**
-     * Envia um e-mail ao cliente com a nota fiscal
-     *
-     * @param $id
-     * @return Response
-     */
-    public function email($id)
-    {
-        try {
-            $nota = (self::MODEL)::find($id);
-
-            if ($nota) {
-                $dataHora = date('His');
-                $arquivo  = storage_path('app/public/' . $dataHora . '.pdf');
-                $email    = $nota->pedido->cliente->email;
-
-                if ($email) {
-                    if (\Config::get('core.email_send_enabled')) {
-                        $mail = Mail::send('emails.danfe', [], function ($message) use ($nota, $email, $arquivo) {
-                            \Invoice::danfe($nota->arquivo, 'F', $arquivo);
-
-                            $message
-                                ->attach($arquivo, ['as' => 'nota.pdf', 'mime' => 'application/pdf'])
-                                ->from('vendas@cariocacelulares.com.br', 'Carioca Celulares Online')
-                                ->to($email)
-                                ->subject('Nota fiscal de compra na Carioca Celulares Online');
-                        });
-
-                        unlink($arquivo);
-                    } else {
-                        \Log::debug("O e-mail não foi enviado para {$email} pois o envio está desativado (nota)!");
-                    }
-
-                    if ($mail) {
-                        \Log::debug('E-mail de venda enviado para: ' . $email);
-
-                        return $this->showResponse(['send' => true]);
-                    } else {
-                        \Log::warning('Falha ao enviar e-mail de venda para: ' . $email);
-
-                        return $this->showResponse(['send' => false]);
-                    }
-                } else {
-                    Log::warning('Falha ao enviar e-mail de venda, email inválido');
-
-                    return $this->showResponse(['send' => false]);
-                }
-            }
-        } catch (\Exception $exception) {
-            \Log::warning(logMessage($exception, 'Falha ao tentar enviar um e-mail de venda', [$id]));
-
-            return $this->clientErrorResponse('Falha ao tentar enviar um e-mail de venda');
-        }
-
-        return $this->notFoundResponse();
     }
 
     /**

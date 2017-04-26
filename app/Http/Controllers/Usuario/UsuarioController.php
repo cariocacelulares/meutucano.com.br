@@ -17,6 +17,15 @@ class UsuarioController extends Controller
 
     const MODEL = Usuario::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:user_list', ['only' => ['index']]);
+        $this->middleware('permission:user_show', ['only' => ['show']]);
+        $this->middleware('permission:user_create', ['only' => ['store']]);
+        $this->middleware('permission:user_update', ['only' => ['update']]);
+        $this->middleware('permission:user_delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Lista pedidos para a tabela
      *
@@ -24,97 +33,10 @@ class UsuarioController extends Controller
      */
     public function tableList()
     {
-        $m = self::MODEL;
-        $m = new $m;
+        $this->middleware('permission:user_list');
 
-        $list = $this->handleRequest($m);
+        $list = $this->handleRequest(new Usuario);
 
         return $this->listResponse($list);
-    }
-
-    /**
-     * Update model
-     *
-     * @param $id
-     * @return Response
-     */
-    public function update($id)
-    {
-        $m = self::MODEL;
-
-        if (!$data = $m::find($id)) {
-            return $this->notFoundResponse();
-        }
-
-        try {
-            $data->fill(Input::except(['novasRoles', 'roles']));
-
-            if (Input::get('novasRoles')) {
-                $data->detachRoles();
-                foreach (Input::get('novasRoles') as $role) {
-                    if ($role) {
-                        $data->roles()->attach($role);
-                    }
-                }
-            }
-            $data->save();
-
-            return $this->showResponse($data);
-        } catch (\Exception $exception) {
-            $data = ['exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()];
-
-            return $this->clientErrorResponse($data);
-        }
-    }
-
-    /**
-     * Store new user
-     *
-     * @return Response
-     */
-    public function store()
-    {
-        $m = self::MODEL;
-        try {
-            $data = new $m;
-            $data->fill(Input::except(['novasRoles']));
-            $data->save();
-
-            if (Input::get('novasRoles')) {
-                $data->detachRoles();
-                foreach (Input::get('novasRoles') as $role) {
-                    if ($role) {
-                        $data->roles()->attach($role);
-                    }
-                }
-            }
-
-            $data->save();
-
-            return $this->createdResponse($data);
-        } catch (\Exception $exception) {
-            $data = ['exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()];
-
-            return $this->clientErrorResponse($data);
-        }
-    }
-
-    /**
-     * Checa se a senha é igual
-     *
-     * @param  string $user_id
-     * @return bool
-     */
-    public function checkPassword($user_id)
-    {
-        $password = Input::get('password');
-
-        if ($usuario = Usuario::find($user_id)) {
-            if (Hash::check($password, $usuario->password)) {
-                return $this->showResponse(true);
-            }
-        }
-
-        return $this->showResponse(false);
     }
 }

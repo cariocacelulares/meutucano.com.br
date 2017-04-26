@@ -19,6 +19,15 @@ class PiController extends Controller
 
     const MODEL = Pi::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:order_shipment_issue_list', ['only' => ['index']]);
+        $this->middleware('permission:order_shipment_issue_show', ['only' => ['show']]);
+        $this->middleware('permission:order_shipment_issue_create', ['only' => ['store']]);
+        $this->middleware('permission:order_shipment_issue_update', ['only' => ['update']]);
+        $this->middleware('permission:order_shipment_issue_delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Retorna uma pi com base no rastreio
      *
@@ -27,36 +36,13 @@ class PiController extends Controller
      */
     public function show($id)
     {
-        $m = Rastreio::class;
-        if ($data = $m::find($id)) {
+        if ($data = Rastreio::find($id)) {
             return $this->showResponse(
                 $data->pi ? PiTransformer::show($data->pi) : $data->pi
             );
         }
 
         return $this->notFoundResponse();
-    }
-
-    /**
-     * Retorna uma lista de PI's pendentes de ação
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function pending()
-    {
-        $m = self::MODEL;
-
-        $list = $m::with(['rastreio', 'rastreio.pedido', 'rastreio.pedido.cliente', 'rastreio.pedido.endereco'])
-            ->join('pedido_rastreios', 'pedido_rastreios.id', '=', 'pedido_rastreio_pis.rastreio_id')
-            ->join('pedidos', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
-            ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
-            ->join('cliente_enderecos', 'cliente_enderecos.id', '=', 'pedidos.cliente_endereco_id')
-            ->whereNull('pedido_rastreio_pis.status')
-            ->orderBy('pedido_rastreio_pis.created_at', 'DESC');
-
-        $list = $this->handleRequest($list, ['pedido_rastreio_pis.*']);
-
-        return $this->listResponse(PiTransformer::pending($list));
     }
 
     /**

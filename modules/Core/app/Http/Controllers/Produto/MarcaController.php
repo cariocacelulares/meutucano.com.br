@@ -14,6 +14,15 @@ class MarcaController extends Controller
 
     const MODEL = Marca::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:brand_list', ['only' => ['index']]);
+        $this->middleware('permission:brand_show', ['only' => ['show']]);
+        $this->middleware('permission:brand_create', ['only' => ['store']]);
+        $this->middleware('permission:brand_update', ['only' => ['update']]);
+        $this->middleware('permission:brand_delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Lista marcas para a tabela
      *
@@ -21,8 +30,9 @@ class MarcaController extends Controller
      */
     public function tableList()
     {
-        $list = (self::MODEL)::orderBy('marcas.created_at', 'DESC');
+        $this->middleware('permission:brand_list');
 
+        $list = Marca::orderBy('marcas.created_at', 'DESC');
         $list = $this->handleRequest($list);
 
         return $this->listResponse($list);

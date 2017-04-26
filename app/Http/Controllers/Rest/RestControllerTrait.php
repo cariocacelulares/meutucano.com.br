@@ -95,7 +95,7 @@ trait RestControllerTrait
          * Pagination
          */
         return $m->paginate(
-            Input::get('per_page', 20),
+            Input::get('per_page', 10),
             Input::get('fields') ? json_decode(Input::get('fields'), true) : $fields
         );
     }

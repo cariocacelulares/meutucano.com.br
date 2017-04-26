@@ -67,8 +67,7 @@ class CepController extends Controller
     private function getByTucano($cep)
     {
         try {
-            $address = Endereco
-                ::where('cep', '=', $cep)
+            $address = Endereco::where('cep', '=', $cep)
                 ->orderBy('created_at', 'DESC')
                 ->first();
 

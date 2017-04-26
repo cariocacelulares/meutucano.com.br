@@ -30,11 +30,12 @@ class ProductImeiController extends Controller
      */
     public function listBySku($sku)
     {
+        $this->middleware('permission:product_list');
+
         try {
             $product = Produto::findOrFail($sku);
 
-            $productImeis = (self::MODEL)
-                ::with(['productStock', 'productStock.stock'])
+            $productImeis = ProductImei::with(['productStock', 'productStock.stock'])
                 ->join('product_stocks', 'product_imeis.product_stock_id', 'product_stocks.id')
                 ->leftJoin('pedido_produtos', 'product_imeis.id', 'pedido_produtos.product_imei_id')
                 ->leftJoin('pedidos', 'pedido_produtos.pedido_id', 'pedidos.id')
@@ -69,29 +70,6 @@ class ProductImeiController extends Controller
     }
 
     /**
-     * Atualiza um recurso
-     *
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function update($id)
-    {
-        try {
-            $data = (self::MODEL)::findOrFail($id);
-            $data->fill(Input::all());
-            $data->save();
-
-            return $this->showResponse($data);
-        } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
-
-            return $this->clientErrorResponse([
-                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
-            ]);
-        }
-    }
-
-    /**
      * Parse imeis and get each product info
      *
      * @return Response
@@ -112,14 +90,13 @@ class ProductImeiController extends Controller
                 }
 
                 if ($imei) {
-                    $imei = ProductImei
-                        ::with([
-                            'productStock',
-                            'productStock.stock',
-                            'productStock.product',
-                        ])
-                        ->where('imei', '=', $imei)
-                        ->first();
+                    $imei = ProductImei::with([
+                        'productStock',
+                        'productStock.stock',
+                        'productStock.product',
+                    ])
+                    ->where('imei', '=', $imei)
+                    ->first();
                 }
 
                 if ($imei) {
@@ -146,239 +123,5 @@ class ProductImeiController extends Controller
         return $this->listResponse([
             'products' => []
         ]);
-    }
-
-    /**
-     * Get revisions of a product imei
-     *
-     * @param  string $imei
-     * @return Reponse
-     */
-    public function history($imei)
-    {
-        $productImei = (self::MODEL)::where('imei', '=', $imei)->withTrashed()->first();
-
-        if ($productImei) {
-            try {
-                $actions      = [];
-                $deleteAction = null;
-
-                $issue           = $productImei->issue;
-                $defect          = $productImei->defect;
-                $removalProducts = $productImei->removalProducts;
-                $pedidoProdutos  = $productImei->pedidoProdutos;
-                $entryImeis      = $productImei->entryImeis;
-
-                $imeiCreated = null;
-                $firstStock  = false;
-                $revisions   = $productImei->revisionHistory;
-                foreach ($revisions as $revision) {
-                    if ($revision->key == 'created_at') {
-                        $imeiCreated = [
-                            'key'   => strtotime($revision->new_value),
-                            'value' => [
-                                'model' => 'ProductImei',
-                                'desc'  => 'Serial registrado',
-                                'date'  => dateConvert($revision->new_value),
-                                'user'  => $revision->user_id ? Usuario::find($revision->user_id)->name : null,
-                            ],
-                        ];
-                    } else if ($revision->key == 'deleted_at') {
-                        $actions[strtotime($revision->new_value ?: $revision->created_at)][] = [
-                            'model' => 'ProductImei',
-                            'desc'  => 'Serial excluido',
-                            'date'  => dateConvert($revision->new_value ?: $revision->created_at),
-                            'user'  => $revision->user_id ? Usuario::find($revision->user_id)->name : null,
-                        ];
-                    } else if ($revision->key == 'product_stock_id') {
-                        $oldStock = ProductStock::find($revision->old_value)->stock->title;
-                        $newStock = ProductStock::find($revision->new_value)->stock->title;
-
-                        if (!$firstStock) {
-                            $firstStock = $oldStock;
-                        }
-
-                        $actions[strtotime($revision->created_at)][] = [
-                            'model' => 'ProductImei',
-                            'desc'  => "Transferência do estoque '{$oldStock}' para o estoque '{$newStock}'",
-                            'date'  => dateConvert($revision->created_at),
-                            'user'  => $revision->user_id ? Usuario::find($revision->user_id)->name : null,
-                        ];
-                    }
-                }
-
-                if ($imeiCreated) {
-                    if ($firstStock) {
-                        $imeiCreated['value']['desc'] .= " no estoque '{$firstStock}'";
-                    }
-
-                    $actions[$imeiCreated['key']][] = $imeiCreated['value'];
-                }
-
-                if ($issue) {
-                    $actions[strtotime($issue->created_at)][] = [
-                        'model' => 'Issue',
-                        'desc'  => "Baixa de estoque<br/>Motivo: {$issue->reason} - {$issue->description}",
-                        'date'  => dateConvert($issue->created_at),
-                        'user'  => $issue->user_id ? Usuario::find($issue->user_id)->name : null,
-                    ];
-                }
-
-                if ($defect) {
-                    $userId = null;
-
-                    foreach ($defect->revisionHistory as $revision) {
-                        if ($revision->key == 'created_at') {
-                            $userId = $revision->user_id;
-                        }
-                    }
-
-                    $actions[strtotime($defect->created_at)][] = [
-                        'model' => 'Defect',
-                        'desc'  => "Defeito<br/>{$defect->description}",
-                        'date'  => dateConvert($defect->created_at),
-                        'user'  => $userId ? Usuario::find($userId)->name : null,
-                    ];
-
-                    unset($userId);
-                }
-
-                foreach ($removalProducts as $removalProduct) {
-                    $revisions = $removalProduct->revisionHistory;
-
-                    foreach ($revisions as $revision) {
-                        if ($revision->key == 'created_at') {
-                            $actions[strtotime($revision->new_value)][] = [
-                                'model' => 'Removal',
-                                'desc'  => "Registrado na retirada de estoque #{$removalProduct->stock_removal_id}",
-                                'date'  => dateConvert($revision->new_value),
-                                'user'  => $revision->user_id ? Usuario::find($revision->user_id)->name : null,
-                            ];
-                        } elseif ($revision->key == 'status') {
-                            $oldStatus = \Config('core.stock_removal_status')[$revision->old_value];
-                            $newStatus = \Config('core.stock_removal_status')[$revision->new_value];
-
-                            $actions[strtotime($revision->created_at)][] = [
-                                'model' => 'Removal',
-                                'desc'  => "Status na retirada de estoque #{$removalProduct->stock_removal_id} alterado de {$oldStatus} para {$newStatus}",
-                                'date'  => dateConvert($revision->created_at),
-                                'user'  => $revision->user_id ? Usuario::find($revision->user_id)->name : null,
-                            ];
-                        }
-                    }
-                }
-
-                foreach ($pedidoProdutos as $pedidoProduto) {
-                    $orderCreated = null;
-                    $revisions    = $pedidoProduto->revisionHistory;
-                    foreach ($revisions as $revision) {
-                        if ($revision->key == 'product_imei_id') {
-                            $orderCreated = [
-                                'key'   => strtotime($revision->created_at),
-                                'value' => [
-                                    'model' => 'Pedido',
-                                    'desc'  => "Anexado ao pedido {$pedidoProduto->pedido_id}",
-                                    'date'  => dateConvert($revision->created_at),
-                                    'user'  => $revision->user_id ? Usuario::find($revision->user_id)->name : null,
-                                ]
-                            ];
-                        }
-                    }
-
-                    $pedido      = Pedido::find($pedidoProduto->pedido_id);
-                    $revisions   = $pedido->revisionHistory;
-                    $firstStatus = false;
-                    foreach ($revisions as $revision) {
-                        if ($revision->key == 'status') {
-                            $oldStatus = \Config('core.pedido_status')[$revision->old_value];
-                            $newStatus = \Config('core.pedido_status')[$revision->new_value];
-
-                            if (!$firstStatus) {
-                                $firstStatus = $oldStatus;
-                            }
-
-                            $actions[strtotime($revision->created_at)][] = [
-                                'model' => 'Pedido',
-                                'desc'  => "Status do pedido {$revision->revisionable_id} alterado de {$oldStatus} para {$newStatus}",
-                                'date'  => dateConvert($revision->created_at),
-                                'user'  => $revision->user_id ? Usuario::find($revision->user_id)->name : null,
-                            ];
-                        }
-                    }
-
-                    if ($orderCreated) {
-                        if ($firstStatus) {
-                            $orderCreated['value']['desc'] .= " com o status {$firstStatus}";
-                        }
-
-                        $actions[$orderCreated['key']][] = $orderCreated['value'];
-                    }
-                }
-
-                $entryValue = null;
-                $entryDate  = null;
-                $entryId    = null;
-                foreach ($entryImeis as $entryImei) {
-                    $entryProduct = $entryImei->entryProduct;
-                    $entry        = $entryProduct->entry;
-
-                    if ($entry->confirmed_at) {
-                        $entryValue = $entryProduct->unitary_value;
-                        $entryDate  = dateConvert($entry->created_at);
-                        $entryId    = $entry->id;
-
-                        $actions[strtotime($entry->confirmed_at)][] = [
-                            'model' => 'Entry',
-                            'desc'  => "Serial confirmado em uma entrada de de estoque",
-                            'date'  => dateConvert($entry->confirmed_at),
-                            'user'  => $entry->user_id ? Usuario::find($entry->user_id)->name : null,
-                        ];
-                    } else {
-                        $actions[strtotime($entry->created_at)][] = [
-                            'model' => 'Entry',
-                            'desc'  => "Serial registrado em uma entrada de de estoque",
-                            'date'  => dateConvert($entry->created_at),
-                            'user'  => $entry->user_id ? Usuario::find($entry->user_id)->name : null,
-                        ];
-                    }
-                }
-
-                ksort($actions);
-
-                $history = [];
-                foreach ($actions as $list) {
-                    foreach ($list as $action) {
-                        $history[] = $action;
-                    }
-                }
-
-                $productStock = $productImei->productStock;
-
-                $info = [
-                    'sku'         => $productStock->product->sku,
-                    'title'       => $productStock->product->titulo,
-                    'ean'         => $productStock->product->ean,
-                    'ncm'         => $productStock->product->ncm,
-                    'value'       => $productStock->product->valor,
-                    'productCost' => $productStock->product->cost,
-                    'stock'       => $productStock->stock->title,
-                    'cost'        => $productImei->cost,
-                    'entry_value' => $entryValue,
-                    'entry_date'  => $entryDate,
-                    'entry_id'    => $entryId,
-                ];
-
-                return $this->showResponse([
-                    'info'    => $info,
-                    'history' => $history,
-                ]);
-            } catch (\Exception $exception) {
-                \Log::error(logMessage($exception, 'Erro ao consultar histórico de imei'));
-
-                return $this->clientErrorResponse('Erro ao consultar histórico de imei');
-            }
-        } else {
-            return $this->showResponse([]);
-        }
     }
 }

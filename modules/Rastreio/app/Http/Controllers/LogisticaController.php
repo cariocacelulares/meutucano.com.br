@@ -19,6 +19,15 @@ class LogisticaController extends Controller
 
     const MODEL = Logistica::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:order_shipment_logistic_list', ['only' => ['index']]);
+        $this->middleware('permission:order_shipment_logistic_show', ['only' => ['show']]);
+        $this->middleware('permission:order_shipment_logistic_create', ['only' => ['store']]);
+        $this->middleware('permission:order_shipment_logistic_update', ['only' => ['update']]);
+        $this->middleware('permission:order_shipment_logistic_delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Retorna uma pi com base no rastreio
      *
@@ -27,11 +36,9 @@ class LogisticaController extends Controller
      */
     public function show($id)
     {
-        $m = self::MODEL;
-
         if ($data = Rastreio::with(['pedido'])->where('id', '=', $id)->first()) {
             if ($data->logistica) {
-                $data = $m::with(['rastreio', 'rastreio.pedido'])->where('id', '=', $data->logistica->id)->first();
+                $data = Logistica::with(['rastreio', 'rastreio.pedido'])->where('id', '=', $data->logistica->id)->first();
 
                 if ($data) {
                     return $this->showResponse(LogisticaTransformer::show($data));

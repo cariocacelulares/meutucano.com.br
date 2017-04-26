@@ -16,7 +16,7 @@ class AuthTest extends TestCase
     */
     public function test__it_should_be_able_to_authenticate()
     {
-        $authData = ['username' => 'test', 'password' => 'test'];
+        $authData = ['email' => 'test@example.com', 'password' => 'test'];
 
         $usuario = CreateUsuario::create($authData);
 
@@ -35,7 +35,7 @@ class AuthTest extends TestCase
     public function test__it_should_return_error_when_credentials_are_wrong()
     {
         $this->json('POST', '/api/authenticate', [
-            'username' => 'test',
+            'email'    => 'test@example.com',
             'password' => 'test2'
         ])->seeJson([
             'error' => 'invalid_credentials'

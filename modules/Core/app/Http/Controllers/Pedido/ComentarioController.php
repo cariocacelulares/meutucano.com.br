@@ -17,13 +17,21 @@ class ComentarioController extends Controller
 
     const MODEL = Comentario::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:order_comment_list', ['only' => ['index']]);
+        $this->middleware('permission:order_comment_create', ['only' => ['store']]);
+        $this->middleware('permission:order_comment_delete', ['only' => ['destroy']]);
+    }
+
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function commentsFromOrder($pedido_id)
     {
-        $data = (self::MODEL)
-            ::where('pedido_id', $pedido_id)
+        $this->middleware('permission:order_comment_list');
+
+        $data = Comentario::where('pedido_id', $pedido_id)
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -38,7 +46,7 @@ class ComentarioController extends Controller
     {
         try {
             $user = getCurrentUserId();
-            $data = (self::MODEL)::create(array_merge(\Request::all(), ['usuario_id' => $user]));
+            $data = Comentario::create(array_merge(\Request::all(), ['usuario_id' => $user]));
 
             return $this->createdResponse($data);
         } catch (\Exception $exception) {

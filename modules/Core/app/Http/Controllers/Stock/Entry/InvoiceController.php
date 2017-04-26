@@ -28,7 +28,9 @@ class InvoiceController extends Controller
      */
     public function xml($id)
     {
-        $invoice = (self::MODEL)::findOrFail($id);
+        $this->middleware('permission:entry_show');
+
+        $invoice = Invoice::findOrFail($id);
 
         return \Invoice::xml($invoice->file);
     }
@@ -43,7 +45,9 @@ class InvoiceController extends Controller
      */
     public function danfe($id, $returnType = 'I', $path = false)
     {
-        $invoice = (self::MODEL)::findOrFail($id);
+        $this->middleware('permission:entry_show');
+
+        $invoice = Invoice::findOrFail($id);
 
         return \Invoice::danfe($invoice->file, $returnType, $path, true);
     }
@@ -55,6 +59,8 @@ class InvoiceController extends Controller
      */
     public function upload()
     {
+        $this->middleware('permission:entry_create');
+
         return $this->uploadOnce(Input::file('file'));
     }
 

@@ -45,11 +45,6 @@ class UpdateStock
             OrderProductCreated::class,
             '\Core\Events\Handlers\UpdateStock@onOrderProductCreated'
         );
-
-        /*$events->listen(
-            OrderCanceled::class,
-            '\Core\Events\Handlers\UpdateStock@onOrderCanceled'
-        );*/
     }
 
     /**

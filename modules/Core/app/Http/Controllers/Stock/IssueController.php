@@ -18,22 +18,32 @@ class IssueController extends Controller
 
     const MODEL = Issue::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:stock_issue_list', ['only' => ['index']]);
+        $this->middleware('permission:stock_issue_show', ['only' => ['show']]);
+        $this->middleware('permission:stock_issue_create', ['only' => ['store']]);
+        $this->middleware('permission:stock_issue_update', ['only' => ['update']]);
+        $this->middleware('permission:stock_issue_delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Lista para a tabela
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function tableList()
     {
-        $list = (self::MODEL)
-            ::join('product_imeis', 'product_imeis.id', 'stock_issues.product_imei_id')
-            ->with([
-                'user',
-                'productImei',
-                'productImei.productStock',
-                'productImei.productStock.stock',
-                'productImei.productStock.product',
-            ])
-            ->orderBy('created_at', 'DESC');
+        $this->middleware('permission:stock_issue_list');
+
+        $list = Issue::with([
+            'user',
+            'productImei',
+            'productImei.productStock',
+            'productImei.productStock.stock',
+            'productImei.productStock.product',
+        ])
+        ->join('product_imeis', 'product_imeis.id', 'stock_issues.product_imei_id')
+        ->orderBy('created_at', 'DESC');
 
         $list = $this->handleRequest($list);
 
@@ -74,7 +84,7 @@ class IssueController extends Controller
                 ]);
             }
 
-            $removal = (self::MODEL)::create($fields);
+            $removal = Issue::create($fields);
 
             return $this->createdResponse($removal);
         } catch (\Exception $exception) {

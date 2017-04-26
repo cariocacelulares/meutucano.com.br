@@ -1,23 +1,23 @@
 <?php namespace Core\Http\Controllers\Pedido;
 
-use Illuminate\Support\Facades\Config;
+use Core\Models\Pedido;
+use Core\Models\Cliente;
+use Core\Models\Produto;
+use Core\Models\Pedido\Nota;
+use Rastreio\Models\Rastreio;
+use Core\Models\Pedido\Imposto;
+use Core\Models\Cliente\Endereco;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Input;
-use App\Http\Controllers\Rest\RestControllerTrait;
-use App\Http\Controllers\Controller;
-use Core\Http\Controllers\Partials\Traits\Uploadable;
-use Core\Models\Pedido;
-use Core\Models\Pedido\Imposto;
-use Core\Models\Pedido\Nota;
-use Core\Models\Pedido\PedidoProduto;
-use Core\Models\Cliente;
-use Core\Models\Cliente\Endereco;
-use Core\Models\Produto;
 use Core\Models\Produto\ProductImei;
+use App\Http\Controllers\Controller;
 use Core\Models\Produto\ProductStock;
 use Core\Models\Stock\RemovalProduct;
-use Rastreio\Models\Rastreio;
+use Core\Models\Pedido\PedidoProduto;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Config;
+use App\Http\Controllers\Rest\RestControllerTrait;
+use Core\Http\Controllers\Partials\Traits\Uploadable;
 
 /**
  * Class UploadController
@@ -40,6 +40,8 @@ class UploadController extends Controller
      */
     public function upload()
     {
+        $this->middleware('permission:order_invoice_upload');
+
         return $this->uploadMultiple(Input::file('files'));
     }
 
@@ -376,7 +378,7 @@ class UploadController extends Controller
 
             return false;
         }
-        
+
         return $nota;
     }
 

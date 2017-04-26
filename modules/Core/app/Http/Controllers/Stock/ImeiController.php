@@ -20,6 +20,8 @@ class ImeiController extends Controller
      */
     public function generate()
     {
+        $this->middleware('permission:serial_generate');
+
         $listSize = Input::get('listSize', 24);
 
         $lastGeneratedImei = t('core.stock.last_generated_imei') ?: 0;

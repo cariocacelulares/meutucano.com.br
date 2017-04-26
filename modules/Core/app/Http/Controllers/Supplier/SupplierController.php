@@ -1,10 +1,10 @@
 <?php namespace Core\Http\Controllers\Supplier;
 
-use Illuminate\Support\Facades\Input;
-use App\Http\Controllers\Rest\RestControllerTrait;
-use App\Http\Controllers\Controller;
 use Core\Models\Supplier;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Input;
 use Core\Transformers\SupplierTransformer;
+use App\Http\Controllers\Rest\RestControllerTrait;
 
 /**
  * Class SupplierController
@@ -16,14 +16,24 @@ class SupplierController extends Controller
 
     const MODEL = Supplier::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:supplier_list', ['only' => ['index']]);
+        $this->middleware('permission:supplier_show', ['only' => ['show']]);
+        $this->middleware('permission:supplier_create', ['only' => ['store']]);
+        $this->middleware('permission:supplier_update', ['only' => ['update']]);
+        $this->middleware('permission:supplier_delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Lista para a tabela
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function tableList()
     {
-        $list = (self::MODEL)::orderBy('created_at', 'DESC');
+        $this->middleware('permission:supplier_list');
 
+        $list = Supplier::orderBy('created_at', 'DESC');
         $list = $this->handleRequest($list);
 
         return $this->listResponse(SupplierTransformer::tableList($list));
@@ -37,9 +47,10 @@ class SupplierController extends Controller
      */
     public function search($term)
     {
+        $this->middleware('permission:supplier_list');
+
         try {
-            $supplier = (self::MODEL)
-                ::where('cnpj', 'LIKE', "%{$term}%")
+            $supplier = Supplier::where('cnpj', 'LIKE', "%{$term}%")
                 ->orderBy('created_at', 'DESC')
                 ->first();
 

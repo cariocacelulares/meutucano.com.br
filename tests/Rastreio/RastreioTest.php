@@ -47,22 +47,6 @@ class RastreioTest extends TestCase
     }
 
     /**
-    * Testa se é possível atualizar o status do rastreio pelos correios
-    *
-    * @return void
-    * @vcr rastreio.refresh.yml
-    */
-    public function test__it_should_be_able_to_refresh_status()
-    {
-        $this->json('PUT', "/api/rastreios/refresh_status/{$this->rastreio->id}")
-            ->seeStatusCode(200);
-
-        $this->rastreio = $this->rastreio->fresh();
-
-        $this->assertEquals(4, $this->rastreio->status);
-    }
-
-    /**
     * Testa se gera uma imagem do rastreio ao chegar em um status final
     *
     * @return void

@@ -18,6 +18,8 @@ class InventarioController extends Controller
 
     public function relatorio($return_type = 'array')
     {
+        $this->middleware('permission:report_inventory');
+
         $this->list      = [];
         $productImeiList = [];
 

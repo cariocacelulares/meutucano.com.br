@@ -17,6 +17,13 @@ class MonitoradoController extends Controller
 
     const MODEL = Monitorado::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:order_shipment_monitor_list', ['only' => ['index']]);
+        $this->middleware('permission:order_shipment_monitor_create', ['only' => ['store']]);
+        $this->middleware('permission:order_shipment_monitor_delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Lista rastreios monitorados
      *
@@ -24,9 +31,9 @@ class MonitoradoController extends Controller
      */
     public function tableList()
     {
-        $m = self::MODEL;
+        $this->middleware('permission:order_shipment_monitor_list');
 
-        $list = $m::with(['rastreio', 'rastreio.pedido', 'rastreio.pedido.cliente', 'rastreio.pedido.endereco'])
+        $list = Monitorado::with(['rastreio', 'rastreio.pedido', 'rastreio.pedido.cliente', 'rastreio.pedido.endereco'])
             ->join('pedido_rastreios', 'pedido_rastreios.id', '=', 'pedido_rastreio_monitorados.rastreio_id')
             ->join('pedidos', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
             ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
@@ -43,9 +50,9 @@ class MonitoradoController extends Controller
 
     public function simpleList()
     {
-        $m = self::MODEL;
+        $this->middleware('permission:order_shipment_monitor_list');
 
-        $list = $m::with(['rastreio', 'rastreio.devolucao', 'rastreio.pi', 'rastreio.logistica'])
+        $list = Monitorado::with(['rastreio', 'rastreio.devolucao', 'rastreio.pi', 'rastreio.logistica'])
             ->join('pedido_rastreios', 'pedido_rastreios.id', '=', 'pedido_rastreio_monitorados.rastreio_id')
             ->where('usuario_id', '=', getCurrentUserId())
             ->orderBy('pedido_rastreios.created_at', 'DESC')
@@ -63,14 +70,12 @@ class MonitoradoController extends Controller
      */
     public function store()
     {
-        $m = self::MODEL;
-
         try {
             $rastreio_id = Input::get('rastreio_id');
             $usuario_id  = getCurrentUserId();
 
-            if (!$data = $m::where('rastreio_id', '=', $rastreio_id)->where('usuario_id', '=', $usuario_id)->first()) {
-                $data = $m::create([
+            if (!$data = Monitorado::where('rastreio_id', '=', $rastreio_id)->where('usuario_id', '=', $usuario_id)->first()) {
+                $data = Monitorado::create([
                     'rastreio_id' => $rastreio_id,
                     'usuario_id'  => $usuario_id
                 ]);
@@ -94,9 +99,9 @@ class MonitoradoController extends Controller
      */
     public function stop($rastreio_id)
     {
-        $m = self::MODEL;
+        $this->middleware('permission:order_shipment_monitor_delete');
 
-        if (!$data = $m::where('rastreio_id', '=', $rastreio_id)->where('usuario_id', '=', getCurrentUserId())->first()) {
+        if (!$data = Monitorado::where('rastreio_id', '=', $rastreio_id)->where('usuario_id', '=', getCurrentUserId())->first()) {
             return $this->notFoundResponse();
         }
 

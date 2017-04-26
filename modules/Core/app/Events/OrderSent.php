@@ -18,7 +18,5 @@ class OrderSent extends \Event
     {
         \Log::debug('Evento OrderSent disparado');
         $this->order = $order;
-
-        \Event::fire(new \Gamification\Events\TarefaRealizada('fature-um-pedido'));
     }
 }

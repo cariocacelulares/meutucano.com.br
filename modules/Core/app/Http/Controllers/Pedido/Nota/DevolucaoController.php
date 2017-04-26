@@ -26,17 +26,13 @@ class DevolucaoController extends Controller
 
     const MODEL = Devolucao::class;
 
-    /**
-     * Generate invoice XML
-     *
-     * @param $id
-     * @return Response
-     */
-    public function xml($id)
+    public function __construct()
     {
-        $invoice = (self::MODEL)::findOrFail($id);
-
-        return \Invoice::xml($invoice->arquivo);
+        $this->middleware('permission:order_invoice_list', ['only' => ['index']]);
+        $this->middleware('permission:order_invoice_show', ['only' => ['show']]);
+        $this->middleware('permission:order_invoice_create', ['only' => ['store']]);
+        $this->middleware('permission:order_invoice_update', ['only' => ['update']]);
+        $this->middleware('permission:order_invoice_delete', ['only' => ['destroy']]);
     }
 
     /**
@@ -49,7 +45,9 @@ class DevolucaoController extends Controller
      */
     public function danfe($id, $returnType = 'I', $path = false)
     {
-        $invoice = (self::MODEL)::findOrFail($id);
+        $this->middleware('permission:order_invoice_print');
+
+        $invoice = Devolucao::findOrFail($id);
 
         return \Invoice::danfe($invoice->arquivo, $returnType, $path);
     }
@@ -62,13 +60,14 @@ class DevolucaoController extends Controller
      */
     public function proceed($id)
     {
+        $this->middleware('permission:order_invoice_devolution');
+
         try {
             // Abre um transaction no banco de dados
             DB::beginTransaction();
             Log::debug('Transaction - begin');
 
-            $devolucao = (self::MODEL)
-                ::findOrFail($id);
+            $devolucao = Devolucao::findOrFail($id);
 
             $cancelOrder = Input::get('cancelOrder');
             if ($cancelOrder) {
@@ -153,6 +152,8 @@ class DevolucaoController extends Controller
      */
     public function upload()
     {
+        $this->middleware('permission:order_invoice_upload');
+
         return $this->uploadOnce(Input::file('file'));
     }
 

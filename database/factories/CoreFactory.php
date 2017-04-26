@@ -21,7 +21,7 @@ $factory->define(\Core\Models\Cliente::class, function () use ($faker) {
 */
 $factory->define(\Core\Models\Cliente\Endereco::class, function () use ($faker) {
     return [
-        'cep'         => $faker->randomNumber(8),
+        'cep'         => '89160216',
         'rua'         => $faker->streetName,
         'numero'      => $faker->buildingNumber,
         'complemento' => $faker->streetSuffix,

@@ -18,19 +18,26 @@ class DefectController extends Controller
 
     const MODEL = Defect::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:product_defect_list', ['only' => ['index']]);
+        $this->middleware('permission:product_defect_show', ['only' => ['show']]);
+        $this->middleware('permission:product_defect_create', ['only' => ['store']]);
+        $this->middleware('permission:product_defect_update', ['only' => ['update']]);
+        $this->middleware('permission:product_defect_return', ['only' => ['destroy']]);
+    }
+
     /**
      * Lista para a tabela
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function tableList()
     {
-        $list = (self::MODEL)
-            ::join('product_imeis', 'product_imeis.id', 'product_defects.product_imei_id')
+        $this->middleware('permission:product_defect_list');
+
+        $list = Defect::with(['productImei', 'product'])
+            ->join('product_imeis', 'product_imeis.id', 'product_defects.product_imei_id')
             ->join('produtos', 'produtos.sku', 'product_defects.product_sku')
-            ->with([
-                'productImei',
-                'product',
-            ])
             ->orderBy('created_at', 'DESC');
 
         $list = $this->handleRequest($list);
@@ -58,13 +65,10 @@ class DefectController extends Controller
                 ]);
             }
 
-            $defect = (self::MODEL)::create(array_merge(
-                $data,
-                [
-                    'product_imei_id' => $productImei->id,
-                    'product_sku'     => $productImei->productStock->product_sku,
-                ]
-            ));
+            $defect = Defect::create(array_merge($data, [
+                'product_imei_id' => $productImei->id,
+                'product_sku'     => $productImei->productStock->product_sku,
+            ]));
 
             return $this->createdResponse($defect);
         } catch (\Exception $exception) {
@@ -85,7 +89,7 @@ class DefectController extends Controller
     public function update($id)
     {
         try {
-            $data = (self::MODEL)::findOrFail($id);
+            $data = Defect::findOrFail($id);
             $data->fill(Input::all());
             $data->save();
 
@@ -108,9 +112,7 @@ class DefectController extends Controller
     public function show($id)
     {
         try {
-            $defect = (self::MODEL)
-                ::with('productImei')
-                ->findOrFail($id);
+            $defect = Defect::with('productImei')->findOrFail($id);
 
             return $this->showResponse($defect);
         } catch (\Exception $exception) {

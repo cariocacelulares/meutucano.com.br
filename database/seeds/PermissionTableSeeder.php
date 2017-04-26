@@ -13,6 +13,14 @@ class PermissionTableSeeder extends Seeder
                 'display_name' => 'Ver dados de gráficos e faturamento',
             ],
             [
+                'name' => 'report_icms',
+                'display_name' => 'Relatório de ICMS',
+            ],
+            [
+                'name' => 'report_inventory',
+                'display_name' => 'Relatório de inventário',
+            ],
+            [
                 'name' => 'order_list',
                 'display_name' => 'Listar pedidos',
             ],
@@ -35,6 +43,14 @@ class PermissionTableSeeder extends Seeder
             [
                 'name' => 'order_cancel',
                 'display_name' => 'Cancelar pedido',
+            ],
+            [
+                'name' => 'order_prioritize',
+                'display_name' => 'Dar prioridade no faturamento do pedido',
+            ],
+            [
+                'name' => 'order_hold',
+                'display_name' => 'Segurar faturamento do pedido',
             ],
             [
                 'name' => 'order_comment_list',
@@ -81,6 +97,10 @@ class PermissionTableSeeder extends Seeder
                 'display_name' => 'Criar/importar devoluções de notas fiscais',
             ],
             [
+                'name' => 'order_invoice_upload',
+                'display_name' => 'Realizar de notas para pedidos',
+            ],
+            [
                 'name' => 'order_shipment_list',
                 'display_name' => 'Listar rastreios',
             ],
@@ -95,6 +115,10 @@ class PermissionTableSeeder extends Seeder
             [
                 'name' => 'order_shipment_print',
                 'display_name' => 'Imprimir etiqueta de rastreio',
+            ],
+            [
+                'name' => 'order_shipment_image',
+                'display_name' => 'Gerar imagem da tela do rastreio manualmente',
             ],
             [
                 'name' => 'order_shipment_important_list',
@@ -253,6 +277,26 @@ class PermissionTableSeeder extends Seeder
                 'display_name' => 'Alterar SKU do produto',
             ],
             [
+                'name' => 'product_depot_list',
+                'display_name' => 'Listar depósitos de estoque do produto',
+            ],
+            [
+                'name' => 'product_depot_show',
+                'display_name' => 'Visualizar detalhes do depósito do produto',
+            ],
+            [
+                'name' => 'product_depot_create',
+                'display_name' => 'Adicionar depósito de estoque ao produto',
+            ],
+            [
+                'name' => 'product_depot_update',
+                'display_name' => 'Atualizar depósito de estoque do produto',
+            ],
+            [
+                'name' => 'product_depot_delete',
+                'display_name' => 'Remover depósito de estoque do produto',
+            ],
+            [
                 'name' => 'depot_list',
                 'display_name' => 'Listar depósitos de estoque',
             ],
@@ -275,6 +319,26 @@ class PermissionTableSeeder extends Seeder
             [
                 'name' => 'depot_transfer',
                 'display_name' => 'Transferir estoque do depósito',
+            ],
+            [
+                'name' => 'stock_issue_list',
+                'display_name' => 'Listar todas baixas manuais',
+            ],
+            [
+                'name' => 'stock_issue_list_mine',
+                'display_name' => 'Listar baixas manuais do usuário',
+            ],
+            [
+                'name' => 'stock_issue_create',
+                'display_name' => 'Criar baixa manual',
+            ],
+            [
+                'name' => 'stock_issue_update',
+                'display_name' => 'Alterar baixa manual',
+            ],
+            [
+                'name' => 'stock_issue_return',
+                'display_name' => 'Retornar baixa manual ao estoque',
             ],
             [
                 'name' => 'withdraw_list',

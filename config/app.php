@@ -44,13 +44,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
-        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-        Barryvdh\Debugbar\ServiceProvider::class,
         Laracasts\Generators\GeneratorsServiceProvider::class,
         Zizaco\Entrust\EntrustServiceProvider::class,
         Spatie\Browsershot\BrowsershotServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        Vinelab\Cdn\CdnServiceProvider::class,
         Jenssegers\Mongodb\MongodbServiceProvider::class,
         Nwidart\Modules\LaravelModulesServiceProvider::class,
         Spatie\Backup\BackupServiceProvider::class,
@@ -97,8 +94,6 @@ return [
 
         'JWTAuth'      => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory'   => Tymon\JWTAuth\Facades\JWTFactory::class,
-
-        'Debugbar'     => Barryvdh\Debugbar\Facade::class,
 
         'Entrust'      => Zizaco\Entrust\EntrustFacade::class,
 

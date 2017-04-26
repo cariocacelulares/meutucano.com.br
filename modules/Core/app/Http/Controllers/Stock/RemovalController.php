@@ -20,15 +20,24 @@ class RemovalController extends Controller
 
     const MODEL = Removal::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:withdraw_list', ['only' => ['index']]);
+        $this->middleware('permission:withdraw_show', ['only' => ['show']]);
+        $this->middleware('permission:withdraw_create', ['only' => ['store']]);
+        $this->middleware('permission:withdraw_update', ['only' => ['update']]);
+        $this->middleware('permission:withdraw_delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Lista para a tabela
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function tableList()
     {
-        $list = (self::MODEL)
-            ::orderBy('created_at', 'DESC');
+        $this->middleware('permission:withdraw_list');
 
+        $list = Removal::orderBy('created_at', 'DESC');
         $list = $this->handleRequest($list);
 
         return $this->listResponse(StockRemovalTransformer::tableList($list));
@@ -43,8 +52,7 @@ class RemovalController extends Controller
     public function store(Request $request)
     {
         try {
-            $openRemoval = (self::MODEL)
-                ::where('user_id', '=', Input::get('user_id'))
+            $openRemoval = Removal::where('user_id', '=', Input::get('user_id'))
                 ->whereNull('closed_at')
                 ->where('is_continuous', '=', false)
                 ->first();
@@ -55,8 +63,7 @@ class RemovalController extends Controller
                 ]);
             }
 
-            $removal = (self::MODEL)
-                ::create(Input::except('removal_products'));
+            $removal = Removal::create(Input::except('removal_products'));
 
             $removalProducts = [];
             foreach (Input::get('removal_products') as $product) {
@@ -88,7 +95,7 @@ class RemovalController extends Controller
     public function update($id)
     {
         try {
-            $removal = (self::MODEL)::findOrFail($id);
+            $removal = Removal::findOrFail($id);
             $removal->fill(Input::except('removal_products'));
             $removal->save();
 
@@ -122,17 +129,15 @@ class RemovalController extends Controller
     public function show($id)
     {
         try {
-            $removal = (self::MODEL)
-                ::with([
-                    'removalProducts',
-                    'removalProducts.productImei',
-                    'removalProducts.productStock',
-                    'removalProducts.productStock.stock',
-                    'removalProducts.productStock.product',
-                    'removalProducts.productStock.product.productStocks',
-                    'removalProducts.productStock.product.productStocks.stock',
-                ])
-                ->findOrFail($id);
+            $removal = Removal::with([
+                'removalProducts',
+                'removalProducts.productImei',
+                'removalProducts.productStock',
+                'removalProducts.productStock.stock',
+                'removalProducts.productStock.product',
+                'removalProducts.productStock.product.productStocks',
+                'removalProducts.productStock.product.productStocks.stock',
+            ])->findOrFail($id);
 
             return $this->showResponse(StockRemovalTransformer::show($removal));
         } catch (\Exception $exception) {
@@ -152,7 +157,9 @@ class RemovalController extends Controller
      */
     public function close($id)
     {
-        $stockRemoval = (self::MODEL)::findOrFail($id);
+        $this->middleware('permission:withdraw_close');
+
+        $stockRemoval = Removal::findOrFail($id);
 
         $openProducts = $stockRemoval->removalProducts->whereIn('status', [0, 1]);
 

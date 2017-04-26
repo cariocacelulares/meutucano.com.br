@@ -23,16 +23,27 @@ class ProductStockController extends Controller
 
     const MODEL = ProductStock::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:product_depot_list', ['only' => ['index']]);
+        $this->middleware('permission:product_depot_show', ['only' => ['show']]);
+        $this->middleware('permission:product_depot_create', ['only' => ['store']]);
+        $this->middleware('permission:product_depot_update', ['only' => ['update']]);
+        $this->middleware('permission:product_depot_delete', ['only' => ['destroy']]);
+    }
+
     /**
-     * Returns a list of ProductStock filtered by sku
+     * Update info from ProductStock
      *
      * @return Response
      */
     public function refresh()
     {
+        $this->middleware('permission:product_depot_update');
+
         try {
             foreach (Input::all() as $productStockData) {
-                $productStock = (self::MODEL)::find($productStockData['id']);
+                $productStock = ProductStock::find($productStockData['id']);
 
                 if ($productStock) {
                     if ($productStockData['serial_enabled'] !== $productStock->serial_enabled) {
@@ -71,9 +82,10 @@ class ProductStockController extends Controller
      */
     public function listBySku($sku)
     {
+        $this->middleware('permission:product_depot_list');
+
         try {
-            $productStocks = (self::MODEL)
-                ::with('stock')
+            $productStocks = ProductStock::with('stock')
                 ->join('stocks', 'stocks.slug', 'product_stocks.stock_slug')
                 ->where('product_sku', '=', $sku)
                 ->orderBy('stocks.priority', 'ASC')
@@ -95,9 +107,10 @@ class ProductStockController extends Controller
      */
     public function listBySlug($slug)
     {
+        $this->middleware('permission:product_depot_list');
+
         try {
-            $productStocks = (self::MODEL)
-                ::with(['product'])
+            $productStocks = ProductStock::with('product')
                 ->join('produtos', 'produtos.sku', 'product_stocks.product_sku')
                 ->where('stock_slug', '=', $slug)
                 ->orderBy('quantity', 'DESC');
@@ -121,7 +134,7 @@ class ProductStockController extends Controller
     public function update($id)
     {
         try {
-            $productStock = (self::MODEL)::findOrFail($id);
+            $productStock = ProductStock::findOrFail($id);
 
             $data = Input::all();
 
@@ -153,12 +166,13 @@ class ProductStockController extends Controller
      */
     public function addOptions($sku)
     {
+        $this->middleware('permission:product_depot_list');
+
         $product = Produto::findOrFail($sku);
 
-        $options = Stock
-            ::whereDoesntHave('productStocks', function($query) use ($sku) {
-                $query->where('product_sku', '=', $sku);
-            })->get();
+        $options = Stock::whereDoesntHave('productStocks', function($query) use ($sku) {
+            $query->where('product_sku', '=', $sku);
+        })->get();
 
         return $this->listResponse($options);
     }
@@ -171,10 +185,11 @@ class ProductStockController extends Controller
      */
     public function transferOptions($id)
     {
+        $this->middleware('permission:product_depot_list');
+
         $productStock = ProductStock::findOrFail($id);
 
-        $options = ProductStock
-            ::with('stock')
+        $options = ProductStock::with('stock')
             ->where('serial_enabled', '=', $productStock->serial_enabled)
             ->where('product_sku', '=', $productStock->product_sku)
             ->where('id', '!=', $productStock->id)
@@ -193,6 +208,8 @@ class ProductStockController extends Controller
      */
     private function transferQty(ProductStock $from, ProductStock $to, $qty)
     {
+        $this->middleware('permission:depot_transfer');
+
         if (!$qty) {
             return $this->validationFailResponse([
                 'Nenhuma quantidade foi informada.'
@@ -252,6 +269,8 @@ class ProductStockController extends Controller
      */
     private function transferImeis(ProductStock $from, ProductStock $to, array $imeis)
     {
+        $this->middleware('permission:depot_transfer');
+
         if (!$imeis || empty($imeis)) {
             return $this->validationFailResponse([
                 'Nenhum serial foi informado ou são inválidos.'
@@ -319,6 +338,8 @@ class ProductStockController extends Controller
      */
     public function transfer()
     {
+        $this->middleware('permission:depot_transfer');
+
         $from  = Input::get('from');
         $to    = Input::get('to');
         $qty   = Input::get('qty');
@@ -360,9 +381,7 @@ class ProductStockController extends Controller
         try {
             $productStock = ProductStock::findOrFail($id);
 
-            $productImei = ProductImei
-                ::where('imei', '=', $imei)
-                ->first();
+            $productImei = ProductImei::where('imei', '=', $imei)->first();
 
             if (!$productImei) {
                 return $this->listResponse([
@@ -380,8 +399,7 @@ class ProductStockController extends Controller
                 ]);
             }
 
-            $removalProduct = RemovalProduct
-                ::where('product_imei_id', '=', $productImei->id)
+            $removalProduct = RemovalProduct::where('product_imei_id', '=', $productImei->id)
                 ->whereNotIn('status', [2, 3])
                 ->first();
 
@@ -393,8 +411,7 @@ class ProductStockController extends Controller
                 ]);
             }
 
-            $order = Pedido
-                ::join('pedido_produtos', 'pedido_produtos.pedido_id', 'pedidos.id')
+            $order = Pedido::join('pedido_produtos', 'pedido_produtos.pedido_id', 'pedidos.id')
                 ->where('pedido_produtos.product_imei_id', '=', $productImei->id)
                 ->whereIn('pedidos.status', [2, 3])
                 ->orderBy('pedidos.created_at', 'DESC')

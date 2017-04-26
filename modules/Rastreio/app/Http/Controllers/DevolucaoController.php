@@ -20,6 +20,15 @@ class DevolucaoController extends Controller
 
     const MODEL = Devolucao::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:order_shipment_devolution_list', ['only' => ['index']]);
+        $this->middleware('permission:order_shipment_devolution_show', ['only' => ['show']]);
+        $this->middleware('permission:order_shipment_devolution_create', ['only' => ['store']]);
+        $this->middleware('permission:order_shipment_devolution_update', ['only' => ['update']]);
+        $this->middleware('permission:order_shipment_devolution_delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Retorna uma devolução com base no rastreio
      *
@@ -28,11 +37,9 @@ class DevolucaoController extends Controller
      */
     public function show($id)
     {
-        $m = self::MODEL;
-
         if ($data = Rastreio::with(['pedido'])->where('id', '=', $id)->first()) {
             if ($data->devolucao) {
-                $data = $m::with(['rastreio', 'rastreio.pedido'])->where('id', '=', $data->devolucao->id)->first();
+                $data = Devolucao::with(['rastreio', 'rastreio.pedido'])->where('id', '=', $data->devolucao->id)->first();
 
                 if ($data) {
                     return $this->showResponse(DevolucaoTransformer::show($data));
@@ -49,28 +56,6 @@ class DevolucaoController extends Controller
     }
 
     /**
-     * Retorna as devoluções sem ação
-     *
-     * @return array
-     */
-    public function pending()
-    {
-        $m = self::MODEL;
-
-        $lista = $m::with(['rastreio', 'rastreio.pedido', 'rastreio.pedido.cliente', 'rastreio.pedido.endereco'])
-            ->join('pedido_rastreios', 'pedido_rastreios.id', '=', 'pedido_rastreio_devolucoes.rastreio_id')
-            ->join('pedidos', 'pedidos.id', '=', 'pedido_rastreios.pedido_id')
-            ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
-            ->join('cliente_enderecos', 'cliente_enderecos.id', '=', 'pedidos.cliente_endereco_id')
-            ->whereNull('pedido_rastreio_devolucoes.acao')
-            ->orderBy('pedido_rastreio_devolucoes.created_at', 'DESC');
-
-        $lista = $this->handleRequest($lista, ['pedido_rastreio_devolucoes.*']);
-
-        return $this->listResponse(DevolucaoTransformer::pending($lista));
-    }
-
-    /**
      * Cria novo recurso
      *
      * @param Request $request
@@ -79,7 +64,7 @@ class DevolucaoController extends Controller
     public function store(Request $request)
     {
         try {
-            $devolucao = (self::MODEL)::create(Input::except(['protocolo', 'imagem']));
+            $devolucao = Devolucao::create(Input::except(['protocolo', 'imagem']));
 
             $rastreio = Rastreio::find(Input::get('rastreio_id'));
             $rastreio->status = 5;
@@ -106,7 +91,7 @@ class DevolucaoController extends Controller
     public function update($id, Request $request)
     {
         try {
-            $devolucao = (self::MODEL)::findOrFail($id);
+            $devolucao = Devolucao::findOrFail($id);
             $devolucao->fill(Input::except(['protocolo']));
             $devolucao->save();
 

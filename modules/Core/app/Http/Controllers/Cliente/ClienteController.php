@@ -18,6 +18,15 @@ class ClienteController extends Controller
 
     const MODEL = Cliente::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:customer_list', ['only' => ['index']]);
+        $this->middleware('permission:customer_show', ['only' => ['show']]);
+        $this->middleware('permission:customer_create', ['only' => ['store']]);
+        $this->middleware('permission:customer_update', ['only' => ['update']]);
+        $this->middleware('permission:customer_delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Lista pedidos para a tabela
      *
@@ -25,7 +34,9 @@ class ClienteController extends Controller
      */
     public function tableList()
     {
-        $list = (self::MODEL)::orderBy('clientes.created_at', 'DESC');
+        $this->middleware('permission:customer_list');
+
+        $list = Cliente::orderBy('clientes.created_at', 'DESC');
         $list = $this->handleRequest($list);
 
         return $this->listResponse(ClientTransformer::tableList($list));
@@ -37,7 +48,9 @@ class ClienteController extends Controller
      */
     public function detail($id)
     {
-        $data = (self::MODEL)::with(['pedidos', 'enderecos'])->find($id);
+        $this->middleware('permission:customer_show');
+
+        $data = Cliente::with(['pedidos', 'enderecos'])->find($id);
 
         if ($data) {
             return $this->showResponse(ClientTransformer::show($data));
@@ -67,7 +80,7 @@ class ClienteController extends Controller
                 }
             }
 
-            $cliente = (self::MODEL)::create($data);
+            $cliente = Cliente::create($data);
 
             $enderecos = [];
             foreach ((Input::get('enderecos') ?: []) as $endereco) {
@@ -76,7 +89,7 @@ class ClienteController extends Controller
 
             $cliente->enderecos()->saveMany($enderecos);
 
-            $cliente = (self::MODEL)
+            $cliente = Cliente
                 ::where('id', '=', $cliente->id)
                 ->with('enderecos')
                 ->first();
@@ -97,7 +110,7 @@ class ClienteController extends Controller
      */
     public function update($id, Request $request)
     {
-        if (!$data = (self::MODEL)::find($id)) {
+        if (!$data = Cliente::find($id)) {
             return $this->notFoundResponse();
         }
 
@@ -127,29 +140,6 @@ class ClienteController extends Controller
     }
 
     /**
-     * Altera o e-mail do cliente
-     *
-     * @param  int $cliente_id
-     * @return  \Symfony\Component\HttpFoundation\Response
-     */
-    public function changeEmail($cliente_id)
-    {
-        try {
-            $email = \Request::get('email');
-
-            $data = (self::MODEL)::find($cliente_id);
-            $data->email = $email;
-            $data->save();
-
-            return $this->showResponse($data);
-        } catch (\Exception $exception) {
-            return $this->clientErrorResponse([
-                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
-            ]);
-        }
-    }
-
-    /**
      * Search clients by taxvat and name based on term
      *
      * @param  string $term
@@ -158,8 +148,7 @@ class ClienteController extends Controller
     public function search($term)
     {
         try {
-            $list = (self::MODEL)
-                ::with('enderecos')
+            $list = Cliente::with('enderecos')
                 ->where('nome', 'LIKE', "%{$term}%")
                 ->orWhere('taxvat', 'LIKE', "%{$term}%")
                 ->get();

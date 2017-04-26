@@ -23,6 +23,8 @@ class ICMSController extends Controller
      */
     public function icms()
     {
+        $this->middleware('permission:report_icms');
+
         $notas = Nota::with(['pedido', 'pedido.imposto', 'pedido.endereco', 'pedido.produtos', 'pedido.produtos.produto'])
             ->where(DB::raw('MONTH(pedido_notas.data)'), '=', date("m", strtotime("-1 month")))
             ->where(DB::raw('YEAR(pedido_notas.data)'), '=', date("Y", strtotime("-1 month")))

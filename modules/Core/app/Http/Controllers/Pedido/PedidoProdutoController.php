@@ -16,6 +16,13 @@ class PedidoProdutoController extends Controller
 
     const MODEL = PedidoProduto::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:order_update', [
+            'only' => ['store', 'update', 'destroy']
+        ]);
+    }
+
     /**
      * Lists pending orders by sku
      *
@@ -24,8 +31,7 @@ class PedidoProdutoController extends Controller
      */
     public function listBySku($sku)
     {
-        $orderProducts = (self::MODEL)
-            ::with(['pedido'])
+        $orderProducts = PedidoProduto::with(['pedido'])
             ->join('pedidos', 'pedidos.id', '=', 'pedido_produtos.pedido_id')
             ->where('produto_sku', '=', $sku)
             ->whereIn('pedidos.status', [0,1])
@@ -43,7 +49,7 @@ class PedidoProdutoController extends Controller
      */
     public function show($id)
     {
-        $data = (self::MODEL)::with('produto')->where('id', '=', $id)->first();
+        $data = PedidoProduto::with('produto')->where('id', '=', $id)->first();
 
         if ($data) {
             return $this->showResponse($data);
@@ -61,12 +67,12 @@ class PedidoProdutoController extends Controller
     public function update($id)
     {
         try {
-            $data = (self::MODEL)::findOrFail($id);
+            $data = PedidoProduto::findOrFail($id);
 
             $data->fill(Input::all());
             $data->save();
 
-            $data = (self::MODEL)::with('produto')->where('id', '=', $data->id)->first();
+            $data = PedidoProduto::with('produto')->where('id', '=', $data->id)->first();
 
             return $this->showResponse($data);
         } catch (\Exception $exception) {

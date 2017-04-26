@@ -17,6 +17,15 @@ class EnderecoController extends Controller
 
     const MODEL = Endereco::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:customer_address_list', ['only' => ['index']]);
+        $this->middleware('permission:customer_address_show', ['only' => ['show']]);
+        $this->middleware('permission:customer_address_create', ['only' => ['store']]);
+        $this->middleware('permission:customer_address_update', ['only' => ['update']]);
+        $this->middleware('permission:customer_address_delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Cria novo recurso
      *
@@ -26,7 +35,7 @@ class EnderecoController extends Controller
     public function store(Request $request)
     {
         try {
-            $data = (self::MODEL)::create(Input::all());
+            $data = Endereco::create(Input::all());
 
             return $this->createdResponse($data);
         } catch (\Exception $exception) {
@@ -47,7 +56,7 @@ class EnderecoController extends Controller
     public function update($id, Request $request)
     {
         try {
-            $endereco = (self::MODEL)::findOrFail($id);
+            $endereco = Endereco::findOrFail($id);
             $endereco->fill(Input::all());
             $endereco->save();
 
@@ -69,9 +78,10 @@ class EnderecoController extends Controller
      */
     public function byClient($clientId)
     {
+        $this->middleware('permission:customer_address_list');
+
         try {
-            $enderecos = (self::MODEL)
-                ::where('cliente_id', '=', $clientId)
+            $enderecos = Endereco::where('cliente_id', '=', $clientId)
                 ->get();
 
             return $this->listResponse($enderecos);

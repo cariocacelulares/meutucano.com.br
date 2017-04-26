@@ -18,13 +18,21 @@ class LigacaoController extends Controller
 
     const MODEL = Ligacao::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:order_call_list', ['only' => ['index']]);
+        $this->middleware('permission:order_call_create', ['only' => ['store']]);
+        $this->middleware('permission:order_call_delete', ['only' => ['destroy']]);
+    }
+
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function ligacoesFromOrder($pedido_id)
     {
-        $data = (self::MODEL)
-            ::where('pedido_id', $pedido_id)
+        $this->middleware('permission:order_call_list');
+
+        $data = Ligacao::where('pedido_id', $pedido_id)
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -37,8 +45,6 @@ class LigacaoController extends Controller
      */
     public function store(Request $request)
     {
-        $m = self::MODEL;
-
         try {
             $path    = 'ligacoes';
             $arquivo = Input::file('arquivo');
@@ -53,7 +59,7 @@ class LigacaoController extends Controller
                 }
             }
 
-            $data = $m::create(array_merge(
+            $data = Ligacao::create(array_merge(
                 \Request::all(), [
                     'usuario_id' => $user,
                     'arquivo'    => $path . '/' . $nomeArquivo
@@ -79,7 +85,7 @@ class LigacaoController extends Controller
     public function destroy($id)
     {
         try {
-            $data    = (self::MODEL)::findOrFail($id);
+            $data    = Ligacao::findOrFail($id);
             $arquivo = storage_path('app/public' . str_replace('storage/', '', $data->arquivo));
 
             File::delete($arquivo);

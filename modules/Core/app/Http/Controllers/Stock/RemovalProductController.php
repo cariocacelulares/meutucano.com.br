@@ -27,7 +27,7 @@ class RemovalProductController extends Controller
      */
     public function changeStatus($id)
     {
-        $removalProduct = (self::MODEL)::findOrFail($id);
+        $removalProduct = RemovalProduct::findOrFail($id);
 
         $status = (int) Input::get('status');
         if ($status !== null && isset(\Config::get('core.stock_removal_status')[$status])) {
@@ -35,16 +35,14 @@ class RemovalProductController extends Controller
             $removalProduct->save();
         }
 
-        $removalProduct = $removalProduct
-            ->with([
-                'productImei',
-                'productStock',
-                'productStock.stock',
-                'productStock.product',
-                'productStock.product.productStocks',
-                'productStock.product.productStocks.stock',
-            ])
-            ->find($removalProduct->id);
+        $removalProduct = $removalProduct->with([
+            'productImei',
+            'productStock',
+            'productStock.stock',
+            'productStock.product',
+            'productStock.product.productStocks',
+            'productStock.product.productStocks.stock',
+        ])->find($removalProduct->id);
 
         return $this->showResponse(StockRemovalProductTransformer::show($removalProduct));
     }
@@ -70,8 +68,7 @@ class RemovalProductController extends Controller
                 ]);
             }
 
-            $removalProduct = RemovalProduct
-                ::where('product_imei_id', '=', $productImei->id)
+            $removalProduct = RemovalProduct::where('product_imei_id', '=', $productImei->id)
                 ->whereNotIn('status', [2, 3])
                 ->first();
 
@@ -83,8 +80,7 @@ class RemovalProductController extends Controller
                 ]);
             }
 
-            $order = Pedido
-                ::join('pedido_produtos', 'pedido_produtos.pedido_id', 'pedidos.id')
+            $order = Pedido::join('pedido_produtos', 'pedido_produtos.pedido_id', 'pedidos.id')
                 ->where('pedido_produtos.product_imei_id', '=', $productImei->id)
                 ->whereIn('pedidos.status', [2, 3])
                 ->orderBy('pedidos.created_at', 'DESC')
@@ -136,8 +132,7 @@ class RemovalProductController extends Controller
                 ]);
             }
 
-            $removalProduct = RemovalProduct
-                ::where('stock_removal_id', '=', $stockRemovalId)
+            $removalProduct = RemovalProduct::where('stock_removal_id', '=', $stockRemovalId)
                 ->where('product_imei_id', '=', $productImei->id)
                 ->where('status', '!=', 3)
                 ->first();
@@ -178,8 +173,6 @@ class RemovalProductController extends Controller
         $stockRemoval = Removal::findOrFail($stockRemovalId);
         $itens        = Input::get('itens');
 
-        dd($itens);
-
         if (($status == 1 && $stockRemoval->user_id == getCurrentUserId()) || $status != 1) {
             try {
                 if ($itens) {
@@ -187,8 +180,7 @@ class RemovalProductController extends Controller
                         $itens = [$itens];
                     }
 
-                    $update = (self::MODEL)
-                        ::whereIn('id', $itens)
+                    $update = RemovalProduct::whereIn('id', $itens)
                         ->where('stock_removal_id', '=', $stockRemoval->id)
                         ->update([
                             'status' => $status
@@ -216,6 +208,8 @@ class RemovalProductController extends Controller
      */
     public function confirm($stockRemovalId)
     {
+        $this->middleware('permission:withdraw_confirm');
+
         return $this->updateStatus($stockRemovalId, 1);
     }
 
@@ -227,6 +221,8 @@ class RemovalProductController extends Controller
      */
     public function return($stockRemovalId)
     {
+        $this->middleware('permission:withdraw_return');
+
         return $this->updateStatus($stockRemovalId, 3);
     }
 }
