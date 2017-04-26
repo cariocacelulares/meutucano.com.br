@@ -1,4 +1,4 @@
-<?php namespace App\Models\Usuario;
+<?php namespace App\Models\User;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -6,11 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-/**
- * Class Usuario
- * @package App\Models\Usuario
- */
-class Usuario extends Authenticatable
+class User extends Authenticatable
 {
     use EntrustUserTrait, Notifiable;
 
@@ -21,7 +17,6 @@ class Usuario extends Authenticatable
         'id',
         'name',
         'email',
-        'username',
         'password',
         'remember_token',
     ];
@@ -32,14 +27,6 @@ class Usuario extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'perms'
-    ];
-
-    /**
-     * @return array
-     */
-    protected $appends = [
-        'permissions'
     ];
 
     /**

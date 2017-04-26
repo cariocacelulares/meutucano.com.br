@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'role' => \App\Models\Usuario\Role::class,
+    'role' => \App\Models\User\Role::class,
     'roles_table' => 'roles',
     'role_user_table' => 'role_user',
 
-    'permission' => \App\Models\Usuario\Permission::class,
+    'permission' => \App\Models\User\Permission::class,
     'permissions_table' => 'permissions',
     'permission_role_table' => 'permission_role',
     'permission_user_table' => 'permission_user',

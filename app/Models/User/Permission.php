@@ -1,4 +1,4 @@
-<?php namespace App\Models\Usuario;
+<?php namespace App\Models\User;
 
 use Carbon\Carbon;
 use Zizaco\Entrust\EntrustPermission;

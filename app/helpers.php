@@ -312,3 +312,10 @@ if (!function_exists('parseMarketplaceId')) {
         return $pedidoId;
     }
 }
+
+if (!function_exists('api')) {
+    function api($url, $controller)
+    {
+        \Route::resource($url, $controller, ['except' => ['create', 'edit']]);
+    }
+}

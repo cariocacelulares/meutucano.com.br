@@ -2,13 +2,9 @@
 
 use Core\Models\Pedido;
 use Sofa\Eloquence\Eloquence;
-use Core\Models\Cliente\Endereco;
+use Core\Models\CustomerAddress;
 
-/**
- * Class Cliente
- * @package Core\Models
- */
-class Cliente extends \Eloquent
+class Customer extends \Eloquent
 {
     use Eloquence;
 
@@ -17,16 +13,23 @@ class Cliente extends \Eloquent
      */
     protected $fillable = [
         'taxvat',
-        'tipo',
-        'nome',
-        'fone',
+        'name',
+        'phone',
         'email',
-        'inscricao',
+        'document',
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::saving(function($customer) {
+            $customer->taxvat = numbers($customer->taxvat);
+            $customer->type   = (strlen($customer->taxvat) > 11) ? 1 : 0;
+        });
+    }
+
     /**
-     * Pedido
-     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function pedidos()
@@ -35,12 +38,10 @@ class Cliente extends \Eloquent
     }
 
     /**
-     * Endereços
-     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function enderecos()
+    public function addresses()
     {
-        return $this->hasMany(Endereco::class);
+        return $this->hasMany(CustomerAddress::class);
     }
 }

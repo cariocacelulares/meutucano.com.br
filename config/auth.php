@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'model' => App\Models\Usuario\Usuario::class,
+    'model' => App\Models\User\User::class,
 
     'defaults' => [
         'guard' => 'web',
@@ -23,7 +23,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Usuario\Usuario::class,
+            'model' => App\Models\User\User::class,
         ],
     ],
 

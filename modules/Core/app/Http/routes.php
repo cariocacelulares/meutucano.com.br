@@ -4,33 +4,9 @@
 Route::get('pedidos/shopsystem/{taxvat}', 'Core\Http\Controllers\Pedido\PedidoController@shopsystem');
 
 Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'Core\Http\Controllers'], function () {
-    /**
-     * CEP
-     */
-     Route::get('cep/{cep}', 'Partials\CepController@getAddress');
 
-    /**
-     * Calls from storage
-     */
-     Route::get('storage/{path}/{filename}', function ($path, $filename) {
-        $path = storage_path("app/public/{$path}/{$filename}");
+    Route::get('cep/{cep}', 'Partials\CepController@getAddress');
 
-        if (!Illuminate\Support\Facades\File::exists($path)) {
-            abort(404);
-        }
-
-        $file     = Illuminate\Support\Facades\File::get($path);
-        $type     = Illuminate\Support\Facades\File::mimeType($path);
-        $response = Illuminate\Support\Facades\Response::make($file, 200);
-
-        $response->header("Content-Type", $type);
-
-        return $response;
-     });
-
-    /**
-    * Notas
-    */
     Route::group(['prefix' => 'notas', 'namespace' => 'Pedido'], function () {
         Route::get('danfe/{id}/{retorno?}', 'NotaController@danfe');
     });
@@ -38,9 +14,9 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     /**
      * Devolucao
      */
-     Route::post('notas/devolucao/upload', 'Pedido\Nota\DevolucaoController@upload');
-     Route::post('notas/devolucao/proceed/{id}', 'Pedido\Nota\DevolucaoController@proceed');
-     Route::get('notas/devolucao/danfe/{id}/{retorno?}', 'Pedido\Nota\DevolucaoController@danfe');
+    Route::post('notas/devolucao/upload', 'Pedido\Nota\DevolucaoController@upload');
+    Route::post('notas/devolucao/proceed/{id}', 'Pedido\Nota\DevolucaoController@proceed');
+    Route::get('notas/devolucao/danfe/{id}/{retorno?}', 'Pedido\Nota\DevolucaoController@danfe');
 
     /**
     * Pedido Produto
@@ -48,38 +24,36 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::group(['prefix' => 'pedido-produtos', 'namespace' => 'Pedido'], function () {
         Route::get('list/{sku}', 'PedidoProdutoController@listBySku');
     });
-    Route::resource('pedido-produtos', 'Pedido\PedidoProdutoController', ['except' => ['create', 'edit']]);
+    api('pedido-produtos', 'Pedido\PedidoProdutoController');
 
     /**
     * Notas
     */
-    Route::resource('notas', 'Pedido\NotaController', ['except' => ['create', 'edit']]);
+    api('notas', 'Pedido\NotaController');
 
     /**
     * Comentarios
     */
     Route::get('comentarios/{pedido_id}', 'Pedido\ComentarioController@commentsFromOrder');
-    Route::resource('comentarios', 'Pedido\ComentarioController', ['except' => ['create', 'edit']]);
+    api('comentarios', 'Pedido\ComentarioController');
 
     /**
     * Ligações
     */
     Route::get('ligacoes/{pedido_id}', 'Pedido\LigacaoController@ligacoesFromOrder');
-    Route::resource('ligacoes', 'Pedido\LigacaoController', ['except' => ['create', 'edit']]);
+    api('ligacoes', 'Pedido\LigacaoController');
 
     /**
      * Faturamento
      */
-    Route::group(['middleware' => ['role:admin|faturamento']], function () {
-        Route::group(['prefix' => 'notas', 'namespace' => 'Pedido'], function () {
-            Route::get('faturar/{pedido_id}', 'NotaController@faturar');
-        });
-
-        /**
-         * Código de rastreio
-         */
-        Route::get('codigos/gerar/{servico}', 'Pedido\FaturamentoCodigoController@getTrakingCode');
+    Route::group(['prefix' => 'notas', 'namespace' => 'Pedido'], function () {
+        Route::get('faturar/{pedido_id}', 'NotaController@faturar');
     });
+
+    /**
+     * Código de rastreio
+     */
+    Route::get('codigos/gerar/{servico}', 'Pedido\FaturamentoCodigoController@getTrakingCode');
 
     /**
      * Pedidos
@@ -96,7 +70,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
 
         Route::post('upload', 'UploadController@upload');
     });
-    Route::resource('pedidos', 'Pedido\PedidoController', ['except' => ['create', 'edit']]);
+    api('pedidos', 'Pedido\PedidoController');
 
     /**
      * Produtos
@@ -105,19 +79,19 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::get('list', 'ProdutoController@tableList');
         Route::get('search/{term}', 'ProdutoController@search');
     });
-    Route::resource('produtos', 'Produto\ProdutoController', ['except' => ['create', 'edit']]);
+    api('produtos', 'Produto\ProdutoController');
 
     /**
      * Marcas
      */
     Route::get('marcas/list', 'Produto\MarcaController@tableList');
-    Route::resource('marcas', 'Produto\MarcaController', ['except' => ['create', 'edit']]);
+    api('marcas', 'Produto\MarcaController');
 
     /**
      * Linhas
      */
     Route::get('linhas/list', 'Produto\LinhaController@tableList');
-    Route::resource('linhas', 'Produto\LinhaController', ['except' => ['create', 'edit']]);
+    api('linhas', 'Produto\LinhaController');
 
     /**
      * Atributos
@@ -127,20 +101,20 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     /**
      * Clientes
      */
-    Route::group(['prefix' => 'clientes', 'namespace' => 'Cliente'], function () {
-        Route::get('detail/{cliente_id}', 'ClienteController@detail');
-        Route::get('list', 'ClienteController@tableList');
-        Route::get('search/{term}', 'ClienteController@search');
+    Route::group(['prefix' => 'customers', 'namespace' => 'Customer'], function () {
+        Route::get('detail/{cliente_id}', 'CustomerController@detail');
+        Route::get('list', 'CustomerController@tableList');
+        Route::get('search/{term}', 'CustomerController@search');
     });
-    Route::resource('clientes', 'Cliente\ClienteController', ['except' => ['create', 'edit']]);
+    api('customers', 'Customer\CustomerController');
 
     /**
      * Endereço
      */
-    Route::group(['prefix' => 'enderecos', 'namespace' => 'Cliente'], function () {
-        Route::get('cliente/{clienteId}', 'EnderecoController@byClient');
+    Route::group(['prefix' => 'addresses', 'namespace' => 'Customer'], function () {
+        Route::get('from/{customer_id}', 'CustomerAddressController@byClient');
     });
-    Route::resource('enderecos', 'Cliente\EnderecoController', ['except' => ['create', 'edit']]);
+    api('addresses', 'Customer\CustomerAddressController');
 
     /**
      * Stock
@@ -149,7 +123,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::get('list', 'StockController@tableList');
         Route::get('imei/generate', 'ImeiController@generate');
     });
-    Route::resource('estoque', 'Stock\StockController', ['except' => ['create', 'edit']]);
+    api('estoque', 'Stock\StockController');
 
     /**
      * Product stock
@@ -163,7 +137,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::get('transferencia/verificar/{id}/{imei}', 'ProductStockController@verifyTransfer');
         Route::post('transferencia', 'ProductStockController@transfer');
     });
-    Route::resource('produto-estoque', 'Produto\ProductStockController', ['except' => ['create', 'edit']]);
+    api('produto-estoque', 'Produto\ProductStockController');
 
     /**
      * Product imei
@@ -172,7 +146,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::get('list/{sku}', 'ProductImeiController@listBySku');
         Route::post('parse', 'ProductImeiController@parseImeis');
     });
-    Route::resource('produto-imei', 'Produto\ProductImeiController', ['except' => ['create', 'edit']]);
+    api('produto-imei', 'Produto\ProductImeiController');
 
     /**
      * Stock removal
@@ -181,7 +155,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::get('list', 'RemovalController@tableList');
         Route::post('fechar/{id}', 'RemovalController@close');
     });
-    Route::resource('estoque/retirada', 'Stock\RemovalController', ['except' => ['create', 'edit']]);
+    api('estoque/retirada', 'Stock\RemovalController');
 
     /**
      * Stock removal product
@@ -193,7 +167,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::post('retornar/{stockRemovalId}', 'RemovalProductController@return');
         Route::post('status/{id}', 'RemovalProductController@changeStatus');
     });
-    Route::resource('estoque/retirada/produto', 'Stock\RemovalProductController', ['except' => ['create', 'edit']]);
+    api('estoque/retirada/produto', 'Stock\RemovalProductController');
 
     /**
      * Stock issue
@@ -201,7 +175,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::group(['prefix' => 'estoque/baixa', 'namespace' => 'Stock'], function () {
         Route::get('list', 'IssueController@tableList');
     });
-    Route::resource('estoque/baixa', 'Stock\IssueController', ['except' => ['create', 'edit']]);
+    api('estoque/baixa', 'Stock\IssueController');
 
     /**
      * Supplier
@@ -210,7 +184,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::get('list', 'SupplierController@tableList');
     });
     Route::get('supplier/search/{term}', 'Supplier\SupplierController@search');
-    Route::resource('supplier', 'Supplier\SupplierController', ['except' => ['create', 'edit']]);
+    api('supplier', 'Supplier\SupplierController');
 
     /**
      * Stock entry
@@ -219,7 +193,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::get('list', 'EntryController@tableList');
         Route::post('confirm/{id}', 'EntryController@confirm');
     });
-    Route::resource('estoque/entrada', 'Stock\EntryController', ['except' => ['create', 'edit']]);
+    api('estoque/entrada', 'Stock\EntryController');
 
     /**
      * Stock entry invoice
@@ -229,7 +203,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
 
         Route::get('danfe/{id}/{retorno?}', 'InvoiceController@danfe');
     });
-    Route::resource('estoque/entrada/nota', 'Stock\Entry\InvoiceController', ['except' => ['create', 'edit']]);
+    api('estoque/entrada/nota', 'Stock\Entry\InvoiceController');
 
     /**
      * Product defect
@@ -237,7 +211,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::group(['prefix' => 'produto/defeito', 'namespace' => 'Produto'], function () {
         Route::get('list', 'DefectController@tableList');
     });
-    Route::resource('produto/defeito', 'Produto\DefectController', ['except' => ['create', 'edit']]);
+    api('produto/defeito', 'Produto\DefectController');
 
     /**
      * Partials

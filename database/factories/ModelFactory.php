@@ -3,9 +3,9 @@
 $faker = \Faker\Factory::create('pt_BR');
 
 /**
-* Usuario
+* User
 */
-$factory->define(App\Models\Usuario\Usuario::class, function () use ($faker) {
+$factory->define(App\Models\User\User::class, function () use ($faker) {
     return [
         'name'           => $faker->name,
         'email'          => $faker->safeEmail,
@@ -18,16 +18,16 @@ $factory->define(App\Models\Usuario\Usuario::class, function () use ($faker) {
 /**
 * Role
 */
-$factory->define(App\Models\Usuario\Role::class, function () use ($faker) {
+$factory->define(App\Models\User\Role::class, function () use ($faker) {
     return [
         'name' => $faker->word,
     ];
 });
 
 /**
-* Senha
+* Password
 */
-$factory->define(App\Models\Usuario\Senha::class, function () use ($faker) {
+$factory->define(App\Models\User\Password::class, function () use ($faker) {
     return [
         'site'    => $faker->name,
         'url'     => $faker->url,

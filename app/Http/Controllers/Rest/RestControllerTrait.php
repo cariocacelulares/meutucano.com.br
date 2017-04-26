@@ -19,10 +19,10 @@ trait RestControllerTrait
      */
     public function index()
     {
-        $m = self::MODEL;
-        $m = new $m;
+        $model = self::MODEL;
+        $list = $this->handleRequest(new $model);
 
-        return $this->listResponse($m::all());
+        return $this->listResponse($list);
     }
 
     /**

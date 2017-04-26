@@ -50,7 +50,7 @@ class AuthenticateController extends Controller
     public function getAuthenticatedUser()
     {
         try {
-            if (!$user = JWTAuth::parseToken()->authenticate()) {
+            if (!$user = JWTAuth::parseToken()->authenticate()->setAppends(['permissions'])) {
                 return response()->json(['user_not_found'], 404);
             }
         } catch (TokenExpiredException $e) {

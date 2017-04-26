@@ -6,40 +6,38 @@ Route::get('/', function () { return 'Hello Toucan!'; });
  * API
  */
 Route::group(['prefix' => '/api'], function () {
-    /**
-     * Auth
-     */
+
     Route::post('authenticate', 'Auth\AuthenticateController@authenticate');
-    Route::get('authenticate/user', 'Auth\AuthenticateController@getAuthenticatedUser');
-    Route::get('token', 'Auth\AuthenticateController@refreshToken');
 
     Route::group(['middleware' => 'jwt.auth'], function () {
-        /**
-         * Usuario
-         */
-        Route::group(['namespace' => 'Usuario'], function () {
-            Route::get('senhas/minhas', 'SenhaController@currentUserPassword');
 
-            /**
-             * Administração
-             */
-            Route::group(['middleware' => ['role:admin']], function () {
-                /**
-                 * Usuários
-                 */
-                Route::group(['prefix' => 'usuarios'], function () {
-                    Route::get('list', 'UsuarioController@tableList');
-                });
-                Route::resource('usuarios', 'UsuarioController', ['except' => ['create', 'edit']]);
+        Route::get('storage/{path}/{filename}', function ($path, $filename) {
+            $path = storage_path("app/public/{$path}/{$filename}");
 
-                /**
-                 * Senhas
-                 */
-                Route::group(['prefix' => 'senhas'], function () {
-                    Route::get('{id}', 'SenhaController@userPassword');
-                });
-                Route::resource('senhas', 'SenhaController', ['except' => ['create', 'edit']]);
+            if (!Illuminate\Support\Facades\File::exists($path)) {
+                abort(404);
+            }
+
+            $file     = Illuminate\Support\Facades\File::get($path);
+            $type     = Illuminate\Support\Facades\File::mimeType($path);
+            $response = Illuminate\Support\Facades\Response::make($file, 200);
+
+            $response->header("Content-Type", $type);
+
+            return $response;
+        });
+
+        Route::get('authenticate/user', 'Auth\AuthenticateController@getAuthenticatedUser');
+        Route::get('token', 'Auth\AuthenticateController@refreshToken');
+
+        Route::group(['namespace' => 'User'], function () {
+            api('users', 'UserController');
+
+            Route::group(['prefix' => 'passwords'], function() {
+                Route::get('from/{user_id}', 'UserPasswordController@listFromUser');
+                Route::get('current', 'UserPasswordController@listCurrentUser');
             });
+            api('passwords', 'UserPasswordController');
         });
     });
 });

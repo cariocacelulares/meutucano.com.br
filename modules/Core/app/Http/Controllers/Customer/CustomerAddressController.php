@@ -1,21 +1,17 @@
-<?php namespace Core\Http\Controllers\Cliente;
+<?php namespace Core\Http\Controllers\Customer;
 
+use Core\Models\Customer;
+use Core\Models\CustomerAddress;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestControllerTrait;
-use App\Http\Controllers\Controller;
-use Core\Models\Cliente\Endereco;
-use Core\Models\Cliente;
-use Core\Http\Requests\EnderecoRequest as Request;
+use Core\Http\Requests\CustomerAddressRequest as Request;
 
-/**
- * Class EnderecoController
- * @package Core\Http\Controllers\Cliente
- */
-class EnderecoController extends Controller
+class CustomerAddressController extends Controller
 {
     use RestControllerTrait;
 
-    const MODEL = Endereco::class;
+    const MODEL = CustomerAddress::class;
 
     public function __construct()
     {
@@ -27,7 +23,7 @@ class EnderecoController extends Controller
     }
 
     /**
-     * Cria novo recurso
+     * Create new address to customer
      *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -35,9 +31,9 @@ class EnderecoController extends Controller
     public function store(Request $request)
     {
         try {
-            $data = Endereco::create(Input::all());
+            $address = CustomerAddress::create(Input::all());
 
-            return $this->createdResponse($data);
+            return $this->createdResponse($address);
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
 
@@ -48,7 +44,7 @@ class EnderecoController extends Controller
     }
 
     /**
-     * Atualiza um recurso
+     * Updates an address from customer
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
@@ -56,11 +52,11 @@ class EnderecoController extends Controller
     public function update($id, Request $request)
     {
         try {
-            $endereco = Endereco::findOrFail($id);
-            $endereco->fill(Input::all());
-            $endereco->save();
+            $address = CustomerAddress::findOrFail($id);
+            $address->fill(Input::all());
+            $address->save();
 
-            return $this->showResponse($endereco);
+            return $this->showResponse($address);
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
 
@@ -71,20 +67,18 @@ class EnderecoController extends Controller
     }
 
     /**
-     * Retorna um único recurso
+     * Return addresses from customer
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function byClient($clientId)
+    public function listByCustomer($customerId)
     {
-        $this->middleware('permission:customer_address_list');
-
         try {
-            $enderecos = Endereco::where('cliente_id', '=', $clientId)
+            $addresses = CustomerAddress::where('cliente_id', '=', $customerId)
                 ->get();
 
-            return $this->listResponse($enderecos);
+            return $this->listResponse($addresses);
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao obter recurso'), ['model' => self::MODEL]);
 
