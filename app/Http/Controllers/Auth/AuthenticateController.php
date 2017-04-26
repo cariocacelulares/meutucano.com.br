@@ -9,8 +9,7 @@ use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * Class AuthenticateController
- * @package App\Http\Controllers\Auth
+ * User authentication controller
  */
 class AuthenticateController extends Controller
 {

@@ -48,7 +48,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::group(['prefix' => 'pedido-produtos', 'namespace' => 'Pedido'], function () {
         Route::get('list/{sku}', 'PedidoProdutoController@listBySku');
     });
-    Route::resource('pedido-produtos', 'Pedido\PedidoProdutoController');
+    Route::resource('pedido-produtos', 'Pedido\PedidoProdutoController', ['except' => ['create', 'edit']]);
 
     /**
     * Notas
@@ -72,7 +72,6 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
      */
     Route::group(['middleware' => ['role:admin|faturamento']], function () {
         Route::group(['prefix' => 'notas', 'namespace' => 'Pedido'], function () {
-            Route::get('faturamento', 'NotaController@notasFaturamento');
             Route::get('faturar/{pedido_id}', 'NotaController@faturar');
         });
 
@@ -97,30 +96,28 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
 
         Route::post('upload', 'UploadController@upload');
     });
-    Route::resource('pedidos', 'Pedido\PedidoController');
+    Route::resource('pedidos', 'Pedido\PedidoController', ['except' => ['create', 'edit']]);
 
     /**
      * Produtos
      */
     Route::group(['prefix' => 'produtos', 'namespace' => 'Produto'], function () {
-        Route::get('generate-sku/{old_sku?}', 'ProdutoController@gerenateSku');
-        Route::get('check-sku/{sku}', 'ProdutoController@checkSku');
         Route::get('list', 'ProdutoController@tableList');
         Route::get('search/{term}', 'ProdutoController@search');
     });
-    Route::resource('produtos', 'Produto\ProdutoController');
+    Route::resource('produtos', 'Produto\ProdutoController', ['except' => ['create', 'edit']]);
 
     /**
      * Marcas
      */
     Route::get('marcas/list', 'Produto\MarcaController@tableList');
-    Route::resource('marcas', 'Produto\MarcaController');
+    Route::resource('marcas', 'Produto\MarcaController', ['except' => ['create', 'edit']]);
 
     /**
      * Linhas
      */
     Route::get('linhas/list', 'Produto\LinhaController@tableList');
-    Route::resource('linhas', 'Produto\LinhaController');
+    Route::resource('linhas', 'Produto\LinhaController', ['except' => ['create', 'edit']]);
 
     /**
      * Atributos
@@ -152,7 +149,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::get('list', 'StockController@tableList');
         Route::get('imei/generate', 'ImeiController@generate');
     });
-    Route::resource('estoque', 'Stock\StockController');
+    Route::resource('estoque', 'Stock\StockController', ['except' => ['create', 'edit']]);
 
     /**
      * Product stock
@@ -166,17 +163,16 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::get('transferencia/verificar/{id}/{imei}', 'ProductStockController@verifyTransfer');
         Route::post('transferencia', 'ProductStockController@transfer');
     });
-    Route::resource('produto-estoque', 'Produto\ProductStockController');
+    Route::resource('produto-estoque', 'Produto\ProductStockController', ['except' => ['create', 'edit']]);
 
     /**
      * Product imei
      */
     Route::group(['prefix' => 'produto-imei', 'namespace' => 'Produto'], function () {
         Route::get('list/{sku}', 'ProductImeiController@listBySku');
-        Route::get('historico/{imei}', 'ProductImeiController@history');
         Route::post('parse', 'ProductImeiController@parseImeis');
     });
-    Route::resource('produto-imei', 'Produto\ProductImeiController');
+    Route::resource('produto-imei', 'Produto\ProductImeiController', ['except' => ['create', 'edit']]);
 
     /**
      * Stock removal
@@ -185,7 +181,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::get('list', 'RemovalController@tableList');
         Route::post('fechar/{id}', 'RemovalController@close');
     });
-    Route::resource('estoque/retirada', 'Stock\RemovalController');
+    Route::resource('estoque/retirada', 'Stock\RemovalController', ['except' => ['create', 'edit']]);
 
     /**
      * Stock removal product
@@ -197,7 +193,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::post('retornar/{stockRemovalId}', 'RemovalProductController@return');
         Route::post('status/{id}', 'RemovalProductController@changeStatus');
     });
-    Route::resource('estoque/retirada/produto', 'Stock\RemovalProductController');
+    Route::resource('estoque/retirada/produto', 'Stock\RemovalProductController', ['except' => ['create', 'edit']]);
 
     /**
      * Stock issue
@@ -205,7 +201,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::group(['prefix' => 'estoque/baixa', 'namespace' => 'Stock'], function () {
         Route::get('list', 'IssueController@tableList');
     });
-    Route::resource('estoque/baixa', 'Stock\IssueController');
+    Route::resource('estoque/baixa', 'Stock\IssueController', ['except' => ['create', 'edit']]);
 
     /**
      * Supplier
@@ -214,7 +210,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::get('list', 'SupplierController@tableList');
     });
     Route::get('supplier/search/{term}', 'Supplier\SupplierController@search');
-    Route::resource('supplier', 'Supplier\SupplierController');
+    Route::resource('supplier', 'Supplier\SupplierController', ['except' => ['create', 'edit']]);
 
     /**
      * Stock entry
@@ -223,18 +219,17 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::get('list', 'EntryController@tableList');
         Route::post('confirm/{id}', 'EntryController@confirm');
     });
-    Route::resource('estoque/entrada', 'Stock\EntryController');
+    Route::resource('estoque/entrada', 'Stock\EntryController', ['except' => ['create', 'edit']]);
 
     /**
      * Stock entry invoice
      */
     Route::group(['prefix' => 'estoque/entrada/nota', 'namespace' => 'Stock\Entry'], function () {
-        Route::get('list', 'InvoiceController@tableList');
         Route::post('upload', 'InvoiceController@upload');
 
         Route::get('danfe/{id}/{retorno?}', 'InvoiceController@danfe');
     });
-    Route::resource('estoque/entrada/nota', 'Stock\Entry\InvoiceController');
+    Route::resource('estoque/entrada/nota', 'Stock\Entry\InvoiceController', ['except' => ['create', 'edit']]);
 
     /**
      * Product defect
@@ -242,7 +237,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::group(['prefix' => 'produto/defeito', 'namespace' => 'Produto'], function () {
         Route::get('list', 'DefectController@tableList');
     });
-    Route::resource('produto/defeito', 'Produto\DefectController');
+    Route::resource('produto/defeito', 'Produto\DefectController', ['except' => ['create', 'edit']]);
 
     /**
      * Partials

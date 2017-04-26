@@ -12,7 +12,6 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'R
             Route::get('historico/{id}', 'RastreioController@imagemHistorico');
             Route::get('pi/{id}', 'RastreioController@pi');
 
-            Route::put('edit/{id}', 'RastreioController@edit');
             Route::put('historico/{id}', 'RastreioController@forceScreenshot');
         });
     });
@@ -26,8 +25,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'R
          * PI's
          */
         Route::group(['prefix' => 'pis'], function () {
-            Route::get('pending', 'PiController@pending');
-            Route::put('edit/{id}', 'PiController@edit');
+
         });
         Route::resource('pis', 'PiController', ['except' => ['create', 'edit']]);
 
@@ -35,15 +33,16 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'R
          * Devoluções
          */
         Route::group(['prefix' => 'devolucoes'], function () {
-            Route::get('pending', 'DevolucaoController@pending');
-            Route::put('edit/{id}', 'DevolucaoController@edit');
+
         });
         Route::resource('devolucoes', 'DevolucaoController', ['except' => ['create', 'edit']]);
 
         /**
          * Logística reversa
          */
-        Route::put('logisticas/edit/{id}', 'LogisticaController@edit');
+         Route::group(['prefix' => 'logisticas'], function () {
+
+         });
         Route::resource('logisticas', 'LogisticaController', ['except' => ['create', 'edit']]);
 
         /**
@@ -55,6 +54,6 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'R
 
             Route::delete('parar/{rastreio_id}', 'MonitoradoController@stop');
         });
-        Route::resource('rastreio/monitorados', 'MonitoradoController');
+        Route::resource('rastreio/monitorados', 'MonitoradoController', ['except' => ['create', 'edit']]);
     });
 });

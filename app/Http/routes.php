@@ -20,8 +20,6 @@ Route::group(['prefix' => '/api'], function () {
         Route::group(['namespace' => 'Usuario'], function () {
             Route::get('senhas/minhas', 'SenhaController@currentUserPassword');
 
-            Route::post('check-password/{user_id}', 'UsuarioController@checkPassword');
-
             /**
              * Administração
              */
