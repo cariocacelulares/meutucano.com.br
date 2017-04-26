@@ -11,7 +11,7 @@
       </form>
     </div>
 
-    <table border="0" align="center">
+    <table border="0" align="center" :class="{ loading: loading }">
       <slot name="head"></slot>
       <tbody v-if="!data.length && !loading" class="no-results">
         <tr>
@@ -20,10 +20,10 @@
       </tbody>
       <tbody v-if="loading" class="loading">
         <tr>
-          <td colspan="50"><Icon name="refresh" :spin="true" /></td>
+          <td colspan="50"><Icon name="refresh" :spin="true" size="giant"/></td>
         </tr>
       </tbody>
-      <slot v-if="data.length && !loading" name="body"></slot>
+      <slot v-if="data.length" name="body"></slot>
     </table>
   </div>
 </template>
@@ -65,11 +65,15 @@ export default {
     loading() {
       return this.$store.getters['global/tableList/GET_LOADING']
     },
+
+    stateSearchTerm() {
+      return this.$store.getters['global/tableList/GET_SEARCHTERM']
+    },
   },
 
   watch: {
-    data(data) {
-      this.changeRows(data.length)
+    stateSearchTerm() {
+      this.searchTerm = this.stateSearchTerm;
     }
   },
 
@@ -85,11 +89,7 @@ export default {
     },
 
     search() {
-      return this.$store.dispatch(`${this.namespace}/SEARCH`)
-    },
-
-    changeRows(rows) {
-      return this.$store.dispatch('global/tableList/CHANGE_ROWS', rows)
+      return this.$store.dispatch('global/tableList/SEARCH', this.searchTerm)
     },
 
     pageChanged(pageAttrs) {
@@ -99,6 +99,7 @@ export default {
 
   mounted() {
     this.setNamespace()
+    this.searchTerm = this.stateSearchTerm;
   }
 }
 </script>
@@ -114,6 +115,7 @@ export default {
 }
 
 table {
+  position: relative;
   width: 100%;
   color: $darker;
   border: 1px solid $light;
@@ -133,10 +135,25 @@ table {
     background-color: $black;
   }
 
+  &.loading tbody:not(.loading) {
+      opacity: .5;
+  }
+
   tbody {
     &.no-results,
     &.loading {
       text-align: center;
+    }
+
+    &.loading {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     tr:nth-child(2n) {

@@ -1,11 +1,7 @@
-export default {
-  getList (page) {
-    if (page > 1) {
-      page = '?page=' + page
-    } else {
-      page = ''
-    }
+import { isEmpty } from 'lodash'
 
-    return axios.get('produtos/list' + page)
+export default {
+  getList (params) {
+    return axios.get('produtos/list' + params)
   }
 }

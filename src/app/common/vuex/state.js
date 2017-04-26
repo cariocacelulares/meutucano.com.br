@@ -10,6 +10,7 @@ export default {
       current: 1,
       total: 1,
     },
-    loading: false
+    searchTerm: '',
+    loading: false,
   }
 }

@@ -10,14 +10,16 @@ window.monetary = new Intl.NumberFormat('pt-BR', {
   minimumFractionDigits: 2,
 });
 
-/**
- * Date formatter config
- * Usage: dating.fomat(9.99) // R$9,99
- *
- * @type {Intl}
- */
-/*window.dating = new Intl.DateTimeFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-  minimumFractionDigits: 2,
-});*/
+window.parseParams = (params) => {
+  var parsed = '?';
+
+  for (var key in params) {
+    if (parsed != '?') {
+      parsed += '&';
+    }
+
+    parsed += `${key}=` + encodeURIComponent(params[key]);
+  }
+
+  return parsed
+}

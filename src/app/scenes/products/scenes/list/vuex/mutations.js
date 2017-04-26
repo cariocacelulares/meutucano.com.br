@@ -2,7 +2,7 @@ export default {
   'products/list/RECEIVED' (state, products) {
     products = products.map((product) => {
       if (typeof(product.custo) == 'number') {
-        product.custo = monetary.format(product.cost)
+        product.cost = monetary.format(product.cost)
       }
 
       if (typeof(product.valor) == 'number') {

@@ -92,10 +92,6 @@ export default {
       return this.$store.getters[`${this.namespace}/GET`]
     },
 
-    page() {
-      return this.$store.getters['global/tableList/GET_PAGE']
-    },
-
     lines() {
       return [
         {

@@ -16,6 +16,16 @@ export default {
       })
   },
 
+  'global/REFRESH_TOKEN' (context) {
+    return axios.get('token')
+      .then(
+        (response) => {
+          context.commit('global/TOKEN_RECEIVED', response.data.token)
+          context.dispatch('global/FETCH_USER', response.data.token)
+        }
+      )
+  },
+
   'global/ADD_TOAST' (context, attrs) {
     context.commit('global/TOAST_ADDED', attrs)
   },
@@ -50,6 +60,11 @@ export default {
 
   'global/tableList/LAST_PAGE' (context) {
     context.commit('global/tableList/PAGE_CHANGED', context.getters['global/tableList/GET_PAGE'].total)
+    context.dispatch(context.getters['global/GET_NAMESPACE'] + '/FETCH')
+  },
+
+  'global/tableList/SEARCH' (context, term) {
+    context.commit('global/tableList/SEARCH_CHANGED', term)
     context.dispatch(context.getters['global/GET_NAMESPACE'] + '/FETCH')
   },
 }

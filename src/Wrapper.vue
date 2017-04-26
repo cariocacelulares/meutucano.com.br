@@ -84,6 +84,22 @@ export default {
           this.$router.push({ name: 'auth.signin' })
 
           return;
+        } else if (error.response.status == 401) {
+          if (
+              (typeof(error.response.data.error) !== 'undefined' && error.response.data.error == 'token_expired')
+              ||
+              (typeof(error.response.data[0]) !== 'undefined' && error.response.data[0] == 'token_expired')
+          ) {
+            this.$store.dispatch('global/REFRESH_TOKEN')
+              .then(() => {},
+                (error) => {
+                  this.$store.dispatch('global/SIGN_OUT')
+                  this.$router.push({ name: 'auth.signin' })
+
+                  return;
+                }
+              )
+          }
         }
 
         return Promise.reject(error);

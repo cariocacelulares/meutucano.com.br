@@ -62,6 +62,12 @@ export default {
     },
   },
 
+  data() {
+    return {
+      oldValue: null
+    }
+  },
+
   computed: {
     wrapperClasses() {
       let classList = []
@@ -109,8 +115,9 @@ export default {
     },
 
     updateValue(value) {
-      if (!isEmpty(value)) {
+      if (!isEmpty(value) || this.oldValue != value) {
         this.$emit('input', value);
+        this.oldValue = value
       }
     }
   }
