@@ -1,17 +1,7 @@
 <?php namespace Core\Models;
 
-use Core\Models\Pedido;
-use Sofa\Eloquence\Eloquence;
-use Core\Models\Stock\Entry;
-
-/**
- * Class Supplier
- * @package Core\Models
- */
 class Supplier extends \Eloquent
 {
-    use Eloquence;
-
     /**
      * @var array
      */
@@ -33,12 +23,10 @@ class Supplier extends \Eloquent
     ];
 
     /**
-     * Entry
-     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function entries()
     {
-        return $this->hasMany(Entry::class);
+        return $this->hasMany(DepotEntry::class);
     }
 }

@@ -1,13 +1,7 @@
 <?php namespace Core\Models;
 
-use Core\Models\Pedido;
-use Sofa\Eloquence\Eloquence;
-use Core\Models\CustomerAddress;
-
 class Customer extends \Eloquent
 {
-    use Eloquence;
-
     /**
      * @var array
      */

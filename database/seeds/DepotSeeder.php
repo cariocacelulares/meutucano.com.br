@@ -1,13 +1,13 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Core\Models\Stock;
+use Core\Models\Depot;
 
 class DepotTableSeeder extends Seeder
 {
     public function run()
     {
-        Stock::insert([
+        Depot::insert([
             'slug'     => 'default',
             'title'    => 'Estoque físico',
             'priority' => 0,

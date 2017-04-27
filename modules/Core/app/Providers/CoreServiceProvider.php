@@ -1,22 +1,22 @@
 <?php namespace Core\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Core\Models\Pedido;
-use Core\Models\Pedido\PedidoProduto;
-use Core\Models\Produto;
-use Core\Models\Produto\ProductStock;
-use Core\Models\Produto\ProductImei;
-use Core\Models\Produto\Defect;
-use Core\Models\Stock\Issue;
-use Core\Models\Stock\Entry;
-use Core\Observers\PedidoObserver;
-use Core\Observers\PedidoProdutoObserver;
-use Core\Observers\ProdutoObserver;
-use Core\Observers\ProductStockObserver;
+use Core\Models\Order;
+use Core\Models\OrderProduct;
+use Core\Models\Product;
+use Core\Models\DepotProduct;
+use Core\Models\ProductImei;
+use Core\Models\ProductDefect;
+use Core\Models\ProductImeiIssue;
+use Core\Models\DepotEntry;
+use Core\Observers\OrderObserver;
+use Core\Observers\OrderProductObserver;
+use Core\Observers\ProductObserver;
+use Core\Observers\ProductDepotObserver;
 use Core\Observers\ProductImeiObserver;
 use Core\Observers\DefectObserver;
 use Core\Observers\EntryObserver;
-use Core\Observers\StockIssueObserver;
+use Core\Observers\DepotIssueObserver;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -38,14 +38,14 @@ class CoreServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
 
-        Produto::observe(ProdutoObserver::class);
-        Pedido::observe(PedidoObserver::class);
-        PedidoProduto::observe(PedidoProdutoObserver::class);
-        ProductStock::observe(ProductStockObserver::class);
+        Product::observe(ProductObserver::class);
+        Order::observe(OrderObserver::class);
+        OrderProduct::observe(OrderProductObserver::class);
+        DepotProduct::observe(ProductDepotObserver::class);
         ProductImei::observe(ProductImeiObserver::class);
-        Defect::observe(DefectObserver::class);
-        Entry::observe(EntryObserver::class);
-        Issue::observe(StockIssueObserver::class);
+        ProductDefect::observe(DefectObserver::class);
+        DepotEntry::observe(EntryObserver::class);
+        ProductImeiIssue::observe(DepotIssueObserver::class);
     }
 
     /**
@@ -58,7 +58,7 @@ class CoreServiceProvider extends ServiceProvider
         \App::register(EventServiceProvider::class);
         \App::register(ScheduleServiceProvider::class);
         \App::register(ConfigServiceProvider::class);
-        \App::register(StockServiceProvider::class);
+        \App::register(DepotServiceProvider::class);
         \App::register(TitleVariationServiceProvider::class);
         \App::register(InvoiceServiceProvider::class);
     }
