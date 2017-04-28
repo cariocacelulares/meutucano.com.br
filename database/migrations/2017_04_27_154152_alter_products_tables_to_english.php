@@ -63,7 +63,16 @@ class AlterProductsTablesToEnglish extends Migration
         */
         Schema::rename('product_imeis', 'product_serials');
         Schema::table('product_serials', function(Blueprint $table) {
+            $table->dropForeign('ProductImeisProductStockId');
+        });
+        Schema::table('product_serials', function(Blueprint $table) {
             $table->renameColumn('imei', 'serial');
+            $table->renameColumn('product_stock_id', 'depot_product_id');
+
+            $table->foreign('depot_product_id')
+                ->references('id')
+                ->on('depot_products')
+                ->onDelete('CASCADE');
         });
 
         Schema::table('depot_entry_product_serials', function(Blueprint $table) {
