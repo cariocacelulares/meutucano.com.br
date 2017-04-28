@@ -1,20 +1,21 @@
 <?php namespace Core\Events;
 
+use Core\Models\Product;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class ProductPriceUpdated extends \Event
 {
     use SerializesModels;
 
+    /**
+     * @param Product $product
+     */
     public $product;
 
     /**
-     * Create a new event instance.
-     *
      * @return void
      */
-    public function __construct($product)
+    public function __construct(Product $product)
     {
         \Log::debug('Evento ProductPriceUpdated disparado!', [$product]);
         $this->product = $product;

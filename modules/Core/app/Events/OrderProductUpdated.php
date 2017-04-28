@@ -1,20 +1,21 @@
 <?php namespace Core\Events;
 
+use Core\Models\OrderProduct;
 use Illuminate\Queue\SerializesModels;
-use Core\Models\Pedido\PedidoProduto;
 
 class OrderProductUpdated extends \Event
 {
     use SerializesModels;
 
+    /**
+     * @param OrderProduct $orderProduct
+     */
     public $orderProduct;
 
     /**
-     * Create a new event instance.
-     *
      * @return void
      */
-    public function __construct(PedidoProduto $orderProduct)
+    public function __construct(OrderProduct $orderProduct)
     {
         \Log::debug('Evento OrderProductUpdated disparado');
         $this->orderProduct = $orderProduct;

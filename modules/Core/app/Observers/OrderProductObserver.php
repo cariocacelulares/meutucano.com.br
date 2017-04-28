@@ -1,41 +1,38 @@
 <?php namespace Core\Observers;
 
-use Illuminate\Support\Facades\Event;
+use Core\Models\OrderProduct;
 use Core\Events\OrderProductCreated;
+use Core\Events\OrderProductUpdated;
 use Core\Events\OrderProductDeleting;
 use Core\Events\OrderProductProductChanged;
-use Core\Events\OrderProductQtyDecreased;
-use Core\Events\OrderProductUpdated;
-use Core\Models\Pedido\PedidoProduto;
-use Core\Models\Produto\ProductStock;
+use Illuminate\Support\Facades\Event;
 
-class PedidoProdutoObserver
+class OrderProductObserver
 {
     /**
-     * Listen to the PedidoProduto updated event.
+     * Listen to the OrderProduct updated event.
      *
-     * @param  PedidoProduto  $orderProduct
+     * @param  OrderProduct $orderProduct
      * @return void
      */
-    public function updated(PedidoProduto $orderProduct)
+    public function updated(OrderProduct $orderProduct)
     {
         Event::fire(new OrderProductUpdated($orderProduct));
 
         $dirty = $orderProduct->getDirty();
 
-        // If product is changed
-        if (isset($dirty['produto_sku'])) {
+        if (isset($dirty['product_sku'])) {
             Event::fire(new OrderProductProductChanged($orderProduct));
         }
     }
 
     /**
-     * Listen to the PedidoProduto created event.
+     * Listen to the OrderProduct created event.
      *
-     * @param  PedidoProduto  $orderProduct
+     * @param  OrderProduct $orderProduct
      * @return void
      */
-    public function created(PedidoProduto $orderProduct)
+    public function created(OrderProduct $orderProduct)
     {
         Event::fire(new OrderProductCreated($orderProduct));
     }
@@ -46,7 +43,7 @@ class PedidoProdutoObserver
      * @param  Pedido  $order
      * @return void
      */
-    public function deleting(PedidoProduto $orderProduct)
+    public function deleting(OrderProduct $orderProduct)
     {
         Event::fire(new OrderProductDeleting($orderProduct));
     }

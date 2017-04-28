@@ -1,30 +1,30 @@
 <?php namespace Core\Observers;
 
-use Illuminate\Support\Facades\Event;
-use Core\Models\Pedido;
-use Core\Events\OrderCanceled;
-use Core\Events\OrderCreated;
-use Core\Events\OrderDelivered;
+use Core\Models\Order;
 use Core\Events\OrderPaid;
-use Core\Events\OrderSaved;
 use Core\Events\OrderSent;
+use Core\Events\OrderSaved;
+use Core\Events\OrderCreated;
 use Core\Events\OrderUpdated;
+use Core\Events\OrderCanceled;
+use Core\Events\OrderDelivered;
+use Illuminate\Support\Facades\Event;
 
-class PedidoObserver
+class OrderObserver
 {
     /**
-     * Listen to the Pedido saved event.
+     * Listen to the Order saved event.
      *
-     * @param  Pedido  $order
+     * @param  Order  $order
      * @return void
      */
-    public function saved(Pedido $order)
+    public function saved(Order $order)
     {
         Event::fire(new OrderSaved($order));
 
         $dirty = $order->getDirty();
         if (isset($dirty['status'])) {
-            $status = ((is_null($order->status)) ? null : (int)$order->status);
+            $status = ((is_null($order->status)) ? null : (int) $order->status);
 
             switch ($status) {
                 case 1: // Pago
@@ -44,48 +44,48 @@ class PedidoObserver
     }
 
     /**
-     * Listen to the Pedido updated event.
+     * Listen to the Order updated event.
      *
-     * @param  Pedido  $order
+     * @param  Order  $order
      * @return void
      */
-    public function updated(Pedido $order)
+    public function updated(Order $order)
     {
         Event::fire(new OrderUpdated($order));
     }
 
     /**
-     * Listen to the Pedido created event.
+     * Listen to the Order created event.
      *
-     * @param  Pedido  $order
+     * @param  Order  $order
      * @return void
      */
-    public function created(Pedido $order)
+    public function created(Order $order)
     {
         Event::fire(new OrderCreated($order));
     }
 
     /**
-     * Listen to the Pedido deleting event.
+     * Listen to the Order deleting event.
      *
-     * @param  Pedido  $order
+     * @param  Order  $order
      * @return void
      */
-    public function deleting(Pedido $order)
+    public function deleting(Order $order)
     {
-        $order->notas()->delete();
-        $order->rastreios()->delete();
+        $order->invoices()->delete();
+        $order->shipments()->delete();
     }
 
     /**
-     * Listen to the Pedido restoring event.
+     * Listen to the Order restoring event.
      *
-     * @param  Pedido  $order
+     * @param  Order  $order
      * @return void
      */
-    public function restoring(Pedido $order)
+    public function restoring(Order $order)
     {
-        $order->notas()->withTrashed()->restore();
-        $order->rastreios()->withTrashed()->restore();
+        $order->invoices()->withTrashed()->restore();
+        $order->shipments()->withTrashed()->restore();
     }
 }

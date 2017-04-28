@@ -1,10 +1,10 @@
 <?php namespace Core\Observers;
 
+use Core\Models\DepotEntry;
+use Core\Events\DepotEntryConfirmed;
 use Illuminate\Support\Facades\Event;
-use Core\Events\EntryConfirmed;
-use Core\Models\Stock\Entry;
 
-class EntryObserver
+class DepotEntryObserver
 {
     /**
      * Listen to the Entry saved event.
@@ -12,12 +12,12 @@ class EntryObserver
      * @param  Entry $entry
      * @return void
      */
-    public function saved(Entry $entry)
+    public function saved(DepotEntry $entry)
     {
         $dirty = $entry->getDirty();
 
         if (isset($dirty['confirmed_at']) && $dirty['confirmed_at']) {
-            Event::fire(new EntryConfirmed($entry));
+            Event::fire(new DepotEntryConfirmed($entry));
         }
     }
 }

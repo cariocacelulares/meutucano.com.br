@@ -1,35 +1,32 @@
 <?php namespace Core\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Core\Models\Order;
-use Core\Models\OrderProduct;
 use Core\Models\Product;
-use Core\Models\DepotProduct;
-use Core\Models\ProductImei;
-use Core\Models\ProductDefect;
-use Core\Models\ProductImeiIssue;
 use Core\Models\DepotEntry;
+use Core\Models\OrderProduct;
+use Core\Models\DepotProduct;
+use Core\Models\ProductSerial;
+use Core\Models\ProductDefect;
+use Core\Models\ProductSerialIssue;
+use Illuminate\Support\ServiceProvider;
+
 use Core\Observers\OrderObserver;
-use Core\Observers\OrderProductObserver;
 use Core\Observers\ProductObserver;
-use Core\Observers\ProductDepotObserver;
-use Core\Observers\ProductImeiObserver;
-use Core\Observers\DefectObserver;
-use Core\Observers\EntryObserver;
-use Core\Observers\DepotIssueObserver;
+use Core\Observers\DepotEntryObserver;
+use Core\Observers\OrderProductObserver;
+use Core\Observers\DepotProductObserver;
+use Core\Observers\ProductSerialObserver;
+use Core\Observers\ProductDefectObserver;
+use Core\Observers\ProductSerialIssueObserver;
 
 class CoreServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
-     *
      * @var bool
      */
     protected $defer = false;
 
     /**
-     * Boot the application events.
-     *
      * @return void
      */
     public function boot()
@@ -38,14 +35,14 @@ class CoreServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
 
-        Product::observe(ProductObserver::class);
         Order::observe(OrderObserver::class);
-        OrderProduct::observe(OrderProductObserver::class);
-        DepotProduct::observe(ProductDepotObserver::class);
-        ProductImei::observe(ProductImeiObserver::class);
+        Product::observe(ProductObserver::class);
         ProductDefect::observe(DefectObserver::class);
-        DepotEntry::observe(EntryObserver::class);
-        ProductImeiIssue::observe(DepotIssueObserver::class);
+        DepotEntry::observe(DepotEntryObserver::class);
+        OrderProduct::observe(OrderProductObserver::class);
+        DepotProduct::observe(DepotProductObserver::class);
+        ProductSerial::observe(ProductSerialObserver::class);
+        ProductSerialIssue::observe(ProductSerialIssueObserver::class);
     }
 
     /**

@@ -1,11 +1,11 @@
 <?php namespace Core\Observers;
 
+use Core\Models\ProductSerialIssue;
 use Illuminate\Support\Facades\Event;
-use Core\Models\Stock\Issue;
-use Core\Events\StockIssueCreated;
-use Core\Events\StockIssueDeleted;
+use Core\Events\ProductSerialIssueCreated;
+use Core\Events\ProductSerialIssueDeleted;
 
-class StockIssueObserver
+class ProductSerialIssueObserver
 {
     /**
      * Listen to the Issue created event.
@@ -15,7 +15,7 @@ class StockIssueObserver
      */
     public function created(Issue $issue)
     {
-        Event::fire(new StockIssueCreated($issue));
+        Event::fire(new ProductSerialIssueCreated($issue));
     }
 
     /**
@@ -26,6 +26,6 @@ class StockIssueObserver
      */
     public function deleted(Issue $issue)
     {
-        Event::fire(new StockIssueDeleted($issue));
+        Event::fire(new ProductSerialIssueDeleted($issue));
     }
 }
