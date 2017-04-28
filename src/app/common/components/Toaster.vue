@@ -131,7 +131,7 @@ export default {
     }
 
     p {
-      margin-top: 2px;
+      margin-top: 5px;
       font-size: 12px;
     }
   }

@@ -1,5 +1,8 @@
 <template>
-  <span :class="classes">
+  <span :class="classes" :style="{
+    width,
+    height,
+    }">
     <slot></slot>
   </span>
 </template>
@@ -16,7 +19,13 @@ export default {
     text: {
       type: String,
       default: 'white'
-    }
+    },
+    width: {
+      type: String,
+    },
+    height: {
+      type: String,
+    },
   },
 
   computed: {
@@ -41,13 +50,15 @@ export default {
 
 <style lang="scss" scoped>
 .TLabel {
-  display: inline-block;
   line-height: 26px;
   padding: 0 20px;
   border-radius: 3px;
   font-size: 11px;
   font-weight: bold;
-  text-align: center;
   cursor: default;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

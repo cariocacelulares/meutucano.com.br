@@ -28,6 +28,9 @@ export default {
         })
       },
       error: (title, message) => {
+        message = (typeof(message) != 'undefined' && message) ? message
+          : 'Ocorreu um erro! Contate um adminstrador.'
+
         show({
           title,
           message,

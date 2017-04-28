@@ -1,17 +1,15 @@
 <template>
   <App>
     <PageHeader>
-      <div>
+      <div slot="left" class="left">
         <Dropdown placeholder="Linha de produtos"
           :itens="lines" name="productLines"/>
-        <div class="separator">
-          <VSeparator :spacing="20" :height="40" />
-          <FeaturedValue label="Em estoque (144)"
-            value="R$133.619,00" color="success" />
-        </div>
+        <VSeparator :spacing="20" :height="40" />
+        <FeaturedValue label="Em estoque (144)"
+          value="R$133.619,00" color="success" />
       </div>
 
-      <TButton size="big" color="success">
+      <TButton size="big" color="success" :link="{ name: 'products.create' }">
         <Icon name="plus" />
         &nbsp; Novo produto
       </TButton>
@@ -127,12 +125,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~style/vars';
-
-.page-header {
-  .separator {
-    display: flex;
-    align-items: center;
-  }
-}
 </style>

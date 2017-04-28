@@ -1,0 +1,29 @@
+$maxColunms: 10;
+
+[class*="grid-"] {
+  $hGap: 10px;
+
+  display: grid;
+
+  grid-column-gap: $hGap;
+  grid-row-gap: 20px;
+  grid-auto-flow: row;
+
+  @for $i from 1 through $maxColunms {
+    &.grid-#{$i} {
+      grid-template-columns: repeat(#{$i}, calc((100% - ((#{$i} - 1) * #{$hGap})) / #{$i}));
+    }
+  }
+
+  @for $i from 1 through $maxColunms {
+    .span-#{$i} {
+      grid-column-end: span #{$i};
+    }
+  }
+
+  @for $i from 1 through $maxColunms {
+    .start-#{$i} {
+      grid-column-start: #{$i};
+    }
+  }
+}

@@ -1,3 +1,5 @@
+import { isEmpty } from 'lodash'
+
 /**
  * Parse params object to url params stromg
  * @param  {Object} params
@@ -15,4 +17,17 @@ window.parseParams = (params) => {
   }
 
   return parsed
+}
+
+/**
+ * Return only valid values from an array
+ * @param  {Array} array
+ * @return {Array}
+ */
+window.notEmpty = (array) => {
+  return array.filter((item) => {
+    if (typeof(item) === 'boolean' || !isEmpty(item)) {
+      return item.trim()
+    }
+  })
 }

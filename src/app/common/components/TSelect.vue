@@ -1,21 +1,27 @@
 <template>
-  <select :class="classList" :required="required"
-    :placeholder="placeholder" :value="value"
-    @input="updateValue($event.target.value)">
-    <option v-if="!value && placeholder" selected disabled value="">{{ placeholder }}</option>
-    <option v-for="option in options" :value="option.value">
-      {{ option.text }}
-    </option>
-  </select>
+  <label :for="`select-${_uid}`" :class="wrapperClasses">
+    <span v-if="label" class="label">{{ label }}</span>
+    <Icon v-if="leftIcon" :name="leftIcon" classes="leftIcon" :size="size" color="dark" />
+    <select :id="`select-${_uid}`" :class="classList" :required="required"
+      :placeholder="placeholder" :value="value"
+      @input="updateValue($event.target.value)">
+      <option v-if="!value && placeholder" selected disabled value="">{{ placeholder }}</option>
+      <option v-for="option in options" :value="option.value">
+        {{ option.text }}
+      </option>
+    </select>
+    <Icon v-if="rightIcon" :name="rightIcon" classes="rightIcon" :size="size" color="dark" />
+  </label>
 </template>
 
 <script>
-import { isEmpty } from 'lodash'
-
 export default {
   props: {
     value: {
       type: String | Number
+    },
+    label: {
+      type: String
     },
     options: {
       type: Array,
@@ -44,30 +50,48 @@ export default {
     classes: {
       type: String,
       default: null
-    }
+    },
+    leftIcon: {
+      type: String
+    },
+    rightIcon: {
+      type: String
+    },
   },
+
   computed: {
+    wrapperClasses() {
+      let classList = []
+
+      classList.push('selectWrapper')
+      classList.push(this.size)
+
+      return notEmpty(classList).join(' ')
+    },
+
     classList() {
       let classList = []
 
       classList.push('TSelect')
       classList.push(this.classes)
       classList.push(this.color)
-      classList.push(this.size)
 
       if (this.block) {
         classList.push('block')
       }
 
-      classList = classList.filter((item) => {
-        if (typeof(item) === 'boolean' || !isEmpty(item)) {
-          return item
-        }
-      });
+      if (this.leftIcon) {
+        classList.push('space-left')
+      }
 
-      return classList.join(' ')
+      if (this.rightIcon) {
+        classList.push('space-right')
+      }
+
+      return notEmpty(classList).join(' ')
     }
   },
+
   methods: {
     updateValue(value) {
       if (!isEmpty(value)) {
@@ -81,8 +105,89 @@ export default {
 <style lang="scss" scoped>
 @import '~style/vars';
 
-.TSelect {
+$big: 20px;
+$normal: 20px;
+$small: 12px;
+
+.selectWrapper {
+  position: relative;
   display: inline-block;
+
+  &.big {
+    .leftIcon { left: $big }
+    .rightIcon { right: $big }
+  }
+
+  &.small {
+    .leftIcon { left: $small }
+    .rightIcon { right: $small }
+  }
+
+  .leftIcon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .rightIcon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+.label {
+  display: block;
+  line-height: 1;
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 14px;
+  color: $inputLabel;
+}
+
+// sizes
+.big select {
+  height: 50px;
+  padding: 0 $big;
+
+  &.space-left {
+    padding-left: ($big * 2) + 9px;
+  }
+
+  &.space-right {
+    padding-right: ($big * 2) + 9px;
+  }
+}
+
+.normal select {
+  height: 40px;
+  padding: 0 $normal;
+
+  &.space-left {
+    padding-left: ($normal * 2) + 9px;
+  }
+
+  &.space-right {
+    padding-right: ($normal * 2) + 9px;
+  }
+}
+
+.small select {
+  height: 30px;
+  padding: 0 $small;
+
+  &.space-left {
+    padding-left: ($small * 2) + 9px;
+  }
+
+  &.space-right {
+    padding-right: ($small * 2) + 9px;
+  }
+}
+
+select {
+  display: inline-block;
+  width: 100%;
   border-radius: 3px;
   border: 1px solid $default;
   color: $darker;
@@ -110,12 +215,12 @@ export default {
   // sizes
   &.big {
     height: 50px;
-    padding: 0 20px;
+    padding: 0 $big;
   }
 
   &.small {
     height: 30px;
-    padding: 0 12px;
+    padding: 0 $small;
   }
 }
 </style>

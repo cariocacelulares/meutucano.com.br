@@ -1,9 +1,9 @@
-import OrderList from './components/OrderList'
+import List from './components/List'
 
 export default [
     {
       path: '/orders/list',
-      component: OrderList,
+      component: List,
       name: 'orders.list',
       meta: {
         auth: true,

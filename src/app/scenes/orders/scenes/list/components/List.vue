@@ -1,20 +1,18 @@
 <template>
   <App>
     <PageHeader>
-      <div>
+      <div slot="left" class="left">
         <Dropdown placeholder="Período"
           :itens="periods" name="orderPeriods"/>
-        <div class="separator">
-          <VSeparator :spacing="20" :height="40" />
-          <FeaturedValue label="Cancelados (144)"
-            value="R$8.125,00" color="danger" />
-          <VSeparator :spacing="20" :height="40" />
-          <FeaturedValue label="Aprovados (14)"
-            value="R$3.619,00" color="success" />
-          <VSeparator :spacing="20" :height="40" />
-          <FeaturedValue label="Faturados (89)"
-            value="R$53.923,00" color="primary" />
-        </div>
+        <VSeparator :spacing="20" :height="40" />
+        <FeaturedValue label="Cancelados (144)"
+          value="R$8.125,00" color="danger" />
+        <VSeparator :spacing="20" :height="40" />
+        <FeaturedValue label="Aprovados (14)"
+          value="R$3.619,00" color="success" />
+        <VSeparator :spacing="20" :height="40" />
+        <FeaturedValue label="Faturados (89)"
+          value="R$53.923,00" color="primary" />
       </div>
 
       <TButton size="big" color="success">
@@ -133,12 +131,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~style/vars';
-
-.page-header {
-  .separator {
-    display: flex;
-    align-items: center;
-  }
-}
 </style>

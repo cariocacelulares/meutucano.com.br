@@ -1,5 +1,8 @@
 <template>
-  <button :type="type" :class="classList" @click="click">
+  <button :type="type" :class="classList" @click="click" :style="{
+      height,
+      width,
+    }">
     <slot></slot>
   </button>
 </template>
@@ -9,6 +12,10 @@ import { isEmpty } from 'lodash'
 
 export default {
   props: {
+    link: {
+      type: Object,
+      default: null
+    },
     type: {
       type: String,
       default: 'button'
@@ -36,7 +43,17 @@ export default {
     classes: {
       type: String,
       default: null
-    }
+    },
+    back: {
+      type: Boolean,
+      default: false
+    },
+    height: {
+      type: String
+    },
+    width: {
+      type: String
+    },
   },
   computed: {
     classList() {
@@ -68,7 +85,13 @@ export default {
   methods: {
     click() {
       if (!this.disabled) {
-        this.$emit('click')
+        if (this.back) {
+          window.history.back()
+        } else if (this.link) {
+          this.$router.push(this.link)
+        } else {
+          this.$emit('click')
+        }
       }
     }
   }

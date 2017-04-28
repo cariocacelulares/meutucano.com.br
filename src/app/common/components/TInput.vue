@@ -1,8 +1,9 @@
 <template>
   <label :for="`input-${_uid}`" :class="wrapperClasses">
+    <span v-if="label" class="label">{{ label }}</span>
     <Icon v-if="leftIcon" :name="leftIcon" classes="leftIcon" :size="size" color="dark" />
     <input :id="`input-${_uid}`" :type="type" :class="classList" :required="required"
-      :placeholder="placeholder" :value="value"
+      :placeholder="placeholder" :value="value" min="min" max="max" step="step"
       @input="updateValue($event.target.value)"/>
     <Icon v-if="rightIcon" :name="rightIcon" classes="rightIcon" :size="size" color="dark" />
   </label>
@@ -21,6 +22,9 @@ export default {
 
   props: {
     value: {
+      type: String
+    },
+    label: {
       type: String
     },
     type: {
@@ -60,6 +64,15 @@ export default {
       type: Boolean,
       default: false
     },
+    min: {
+      type: Number
+    },
+    max: {
+      type: Number
+    },
+    step: {
+      type: Number
+    },
   },
 
   data() {
@@ -75,7 +88,11 @@ export default {
       classList.push('inputWrapper')
       classList.push(this.size)
 
-      return this.notEmpty(classList).join(' ')
+      if (this.block) {
+        classList.push('block')
+      }
+
+      return notEmpty(classList).join(' ')
     },
 
     classList() {
@@ -84,10 +101,6 @@ export default {
       classList.push('TInput')
       classList.push(this.classes)
       classList.push(this.color)
-
-      if (this.block) {
-        classList.push('block')
-      }
 
       if (this.leftIcon) {
         classList.push('space-left')
@@ -101,19 +114,11 @@ export default {
         classList.push('discrete')
       }
 
-      return this.notEmpty(classList).join(' ')
+      return notEmpty(classList).join(' ')
     }
   },
 
   methods: {
-    notEmpty(array) {
-      return array.filter((item) => {
-        if (typeof(item) === 'boolean' || !isEmpty(item)) {
-          return item
-        }
-      });
-    },
-
     updateValue(value) {
       if (!isEmpty(value) || this.oldValue != value) {
         this.$emit('input', value);
@@ -128,10 +133,12 @@ export default {
 @import '~style/vars';
 
 $big: 20px;
+$normal: 20px;
 $small: 12px;
 
 .inputWrapper {
   position: relative;
+  display: inline-block;
 
   &.big {
     .leftIcon { left: $big }
@@ -156,6 +163,15 @@ $small: 12px;
   }
 }
 
+.label {
+  display: block;
+  line-height: 1;
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 14px;
+  color: $inputLabel;
+}
+
 // sizes
 .big input {
   height: 50px;
@@ -167,6 +183,19 @@ $small: 12px;
 
   &.space-right {
     padding-right: ($big * 2) + 9px;
+  }
+}
+
+.normal input {
+  height: 40px;
+  padding: 0 $normal;
+
+  &.space-left {
+    padding-left: ($normal * 2) + 9px;
+  }
+
+  &.space-right {
+    padding-right: ($normal * 2) + 9px;
   }
 }
 
@@ -185,6 +214,7 @@ $small: 12px;
 
 input {
   display: inline-block;
+  width: 100%;
   border-radius: 3px;
   border: 1px solid $default;
   color: $darker;
@@ -215,11 +245,6 @@ input {
   &:focus {
     background-color: darken($white, 3);
     border-color: darken($default, 3);
-  }
-
-  &.block {
-    display: block;
-    width: 100%;
   }
 }
 </style>
