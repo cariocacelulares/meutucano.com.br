@@ -22,29 +22,22 @@ class Product extends \Eloquent
      */
     protected $fillable = [
         'sku',
-        'marca_id',
-        'linha_id',
-        'titulo',
-        'ncm',
+        'brand_id',
+        'line_id',
+        'title',
         'ean',
-        'valor',
+        'ncm',
+        'price',
         'cost',
-        'estado',
+        'condition',
         'warranty'
     ];
 
     /**
      * @var array
      */
-    protected $casts = [
-        'estado' => 'string',
-    ];
-
-    /**
-     * @var array
-     */
     protected $appends = [
-        'estoque',
+        'stock',
     ];
 
     /**
@@ -76,7 +69,7 @@ class Product extends \Eloquent
      */
     public function entryProducts()
     {
-        return $this->hasMany(EntryProduct::class, 'product_sku', 'sku');
+        return $this->hasMany(EntryProduct::class);
     }
 
     /**
@@ -84,7 +77,7 @@ class Product extends \Eloquent
      */
     public function mercadolivreAds()
     {
-        return $this->hasMany(Ad::class, 'product_sku', 'sku');
+        return $this->hasMany(Ad::class);
     }
 
     /**
@@ -109,24 +102,24 @@ class Product extends \Eloquent
      */
     public function getStock()
     {
-        $stock = $this->productStocks()
-                ->join('stocks', 'stocks.slug', 'product_stocks.stock_slug')
-                ->where('stocks.include', '=', true)
+        $stock = $this->depotProducts()
+                ->join('depots', 'depots.slug', 'depot_products.depot_slug')
+                ->where('depots.include', '=', true)
                 ->sum('quantity');
 
-        $reservados = $this->pedidoProdutos()
-            ->join('pedidos', 'pedidos.id', 'pedido_produtos.pedido_id')
-            ->whereIn('pedidos.status', [0, 1])
+        $reserved = $this->orderProducts()
+            ->join('orders', 'orders.id', 'order_products.order_id')
+            ->whereIn('orders.status', [0, 1])
             ->count();
 
-        return ($stock - $reservados);
+        return ($stock - $reserved);
     }
 
     /**
      * Return calculated estoque
      * @return int quantity in stock
      */
-    public function getEstoqueAttribute()
+    public function getStockAttribute()
     {
         return $this->getStock();
     }

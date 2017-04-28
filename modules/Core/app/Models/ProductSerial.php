@@ -3,7 +3,7 @@
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 
-class ProductImei extends \Eloquent
+class ProductSerial extends \Eloquent
 {
     use SoftDeletes,
         RevisionableTrait;
@@ -17,8 +17,8 @@ class ProductImei extends \Eloquent
      * @var array
      */
     protected $fillable = [
-        'product_stock_id',
-        'imei',
+        'depot_product_id',
+        'serial',
         'cost',
     ];
 
@@ -43,7 +43,7 @@ class ProductImei extends \Eloquent
      */
     public function withdrawProducts()
     {
-        return $this->hasMany(RemovalProduct::class);
+        return $this->hasMany(WithdrawProduct::class);
     }
 
     /**
@@ -51,7 +51,7 @@ class ProductImei extends \Eloquent
      */
     public function issue()
     {
-        return $this->hasOne(ProductImeiIssue::class);
+        return $this->hasOne(ProductSerialIssue::class);
     }
 
     /**
@@ -65,9 +65,9 @@ class ProductImei extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function entryImeis()
+    public function entrySerials()
     {
-        return $this->hasMany(Imei::class);
+        return $this->hasMany(Serial::class);
     }
 
     /**
@@ -82,7 +82,7 @@ class ProductImei extends \Eloquent
      * Set the imei
      * @param string $imei upper and trim
      */
-    public function setImeiAttribute($imei)
+    public function setSerialAttribute($imei)
     {
         $this->attributes['imei'] = mb_strtoupper(trim($imei));
     }

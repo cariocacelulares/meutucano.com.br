@@ -45,7 +45,7 @@ class AlterCustomerTablesToEnglish extends Migration
             $table->renameColumn('tipo', 'type');
             $table->renameColumn('nome', 'name');
             $table->renameColumn('fone', 'phone');
-            $table->renameColumn('inscricao', 'documento');
+            $table->renameColumn('inscricao', 'document');
         });
 
         /**

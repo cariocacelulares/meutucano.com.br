@@ -15,8 +15,8 @@ class Line extends \Eloquent
      * @var array
      */
     protected $fillable = [
-        'titulo',
-        'ncm_padrao',
+        'title',
+        'ncm_default',
     ];
 
     /**

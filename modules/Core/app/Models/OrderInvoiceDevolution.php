@@ -16,19 +16,22 @@ class OrderInvoiceDevolution extends \Eloquent
      * @var array
      */
     protected $fillable = [
-        'usuario_id',
-        'nota_id',
-        'chave',
-        'arquivo',
-        'tipo',
-        'data',
+        'user_id',
+        'order_invoice_id',
+        'key',
+        'file',
+        'type',
+        'issued_at',
+        'note'
     ];
 
     /**
      * @var array
      */
     protected $appends = [
-        'tipo_readable',
+        'number',
+        'serie',
+        'type_readable',
     ];
 
     /**
@@ -42,7 +45,7 @@ class OrderInvoiceDevolution extends \Eloquent
     /**
      * @return string
      */
-    public function getTipoReadableAttribute()
+    public function getTypeReadableAttribute()
     {
         return ($this->tipo == 1) ? 'Estorno' : 'Devolução';
     }
@@ -52,7 +55,7 @@ class OrderInvoiceDevolution extends \Eloquent
      *
      * @return string
      */
-    public function getNumeroAttribute()
+    public function getNumberAttribute()
     {
         return (int) (substr($this->chave, 25, 9)) ?: $this->pedido_id;
     }

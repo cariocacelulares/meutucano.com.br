@@ -20,9 +20,9 @@ class DepotWithdrawProduct extends \Eloquent
      * @var array
      */
     protected $fillable = [
-        'stock_removal_id',
-        'product_stock_id',
-        'product_imei_id',
+        'depot_withdraw_id',
+        'depot_product_id',
+        'product_serial_id',
         'status',
     ];
 
@@ -37,7 +37,7 @@ class DepotWithdrawProduct extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function productStock()
+    public function depotProduct()
     {
         return $this->belongsTo(DepotProduct::class);
     }
@@ -45,8 +45,8 @@ class DepotWithdrawProduct extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function productImei()
+    public function productSerial()
     {
-        return $this->belongsTo(ProductImei::class)->withTrashed();
+        return $this->belongsTo(ProductSerial::class)->withTrashed();
     }
 }

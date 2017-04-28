@@ -15,7 +15,7 @@ class DepotEntryProduct extends \Eloquent
      * @var array
      */
     protected $fillable = [
-        'stock_entry_id',
+        'depot_entry_id',
         'product_sku',
         'depot_product_id',
         'quantity',
@@ -25,7 +25,7 @@ class DepotEntryProduct extends \Eloquent
         'ipi',
         'pis',
         'cofins',
-        'imeis',
+        'serials',
     ];
 
     /**
@@ -74,9 +74,9 @@ class DepotEntryProduct extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function entryImeis()
+    public function serials()
     {
-        return $this->hasMany(EntryImei::class);
+        return $this->hasMany(DepotEntryProductSerial::class);
     }
 
     /**
@@ -85,7 +85,7 @@ class DepotEntryProduct extends \Eloquent
      * @param  string  $imeis imeis json encoded
      * @return array|null
      */
-    public function getImeisAttribute($imeis)
+    public function getSerialsAttribute($imeis)
     {
         if (!$imeis) return null;
 

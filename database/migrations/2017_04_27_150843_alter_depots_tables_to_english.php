@@ -21,7 +21,7 @@ class AlterDepotsTablesToEnglish extends Migration
         Schema::rename('stocks', 'depots');
         Schema::rename('stock_removals', 'depot_withdraws');
         Schema::rename('stock_removal_products', 'depot_withdraw_products');
-        Schema::rename('stock_issues', 'depot_issues');
+        Schema::rename('stock_issues', 'product_serial_issues');
         Schema::rename('stock_entry_products', 'depot_entry_products');
         Schema::rename('stock_entry_product_imeis', 'depot_entry_product_serials');
         Schema::rename('stock_entry_invoices', 'depot_entry_invoices');

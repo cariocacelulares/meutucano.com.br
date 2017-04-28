@@ -5,7 +5,7 @@ class TrackingCode extends \Eloquent
     /**
      * @var string
      */
-    protected $primaryKey = 'service';
+    protected $primaryKey = 'carries';
 
     /**
      * @var bool
@@ -21,9 +21,9 @@ class TrackingCode extends \Eloquent
      * @var array
      */
     protected $fillable = [
-        'service',
+        'carries',
         'prefix',
         'current',
-        'end',
+        'last',
     ];
 }

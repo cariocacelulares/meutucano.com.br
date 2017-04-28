@@ -16,7 +16,7 @@ class ProductDefect extends \Eloquent
      */
     protected $fillable = [
         'product_sku',
-        'product_imei_id',
+        'product_serial_id',
         'description',
     ];
 
@@ -31,8 +31,8 @@ class ProductDefect extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function productImei()
+    public function serial()
     {
-        return $this->belongsTo(ProductImei::class)->withTrashed();
+        return $this->belongsTo(ProductSerial::class)->withTrashed();
     }
 }

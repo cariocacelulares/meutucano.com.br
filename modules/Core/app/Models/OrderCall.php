@@ -16,9 +16,9 @@ class OrderCall extends \Eloquent
      * @var array
      */
     protected $fillable = [
-        'pedido_id',
-        'usuario_id',
-        'arquivo',
+        'order_id',
+        'user_id',
+        'file',
     ];
 
     /**
@@ -50,7 +50,7 @@ class OrderCall extends \Eloquent
      * @param  string $arquivo
      * @return string
      */
-    public function getArquivoAttribute($arquivo)
+    public function getFileAttribute($arquivo)
     {
         return "/storage/{$arquivo}";
     }

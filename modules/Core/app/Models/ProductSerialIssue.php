@@ -1,8 +1,9 @@
 <?php namespace Core\Models;
 
+use App\Models\User\User;
 use Venturecraft\Revisionable\RevisionableTrait;
 
-class DepotEntryProductImei extends \Eloquent
+class ProductSerialIssue extends \Eloquent
 {
     use RevisionableTrait;
 
@@ -15,23 +16,25 @@ class DepotEntryProductImei extends \Eloquent
      * @var array
      */
     protected $fillable = [
-        'stock_entry_product_id',
-        'product_imei_id',
+        'user_id',
+        'product_serial_id',
+        'reason',
+        'description',
     ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function entryProduct()
+    public function user()
     {
-        return $this->belongsTo(DepotEntryProduct::class);
+        return $this->belongsTo(User::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function productImei()
+    public function serial()
     {
-        return $this->belongsTo(ProductImei::class);
+        return $this->belongsTo(ProductSerial::class)->withTrashed();
     }
 }

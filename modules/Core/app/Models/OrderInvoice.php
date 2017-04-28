@@ -17,19 +17,19 @@ class OrderInvoice extends \Eloquent
      * @var array
      */
     protected $fillable = [
-        'pedido_id',
-        'usuario_id',
-        'chave',
-        'arquivo',
-        'data',
-        'delete_note',
+        'order_id',
+        'user_id',
+        'key',
+        'file',
+        'issued_at',
+        'note',
     ];
 
     /**
      * @var array
      */
     protected $appends = [
-        'numero',
+        'number',
         'serie',
     ];
 
@@ -53,17 +53,17 @@ class OrderInvoice extends \Eloquent
      */
     public function devolution()
     {
-        return $this->HasOne(OrderInvoiceDevolution::class);
+        return $this->hasOne(OrderInvoiceDevolution::class);
     }
 
     /**
-     * Return numero attribute
+     * Return number attribute
      *
      * @return string
      */
-    public function getNumeroAttribute()
+    public function getNumberAttribute()
     {
-        return (int) (substr($this->chave, 25, 9)) ?: $this->pedido_id;
+        return (int) (substr($this->chave, 25, 9)) ?: null;
     }
 
     /**

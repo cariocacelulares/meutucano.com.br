@@ -16,9 +16,9 @@ class OrderComment extends \Eloquent
      * @var array
      */
     protected $fillable = [
-        'pedido_id',
-        'usuario_id',
-        'comentario',
+        'order_id',
+        'user_id',
+        'comment',
     ];
 
     /**

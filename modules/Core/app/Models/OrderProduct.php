@@ -15,11 +15,11 @@ class OrderProduct extends \Eloquent
      * @var array
      */
     protected $fillable = [
-        'pedido_id',
-        'produto_sku',
-        'product_imei_id',
-        'product_stock_id',
-        'valor',
+        'order_id',
+        'product_sku',
+        'depot_product_id',
+        'product_serial_id',
+        'price',
     ];
 
     /**
@@ -41,9 +41,9 @@ class OrderProduct extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function productImei()
+    public function productSerial()
     {
-        return $this->belongsTo(ProductImei::class);
+        return $this->belongsTo(ProductSerial::class);
     }
 
     /**

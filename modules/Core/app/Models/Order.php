@@ -18,31 +18,21 @@ class Order extends \Eloquent
      * @var array
      */
     protected $fillable = [
-        'cliente_id',
-        'cliente_endereco_id',
-        'codigo_api',
-        'frete_valor',
-        'frete_metodo',
-        'pagamento_metodo',
-        'parcelas',
-        'codigo_marketplace',
+        'customer_id',
+        'customer_address_id',
+        'shipment_cost',
+        'shipment_method',
+        'payment_method',
+        'installments',
+        'api_code',
         'marketplace',
-        'operacao',
         'total',
         'estimated_delivery',
         'status',
-        'protocolo',
-        'imagem_cancelamento',
-        'segurado',
-        'reembolso',
-        'priorizado',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $casts = [
-        'status' => 'string',
+        'cancel_protocol',
+        'holded',
+        'refunded',
+        'priority',
     ];
 
     /**

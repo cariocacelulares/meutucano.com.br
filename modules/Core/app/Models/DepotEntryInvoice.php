@@ -15,7 +15,7 @@ class DepotEntryInvoice extends \Eloquent
      * @var array
      */
     protected $fillable = [
-        'stock_entry_id',
+        'depot_entry_id',
         'key',
         'series',
         'number',

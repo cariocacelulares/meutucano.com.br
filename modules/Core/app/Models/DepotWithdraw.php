@@ -26,13 +26,13 @@ class DepotWithdraw extends Model
      */
     public function user()
     {
-        return $this->belongsTo(Usuario::class);
+        return $this->belongsTo(User::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function removalProducts()
+    public function products()
     {
         return $this->hasMany(DepotWithdrawProduct::class);
     }

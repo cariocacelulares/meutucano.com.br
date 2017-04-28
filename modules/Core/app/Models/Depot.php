@@ -46,7 +46,7 @@ class Depot extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function depotProducts()
+    public function products()
     {
         return $this->hasMany(DepotProduct::class);
     }

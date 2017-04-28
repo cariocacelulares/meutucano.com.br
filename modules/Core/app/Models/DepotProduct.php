@@ -15,7 +15,7 @@ class DepotProduct extends \Eloquent
      * @var array
      */
     protected $fillable = [
-        'stock_slug',
+        'depot_slug',
         'product_sku',
         'quantity',
         'serial_enabled',
@@ -39,7 +39,7 @@ class DepotProduct extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function stock()
+    public function depot()
     {
         return $this->belongsTo(Depot::class);
     }
@@ -55,8 +55,8 @@ class DepotProduct extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function productImeis()
+    public function productSerials()
     {
-        return $this->hasMany(ProductImei::class);
+        return $this->hasMany(ProductSerial::class);
     }
 }

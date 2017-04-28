@@ -26,9 +26,9 @@ class Customer extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function pedidos()
+    public function orders()
     {
-        return $this->hasMany(Pedido::class);
+        return $this->hasMany(Order::class);
     }
 
     /**

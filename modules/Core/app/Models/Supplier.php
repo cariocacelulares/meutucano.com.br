@@ -8,24 +8,24 @@ class Supplier extends \Eloquent
     protected $fillable = [
         'company_name',
         'name',
-        'cnpj',
-        'ie',
+        'taxvat',
+        'document',
         'crt',
-        'fone',
+        'phone',
         'street',
         'number',
         'complement',
-        'neighborhood',
+        'district',
         'city',
-        'uf',
-        'cep',
+        'state',
+        'zipcode',
         'country',
     ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function entries()
+    public function depotEntries()
     {
         return $this->hasMany(DepotEntry::class);
     }
