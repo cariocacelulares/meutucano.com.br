@@ -232,7 +232,9 @@ class RastreioController extends Controller
             }
 
             $status = 1;
-            if ($ultimoEvento === false && $dateDiff > 15) {
+            if ($ultimoEvento === false) {
+				return $rastreio;
+            } else if ($dateDiff > 15) {
                 $status = 9;
             } else if (!$ultimoEvento['acao']) {
                 $status = $rastreio->status;
