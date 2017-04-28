@@ -1,7 +1,7 @@
 <?php namespace Core\Console\Commands;
 
 use Illuminate\Console\Command;
-use Core\Http\Controllers\Pedido\PedidoController;
+use Core\Http\Controllers\Order\OrderController;
 
 class CancelOldOrders extends Command
 {
@@ -10,14 +10,14 @@ class CancelOldOrders extends Command
      *
      * @var string
      */
-    protected $signature = 'pedidos:cancelold';
+    protected $signature = 'orders:cancel-old';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Cancela pedidos pendentes a mais de x dias úteis';
+    protected $description = 'Cancel old orders due to deadline configured by store';
 
     /**
      * Execute the console command.
@@ -26,7 +26,7 @@ class CancelOldOrders extends Command
      */
     public function handle()
     {
-        $return = with(new PedidoController())->cancelOldOrders();
+        $return = with(new OrderController())->cancelOldOrders();
         $this->comment($return);
     }
 }

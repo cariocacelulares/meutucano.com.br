@@ -1,8 +1,8 @@
 <?php namespace Core\Console\Commands;
 
+use Core\Models\Order;
 use Illuminate\Console\Command;
-use Core\Models\Pedido\Pedido;
-use Core\Http\Controllers\Pedido\PedidoController;
+use Core\Http\Controllers\Order\OrderController;
 
 class InvoiceOrders extends Command
 {
@@ -11,14 +11,14 @@ class InvoiceOrders extends Command
      *
      * @var string
      */
-    protected $signature = 'pedidos:faturar {orders}';
+    protected $signature = 'order:invoice {orders}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Considera os pedidos como enviados (separado por ,)';
+    protected $description = 'Invoice orders manually (use commas to separate ids)';
 
     /**
      * Execute the console command.
@@ -27,22 +27,22 @@ class InvoiceOrders extends Command
      */
     public function handle()
     {
-        $pedidos = $this->argument('orders');
-        $pedidos = $pedidos ? explode(',', $pedidos) : [];
+        $orderCodes = $this->argument('orders');
+        $orderCodes = $orderCodes ? explode(',', $orderCodes) : [];
 
         $i = 0;
-        $total = count($pedidos);
+        $total = count($orderCodes);
         try {
-            foreach ($pedidos as $codigoMarketplace) {
-                $pedido = Pedido::where('codigo_marketplace', '=', $codigoMarketplace)->first();
+            foreach ($orderCodes as $code) {
+                $order = Order::where('api_code', '=', $code)->first();
 
-                if ($pedido) {
-                    with(new PedidoController())->faturar($pedido->id);
+                if ($order) {
+                    with(new OrderController())->invoice($order->id);
                     $i++;
                 }
             }
         } catch (\Exception $exception) {
-            logMessage($exception, 'Erro ao executar comando pedidos:invoice');
+            logMessage($exception, 'Erro ao executar comando orders:invoice');
             $this->comment('Ocorreu um erro');
         }
 

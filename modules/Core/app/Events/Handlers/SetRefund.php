@@ -1,8 +1,8 @@
 <?php namespace Core\Events\Handlers;
 
+use Core\Events\OrderCanceled;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;
-use Core\Events\OrderCanceled;
 
 class SetRefund
 {
@@ -37,12 +37,10 @@ class SetRefund
                 Log::debug('Pedido não encontrado!', [$order]);
             } else {
                 $dirty = $order->getDirty();
-                // If status has updated
                 if (isset($dirty['status'])) {
-                    // If old status is sent, paid or delivered
-                    if (in_array((int)$order->getOriginal('status'), [1, 2, 3])) {
+                    if (in_array((int) $order->getOriginal('status'), [1, 2, 3])) {
                         $order = $order->fresh();
-                        $order->reembolso = true;
+                        $order->refunded = true;
                         if ($order->save()) {
                             Log::notice("Pedido {$order->id} marcado como reembolso!", [$order]);
                         } else {

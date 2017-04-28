@@ -25,6 +25,23 @@ class DepotEntry extends \Eloquent
     ];
 
     /**
+     * @var array
+     */
+    protected $appends = [
+        'confirmed'
+    ];
+
+    /**
+     * Return if entry was confirmed
+     *
+     * @return void
+     */
+    public function getConfirmedAttribute()
+    {
+        return ($this->confirmed_at) true : false;
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

@@ -1,14 +1,13 @@
 <?php namespace Core\Events\Handlers;
 
+use Core\Events\OrderSent;
+use Core\Events\OrderCanceled;
+use Core\Events\OrderProductCreated;
+use Core\Events\ProductSerialCreated;
+use Core\Events\ProductSerialDeleted;
+use Core\Events\ProductSerialRestored;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;
-use Core\Events\ProductImeiCreated;
-use Core\Events\ProductImeiDeleted;
-use Core\Events\ProductImeiRestored;
-use Core\Events\OrderSent;
-use Core\Events\OrderProductCreated;
-use Core\Events\OrderCanceled;
-
 
 class UpdateStock
 {
@@ -21,18 +20,18 @@ class UpdateStock
     public function subscribe(Dispatcher $events)
     {
         $events->listen(
-            ProductImeiRestored::class,
-            '\Core\Events\Handlers\UpdateStock@onProductImeiRestored'
+            ProductSerialRestored::class,
+            '\Core\Events\Handlers\UpdateStock@onProductSerialRestored'
         );
 
         $events->listen(
-            ProductImeiDeleted::class,
-            '\Core\Events\Handlers\UpdateStock@onProductImeiDeleted'
+            ProductSerialDeleted::class,
+            '\Core\Events\Handlers\UpdateStock@onProductSerialDeleted'
         );
 
         $events->listen(
-            ProductImeiCreated::class,
-            '\Core\Events\Handlers\UpdateStock@onProductImeiCreated'
+            ProductSerialCreated::class,
+            '\Core\Events\Handlers\UpdateStock@onProductSerialCreated'
         );
 
         $events->listen(
@@ -40,7 +39,6 @@ class UpdateStock
             '\Core\Events\Handlers\UpdateStock@onOrderSent'
         );
 
-        // Aqui foi criado uma redundancia pois quando o produto é criado já com status pago ele ainda não possui pedido produto
         $events->listen(
             OrderProductCreated::class,
             '\Core\Events\Handlers\UpdateStock@onOrderProductCreated'
@@ -48,72 +46,72 @@ class UpdateStock
     }
 
     /**
-     * Trigger stock updates on product imei created
+     * Trigger stock updates on product serial created
      *
-     * @param  ProductImeiCreated $event
+     * @param  ProductSerialCreated $event
      * @return void
      */
-    public function onProductImeiCreated(ProductImeiCreated $event)
+    public function onProductSerialCreated(ProductSerialCreated $event)
     {
-        Log::debug('Handler UpdateStock/onProductImeiCreated acionado!', [$event]);
+        Log::debug('Handler UpdateStock/onProductSerialCreated acionado!', [$event]);
 
-        if ($productImei = $event->productImei) {
+        if ($productSerial = $event->productSerial) {
             \Stock::add(
-                $productImei->productStock->product_sku,
+                $productSerial->depotProduct->product_sku,
                 1,
-                $productImei->productStock->stock_slug
+                $productSerial->depotProduct->stock_slug
             );
         } else {
-            Log::warning('ProductImei não encontrado!', [$productImei]);
+            Log::warning('ProductSerial não encontrado!', [$productSerial]);
         }
     }
 
     /**
-     * Trigger stock updates on product imei restored
+     * Trigger stock updates on product serial restored
      *
-     * @param  ProductImeiRestored $event
+     * @param  ProductSerialRestored $event
      * @return void
      */
-    public function onProductImeiRestored(ProductImeiRestored $event)
+    public function onProductSerialRestored(ProductSerialRestored $event)
     {
-        Log::debug('Handler UpdateStock/onProductImeiRestored acionado!', [$event]);
+        Log::debug('Handler UpdateStock/onProductSerialRestored acionado!', [$event]);
 
-        if ($productImei = $event->productImei) {
+        if ($productSerial = $event->productSerial) {
             \Stock::add(
-                $productImei->productStock->product_sku,
+                $productSerial->depotProduct->product_sku,
                 1,
-                $productImei->productStock->stock_slug
+                $productSerial->depotProduct->stock_slug
             );
         } else {
-            Log::warning('ProductImei não encontrado!', [$productImei]);
+            Log::warning('ProductSerial não encontrado!', [$productSerial]);
         }
     }
 
     /**
-     * Trigger stock updates on product imei deleted
+     * Trigger stock updates on product serial deleted
      *
-     * @param  ProductImeiDeleted $event
+     * @param  ProductSerialDeleted $event
      * @return void
      */
-    public function onProductImeiDeleted(ProductImeiDeleted $event)
+    public function onProductSerialDeleted(ProductSerialDeleted $event)
     {
-        Log::debug('Handler UpdateStock/onProductImeiDeleted acionado!', [$event]);
+        Log::debug('Handler UpdateStock/onProductSerialDeleted acionado!', [$event]);
 
-        if ($productImei = $event->productImei) {
+        if ($productSerial = $event->productSerial) {
             \Stock::substract(
-                $productImei->productStock->product_sku,
+                $productSerial->depotProduct->product_sku,
                 1,
-                $productImei->productStock->stock_slug
+                $productSerial->depotProduct->stock_slug
             );
         } else {
-            Log::warning('ProductImei não encontrado!', [$productImei]);
+            Log::warning('ProductSerial não encontrado!', [$productSerial]);
         }
     }
 
     /**
      * Trigger stock updates when order sent
      *
-     * @param  OrderSent  $event
+     * @param  OrderSent $event
      * @return void
      */
     public function onOrderSent(OrderSent $event)
@@ -126,15 +124,15 @@ class UpdateStock
         if (!$order) {
             Log::debug('Pedido não encontrado!', [$order]);
         } else {
-            foreach ($order->produtos as $orderProduct) {
-                $stock = \Stock::choose($orderProduct->produto_sku);
-                \Stock::substract($orderProduct->produto_sku, 1, $stock);
+            foreach ($order->products as $orderProduct) {
+                $stock = \Stock::choose($orderProduct->product_sku);
+                \Stock::substract($orderProduct->product_sku, 1, $stock);
             }
         }
     }
 
     /**
-     * Trigger stock updates when order canceled
+     * Trigger stock updates when order product is created
      *
      * @param  OrderProductCreated  $event
      * @return void
@@ -144,35 +142,11 @@ class UpdateStock
         $orderProduct = $event->orderProduct;
         $orderProduct = $orderProduct->fresh();
 
-        // Apenas se o produto for enviado ou entregue
-        if (in_array((int)$orderProduct->pedido->status, [2, 3])) {
+        if (in_array((int) $orderProduct->pedido->status, [2, 3])) {
             Log::debug('Handler UpdateStock/onOrderProductCreated acionado.', [$event]);
 
-            $stock = \Stock::choose($orderProduct->produto_sku);
-            \Stock::substract($orderProduct->produto_sku, 1, $stock);
+            $stock = \Stock::choose($orderProduct->product_sku);
+            \Stock::substract($orderProduct->product_sku, 1, $stock);
         }
     }
-
-    /**
-     * Trigger stock updates when order canceled
-     *
-     * @param  OrderCanceled  $event
-     * @return void
-     */
-    /*public function onOrderCanceled(OrderCanceled $event)
-    {
-        Log::debug('Handler UpdateStock/onOrderCanceled acionado!', [$event]);
-
-        $order = $event->order;
-        $order = $order->fresh();
-
-        if (!$order) {
-            Log::debug('Pedido não encontrado!', [$order]);
-        } else {
-            foreach ($order->produtos as $orderProduct) {
-                $stock = \Stock::choose($orderProduct->produto_sku);
-                \Stock::add($orderProduct->produto_sku, 1, $stock);
-            }
-        }
-    }*/
 }

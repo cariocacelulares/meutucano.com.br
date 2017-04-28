@@ -1,9 +1,9 @@
 <?php namespace Core\Events\Handlers;
 
+use Core\Models\Product;
+use Core\Events\DepotEntryConfirmed;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;
-use Core\Events\EntryConfirmed;
-use Core\Models\Produto;
 
 class SetProductCost
 {
@@ -16,25 +16,25 @@ class SetProductCost
     public function subscribe(Dispatcher $events)
     {
         $events->listen(
-            EntryConfirmed::class,
-            '\Core\Events\Handlers\SetProductCost@onEntryConfirmed'
+            DepotEntryConfirmed::class,
+            '\Core\Events\Handlers\SetProductCost@onDepotEntryConfirmed'
         );
     }
 
     /**
      * Handle the event.
      *
-     * @param  EntryConfirmed $event
+     * @param  DepotEntryConfirmed $event
      * @return void
      */
-    public function onEntryConfirmed(EntryConfirmed $event)
+    public function onDepotEntryConfirmed(DepotEntryConfirmed $event)
     {
-        Log::debug('Handler SetProductCost/onEntryConfirmed acionado!', [$event]);
+        Log::debug('Handler SetProductCost/onDepotEntryConfirmed acionado!', [$event]);
         $entry = $event->entry;
 
         try {
             foreach ($entry->products as $entryProduct) {
-                $product = Produto::find($entryProduct->product->sku);
+                $product = Product::find($entryProduct->product->sku);
 
                 if ($product) {
                     $product->cost = $this->getCost($product);
@@ -48,28 +48,23 @@ class SetProductCost
 
     /**
      * Calculate product const
-     * @param  Produto  $product
+     *
+     * @param  Product  $product
      * @return float
      */
     private function getCost($product)
     {
-        if (!$product) {
-            return 0;
-        }
+        if (!$product) return 0;
 
         $totalQty   = 0;
         $totalValue = 0;
 
-        // pra cada produto com esse sku em uma entrada
         foreach ($product->entryProducts as $entryProduct) {
             $qty = 0;
 
-            // se a entrtada estiver confirmada
-            if (!is_null($entryProduct->entry->confirmed_at)) {
-                // pra cada imei da entrada
-                foreach ($entryProduct->entryImeis as $entryImei) {
-                    // se está no estoque, considera
-                    if ($entryImei->productImei->inStock()) {
+            if ($entryProduct->entry->confirmed) {
+                foreach ($entryProduct->serials as $serial) {
+                    if ($serial->productSerial->inStock()) {
                         $qty++;
                     }
                 }

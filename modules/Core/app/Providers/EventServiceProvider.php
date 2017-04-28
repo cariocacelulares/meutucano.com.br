@@ -1,16 +1,16 @@
 <?php namespace Core\Providers;
 
-use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use Core\Events\Handlers\SetRefund;
 use Core\Events\Handlers\UpdateStock;
-use Core\Events\Handlers\DeleteProductImei;
-use Core\Events\Handlers\RestoreProductImei;
-use Core\Events\Handlers\ConvertEntryImeis;
 use Core\Events\Handlers\SetProductCost;
-use Core\Events\Handlers\SetProductImeiCost;
+use Core\Events\Handlers\DeleteProductSerial;
+use Core\Events\Handlers\RestoreProductSerial;
+use Core\Events\Handlers\ConvertEntrySerials;
+use Core\Events\Handlers\SetProductSerialCost;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider;
 
-class EventServiceProvider extends ServiceProvider
+class EventServiceProvider extends EventServiceProvider
 {
     /**
      * The event listener mappings for the application.
@@ -22,13 +22,13 @@ class EventServiceProvider extends ServiceProvider
     ];
 
     protected $subscribe = [
-        UpdateStock::class,
         SetRefund::class,
-        DeleteProductImei::class,
-        RestoreProductImei::class,
-        ConvertEntryImeis::class,
+        UpdateStock::class,
         SetProductCost::class,
-        SetProductImeiCost::class,
+        DeleteProductSerial::class,
+        ConvertEntrySerials::class,
+        RestoreProductSerial::class,
+        SetProductSerialCost::class,
     ];
 
     /**

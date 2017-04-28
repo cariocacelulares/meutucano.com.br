@@ -251,16 +251,16 @@ class PedidoController extends Controller
     /**
      * Envia informações de entrega e nota
      *
-     * @param  int $pedido_id
+     * @param  int $order_id
      * @return void
      */
-    public function faturar($pedido_id)
+    public function invoice($order_id)
     {
-        Log::debug("Tentando faturar o pedido {$pedido_id}");
+        Log::debug("Tentando faturar o pedido {$order_id}");
 
-        if ($pedido = Pedido::find($pedido_id)) {
-            $pedido->status = 2;
-            $pedido->save();
+        if ($order = Order::find($order_id)) {
+            $order->status = 2;
+            $order->save();
         }
     }
 

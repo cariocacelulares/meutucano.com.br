@@ -29,7 +29,7 @@ class ScheduleServiceProvider extends ServiceProvider
         $this->app->booted(function () {
             $schedule = $this->app->make(Schedule::class);
 
-            $schedule->command('pedidos:cancelold')
+            $schedule->command('orders:cancel-old')
                 ->daily();
         });
     }
