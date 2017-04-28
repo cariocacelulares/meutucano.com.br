@@ -22,7 +22,7 @@
     <VSeparator :height="30" />
     Mostrar
     <TSelect v-model="perPage" :options="options"
-      size="small" classes="m-h-10" @input="changePerPage" />
+      size="small" class="m-h-10" @input="changePerPage" />
     por página
     <VSeparator :height="30" />
     Total de {{ rows }} registro{{ (rows !== 1) ? 's' : '' }}

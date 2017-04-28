@@ -7,8 +7,8 @@
         </TButton>
 
         <VSeparator :spacing="20" :height="40" />
-        <FeaturedValue label="SKU"
-        value="1384" color="darker" />
+        <FeaturedValue v-if="sku" label="SKU"
+        :value="sku" color="darker" />
       </div>
 
       <TButton size="big" color="success" @click="save">
@@ -89,9 +89,14 @@ export default {
     Help,
   },
 
+  props: {
+    sku: {
+      default: null
+    }
+  },
+
   data() {
     return {
-      sku: null,
       title: null,
       reference: null,
       ean: null,
@@ -108,15 +113,29 @@ export default {
 
   methods: {
     save() {
-      axios.post('product/create', this.$data)
-        .then(
-          (response) => {
-            this.$router.push({ name: 'products.list' })
-          },
-          (error) => {
-            this.$toaster.error('Não foi possível salvar o salvar produto!')
-          }
-        )
+      axios.post('product/create', this.$data).then(
+        (response) => {
+          this.$router.push({ name: 'products.list' })
+        },
+        (error) => {
+          this.$toaster.error('Não foi possível salvar o salvar produto!')
+        }
+      )
+    }
+  },
+
+  beforeRouteEnter(to, from, next) {
+    if (to.name == 'products.create') {
+      next()
+    } else {
+      axios.get('product/' + to.params.sku).then(
+        (response) => {
+          next()
+        },
+        (error) => {
+          next({ name: 'products.list' })
+        }
+      )
     }
   },
 };

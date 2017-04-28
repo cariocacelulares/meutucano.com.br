@@ -74,7 +74,7 @@ export default {
       max-height: 0;
       transition: all 250ms ease-out;
       overflow: hidden;
-      transform: translateZ(0, 0, 0);
+      transform: translateZ(0);
 
       li {
         list-style: none;

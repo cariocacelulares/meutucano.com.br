@@ -65,6 +65,13 @@ export default {
   justify-content: space-between;
   z-index: 500;
 
+  &::selection,
+  *::selection {
+    background: transparent;
+    text-shadow: none;
+    color: $darker;
+  }
+
   .selection {
     padding: 12px 20px;
     color: $darker;
@@ -75,6 +82,10 @@ export default {
     span {
       margin-right: 20px;
     }
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   &:hover {
@@ -83,13 +94,13 @@ export default {
     }
 
     ul {
-      display: block;
+      max-height: 500px;
+      transition: all 350ms ease-in;
     }
   }
 
   ul {
     position: absolute;
-    display: none;
     top: 38px;
     left: 0;
     width: 100%;
@@ -97,6 +108,11 @@ export default {
     background-color: $ligther;
     box-shadow: 0px 2px 1px 0px $default;
     font-size: .9em;
+    // transition effect
+    max-height: 0;
+    transition: all 250ms ease-out;
+    overflow: hidden;
+    transform: translateZ(0);
 
     li {
       list-style: none;

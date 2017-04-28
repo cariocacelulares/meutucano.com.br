@@ -17,6 +17,7 @@ export default [
     meta: {
       auth: true,
       breadcrumb: 'Editar'
-    }
+    },
+    props: (route) => ({ sku: route.params.sku })
   },
 ]

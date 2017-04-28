@@ -31,6 +31,16 @@ body {
   letter-spacing: .01em;
 }
 
+textarea,
+select,
+input,
+button {
+  &::selection {
+    background: transparent;
+    text-shadow: none;
+  }
+}
+
 ::selection {
   background: #292B37;
   color: #FFF;
