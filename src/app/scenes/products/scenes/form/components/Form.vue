@@ -1,25 +1,25 @@
 <template>
   <App>
-    <PageHeader>
-      <div slot="left" class="left">
-        <TButton size="big" color="light" text="dark" :back="true">
-          <Icon name="angle-left" />
+    <form @submit.prevent="save">
+      <PageHeader>
+        <div slot="left" class="left">
+          <TButton size="big" color="light" text="dark" :back="true">
+            <Icon name="angle-left" />
+          </TButton>
+
+          <VSeparator v-if="sku" :spacing="20" :height="40" />
+          <FeaturedValue v-if="sku" label="SKU"
+            :value="sku" color="darker" />
+        </div>
+
+        <TButton size="big" color="success" type="submit">
+          <Icon name="check" />
+          &nbsp; Salvar
         </TButton>
-
-        <VSeparator :spacing="20" :height="40" />
-        <FeaturedValue v-if="sku" label="SKU"
-        :value="sku" color="darker" />
-      </div>
-
-      <TButton size="big" color="success" @click="save">
-        <Icon name="check" />
-        &nbsp; Salvar
-      </TButton>
-    </PageHeader>
-    <ContentBox :boxed="true">
-      <form @submit.prevent="save">
+      </PageHeader>
+      <ContentBox :boxed="true">
         <div class="grid-5">
-          <TInput v-model="sku" label="SKU" placeholder="Cód. único" />
+          <TInput v-model.trim="sku" label="SKU" placeholder="Cód. único" />
           <TInput v-model="title" label="Título" placeholder="Ex: Iphone 6S Plus Dourado" class="span-4" />
 
           <TInput v-model="reference" label="Referência" placeholder="Ref. do produto" />
@@ -54,15 +54,15 @@
             title="Uma notificação será disparada quando o estoque do produto estiver acima no máximo."
             message="Os destinatários dessa notificação podem ser configurados em Configurações." />
         </div>
-      </form>
-    </ContentBox>
+      </ContentBox>
+    </form>
   </App>
 </template>
 
 <script>
 import { App, PageHeader, ContentBox } from 'common/layout'
-import {
-  Icon,
+/*import {
+  // Icon,
   TButton,
   VSeparator,
   FeaturedValue,
@@ -71,14 +71,14 @@ import {
   TSelect,
   HSeparator,
   Help,
-} from 'common/components'
+} from 'common/components'*/
 
 export default {
-  components: {
+  /*components: {
     App,
     PageHeader,
     ContentBox,
-    Icon,
+    // Icon,
     TButton,
     VSeparator,
     FeaturedValue,
@@ -87,16 +87,17 @@ export default {
     TSelect,
     HSeparator,
     Help,
-  },
+  },*/
 
   props: {
-    sku: {
+    productSku: {
       default: null
     }
   },
 
   data() {
     return {
+      sku: null,
       title: null,
       reference: null,
       ean: null,
@@ -111,17 +112,31 @@ export default {
     }
   },
 
+  computed() {
+    this.sku = this.productSku
+  },
+
   methods: {
     save() {
-      axios.post('product/create', this.$data).then(
-        (response) => {
-          this.$router.push({ name: 'products.list' })
-        },
-        (error) => {
-          this.$toaster.error('Não foi possível salvar o salvar produto!')
+      this.$validate().then(
+        (success) => {
+          if (success) {
+            axios.post('product/create', this.$data).then(
+              (response) => {
+                if (validationFail(response)) {
+                  console.log('validationFail', response.data)
+                } else {
+                  this.$router.push({ name: 'products.list' })
+                }
+              },
+              (error) => {
+                this.$toaster.error('Não foi possível salvar o salvar produto!')
+              }
+            )
+          }
         }
       )
-    }
+    },
   },
 
   beforeRouteEnter(to, from, next) {

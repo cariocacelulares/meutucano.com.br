@@ -31,3 +31,12 @@ window.notEmpty = (array) => {
     }
   })
 }
+
+/**
+ * If http response is a validation fail
+ * @param  {Object} response
+ * @return {Boolean}
+ */
+window.validationFail = (response) => {
+  return (response.status == 'ValidationFail' || response.code == 400)
+}

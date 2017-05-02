@@ -21,6 +21,10 @@ export default {
       attrs.type = 'info'
     }
 
+    if (typeof(attrs.classList) == 'undefined' || isEmpty(attrs.classList)) {
+      attrs.classList = ''
+    }
+
     state.toasts.push(attrs)
   },
 

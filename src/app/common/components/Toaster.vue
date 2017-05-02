@@ -1,6 +1,6 @@
 <template>
   <div id="toaster-container">
-    <div v-for="(toast, index) in toasts" :class="toast.type + ' toaster'">
+    <div v-for="(toast, index) in toasts" :class="toast.type + ' toaster ' + toast.classList">
       <Icon :name="getIcon(toast.type)" classes="toastIcon" />
       <div class="text">
         <span>{{ toast.title }}</span>
@@ -46,7 +46,11 @@ export default {
 
     closeToast(toast, index) {
       if (this.toasts[index] == toast) {
-        this.toasts.splice(index, 1)
+        this.toasts[index].classList = 'closed'
+
+        setTimeout((index) => {
+          this.toasts.splice(index, 1)
+        }, 300);
       }
     },
   },
@@ -74,6 +78,7 @@ export default {
   display: flex;
   flex-direction: column-reverse;
   opacity: .9;
+  z-index: 999;
 }
 
 .toaster {
@@ -85,6 +90,15 @@ export default {
   margin-bottom: 20px;
   display: flex;
   align-items: center;
+
+  opacity: 1;
+  visibility: visible;
+
+  &.closed {
+    opacity: 0;
+    visibility: hidden;
+    transition: all linear 300ms;
+  }
 
   &:first-child {
     margin-bottom: 0;

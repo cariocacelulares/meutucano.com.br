@@ -18,6 +18,6 @@ export default [
       auth: true,
       breadcrumb: 'Editar'
     },
-    props: (route) => ({ sku: route.params.sku })
+    props: (route) => ({ productSku: route.params.sku })
   },
 ]
