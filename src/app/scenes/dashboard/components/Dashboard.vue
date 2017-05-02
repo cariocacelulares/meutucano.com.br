@@ -8,17 +8,8 @@
 
 <script>
 import { mapActions } from 'vuex';
-import {
-  App,
-  ContentBox
-} from 'common/layout/'
 
 export default {
-  components: {
-    App,
-    ContentBox,
-  },
-
   data() {
     return {
       //

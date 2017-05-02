@@ -10,16 +10,7 @@
 </template>
 
 <script>
-import {
-  Icon,
-  Breadcrumbs
-} from 'common/components'
-
 export default {
-  components: {
-    Icon,
-    Breadcrumbs,
-  },
 }
 </script>
 

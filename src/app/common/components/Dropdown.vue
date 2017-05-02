@@ -17,13 +17,8 @@
 <script>
 import 'font-awesome/css/font-awesome.css'
 import { isEmpty } from 'lodash'
-import Icon from 'common/components/Icon';
 
 export default {
-  components: {
-    Icon,
-  },
-
   props: {
     placeholder: {
       type: String,

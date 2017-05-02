@@ -58,33 +58,7 @@
 </template>
 
 <script>
-import { App, PageHeader, ContentBox } from 'common/layout'
-import {
-  Dropdown,
-  FeaturedValue,
-  TButton,
-  Icon,
-  VSeparator,
-  TableList,
-  Badge,
-  TLabel,
-} from 'common/components'
-
 export default {
-  components: {
-    App,
-    PageHeader,
-    ContentBox,
-    Dropdown,
-    FeaturedValue,
-    TButton,
-    Icon,
-    VSeparator,
-    TableList,
-    Badge,
-    TLabel,
-  },
-
   data() {
     return {
       namespace: 'orders/list'

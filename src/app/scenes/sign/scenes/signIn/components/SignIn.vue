@@ -22,18 +22,12 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import Background from '../../../components/Background'
-import {
-  TButton,
-  TInput
-} from 'common/components'
 
 export default {
   extend: Background,
 
   components: {
     Background,
-    TButton,
-    TInput,
   },
 
   data() {

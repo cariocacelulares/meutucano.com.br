@@ -7,15 +7,7 @@
 </template>
 
 <script>
-import TInput from 'common/components/TInput'
-import Icon from 'common/components/Icon'
-
 export default {
-  components: {
-    TInput,
-    Icon,
-  },
-
   data() {
     return {
       term: ''

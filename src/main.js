@@ -9,12 +9,14 @@ import VueBreadcrumbs  from 'vue2-breadcrumbs'
 import Helpers from './imports/helpers'
 import Axios from './imports/axios'
 
-// import { Icon } from 'common/components'
-// Vue.component('Icon', Icon)
+import * as layoutComponents from 'common/layout'
+Object.keys(layoutComponents).map((component) => {
+  Vue.component(component, layoutComponents[component])
+})
 
-import * as cmps from 'common/components'
-Object.keys(cmps).map(function(objectKey, index) {
-  Vue.component(objectKey, cmps[objectKey])
+import * as globalComponents from 'common/components'
+Object.keys(globalComponents).map((component) => {
+  Vue.component(component, globalComponents[component])
 })
 
 /**

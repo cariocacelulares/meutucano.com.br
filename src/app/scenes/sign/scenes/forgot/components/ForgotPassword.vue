@@ -19,16 +19,10 @@
 
 <script>
 import Background from '../../../components/Background'
-import {
-  TButton,
-  TInput
-} from 'common/components'
 
 export default {
   components: {
     Background,
-    TButton,
-    TInput,
   },
 
   data() {

@@ -11,15 +11,8 @@
 
 <script>
 import { isEmpty } from 'lodash'
-import {
-  Icon,
-} from 'common/components'
 
 export default {
-  components: {
-    Icon,
-  },
-
   props: {
     value: {
       type: String | Number

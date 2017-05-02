@@ -60,35 +60,7 @@
 </template>
 
 <script>
-import { App, PageHeader, ContentBox } from 'common/layout'
-/*import {
-  // Icon,
-  TButton,
-  VSeparator,
-  FeaturedValue,
-  TLabel,
-  TInput,
-  TSelect,
-  HSeparator,
-  Help,
-} from 'common/components'*/
-
 export default {
-  /*components: {
-    App,
-    PageHeader,
-    ContentBox,
-    // Icon,
-    TButton,
-    VSeparator,
-    FeaturedValue,
-    TLabel,
-    TInput,
-    TSelect,
-    HSeparator,
-    Help,
-  },*/
-
   props: {
     productSku: {
       default: null

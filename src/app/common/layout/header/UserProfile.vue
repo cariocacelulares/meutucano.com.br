@@ -23,13 +23,8 @@
 
 <script>
 import { mapActions } from 'vuex';
-import Icon from 'common/components/Icon'
 
 export default {
-  components: {
-    Icon,
-  },
-
   methods: {
     ...mapActions({
       logout: 'global/SIGN_OUT',

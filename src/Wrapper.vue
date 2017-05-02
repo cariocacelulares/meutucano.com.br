@@ -7,13 +7,7 @@
 </template>
 
 <script>
-import { Toaster } from 'common/components'
-
 export default {
-  components: {
-    Toaster
-  },
-
   created() {
     const show = (attrs) => {
       return this.$store.dispatch('global/ADD_TOAST', attrs)
