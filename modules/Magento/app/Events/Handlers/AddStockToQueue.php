@@ -51,7 +51,7 @@ class AddStockToQueue
         $orderProduct = $orderProduct->fresh();
         $productStock = $orderProduct->productStock();
         
-        if ((int)$orderProduct->pedido->status == 1) {
+        if (in_array((int)$orderProduct->pedido->status, [0,1])) {
             \Log::debug('Handler AddStockToQueue/onOrderProductCreated acionado!', [$productStock]);
             dispatch(with(new SendStockInfo($productStock))->onQueue('high'));
         }
