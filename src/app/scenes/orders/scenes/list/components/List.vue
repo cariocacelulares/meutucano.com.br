@@ -16,8 +16,7 @@
       </div>
 
       <TButton size="big" color="success">
-        <Icon name="plus" />
-        &nbsp; Novo pedidos
+        <Icon name="plus" text="Novo pedidos" />
       </TButton>
     </PageHeader>
     <ContentBox>

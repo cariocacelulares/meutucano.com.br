@@ -19,9 +19,15 @@
 @import 'clean';
 
 /**
- * Spacing: margin, padding helpers
+ * Utils
  */
 @import 'utils/spacing';
 @import 'utils/display';
 @import 'utils/colors';
 @import 'utils/grid';
+@import 'utils/flex';
+
+/**
+ * When vue scoped style limit the ui
+ */
+ @import 'components/input-group';

@@ -1,0 +1,15 @@
+.InputGroup {
+  > .inputWrapper {
+    &:first-child input {
+      border-radius: 3px 0 0 3px;
+    }
+
+    &:nth-child(2) input {
+      border-radius: 0;
+    }
+
+    &:last-child input {
+      border-radius: 0 3px 3px 0;
+    }
+  }
+}

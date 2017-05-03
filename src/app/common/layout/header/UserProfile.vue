@@ -1,6 +1,6 @@
 <template>
   <div class="user-profile">
-    <div class="info">
+    <div :class="{ info: true, opened: opened }" @click="open">
       <div class="personal">
         <span class="name">Meu Tucano</span>
         <span class="role">Administrador</span>
@@ -25,6 +25,12 @@
 import { mapActions } from 'vuex';
 
 export default {
+  data() {
+    return {
+      opened: false
+    }
+  },
+
   methods: {
     ...mapActions({
       logout: 'global/SIGN_OUT',
@@ -33,7 +39,24 @@ export default {
     signOut() {
       this.logout()
       this.$router.push({ name: 'auth.signin' })
-    }
+    },
+
+    close() {
+      document.removeEventListener('click', this.close, false);
+
+      this.opened = false
+    },
+
+    open(event) {
+      event.stopPropagation()
+
+      if (this.opened) {
+        this.close()
+      } else {
+        this.opened = true
+        document.addEventListener('click', this.close, false);
+      }
+    },
   }
 }
 </script>
@@ -49,8 +72,8 @@ export default {
     position: relative;
     cursor: pointer;
 
-    &:hover .user-menu,
-    .user-menu {
+    // &:hover .user-menu {
+    &.opened .user-menu {
       max-height: 500px;
       transition: all 350ms ease-in;
     }
@@ -65,6 +88,7 @@ export default {
       border-radius: 0 0 3px 3px;
       color: $darker;
       box-shadow: 0px 2px 2px 0 #CCC;
+
       // transition effect
       max-height: 0;
       transition: all 250ms ease-out;
@@ -112,7 +136,6 @@ export default {
     }
 
     .avatar {
-      float: left;
       border-radius: 50%;
       overflow: hidden;
 

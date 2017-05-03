@@ -10,8 +10,7 @@
       </div>
 
       <TButton size="big" color="success" :link="{ name: 'products.create' }">
-        <Icon name="plus" />
-        &nbsp; Novo produto
+        <Icon name="plus" text="Novo produto" />
       </TButton>
     </PageHeader>
     <ContentBox>

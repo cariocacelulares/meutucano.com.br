@@ -1,0 +1,11 @@
+$max: 10;
+
+@for $i from 1 through $max {
+  &.shrink-#{$i} {
+    flex-shrink: #{$i} !important;
+  }
+
+  &.grow-#{$i} {
+    flex-grow: #{$i} !important;
+  }
+}

@@ -13,15 +13,22 @@
         </div>
 
         <TButton size="big" color="success" type="submit">
-          <Icon name="check" />
-          &nbsp; Salvar
+          <Icon name="check" text="Salvar" />
         </TButton>
       </PageHeader>
       <ContentBox :boxed="true">
-        <div class="grid-5">
-          <TInput v-model.trim="sku" label="SKU" placeholder="Cód. único" />
-          <TInput v-model="title" label="Título" placeholder="Ex: Iphone 6S Plus Dourado" class="span-4" />
+        <div class="grid-4 m-b-20">
+          <InputGroup>
+            <TInput v-model="sku" label="SKU" placeholder="Cód. único" slot="input" class="shrink-1" />
+            <TButton size="big" color="info" slot="right">
+              <Icon name="refresh" text="Gerar" />
+            </TButton>
+          </InputGroup>
 
+          <TInput v-model="title" label="Título" placeholder="Ex: Iphone 6S Plus Dourado" class="span-3" />
+        </div>
+
+        <div class="grid-5">
           <TInput v-model="reference" label="Referência" placeholder="Ref. do produto" />
           <TInput v-model="ean" label="EAN" placeholder="Cód. de barras" />
           <TInput v-model="ncm" label="NCM" placeholder="Nomenclatura Comum do MERCOSUL " />
@@ -90,22 +97,16 @@ export default {
 
   methods: {
     save() {
-      this.$validate().then(
-        (success) => {
-          if (success) {
-            axios.post('product/create', this.$data).then(
-              (response) => {
-                if (validationFail(response)) {
-                  console.log('validationFail', response.data)
-                } else {
-                  this.$router.push({ name: 'products.list' })
-                }
-              },
-              (error) => {
-                this.$toaster.error('Não foi possível salvar o salvar produto!')
-              }
-            )
+      axios.post('product/create', this.$data).then(
+        (response) => {
+          if (validationFail(response)) {
+            console.log('validationFail', response.data)
+          } else {
+            this.$router.push({ name: 'products.list' })
           }
+        },
+        (error) => {
+          this.$toaster.error('Não foi possível salvar o salvar produto!')
         }
       )
     },

@@ -6,7 +6,7 @@
         <TInput v-model="searchTerm" size="small" :placeholder="searchText"
           leftIcon="search" classes="m-r-10" />
         <TButton size="small" color="info" type="submit">
-          <Icon name="refresh" />&nbsp; Atualizar
+          <Icon name="refresh" text="Atualizar" />
         </TButton>
       </form>
     </div>

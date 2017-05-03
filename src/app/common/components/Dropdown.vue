@@ -1,5 +1,5 @@
 <template>
-  <div class="dropdown">
+  <div :class="{ dropdown: true, opened: opened }" @click="open">
     <div class="selection">
       <span v-if="selected">{{ selected.label }}</span>
       <span v-if="!selected">{{ placeholder }}</span>
@@ -36,7 +36,8 @@ export default {
 
   data() {
     return {
-      selected: null
+      selected: null,
+      opened: false,
     }
   },
 
@@ -44,7 +45,24 @@ export default {
     select(item) {
       this.selected = item
       this.$root.$emit(`dropdownChanged.${this.name}`, this.selected)
-    }
+    },
+
+    close() {
+      document.removeEventListener('click', this.close, false);
+
+      this.opened = false
+    },
+
+    open(event) {
+      event.stopPropagation()
+
+      if (this.opened) {
+        this.close()
+      } else {
+        this.opened = true
+        document.addEventListener('click', this.close, false);
+      }
+    },
   }
 }
 </script>
@@ -53,7 +71,6 @@ export default {
 @import '~style/vars';
 
 .dropdown {
-  float: left;
   position: relative;
   display: flex;
   align-items: center;
@@ -83,14 +100,15 @@ export default {
     }
   }
 
-  &:hover {
+  // &:hover {
+  &.opened {
     .selection {
       border-radius: 3px 3px 0 0;
     }
 
     ul {
       max-height: 500px;
-      transition: all 350ms ease-in;
+      // transition: all 350ms ease-in;
     }
   }
 
@@ -103,9 +121,10 @@ export default {
     background-color: $ligther;
     box-shadow: 0px 2px 1px 0px $default;
     font-size: .9em;
+
     // transition effect
     max-height: 0;
-    transition: all 250ms ease-out;
+    // transition: all 250ms ease-out;
     overflow: hidden;
     transform: translateZ(0);
 

@@ -2,26 +2,22 @@
   <ul>
     <li>
       <router-link :to="{ path: 'dashboard' }">
-        <Icon name="home" />
-        Início
+        <Icon name="home" text="Início" />
       </router-link>
     </li>
     <li>
       <router-link :to="{ name: 'orders.list' }">
-        <Icon name="list" />
-        Pedidos
+        <Icon name="list" text="Pedidos" />
       </router-link>
     </li>
     <li>
       <a href="#">
-        <Icon name="group" />
-        Clientes
+        <Icon name="group" text="Clientes" />
       </a>
     </li>
     <li>
       <router-link :to="{ name: 'products.list' }">
-        <Icon name="futbol-o" />
-        Produtos
+        <Icon name="futbol-o" text="Produtos" />
       </router-link>
     </li>
   </ul>

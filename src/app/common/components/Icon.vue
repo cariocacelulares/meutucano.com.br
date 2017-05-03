@@ -1,5 +1,5 @@
 <template>
-  <i :class="classList" :style="{ color: color, fontSize: `${fontSize}px` }"></i>
+  <i :class="classList" :style="{ color: color, fontSize: `${fontSize}px` }">{{ (text) ? `&nbsp; ${text}` : '' }}</i>
 </template>
 
 <script>
@@ -11,6 +11,9 @@ export default {
     lib: {
       type: String,
       default: 'fa'
+    },
+    text: {
+      type: String
     },
     name: {
       type: String,
@@ -77,6 +80,14 @@ export default {
 
 .Icon {
   font-size: inherit;
+
+  &.fa {
+    font: inherit;
+
+    &:before {
+      font: normal normal normal 14px/1 FontAwesome;
+    }
+  }
 
   &.circular {
     padding: 0.3em 0.5em;

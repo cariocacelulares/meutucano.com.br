@@ -2,9 +2,8 @@
   <div class="topbar">
     <Breadcrumbs />
 
-    <a href="#">
-      <Icon name="question-circle" size="normal" />
-      &nbsp;Ajuda?
+    <a href="#" class="help">
+      <Icon name="question-circle" size="normal" text="Ajuda?" />
     </a>
   </div>
 </template>
@@ -34,6 +33,10 @@ export default {
   a:focus {
     color: $darker;
     text-decoration: none;
+  }
+
+  .help .Icon {
+    font-size: 13px;
   }
 }
 </style>
