@@ -40,3 +40,41 @@ window.notEmpty = (array) => {
 window.validationFail = (response) => {
   return (response.status == 'ValidationFail' || response.code == 400)
 }
+
+/**
+ * A array with month names
+ * @type {Array}
+ */
+window.monthList = (short = false) => {
+  if (short) {
+    return [
+      'Jan',
+      'Fev',
+      'Mar',
+      'Abr',
+      'Mai',
+      'Jun',
+      'Jul',
+      'Ago',
+      'Set',
+      'Out',
+      'Nov',
+      'Dez'
+    ]
+  }
+
+  return [
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro'
+  ]
+}

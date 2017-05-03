@@ -4,7 +4,7 @@
     <Icon v-if="leftIcon" :name="leftIcon" classes="leftIcon" :size="size" color="dark" />
     <input :id="`input-${_uid}`" :type="type" :class="classList" :required="required"
       :placeholder="placeholder" :value="value" min="min" max="max" step="step"
-      @input="updateValue($event.target.value)"/>
+      @input="updateValue($event.target.value)" :disabled="disabled" />
     <Icon v-if="rightIcon" :name="rightIcon" classes="rightIcon" :size="size" color="dark" />
   </label>
 </template>
@@ -65,6 +65,10 @@ export default {
     },
     step: {
       type: Number
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     },
   },
 
@@ -215,6 +219,14 @@ input {
 
   &::placeholder {
     color: $dark;
+  }
+
+  &[disabled] {
+    opacity: .3;
+
+    &, > * {
+      cursor: not-allowed;
+    }
   }
 
   &.discrete {

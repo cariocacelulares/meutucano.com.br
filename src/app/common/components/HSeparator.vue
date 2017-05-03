@@ -42,7 +42,7 @@ export default {
     classList() {
       let classList = []
 
-      classList.push('VSeparator')
+      classList.push('HSeparator')
       classList.push(this.classes)
       classList.push(`bg-${this.color}`)
 
@@ -61,7 +61,7 @@ export default {
 <style lang="scss" scoped>
 @import '~style/vars';
 
-.VSeparator {
+.HSeparator {
   display: inline-block;
   width: 100%;
   height: 1px;

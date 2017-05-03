@@ -2,7 +2,7 @@
   <button :type="type" :class="classList" @click="click" :style="{
       height,
       width,
-    }">
+    }" :disabled="disabled">
     <slot></slot>
   </button>
 </template>
@@ -69,10 +69,6 @@ export default {
         classList.push('block')
       }
 
-      if (this.disabled) {
-        classList.push('disabled')
-      }
-
       classList = classList.filter((item) => {
         if (typeof(item) === 'boolean' || !isEmpty(item)) {
           return item
@@ -108,8 +104,8 @@ button {
   cursor: pointer;
   transition: opacity linear 100ms;
 
-  &:not(.disabled):focus,
-  &:not(.disabled):hover {
+  &:not([disabled]):focus,
+  &:not([disabled]):hover {
     opacity: .8;
   }
 
@@ -118,7 +114,7 @@ button {
     width: 100%;
   }
 
-  &.disabled {
+  &[disabled] {
     cursor: not-allowed;
     opacity: .3;
   }

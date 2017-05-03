@@ -19,8 +19,8 @@
       <ContentBox :boxed="true">
         <div class="grid-4 m-b-20">
           <InputGroup>
-            <TInput v-model="sku" label="SKU" placeholder="Cód. único" slot="input" class="shrink-1" />
-            <TButton size="big" color="info" slot="right">
+            <TInput v-model="sku" label="SKU" placeholder="Cód. único" slot="input" class="shrink-1" :disabled="!sku" />
+            <TButton size="big" color="info" slot="right" @click="generateSku" :disabled="!sku">
               <Icon name="refresh" text="Gerar" />
             </TButton>
           </InputGroup>
@@ -96,6 +96,10 @@ export default {
   },
 
   methods: {
+    generateSku() {
+      this.sku = 384
+    },
+
     save() {
       axios.post('product/create', this.$data).then(
         (response) => {

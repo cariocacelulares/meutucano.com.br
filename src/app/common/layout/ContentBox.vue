@@ -13,21 +13,29 @@ export default {
       type: Boolean,
       default: false
     },
+    discret: {
+      type: Boolean,
+      default: false
+    },
     classes: {
       type: String,
       default: null
-    }
+    },
   },
 
   computed: {
     classList() {
       let classList = []
 
-      classList.push('content')
+      classList.push('content ContentBox')
       classList.push(this.classes)
 
       if (this.boxed) {
         classList.push('boxed')
+      }
+
+      if (this.discret) {
+        classList.push('discret')
       }
 
       classList = classList.filter((item) => {
@@ -49,10 +57,13 @@ export default {
   width: calc(100% - 40px);
   margin: 0 auto;
   min-height: 10px;
-  padding: 20px;
-  background-color: $white;
-  box-shadow: 0px 0px 10px rgba(204, 204, 204, 0.5);
-  border-radius: 3px;
+
+  &:not(.discret) {
+    padding: 20px;
+    background-color: $white;
+    box-shadow: 0px 0px 10px rgba(204, 204, 204, 0.5);
+    border-radius: 3px;
+  }
 
   &.boxed {
     max-width: 980px;

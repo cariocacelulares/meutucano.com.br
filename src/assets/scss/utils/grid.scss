@@ -3,8 +3,6 @@ $maxColunms: 10;
 [class*="grid-"] {
   $hGap: 10px;
 
-  display: grid;
-
   grid-column-gap: $hGap;
   grid-row-gap: 20px;
   grid-auto-flow: row;
@@ -14,6 +12,11 @@ $maxColunms: 10;
       grid-template-columns: repeat(#{$i}, calc((100% - ((#{$i} - 1) * #{$hGap})) / #{$i}));
     }
   }
+}
+
+[class*="grid-"],
+.grid {
+  display: grid;
 
   @for $i from 1 through $maxColunms {
     .span-#{$i} {
@@ -24,6 +27,12 @@ $maxColunms: 10;
   @for $i from 1 through $maxColunms {
     .start-#{$i} {
       grid-column-start: #{$i};
+    }
+  }
+
+  @for $i from 1 through $maxColunms {
+    .row-#{$i} {
+      grid-row-start: #{$i};
     }
   }
 }
