@@ -1,6 +1,8 @@
 <template>
   <article :class="classList">
-    <header v-if="headerIcon || headerText">
+    <header v-if="headerIcon || headerText" :style="{
+        marginBottom: `${headerMarginBottom}px`
+      }">
       <Icon v-if="headerIcon" :name="headerIcon" />
       <h1>{{ headerText }}</h1>
     </header>
@@ -16,12 +18,13 @@ export default {
       default: ''
     },
     headerIcon: {
-      type: String,
-      default: null
+      type: String
     },
     headerText: {
-      type: String,
-      default: null
+      type: String
+    },
+    headerMarginBottom: {
+      type: Number
     },
   },
   computed: {
@@ -50,7 +53,7 @@ export default {
   overflow: hidden;
 
   header {
-    border-bottom: 1px solid $default;
+    border-bottom: 1px solid $light;
     margin-bottom: 20px;
     padding-bottom: 10px;
     font-size: 14px;

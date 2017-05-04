@@ -99,16 +99,19 @@
       </div>
 
       <div>
-        <Card header-icon="area-chart" header-text="Histórico de vendas por mês" class="sold-chart">
-          <vue-highcharts :options="options" ref="lineCharts"></vue-highcharts>
+        <Card header-icon="area-chart" header-text="Histórico de vendas por mês">
+          <vue-highcharts :options="salesHistoryOptions" ref="salesHistory"></vue-highcharts>
         </Card>
 
         <Card header-icon="money" header-text="Histórico de custo por mês">
+          <vue-highcharts :options="costHistoryOptions" ref="costHistory"></vue-highcharts>
         </Card>
       </div>
 
       <div>
-        <Card header-icon="pie-chart" header-text="Vendas no mês por canal">
+        <Card header-icon="pie-chart" header-text="Vendas no mês por canal"
+          :header-margin-bottom="10" class="p-b-10">
+          <vue-highcharts :options="channelSalesOptions" ref="channelSales"></vue-highcharts>
         </Card>
 
         <Card header-icon="shopping-cart" header-text="Última compra">
@@ -158,41 +161,142 @@ export default {
 
   mounted() {
     setTimeout(() => {
-        this.$refs.lineCharts.addSeries({
+        this.$refs.salesHistory.addSeries({
           data: this.graphs.sold
         })
 
-        this.$refs.lineCharts.hideLoading()
+        this.$refs.salesHistory.hideLoading()
+
+        this.$refs.costHistory.addSeries({
+          data: this.graphs.cost
+        })
+
+        this.$refs.costHistory.hideLoading()
+
+        this.$refs.channelSales.addSeries({
+          data: this.graphs.channel
+        })
+
+        this.$refs.channelSales.hideLoading()
     }, 1000)
   },
 
   data() {
-    return {
-      options: {
-        chart: {
-          height: 130,
-        },
+    const lineChartOptions = {
+      chart: {
+        height: 130,
+        marginTop: 0,
+        marginLeft: 0,
+        marginRight: 0,
+        spacingTop: 0,
+        spacingBottom: 0,
+        spacingLeft: 0,
+        spacingRight: 0,
+      },
+      title: false,
+      yAxis: {
         title: false,
-        yAxis: {
-            title: false
-        },
-        legend: false,
-        credits: false,
-        loading: true,
-        exporting: {
-          enabled: false
-        },
-        tooltip: {
-          followPointer: true,
-          shared: true,
-          headerFormat: '<b>{point.x}</b><br/>',
-          pointFormat: '{point.y} vendas'
-        },
-        xAxis: {
-            categories: monthList()
+        visible: false,
+      },
+      legend: false,
+      credits: false,
+      loading: true,
+      exporting: {
+        enabled: false
+      },
+      xAxis: {
+        categories: monthList(),
+        tickLength: 10,
+        labels: {
+          style: {
+            color: '#999',
+            cursor: 'default',
+            fontSize: '11px',
+          }
+        }
+      },
+      plotOptions: {
+        line: {
+          size:'100%',
+          color: '#6D5CAE',
+          dataLabels: {
+            enabled: true,
+            y: -1,
+            inside: true,
+            style: {
+              color: '#666',
+              fontSize: '11px',
+              fontWeight: 'normal',
+              textOutline: 'none',
+              cursor: 'default',
+            },
+          },
+          enableMouseTracking: false
+        }
+      },
+    }
+
+    const costHistoryOptions = _.cloneDeep(lineChartOptions)
+    costHistoryOptions.plotOptions.line.dataLabels.format = 'R${y}'
+
+    const channelSalesOptions = {
+      chart: {
+        type: 'pie',
+        height: 150,
+        marginTop: 10,
+        marginBottom: 10,
+        marginLeft: 0,
+        // marginRight: 0,
+        spacingTop: 0,
+        spacingBottom: 0,
+        spacingLeft: 0,
+        spacingRight: 0,
+      },
+      title: false,
+      legend: {
+        align: 'right',
+        verticalAlign: 'middle',
+        layout: 'vertical',
+        itemMarginBottom: 5,
+        symbolRadius: 3,
+        itemStyle: {
+          color: '#999',
+          cursor: 'pointer',
+          fontSize: '12px',
+          fontWeight: 'normal',
         },
       },
+      credits: false,
+      loading: true,
+      exporting: {
+        enabled: false
+      },
+      plotOptions: {
+        pie: {
+          size:'100%',
+          slicedOffset: 0,
+          enableMouseTracking: false,
+          dataLabels: {
+            distance: -20,
+            inside: true,
+            format: '{y}%',
+            style: {
+              color: '#FFF',
+              fontSize: '12px',
+              fontWeight: 'bold',
+              textOutline: 'none',
+              cursor: 'default',
+            },
+          },
+          showInLegend: true
+        }
+      },
+    }
 
+    return {
+      salesHistoryOptions: lineChartOptions,
+      costHistoryOptions: costHistoryOptions,
+      channelSalesOptions: channelSalesOptions,
 
       sku: 1384,
       title: 'Motorola Moto G 2ª Geração XT1068 8GB Preto	',
@@ -213,25 +317,33 @@ export default {
       },
       graphs: {
         sold: [
-          /*1: */32,
-          /*2: */41,
-          /*3: */33,
-          /*4: */84,
-          /*5: */65,
+          32, 41, 33, 84, 65
         ],
-        cost: {
-          1: 32,
-          2: 41,
-          3: 33,
-          4: 84,
-          5: 65,
-        },
-        channel: {
-          'Mercado Livre': 16,
-          'E-commerce': 32,
-          'B2W': 12,
-          'CNOVA': 40,
-        },
+        cost: [
+          12, 21, 8, 18, 33
+        ],
+        channel: [
+          {
+            name: 'Mercado Livre',
+            y: 16,
+            color: '#584FF1',
+          },
+          {
+            name: 'E-commerce',
+            y: 32,
+            color: '#AB00C3',
+          },
+          {
+            name: 'B2W',
+            y: 12,
+            color: '#00E5CB',
+          },
+          {
+            name: 'CNOVA',
+            y: 40,
+            color: '#F5E135',
+          },
+        ],
       },
       last_entry: {
         id: 123,
