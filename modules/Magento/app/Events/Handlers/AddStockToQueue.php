@@ -49,7 +49,7 @@ class AddStockToQueue
     {
         $orderProduct = $event->orderProduct;
         $orderProduct = $orderProduct->fresh();
-        $productStock = $orderProduct->productStock();
+        $productStock = $orderProduct->productStock;
         
         if (in_array((int)$orderProduct->pedido->status, [0,1])) {
             \Log::debug('Handler AddStockToQueue/onOrderProductCreated acionado!', [$productStock]);
