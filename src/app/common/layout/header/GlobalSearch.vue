@@ -26,8 +26,18 @@ export default {
 @import '~style/vars';
 
 .global-search {
-  margin: 0 30px 0 20px;
-  border-right: 1px solid $default;
-  padding-right: 30px;
+  position: relative;
+  margin-left: 20px;
+  padding-right: 61px;
+
+  &:after {
+      content: '';
+    position: absolute;
+    top: 5px;
+    right: 30px;
+    width: 1px;
+    height: 30px;
+    background-color: $light;
+  }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <footer>
+  <footer class="TFooter">
     <span>Desenvolvido por Carioca Celulares &copy; 2017</span>
     <div>
       <a href="mailto:suporte@meutucano.com.br">suporte@meutucano.com.br</a>
@@ -16,12 +16,16 @@ export default {
 <style lang="scss" scoped>
 @import '~style/vars';
 
-footer {
+.TFooter {
   display: flex;
   justify-content: space-between;
   padding: 15px 20px;
   color: $dark;
   font-size: 12px;
+
+  a {
+    color: inherit;
+  }
 
   a:first-child {
     margin-right: 8px;

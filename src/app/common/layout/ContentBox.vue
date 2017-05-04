@@ -61,7 +61,7 @@ export default {
   &:not(.discret) {
     padding: 20px;
     background-color: $white;
-    box-shadow: 0px 0px 10px rgba(204, 204, 204, 0.5);
+    box-shadow: $defaultShadow;
     border-radius: 3px;
   }
 

@@ -1,9 +1,4 @@
 <template>
-  <!-- <ul>
-    <li><a href="#"><Icon name="home" /></a></li>
-    <li><a href="#">Vendas</a></li>
-    <li><a href="#" class="active">Pedidos</a></li>
-  </ul> -->
   <nav class="breadcrumbs">
     <ul>
       <li>
@@ -28,22 +23,28 @@ export default {
 <style lang="scss" scoped>
 @import '~style/vars';
 
-ul {
-  li {
-    list-style: none;
-    display: inline-block;
+.breadcrumbs {
+  ul {
+    li {
+      list-style: none;
+      display: inline-block;
 
-    .active:not(.home) {
-      color: $darker;
-    }
+      .active:not(.home) {
+        color: $darker;
+      }
 
-    a:hover,
-    a:focus {
-      color: $darker;
-    }
+      a {
+        color: inherit;
+      }
 
-    .right-icon {
-      padding: 0 10px;
+      a:hover,
+      a:focus {
+        color: $darker;
+      }
+
+      .right-icon {
+        padding: 0 10px;
+      }
     }
   }
 }

@@ -113,57 +113,63 @@ export default {
 <style lang="scss" scoped>
 @import '~style/vars';
 
-.ListActions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 20px;
-}
-
-table {
-  position: relative;
-  width: 100%;
-  color: $darker;
-  border: 1px solid $light;
-  border-radius: 3px;
-  border-spacing: 0;
-
-  th, td {
-    border: none;
-    border-collapse: collapse;
-    height: 52px;
-    padding: 15px 20px;
-    text-align: center;
+.TableList {
+  .ListActions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 20px;
   }
 
-  thead {
-    color: $white;
-    background-color: $black;
-  }
+  table {
+    position: relative;
+    width: 100%;
+    color: $darker;
+    border: 1px solid $light;
+    border-radius: 3px;
+    border-spacing: 0;
 
-  &.loading tbody:not(.loading) {
-      opacity: .5;
-  }
-
-  tbody {
-    &.no-results,
-    &.loading {
+    th, td {
+      border: none;
+      border-collapse: collapse;
+      height: 52px;
+      padding: 15px 20px;
       text-align: center;
     }
 
-    &.loading {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    thead {
+      color: $white;
+      background-color: $black;
     }
 
-    tr:nth-child(2n) {
-      background-color: $ligther;
+    &.loading tbody:not(.loading) {
+      opacity: .5;
+    }
+
+    tbody {
+      &.no-results,
+      &.loading {
+        text-align: center;
+      }
+
+      &.loading {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      tr:nth-child(2n) {
+        background-color: $lighter;
+      }
+
+      a {
+        color: inherit;
+      }
     }
   }
 }

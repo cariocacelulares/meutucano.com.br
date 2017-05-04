@@ -45,6 +45,6 @@ export default {
 
 .app {
   min-height: 100%;
-  background-color: $ligther;
+  background-color: $lighter;
 }
 </style>

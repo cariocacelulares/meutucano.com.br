@@ -87,7 +87,7 @@ export default {
   .selection {
     padding: 12px 20px;
     color: $darker;
-    background-color: $ligther;
+    background-color: $lighter;
     border-radius: 3px;
     font-weight: bold;
 
@@ -118,7 +118,7 @@ export default {
     left: 0;
     width: 100%;
     border-radius: 0 0 3px 3px;
-    background-color: $ligther;
+    background-color: $lighter;
     box-shadow: 0px 2px 1px 0px $default;
     font-size: .9em;
 

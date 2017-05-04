@@ -47,6 +47,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '~style/vars';
+
 .sign-wrapper {
   display: flex;
   justify-content: center;
@@ -63,7 +65,7 @@ export default {
     background-color: #FFF;
     text-align: center;
     border-radius: 3px;
-    box-shadow: 0px 0px 10px rgba(204, 204, 204, 0.5);
+    box-shadow: $defaultShadow;
 
     @media all and (max-width: $formWidth) {
       width: 100%;

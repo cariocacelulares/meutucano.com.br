@@ -1,5 +1,5 @@
 <template>
-  <ul>
+  <ul class="TMenu">
     <li>
       <router-link :to="{ path: 'dashboard' }">
         <Icon name="home" text="Início" />
@@ -31,7 +31,7 @@ export default {
 <style lang="scss" scoped>
 @import '~style/vars';
 
-ul {
+.TMenu {
   font-size: 13px;
   color: $darker;
 
@@ -46,6 +46,7 @@ ul {
   }
 
   a {
+    color: inherit;
     transition: color linear 100ms;
   }
 

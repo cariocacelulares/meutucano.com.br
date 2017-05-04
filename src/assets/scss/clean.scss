@@ -51,6 +51,16 @@ a {
   color: inherit;
   text-decoration: none;
   transition: color linear 100ms;
+
+  &[href]:not([href="#"]) {
+    color: $link;
+    transition: all linear 150ms;
+
+    &:hover,
+    &:focus {
+      opacity: .9;
+    }
+  }
 }
 
 a:focus,

@@ -3,9 +3,18 @@
     <header v-if="headerIcon || headerText" :style="{
         marginBottom: `${headerMarginBottom}px`
       }">
-      <Icon v-if="headerIcon" :name="headerIcon" />
-      <h1>{{ headerText }}</h1>
+      <div>
+        <Icon v-if="headerIcon" :name="headerIcon" />
+        <h1>{{ headerText }}</h1>
+      </div>
+
+      <div>
+        <slot name="header"></slot>
+      </div>
     </header>
+    <span v-if="loading" class="loading">
+      <Icon name="refresh" :spin="true" size="giant" />
+    </span>
     <slot></slot>
   </article>
 </template>
@@ -26,6 +35,10 @@ export default {
     headerMarginBottom: {
       type: Number
     },
+    loading: {
+      type: Boolean,
+      default: false
+    },
   },
   computed: {
     classList() {
@@ -43,9 +56,10 @@ export default {
 @import '~style/vars';
 
 .Card {
+  position: relative;
   padding: 20px;
   background-color: $white;
-  box-shadow: 0px 0px 10px rgba(204, 204, 204, 0.5);
+  box-shadow: $defaultShadow;
   border-radius: 3px;
   display: flex;
   flex-direction: column;
@@ -59,6 +73,7 @@ export default {
     font-size: 14px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 
     h1 {
       font-size: inherit;
@@ -66,6 +81,42 @@ export default {
       padding: 0;
       margin: 0 0 0 10px;
     }
+
+    > div {
+      display: flex;
+      align-items: center;
+
+      &:last-child {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+
+    i {
+      margin-top: 25px;
+      width: 15px;
+      height: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+  }
+
+  .highcharts {
+    position: relative;
+    z-index: 1;
   }
 }
 </style>

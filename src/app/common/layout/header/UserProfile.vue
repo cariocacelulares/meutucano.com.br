@@ -105,7 +105,7 @@ export default {
 
           &:focus,
           &:hover {
-            background-color: $ligther;
+            background-color: $lighter;
             text-decoration: none;
           }
         }
@@ -152,7 +152,7 @@ export default {
     margin-left: 20px;
     padding: 0 15px;
     font-size: 12px;
-    background-color: $ligther;
+    background-color: $lighter;
     border-radius: 3px;
     color: $darker;
   }

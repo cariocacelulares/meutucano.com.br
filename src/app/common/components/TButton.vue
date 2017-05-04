@@ -3,7 +3,9 @@
       height,
       width,
     }" :disabled="disabled">
+    <Icon v-if="leftIcon" :name="leftIcon" class="m-r-15" />
     <slot></slot>
+    <Icon v-if="rightIcon" :name="rightIcon" class="m-l-15" />
   </button>
 </template>
 
@@ -52,6 +54,12 @@ export default {
       type: String
     },
     width: {
+      type: String
+    },
+    leftIcon: {
+      type: String
+    },
+    rightIcon: {
       type: String
     },
   },
@@ -122,6 +130,11 @@ button {
   // sizes
   &.big {
     height: 50px;
+    padding: 0 20px;
+  }
+
+  &.normal {
+    height: 40px;
     padding: 0 20px;
   }
 

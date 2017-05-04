@@ -1,3 +1,30 @@
+@keyframes placeHolderShimmer{
+  0% {
+    background-position: -468px 0
+  }
+  100% {
+    background-position: 468px 0
+  }
+}
+
+.loading .card-data {
+  strong {
+    width: 80%;
+    height: 16px;
+
+    // loading placeholder
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: placeHolderShimmer;
+    animation-timing-function: linear;
+    background: $lighter;
+    background: linear-gradient(to right, $lighter 8%, $light 18%, $lighter 33%);
+    background-size: 800px 104px;
+    position: relative;
+  }
+}
+
 .card-data {
   display: flex;
   flex-direction: column;
