@@ -113,7 +113,7 @@ $padding: 20px;
       a {
         display: inline-block;
         height: 100%;
-        padding: 15px 0;
+        padding: 15px 2px;
         border-bottom: 5px solid transparent;
         color: inherit;
         transition: all linear 200ms;

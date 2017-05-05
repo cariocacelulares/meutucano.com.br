@@ -27,10 +27,10 @@
           </a>
         </li>
       </ul>
-      <TButton color="default" text="darker" leftIcon="plus">Adicionar depósito</TButton>
+      <TButton color="light" text="darker" leftIcon="plus">Adicionar depósito</TButton>
     </aside>
 
-    <div :class="'content-wrapper deposit-' + depositIndex">
+    <div :class="'content-wrapper depot-' + depotIndex">
       <article class="inner-content">
         <header>
           <FeaturedValue label="Depósito" value="Estoque físico" color="darker" />
@@ -46,6 +46,29 @@
         </header>
 
         <HSeparator :spacing="20" />
+
+        <TableList :namespace="namespace" searchText="Pesquisar seriais">
+          <thead slot="head">
+            <tr>
+              <th>Serial</th>
+              <th>Entrada</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody slot="body">
+            <tr v-for="serial in serials">
+              <td>{{ serial.serial }}</td>
+              <td>{{ `${serial.entry.date} por ${serial.entry.user.name}` }}</td>
+              <td>
+                <router-link :to="{ name: 'products.list' }">
+                  <Icon name="eye" size="big" text="Ver histórico" color="link" />
+                  <VSeparator :spacing="10"/>
+                  <Icon name="angle-double-down" size="big" text="Baixa manual" color="danger" />
+                </router-link>
+              </td>
+            </tr>
+          </tbody>
+        </TableList>
       </article>
     </div>
   </ContentBox>
@@ -55,9 +78,16 @@
 export default {
   data() {
     return {
-      depositIndex: 0
+      depotIndex: 0,
+      namespace: 'products/detail/depots/serials'
     }
-  }
+  },
+
+  computed: {
+    serials() {
+      return this.$store.getters[`${this.namespace}/GET`]
+    },
+  },
 }
 </script>
 
@@ -103,11 +133,13 @@ export default {
 
     strong {
       font-size: 14px;
+      color: $darker;
     }
 
     span {
       margin-top: 5px;
       font-size: 12px;
+      color: $dark;
     }
   }
 
@@ -131,7 +163,7 @@ export default {
       $before: $initial + (56px * $i);
     }
 
-    &.deposit-#{$i} {
+    &.depot-#{$i} {
       &:before {
         top: $before;
       }

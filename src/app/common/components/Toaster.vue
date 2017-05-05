@@ -45,11 +45,13 @@ export default {
     },
 
     closeToast(toast, index) {
-      if (this.toasts[index] == toast) {
+      if (typeof(this.toasts[index]) !== 'undefined' && this.toasts[index] == toast) {
         this.toasts[index].classList = 'closed'
 
         setTimeout((index) => {
-          this.toasts.splice(index, 1)
+          if (typeof(this.toasts[index]) !== 'undefined') {
+            this.toasts.splice(index, 1)
+          }
         }, 300);
       }
     },
