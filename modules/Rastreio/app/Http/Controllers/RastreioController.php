@@ -237,23 +237,21 @@ class RastreioController extends Controller
 
             $status = 1;
             if ($ultimoEvento === false) {
-				return $rastreio;
+				        return $rastreio;
             } else if ($dateDiff > 15) {
                 $status = 9;
             } else if (!$ultimoEvento['acao']) {
                 $status = $rastreio->status;
-            } elseif (strpos($ultimoEvento['detalhes'], 'por favor, entre em contato conosco clicando') !== false) {
+            } elseif (in_array($ultimoEvento['status'], [9, 28, 37, 43, 50, 51, 52, 80])) {
                 $status = 3;
-            } elseif (strpos($ultimoEvento['acao'], 'fluxo postal') !== false) {
-                $status = 3;
-            } elseif ((strpos($ultimoEvento['acao'], 'devolvido ao remetente') !== false) || strpos($ultimoEvento['acao'], 'devolução ao remetente') !== false) {
+            } elseif (in_array($ultimoEvento['status'], [4, 5, 6, 8, 10, 21, 26, 33, 36, 40, 42, 48, 49, 56])) {
                 $status = 5;
-            } elseif (strpos($ultimoEvento['acao'], 'entrega efetuada') !== false) {
+            } elseif (strpos($ultimoEvento['acao'], 'entregue ao destinatário') !== false) {
                 $rastreio->pedido->status = 3;
                 $rastreio->pedido->save();
 
                 $status = 4;
-            } elseif (strpos($ultimoEvento['acao'], 'aguardando retirada') !== false) {
+            } elseif (in_array($ultimoEvento['status'], [2])) {
                 $status = 6;
             } elseif ($prazoEntrega < date('Ymd')) {
                 $status = 2;
@@ -451,12 +449,15 @@ class RastreioController extends Controller
           return false;
 
         foreach ($result->getResult()->getEventos() as $index => $evento) {
-            $historico[$index]['data']  = $evento->getDataHora();
-            $historico[$index]['local'] = $evento->getLocal();
-            $historico[$index]['acao']  = $evento->getDescricao();
+            $historico[$index]['status']   = (int) $evento->getStatus();
+            $historico[$index]['data']     = $evento->getDataHora();
+            $historico[$index]['local']    = $evento->getLocal();
+            $historico[$index]['acao']     = $evento->getDescricao();
             $historico[$index]['detalhes'] = $evento->getDetalhe();
         }
 
+
+        dd($historico);
         return $historico;
     }
 
