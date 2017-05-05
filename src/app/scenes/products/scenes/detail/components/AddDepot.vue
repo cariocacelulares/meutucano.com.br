@@ -1,5 +1,5 @@
 <template>
-  <Modal icon="plus" title="Adicionar depósito" :on-close="close" :on-show="fetch" :on-confirm="save" :id="_uid">
+  <Modal name="AddDepot" icon="plus" title="Adicionar depósito" :on-show="fetch" :on-confirm="save">
     <form>
       <TSelect label="Depósito" placeholder="Selecione o depósito" :block="true" :options="[
         {
@@ -17,21 +17,6 @@
 
 <script>
 export default {
-  props: {
-    show: {
-      type: Boolean,
-      default: false,
-    }
-  },
-
-  watch: {
-    show() {
-      if (this.show) {
-        this.$root.$emit('show::modal', this._uid)
-      }
-    }
-  },
-
   methods: {
     fetch() {
       console.log('depot fetch')
@@ -39,11 +24,6 @@ export default {
 
     save() {
       console.log('depot save')
-    },
-
-    close() {
-      console.log('depot close')
-      this.$emit('closed')
     },
   },
 }

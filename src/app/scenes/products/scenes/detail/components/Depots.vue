@@ -27,8 +27,7 @@
           </a>
         </li>
       </ul>
-      <TButton color="light" text="darker" leftIcon="plus" @click="showAddDepot = true">Adicionar depósito</TButton>
-      <TButton color="light" text="darker" leftIcon="plus" @click="showFodase = true">faodase</TButton>
+      <TButton color="light" text="darker" leftIcon="plus" @click="openAddDepot">Adicionar depósito</TButton>
     </aside>
 
     <div :class="'content-wrapper depot-' + depotIndex">
@@ -73,27 +72,22 @@
       </article>
     </div>
 
-    <AddDepot :show.sync="showAddDepot" @closed="showAddDepot = false"/>
-    <Fodase :show.sync="showFodase" @closed="showFodase = false"/>
+    <AddDepot/>
   </ContentBox>
 </template>
 
 <script>
 import AddDepot from './AddDepot'
-import Fodase from './Fodase'
 
 export default {
   components: {
     AddDepot,
-    Fodase,
   },
 
   data() {
     return {
       depotIndex: 0,
       namespace: 'products/detail/depots/serials',
-      showAddDepot: false,
-      showFodase: false,
     }
   },
 
@@ -104,6 +98,13 @@ export default {
   },
 
   methods: {
+    openAddDepot() {
+      this.$root.$emit('show::modal-AddDepot')
+    },
+
+    openFodase() {
+      this.$root.$emit('show::modal-fodase')
+    },
   },
 }
 </script>

@@ -32,7 +32,7 @@ export default {
   },
 
   props: {
-    id: {
+    name: {
       type: String | Number,
       default: null
     },
@@ -141,33 +141,25 @@ export default {
   },
 
   mounted() {
-    console.log('modal mounted', this.id);
-
+    // TODO: remover event listener (?)
     document.addEventListener('keydown', (event) => {
       if (this.show && event.keyCode == 27) {
         this.close()
       }
     })
 
-    this.$root.$on('show::modal', (id) => {
-      console.log('modal show', id);
-
-      if (id == this.id) {
-        this.show = true
-      }
+    this.$root.$on(`show::modal-${this.name}`, () => {
+      this.show = true
     })
 
-    this.$root.$on('close::modal', (id) => {
-      console.log('modal close', id);
-      if (id == this.id) {
-        this.show = false
-      }
+    this.$root.$on(`close::modal-${this.name}`, () => {
+      this.show = false
     })
   },
 
   beforeDestroy () {
-    this.$root.$off('show::modal')
-    this.$root.$off('close::modal')
+    this.$root.$off(`show::modal-${this.name}`)
+    this.$root.$off(`close::modal-${this.name}`)
   },
 }
 </script>
