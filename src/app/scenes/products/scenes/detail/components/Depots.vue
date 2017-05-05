@@ -27,7 +27,8 @@
           </a>
         </li>
       </ul>
-      <TButton color="light" text="darker" leftIcon="plus">Adicionar depósito</TButton>
+      <TButton color="light" text="darker" leftIcon="plus" @click="showAddDepot = true">Adicionar depósito</TButton>
+      <TButton color="light" text="darker" leftIcon="plus" @click="showFodase = true">faodase</TButton>
     </aside>
 
     <div :class="'content-wrapper depot-' + depotIndex">
@@ -71,15 +72,28 @@
         </TableList>
       </article>
     </div>
+
+    <AddDepot :show.sync="showAddDepot" @closed="showAddDepot = false"/>
+    <Fodase :show.sync="showFodase" @closed="showFodase = false"/>
   </ContentBox>
 </template>
 
 <script>
+import AddDepot from './AddDepot'
+import Fodase from './Fodase'
+
 export default {
+  components: {
+    AddDepot,
+    Fodase,
+  },
+
   data() {
     return {
       depotIndex: 0,
-      namespace: 'products/detail/depots/serials'
+      namespace: 'products/detail/depots/serials',
+      showAddDepot: false,
+      showFodase: false,
     }
   },
 
@@ -87,6 +101,9 @@ export default {
     serials() {
       return this.$store.getters[`${this.namespace}/GET`]
     },
+  },
+
+  methods: {
   },
 }
 </script>

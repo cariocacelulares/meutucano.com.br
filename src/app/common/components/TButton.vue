@@ -87,14 +87,14 @@ export default {
     }
   },
   methods: {
-    click() {
+    click(event) {
       if (!this.disabled) {
         if (this.back) {
           window.history.back()
         } else if (this.link) {
           this.$router.push(this.link)
         } else {
-          this.$emit('click')
+          this.$emit('click', event)
         }
       }
     }

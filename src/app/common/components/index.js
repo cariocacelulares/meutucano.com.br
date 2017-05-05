@@ -13,4 +13,6 @@ export { default as HSeparator } from './HSeparator'
 export { default as Help } from './Help'
 export { default as InputGroup } from './InputGroup'
 export { default as Card } from './Card'
+export { default as Modal } from './Modal'
+
 export { default as TableList } from './TableList'

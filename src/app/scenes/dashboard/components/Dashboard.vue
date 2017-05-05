@@ -7,21 +7,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-
 export default {
-  data() {
-    return {
-      //
-    };
-  },
-
-  methods: {
-    ...mapActions({
-      //
-    }),
-  },
-};
+}
 </script>
 
 <style lang="scss" scoped>
