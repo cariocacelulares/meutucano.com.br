@@ -117,7 +117,7 @@ class RastreioController extends Controller
              * Atualiza o rastreio
              */
             if (Input::get('status') == 0) {
-                $this->refresh($rastreio);
+                $rastreio = $this->refresh($rastreio);
             }
 
             return $this->showResponse($rastreio);
@@ -238,15 +238,13 @@ class RastreioController extends Controller
             $status = 1;
             if ($ultimoEvento === false) {
 				        return $rastreio;
-            } else if ($dateDiff > 15) {
-                $status = 9;
             } else if (!$ultimoEvento['acao']) {
                 $status = $rastreio->status;
             } elseif (in_array($ultimoEvento['status'], [9, 28, 37, 43, 50, 51, 52, 80])) {
                 $status = 3;
             } elseif (in_array($ultimoEvento['status'], [4, 5, 6, 8, 10, 21, 26, 33, 36, 40, 42, 48, 49, 56])) {
                 $status = 5;
-            } elseif (strpos($ultimoEvento['acao'], 'entregue ao destinatário') !== false) {
+            } elseif (strpos($ultimoEvento['acao'], 'entregue') !== false) {
                 $rastreio->pedido->status = 3;
                 $rastreio->pedido->save();
 
@@ -255,11 +253,13 @@ class RastreioController extends Controller
                 $status = 6;
             } elseif ($prazoEntrega < date('Ymd')) {
                 $status = 2;
+            } else if ($dateDiff > 15) {
+                $status = 9;
             }
 
             if ($rastreio->status == 0 && ($rastreio->status != $status)) {
                 if ($firstStatusDate = $this->firstStatus($rastreio->rastreio)['data']) {
-                    $rastreio->data_envio = Carbon::createFromFormat('d/m/Y H:i', $firstStatusDate)->format('Y-m-d');
+                    $rastreio->data_envio = Carbon::createFromFormat('Y-m-d H:i', $firstStatusDate)->format('Y-m-d');
                 }
             }
 
