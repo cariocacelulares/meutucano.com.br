@@ -27,6 +27,10 @@ use Rastreio\Transformers\Parsers\RastreioParser;
 use Rastreio\Http\Requests\Rastreio\DeleteRequest;
 use Rastreio\Http\Requests\RastreioRequest as Request;
 
+use correios\Correios;
+use correios\Rastreamento\CorreiosRastreamento;
+use correios\Sro\CorreiosSroData;
+
 /**
  * Class RastreioController
  * @package Rastreio\Http\Controllers
@@ -414,45 +418,46 @@ class RastreioController extends Controller
      * @param array|string $codigos
      * @return array
      */
-    public function historico($codigos)
+    public function historico($codigo)
     {
-        $codigos = (!is_array($codigos)) ? [$codigos] : $codigos;
+        $accessData = new AccessData(Config::get('rastreio.correios.accessData'));
 
-        $detalhes = [];
-        foreach ($codigos as $key => $item) {
-            $correios = sprintf(
-                'http://websro.correios.com.br/sro_bin/txect01$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS=%s',
-                $item
-            );
+        $config = new \PhpSigep\Config();
+        $config->setAccessData($accessData);
+        $config->setEnv(\PhpSigep\Config::ENV_PRODUCTION);
+        $config->setCacheOptions([
+            'storageOptions' => [
+                'enabled'  => false
+            ],
+        ]);
 
-            $historico = [];
-            $detalhes[$key]['codigo'] = $item;
+        Bootstrap::start($config);
 
-            try {
-                $content = HtmlDomParser::file_get_html($correios);
-                if (sizeof($content->find('table tr')) > 1) {
-                    foreach ($content->find('table tr') as $index => $row) {
-                        if ($row->find('td', 0)->plaintext == 'Data') {
-                            continue;
-                        }
+        $etiqueta = new \PhpSigep\Model\Etiqueta();
+        $etiqueta->setEtiquetaComDv($codigo);
+        $etiqueta->setEtiquetaSemDv($etiqueta->getEtiquetaSemDv());
+        $etiquetas[] = $etiqueta;
 
-                        if (sizeof($row->find('td')) > 1) {
-                            $historico[$index]['data']  = mb_strtolower(utf8_encode($row->find('td', 0)->plaintext));
-                            $historico[$index]['local'] = mb_strtolower(utf8_encode($row->find('td', 1)->plaintext));
-                            $historico[$index]['acao']  = mb_strtolower(utf8_encode($row->find('td', 2)->plaintext));
-                            $historico[$index]['detalhes'] = '';
-                        } else {
-                            $historico[$index - 1]['detalhes'] = mb_strtolower(utf8_encode($row->find('td', 0)->plaintext));
-                        }
-                    }
-                }
-            } catch (\Exception $e) {
-            }
+        $params = new \PhpSigep\Model\RastrearObjeto();
+        $params->setAccessData($accessData);
+        $params->setEtiquetas($etiquetas);
 
-            $detalhes[$key]['historico'] = $historico;
+        $phpSigep = new \PhpSigep\Services\SoapClient\Real();
+        $result = $phpSigep->rastrearObjeto($params);
+
+        $historico = [];
+
+        if (!$result->getResult())
+          return false;
+
+        foreach ($result->getResult()->getEventos() as $index => $evento) {
+            $historico[$index]['data']  = $evento->getDataHora();
+            $historico[$index]['local'] = $evento->getLocal();
+            $historico[$index]['acao']  = $evento->getDescricao();
+            $historico[$index]['detalhes'] = $evento->getDetalhe();
         }
 
-        return (sizeof($detalhes) == 1) ? $detalhes[0] : $detalhes;
+        return $historico;
     }
 
     /**
@@ -463,7 +468,9 @@ class RastreioController extends Controller
      */
     public function lastStatus($codigoRastreio)
     {
-        return reset($this->historico($codigoRastreio)['historico']);
+        $historico = $this->historico($codigoRastreio);
+
+        return is_array($historico) ? reset($historico) : false;
     }
 
     /**
@@ -474,7 +481,9 @@ class RastreioController extends Controller
      */
     public function firstStatus($codigoRastreio)
     {
-        return end($this->historico($codigoRastreio)['historico']);
+      $historico = $this->historico($codigoRastreio);
+
+      return is_array($historico) ? end($historico) : false;
     }
 
     /**
