@@ -1,7 +1,5 @@
 <?php
 
-Route::get('test/{codigo}', 'Rastreio\Http\Controllers\RastreioController@historico');
-
 Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'Rastreio\Http\Controllers'], function () {
     /**
      * Rastreios

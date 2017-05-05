@@ -456,8 +456,6 @@ class RastreioController extends Controller
             $historico[$index]['detalhes'] = $evento->getDetalhe();
         }
 
-
-        dd($historico);
         return $historico;
     }
 
