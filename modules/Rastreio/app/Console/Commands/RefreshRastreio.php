@@ -41,7 +41,7 @@ class RefreshRastreio extends Command
                 $i++;
 
                 if (json_decode($return)) {
-                    $this->comment("{$return->rastreio}: {$return->status_description} - {$return->prazo} dias");
+                    $this->comment("{$return->rastreio}: {$return->status}/{$return->status_description} - {$return->prazo} dias");
                 } else {
                     $this->comment($return);
                 }

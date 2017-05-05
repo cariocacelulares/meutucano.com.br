@@ -2,6 +2,7 @@
 
 use Illuminate\Events\Dispatcher;
 use Core\Events\ProductStockUpdated;
+use Core\Events\OrderProductCreated;
 use Magento\Jobs\SendStockInfo;
 
 class AddStockToQueue
@@ -18,6 +19,11 @@ class AddStockToQueue
             ProductStockUpdated::class,
             '\Magento\Events\Handlers\AddStockToQueue@onProductStockUpdated'
         );
+
+        $events->listen(
+            OrderProductCreated::class,
+            '\Magento\Events\Handlers\AddStockToQueue@onOrderProductCreated'
+        );
     }
 
     /**
@@ -28,7 +34,26 @@ class AddStockToQueue
      */
     public function onProductStockUpdated(ProductStockUpdated $event)
     {
-        \Log::debug('Handler AddStockToQueue acionado!', [$event->productStock]);
+        \Log::debug('Handler AddStockToQueue/onProductStockUpdated acionado!', [$event->productStock]);
         dispatch(with(new SendStockInfo($event->productStock))->onQueue('high'));
+    }
+
+
+    /**
+     * Handle the event.
+     *
+     * @param  OrderProductCreated  $event
+     * @return void
+     */
+    public function onOrderProductCreated(OrderProductCreated $event)
+    {
+        $orderProduct = $event->orderProduct;
+        $orderProduct = $orderProduct->fresh();
+        $productStock = $orderProduct->productStock;
+
+        if ($productStock && in_array((int)$orderProduct->pedido->status, [0,1])) {
+            \Log::debug('Handler AddStockToQueue/onOrderProductCreated acionado!', [$productStock]);
+            dispatch(with(new SendStockInfo($productStock))->onQueue('high'));
+        }
     }
 }
