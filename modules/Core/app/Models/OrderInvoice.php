@@ -1,12 +1,19 @@
 <?php namespace Core\Models;
 
+use Core\Models\Traits\InvoiceableTrait;
+use App\Models\Traits\UploadableTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 class OrderInvoice extends \Eloquent
 {
     use SoftDeletes,
-        RevisionableTrait;
+        RevisionableTrait,
+        UploadableTrait,
+        InvoiceableTrait;
+
+    const UPLOAD_PATH = 'nota';
+    const UPLOAD_ATTR = ['file'];
 
     /**
      * @var boolean
@@ -19,25 +26,8 @@ class OrderInvoice extends \Eloquent
     protected $fillable = [
         'order_id',
         'user_id',
-        'key',
         'file',
-        'issued_at',
         'note',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $appends = [
-        'number',
-        'serie',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $with = [
-        'devolution',
     ];
 
     /**
@@ -57,22 +47,13 @@ class OrderInvoice extends \Eloquent
     }
 
     /**
-     * Return number attribute
+     * Return file full url
      *
+     * @param  string $file
      * @return string
      */
-    public function getNumberAttribute()
+    public function getFileAttribute($file)
     {
-        return (int) (substr($this->chave, 25, 9)) ?: null;
-    }
-
-    /**
-     * Return serie attribute
-     *
-     * @return string
-     */
-    public function getSerieAttribute()
-    {
-        return (substr($this->chave, 34, 1)) ?: 1;
+        return fileUrl(self::UPLOAD_PATH . '/' . $file);
     }
 }

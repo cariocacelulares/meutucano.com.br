@@ -3,7 +3,7 @@
 use App\Http\Requests\JsonResponseTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CustomerAddressRequest extends FormRequest
+class OrderCommentRequest extends FormRequest
 {
     use JsonResponseTrait;
 
@@ -21,12 +21,7 @@ class CustomerAddressRequest extends FormRequest
     public function rules()
     {
         return [
-            'street'   => 'required',
-            'number'   => 'required|numeric',
-            'district' => 'required',
-            'zipcode'  => 'required',
-            'city'     => 'required',
-            'state'    => 'required|size:2',
+            'comment' => 'required|min:2',
         ];
     }
 }

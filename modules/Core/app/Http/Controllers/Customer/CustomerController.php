@@ -1,18 +1,11 @@
 <?php namespace Core\Http\Controllers\Customer;
 
-use Illuminate\Support\Facades\Input;
-use App\Http\Controllers\Rest\RestControllerTrait;
-use App\Http\Controllers\Controller;
 use Core\Models\Customer;
-use Core\Models\CustomerAddress;
-use Core\Transformers\ClientTransformer;
+use App\Http\Controllers\Controller;
 use Core\Http\Requests\CustomerRequest as Request;
 
 class CustomerController extends Controller
 {
-    use RestControllerTrait;
-
-    const MODEL = Customer::class;
 
     public function __construct()
     {
@@ -24,54 +17,91 @@ class CustomerController extends Controller
     }
 
     /**
-     * List all customers
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function index()
     {
-        $customers = Customer::orderBy('created_at', 'DESC');
-        $customers = $this->handleRequest($customers);
+        $data = Customer::orderBy('created_at', 'DESC');
 
-        return $this->listResponse($customers);
+        return tableListResponse($data);
     }
 
     /**
-     * Show details from customer
-     *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function show($id)
     {
         try {
-            return $this->showResponse(Customer::with(['pedidos', 'addresses'])->findOrFail($id));
-        } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Erro ao obter recurso'), ['model' => self::MODEL]);
+            $data = Customer::with(['orders', 'addresses'])->findOrFail($id);
 
-            return $this->clientErrorResponse([
+            return showResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao obter recurso'));
+
+            return clientErrorResponse([
                 'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
 
     /**
-     * Search customers
-     *
-     * @param  string $term
-     * @return Object
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function search($term)
+    public function store(Request $request)
     {
         try {
-            $customers = Customer::with('enderecos')
-                ->where('name', 'LIKE', "%{$term}%")
-                ->orWhere('taxvat', 'LIKE', "%{$term}%")
-                ->get();
+            $data = Customer::create($request->all());
 
-            return $this->listResponse(ClientTransformer::directSearch($customers));
+            return createdResponse($data);
         } catch (\Exception $exception) {
-            return $this->listResponse([]);
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function update(Request $request, $id)
+    {
+        try {
+            $data = Customer::findOrFail($id);
+            $data->fill($request->all());
+            $data->save();
+
+            return showResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function destroy($id)
+    {
+        try {
+            $data = Customer::findOrFail($id);
+            $data->delete();
+
+            return deletedResponse();
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao excluir recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
         }
     }
 }

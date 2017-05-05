@@ -1,11 +1,19 @@
 <?php namespace Core\Models;
 
-use App\Models\User\User;
+use App\Models\Traits\UploadableTrait;
+use Core\Models\Traits\InvoiceableTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 class OrderInvoiceDevolution extends \Eloquent
 {
-    use RevisionableTrait;
+    use SoftDeletes,
+        RevisionableTrait,
+        InvoiceableTrait,
+        UploadableTrait;
+
+    const UPLOAD_PATH = 'nota';
+    const UPLOAD_ATTR = ['file'];
 
     /**
      * @var boolean
@@ -16,57 +24,18 @@ class OrderInvoiceDevolution extends \Eloquent
      * @var array
      */
     protected $fillable = [
-        'user_id',
         'order_invoice_id',
-        'key',
+        'user_id',
         'file',
         'type',
-        'issued_at',
-        'note'
-    ];
-
-    /**
-     * @var array
-     */
-    protected $appends = [
-        'number',
-        'serie',
-        'type_readable',
+        'note',
     ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function invoice()
+    public function orderInvoice()
     {
         return $this->belongsTo(OrderInvoice::class);
-    }
-
-    /**
-     * @return string
-     */
-    public function getTypeReadableAttribute()
-    {
-        return ($this->tipo == 1) ? 'Estorno' : 'Devolução';
-    }
-
-    /**
-     * Return numero attribute
-     *
-     * @return string
-     */
-    public function getNumberAttribute()
-    {
-        return (int) (substr($this->chave, 25, 9)) ?: $this->pedido_id;
-    }
-
-    /**
-     * Return serie attribute
-     *
-     * @return string
-     */
-    public function getSerieAttribute()
-    {
-        return (substr($this->chave, 34, 1)) ?: 1;
     }
 }

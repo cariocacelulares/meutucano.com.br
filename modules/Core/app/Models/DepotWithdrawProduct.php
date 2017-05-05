@@ -6,6 +6,11 @@ class DepotWithdrawProduct extends \Eloquent
 {
     use RevisionableTrait;
 
+    const STATUS_WITHDRAWN = 0;
+    const STATUS_CONFIRMED = 1;
+    const STATUS_INVOICED  = 2;
+    const STATUS_RETURNED  = 3;
+
     /**
      * @var boolean
      */

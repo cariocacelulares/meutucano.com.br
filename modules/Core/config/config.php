@@ -105,23 +105,6 @@ return [
         5 => 'Cancelado'
     ],
 
-    /**
-     * Excluir CNPJs da meta
-     */
-    'excluir_cnpj' => [
-        '06971234000162',
-        '06971234000243',
-        '06971234000324',
-        '10722871000172',
-    ],
-
-    /**
-     * Marketplaces com protocolo obrigatório para cancelamento
-     */
-    'required_protocolo' => [
-        'b2w',
-        'cnova'
-    ],
 
     /**
      * Status da retirada de estoque

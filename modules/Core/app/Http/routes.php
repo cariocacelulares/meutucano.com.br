@@ -1,226 +1,213 @@
 <?php
 
 // Extensão do chrome para o shopsystem
-Route::get('pedidos/shopsystem/{taxvat}', 'Core\Http\Controllers\Pedido\PedidoController@shopsystem');
+Route::get('orders/shopsystem/{taxvat}', 'Core\Http\Controllers\Order\OrderController@shopsystem');
 
 Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'Core\Http\Controllers'], function () {
 
-    Route::get('cep/{cep}', 'Partials\CepController@getAddress');
+    Route::get('zipcode/{zipcode}', 'ZipcodeController@getAddress');
 
     /**
      * Customers
      */
-    Route::group(['prefix' => 'customers', 'namespace' => 'Customer'], function () {
-        Route::get('detail/{cliente_id}', 'CustomerController@detail');
-        Route::get('search/{term}', 'CustomerController@search');
-    });
     api('customers', 'Customer\CustomerController');
 
     /**
      * Customer Addresses
      */
-    Route::group(['prefix' => 'addresses', 'namespace' => 'Customer'], function () {
-        Route::get('from/{customer_id}', 'CustomerAddressController@byClient');
+    Route::get('customers/addresses/from/{customer_id}', 'Customer\CustomerAddressController@listByCustomer');
+    api('customers/addresses', 'Customer\CustomerAddressController', ['index']);
+
+    /**
+    * Order Comments
+    */
+    Route::get('orders/comments/from/{order_id}', 'Order\OrderCommentController@listByOrder');
+    api('orders/comments', 'Order\OrderCommentController', ['index', 'update']);
+
+    /**
+    * Order Calls
+    */
+    Route::get('orders/calls/from/{order_id}', 'Order\OrderCallController@listByOrder');
+    api('orders/calls', 'Order\OrderCallController', ['index', 'update']);
+
+    /**
+     * Order Invoices
+     */
+    Route::get('orders/invoices/danfe/{invoice_id}/{return?}', 'Order\OrderInvoiceController@danfe');
+    api('orders/invoices', 'Order\OrderInvoiceController', ['index', 'update']);
+
+    /**
+     * Order Invoice Devolutions
+     */
+    Route::group(['prefix' => 'orders/invoices/devolutions'], function() {
+        Route::post('upload', 'Order\OrderInvoiceDevolutionController@upload');
+        Route::post('proceed/{devolution_id}', 'Order\OrderInvoiceDevolutionController@proceed');
+        Route::get('danfe/{devolution_id}/{retorno?}', 'Order\OrderInvoiceDevolutionController@danfe');
     });
-    api('addresses', 'Customer\CustomerAddressController');
+    api('orders/invoices/devolutions', 'Order\OrderInvoiceDevolutionController', ['index', 'update']);
 
     /**
      * Orders
      */
     Route::group(['prefix' => 'orders', 'namespace' => 'Order'], function () {
-        Route::get('faturamento', 'OrderController@faturamento');
-        Route::get('faturar/{order_id}', 'OrderController@faturar');
+        Route::get('invoiceable', 'OrderController@invoiceable');
+        Route::get('invoice/{order_id}', 'OrderController@invoice');
 
-        Route::post('status/{order_id}', 'OrderController@alterarStatus');
+        Route::put('prioritize/{order_id}', 'OrderController@prioritize');
+        Route::put('unprioritize/{order_id}', 'OrderController@unprioritize');
 
-        Route::put('priority/{order_id}', 'OrderController@prioridade');
-        Route::put('hold/{order_id}', 'OrderController@segurar');
+        Route::put('hold/{order_id}', 'OrderController@hold');
+        Route::put('unhold/{order_id}', 'OrderController@unhold');
 
-        Route::post('upload', 'UploadController@upload');
+        // Route::post('upload', 'UploadController@upload');
     });
-    api('orders', 'Pedido\PedidoController');
+    api('orders', 'Order\OrderController');
+
 
     /**
-     * Invoices
-     */
-    Route::group(['prefix' => 'notas', 'namespace' => 'Pedido'], function () {
-        Route::get('danfe/{id}/{retorno?}', 'NotaController@danfe');
+    * Order Product
+    */
+    Route::group(['prefix' => 'order-produtos', 'namespace' => 'Order'], function () {
+        Route::get('list/{sku}', 'OrderProductController@listBySku');
     });
+    api('order-produtos', 'Order\OrderProductController');
 
-    /**
-     * Devolucao
-     */
-    Route::post('notas/devolucao/upload', 'Pedido\Nota\DevolucaoController@upload');
-    Route::post('notas/devolucao/proceed/{id}', 'Pedido\Nota\DevolucaoController@proceed');
-    Route::get('notas/devolucao/danfe/{id}/{retorno?}', 'Pedido\Nota\DevolucaoController@danfe');
-
-    /**
-    * Pedido Produto
-    */
-    Route::group(['prefix' => 'pedido-produtos', 'namespace' => 'Pedido'], function () {
-        Route::get('list/{sku}', 'PedidoProdutoController@listBySku');
-    });
-    api('pedido-produtos', 'Pedido\PedidoProdutoController');
-
-    /**
-    * Notas
-    */
-    api('notas', 'Pedido\NotaController');
-
-    /**
-    * Comentarios
-    */
-    Route::get('comentarios/{pedido_id}', 'Pedido\ComentarioController@commentsFromOrder');
-    api('comentarios', 'Pedido\ComentarioController');
-
-    /**
-    * Ligações
-    */
-    Route::get('ligacoes/{pedido_id}', 'Pedido\LigacaoController@ligacoesFromOrder');
-    api('ligacoes', 'Pedido\LigacaoController');
-
-    /**
-     * Faturamento
-     */
-    Route::group(['prefix' => 'notas', 'namespace' => 'Pedido'], function () {
-        Route::get('faturar/{pedido_id}', 'NotaController@faturar');
-    });
 
     /**
      * Código de rastreio
      */
-    Route::get('codigos/gerar/{servico}', 'Pedido\FaturamentoCodigoController@getTrakingCode');
+    // Route::get('codigos/gerar/{servico}', 'Order\FaturamentoCodigoController@getTrakingCode');
 
     /**
-     * Produtos
+     * Products
      */
-    Route::group(['prefix' => 'produtos', 'namespace' => 'Produto'], function () {
-        Route::get('search/{term}', 'ProdutoController@search');
-    });
-    api('produtos', 'Produto\ProdutoController');
-
-    /**
-     * Marcas
-     */
-    api('marcas', 'Produto\MarcaController');
-
-    /**
-     * Linhas
-     */
-    api('linhas', 'Produto\LinhaController');
-
-    /**
-     * Atributos
-     */
-    Route::get('atributos/linha/{linha_id}', 'Produto\Linha\AtributoController@fromLinha');
-
-    /**
-     * Stock
-     */
-    Route::group(['prefix' => 'estoque', 'namespace' => 'Stock'], function () {
-        Route::get('imei/generate', 'ImeiController@generate');
-    });
-    api('estoque', 'Stock\StockController');
-
-    /**
-     * Product stock
-     */
-    Route::group(['prefix' => 'produto-estoque', 'namespace' => 'Produto'], function () {
-        Route::get('list/{sku}', 'ProductStockController@listBySku');
-        Route::get('slug/{slug}', 'ProductStockController@listBySlug');
-        Route::post('refresh', 'ProductStockController@refresh');
-        Route::get('adicionar/{sku}', 'ProductStockController@addOptions');
-        Route::get('transferencia/{id}', 'ProductStockController@transferOptions');
-        Route::get('transferencia/verificar/{id}/{imei}', 'ProductStockController@verifyTransfer');
-        Route::post('transferencia', 'ProductStockController@transfer');
-    });
-    api('produto-estoque', 'Produto\ProductStockController');
-
-    /**
-     * Product imei
-     */
-    Route::group(['prefix' => 'produto-imei', 'namespace' => 'Produto'], function () {
-        Route::get('list/{sku}', 'ProductImeiController@listBySku');
-        Route::post('parse', 'ProductImeiController@parseImeis');
-    });
-    api('produto-imei', 'Produto\ProductImeiController');
-
-    /**
-     * Stock removal
-     */
-    Route::group(['prefix' => 'estoque/retirada', 'namespace' => 'Stock'], function () {
-        Route::post('fechar/{id}', 'RemovalController@close');
-    });
-    api('estoque/retirada', 'Stock\RemovalController');
-
-    /**
-     * Stock removal product
-     */
-    Route::group(['prefix' => 'estoque/retirada/produto', 'namespace' => 'Stock'], function () {
-        Route::get('verificar/{imei}', 'RemovalProductController@verify');
-        Route::get('verificar/{imei}/{stockRemovalId}', 'RemovalProductController@check');
-        Route::post('confirmar/{stockRemovalId}', 'RemovalProductController@confirm');
-        Route::post('retornar/{stockRemovalId}', 'RemovalProductController@return');
-        Route::post('status/{id}', 'RemovalProductController@changeStatus');
-    });
-    api('estoque/retirada/produto', 'Stock\RemovalProductController');
-
-    /**
-     * Stock issue
-     */
-    Route::group(['prefix' => 'estoque/baixa', 'namespace' => 'Stock'], function () {
-    });
-    api('estoque/baixa', 'Stock\IssueController');
-
-    /**
-     * Supplier
-     */
-    Route::group(['prefix' => 'supplier', 'namespace' => 'Supplier'], function () {
-    });
-    Route::get('supplier/search/{term}', 'Supplier\SupplierController@search');
-    api('supplier', 'Supplier\SupplierController');
-
-    /**
-     * Stock entry
-     */
-    Route::group(['prefix' => 'estoque/entrada', 'namespace' => 'Stock'], function () {
-        Route::post('confirm/{id}', 'EntryController@confirm');
-    });
-    api('estoque/entrada', 'Stock\EntryController');
-
-    /**
-     * Stock entry invoice
-     */
-    Route::group(['prefix' => 'estoque/entrada/nota', 'namespace' => 'Stock\Entry'], function () {
-        Route::post('upload', 'InvoiceController@upload');
-
-        Route::get('danfe/{id}/{retorno?}', 'InvoiceController@danfe');
-    });
-    api('estoque/entrada/nota', 'Stock\Entry\InvoiceController');
-
-    /**
-     * Product defect
-     */
-    Route::group(['prefix' => 'produto/defeito', 'namespace' => 'Produto'], function () {
-    });
-    api('produto/defeito', 'Produto\DefectController');
-
-    /**
-     * Partials
-     */
-    Route::group(['namespace' => 'Partials'], function () {
-        Route::get('search', 'SearchController@search');
-    });
-
-    /**
-     * Relatórios
-     */
-    Route::group(['middleware' => ['role:admin'], 'namespace' => 'Relatorio', 'prefix' => 'relatorios'], function () {
-        // ICMS
-        Route::get('icms', 'ICMSController@icms');
-
-        // Inventário
-        Route::post('inventario', 'InventarioController@relatorio');
-        Route::get('inventario/{return_type}', 'InventarioController@relatorio');
-    });
+    // Route::group(['prefix' => 'produtos', 'namespace' => 'Product'], function () {
+    //     Route::get('search/{term}', 'ProductController@search');
+    // });
+    // api('produtos', 'Product\ProductController');
+    //
+    // /**
+    //  * Marcas
+    //  */
+    // api('marcas', 'Product\MarcaController');
+    //
+    // /**
+    //  * Linhas
+    //  */
+    // api('linhas', 'Product\LinhaController');
+    //
+    // /**
+    //  * Atributos
+    //  */
+    // Route::get('atributos/linha/{linha_id}', 'Product\Linha\AtributoController@fromLinha');
+    //
+    // /**
+    //  * Stock
+    //  */
+    // Route::group(['prefix' => 'estoque', 'namespace' => 'Stock'], function () {
+    //     Route::get('imei/generate', 'ImeiController@generate');
+    // });
+    // api('estoque', 'Stock\StockController');
+    //
+    // /**
+    //  * Product stock
+    //  */
+    // Route::group(['prefix' => 'produto-estoque', 'namespace' => 'Product'], function () {
+    //     Route::get('list/{sku}', 'ProductStockController@listBySku');
+    //     Route::get('slug/{slug}', 'ProductStockController@listBySlug');
+    //     Route::post('refresh', 'ProductStockController@refresh');
+    //     Route::get('adicionar/{sku}', 'ProductStockController@addOptions');
+    //     Route::get('transferencia/{id}', 'ProductStockController@transferOptions');
+    //     Route::get('transferencia/verificar/{id}/{imei}', 'ProductStockController@verifyTransfer');
+    //     Route::post('transferencia', 'ProductStockController@transfer');
+    // });
+    // api('produto-estoque', 'Product\ProductStockController');
+    //
+    // /**
+    //  * Product imei
+    //  */
+    // Route::group(['prefix' => 'produto-imei', 'namespace' => 'Product'], function () {
+    //     Route::get('list/{sku}', 'ProductImeiController@listBySku');
+    //     Route::post('parse', 'ProductImeiController@parseImeis');
+    // });
+    // api('produto-imei', 'Product\ProductImeiController');
+    //
+    // /**
+    //  * Stock removal
+    //  */
+    // Route::group(['prefix' => 'estoque/retirada', 'namespace' => 'Stock'], function () {
+    //     Route::post('fechar/{id}', 'RemovalController@close');
+    // });
+    // api('estoque/retirada', 'Stock\RemovalController');
+    //
+    // /**
+    //  * Stock removal product
+    //  */
+    // Route::group(['prefix' => 'estoque/retirada/produto', 'namespace' => 'Stock'], function () {
+    //     Route::get('verificar/{imei}', 'RemovalProductController@verify');
+    //     Route::get('verificar/{imei}/{stockRemovalId}', 'RemovalProductController@check');
+    //     Route::post('confirmar/{stockRemovalId}', 'RemovalProductController@confirm');
+    //     Route::post('retornar/{stockRemovalId}', 'RemovalProductController@return');
+    //     Route::post('status/{id}', 'RemovalProductController@changeStatus');
+    // });
+    // api('estoque/retirada/produto', 'Stock\RemovalProductController');
+    //
+    // /**
+    //  * Stock issue
+    //  */
+    // Route::group(['prefix' => 'estoque/baixa', 'namespace' => 'Stock'], function () {
+    // });
+    // api('estoque/baixa', 'Stock\IssueController');
+    //
+    // /**
+    //  * Supplier
+    //  */
+    // Route::group(['prefix' => 'supplier', 'namespace' => 'Supplier'], function () {
+    // });
+    // Route::get('supplier/search/{term}', 'Supplier\SupplierController@search');
+    // api('supplier', 'Supplier\SupplierController');
+    //
+    // /**
+    //  * Stock entry
+    //  */
+    // Route::group(['prefix' => 'estoque/entrada', 'namespace' => 'Stock'], function () {
+    //     Route::post('confirm/{id}', 'EntryController@confirm');
+    // });
+    // api('estoque/entrada', 'Stock\EntryController');
+    //
+    // /**
+    //  * Stock entry invoice
+    //  */
+    // Route::group(['prefix' => 'estoque/entrada/nota', 'namespace' => 'Stock\Entry'], function () {
+    //     Route::post('upload', 'InvoiceController@upload');
+    //
+    //     Route::get('danfe/{id}/{retorno?}', 'InvoiceController@danfe');
+    // });
+    // api('estoque/entrada/nota', 'Stock\Entry\InvoiceController');
+    //
+    // /**
+    //  * Product defect
+    //  */
+    // Route::group(['prefix' => 'produto/defeito', 'namespace' => 'Product'], function () {
+    // });
+    // api('produto/defeito', 'Product\DefectController');
+    //
+    // /**
+    //  * Partials
+    //  */
+    // Route::group(['namespace' => 'Partials'], function () {
+    //     Route::get('search', 'SearchController@search');
+    // });
+    //
+    // /**
+    //  * Relatórios
+    //  */
+    // Route::group(['middleware' => ['role:admin'], 'namespace' => 'Relatorio', 'prefix' => 'relatorios'], function () {
+    //     // ICMS
+    //     Route::get('icms', 'ICMSController@icms');
+    //
+    //     // Inventário
+    //     Route::post('inventario', 'InventarioController@relatorio');
+    //     Route::get('inventario/{return_type}', 'InventarioController@relatorio');
+    // });
 });

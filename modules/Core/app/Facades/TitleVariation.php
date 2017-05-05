@@ -2,12 +2,8 @@
 
 use Illuminate\Support\Facades\Facade;
 use Core\Models\Produto;
-use Core\Models\Produto\TitleVariation as TitleVariationModel;
+use Core\Models\ProductTitleVariation;
 
-/**
- * TitleVariationProvider
- * @package Core\Facades;
- */
 class TitleVariationProvider
 {
     /**
@@ -18,39 +14,15 @@ class TitleVariationProvider
      * @param string $ean        variation ean
      * @param string $ncm        variation ncm
      */
-    public function set($productSku, $title, $ean = null, $ncm = null)
+    public function set($productSku, $title, $ean = null)
     {
-        $titleVariation = TitleVariationModel::firstOrCreate([
+        $titleVariation = ProductTitleVariation::firstOrCreate([
             'product_sku' => $productSku,
             'title'       => $title,
-            'ean'         => $ean,
-            'ncm'         => $ncm,
+            'ean'         => $ean
         ]);
 
         return $titleVariation;
-    }
-
-    /**
-     * Get exact variation or null
-     *
-     * @param  string $title
-     * @param  string $ean
-     * @param  string $ncm
-     * @return TitleVariation|null
-     */
-    public function getExact($title, $ean = null, $ncm = null)
-    {
-        $ean = $ean ?: null;
-        $ncm = $ncm ?: null;
-
-        $titleVariation = TitleVariationModel
-            ::where('title', '=', $title)
-            ->where('ean', '=', $ean)
-            ->where('ncm', '=', $ncm)
-            ->orderBy('id', 'DESC')
-            ->first();
-
-        return $titleVariation ?: null;
     }
 
     /**
@@ -61,58 +33,27 @@ class TitleVariationProvider
      * @param  string $ncm   variation ncm
      * @return TitleVariation|null
      */
-    public function get($title, $ean = null, $ncm = null)
+    public function get($title, $ean = null)
     {
         $ean = $ean ?: null;
         $ncm = $ncm ?: null;
 
-        $titleVariation = TitleVariationModel
-            ::where('title', '=', $title)
-            ->where('ean', '=', $ean)
-            ->where('ncm', '=', $ncm)
+        $titleVariation = ProductTitleVariation::where('title', '=', $title)
+            ->orWhere('ean', '=', $ean)
             ->orderBy('id', 'DESC')
             ->first();
 
         if (!$titleVariation) {
-            $titleVariation = TitleVariationModel
-            ::where('title', '=', $title)
-            ->where('ean', '=', $ean)
-            ->orderBy('id', 'DESC')
-            ->first();
-        }
-
-        if (!$titleVariation) {
-            $titleVariation = TitleVariationModel
-                ::where('title', '=', $title)
-                ->where('ncm', '=', $ncm)
-                ->orderBy('id', 'DESC')
-                ->first();
-        }
-
-        if (!$titleVariation) {
-            $titleVariation = TitleVariationModel
-                ::where('title', '=', $title)
+            $product = Produto::where('title', '=', $title)
                 ->orWhere('ean', '=', $ean)
-                ->orWhere('ncm', '=', $ncm)
-                ->orderBy('id', 'DESC')
-                ->first();
-        }
-
-        if (!$titleVariation) {
-            $produto = Produto
-                ::where('titulo', '=', $title)
-                ->orWhere('ean', '=', $ean)
-                ->orWhere('ncm', '=', $ncm)
                 ->orderBy('created_at', 'DESC')
                 ->first();
 
-            if ($produto &&
-                is_null($this->getExact($produto->titulo, $produto->eac, $produto->ncm))) {
+            if ($product) {
                 $titleVariation = $this->set(
                     $produto->sku,
-                    $produto->titulo,
-                    $produto->eac,
-                    $produto->ncm
+                    $produto->title,
+                    $produto->ean
                 );
             }
         }
@@ -121,10 +62,6 @@ class TitleVariationProvider
     }
 }
 
-/**
- * Facade register
- * @package Core\Facades;
- */
 class TitleVariation extends Facade
 {
     protected static function getFacadeAccessor()

@@ -6,7 +6,7 @@ use Core\Events\DepotEntryConfirmed;
 use Core\Models\ProductSerial;
 use Core\Models\DepotEntryProductSerial;
 
-class ConvertEntryImeis
+class ConvertEntrySerials
 {
     /**
      * Set events that this will listen

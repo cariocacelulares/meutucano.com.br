@@ -1,4 +1,4 @@
-<?php namespace Core\Http\Controllers\Partials\Traits;
+<?php namespace Core\Http\Controllers\Traits;
 
 use Illuminate\Support\Facades\Log;
 

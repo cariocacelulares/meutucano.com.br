@@ -1,11 +1,16 @@
 <?php namespace Core\Models;
 
 use App\Models\User\User;
+use App\Models\Traits\UploadableTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 class OrderCall extends \Eloquent
 {
-    use RevisionableTrait;
+    use RevisionableTrait,
+        UploadableTrait;
+
+    const UPLOAD_PATH = 'ligacoes';
+    const UPLOAD_ATTR = ['file'];
 
     /**
      * @var boolean
@@ -19,13 +24,6 @@ class OrderCall extends \Eloquent
         'order_id',
         'user_id',
         'file',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $with = [
-        'user',
     ];
 
     /**
@@ -45,13 +43,13 @@ class OrderCall extends \Eloquent
     }
 
     /**
-     * Return URL to call file
+     * Return file full url
      *
-     * @param  string $arquivo
+     * @param  string $file
      * @return string
      */
-    public function getFileAttribute($arquivo)
+    public function getFileAttribute($file)
     {
-        return "/storage/{$arquivo}";
+        return fileUrl(self::UPLOAD_PATH . '/' . $file);
     }
 }

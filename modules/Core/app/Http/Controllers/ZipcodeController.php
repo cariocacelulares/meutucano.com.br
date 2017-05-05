@@ -1,14 +1,10 @@
-<?php namespace Core\Http\Controllers\Partials;
+<?php namespace Core\Http\Controllers;
 
 use App\Http\Controllers\Rest\RestResponseTrait;
 use App\Http\Controllers\Controller;
 use Core\Models\Cliente\Endereco;
 
-/**
- * Class CepController
- * @package Core\Http\Controllers\Partials
- */
-class CepController extends Controller
+class ZipcodeController extends Controller
 {
     use RestResponseTrait;
 

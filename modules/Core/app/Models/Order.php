@@ -9,6 +9,14 @@ class Order extends \Eloquent
     use SoftDeletes,
         RevisionableTrait;
 
+    const STATUS_PENDING  = 0;
+    const STATUS_PAID     = 1;
+    const STATUS_INVOICED = 2;
+    const STATUS_COMPLETE = 3;
+    const STATUS_SHIPPED  = 4;
+    const STATUS_CANCELED = 5;
+    const STATUS_RETURNED = 6;
+
     /**
      * @var boolean
      */
@@ -98,7 +106,7 @@ class Order extends \Eloquent
      */
     public function getCanHold()
     {
-        if (in_array($this->status, [0,1])) {
+        if (in_array($this->status, [0, 1])) {
             return true;
         }
 
@@ -112,7 +120,7 @@ class Order extends \Eloquent
      */
     public function getCanPrioritize()
     {
-        if (in_array($this->status, [0,1])) {
+        if (in_array($this->status, [0, 1])) {
             return true;
         }
 
@@ -126,32 +134,10 @@ class Order extends \Eloquent
      */
     public function getCanCancel()
     {
-        if (in_array($this->status, [0,1])) {
+        if (in_array($this->status, [0, 1])) {
             return true;
         }
 
         return false;
-    }
-
-    /**
-     * Calculate discount percent based in order products: 100 - ((valor - shipping) * 100 / totalProducts)
-     *
-     * @return null|int
-     */
-    public function getDesconto()
-    {
-        if (strtolower($this->marketplace) === 'b2w') {
-            $frete = ($this->frete_valor) ?: 0;
-            $totalProdutos = 0;
-            foreach ($this->produtos as $produto) {
-                $totalProdutos += $produto->valor;
-            }
-
-            if ($totalProdutos > 0 && ($this->total - $frete) != $totalProdutos) {
-                return round(100 - ((($this->total - $frete) * 100) / $totalProdutos));
-            }
-        }
-
-        return null;
     }
 }

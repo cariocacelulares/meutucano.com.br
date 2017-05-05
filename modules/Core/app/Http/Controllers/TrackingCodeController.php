@@ -1,4 +1,4 @@
-<?php namespace Core\Http\Controllers\Pedido;
+<?php namespace Core\Http\Controllers;
 
 use Illuminate\Support\Facades\Input;
 use PhpSigep\Model\Etiqueta;

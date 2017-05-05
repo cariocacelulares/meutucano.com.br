@@ -1,12 +1,8 @@
 <?php namespace Core\Facades;
 
-use Core\Models\Config as TConfig;
 use Illuminate\Support\Facades\Facade;
+use Core\Models\Additional\Config as TConfig;
 
-/**
- * ConfigProvider
- * @package Core\Facades;
- */
 class ConfigProvider
 {
     /**
@@ -33,10 +29,6 @@ class ConfigProvider
     }
 }
 
-/**
- * Facade register
- * @package Core\Facades;
- */
 class Config extends Facade
 {
     protected static function getFacadeAccessor()

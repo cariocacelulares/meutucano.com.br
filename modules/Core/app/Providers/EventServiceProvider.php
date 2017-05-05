@@ -8,9 +8,9 @@ use Core\Events\Handlers\DeleteProductSerial;
 use Core\Events\Handlers\RestoreProductSerial;
 use Core\Events\Handlers\ConvertEntrySerials;
 use Core\Events\Handlers\SetProductSerialCost;
-use Illuminate\Foundation\Support\Providers\EventServiceProvider;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
-class EventServiceProvider extends EventServiceProvider
+class EventServiceProvider extends ServiceProvider
 {
     /**
      * The event listener mappings for the application.

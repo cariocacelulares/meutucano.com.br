@@ -38,7 +38,7 @@ class DepotEntry extends \Eloquent
      */
     public function getConfirmedAttribute()
     {
-        return ($this->confirmed_at) true : false;
+        return ($this->confirmed_at) ? true : false;
     }
 
     /**

@@ -1,13 +1,9 @@
 <?php namespace Core\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Core\Models\Stock as StockModel;
-use Core\Models\Produto\ProductStock;
+use Core\Models\Depot;
+use Core\Models\DepotProduct;
 
-/**
- * StockProvider
- * @package Core\Facades;
- */
 class StockProvider
 {
     /**
@@ -18,8 +14,7 @@ class StockProvider
      */
     public function getObjects($sku, $stock = 'default')
     {
-        $productStock = ProductStock::with('stock')
-            ->where('product_sku', $sku);
+        $productStock = DepotProduct::with('stock')->where('product_sku', $sku);
 
         if ($stock) {
             $productStock->where('stock_slug', $stock);
@@ -145,10 +140,6 @@ class StockProvider
     }
 }
 
-/**
- * Facade register
- * @package Core\Facades;
- */
 class Stock extends Facade
 {
     protected static function getFacadeAccessor()

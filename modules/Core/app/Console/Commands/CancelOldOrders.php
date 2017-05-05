@@ -10,7 +10,7 @@ class CancelOldOrders extends Command
      *
      * @var string
      */
-    protected $signature = 'orders:cancel-old';
+    protected $signature = 'order:cancel-old';
 
     /**
      * The console command description.

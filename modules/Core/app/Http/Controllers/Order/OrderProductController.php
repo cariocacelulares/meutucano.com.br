@@ -1,4 +1,4 @@
-<?php namespace Core\Http\Controllers\Pedido;
+<?php namespace Core\Http\Controllers\Order;
 
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestControllerTrait;
@@ -6,11 +6,7 @@ use App\Http\Controllers\Controller;
 use Core\Models\Pedido\PedidoProduto;
 use Core\Transformers\OrderProductTransformer;
 
-/**
- * Class PedidoProdutoController
- * @package Core\Http\Controllers\Pedido
- */
-class PedidoProdutoController extends Controller
+class OrderProductController extends Controller
 {
     use RestControllerTrait;
 

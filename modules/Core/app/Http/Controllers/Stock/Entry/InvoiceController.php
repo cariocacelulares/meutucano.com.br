@@ -100,7 +100,7 @@ class InvoiceController extends Controller
                 $ncm   = (string) $product->prod->NCM;
                 $title = (string) $product->prod->xProd;
 
-                $titleVariation   = \TitleVariation::get($title, $ean, $ncm);
+                $titleVariation   = \TitleVariation::get($title, $ean);
                 $titleVariationId = $titleVariation ? $titleVariation->id : null;
 
                 $sku            = $titleVariation ? $titleVariation->product_sku : null;

@@ -3,21 +3,21 @@
 use App\Models\User\UserPassword;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Rest\RestControllerTrait;
+use Illuminate\Support\Facades\Input;
+use App\Http\Requests\UserPasswordRequest as Request;
 
 class UserPasswordController extends Controller
 {
-    use RestControllerTrait;
-
-    const MODEL = UserPassword::class;
 
     public function __construct()
     {
-        $this->middleware('permission:user_password_list',      ['only' => ['index', 'listFromUser', 'show']]);
+        $this->middleware('permission:user_password_list',      ['only' => ['listFromUser']]);
         $this->middleware('permission:user_password_list_mine', ['only' => ['listCurrentUser']]);
         $this->middleware('permission:user_password_create',    ['only' => ['store']]);
         $this->middleware('permission:user_password_update',    ['only' => ['update']]);
         $this->middleware('permission:user_password_delete',    ['only' => ['destroy']]);
+
+        $this->middleware('currentUser', ['only' => 'listCurrentUser']);
     }
 
     /**
@@ -28,7 +28,9 @@ class UserPasswordController extends Controller
      */
     public function listFromUser($id)
     {
-        return $this->listResponse($this->listPasswords($id));
+        $data = UserPassword::where('user_id', $id);
+
+        return tableListResponse($data);
     }
 
     /**
@@ -38,21 +40,68 @@ class UserPasswordController extends Controller
      */
     public function listCurrentUser()
     {
-        $id = JWTAuth::parseToken()->authenticate()->id;
+        $data = UserPassword::where('user_id', Input::get('user_id'));
 
-        return $this->listResponse($this->listPasswords($id));
+        return tableListResponse($data);
     }
 
     /**
-     * Reutn passwords form user
-     *
-     * @param  int $user_id
-     * @return Object
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function listPasswords($user_id)
+    public function store(Request $request)
     {
-        $list = UserPassword::where('user_id', $user_id);
+        try {
+            $data = UserPassword::create($request->all());
 
-        return $this->handleRequest($list);
+            return createdResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function update(Request $request, $id)
+    {
+        try {
+            $data = UserPassword::findOrFail($id);
+            $data->fill($request->all());
+            $data->save();
+
+            return showResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function destroy($id)
+    {
+        try {
+            $data = UserPassword::findOrFail($id);
+            $data->delete();
+
+            return deletedResponse();
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao excluir recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
     }
 }

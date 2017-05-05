@@ -247,8 +247,8 @@ class EntryController extends Controller
                 continue;
             }
 
-            if (isset($productData['title']) && is_null(\TitleVariation::getExact($productData['title'], $productData['ean'], $productData['ncm']))) {
-                \TitleVariation::set($productData['product_sku'], $productData['title'], $productData['ean'], $productData['ncm']);
+            if (isset($productData['title']) && is_null(\TitleVariation::get($productData['title'], $productData['ean']))) {
+                \TitleVariation::set($productData['product_sku'], $productData['title'], $productData['ean']);
             }
 
             $product = null;

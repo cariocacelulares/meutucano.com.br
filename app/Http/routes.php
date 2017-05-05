@@ -11,7 +11,7 @@ Route::group(['prefix' => '/api'], function () {
 
     Route::group(['middleware' => 'jwt.auth'], function () {
 
-        Route::get('storage/{path}/{filename}', function ($path, $filename) {
+        Route::get('file/{path}/{filename}', function ($path, $filename) {
             $path = storage_path("app/public/{$path}/{$filename}");
 
             if (!Illuminate\Support\Facades\File::exists($path)) {
@@ -37,7 +37,7 @@ Route::group(['prefix' => '/api'], function () {
                 Route::get('from/{user_id}', 'UserPasswordController@listFromUser');
                 Route::get('current', 'UserPasswordController@listCurrentUser');
             });
-            api('passwords', 'UserPasswordController');
+            api('passwords', 'UserPasswordController', ['index', 'show']);
         });
     });
 });

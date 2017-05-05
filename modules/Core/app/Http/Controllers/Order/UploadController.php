@@ -1,4 +1,4 @@
-<?php namespace Core\Http\Controllers\Pedido;
+<?php namespace Core\Http\Controllers\Order;
 
 use Core\Models\Pedido;
 use Core\Models\Cliente;
@@ -16,13 +16,9 @@ use Core\Models\Stock\RemovalProduct;
 use Core\Models\Pedido\PedidoProduto;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Config;
+use Core\Http\Controllers\Traits\Uploadable;
 use App\Http\Controllers\Rest\RestControllerTrait;
-use Core\Http\Controllers\Partials\Traits\Uploadable;
 
-/**
- * Class UploadController
- * @package Core\Http\Controllers\Pedido
- */
 class UploadController extends Controller
 {
     use RestControllerTrait,

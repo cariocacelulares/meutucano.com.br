@@ -50,5 +50,7 @@ class Kernel extends HttpKernel
         'permission'  => \Zizaco\Entrust\Middleware\EntrustPermission::class,
         'ability'     => \Zizaco\Entrust\Middleware\EntrustAbility::class,
         'bindings'    => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        'currentUser' => \App\Http\Middleware\AddUserToRequest::class,
+        'convertJson' => \App\Http\Middleware\ConvertJsonString::class,
     ];
 }

@@ -19,6 +19,7 @@ class OrderProduct extends \Eloquent
         'product_sku',
         'depot_product_id',
         'product_serial_id',
+        'order_invoice_devolution_id',
         'price',
     ];
 

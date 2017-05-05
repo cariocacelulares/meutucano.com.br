@@ -1,16 +1,38 @@
 <?php namespace Core\Facades;
 
-use Illuminate\Support\Facades\Facade;
 use NFePHP\Extras\Danfe;
-use App\Http\Controllers\Rest\RestControllerTrait;
+use Illuminate\Support\Facades\Facade;
 
-/**
- * InvoiceProvider
- * @package Core\Facades;
- */
 class InvoiceProvider
 {
-    use RestControllerTrait;
+    /**
+     * Validate if uploaded XML is an NFe
+     *
+     * @param  string $file
+     * @param  array $validCfops
+     * @return object
+     */
+    public function validateNfeUpload($file, $validCfops = [])
+    {
+        $xml = simplexml_load_file($file);
+
+        if (!$xml->NFe) throw new \Exception("Arquivo enviado não é um XML de Nota Fiscal.");
+        if (!$xml->protNFe) throw new \Exception("Arquivo de NFe não emitido.");
+
+        $nfe = $xml->NFe->infNFe;
+
+        $nfeProducts = (sizeof($nfe->det) > 1) ? $nfe->det : [$nfe->det];
+        $cfop        = (int) $nfeProducts[0]->prod->CFOP;
+
+        /**
+         * Verify CFOP
+         */
+        if (!in_array($cfop, $validCfops)) {
+            throw new \Exception("CFOP da nota não é compatível com esta operação.");
+        }
+
+        return $nfe;
+    }
 
     /**
      * Returns invoice XML
@@ -24,7 +46,7 @@ class InvoiceProvider
             $filePath = storage_path('app/public/nota/' . $file);
 
             if (!file_exists($filePath)) {
-                return $this->notFoundResponse();
+                return notFoundResponse();
             }
 
             return response()
@@ -33,7 +55,7 @@ class InvoiceProvider
         } catch (\Exception $exception) {
             \Log::warning(logMessage($exception, 'Falha ao tentar imprimir XML'), [$id]);
 
-            return $this->clientErrorResponse('Falha ao tentar imprimir XML');
+            return clientErrorResponse('Falha ao tentar imprimir XML');
         }
     }
 
@@ -51,10 +73,8 @@ class InvoiceProvider
         try {
             $path = storage_path('app/public/nota/'. $file);
 
-            // dd($path);
-
             if (!file_exists($path)) {
-                return $this->notFoundResponse();
+                return notFoundResponse();
             }
 
             $danfe = new Danfe(
@@ -72,19 +92,15 @@ class InvoiceProvider
             $danfe->montaDANFE('P', 'A4', 'L');
             $danfe->printDANFE($nomeDanfe, $returnType);
 
-            return $this->showResponse([]);
+            return showResponse([]);
         } catch (\Exception $exception) {
-            \Log::warning(logMessage($exception, 'Falha ao tentar imprimir DANFe'), [$id]);
+            \Log::warning(logMessage($exception, 'Falha ao tentar imprimir DANFe'), [$file]);
 
-            return $this->clientErrorResponse('Falha ao tentar imprimir DANFe');
+            return clientErrorResponse('Falha ao tentar imprimir DANFe');
         }
     }
 }
 
-/**
- * Facade register
- * @package Core\Facades;
- */
 class Invoice extends Facade
 {
     protected static function getFacadeAccessor()
