@@ -165,7 +165,7 @@ $small: 12px;
   line-height: 1;
   margin-bottom: 5px;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 12px;
   color: $inputLabel;
 }
 
@@ -212,7 +212,7 @@ $small: 12px;
 input {
   display: inline-block;
   width: 100%;
-  border-radius: 3px;
+  border-radius: $borderRadius;
   border: 1px solid $default;
   color: $darker;
   background-color: $white;

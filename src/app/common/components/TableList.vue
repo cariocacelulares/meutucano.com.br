@@ -126,7 +126,7 @@ export default {
     width: 100%;
     color: $darker;
     border: 1px solid $light;
-    border-radius: 3px;
+    border-radius: $borderRadius;
     border-spacing: 0;
 
     th, td {

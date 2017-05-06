@@ -153,7 +153,7 @@ export default {
     padding: 0 15px;
     font-size: 12px;
     background-color: $lighter;
-    border-radius: 3px;
+    border-radius: $borderRadius;
     color: $darker;
   }
 }

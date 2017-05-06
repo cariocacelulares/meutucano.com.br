@@ -81,7 +81,7 @@ export default {
     },
     cancelIcon: {
       type: String,
-      default: 'angle-left'
+      default: 'close'
     },
 
     confirm: {
@@ -186,7 +186,7 @@ export default {
     width: 600px;
     padding: 20px;
     box-shadow: $defaultShadow;
-    border-radius: 3px;
+    border-radius: $borderRadius;
     background-color: $white;
     z-index: 999;
 

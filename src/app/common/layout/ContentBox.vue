@@ -62,7 +62,7 @@ export default {
     padding: 20px;
     background-color: $white;
     box-shadow: $defaultShadow;
-    border-radius: 3px;
+    border-radius: $borderRadius;
   }
 
   &.boxed {

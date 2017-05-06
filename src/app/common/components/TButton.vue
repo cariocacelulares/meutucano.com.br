@@ -30,6 +30,10 @@ export default {
       type: Boolean,
       default: false
     },
+    discrete: {
+      type: Boolean,
+      default: false
+    },
     color: {
       type: String,
       default: 'default'
@@ -69,12 +73,17 @@ export default {
 
       classList.push('TButton')
       classList.push(this.classes)
-      classList.push(`text-${this.text}`)
-      classList.push(`bg-${this.color}`)
-      classList.push(this.size)
 
       if (this.block) {
         classList.push('block')
+      }
+
+      if (this.discrete) {
+        classList.push('discrete')
+      } else {
+        classList.push(`text-${this.text}`)
+        classList.push(`bg-${this.color}`)
+        classList.push(this.size)
       }
 
       classList = classList.filter((item) => {
@@ -108,9 +117,12 @@ export default {
 button {
   display: inline-block;
   font-weight: bold;
-  border-radius: 3px;
   cursor: pointer;
   transition: opacity linear 100ms;
+
+  &:not(.discrete) {
+    border-radius: $borderRadius;
+  }
 
   &:not([disabled]):focus,
   &:not([disabled]):hover {

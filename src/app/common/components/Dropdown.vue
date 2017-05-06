@@ -88,7 +88,7 @@ export default {
     padding: 12px 20px;
     color: $darker;
     background-color: $lighter;
-    border-radius: 3px;
+    border-radius: $borderRadius;
     font-weight: bold;
 
     span {

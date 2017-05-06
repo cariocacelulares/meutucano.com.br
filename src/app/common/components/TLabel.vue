@@ -49,10 +49,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '~style/vars';
+
 .TLabel {
   line-height: 26px;
   padding: 0 20px;
-  border-radius: 3px;
+  border-radius: $borderRadius;
   font-size: 11px;
   font-weight: bold;
   cursor: default;

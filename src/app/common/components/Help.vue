@@ -26,23 +26,6 @@ export default {
       required: true
     },
   },
-  computed: {
-    /*classList() {
-      let classList = []
-
-      classList.push('VSeparator')
-      classList.push(this.classes)
-      classList.push(`bg-${this.color}`)
-
-      classList = classList.filter((item) => {
-        if (typeof(item) === 'boolean' || !isEmpty(item)) {
-          return item
-        }
-      });
-
-      return classList.join(' ')
-    }*/
-  }
 }
 </script>
 

@@ -64,7 +64,7 @@ export default {
     padding: 40px 20px;
     background-color: #FFF;
     text-align: center;
-    border-radius: 3px;
+    border-radius: $borderRadius;
     box-shadow: $defaultShadow;
 
     @media all and (max-width: $formWidth) {

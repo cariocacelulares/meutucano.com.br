@@ -33,11 +33,18 @@ body {
 
 textarea,
 select,
-input,
 button {
   &::selection {
     background: transparent;
     text-shadow: none;
+  }
+}
+
+input {
+  &::selection {
+    text-shadow: none;
+    color: $black;
+    background: $default;
   }
 }
 

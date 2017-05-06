@@ -40,7 +40,7 @@
           <FeaturedValue label="Quantidade" value="223" color="darker" />
 
           <div class="buttons">
-            <TButton color="info" text="white" leftIcon="exchange" class="m-r-10">Transferir</TButton>
+            <TButton @click="openTransferStock" color="info" text="white" leftIcon="exchange" class="m-r-10">Transferir</TButton>
             <TButton color="danger" text="white" leftIcon="close">Excluir</TButton>
           </div>
         </header>
@@ -72,16 +72,19 @@
       </article>
     </div>
 
-    <AddDepot/>
+    <AddDepot />
+    <TransferStock />
   </ContentBox>
 </template>
 
 <script>
 import AddDepot from './AddDepot'
+import TransferStock from './TransferStock'
 
 export default {
   components: {
     AddDepot,
+    TransferStock,
   },
 
   data() {
@@ -102,8 +105,8 @@ export default {
       this.$root.$emit('show::modal-AddDepot')
     },
 
-    openFodase() {
-      this.$root.$emit('show::modal-fodase')
+    openTransferStock() {
+      this.$root.$emit('show::modal-TransferStock')
     },
   },
 }
@@ -120,7 +123,7 @@ export default {
 .sidebar,
 .inner-content {
   padding: 20px;
-  border-radius: 3px;
+  border-radius: $borderRadius;
   box-shadow: $defaultShadow;
   background-color: $white;
 }

@@ -68,6 +68,10 @@ export default {
       classList.push('selectWrapper')
       classList.push(this.size)
 
+      if (this.block) {
+        classList.push('block')
+      }
+
       return notEmpty(classList).join(' ')
     },
 
@@ -77,10 +81,6 @@ export default {
       classList.push('TSelect')
       classList.push(this.classes)
       classList.push(this.color)
-
-      if (this.block) {
-        classList.push('block')
-      }
 
       if (this.leftIcon) {
         classList.push('space-left')
@@ -143,7 +143,7 @@ $small: 12px;
   line-height: 1;
   margin-bottom: 5px;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 12px;
   color: $inputLabel;
 }
 
@@ -190,7 +190,7 @@ $small: 12px;
 select {
   display: inline-block;
   width: 100%;
-  border-radius: 3px;
+  border-radius: $borderRadius;
   border: 1px solid $default;
   color: $darker;
   background-color: $white;
