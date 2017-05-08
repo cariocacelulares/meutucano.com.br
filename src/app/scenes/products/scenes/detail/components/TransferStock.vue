@@ -1,6 +1,6 @@
 <template>
   <Modal name="TransferStock" icon="exchange" title="Transferir estoque" :on-show="fetch" :on-confirm="save">
-    <form>
+    <form @submit.prevent>
       <TSelect class="m-b-20" label="Depósito de destino" placeholder="Selecione o depósito" :block="true" :options="[
         {
           value: 1,
@@ -12,7 +12,7 @@
         },
       ]"/>
 
-      <SerialBox label="Seriais" :serials="serials" @remove="removeSerial" />
+      <SerialBox label="Seriais" :serials="serials" @add="validate" />
     </form>
   </Modal>
 </template>
@@ -52,8 +52,10 @@ export default {
       console.log('transfer save')
     },
 
-    removeSerial(index) {
-      this.serials.splice(index, 1)
+    validate(index) {
+      setTimeout(() => {
+        this.serials[index].valid = true
+      }, 500)
     },
   },
 }

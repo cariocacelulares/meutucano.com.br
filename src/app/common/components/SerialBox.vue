@@ -1,23 +1,25 @@
 <template>
   <div class="SerialBox">
     <span v-if="label" class="label">{{ label }}</span>
-    <form class="serial-wrapper">
-      <ul>
+    <form class="serial-wrapper" @submit.prevent="addSerial">
+      <ul :class="{ scrollbar: serials.length > 4 }">
         <li v-for="(serial, index) in serials">
           <span>
             <Icon v-if="serial.valid" name="check" color="success" />
-            <Icon v-if="!serial.valid" name="ban" color="danger" />
+            <Icon v-if="serial.valid === false" name="ban" color="danger" />
+            <Icon v-if="serial.valid === null" name="refresh" :spin="true" color="darker" />
             {{ serial.serial }}
           </span>
           <TButton @click="removeSerial(index)" :discrete="true">
             <Icon name="close" color="danger" text="Remover" />
           </TButton>
         </li>
-        <li class="input">
-          <Icon name="ellipsis-h" color="dark" />
-          <TInput placeholder="Digite o serial ou utilize um leitor" :block="true" :discrete="true" />
-        </li>
       </ul>
+      <div class="input">
+        <Icon name="ellipsis-h" color="dark" />
+        <TInput v-model="serial" :block="true" :discrete="true"
+        placeholder="Digite o serial ou utilize um leitor para inserir o serial e pressione enter" />
+      </div>
       <span v-if="serials.length && serials.length !== valid">
         <b>{{ valid }}</b> seria{{ (valid === 1) ? 'l' : 'is' }}
         válido{{ (valid !== 1) ? 's' : '' }} de
@@ -50,44 +52,42 @@ export default {
   data() {
     return {
       valid: 0,
+      serial: null
     }
   },
 
   watch: {
-    serials() {
-      this.valid = 0
+    serials: {
+      handler() {
+        this.valid = 0
 
-      this.serials.forEach((item) => {
-        if (item.valid) {
-          this.valid++
-        }
-      })
+        this.serials.forEach((item) => {
+          if (item.valid) {
+            this.valid++
+          }
+        })
+      },
+      deep: true
     }
   },
 
   methods: {
     removeSerial(index) {
-      this.$emit('remove', index)
+      this.serials.splice(index, 1)
+    },
+
+    addSerial() {
+      const newLength = this.serials.push({
+        serial: this.serial,
+        valid: null,
+        message: null,
+      })
+
+      this.$emit('add', (newLength - 1))
+
+      this.serial = null
     },
   },
-
-  computed: {
-    /*classList() {
-      let classList = []
-
-      classList.push('VSeparator')
-      classList.push(this.classes)
-      classList.push(`bg-${this.color}`)
-
-      classList = classList.filter((item) => {
-        if (typeof(item) === 'boolean' || !isEmpty(item)) {
-          return item
-        }
-      });
-
-      return classList.join(' ')
-    }*/
-  }
 }
 </script>
 
@@ -123,10 +123,21 @@ export default {
 
     ul {
       width: 100%;
-      display: flex;
-      flex-direction: column;
+      max-height: 190px;
+      overflow-y: auto;
+
+      &.scrollbar {
+        position: relative;
+        left: 15px;
+        width: calc(100% + 15px);
+      }
     }
 
+    .input {
+      width: 100%;
+    }
+
+    .input,
     li {
       list-style: none;
       height: 40px;

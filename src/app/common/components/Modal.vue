@@ -184,10 +184,12 @@ export default {
     position: relative;
     max-width: 100vw;
     width: 600px;
+    max-height: calc(100vh - 20px);
     padding: 20px;
     box-shadow: $defaultShadow;
     border-radius: $borderRadius;
     background-color: $white;
+    overflow-y: auto;
     z-index: 999;
 
     header {
