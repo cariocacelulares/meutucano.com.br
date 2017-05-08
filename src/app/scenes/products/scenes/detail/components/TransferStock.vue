@@ -33,11 +33,23 @@ export default {
           serial: '1554545645645',
           valid: true,
           message: null,
+          product: {
+            title: 'Samsung Galaxy S5 Preto 15GB',
+            depot: {
+              name: 'Estoque físico'
+            },
+          },
         },
         {
           serial: 'DAS5445645645',
           valid: false,
           message: 'Serial não registrado',
+          product: {
+            title: 'Samsung Galaxy S5 Preto 15GB',
+            depot: {
+              name: 'Estoque físico'
+            },
+          },
         },
       ]
     }, 1000)

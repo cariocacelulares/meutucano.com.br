@@ -2,14 +2,20 @@
   <div class="SerialBox">
     <span v-if="label" class="label">{{ label }}</span>
     <form class="serial-wrapper" @submit.prevent="addSerial">
-      <ul :class="{ scrollbar: serials.length > 4 }">
+      <ul :class="{ scrollbar: serials.length > 3 }">
         <li v-for="(serial, index) in serials">
           <span>
             <Icon v-if="serial.valid" name="check" color="success" />
             <Icon v-if="serial.valid === false" name="ban" color="danger" />
             <Icon v-if="serial.valid === null" name="refresh" :spin="true" color="darker" />
-            {{ serial.serial }}
           </span>
+          <div>
+            <strong>{{ serial.serial }}</strong>
+            <p>
+              {{ serial.product.title }}
+              <span v-if="serial.product.depot.name"> | {{ serial.product.depot.name }}</span>
+            </p>
+          </div>
           <TButton @click="removeSerial(index)" :discrete="true">
             <Icon name="close" color="danger" text="Remover" />
           </TButton>
@@ -77,10 +83,20 @@ export default {
     },
 
     addSerial() {
+      if (!this.serial) {
+        return
+      }
+
       const newLength = this.serials.push({
         serial: this.serial,
         valid: null,
         message: null,
+        product: {
+          title: 'Samsung Galaxy S5 Preto 15GB',
+          depot: {
+            name: 'Estoque físico'
+          },
+        },
       })
 
       this.$emit('add', (newLength - 1))
@@ -133,7 +149,7 @@ export default {
 
     ul {
       width: 100%;
-      max-height: 190px;
+      max-height: 210px;
       overflow-y: auto;
 
       &.scrollbar {
@@ -143,30 +159,42 @@ export default {
       }
     }
 
-    .input {
-      width: 100%;
-    }
-
     .input,
     li {
-      list-style: none;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      &:not(:first-child) {
-        margin-top: 10px;
-      }
-
       padding: 0 25px;
       border-radius: $borderRadius;
       border: 1px solid $default;
       background-color: $white;
+      display: flex;
+      align-items: center;
+    }
 
-      span .Icon,
-      &.input .Icon {
+    .input {
+      width: 100%;
+      height: 40px;
+      justify-content: space-between;
+
+      .Icon {
         margin-right: 15px;
+      }
+    }
+
+    li {
+      list-style: none;
+      height: 60px;
+      margin-bottom: 10px;
+
+      span {
+        margin-right: 15px;
+      }
+
+      div {
+        flex-grow: 1;
+
+        p {
+          margin-top: 5px;
+          color: $dark;
+        }
       }
     }
   }
