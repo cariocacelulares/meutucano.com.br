@@ -86,6 +86,16 @@ export default {
       this.$emit('add', (newLength - 1))
 
       this.serial = null
+
+      // scroll element to bottom
+      setTimeout(() => {
+        let scrollbar = document.getElementsByClassName('scrollbar')
+        scrollbar = (scrollbar.length) ? scrollbar[0] : null
+
+        if (scrollbar) {
+          scrollbar.scrollTop = scrollbar.scrollHeight
+        }
+      }, 1)
     },
   },
 }

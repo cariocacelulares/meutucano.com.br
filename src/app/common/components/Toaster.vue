@@ -49,9 +49,9 @@ export default {
         this.toasts[index].classList = 'closed'
 
         setTimeout((index) => {
-          if (typeof(this.toasts[index]) !== 'undefined') {
+          // if (typeof(this.toasts[index]) !== 'undefined') {
             this.toasts.splice(index, 1)
-          }
+          // }
         }, 300);
       }
     },
@@ -85,7 +85,7 @@ export default {
 
 .toaster {
   position: relative;
-  width: 280px;
+  width: 350px;
   min-height: 65px;
   padding: 15px 20px;
   border-radius: $borderRadius;

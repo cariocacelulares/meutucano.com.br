@@ -7,6 +7,7 @@ export default [
     name: 'products.list',
     meta: {
       auth: true,
+      permission: 'product_list',
       breadcrumb: 'Lista'
     }
   },

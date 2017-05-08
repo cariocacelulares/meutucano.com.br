@@ -21,6 +21,10 @@
           <Icon name="pencil" text="Editar" />
         </TButton>
 
+        <TButton size="big" color="light" text="darker" :link="{ name: 'products.edit' }" class="m-l-10">
+          <Icon name="files-o" text="Duplicar" />
+        </TButton>
+
         <VSeparator :spacing="20" :height="40" />
         <FeaturedValue label="SKU" :value="sku" color="darker" />
 

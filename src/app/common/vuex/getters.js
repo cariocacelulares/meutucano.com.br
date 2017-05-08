@@ -1,10 +1,10 @@
 export default {
   'global/GET_USER' ({ user }) {
-    return user
+    return user || JSON.parse(localStorage.getItem('auth_user')) || null
   },
 
-  'global/GET_TOKEN' ({ user }) {
-    return user
+  'global/GET_TOKEN' ({ token }) {
+    return token || localStorage.getItem('auth_token') || null
   },
 
   'global/IS_AUTH' ({ token }) {

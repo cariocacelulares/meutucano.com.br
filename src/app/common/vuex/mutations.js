@@ -13,6 +13,13 @@ export default {
   },
 
   'global/USER_RECEIVED' (state, user) {
+    if (!isEmpty(user)) {
+      localStorage.setItem('auth_user', JSON.stringify(user))
+    } else {
+      localStorage.removeItem('auth_user')
+      localStorage.clear()
+    }
+
     state.user = user
   },
 

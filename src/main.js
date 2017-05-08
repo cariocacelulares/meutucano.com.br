@@ -22,7 +22,7 @@ Object.keys(globalComponents).map((component) => {
 /**
  * Globals
  */
-window.Vue = Vue;
+window.Vue = Vue
 
 /**
  * Breadcrumbs
@@ -41,6 +41,15 @@ Vue.use(VueBreadcrumbs)
     opacity: '0.6s'
   }
 })
+
+/**
+ * Check if user has the requiredPermissions
+ *
+ * @param  {String} requiredPermissions
+ * @return {Boolean}
+ */
+Vue.prototype.$can = ( ...requiredPermissions ) =>
+  (_.difference(requiredPermissions, store.getters['global/GET_USER'].permissions).length === 0)
 
 /* eslint-disable no-new */
 new Vue({
