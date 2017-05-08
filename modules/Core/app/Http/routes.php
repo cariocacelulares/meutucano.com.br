@@ -51,27 +51,38 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
      */
     Route::group(['prefix' => 'orders', 'namespace' => 'Order'], function () {
         Route::get('invoiceable', 'OrderController@invoiceable');
-        Route::get('invoice/{order_id}', 'OrderController@invoice');
+
+        Route::put('approve/{order_id}', 'OrderController@approve');
+        Route::put('invoice/{order_id}', 'OrderController@invoice');
+        Route::put('cancel/{order_id}', 'OrderController@cancel');
 
         Route::put('prioritize/{order_id}', 'OrderController@prioritize');
         Route::put('unprioritize/{order_id}', 'OrderController@unprioritize');
 
         Route::put('hold/{order_id}', 'OrderController@hold');
         Route::put('unhold/{order_id}', 'OrderController@unhold');
-
-        // Route::post('upload', 'UploadController@upload');
     });
     api('orders', 'Order\OrderController');
 
+    /**
+     * Lines
+     */
+    api('lines', 'Product\LineController');
 
     /**
-    * Order Product
-    */
-    Route::group(['prefix' => 'order-produtos', 'namespace' => 'Order'], function () {
-        Route::get('list/{sku}', 'OrderProductController@listBySku');
-    });
-    api('order-produtos', 'Order\OrderProductController');
+     * Brands
+     */
+    api('brands', 'Product\BrandController');
 
+    /**
+     * Product Defects
+     */
+    api('products/defects', 'Product\ProductDefectController');
+
+    /**
+     * Product Serials
+     */
+    Route::get('products/serials/find/{serial}', 'Product\ProductSerialController@find');
 
     /**
      * Código de rastreio
@@ -86,15 +97,9 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     // });
     // api('produtos', 'Product\ProductController');
     //
-    // /**
-    //  * Marcas
-    //  */
-    // api('marcas', 'Product\MarcaController');
+
     //
-    // /**
-    //  * Linhas
-    //  */
-    // api('linhas', 'Product\LinhaController');
+
     //
     // /**
     //  * Atributos
@@ -126,11 +131,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     // /**
     //  * Product imei
     //  */
-    // Route::group(['prefix' => 'produto-imei', 'namespace' => 'Product'], function () {
-    //     Route::get('list/{sku}', 'ProductImeiController@listBySku');
-    //     Route::post('parse', 'ProductImeiController@parseImeis');
-    // });
-    // api('produto-imei', 'Product\ProductImeiController');
+
     //
     // /**
     //  * Stock removal
@@ -185,12 +186,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     // });
     // api('estoque/entrada/nota', 'Stock\Entry\InvoiceController');
     //
-    // /**
-    //  * Product defect
-    //  */
-    // Route::group(['prefix' => 'produto/defeito', 'namespace' => 'Product'], function () {
-    // });
-    // api('produto/defeito', 'Product\DefectController');
+
     //
     // /**
     //  * Partials

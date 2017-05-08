@@ -12,8 +12,8 @@ class Order extends \Eloquent
     const STATUS_PENDING  = 0;
     const STATUS_PAID     = 1;
     const STATUS_INVOICED = 2;
-    const STATUS_COMPLETE = 3;
     const STATUS_SHIPPED  = 4;
+    const STATUS_COMPLETE = 3;
     const STATUS_CANCELED = 5;
     const STATUS_RETURNED = 6;
 
@@ -44,9 +44,19 @@ class Order extends \Eloquent
     ];
 
     /**
+     * @return array
+     */
+    protected $appends = [
+        'can_hold',
+        'can_prioritize',
+        'can_approve',
+        'can_cancel'
+    ];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\hasMany
      */
-    public function invoices()
+    public function orderInvoices()
     {
         return $this->hasMany(OrderInvoice::class);
     }
@@ -54,7 +64,7 @@ class Order extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function taxes()
+    public function orderTaxes()
     {
         return $this->hasOne(OrderTax::class);
     }
@@ -62,7 +72,7 @@ class Order extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function products()
+    public function orderProducts()
     {
         return $this->hasMany(OrderProduct::class);
     }
@@ -104,9 +114,9 @@ class Order extends \Eloquent
      *
      * @return boolean
      */
-    public function getCanHold()
+    public function getCanHoldAttribute()
     {
-        if (in_array($this->status, [0, 1])) {
+        if (in_array($this->status, [self::STATUS_PENDING, self::STATUS_PAID])) {
             return true;
         }
 
@@ -118,9 +128,23 @@ class Order extends \Eloquent
      *
      * @return boolean
      */
-    public function getCanPrioritize()
+    public function getCanPrioritizeAttribute()
     {
-        if (in_array($this->status, [0, 1])) {
+        if (in_array($this->status, [self::STATUS_PENDING, self::STATUS_PAID])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Define if a order can be approved
+     *
+     * @return boolean
+     */
+    public function getCanApproveAttribute()
+    {
+        if (in_array($this->status, [self::STATUS_PENDING])) {
             return true;
         }
 
@@ -132,9 +156,9 @@ class Order extends \Eloquent
      *
      * @return boolean
      */
-    public function getCanCancel()
+    public function getCanCancelAttribute()
     {
-        if (in_array($this->status, [0, 1])) {
+        if (in_array($this->status, [self::STATUS_PENDING, self::STATUS_PAID])) {
             return true;
         }
 

@@ -40,7 +40,8 @@
         "dompdf/dompdf": "^0.8.0",
         "livepixel/mercado-livre": "^1.1",
         "doctrine/dbal": "^2.5",
-        "barryvdh/laravel-cors": "^0.9.2"
+        "barryvdh/laravel-cors": "^0.9.2",
+        "lanin/laravel-api-debugger": "~0.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

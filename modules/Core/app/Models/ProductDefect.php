@@ -15,23 +15,14 @@ class ProductDefect extends \Eloquent
      * @var array
      */
     protected $fillable = [
-        'product_sku',
         'product_serial_id',
         'description',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function product()
-    {
-        return $this->belongsTo(Product::class);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function serial()
+    public function productSerial()
     {
         return $this->belongsTo(ProductSerial::class)->withTrashed();
     }

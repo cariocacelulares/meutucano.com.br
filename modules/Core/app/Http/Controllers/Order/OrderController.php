@@ -7,15 +7,10 @@ use Illuminate\Support\Facades\Log;
 use Core\Models\Order\OrderProduct;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
-use Core\Transformers\OrderTransformer;
 use Core\Http\Requests\OrderRequest as Request;
-use App\Http\Controllers\Rest\RestControllerTrait;
 
 class OrderController extends Controller
 {
-    use RestControllerTrait;
-
-    const MODEL = Order::class;
 
     public function __construct()
     {
@@ -30,56 +25,31 @@ class OrderController extends Controller
     }
 
     /**
-     * List orders
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function index()
     {
-        $list = Order::with(['customer', 'customerAddress'])
-            ->join('customers', 'customers.id', '=', 'orders.customer_id')
-            ->leftJoin('order_invoices', 'order_invoices.order_id', '=', 'orders.id')
+        $data = Order::with(['customer', 'customerAddress'])
             ->orderBy('orders.created_at', 'DESC');
 
-        $list = $this->handleRequest($list);
-
-        return $this->listResponse(OrderTransformer::tableList($list));
+        return tableListResponse($data);
     }
 
     /**
-     * List invoiceable orders
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function invoiceable()
     {
-        $list = Order::with([
-                'customer',
-                'customerAddress',
-                'invoices',
-                'shipments',
-                'products',
-                'products.product',
-                'comments'
-            ])
-            ->join('customers', 'customers.id', '=', 'orders.customer_id')
-            ->join('customer_customerAddresss', 'customer_customerAddresss.id', '=', 'orders.customer_customerAddress_id')
-            ->leftJoin('order_shipments', 'order_shipments.order_id', '=', 'orders.id')
-            ->leftJoin('order_products', 'order_products.order_id', '=', 'orders.id')
-            ->leftJoin('order_invoices', 'order_invoices.order_id', '=', 'orders.id')
-            ->where('orders.status', '=', 1)
-            ->groupBy('orders.id')
+        $data = Order::where('status', Order::STATUS_PAID)
             ->orderBy('priority', 'DESC')
             ->orderBy('estimated_delivery', 'ASC')
             ->orderBy('created_at', 'ASC');
 
-        $list = $this->handleRequest($list);
-
-        return $this->listResponse(OrderTransformer::faturamento($list));
+        return tableListResponse($data);
     }
 
     /**
-     * Set an order as priority on invoiceable list
+     * Set an order as priority
      *
      * @param  int $order_id
      * @return Order
@@ -91,9 +61,9 @@ class OrderController extends Controller
             $order->priority = 1;
             $order->save();
 
-            return $this->showResponse($order);
+            return showResponse($order);
         } catch (\Exception $exception) {
-            return $this->clientErrorResponse([
+            return clientErrorResponse([
                 'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
@@ -112,9 +82,9 @@ class OrderController extends Controller
             $order->priority = 0;
             $order->save();
 
-            return $this->showResponse($order);
+            return showResponse($order);
         } catch (\Exception $exception) {
-            return $this->clientErrorResponse([
+            return clientErrorResponse([
                 'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
@@ -133,9 +103,9 @@ class OrderController extends Controller
             $order->holded = 1;
             $order->save();
 
-            return $this->showResponse($order);
+            return showResponse($order);
         } catch (\Exception $exception) {
-            return $this->clientErrorResponse([
+            return clientErrorResponse([
                 'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
@@ -154,9 +124,9 @@ class OrderController extends Controller
             $order->holded = 0;
             $order->save();
 
-            return $this->showResponse($order);
+            return showResponse($order);
         } catch (\Exception $exception) {
-            return $this->clientErrorResponse([
+            return clientErrorResponse([
                 'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
@@ -169,62 +139,43 @@ class OrderController extends Controller
     public function show($id)
     {
         try {
-            $order = Order::with([
+            $data = Order::with([
                 'customer',
                 'customerAddress',
-                'invoices' => function ($query) {
-                    $query->withTrashed();
-                },
-                'shipments' => function ($query) {
-                    $query->withTrashed();
-                },
                 'products',
                 'products.product',
                 'products.productSerial',
                 'comments',
-                'shipments.devolucao',
-                'shipments.pi',
-                'shipments.logistica'
-            ])->find($id);
+            ])->findOrFail($id);
 
-            if ($order) {
-                return $this->showResponse(OrderTransformer::show($order));
-            }
+            return showResponse($data);
         } catch (\Exception $exception) {
-            if ($exception->getPrevious()) {
-                throw $exception->getPrevious();
-            } else {
-                throw $exception;
-            }
-        }
+            \Log::error(logMessage($exception, 'Erro ao obter recurso'));
 
-        return $this->notFoundResponse();
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
     }
 
     /**
-     * Cancel old orders based on deadline configured by company
+     * Set order as approved
      *
+     * @param  int $order_id
      * @return void
      */
-    public static function cancelOldOrders()
+    public function approve($order_id)
     {
-        $orders = Order::where('status', '=', 0)->whereNotNull('api_code')->get();
+        try {
+            $order = Order::find($order_id);
+            $order->status = Order::STATUS_PAID;
+            $order->save();
 
-        foreach ($orders as $order) {
-            try {
-                $createdDate = Carbon::createFromFormat('Y-m-d H:i:s', $order->created_at)->format('d/m/Y');
-                $utilDays    = diasUteisPeriodo($createdDate, date('d/m/Y'), true);
-
-                if (strtolower($order->marketplace) == 'site') {
-                    if (($order->payment_method == 'boleto' && $utilDays > config('magento.old_order.boleto'))
-                        || ($order->payment_method == 'credito' && $utilDays > config('magento.old_order.credito'))) {
-                        $order->status = 5;
-                        $order->save();
-                    }
-                }
-            } catch (\Exception $e) {
-                Log::error(logMessage($e, 'Não foi possível cancelar o order na Integração'));
-            }
+            return showResponse($order);
+        } catch (\Exception $exception) {
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
         }
     }
 
@@ -237,15 +188,34 @@ class OrderController extends Controller
     public function invoice($order_id)
     {
         try {
-            Log::debug("Tentando faturar o order {$order_id}");
-
             $order = Order::find($order_id);
-            $order->status = 2;
+            $order->status = Order::STATUS_INVOICED;
             $order->save();
 
-            return $this->showResponse($order);
+            return showResponse($order);
         } catch (\Exception $exception) {
-            return $this->clientErrorResponse([
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Set order as canceled
+     *
+     * @param  int $order_id
+     * @return void
+     */
+    public function cancel($order_id)
+    {
+        try {
+            $order = Order::find($order_id);
+            $order->status = Order::STATUS_CANCELED;
+            $order->save();
+
+            return showResponse($order);
+        } catch (\Exception $exception) {
+            return clientErrorResponse([
                 'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
@@ -264,7 +234,7 @@ class OrderController extends Controller
                 $shipment      = $order->shipments()->orderBy('created_at', 'DESC')->first();
                 $tracking_code = ($shipment) ? $shipment->tracking_code : null;
 
-                return $this->showResponse([
+                return showResponse([
                     'taxvat'      => $order->customer->taxvat,
                     'nome'        => mb_strtolower(removeAcentos($order->customer->name)),
                     'email'       => removeAcentos($order->customer->email),
@@ -284,7 +254,7 @@ class OrderController extends Controller
             \Log::warning(logMessage($e, 'Não foi possível obter os dados do order para o shopsystem!'));
         }
 
-        return $this->notFoundResponse();
+        return notFoundResponse();
     }
 
     /**
@@ -349,4 +319,31 @@ class OrderController extends Controller
             ]);
         }
     }
+
+    /**
+     * Cancel old orders based on deadline configured by company
+     *
+     * @return void
+     */
+    // public static function cancelOldOrders()
+    // {
+    //     $orders = Order::where('status', '=', 0)->whereNotNull('api_code')->get();
+    //
+    //     foreach ($orders as $order) {
+    //         try {
+    //             $createdDate = Carbon::createFromFormat('Y-m-d H:i:s', $order->created_at)->format('d/m/Y');
+    //             $utilDays    = diasUteisPeriodo($createdDate, date('d/m/Y'), true);
+    //
+    //             if (strtolower($order->marketplace) == 'site') {
+    //                 if (($order->payment_method == 'boleto' && $utilDays > config('magento.old_order.boleto'))
+    //                     || ($order->payment_method == 'credito' && $utilDays > config('magento.old_order.credito'))) {
+    //                     $order->status = 5;
+    //                     $order->save();
+    //                 }
+    //             }
+    //         } catch (\Exception $e) {
+    //             Log::error(logMessage($e, 'Não foi possível cancelar o order na Integração'));
+    //         }
+    //     }
+    // }
 }

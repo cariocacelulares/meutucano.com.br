@@ -75,7 +75,7 @@ class ProductSerial extends \Eloquent
      */
     public function lastOrderProduct()
     {
-        return $this->pedidoProdutos()->orderBy('created_at', 'desc')->first();
+        return $this->orderProducts()->orderBy('created_at', 'desc')->first();
     }
 
     /**
@@ -92,7 +92,7 @@ class ProductSerial extends \Eloquent
      *
      * @return boolean
      */
-    public function inStock()
+    public function getInStockAttribute()
     {
         if (!is_null($this->deleted_at)) {
             return false;
@@ -104,7 +104,7 @@ class ProductSerial extends \Eloquent
             return true;
         }
 
-        if (in_array($lastOrderProduct->pedido->status, [2, 3])) {
+        if (in_array($lastOrderProduct->order->status, [2, 3])) {
             return false;
         }
 
