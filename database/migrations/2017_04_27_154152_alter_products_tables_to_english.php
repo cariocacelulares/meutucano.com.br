@@ -50,11 +50,13 @@ class AlterProductsTablesToEnglish extends Migration
             $table->foreign('brand_id')
                 ->references('id')
                 ->on('brands')
+                ->onUpdate('CASCADE')
                 ->onDelete('set null');
 
             $table->foreign('line_id')
                 ->references('id')
                 ->on('lines')
+                ->onUpdate('CASCADE')
                 ->onDelete('set null');
         });
 
@@ -72,6 +74,7 @@ class AlterProductsTablesToEnglish extends Migration
             $table->foreign('depot_product_id')
                 ->references('id')
                 ->on('depot_products')
+                ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
         });
 
@@ -84,6 +87,7 @@ class AlterProductsTablesToEnglish extends Migration
             $table->foreign('product_serial_id')
                 ->references('id')
                 ->on('product_serials')
+                ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
         });
 
@@ -99,6 +103,7 @@ class AlterProductsTablesToEnglish extends Migration
             $table->foreign('product_serial_id')
                 ->references('id')
                 ->on('product_serials')
+                ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
         });
 
@@ -114,6 +119,7 @@ class AlterProductsTablesToEnglish extends Migration
             $table->foreign('product_serial_id')
                 ->references('id')
                 ->on('product_serials')
+                ->onUpdate('CASCADE')
                 ->onDelete('set null');
         });
 
@@ -129,6 +135,7 @@ class AlterProductsTablesToEnglish extends Migration
             $table->foreign('product_serial_id')
                 ->references('id')
                 ->on('product_serials')
+                ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
         });
 
@@ -152,21 +159,25 @@ class AlterProductsTablesToEnglish extends Migration
             $table->foreign('order_id')
                 ->references('id')
                 ->on('orders')
+                ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
 
             $table->foreign('product_sku')
                 ->references('sku')
                 ->on('products')
+                ->onUpdate('CASCADE')
                 ->onDelete('RESTRICT');
 
             $table->foreign('depot_product_id')
                 ->references('id')
                 ->on('depot_products')
+                ->onUpdate('CASCADE')
                 ->onDelete('set null');
 
             $table->foreign('product_serial_id')
                 ->references('id')
                 ->on('product_serials')
+                ->onUpdate('CASCADE')
                 ->onDelete('set null');
         });
 

@@ -1,19 +1,19 @@
-<?php namespace Core\Http\Controllers\Supplier;
+<?php namespace Core\Http\Controllers\Depot;
 
-use Core\Models\Supplier;
+use Core\Models\Depot;
 use App\Http\Controllers\Controller;
+use Core\Http\Requests\DepotRequest as Request;
 use App\Http\Controllers\Rest\RestControllerTrait;
-use Core\Http\Requests\SupplierRequest as Request;
 
-class SupplierController extends Controller
+class DepotController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:supplier_list', ['only' => ['index']]);
-        $this->middleware('permission:supplier_show', ['only' => ['show']]);
-        $this->middleware('permission:supplier_create', ['only' => ['store']]);
-        $this->middleware('permission:supplier_update', ['only' => ['update']]);
-        $this->middleware('permission:supplier_delete', ['only' => ['destroy']]);
+        $this->middleware('permission:depot_list', ['only' => ['index']]);
+        $this->middleware('permission:depot_show', ['only' => ['show']]);
+        $this->middleware('permission:depot_create', ['only' => ['store']]);
+        $this->middleware('permission:depot_update', ['only' => ['update']]);
+        $this->middleware('permission:depot_delete', ['only' => ['destroy']]);
     }
 
     /**
@@ -21,25 +21,9 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        $data = Supplier::orderBy('created_at', 'DESC');
+        $data = Depot::orderBy('priority', 'ASC');
 
         return tableListResponse($data);
-    }
-
-    /**
-     * Search suppliers by cnpj
-     *
-     * @param  string $term
-     * @return Object
-     */
-    public function find($term)
-    {
-        $supplier = Supplier::where('taxvat', 'LIKE', "%{$term}%")
-            ->orwhere('name', 'LIKE', "%{$term}%")
-            ->orderBy('created_at', 'DESC')
-            ->get();
-
-        return listResponse($supplier);
     }
 
     /**
@@ -49,7 +33,7 @@ class SupplierController extends Controller
     public function show($id)
     {
         try {
-            $data = Supplier::findOrFail($id);
+            $data = Depot::findOrFail($id);
 
             return showResponse($data);
         } catch (\Exception $exception) {
@@ -68,7 +52,7 @@ class SupplierController extends Controller
     public function store(Request $request)
     {
         try {
-            $data = Supplier::create($request->all());
+            $data = Depot::create($request->all());
 
             return createdResponse($data);
         } catch (\Exception $exception) {
@@ -87,7 +71,7 @@ class SupplierController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $data = Supplier::findOrFail($id);
+            $data = Depot::findOrFail($id);
             $data->fill($request->all());
             $data->save();
 
@@ -108,7 +92,14 @@ class SupplierController extends Controller
     public function destroy($id)
     {
         try {
-            $data = Supplier::findOrFail($id);
+            $data = Depot::with(['depotProducts'])->findOrFail($id);
+
+            if ($data->depotProducts->max('quantity') != 0) {
+                return clientErrorResponse([
+                    'message' => 'Um ou mais produtos do depósito possuem quantidade em estoque, realize uma transferência antes de deletar o depósito'
+                ]);
+            }
+
             $data->delete();
 
             return deletedResponse();

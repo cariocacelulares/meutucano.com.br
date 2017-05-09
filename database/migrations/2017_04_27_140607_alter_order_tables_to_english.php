@@ -41,11 +41,13 @@ class AlterOrderTablesToEnglish extends Migration
              $table->foreign('customer_id')
                  ->references('id')
                  ->on('customers')
+                 ->onUpdate('CASCADE')
                  ->onDelete('RESTRICT');
 
              $table->foreign('customer_address_id')
                  ->references('id')
                  ->on('customers')
+                 ->onUpdate('CASCADE')
                  ->onDelete('RESTRICT');
          });
 
@@ -73,6 +75,7 @@ class AlterOrderTablesToEnglish extends Migration
              $table->foreign('user_id')
                  ->references('id')
                  ->on('users')
+                 ->onUpdate('CASCADE')
                  ->onDelete('CASCADE');
          });
 
@@ -92,11 +95,13 @@ class AlterOrderTablesToEnglish extends Migration
              $table->foreign('order_id')
                  ->references('id')
                  ->on('orders')
+                 ->onUpdate('CASCADE')
                  ->onDelete('CASCADE');
 
              $table->foreign('user_id')
                  ->references('id')
                  ->on('users')
+                 ->onUpdate('CASCADE')
                  ->onDelete('set null');
          });
 
@@ -115,6 +120,7 @@ class AlterOrderTablesToEnglish extends Migration
              $table->foreign('order_id')
                  ->references('id')
                  ->on('orders')
+                 ->onUpdate('CASCADE')
                  ->onDelete('CASCADE');
          });
 
@@ -134,11 +140,13 @@ class AlterOrderTablesToEnglish extends Migration
              $table->foreign('order_id')
                  ->references('id')
                  ->on('orders')
+                 ->onUpdate('CASCADE')
                  ->onDelete('CASCADE');
 
              $table->foreign('user_id')
                  ->references('id')
                  ->on('users')
+                 ->onUpdate('CASCADE')
                  ->onDelete('set null');
          });
 
@@ -163,11 +171,13 @@ class AlterOrderTablesToEnglish extends Migration
              $table->foreign('order_id')
                  ->references('id')
                  ->on('orders')
+                 ->onUpdate('CASCADE')
                  ->onDelete('CASCADE');
 
              $table->foreign('user_id')
                  ->references('id')
                  ->on('users')
+                 ->onUpdate('CASCADE')
                  ->onDelete('set null');
          });
 
@@ -193,11 +203,13 @@ class AlterOrderTablesToEnglish extends Migration
              $table->foreign('order_invoice_id')
                  ->references('id')
                  ->on('order_invoices')
+                 ->onUpdate('CASCADE')
                  ->onDelete('CASCADE');
 
              $table->foreign('user_id')
                  ->references('id')
                  ->on('users')
+                 ->onUpdate('CASCADE')
                  ->onDelete('set null');
          });
 
@@ -221,6 +233,7 @@ class AlterOrderTablesToEnglish extends Migration
              $table->foreign('order_id')
                  ->references('id')
                  ->on('orders')
+                 ->onUpdate('CASCADE')
                  ->onDelete('CASCADE');
          });
 
@@ -242,6 +255,7 @@ class AlterOrderTablesToEnglish extends Migration
              $table->foreign('order_shipment_id')
                  ->references('id')
                  ->on('order_shipments')
+                 ->onUpdate('CASCADE')
                  ->onDelete('CASCADE');
          });
 
@@ -262,6 +276,7 @@ class AlterOrderTablesToEnglish extends Migration
              $table->foreign('order_shipment_id')
                  ->references('id')
                  ->on('order_shipments')
+                 ->onUpdate('CASCADE')
                  ->onDelete('CASCADE');
          });
 
@@ -286,6 +301,7 @@ class AlterOrderTablesToEnglish extends Migration
              $table->foreign('order_shipment_id')
                  ->references('id')
                  ->on('order_shipments')
+                 ->onUpdate('CASCADE')
                  ->onDelete('CASCADE');
          });
 
@@ -304,11 +320,13 @@ class AlterOrderTablesToEnglish extends Migration
              $table->foreign('order_shipment_id')
                  ->references('id')
                  ->on('order_shipments')
+                 ->onUpdate('CASCADE')
                  ->onDelete('CASCADE');
 
              $table->foreign('user_id')
                  ->references('id')
                  ->on('users')
+                 ->onUpdate('CASCADE')
                  ->onDelete('CASCADE');
          });
 

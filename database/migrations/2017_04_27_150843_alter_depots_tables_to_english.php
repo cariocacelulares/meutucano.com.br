@@ -40,6 +40,7 @@ class AlterDepotsTablesToEnglish extends Migration
             $table->foreign('depot_slug')
                 ->references('slug')
                 ->on('depots')
+                ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
         });
 
@@ -57,11 +58,13 @@ class AlterDepotsTablesToEnglish extends Migration
             $table->foreign('depot_product_id')
                 ->references('id')
                 ->on('depot_products')
+                ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
 
             $table->foreign('depot_withdraw_id')
                 ->references('id')
                 ->on('depot_withdraws')
+                ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
         });
 
@@ -77,6 +80,7 @@ class AlterDepotsTablesToEnglish extends Migration
             $table->foreign('depot_entry_id')
                 ->references('id')
                 ->on('depot_entries')
+                ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
         });
 
@@ -95,11 +99,13 @@ class AlterDepotsTablesToEnglish extends Migration
             $table->foreign('depot_product_id')
                 ->references('id')
                 ->on('depot_products')
+                ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
 
             $table->foreign('depot_entry_id')
                 ->references('id')
                 ->on('depot_entries')
+                ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
         });
 
@@ -115,6 +121,7 @@ class AlterDepotsTablesToEnglish extends Migration
             $table->foreign('depot_entry_product_id')
                 ->references('id')
                 ->on('depot_entry_products')
+                ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
         });
     }

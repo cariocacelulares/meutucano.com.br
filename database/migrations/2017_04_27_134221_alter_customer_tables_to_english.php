@@ -69,6 +69,7 @@ class AlterCustomerTablesToEnglish extends Migration
             $table->foreign('customer_id')
                 ->references('id')
                 ->on('customers')
+                ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
         });
 

@@ -19,6 +19,7 @@ class AlterTableOrderProductsAddOrderInvoiceDevolutionId extends Migration
             $table->foreign('order_invoice_devolution_id')
                 ->references('id')
                 ->on('order_invoice_devolutions')
+                ->onUpdate('CASCADE')
                 ->onDelete('set null');
         });
     }

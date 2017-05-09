@@ -43,11 +43,20 @@ class Depot extends \Eloquent
         'include' => 'boolean',
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::saving(function($depot) {
+            $depot->slug = str_slug($depot->title);
+        });
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function products()
+    public function depotProducts()
     {
-        return $this->hasMany(DepotProduct::class);
+        return $this->hasMany(DepotProduct::class, 'depot_slug');
     }
 }

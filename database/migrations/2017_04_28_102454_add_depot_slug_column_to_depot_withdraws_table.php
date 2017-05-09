@@ -19,6 +19,7 @@ class AddDepotSlugColumnToDepotWithdrawsTable extends Migration
             $table->foreign('depot_slug')
                 ->references('slug')
                 ->on('depots')
+                ->onUpdate('CASCADE')
                 ->onDelete('set null');
         });
     }

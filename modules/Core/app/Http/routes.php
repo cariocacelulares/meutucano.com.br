@@ -91,28 +91,24 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     api('products', 'Product\ProductController');
 
     /**
-     * Código de rastreio
+     * Suppliers
      */
-    // Route::get('codigos/gerar/{servico}', 'Order\FaturamentoCodigoController@getTrakingCode');
+    Route::get('suppliers/find/{term}', 'Supplier\SupplierController@find');
+    api('suppliers', 'Supplier\SupplierController');
 
+    /**
+     * Depots
+     */
+    api('depots', 'Depot\DepotController');
 
-    //
-
-    //
-
-    //
-    // /**
-    //  * Atributos
-    //  */
-    // Route::get('atributos/linha/{linha_id}', 'Product\Linha\AtributoController@fromLinha');
-    //
+    /*
     // /**
     //  * Stock
     //  */
     // Route::group(['prefix' => 'estoque', 'namespace' => 'Stock'], function () {
     //     Route::get('imei/generate', 'ImeiController@generate');
     // });
-    // api('estoque', 'Stock\StockController');
+    //
     //
     // /**
     //  * Product stock
@@ -160,13 +156,6 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     // });
     // api('estoque/baixa', 'Stock\IssueController');
     //
-    // /**
-    //  * Supplier
-    //  */
-    // Route::group(['prefix' => 'supplier', 'namespace' => 'Supplier'], function () {
-    // });
-    // Route::get('supplier/search/{term}', 'Supplier\SupplierController@search');
-    // api('supplier', 'Supplier\SupplierController');
     //
     // /**
     //  * Stock entry
@@ -186,24 +175,4 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     // });
     // api('estoque/entrada/nota', 'Stock\Entry\InvoiceController');
     //
-
-    //
-    // /**
-    //  * Partials
-    //  */
-    // Route::group(['namespace' => 'Partials'], function () {
-    //     Route::get('search', 'SearchController@search');
-    // });
-    //
-    // /**
-    //  * Relatórios
-    //  */
-    // Route::group(['middleware' => ['role:admin'], 'namespace' => 'Relatorio', 'prefix' => 'relatorios'], function () {
-    //     // ICMS
-    //     Route::get('icms', 'ICMSController@icms');
-    //
-    //     // Inventário
-    //     Route::post('inventario', 'InventarioController@relatorio');
-    //     Route::get('inventario/{return_type}', 'InventarioController@relatorio');
-    // });
 });
