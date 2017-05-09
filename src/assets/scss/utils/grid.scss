@@ -18,6 +18,9 @@ $maxColunms: 10;
 .grid {
   display: grid;
 
+  &.gap-0 { grid-gap: 0 !important; }
+  &.row-gap-0 { grid-row-gap: 0 !important; }
+
   @for $i from 1 through $maxColunms {
     .span-#{$i} {
       grid-column-end: span #{$i};

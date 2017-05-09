@@ -1,5 +1,6 @@
 import Orders from './components/Orders'
 import { routes as list } from './scenes/list'
+import { routes as detail } from './scenes/detail'
 
 export default [
   {
@@ -12,6 +13,7 @@ export default [
     },
     children: [
       ...list,
+      ...detail,
     ],
   },
 ]

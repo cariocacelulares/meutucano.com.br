@@ -1,8 +1,6 @@
 <template>
   <article :class="classList">
-    <header v-if="headerIcon || headerText" :style="{
-        marginBottom: `${headerMarginBottom}px`
-      }">
+    <header v-if="headerIcon || headerText">
       <div>
         <Icon v-if="headerIcon" :name="headerIcon" />
         <h1>{{ headerText }}</h1>
@@ -15,7 +13,12 @@
     <span v-if="loading" class="loading">
       <Icon name="refresh" :spin="true" size="giant" />
     </span>
-    <slot></slot>
+    <div class="card-content">
+      <slot></slot>
+    </div>
+    <footer>
+      <slot name="footer"></slot>
+    </footer>
   </article>
 </template>
 
@@ -31,9 +34,6 @@ export default {
     },
     headerText: {
       type: String
-    },
-    headerMarginBottom: {
-      type: Number
     },
     loading: {
       type: Boolean,
@@ -57,7 +57,6 @@ export default {
 
 .Card {
   position: relative;
-  padding: 20px;
   background-color: $white;
   box-shadow: $defaultShadow;
   border-radius: $borderRadius;
@@ -66,14 +65,27 @@ export default {
   color: $darker;
   overflow: hidden;
 
-  header {
-    border-bottom: 1px solid $light;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
+  > .card-content {
+    padding: 20px;
+  }
+
+  > header {
+    position: relative;
+    padding: 20px 20px 10px 20px;
     font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    &:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 20px;
+      width: calc(100% - 40px);
+      height: 1px;
+      background-color: $light;
+    }
 
     h1 {
       font-size: inherit;
@@ -89,6 +101,28 @@ export default {
       &:last-child {
         font-size: 12px;
       }
+    }
+  }
+
+  > footer {
+    position: relative;
+
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 20px;
+      width: calc(100% - 40px);
+      height: 1px;
+      background-color: $light;
+    }
+
+    > * {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      // border-top: 1px solid $light;
+      padding: 10px 20px 20px 20px;
     }
   }
 

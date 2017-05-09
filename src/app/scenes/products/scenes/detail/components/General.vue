@@ -1,6 +1,6 @@
 <template>
-  <ContentBox :discret="true" class="grid">
-    <div :class="{ loading: loading }">
+  <ContentBox :discret="true" :class="{ grid: true, loading: loading }">
+    <div>
       <Card header-icon="info" header-text="Detalhes">
         <div class="card-data">
           <span>Título</span>
