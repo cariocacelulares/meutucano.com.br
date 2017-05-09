@@ -3,13 +3,11 @@
 use App\Http\Requests\JsonResponseTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProdutoRequest extends FormRequest
+class ProductRequest extends FormRequest
 {
     use JsonResponseTrait;
 
     /**
-     * Determine if the user is authorized to make this request.
-     *
      * @return bool
      */
     public function authorize()
@@ -18,16 +16,14 @@ class ProdutoRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
      * @return array
      */
     public function rules()
     {
         return [
-            'sku'    => "required|unique:produtos,sku,{$this->originalSku},sku",
-            'titulo' => "required|min:2",
-            'valor'  => "required"
+            'sku'   => "required|unique:products,sku,{$this->product},sku",
+            'title' => "required|min:2",
+            'price' => "required"
         ];
     }
 }

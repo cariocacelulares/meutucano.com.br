@@ -36,8 +36,15 @@ class Product extends \Eloquent
     /**
      * @var array
      */
+    protected $hidden = [
+        'reservedStockCount',
+    ];
+
+    /**
+     * @return array
+     */
     protected $appends = [
-        // 'stock',
+        'reserved_stock'
     ];
 
     /**
@@ -45,7 +52,7 @@ class Product extends \Eloquent
      */
     public function depotProducts()
     {
-        return $this->hasMany(DepotProduct::class);
+        return $this->hasMany(DepotProduct::class, 'product_sku');
     }
 
     /**
@@ -61,7 +68,7 @@ class Product extends \Eloquent
      */
     public function entryProducts()
     {
-        return $this->hasMany(EntryProduct::class);
+        return $this->hasMany(EntryProduct::class, 'product_sku');
     }
 
     /**
@@ -69,7 +76,7 @@ class Product extends \Eloquent
      */
     public function mercadolivreAds()
     {
-        return $this->hasMany(Ad::class);
+        return $this->hasMany(Ad::class, 'product_sku');
     }
 
     /**
@@ -89,42 +96,49 @@ class Product extends \Eloquent
     }
 
     /**
+     * Return orders that are reserving the stream_set_blocking
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function reservedStockCount()
+    {
+        return $this->hasMany(OrderProduct::class, 'product_sku')
+            ->selectRaw('order_products.product_sku, count(*) as aggregate_reserved_stock')
+            ->join('orders', 'orders.id', 'order_products.order_id')
+            ->whereIn('orders.status', [Order::STATUS_PENDING, Order::STATUS_PAID]);
+    }
+
+    /**
      * Return count of reserved stock from product
      *
      * @return int
      */
-    public function reservedStock()
+    public function getReservedStockAttribute()
     {
-        return $this->orderProducts()
-            ->selectRaw('order_products.product_sku, count(*) as count')
-            ->join('orders', 'orders.id', 'order_products.order_id')
-            ->whereIn('orders.status', [Order::STATUS_PENDING, Order::STATUS_PAID])
-            ->groupBy('order_products.product_sku');
+        if (!array_key_exists('reservedStockCount', $this->relations)) {
+            return;
+        }
+
+        $related = $this->getRelation('reservedStockCount')->first();
+        return $related ? (int) $related->aggregate_reserved_stock : 0;
     }
 
+
     /**
-     * Return the sum of included stocks
+     * Return count of available stock from product
      *
      * @return int
      */
-    public function getStock()
+    public function getAvailableStockAttribute()
     {
         $stock = $this->depotProducts()
                 ->join('depots', 'depots.slug', 'depot_products.depot_slug')
                 ->where('depots.include', '=', true)
                 ->sum('quantity');
 
-        $reserved = $this->stock_reserved;
+        $this->load('reservedStockCount');
+        $reserved = $this->reserved_stock;
 
         return ($stock - $reserved);
-    }
-
-    /**
-     * Return calculated estoque
-     * @return int quantity in stock
-     */
-    public function getStockAttribute()
-    {
-        return $this->getStock();
     }
 }

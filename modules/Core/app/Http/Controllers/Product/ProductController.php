@@ -1,13 +1,11 @@
 <?php namespace Core\Http\Controllers\Product;
 
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 use Core\Models\Order;
 use Core\Models\Product;
 use Core\Models\OrderProduct;
-use Core\Http\Requests\ProductRequest as Request;
+use App\Http\Controllers\Controller;
 use Core\Transformers\ProductTransformer;
+use Core\Http\Requests\ProductRequest as Request;
 
 class ProductController extends Controller
 {
@@ -25,7 +23,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $data = Product::with(['reservedStock'])->orderBy('created_at', 'DESC');
+        $data = Product::with('reservedStockCount')
+            ->orderBy('created_at', 'DESC');
 
         return tableListResponse($data);
     }
