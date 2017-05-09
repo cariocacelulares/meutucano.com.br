@@ -344,16 +344,6 @@ class RastreioController extends Controller
         }
     }
 
-    public function updateRastreiosPrazo()
-    {
-        $rastreios = Rastreio::where('id', '>', 42500)->where('prazo', 0)->get();
-
-        foreach ($rastreios as $rastreio) {
-          $rastreio->prazo = self::deadline($rastreio->rastreio);
-          $rastreio->save();
-        }
-    }
-
     /**
      * Retorna o prazo de entrega dos correios
      *
