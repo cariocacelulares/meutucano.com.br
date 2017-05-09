@@ -43,6 +43,10 @@ export default {
       type: Boolean,
       default: false
     },
+    noFooterSep: {
+      type: Boolean,
+      default: false
+    },
   },
 
   computed: {
@@ -53,6 +57,10 @@ export default {
 
       if (this.important) {
         classList.push('important')
+      }
+
+      if (this.noFooterSep) {
+        classList.push('no-footer-sep')
       }
 
       return notEmpty(classList).join(' ')
@@ -121,18 +129,18 @@ export default {
     }
   }
 
+  &:not(.no-footer-sep) > footer:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20px;
+    width: calc(100% - 40px);
+    height: 1px;
+    background-color: $light;
+  }
+
   > footer {
     position: relative;
-
-    &:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 20px;
-      width: calc(100% - 40px);
-      height: 1px;
-      background-color: $light;
-    }
 
     > * {
       display: flex;

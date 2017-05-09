@@ -56,9 +56,6 @@ export default {
     }
   },
 
-  computed() {
-  },
-
   beforeRouteEnter(to, from, next) {
     // if (to.name == 'orders.create') {
       next()

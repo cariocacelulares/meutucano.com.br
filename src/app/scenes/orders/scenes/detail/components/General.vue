@@ -43,7 +43,7 @@
           </div>
 
           <div class="card-data">
-            <span style="font-size:14px;line-height:1.3" class="text-darker">
+            <span style="font-size:13px;line-height:1.3" class="text-darker">
               Rua Padre Anchieta #200 - Canoas<br/>
               Rio do Sul / SC<br/>
               89160-000<br/>
@@ -93,14 +93,14 @@
             <strong>R$1567,90</strong>
           </div>
 
-          <Icon class="signal" name="plus" />
+          <span class="signal">+</span>
 
           <div class="card-data">
             <span>Valor de frete</span>
             <strong>R$13,90</strong>
           </div>
 
-          <Icon class="signal" name="plus" />
+          <span class="signal">+</span>
 
           <div class="card-data">
             <span>Taxas</span>
@@ -128,7 +128,7 @@
 
     <div class="invoices">
       <strong>Notas fiscais</strong>
-      <Card header-icon="file-code-o" header-text="44318/1">
+      <Card header-icon="file-code-o" header-text="44318/1" :no-footer-sep="true">
         <div slot="header">
           <a href="#" class="text-bold">
             <Icon name="print" text="Imprimir" color="link" />
