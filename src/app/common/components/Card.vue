@@ -1,12 +1,12 @@
 <template>
   <article :class="classList">
-    <header v-if="headerIcon || headerText">
-      <div>
+    <header v-if="noHeader">
+      <div v-if="headerIcon || headerText">
         <Icon v-if="headerIcon" :name="headerIcon" />
         <h1>{{ headerText }}</h1>
       </div>
 
-      <div>
+      <div :class="{ 'full-width': !(headerIcon && headerText) }">
         <slot name="header"></slot>
       </div>
     </header>
@@ -40,6 +40,7 @@ export default {
       default: false
     },
   },
+
   computed: {
     classList() {
       let classList = []
@@ -47,7 +48,11 @@ export default {
       classList.push('Card')
 
       return notEmpty(classList).join(' ')
-    }
+    },
+
+    noHeader() {
+      return (typeof(this.$slots.header) !== 'undefined' && this.$slots.header.length)
+    },
   }
 }
 </script>

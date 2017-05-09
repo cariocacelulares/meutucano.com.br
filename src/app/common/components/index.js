@@ -15,5 +15,7 @@ export { default as InputGroup } from './InputGroup'
 export { default as Card } from './Card'
 export { default as Modal } from './Modal'
 export { default as SerialBox } from './SerialBox'
+export { default as TTextarea } from './TTextarea'
+export { default as TCheckbox } from './TCheckbox'
 
 export { default as TableList } from './TableList'

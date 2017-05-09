@@ -1,6 +1,6 @@
 <template>
   <div class="Help">
-    <Icon name="question-circle" size="big" />
+    <Icon name="question-circle" size="big" :class="classList" />
 
     <div class="help-box">
       <Icon name="info" />
@@ -25,6 +25,19 @@ export default {
       type: String,
       required: true
     },
+    color: {
+      type: String
+    },
+  },
+
+  computed: {
+    classList() {
+      let classList = []
+
+      classList.push(`text-${this.color}`)
+
+      return notEmpty(classList).join(' ')
+    }
   },
 }
 </script>

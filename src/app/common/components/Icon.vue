@@ -1,5 +1,8 @@
 <template>
-  <i :class="classList" :style="{ color: color, fontSize: `${fontSize}px` }">{{ (text) ? `&nbsp; ${text}` : '' }}</i>
+  <i :class="classList" :style="{
+    color: color,
+    fontSize: `${fontSize}px`
+  }">{{ (text) ? `&nbsp; ${text}` : '' }}</i>
 </template>
 
 <script>
@@ -81,11 +84,17 @@ export default {
 .Icon {
   font-size: inherit;
 
+  &,
+  &:before {
+    line-height: 1;
+  }
+
   &.fa {
     font: inherit;
 
     &:before {
       font: normal normal normal 14px/1 FontAwesome;
+      font-size: inherit;
     }
   }
 
