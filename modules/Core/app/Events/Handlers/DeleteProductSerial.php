@@ -2,7 +2,7 @@
 
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;
-use Core\Events\ProductDefectCreated;
+use Core\Events\ProductSerialDefectCreated;
 use Core\Events\ProductSerialIssueCreated;
 
 class DeleteProductSerial
@@ -21,8 +21,8 @@ class DeleteProductSerial
         );
 
         $events->listen(
-            ProductDefectCreated::class,
-            '\Core\Events\Handlers\DeleteProductImei@onProductDefectCreated'
+            ProductSerialDefectCreated::class,
+            '\Core\Events\Handlers\DeleteProductImei@onProductSerialDefectCreated'
         );
     }
 
@@ -47,18 +47,18 @@ class DeleteProductSerial
     /**
      * Handle the event.
      *
-     * @param  ProductDefectCreated $event
+     * @param  ProductSerialDefectCreated $event
      * @return void
      */
-    public function onProductDefectCreated(ProductDefectCreated $event)
+    public function onProductSerialDefectCreated(ProductSerialDefectCreated $event)
     {
-        Log::debug('Handler DeleteProductImei/onProductDefectCreated acionado!', [$event]);
+        Log::debug('Handler DeleteProductImei/onProductSerialDefectCreated acionado!', [$event]);
         $defect = $event->defect;
 
         try {
             $defect->serial->delete();
         } catch (Exception $exception) {
-            Log::warning('Ocorreu um erro ao excluir serial (DeleteProductImei/onProductDefectCreated/onProductSerialIssueCreated)', [$defect]);
+            Log::warning('Ocorreu um erro ao excluir serial (DeleteProductImei/onProductSerialDefectCreated/onProductSerialIssueCreated)', [$defect]);
         }
     }
 }

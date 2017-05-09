@@ -3,7 +3,7 @@
 use App\Http\Requests\JsonResponseTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProductDefectRequest extends FormRequest
+class ProductSerialDefectRequest extends FormRequest
 {
     use JsonResponseTrait;
 

@@ -37,15 +37,7 @@ class Product extends \Eloquent
      * @var array
      */
     protected $appends = [
-        'stock',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $with = [
-        'line',
-        'brand',
+        // 'stock',
     ];
 
     /**
@@ -61,7 +53,7 @@ class Product extends \Eloquent
      */
     public function orderProducts()
     {
-        return $this->hasMany(OrderProduct::class);
+        return $this->hasMany(OrderProduct::class, 'product_sku');
     }
 
     /**
@@ -97,7 +89,22 @@ class Product extends \Eloquent
     }
 
     /**
+     * Return count of reserved stock from product
+     *
+     * @return int
+     */
+    public function reservedStock()
+    {
+        return $this->orderProducts()
+            ->selectRaw('order_products.product_sku, count(*) as count')
+            ->join('orders', 'orders.id', 'order_products.order_id')
+            ->whereIn('orders.status', [Order::STATUS_PENDING, Order::STATUS_PAID])
+            ->groupBy('order_products.product_sku');
+    }
+
+    /**
      * Return the sum of included stocks
+     *
      * @return int
      */
     public function getStock()
@@ -107,10 +114,7 @@ class Product extends \Eloquent
                 ->where('depots.include', '=', true)
                 ->sum('quantity');
 
-        $reserved = $this->orderProducts()
-            ->join('orders', 'orders.id', 'order_products.order_id')
-            ->whereIn('orders.status', [0, 1])
-            ->count();
+        $reserved = $this->stock_reserved;
 
         return ($stock - $reserved);
     }

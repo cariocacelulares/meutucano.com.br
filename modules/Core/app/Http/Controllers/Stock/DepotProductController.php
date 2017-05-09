@@ -33,48 +33,6 @@ class ProductStockController extends Controller
     }
 
     /**
-     * Update info from ProductStock
-     *
-     * @return Response
-     */
-    public function refresh()
-    {
-        $this->middleware('permission:product_depot_update');
-
-        try {
-            foreach (Input::all() as $productStockData) {
-                $productStock = ProductStock::find($productStockData['id']);
-
-                if ($productStock) {
-                    if ($productStockData['serial_enabled'] !== $productStock->serial_enabled) {
-                        $productStock->serial_enabled = $productStockData['serial_enabled'];
-                    }
-
-                    if (!$productStock->serial_enabled) {
-                        if ($productStockData['quantity'] !== $productStock->quantity) {
-                            $productStock->quantity = $productStockData['quantity'];
-                        }
-                    }
-
-                    if ($productStock->getDirty()) {
-                        $productStock->save();
-                    }
-                }
-            }
-
-            return $this->showResponse([
-                'updated' => true
-            ]);
-        } catch (\Exception $exception) {
-            \Log::error('Erro ao tentar atualizar as informações de estoque');
-
-            return $this->clientErrorResponse([
-                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
-            ]);
-        }
-    }
-
-    /**
      * Returns a list of ProductStock filtered by sku
      *
      * @param  int $sku

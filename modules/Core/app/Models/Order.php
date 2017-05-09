@@ -50,7 +50,8 @@ class Order extends \Eloquent
         'can_hold',
         'can_prioritize',
         'can_approve',
-        'can_cancel'
+        'can_cancel',
+        'count_on_stock'
     ];
 
     /**
@@ -110,7 +111,7 @@ class Order extends \Eloquent
     }
 
     /**
-     * Define if a order can be holded
+     * Define if an order can be holded
      *
      * @return boolean
      */
@@ -138,7 +139,7 @@ class Order extends \Eloquent
     }
 
     /**
-     * Define if a order can be approved
+     * Define if an order can be approved
      *
      * @return boolean
      */
@@ -152,13 +153,29 @@ class Order extends \Eloquent
     }
 
     /**
-     * Define if a order can be canceled
+     * Define if an order can be canceled
      *
      * @return boolean
      */
     public function getCanCancelAttribute()
     {
         if (in_array($this->status, [self::STATUS_PENDING, self::STATUS_PAID])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Define if an order counts on stock
+     */
+    public function getCountOnStockAttribute()
+    {
+        if (in_array($this->status, [
+            self::STATUS_INVOICED,
+            self::STATUS_SHIPPED,
+            self::STATUS_COMPLETE
+        ])) {
             return true;
         }
 

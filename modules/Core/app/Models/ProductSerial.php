@@ -71,7 +71,7 @@ class ProductSerial extends \Eloquent
     }
 
     /**
-     * @return OrderProduct
+     * @return object
      */
     public function lastOrderProduct()
     {
@@ -79,7 +79,8 @@ class ProductSerial extends \Eloquent
     }
 
     /**
-     * Set the imei
+     * Set the serial
+     *
      * @param string $imei upper and trim
      */
     public function setSerialAttribute($imei)
@@ -88,23 +89,19 @@ class ProductSerial extends \Eloquent
     }
 
     /**
-     * Check if imei is in stock
+     * Check if serial is in stock
      *
      * @return boolean
      */
     public function getInStockAttribute()
     {
-        if (!is_null($this->deleted_at)) {
-            return false;
-        }
+        if ($this->trashed()) return false;
 
         $lastOrderProduct = $this->lastOrderProduct();
 
         if (!$lastOrderProduct) {
             return true;
-        }
-
-        if (in_array($lastOrderProduct->order->status, [2, 3])) {
+        } elseif ($lastOrderProduct->order->count_on_stock) {
             return false;
         }
 

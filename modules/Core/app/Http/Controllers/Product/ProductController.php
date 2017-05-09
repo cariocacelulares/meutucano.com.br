@@ -1,20 +1,23 @@
 <?php namespace Core\Http\Controllers\Product;
 
-use Core\Models\ProductSerialDefect;
-use Core\Models\ProductSerial;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
-use Core\Http\Requests\ProductSerialDefectRequest as Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Core\Models\Order;
+use Core\Models\Product;
+use Core\Models\OrderProduct;
+use Core\Http\Requests\ProductRequest as Request;
+use Core\Transformers\ProductTransformer;
 
-class ProductSerialDefectController extends Controller
+class ProductController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:product_defect_list', ['only' => ['index']]);
-        $this->middleware('permission:product_defect_show', ['only' => ['show']]);
-        $this->middleware('permission:product_defect_create', ['only' => ['store']]);
-        $this->middleware('permission:product_defect_update', ['only' => ['update']]);
-        $this->middleware('permission:product_defect_return', ['only' => ['destroy']]);
+        $this->middleware('permission:product_list', ['only' => ['index', 'find']]);
+        $this->middleware('permission:product_show', ['only' => ['show']]);
+        $this->middleware('permission:product_create', ['only' => ['store']]);
+        $this->middleware('permission:product_update', ['only' => ['update']]);
+        $this->middleware('permission:product_delete', ['only' => ['destroy']]);
     }
 
     /**
@@ -22,10 +25,24 @@ class ProductSerialDefectController extends Controller
      */
     public function index()
     {
-        $data = ProductSerialDefect::with(['productSerial'])
-            ->orderBy('created_at', 'DESC');
+        $data = Product::with(['reservedStock'])->orderBy('created_at', 'DESC');
 
         return tableListResponse($data);
+    }
+
+    /**
+     * Find products by SKU or title
+     *
+     * @param  string $term
+     * @return Object
+     */
+    public function find($term)
+    {
+        $data = Product::where('title', 'LIKE', "%{$term}%")
+            ->orWhere('sku', 'LIKE', "%{$term}%")
+            ->get();
+
+        return listResponse($data);
     }
 
     /**
@@ -35,7 +52,7 @@ class ProductSerialDefectController extends Controller
     public function show($id)
     {
         try {
-            $data = ProductSerialDefect::findOrFail($id);
+            $data = Product::findOrFail($id);
 
             return showResponse($data);
         } catch (\Exception $exception) {
@@ -54,7 +71,7 @@ class ProductSerialDefectController extends Controller
     public function store(Request $request)
     {
         try {
-            $data = ProductSerialDefect::create($request->all());
+            $data = Product::create($request->all());
 
             return createdResponse($data);
         } catch (\Exception $exception) {
@@ -73,7 +90,7 @@ class ProductSerialDefectController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $data = Brand::findOrFail($id);
+            $data = Product::findOrFail($id);
             $data->fill($request->all());
             $data->save();
 
@@ -94,7 +111,7 @@ class ProductSerialDefectController extends Controller
     public function destroy($id)
     {
         try {
-            $data = ProductSerialDefect::findOrFail($id);
+            $data = Product::findOrFail($id);
             $data->delete();
 
             return deletedResponse();

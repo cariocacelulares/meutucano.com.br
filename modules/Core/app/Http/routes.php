@@ -75,27 +75,27 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     api('brands', 'Product\BrandController');
 
     /**
-     * Product Defects
-     */
-    api('products/defects', 'Product\ProductDefectController');
-
-    /**
      * Product Serials
      */
     Route::get('products/serials/find/{serial}', 'Product\ProductSerialController@find');
+
+    /**
+     * Product Defects
+     */
+    api('products/serials/defects', 'Product\ProductSerialDefectController');
+
+    /**
+     * Products
+     */
+    Route::get('products/find/{term}', 'Product\ProductController@find');
+    api('products', 'Product\ProductController');
 
     /**
      * Código de rastreio
      */
     // Route::get('codigos/gerar/{servico}', 'Order\FaturamentoCodigoController@getTrakingCode');
 
-    /**
-     * Products
-     */
-    // Route::group(['prefix' => 'produtos', 'namespace' => 'Product'], function () {
-    //     Route::get('search/{term}', 'ProductController@search');
-    // });
-    // api('produtos', 'Product\ProductController');
+
     //
 
     //

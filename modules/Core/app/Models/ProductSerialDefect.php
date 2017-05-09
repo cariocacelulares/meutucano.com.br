@@ -2,7 +2,7 @@
 
 use Venturecraft\Revisionable\RevisionableTrait;
 
-class ProductDefect extends \Eloquent
+class ProductSerialDefect extends \Eloquent
 {
     use RevisionableTrait;
 

@@ -3,7 +3,7 @@
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;
 use Core\Events\ProductSerialIssueDeleted;
-use Core\Events\ProductDefectDeleted;
+use Core\Events\ProductSerialDefectDeleted;
 
 class RestoreProductSerial
 {
@@ -21,8 +21,8 @@ class RestoreProductSerial
         );
 
         $events->listen(
-            ProductDefectDeleted::class,
-            '\Core\Events\Handlers\RestoreProductSerial@onProductDefectDeleted'
+            ProductSerialDefectDeleted::class,
+            '\Core\Events\Handlers\RestoreProductSerial@onProductSerialDefectDeleted'
         );
     }
 
@@ -47,18 +47,18 @@ class RestoreProductSerial
     /**
      * Handle the event.
      *
-     * @param  ProductDefectDeleted $event
+     * @param  ProductSerialDefectDeleted $event
      * @return void
      */
-    public function onProductDefectDeleted(ProductDefectDeleted $event)
+    public function onProductSerialDefectDeleted(ProductSerialDefectDeleted $event)
     {
-        Log::debug('Handler RestoreProductSerial/onProductDefectDeleted acionado!', [$event]);
+        Log::debug('Handler RestoreProductSerial/onProductSerialDefectDeleted acionado!', [$event]);
         $defect = $event->defect;
 
         try {
             $defect->serial->restore();
         } catch (Exception $exception) {
-            Log::warning('Ocorreu um erro ao restaurar serial (RestoreProductSerial/onProductDefectDeleted/onProductSerialIssueDeleted)', [$defect]);
+            Log::warning('Ocorreu um erro ao restaurar serial (RestoreProductSerial/onProductSerialDefectDeleted/onProductSerialIssueDeleted)', [$defect]);
         }
     }
 }
