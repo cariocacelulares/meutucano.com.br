@@ -344,6 +344,16 @@ class RastreioController extends Controller
         }
     }
 
+    public function updateRastreiosPrazo()
+    {
+        $rastreios = Rastreio::where('id', '>', 42500)->where('prazo', 0)->get();
+
+        foreach ($rastreios as $rastreio) {
+          $rastreio->prazo = self::deadline($rastreio->rastreio);
+          $rastreio->save();
+        }
+    }
+
     /**
      * Retorna o prazo de entrega dos correios
      *
@@ -366,11 +376,11 @@ class RastreioController extends Controller
         $tipoRastreio    = substr($codigoRastreio, 0, 1);
         $servicoPostagem = null;
         if ($tipoRastreio == 'P') {
-            $servicoPostagem = 41106;
+            $servicoPostagem = '04510';
         } elseif ($tipoRastreio == 'D') {
-            $servicoPostagem = 40010;
+            $servicoPostagem = '04014';
         } elseif ($tipoRastreio == 'O') {
-            $servicoPostagem = 81019;
+            $servicoPostagem = '81019';
         }
 
         if (!$servicoPostagem) {
@@ -383,9 +393,9 @@ class RastreioController extends Controller
             }
 
             if (strtolower($rastreio->pedido->frete_metodo) == 'sedex') {
-                $servicoPostagem = 40010;
+                $servicoPostagem = '04014';
             } else {
-                $servicoPostagem = 41106;
+                $servicoPostagem = '04510';
             }
         }
 

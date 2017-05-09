@@ -1,5 +1,7 @@
 <?php
 
+Route::get('updateprazos', 'Rastreio\Http\Controllers\RastreioController@updateRastreiosPrazo');
+
 Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'Rastreio\Http\Controllers'], function () {
     /**
      * Rastreios
