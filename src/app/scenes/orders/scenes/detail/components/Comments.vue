@@ -8,7 +8,9 @@
         <footer>
           <div>
             <TCheckbox v-model="important" label="Marcar como importante" />
-            <Help title="Utilize apenas se realmente for importante para o fluxo" message="Um comentário importante é diferenciado visualmente dos demais" color="darker" />
+            <Help title="Utilize apenas se realmente for importante para o fluxo"
+              message="Um comentário importante é diferenciado visualmente dos demais"
+              color="darker" />
           </div>
           <TButton color="success" leftIcon="commenting-o">Salvar</TButton>
         </footer>
@@ -17,15 +19,7 @@
 
     <Card class="comment">
       <div class="card-header" slot="header">
-        <div class="user">
-          <div class="avatar">
-            <img src="/static/images/logo.png" alt="Meu Tucano">
-          </div>
-          <div class="personal">
-            <span class="name">Meu Tucano</span>
-            <span class="role">há 3 minutos</span>
-          </div>
-        </div>
+        <UserInfo name="Cleiton Souza" avatar="/static/images/logo.png" sub="há 3 minutos" />
         <Icon name="close" />
       </div>
 
@@ -34,17 +28,9 @@
       </div>
     </Card>
 
-    <Card class="comment important">
+    <Card class="comment" :important="true">
       <div class="card-header" slot="header">
-        <div class="user">
-          <div class="avatar">
-            <img src="/static/images/logo.png" alt="Meu Tucano">
-          </div>
-          <div class="personal">
-            <span class="name">Meu Tucano</span>
-            <span class="role">há 3 minutos</span>
-          </div>
-        </div>
+        <UserInfo name="Cleiton Souza" avatar="/static/images/logo.png" sub="há 3 minutos" />
         <Icon name="close" />
       </div>
 
@@ -55,15 +41,7 @@
 
     <Card class="comment">
       <div class="card-header" slot="header">
-        <div class="user">
-          <div class="avatar">
-            <img src="/static/images/logo.png" alt="Meu Tucano">
-          </div>
-          <div class="personal">
-            <span class="name">Meu Tucano</span>
-            <span class="role">há 3 minutos</span>
-          </div>
-        </div>
+        <UserInfo name="Cleiton Souza" avatar="/static/images/logo.png" sub="há 3 minutos" />
         <Icon name="close" />
       </div>
 
@@ -121,10 +99,6 @@ form {
 }
 
 .comment {
-  &.important {
-    border-top: 5px solid $warning;
-  }
-
   > div {
     color: $darker;
 
@@ -138,45 +112,6 @@ form {
     align-items: center;
     justify-content: space-between;
     width: 100%;
-  }
-
-  header {
-    .user {
-      display: flex;
-      align-items: center;
-
-      .personal {
-        margin-left: 10px;
-
-        span {
-          display: block;
-        }
-
-        .name {
-          font-size: 12px;
-          color: $darker;
-          padding-bottom: 2px;
-          font-weight: bold;
-        }
-
-        .role {
-          font-size: 11px;
-          color: $dark;
-        }
-      }
-
-      .avatar {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        overflow: hidden;
-
-        img {
-          width: 100%;
-          height: 100%;
-        }
-      }
-    }
   }
 }
 </style>

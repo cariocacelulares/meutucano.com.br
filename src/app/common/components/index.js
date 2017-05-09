@@ -17,5 +17,6 @@ export { default as Modal } from './Modal'
 export { default as SerialBox } from './SerialBox'
 export { default as TTextarea } from './TTextarea'
 export { default as TCheckbox } from './TCheckbox'
+export { default as UserInfo } from './UserInfo'
 
 export { default as TableList } from './TableList'

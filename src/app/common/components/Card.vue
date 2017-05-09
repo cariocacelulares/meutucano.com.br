@@ -39,6 +39,10 @@ export default {
       type: Boolean,
       default: false
     },
+    important: {
+      type: Boolean,
+      default: false
+    },
   },
 
   computed: {
@@ -46,6 +50,10 @@ export default {
       let classList = []
 
       classList.push('Card')
+
+      if (this.important) {
+        classList.push('important')
+      }
 
       return notEmpty(classList).join(' ')
     },
@@ -69,6 +77,10 @@ export default {
   flex-direction: column;
   color: $darker;
   overflow: hidden;
+
+  &.important {
+    border-top: 5px solid $warning;
+  }
 
   > .card-content {
     padding: 20px;
