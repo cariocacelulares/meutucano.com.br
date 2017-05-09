@@ -56,7 +56,7 @@ return [
         Milon\Barcode\BarcodeServiceProvider::class,
         Livepixel\MercadoLivre\MeliServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
-        Lanin\ApiDebugger\DebuggerServiceProvider::class,
+        Lanin\Laravel\ApiDebugger\ServiceProvider::class,
     ],
 
 
@@ -107,7 +107,7 @@ return [
         'DNS1D'        => Milon\Barcode\Facades\DNS1DFacade::class,
         'DNS2D'        => Milon\Barcode\Facades\DNS2DFacade::class,
 
-        'Debugger'     => Lanin\ApiDebugger\DebuggerFacade::class,
+        'Debugger'     => Lanin\Laravel\ApiDebugger\Facade::class,
     ],
 
 ];

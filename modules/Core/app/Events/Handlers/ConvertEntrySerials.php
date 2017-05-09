@@ -18,7 +18,7 @@ class ConvertEntrySerials
     {
         $events->listen(
             DepotEntryConfirmed::class,
-            '\Core\Events\Handlers\ConvertEntryImeis@onDepotEntryConfirmed'
+            '\Core\Events\Handlers\ConvertEntrySerials@onDepotEntryConfirmed'
         );
     }
 
@@ -30,7 +30,7 @@ class ConvertEntrySerials
      */
     public function onDepotEntryConfirmed(DepotEntryConfirmed $event)
     {
-        Log::debug('Handler ConvertEntryImeis/onDepotEntryConfirmed acionado!', [$event]);
+        Log::debug('Handler ConvertEntrySerials/onDepotEntryConfirmed acionado!', [$event]);
         $entry = $event->entry;
 
         try {
@@ -93,7 +93,7 @@ class ConvertEntrySerials
 
             Log::info('Tirado confirmação de retirada de estoque: erro ao registrar seriais');
 
-            Log::warning(logMessage($exception, 'Ocorreu um erro ao transferir serials (ConvertEntryImeis/onDepotEntryConfirmed/onDepotEntryConfirmed)'), [$entry]);
+            Log::warning(logMessage($exception, 'Ocorreu um erro ao transferir serials (ConvertEntrySerials/onDepotEntryConfirmed/onDepotEntryConfirmed)'), [$entry]);
         }
     }
 }

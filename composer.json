@@ -17,7 +17,7 @@
     "type": "project",
     "require": {
         "php": ">= 5.5.9",
-        "laravel/framework": "5.3.*",
+        "laravel/framework": "5.4.*",
         "tymon/jwt-auth": "0.5.*",
         "stavarengo/php-sigep": "dev-master",
         "stavarengo/php-sigep-fpdf": "dev-master",
@@ -31,7 +31,6 @@
         "spatie/browsershot": "^1.5",
         "maatwebsite/excel": "~2.1.0",
         "jenssegers/mongodb": "^3.1",
-        "nwidart/laravel-modules": "1.14.*",
         "predis/predis": "~1.0",
         "spatie/laravel-backup": "^4.3",
         "spatie/laravel-failed-job-monitor": "^2.1",
@@ -41,11 +40,12 @@
         "livepixel/mercado-livre": "^1.1",
         "doctrine/dbal": "^2.5",
         "barryvdh/laravel-cors": "^0.9.2",
-        "lanin/laravel-api-debugger": "0.3.1"
+        "lanin/laravel-api-debugger": "^0.3",
+        "nwidart/laravel-modules": "^1.20"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
-        "phpunit/phpunit": "~5.0",
+        "phpunit/phpunit": "~5.7",
         "symfony/css-selector": "3.1.*",
         "symfony/dom-crawler": "3.1.*",
         "tightenco/mailthief": "^0.3.2",
