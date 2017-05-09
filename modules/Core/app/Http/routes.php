@@ -8,15 +8,15 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::get('zipcode/{zipcode}', 'ZipcodeController@getAddress');
 
     /**
-     * Customers
-     */
-    api('customers', 'Customer\CustomerController');
-
-    /**
      * Customer Addresses
      */
     Route::get('customers/addresses/from/{customer_id}', 'Customer\CustomerAddressController@listByCustomer');
     api('customers/addresses', 'Customer\CustomerAddressController', ['index']);
+
+    /**
+     * Customers
+     */
+    api('customers', 'Customer\CustomerController');
 
     /**
     * Order Comments
@@ -97,6 +97,12 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     api('suppliers', 'Supplier\SupplierController');
 
     /**
+     * Depot entry
+     */
+    Route::put('depots/entries/confirm/{id}', 'Depot\DepotEntryController@confirm');
+    api('depots/entries', 'Depot\DepotEntryController');
+
+    /**
      * Depots
      */
     api('depots', 'Depot\DepotController');
@@ -157,13 +163,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     // api('estoque/baixa', 'Stock\IssueController');
     //
     //
-    // /**
-    //  * Stock entry
-    //  */
-    // Route::group(['prefix' => 'estoque/entrada', 'namespace' => 'Stock'], function () {
-    //     Route::post('confirm/{id}', 'EntryController@confirm');
-    // });
-    // api('estoque/entrada', 'Stock\EntryController');
+
     //
     // /**
     //  * Stock entry invoice

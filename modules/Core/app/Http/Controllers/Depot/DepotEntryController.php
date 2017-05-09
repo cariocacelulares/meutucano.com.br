@@ -1,25 +1,14 @@
-<?php namespace Core\Http\Controllers\Stock;
+<?php namespace Core\Http\Controllers\Depot;
 
 use Carbon\Carbon;
+use Core\Models\Supplier;
+use Core\Models\DepotEntry;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestControllerTrait;
-use App\Http\Controllers\Controller;
-use Core\Models\Stock\Entry;
-use Core\Models\Stock\Entry\Invoice;
-use Core\Models\Stock\Entry\Product;
-use Core\Models\Supplier;
-use Core\Transformers\EntryTransformer;
 
-/**
- * Class EntryController
- * @package Core\Http\Controllers\Stock
- */
-class EntryController extends Controller
+class DepotEntryController extends Controller
 {
-    use RestControllerTrait;
-
-    const MODEL = Entry::class;
-
     public function __construct()
     {
         $this->middleware('permission:entry_list', ['only' => ['index']]);
@@ -27,44 +16,39 @@ class EntryController extends Controller
         $this->middleware('permission:entry_create', ['only' => ['store']]);
         $this->middleware('permission:entry_update', ['only' => ['update']]);
         $this->middleware('permission:entry_delete', ['only' => ['destroy']]);
+        $this->middleware('permission:entry_confirm', ['only' => ['confirm']]);
     }
 
     /**
-     * Lista para a tabela
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableList()
+    public function index()
     {
-        $this->middleware('permission:entry_list');
+        $data = DepotEntry::with(['supplier', 'user'])
+            ->orderBy('created_at', 'DESC');
 
-        $list = Entry::with(['supplier', 'invoice', 'products', 'user'])
-            ->leftJoin('stock_entry_invoices', 'stock_entry_invoices.stock_entry_id', 'stock_entries.id')
-            ->join('suppliers', 'stock_entries.supplier_id', 'suppliers.id')
-            ->orderBy('stock_entries.created_at', 'DESC');
-
-        $list = $this->handleRequest($list);
-
-        return $this->listResponse(EntryTransformer::tableList($list));
+        return tableListResponse($data);
     }
 
     /**
      * Confirm entry
      *
-     * @param  int $id
-     * @return Response
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function confirm($id)
     {
-        $this->middleware('permission:entry_confirm');
+        try {
+            $data = DepotEntry::findOrFail($id);
+            $data->confirmed_at = Carbon::now();
+            $data->save();
 
-        $entry = Entry::findOrFail($id);
-        $entry->confirmed_at = Carbon::now();
+            return showResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'));
 
-        if ($entry->save()) {
-            return $this->showResponse($entry);
-        } else {
-            return $this->clientErrorResponse([
-                'Erro ao confirmar entrada de estoque'
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
@@ -78,7 +62,7 @@ class EntryController extends Controller
     public function show($id)
     {
         try {
-            $entry = Entry::with([
+            $entry = DepotEntry::with([
                 'supplier',
                 'invoice',
                 'user',
@@ -90,7 +74,7 @@ class EntryController extends Controller
                 'products.productStock.stock',
             ])->findOrFail($id);
 
-            return $this->showResponse(EntryTransformer::show($entry));
+            return $this->showResponse(DepotEntryTransformer::show($entry));
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao obter recurso'), ['model' => self::MODEL]);
 
@@ -121,7 +105,7 @@ class EntryController extends Controller
 
             $supplier = $this->importSupplier($supplier);
 
-            $entry = Entry::create([
+            $entry = DepotEntry::create([
                 'description'  => $description,
                 'confirmed_at' => null,
                 'user_id'      => $userId,
@@ -174,7 +158,7 @@ class EntryController extends Controller
 
             $supplier = $this->importSupplier($supplier);
 
-            $entry = Entry::findOrFail($id);
+            $entry = DepotEntry::findOrFail($id);
             $entry->description  = $description;
             $entry->confirmed_at = $confirm ? Carbon::now() : null;
             $entry->user_id      = $userId;
