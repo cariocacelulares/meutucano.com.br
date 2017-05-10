@@ -1,30 +1,22 @@
 <template>
-  <Background>
-    <form @submit.prevent="forgotPassword">
-      <img src="/static/images/logo.png" alt="Meu Tucano">
+  <form @submit.prevent="forgotPassword">
+    <img src="/static/images/logo.png" alt="Meu Tucano">
 
-      <TInput v-model="email" :required="true" placeholder="Digite seu e-mail"
-        :block="true" size="big" class="m-v-10" type="email" />
+    <TInput v-model="email" :required="true" placeholder="Digite seu e-mail"
+      :block="true" size="big" class="m-v-10" type="email" />
 
-      <TButton type="submit" color="info" :block="true" size="big" classes="m-t-20 m-b-15">
-        Recuperar senha
-      </TButton>
+    <TButton type="submit" color="info" :block="true" size="big" classes="m-t-20 m-b-15">
+      Recuperar senha
+    </TButton>
 
-      <router-link class="back-link" :to="{ name: 'auth.signin' }">
-        voltar
-      </router-link>
-    </form>
-  </Background>
+    <router-link class="back-link" :to="{ name: 'sign.signin' }">
+      voltar
+    </router-link>
+  </form>
 </template>
 
 <script>
-import Background from '../../../components/Background'
-
 export default {
-  components: {
-    Background,
-  },
-
   data() {
     return {
       email: null,

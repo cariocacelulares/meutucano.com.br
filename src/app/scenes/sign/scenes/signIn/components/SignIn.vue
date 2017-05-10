@@ -1,35 +1,26 @@
 <template>
-  <Background>
-    <form @submit.prevent="signIn">
-      <img src="/static/images/logo.png" alt="Meu Tucano">
+  <form @submit.prevent="signIn">
+    <img src="/static/images/logo.png" alt="Meu Tucano">
 
-      <TInput v-model="email" :required="true" placeholder="Digite seu e-mail"
-        :block="true" size="big" classes="m-v-10" type="email" />
-      <TInput v-model="password" type="password" :required="true" :block="true"
-        placeholder="Digite sua senha" size="big" />
+    <TInput v-model="email" :required="true" placeholder="Digite seu e-mail"
+      :block="true" size="big" classes="m-v-10" type="email" />
+    <TInput v-model="password" type="password" :required="true" :block="true"
+      placeholder="Digite sua senha" size="big" />
 
-      <TButton type="submit" color="info" :block="true" size="big" classes="m-t-20 m-b-15">
-        Entrar
-      </TButton>
+    <TButton type="submit" color="info" :block="true" size="big" classes="m-t-20 m-b-15">
+      Entrar
+    </TButton>
 
-      <router-link class="forgot-link" :to="{ name: 'auth.forgot' }">
-        esqueci minha senha
-      </router-link>
-    </form>
-  </Background>
+    <router-link class="forgot-link" :to="{ name: 'sign.forgot' }">
+      esqueci minha senha
+    </router-link>
+  </form>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import Background from '../../../components/Background'
 
 export default {
-  extend: Background,
-
-  components: {
-    Background,
-  },
-
   data() {
     return {
       email: null,

@@ -1,6 +1,6 @@
 <template>
     <div class="sign-wrapper">
-      <slot></slot>
+      <router-view></router-view>
     </div>
 </template>
 

@@ -4,6 +4,6 @@ export default [
   {
     path: '/forgot',
     component: ForgotPassword,
-    name: 'auth.forgot',
+    name: 'sign.forgot',
   },
 ]

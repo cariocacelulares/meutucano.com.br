@@ -1,11 +1,7 @@
 import { routes as sign } from './scenes/sign'
-import { routes as dashboard } from './scenes/dashboard'
-import { routes as products } from './scenes/products'
-import { routes as orders } from './scenes/orders'
+import { routes as app } from './scenes/app'
 
 export default [
   ...sign,
-  ...dashboard,
-  ...products,
-  ...orders,
-];
+  ...app,
+]

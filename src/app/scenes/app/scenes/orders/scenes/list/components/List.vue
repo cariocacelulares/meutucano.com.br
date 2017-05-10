@@ -1,18 +1,18 @@
 <template>
-  <App>
+  <div>
     <PageHeader>
       <div slot="left" class="left">
         <Dropdown placeholder="Período"
-          :itens="periods" name="orderPeriods"/>
+        :itens="periods" name="orderPeriods"/>
         <VSeparator :spacing="20" :height="40" />
         <FeaturedValue label="Cancelados (144)"
-          value="R$8.125,00" color="danger" />
+        value="R$8.125,00" color="danger" />
         <VSeparator :spacing="20" :height="40" />
         <FeaturedValue label="Aprovados (14)"
-          value="R$3.619,00" color="success" />
+        value="R$3.619,00" color="success" />
         <VSeparator :spacing="20" :height="40" />
         <FeaturedValue label="Faturados (89)"
-          value="R$53.923,00" color="primary" />
+        value="R$53.923,00" color="primary" />
       </div>
 
       <TButton size="big" color="success">
@@ -53,7 +53,7 @@
         </tbody>
       </TableList>
     </ContentBox>
-  </App>
+  </div>
 </template>
 
 <script>

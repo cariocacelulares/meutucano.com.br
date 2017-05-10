@@ -38,7 +38,7 @@ export default {
 
     signOut() {
       this.logout()
-      this.$router.push({ name: 'auth.signin' })
+      this.$router.push({ name: 'sign.signin' })
     },
 
     close() {

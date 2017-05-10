@@ -3,7 +3,7 @@
     <THeader />
     <TopBar />
 
-    <slot></slot>
+    <router-view></router-view>
 
     <TFooter />
   </div>

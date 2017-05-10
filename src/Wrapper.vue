@@ -78,7 +78,7 @@ export default {
 
         if (error.response.status == 400) {
           this.$store.dispatch('global/SIGN_OUT')
-          this.$router.push({ name: 'auth.signin' })
+          this.$router.push({ name: 'sign.signin' })
 
           return;
         } else if (error.response.status == 401) {
@@ -91,7 +91,7 @@ export default {
               .then(() => {},
                 (error) => {
                   this.$store.dispatch('global/SIGN_OUT')
-                  this.$router.push({ name: 'auth.signin' })
+                  this.$router.push({ name: 'sign.signin' })
 
                   return;
                 }

@@ -1,18 +1,19 @@
 <template>
-  <App>
+  <div>
     <PageHeader>
       <div slot="left" class="left">
         <Dropdown placeholder="Linha de produtos"
-          :itens="lines" name="productLines"/>
+        :itens="lines" name="productLines"/>
         <VSeparator :spacing="20" :height="40" />
         <FeaturedValue label="Em estoque (144)"
-          value="R$133.619,00" color="success" />
+        value="R$133.619,00" color="success" />
       </div>
 
       <TButton size="big" color="success" :link="{ name: 'products.create' }">
         <Icon name="plus" text="Novo produto" />
       </TButton>
     </PageHeader>
+
     <ContentBox>
       <TableList :namespace="namespace" searchText="Pesquisar nos produtos">
         <thead slot="head">
@@ -49,7 +50,7 @@
         </tbody>
       </TableList>
     </ContentBox>
-  </App>
+  </div>
 </template>
 
 <script>

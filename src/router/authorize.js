@@ -13,7 +13,7 @@ export default (to, from, next) => {
     const isAuth = store.getters['global/IS_AUTH'];
 
     if (isAuth !== true && isEmpty(isAuth)) {
-      redirect = { name: 'auth.signin' }
+      redirect = { name: 'sign.signin' }
     } else if (requirePermission) {
       const permissions = store.getters['global/GET_USER'].permissions
 

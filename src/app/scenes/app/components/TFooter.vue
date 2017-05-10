@@ -24,7 +24,7 @@ export default {
   font-size: 12px;
 
   a {
-    color: inherit;
+    color: $dark !important;
   }
 
   a:first-child {

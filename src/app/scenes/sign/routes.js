@@ -1,7 +1,16 @@
+import Sign from './components/Sign'
 import { routes as forgot } from './scenes/forgot'
 import { routes as signIn } from './scenes/signIn'
 
 export default [
-  ...forgot,
-  ...signIn,
+  {
+    path: '/',
+    name: 'sign',
+    component: Sign,
+    redirect: '/signin',
+    children: [
+      ...forgot,
+      ...signIn,
+    ]
+  },
 ]

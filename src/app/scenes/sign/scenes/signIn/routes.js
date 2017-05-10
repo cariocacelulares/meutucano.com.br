@@ -2,8 +2,8 @@ import SignIn from './components/SignIn'
 
 export default [
   {
-    path: '/',
+    path: '/signin',
     component: SignIn,
-    name: 'auth.signin'
+    name: 'sign.signin'
   },
 ]
