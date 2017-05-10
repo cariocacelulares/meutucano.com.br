@@ -12,7 +12,7 @@
               message="Um comentário importante é diferenciado visualmente dos demais"
               color="darker" />
           </div>
-          <TButton color="success" leftIcon="commenting-o">Salvar</TButton>
+          <TButton color="success" leftIcon="check">Salvar</TButton>
         </footer>
       </form>
     </Card>

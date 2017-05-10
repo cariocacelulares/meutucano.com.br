@@ -18,5 +18,6 @@ export { default as SerialBox } from './SerialBox'
 export { default as TTextarea } from './TTextarea'
 export { default as TCheckbox } from './TCheckbox'
 export { default as UserInfo } from './UserInfo'
+export { default as FileUpload } from './FileUpload'
 
 export { default as TableList } from './TableList'

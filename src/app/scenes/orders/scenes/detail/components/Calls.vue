@@ -3,8 +3,7 @@
     <Card>
       <form @submit.prevent>
         <!-- <p>* Você pode mencionar um usuário utilizando o sinal @ ou um grupo utilizando #.</p> -->
-        <TTextarea v-model="newComment" placeholder="Digite um comentário para o pedido"
-          :block="true" theme="dark"></TTextarea>
+        <FileUpload v-model="call"></FileUpload>
         <footer>
           <div>
             <TCheckbox v-model="important" label="Marcar como importante" />
@@ -12,7 +11,7 @@
               message="Uma ligação importante é diferenciada visualmente das demais"
               color="darker" />
           </div>
-          <TButton color="success" leftIcon="phone">Salvar</TButton>
+          <TButton color="success" leftIcon="check">Salvar</TButton>
         </footer>
       </form>
     </Card>
@@ -51,9 +50,15 @@
 export default {
   data() {
     return {
-      newComment: null,
+      call: null,
       loading: false,
       important: false
+    }
+  },
+
+  watch: {
+    call() {
+      console.log(this.call)
     }
   }
 }
