@@ -138,15 +138,17 @@ export default {
 
       this.close()
     },
+
+    pressEscape(event) {
+      if (this.show && event.keyCode == 27) {
+        this.close()
+        document.removeEventListener('keydown', this.pressEscape)
+      }
+    },
   },
 
   mounted() {
-    // TODO: remover event listener (?)
-    document.addEventListener('keydown', (event) => {
-      if (this.show && event.keyCode == 27) {
-        this.close()
-      }
-    })
+    document.addEventListener('keydown', this.pressEscape)
 
     this.$root.$on(`show::modal-${this.name}`, () => {
       this.show = true

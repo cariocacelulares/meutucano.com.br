@@ -51,6 +51,60 @@ Vue.use(VueBreadcrumbs)
 Vue.prototype.$can = ( ...requiredPermissions ) =>
   (_.difference(requiredPermissions, store.getters['global/GET_USER'].permissions).length === 0)
 
+const Dialog = Vue.extend({
+  template: `
+    <transition name="fade">
+      <div v-if="show" class="confirm-dialog" @click="show = false">
+        <div class="confirm-content" @click.stop>
+          <Icon name="exclamation-triangle" color="dark" />
+          <div>
+            <h1>Você tem certeza?</h1>
+            <span>Esta ação não poderá ser desfeita!</span>
+            <div>
+              <TButton @click="show = false" leftIcon="times" color="light" text="darker">Voltar</TButton>
+              <TButton @click="show = doConfirm()" leftIcon="check" color="info" text="white">Confirmar</TButton>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
+  `
+})
+
+Vue.directive('confirm', {
+  bind(el, binding, vnode) {
+    const onConfirm = () => {
+      binding.value()
+
+      return false
+    }
+
+    el.handleClick = (e) => {
+      const data = {
+        doConfirm: onConfirm,
+        show: true
+      }
+
+      let dialog = new Dialog({ data: data }).$mount()
+      document.getElementById('app').appendChild(dialog.$el)
+
+      const closeConfirm = () => {
+        if (dialog.$data.show && event.keyCode == 27) {
+          dialog.$data.show = false
+          document.removeEventListener('keydown', closeConfirm)
+        }
+      }
+
+      document.addEventListener('keydown', closeConfirm)
+    }
+
+    el.addEventListener('click', el.handleClick)
+  },
+  unbind(el) {
+    el.removeEventListener('click', el.handleClick)
+  }
+})
+
 /* eslint-disable no-new */
 new Vue({
   store,

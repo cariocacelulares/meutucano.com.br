@@ -1,0 +1,54 @@
+.confirm-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba($black, .5);
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .confirm-content {
+    position: relative;
+    max-width: 100vw;
+    width: 390px;
+    max-height: calc(100vh - 20px);
+    padding: 20px 20px 20px 0;
+    box-shadow: $defaultShadow;
+    border-radius: $borderRadius;
+    background-color: $white;
+    overflow-y: auto;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+
+    > .Icon {
+      font-size: 43px !important;
+      flex-grow: 1;
+      text-align: center;
+    }
+
+    > div {
+      color: $inputLabel;
+
+      h1 {
+        font-size: 14px;
+        margin-bottom: 2px;
+      }
+
+      span {
+        font-size: 12px;
+      }
+
+      > div {
+        margin-top: 10px;
+
+        :not(:first-child) {
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+}

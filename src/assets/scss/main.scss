@@ -26,9 +26,11 @@
 @import 'utils/colors';
 @import 'utils/grid';
 @import 'utils/flex';
+@import 'utils/transitions';
 
 /**
  * When vue scoped style limit the ui
  */
  @import 'components/input-group';
  @import 'components/card-data';
+ @import 'components/confirm';

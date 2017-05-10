@@ -37,7 +37,7 @@
 
       <div>
         <TButton size="big" color="success" type="submit" leftIcon="check">Aprovar</TButton>
-        <TButton size="big" color="danger" type="submit" leftIcon="close" class="m-l-5">Excluir</TButton>
+        <TButton v-confirm="destroy" size="big" color="danger" type="submit" leftIcon="close" class="m-l-5">Excluir</TButton>
       </div>
     </PageHeader>
 
@@ -48,6 +48,12 @@
 <script>
 
 export default {
+  methods: {
+    destroy() {
+      console.log('destroy it!')
+    }
+  },
+
   data() {
     return {
       sku: 1384,
