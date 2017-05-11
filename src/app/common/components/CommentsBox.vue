@@ -17,10 +17,10 @@
       </form>
     </Card>
 
-    <Card class="comment">
+    <Card class="comment" v-if="!onlyImportant">
       <div class="card-header" slot="header">
         <UserInfo name="Cleiton Souza" avatar="/static/images/logo.png" sub="há 3 minutos" />
-        <Icon name="close" />
+        <Icon v-if="!onlyImportant" name="close" />
       </div>
 
       <div>
@@ -31,7 +31,7 @@
     <Card class="comment" :important="true">
       <div class="card-header" slot="header">
         <UserInfo name="Cleiton Souza" avatar="/static/images/logo.png" sub="há 3 minutos" />
-        <Icon name="close" />
+        <Icon v-if="!onlyImportant" name="close" />
       </div>
 
       <div>
@@ -39,10 +39,10 @@
       </div>
     </Card>
 
-    <Card class="comment">
+    <Card class="comment" v-if="!onlyImportant">
       <div class="card-header" slot="header">
         <UserInfo name="Cleiton Souza" avatar="/static/images/logo.png" sub="há 3 minutos" />
-        <Icon name="close" />
+        <Icon v-if="!onlyImportant" name="close" />
       </div>
 
       <div>
@@ -60,6 +60,10 @@ export default {
     form: {
       type: Boolean,
       default: true
+    },
+    onlyImportant: {
+      type: Boolean,
+      default: false
     },
   },
 

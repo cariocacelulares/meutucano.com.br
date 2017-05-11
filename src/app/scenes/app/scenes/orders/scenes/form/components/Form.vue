@@ -20,9 +20,33 @@
     </PageHeader>
 
     <ContentBox :discret="true" :class="{ grid: true, loading: loading }">
-      <form @submit.prevent>
+      <div>
         <Card header-icon="user" header-text="Informações do cliente">
-          <div class="grid-2">
+          <div v-if="true" class="grid-2">
+            <TSelect label="Cliente" placeholder="Selecione um cliente" :options="[
+              {
+                value: 1,
+                text: 'Aprovado'
+              },
+              {
+                value: 2,
+                text: 'Cancelado'
+              },
+            ]" />
+
+            <TSelect label="Endereço" placeholder="Selecione um cliente" :options="[
+              {
+                value: 1,
+                text: 'Aprovado'
+              },
+              {
+                value: 2,
+                text: 'Cancelado'
+              },
+            ]" />
+          </div>
+
+          <div v-if="false" class="grid-2">
             <div class="card-data">
               <span>Nome do cliente</span>
               <strong>Cleiton Souza</strong>
@@ -39,14 +63,14 @@
                 <strong>cleiton7souza@gmail.com</strong>
               </div>
 
-              <div class="card-data span-2">
+              <div class="card-data span-2 m-t-20">
                 <span>Telefone</span>
                 <strong>(47) 3521-3183<!--b><br/>(47) 98898-3927</b--></strong>
               </div>
             </div>
 
-            <div class="card-data">
-              <span style="font-size:14px;line-height:1.3" class="text-darker">
+            <div class="card-data address">
+              <span>
                 Rua Padre Anchieta #200 - Canoas<br/>
                 Rio do Sul / SC<br/>
                 89160-000<br/>
@@ -117,12 +141,12 @@
             <Help title="Valor formado pela soma do subtotal, frete e taxas subtraído pelo desconto aplicado" />
           </div>
         </Card>
-      </form>
+      </div>
 
       <VSeparator :spacing="0" />
 
       <div>
-        <CommentsBox :form="false" />
+        <CommentsBox :form="false" :only-important="true" />
       </div>
     </ContentBox>
   </form>
@@ -152,8 +176,10 @@ export default {
     }
   },
 
-  computed() {
-    this.id = this.orderId
+  computed: {
+    id() {
+      return this.orderId
+    },
   },
 
   methods: {
@@ -177,10 +203,10 @@ export default {
     },
   },
 
-  /*beforeRouteEnter(to, from, next) {
-    if (to.name == 'orders.create') {
+  beforeRouteEnter(to, from, next) {
+    //if (to.name == 'orders.create') {
       next()
-    } else {
+    /*} else {
       axios.get('order/' + to.params.id).then(
         (response) => {
           next()
@@ -189,12 +215,14 @@ export default {
           next({ name: 'orders.list' })
         }
       )
-    }
-  },*/
+    }*/
+  },
 };
 </script>
 
 <style lang="scss" scoped>
+@import '~style/vars';
+
 $gap: 20px;
 
 .ContentBox {
@@ -202,21 +230,16 @@ $gap: 20px;
   grid-gap: $gap;
   grid-auto-flow: row;
 
-  form {
+  .card-data.address * {
+    color: $dark;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  > div {
     > :not(:first-child) {
       margin-top: $gap;
     }
-  }
-
-  .grid-2 {
-    > .card-data:nth-last-child(2),
-    > .card-data:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-  .card-data:not(:last-child) {
-    margin-bottom: 20px;
   }
 
   .table-values {
@@ -232,7 +255,7 @@ $gap: 20px;
     }
 
     .card-data {
-      margin: 0 10px 0 0;
+      margin-right: 10px;
 
       strong {
         font-size: 24px;

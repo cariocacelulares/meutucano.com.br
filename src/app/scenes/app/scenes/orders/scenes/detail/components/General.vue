@@ -42,8 +42,8 @@
             </div>
           </div>
 
-          <div class="card-data">
-            <span style="font-size:13px;line-height:1.3" class="text-darker">
+          <div class="card-data address">
+            <span>
               Rua Padre Anchieta #200 - Canoas<br/>
               Rio do Sul / SC<br/>
               89160-000<br/>
@@ -283,6 +283,12 @@ $gap: 20px;
     grid-template-columns: 200px calc(100% - 200px - #{$gap});
     grid-gap: $gap;
     grid-auto-flow: row;
+
+    .address * {
+      color: $dark;
+      font-size: 13px;
+      line-height: 1.3;
+    }
 
     .products {
       grid-column-end: span 2;

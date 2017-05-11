@@ -23,7 +23,7 @@ export default {
     },
     message: {
       type: String,
-      required: true
+      default: null
     },
     color: {
       type: String
