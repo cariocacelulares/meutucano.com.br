@@ -31,15 +31,6 @@ class DepotEntryProduct extends \Eloquent
     /**
      * @var array
      */
-    protected $appends = [
-        'ean',
-        'ncm',
-        'title',
-    ];
-
-    /**
-     * @var array
-     */
     protected $casts = [
         'icms'   => 'float',
         'ipi'    => 'float',
@@ -80,42 +71,26 @@ class DepotEntryProduct extends \Eloquent
     }
 
     /**
-     * Decode imeis from json
+     * Decode serials from json
      *
-     * @param  string  $imeis imeis json encoded
+     * @param  string  $serials
      * @return array|null
      */
-    public function getSerialsAttribute($imeis)
+    public function getSerialsAttribute($serials)
     {
-        if (!$imeis) return null;
+        if (!$serials) return null;
 
-        return implode(PHP_EOL, json_decode($imeis));
+        return json_decode($serials);
     }
 
     /**
-     * Get product title
-     * @return string
+     * Encode serials to json
+     *
+     * @param  array  $serials
+     * @return string|null
      */
-    public function getTitleAttribute()
+    public function setSerialsAttribute($serials)
     {
-        return $this->product->titulo;
-    }
-
-    /**
-     * Get product ncm
-     * @return string
-     */
-    public function getNcmAttribute()
-    {
-        return $this->product->ncm;
-    }
-
-    /**
-     * Get product ean
-     * @return string
-     */
-    public function getEanAttribute()
-    {
-        return $this->product->ean;
+        $this->attributes['serials'] = json_encode($serials);
     }
 }

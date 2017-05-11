@@ -53,8 +53,7 @@ return [
         'venda_externa' => 6108,
         'devolucao'     => [1202, 2202, 1411],
         'estorno'       => [1949, 2949],
-        'extravio'      => [5927, 6927],
-        'compra'        => [1102, 2102],
+        'extravio'      => [5927, 6927]
     ],
 
     /**

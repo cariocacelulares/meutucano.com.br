@@ -51,8 +51,7 @@
         "tightenco/mailthief": "^0.3.2",
         "php-vcr/php-vcr": "dev-master",
         "php-vcr/phpunit-testlistener-vcr": "^1.1",
-        "mockery/mockery": "^0.9.6",
-        "laracasts/generators": "^1.1"
+        "mockery/mockery": "^0.9.6"
     },
     "autoload": {
         "classmap": [

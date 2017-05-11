@@ -20,6 +20,12 @@ class DepotEntry extends \Eloquent
     protected $fillable = [
         'user_id',
         'supplier_id',
+        'shipment_method',
+        'shipment_cost',
+        'payment_method',
+        'installments',
+        'taxes',
+        'discount',
         'description',
         'confirmed_at',
     ];

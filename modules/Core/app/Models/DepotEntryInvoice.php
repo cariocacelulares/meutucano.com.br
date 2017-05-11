@@ -1,10 +1,19 @@
 <?php namespace Core\Models;
 
+use App\Models\Traits\UploadableTrait;
+use Core\Models\Traits\InvoiceableTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 class DepotEntryInvoice extends \Eloquent
 {
-    use RevisionableTrait;
+    use SoftDeletes,
+        RevisionableTrait,
+        UploadableTrait,
+        InvoiceableTrait;
+
+    const UPLOAD_PATH = 'nota';
+    const UPLOAD_ATTR = ['file'];
 
     /**
      * @var boolean
@@ -16,14 +25,8 @@ class DepotEntryInvoice extends \Eloquent
      */
     protected $fillable = [
         'depot_entry_id',
-        'key',
-        'series',
-        'number',
-        'model',
-        'cfop',
-        'total',
+        'user_id',
         'file',
-        'emission',
     ];
 
     /**

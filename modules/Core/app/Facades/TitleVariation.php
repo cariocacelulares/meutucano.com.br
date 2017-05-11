@@ -1,7 +1,7 @@
 <?php namespace Core\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Core\Models\Produto;
+use Core\Models\Product;
 use Core\Models\ProductTitleVariation;
 
 class TitleVariationProvider
@@ -11,51 +11,32 @@ class TitleVariationProvider
      *
      * @param int $productSku    ref to product
      * @param string $title      variation title
-     * @param string $ean        variation ean
-     * @param string $ncm        variation ncm
+     * @return ProductTitleVariation
      */
-    public function set($productSku, $title, $ean = null)
+    public function set($productSku, $title)
     {
         $titleVariation = ProductTitleVariation::firstOrCreate([
             'product_sku' => $productSku,
-            'title'       => $title,
-            'ean'         => $ean
+            'title'       => $title
         ]);
 
         return $titleVariation;
     }
 
     /**
-     * Get a title variation (exact or not) and saves if not exists
+     * Get a title variation
      *
      * @param  string $title variation title
-     * @param  string $ean   variation ean
-     * @param  string $ncm   variation ncm
      * @return TitleVariation|null
      */
-    public function get($title, $ean = null)
+    public function get($title)
     {
-        $ean = $ean ?: null;
-        $ncm = $ncm ?: null;
+        $titleVariation = ProductTitleVariation::orderBy('id', 'DESC');
 
-        $titleVariation = ProductTitleVariation::where('title', '=', $title)
-            ->orWhere('ean', '=', $ean)
-            ->orderBy('id', 'DESC')
-            ->first();
-
-        if (!$titleVariation) {
-            $product = Produto::where('title', '=', $title)
-                ->orWhere('ean', '=', $ean)
-                ->orderBy('created_at', 'DESC')
-                ->first();
-
-            if ($product) {
-                $titleVariation = $this->set(
-                    $produto->sku,
-                    $produto->title,
-                    $produto->ean
-                );
-            }
+        if (is_array($title)) {
+            $titleVariation = $titleVariation->whereIn('title', $title)->get();
+        } else {
+            $titleVariation = $titleVariation->where('title', $title)->first();
         }
 
         return $titleVariation ?: null;

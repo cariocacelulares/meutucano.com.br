@@ -1,9 +1,9 @@
 <?php namespace Core\Providers;
 
-use Core\Facades\DepotProvider;
+use Core\Facades\StockProvider;
 use Illuminate\Support\ServiceProvider;
 
-class DepotServiceProvider extends ServiceProvider
+class StockServiceProvider extends ServiceProvider
 {
     /**
      * @var bool
@@ -15,8 +15,8 @@ class DepotServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('depotProvider', function () {
-            return new DepotProvider;
+        $this->app->bind('stockProvider', function () {
+            return new StockProvider;
         });
     }
 }

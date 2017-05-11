@@ -44,7 +44,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
-        Laracasts\Generators\GeneratorsServiceProvider::class,
         Zizaco\Entrust\EntrustServiceProvider::class,
         Spatie\Browsershot\BrowsershotServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
@@ -58,7 +57,6 @@ return [
         Barryvdh\Cors\ServiceProvider::class,
         Lanin\Laravel\ApiDebugger\ServiceProvider::class,
     ],
-
 
     'aliases' => [
         'App'          => Illuminate\Support\Facades\App::class,

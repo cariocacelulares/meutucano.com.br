@@ -1,38 +1,46 @@
 <?php namespace Core\Facades;
 
-use Illuminate\Support\Facades\Facade;
 use Core\Models\Depot;
 use Core\Models\DepotProduct;
+use Illuminate\Support\Facades\Facade;
 
 class StockProvider
 {
     /**
-     * Get stock quantity
+     * Get stock information from SKU
+     *
      * @param  int $sku
-     * @param  string $stock
+     * @param  string $depot
      * @return int
      */
-    public function getObjects($sku, $stock = 'default')
+    public function getObjects($sku, $depot = null)
     {
-        $productStock = DepotProduct::with('stock')->where('product_sku', $sku);
+        $depotProduct = DepotProduct::with('depot');
 
-        if ($stock) {
-            $productStock->where('stock_slug', $stock);
+        if (is_array($sku)) {
+            $depotProduct = $depotProduct->whereIn('product_sku', $sku);
+        } else {
+            $depotProduct = $depotProduct->where('product_sku', $sku);
         }
 
-        return $productStock->get();
+        if ($depot) {
+            $depotProduct->where('depot_slug', $depot);
+        }
+
+        return $depotProduct->get();
     }
 
     /**
-     * Get stock quantity
+     * Get stock quantity from SKU
+     *
      * @param  int $sku
-     * @param  string $stock
+     * @param  string $depot
      * @return int
      */
-    public function get($sku, $stock = 'default')
+    public function get($sku, $depot = null)
     {
-        return ProductStock::where('product_sku', $sku)
-            ->where('stock_slug', $stock)
+        return DepotProduct::where('product_sku', $sku)
+            ->where('depot_slug', $depot)
             ->pluck('quantity');
     }
 
@@ -41,13 +49,13 @@ class StockProvider
      *
      * @param int $sku
      * @param int $quantity
-     * @param string $stock
+     * @param string $depot
      */
-    public function set($sku, $quantity, $stock = 'default')
+    public function set($sku, $quantity, $depot = null)
     {
-        return ProductStock::updateOrCreate([
+        return DepotProduct::updateOrCreate([
             'product_sku' => $sku,
-            'stock_slug'  => $stock
+            'depot_slug'  => $depot
         ], [
             'quantity' => $quantity
         ]);
@@ -58,22 +66,21 @@ class StockProvider
      *
      * @param int $sku
      * @param int $quantity
-     * @param string $stock
+     * @param string $depot
      */
-    public function add($sku, $quantity, $stock = 'default')
+    public function add($sku, $quantity, $depot = null)
     {
-        \Log::notice("Adicionando {$quantity} quantidade no estoque '{$stock}' do produto {$sku}");
+        \Log::notice("Adicionando {$quantity} quantidade no estoque '{$depot}' do produto {$sku}");
 
-        $productStocks = ProductStock
-            ::where('product_sku', $sku)
-            ->where('stock_slug', $stock)
+        $depotProducts = DepotProduct::where('product_sku', $sku)
+            ->where('depot_slug', $depot)
             ->get();
 
         $i = 0;
-        foreach ($productStocks as $productStock) {
-            $productStock->quantity = ($productStock->quantity + $quantity);
+        foreach ($depotProducts as $depotProduct) {
+            $depotProduct->quantity = ($depotProduct->quantity + $quantity);
 
-            if ($productStock->save()) {
+            if ($depotProduct->save()) {
                 $i++;
             }
         }
@@ -86,22 +93,21 @@ class StockProvider
      *
      * @param int $sku
      * @param int $quantity
-     * @param string $stock
+     * @param string $depot
      */
-    public function substract($sku, $quantity, $stock = 'default')
+    public function substract($sku, $quantity, $depot = null)
     {
-        \Log::notice("Subtraindo {$quantity} quantidade no estoque '{$stock}' do produto {$sku}");
+        \Log::notice("Subtraindo {$quantity} quantidade no estoque '{$depot}' do produto {$sku}");
 
-        $productStocks = ProductStock
-            ::where('product_sku', $sku)
-            ->where('stock_slug', $stock)
+        $depotProducts = DepotProduct::where('product_sku', $sku)
+            ->where('depot_slug', $depot)
             ->get();
 
         $i = 0;
-        foreach ($productStocks as $productStock) {
-            $productStock->quantity = ($productStock->quantity - $quantity);
+        foreach ($depotProducts as $depotProduct) {
+            $depotProduct->quantity = ($depotProduct->quantity - $quantity);
 
-            if ($productStock->save()) {
+            if ($depotProduct->save()) {
                 $i++;
             }
         }
@@ -122,16 +128,15 @@ class StockProvider
         if (isset($default[0]) && $default[0] > 0) {
             return 'default';
         } else {
-            $productStocks = ProductStock
-                ::join('stocks', 'stocks.slug', 'product_stocks.stock_slug')
-                ->where('product_sku', '=', $sku)
-                ->where('stocks.include', '=', true)
-                ->orderBy('stocks.priority', 'ASC')
+            $depotProducts = DepotProduct::join('depots', 'depots.slug', 'depot_products.depot_slug')
+                ->where('product_sku', $sku)
+                ->where('depots.include', true)
+                ->orderBy('depots.priority', 'ASC')
                 ->get();
 
-            foreach ($productStocks as $productStock) {
-                if ((int) $productStock->quantity > 0) {
-                    return $productStock->stock_slug;
+            foreach ($depotProducts as $depotProduct) {
+                if ((int) $depotProduct->quantity > 0) {
+                    return $depotProduct->depot_slug;
                 }
             }
         }

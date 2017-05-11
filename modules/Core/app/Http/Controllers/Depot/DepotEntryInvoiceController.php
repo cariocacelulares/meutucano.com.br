@@ -1,42 +1,65 @@
-<?php namespace Core\Http\Controllers\Stock\Entry;
+<?php namespace Core\Http\Controllers\Depot;
 
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Input;
-use App\Http\Controllers\Rest\RestControllerTrait;
-use App\Http\Controllers\Controller;
-use Core\Http\Controllers\Partials\Traits\Uploadable;
-use Core\Models\Stock\Entry\Invoice;
+use Core\Models\Product;
 use Core\Models\Supplier;
-use Core\Models\Produto;
+use Core\Models\DepotEntryInvoice;
+use App\Http\Controllers\Controller;
+use Core\Http\Requests\InvoiceRequest as Request;
 
-/**
- * Class InvoiceController
- * @package Core\Http\Controllers\Stock\Entry
- */
-class InvoiceController extends Controller
+class DepotEntryInvoiceController extends Controller
 {
-    use RestControllerTrait,
-        Uploadable;
 
-    const MODEL = Invoice::class;
-
-    /**
-     * Generate invoice XML
-     *
-     * @param $id
-     * @return Response
-     */
-    public function xml($id)
+    public function __construct()
     {
-        $this->middleware('permission:entry_show');
+        $this->middleware('permission:entry_create', ['only' => ['store', 'parse']]);
+        $this->middleware('permission:entry_show', ['only' => ['danfe']]);
 
-        $invoice = Invoice::findOrFail($id);
-
-        return \Invoice::xml($invoice->file);
+        $this->middleware('currentUser', ['only' => 'store']);
     }
 
     /**
-     * Generate DANFe PDF file
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function store(Request $request)
+    {
+        try {
+            $this->processUpload($request->file('file'));
+
+            $data = DepotEntryInvoice::create($request->all());
+
+            return createdResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function destroy($id)
+    {
+        try {
+            $data = DepotEntryInvoice::findOrFail($id);
+            $data->delete();
+
+            return deletedResponse();
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao excluir recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Generate DANFe PDF from invoice xml
      *
      * @param  $id
      * @param  string  $returnType I-borwser, S-retorna o arquivo, D-força download, F-salva em arquivo local
@@ -45,108 +68,93 @@ class InvoiceController extends Controller
      */
     public function danfe($id, $returnType = 'I', $path = false)
     {
-        $this->middleware('permission:entry_show');
+        $invoice = DepotEntryInvoice::findOrFail($id);
 
-        $invoice = Invoice::findOrFail($id);
-
-        return \Invoice::danfe($invoice->file, $returnType, $path, true);
+        return \Invoice::danfe($invoice->getAttributes()['file'], $returnType, $path);
     }
 
     /**
-     * Call trait method to prepare and wrap upload
+     * Process upload from invoice xml
      *
-     * @return Response
+     * @param  File $file
+     * @return boolean
      */
-    public function upload()
+    private function processUpload($file)
     {
-        $this->middleware('permission:entry_create');
+        $nfe = \Invoice::validateNfeUpload($file->getRealPath(), config('core.notas.venda'));
 
-        return $this->uploadOnce(Input::file('file'));
+        return true;
     }
 
     /**
-     * Process all data to import info to invoice order
+     * Read invoice file and return information to entry
      *
-     * @param  string $fileName name of UploadedFile
-     * @return bool|array       return of process
+     * @param  int $id
+     * @return array
      */
-    public function processUpload($fileName)
+    public function parse($id)
     {
-        try {
-            $key = (string) $this->protNfe->infProt->chNFe;
+        $invoice = DepotEntryInvoice::findOrFail($id);
 
-            $supplier = [
-                'company_name' => (string) $this->nfe->emit->xNome,
-                'name'         => (string) $this->nfe->emit->xFant,
-                'cnpj'         => (string) $this->nfe->emit->CNPJ,
-                'ie'           => (string) $this->nfe->emit->IE,
-                'crt'          => (string) $this->nfe->emit->CRT,
-                'fone'         => (string) $this->nfe->emit->enderEmit->fone,
-                'street'       => (string) $this->nfe->emit->enderEmit->xLgr,
-                'number'       => (string) $this->nfe->emit->enderEmit->nro,
-                'complement'   => (string) $this->nfe->emit->enderEmit->xCpl,
-                'neighborhood' => (string) $this->nfe->emit->enderEmit->xBairro,
-                'city'         => (string) $this->nfe->emit->enderEmit->xMun,
-                'uf'           => (string) $this->nfe->emit->enderEmit->UF,
-                'cep'          => (string) $this->nfe->emit->enderEmit->CEP,
-                'country'      => (string) $this->nfe->emit->enderEmit->xPais,
-            ];
+        $filePath = storage_path('app/public/nota/' . $invoice->getAttributes()['file']);
+        $xml = simplexml_load_file($filePath);
 
-            $products = [];
-            foreach ($this->getProducts() as $product) {
-                $qty   = (float)  $product->prod->qCom;
-                $value = (float)  $product->prod->vUnCom;
-                $ean   = (string) $product->prod->cEAN;
-                $ncm   = (string) $product->prod->NCM;
-                $title = (string) $product->prod->xProd;
+        $nfe = $xml->NFe->infNFe;
 
-                $titleVariation   = \TitleVariation::get($title, $ean);
-                $titleVariationId = $titleVariation ? $titleVariation->id : null;
+        /**
+         * Supplier
+         */
+        $supplier = Supplier::where('taxvat', $nfe->emit->CNPJ)->first();
 
-                $sku            = $titleVariation ? $titleVariation->product_sku : null;
-                $stocks         = $sku ? \Stock::getObjects($sku) : [];
-                $productStockId = isset($stocks[0]) ? $stocks[0]->id : null;
-                $produto        = $sku ? Produto::find($sku) : null;
+        /**
+         * Products
+         */
+        $nfeProducts = (sizeof($nfe->det) > 1) ? $nfe->det : [$nfe->det];
+        foreach ($nfeProducts as $product) {
+            $xmlProducts[] = $product;
+        }
 
-                $products[] = [
-                    'ean'                        => $ean,
-                    'ncm'                        => $ncm,
-                    'title'                      => $title,
-                    'quantity'                   => $qty,
-                    'unitary_value'              => $value,
-                    'total_value'                => ($qty * $value),
-                    'icms'                       => (float) $product->imposto->ICMS->ICMS00->pICMS,
-                    'ipi'                        => (float) $product->imposto->IPI->IPITrib->pIPI,
-                    'pis'                        => (float) $product->imposto->PIS->PISAliq->pPIS,
-                    'cofins'                     => (float) $product->imposto->COFINS->COFINSAliq->pCOFINS,
-                    'product_sku'                => $sku,
-                    'product'                    => $produto,
-                    'product_stock_id'           => $productStockId,
-                    'stock'                      => isset($stocks[0]) ? $stocks[0] : null,
-                    'stocks'                     => $stocks,
-                ];
+        $titles = array_map('strval', collect($xmlProducts)->pluck('prod.xProd')
+            ->toArray());
+
+        $titleVariations = \TitleVariation::get($titles);
+        $variationSkus = $titleVariations->pluck('product_sku')->toArray();
+        $availableDepots = \Stock::getObjects($variationSkus);
+
+        foreach ($nfeProducts as $product) {
+            $sku = $stocks = $depotProduct = null;
+
+            $productTitle = (string) $product->prod->xProd;
+            $ean          = (string) $product->prod->cEAN;
+
+            $titleVariation = $titleVariations->where('title', $productTitle)->first();
+            if ($titleVariation) {
+                $sku          = $titleVariation->product_sku;
+                $stocks       = $availableDepots->where('product_sku', $sku);
+                $depotProduct = $stocks->where('depot_slug', 'default')->first();
             }
 
-            $invoice = [
-                'file'     => $fileName,
-                'key'      => $key,
-                'series'   => (string) $this->nfe->ide->serie,
-                'number'   => (string) $this->nfe->ide->nNF,
-                'model'    => (string) $this->nfe->ide->mod,
-                'cfop'     => (string) $this->getProducts()[0]->prod->CFOP,
-                'total'    => (float) $this->nfe->total->ICMSTot->vNF,
-                'emission' => \DateTime::createFromFormat('Y-m-d\TH:i:sP', (string) $this->nfe->ide->dhEmi)->format('d/m/Y H:i:s'),
+            $products[] = [
+                "sku"              => $sku,
+                "variation_title"  => $productTitle,
+                "depot_products"   => $stocks,
+    			"depot_product_id" => $depotProduct ? $depotProduct->id : null,
+    			"cost"             => (float) $product->prod->vUnCom,
+    			"quantity"         => (int) $product->prod->qCom,
+    			"taxes" => [
+    				"taxed"  => true,
+    				"icms"   => (float) $product->imposto->ICMS->ICMS20->pICMS,
+    				"pis"    => (float) $product->imposto->PIS->PISAliq->pPIS,
+    				"ipi"    => (float) $product->imposto->IPI->IPITrib->pIPI,
+    				"cofins" => (float) $product->imposto->COFINS->COFINSAliq->pCOFINS
+    			]
             ];
-
-            return [
-                'supplier' => $supplier,
-                'invoice'  => $invoice,
-                'products' => $products,
-            ];
-        } catch (\Exception $exception) {
-            $this->clientErrorResponse([
-                'Ocorreu um erro ao tentar fazer upload da nota de entrada'
-            ]);
         }
+
+        return showResponse([
+            'invoice' => $invoice,
+            'supplier' => $supplier,
+            'products' => $products
+        ]);
     }
 }

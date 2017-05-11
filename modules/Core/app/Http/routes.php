@@ -49,18 +49,18 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     /**
      * Orders
      */
-    Route::group(['prefix' => 'orders', 'namespace' => 'Order'], function () {
-        Route::get('invoiceable', 'OrderController@invoiceable');
+    Route::group(['prefix' => 'orders'], function () {
+        Route::get('invoiceable', 'Order\OrderController@invoiceable');
 
-        Route::put('approve/{order_id}', 'OrderController@approve');
-        Route::put('invoice/{order_id}', 'OrderController@invoice');
-        Route::put('cancel/{order_id}', 'OrderController@cancel');
+        Route::put('approve/{order_id}', 'Order\OrderController@approve');
+        Route::put('invoice/{order_id}', 'Order\OrderController@invoice');
+        Route::put('cancel/{order_id}', 'Order\OrderController@cancel');
 
-        Route::put('prioritize/{order_id}', 'OrderController@prioritize');
-        Route::put('unprioritize/{order_id}', 'OrderController@unprioritize');
+        Route::put('prioritize/{order_id}', 'Order\OrderController@prioritize');
+        Route::put('unprioritize/{order_id}', 'Order\OrderController@unprioritize');
 
-        Route::put('hold/{order_id}', 'OrderController@hold');
-        Route::put('unhold/{order_id}', 'OrderController@unhold');
+        Route::put('hold/{order_id}', 'Order\OrderController@hold');
+        Route::put('unhold/{order_id}', 'Order\OrderController@unhold');
     });
     api('orders', 'Order\OrderController');
 
@@ -97,7 +97,16 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     api('suppliers', 'Supplier\SupplierController');
 
     /**
-     * Depot entry
+     * Depot Entry Invoice
+     */
+    Route::group(['prefix' => 'depots/entries/invoices'], function() {
+        Route::get('parse/{id}', 'Depot\DepotEntryInvoiceController@parse');
+        Route::get('danfe/{id}/{retorno?}', 'Depot\DepotEntryInvoiceController@danfe');
+    });
+    api('depots/entries/invoices', 'Depot\DepotEntryInvoiceController');
+
+    /**
+     * Depot Entry
      */
     Route::put('depots/entries/confirm/{id}', 'Depot\DepotEntryController@confirm');
     api('depots/entries', 'Depot\DepotEntryController');
@@ -165,14 +174,6 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     //
 
     //
-    // /**
-    //  * Stock entry invoice
-    //  */
-    // Route::group(['prefix' => 'estoque/entrada/nota', 'namespace' => 'Stock\Entry'], function () {
-    //     Route::post('upload', 'InvoiceController@upload');
-    //
-    //     Route::get('danfe/{id}/{retorno?}', 'InvoiceController@danfe');
-    // });
-    // api('estoque/entrada/nota', 'Stock\Entry\InvoiceController');
+
     //
 });

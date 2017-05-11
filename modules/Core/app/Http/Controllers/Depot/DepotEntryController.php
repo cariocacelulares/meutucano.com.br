@@ -3,9 +3,12 @@
 use Carbon\Carbon;
 use Core\Models\Supplier;
 use Core\Models\DepotEntry;
+use Core\Models\DepotEntryInvoice;
+use Core\Models\DepotEntryProduct;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Rest\RestControllerTrait;
+use Core\Http\Requests\DepotEntryRequest as Request;
 
 class DepotEntryController extends Controller
 {
@@ -17,6 +20,8 @@ class DepotEntryController extends Controller
         $this->middleware('permission:entry_update', ['only' => ['update']]);
         $this->middleware('permission:entry_delete', ['only' => ['destroy']]);
         $this->middleware('permission:entry_confirm', ['only' => ['confirm']]);
+
+        $this->middleware('currentUser', ['only' => ['store']]);
     }
 
     /**
@@ -31,6 +36,92 @@ class DepotEntryController extends Controller
     }
 
     /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function show($id)
+    {
+        try {
+            $data = DepotEntry::with([
+                'supplier',
+                'invoice',
+                'user',
+                'products',
+                'products.product',
+                'products.depotProduct',
+                'products.depotProduct.depot',
+            ])->findOrFail($id);
+
+            return showResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao obter recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function store(Request $request)
+    {
+        try {
+            \DB::transaction(function() use ($request, &$entry) {
+                $entry = DepotEntry::create($request->except(['products']));
+
+                if ($invoiceId = $request->input('invoice')) {
+                    $invoice = DepotEntryInvoice::findOrFail($invoiceId);
+                    $invoice->depot_entry_id = $entry->id;
+                    $invoice->save();
+                }
+
+                $this->processEntryProducts($entry, $request->input('products'));
+            });
+
+            return createdResponse($entry);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . ']' . ' ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function update(Request $request, $id)
+    {
+        try {
+            \DB::transaction(function() use ($request, $id, &$entry) {
+                $entry = DepotEntry::findOrFail($id);
+
+                if ($entry->confirmed === true) {
+                    throw new \Exception("Não é possível realizar alterações em entradas confirmadas.");
+                }
+
+                $entry->fill($request->except(['products']));
+                $entry->save();
+
+                $this->processEntryProducts($entry, $request->input('products'));
+            });
+
+            return showResponse($entry);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
      * Confirm entry
      *
      * @param $id
@@ -40,6 +131,16 @@ class DepotEntryController extends Controller
     {
         try {
             $data = DepotEntry::findOrFail($id);
+
+            /**
+             * User from entry must be the same from request
+             */
+            if ($data->user_id !== getCurrentUserId()) {
+                return clientErrorResponse([
+                    'message' => 'Não é possível confirmar a entrada de outro usuário.'
+                ]);
+            }
+
             $data->confirmed_at = Carbon::now();
             $data->save();
 
@@ -54,256 +155,60 @@ class DepotEntryController extends Controller
     }
 
     /**
-     * Returns a unique resource
+     * Create/update products from entry
      *
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function show($id)
-    {
-        try {
-            $entry = DepotEntry::with([
-                'supplier',
-                'invoice',
-                'user',
-                'products',
-                'products.product',
-                'products.product.productStocks',
-                'products.product.productStocks.stock',
-                'products.productStock',
-                'products.productStock.stock',
-            ])->findOrFail($id);
-
-            return $this->showResponse(DepotEntryTransformer::show($entry));
-        } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Erro ao obter recurso'), ['model' => self::MODEL]);
-
-            return $this->clientErrorResponse([
-                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
-            ]);
-        }
-    }
-
-    /**
-     * Create a new resource
-     *
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function store()
-    {
-        try {
-            $userId      = Input::get('user_id') ?: getCurrentUserId();
-            $supplier    = Input::get('supplier');
-            $invoice     = Input::get('invoice');
-            $products    = Input::get('products') ?: [];
-            $description = Input::get('description');
-
-            // Abre um transaction no banco de dados
-            \DB::beginTransaction();
-            \Log::debug('Transaction - begin');
-
-            $supplier = $this->importSupplier($supplier);
-
-            $entry = DepotEntry::create([
-                'description'  => $description,
-                'confirmed_at' => null,
-                'user_id'      => $userId,
-                'supplier_id'  => $supplier ? $supplier->id : null,
-            ]);
-
-            $invoice  = $this->importInvoice($invoice, $entry->id);
-            $products = $this->importProducts($products, $entry->id);
-
-            // Fecha a transação e comita as alterações
-            \DB::commit();
-            \Log::debug('Transaction - commit');
-
-            return $this->createdResponse($entry);
-        } catch (\Exception $exception) {
-            \DB::rollBack();
-            \Log::debug('Transaction - rollback');
-
-            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
-
-            return $this->clientErrorResponse([
-                'exception' => '[' . $exception->getLine() . ']' . ' ' . $exception->getMessage()
-            ]);
-        }
-    }
-
-    /**
-     * Update a resource
-     *
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function update($id)
-    {
-        try {
-            $userId      = Input::get('user_id') ?: getCurrentUserId();
-            $supplier    = Input::get('supplier');
-            $invoice     = Input::get('invoice');
-            $products    = Input::get('products');
-            $description = Input::get('description');
-            $confirm     = Input::get('confirm');
-
-            if (!$invoice) {
-                $this->middleware('permission:entry_manual');
-            }
-
-            // Abre um transaction no banco de dados
-            \DB::beginTransaction();
-            \Log::debug('Transaction - begin');
-
-            $supplier = $this->importSupplier($supplier);
-
-            $entry = DepotEntry::findOrFail($id);
-            $entry->description  = $description;
-            $entry->confirmed_at = $confirm ? Carbon::now() : null;
-            $entry->user_id      = $userId;
-            $entry->supplier_id  = $supplier ? $supplier->id : null;
-            $entry->save();
-
-            $invoice  = $this->importInvoice($invoice, $entry->id);
-            $products = $this->importProducts($products, $entry->id);
-
-            // Fecha a transação e comita as alterações
-            \DB::commit();
-            \Log::debug('Transaction - commit');
-
-            return $this->showResponse($entry);
-        } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
-
-            return $this->clientErrorResponse([
-                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
-            ]);
-        }
-    }
-
-    /**
-     * Check if exists and saves invoice
-     *
-     * @param  array $invoiceData
-     * @param  int $entryId
-     * @return Invoice
-     */
-    private function importInvoice($invoiceData, $entryId)
-    {
-        if (!$invoiceData) {
-            return null;
-        }
-
-        $invoice = null;
-
-        if (isset($invoiceData['id'])) {
-            $invoice = Invoice::find($invoiceData['id']);
-        }
-
-        $invoice = $invoice ?: new Invoice;
-
-        $invoice->stock_entry_id = $entryId;
-        $invoice->key            = $invoiceData['key'];
-        $invoice->series         = $invoiceData['series'];
-        $invoice->number         = $invoiceData['number'];
-        $invoice->model          = $invoiceData['model'];
-        $invoice->cfop           = $invoiceData['cfop'];
-        $invoice->total          = $invoiceData['total'];
-        $invoice->file           = $invoiceData['file'];
-        $invoice->emission       = dateConvert($invoiceData['emission'], 'd/m/Y H:i:s', 'Y-m-d H:i:s');
-
-        return $invoice->save() ? $invoice : null;
-    }
-
-    /**
-     * Import products from entry
-     *
+     * @param  DepotEntry $entry
      * @param  array $products
-     * @param  int $entryId
-     * @return array
+     * @return void
      */
-    private function importProducts($products, $entryId)
+    private function processEntryProducts($entry, $products)
     {
-        $return = [];
-        foreach ($products as $productData) {
-            if (!isset($productData['product_sku']) || !$productData['product_sku']) {
-                continue;
-            }
+        $entry->products()->delete();
 
-            if (isset($productData['title']) && is_null(\TitleVariation::get($productData['title'], $productData['ean']))) {
-                \TitleVariation::set($productData['product_sku'], $productData['title'], $productData['ean']);
-            }
+        foreach ($products as $product) {
+            if (array_key_exists('variation_title', $product))
+                \TitleVariation::set($product['sku'], $product['variation_title']);
 
-            $product = null;
-
-            if (isset($productData['id'])) {
-                $product = Product::find($productData['id']);
-            }
-
-            $product = $product ?: new Product;
-
-            if (isset($productData['imeis'])) {
-                $imeis = json_encode(explode(PHP_EOL, $productData['imeis']));
-            } else {
-                $imeis = null;
-            }
-
-            $product->stock_entry_id   = $entryId;
-            $product->product_sku      = $productData['product_sku'];
-            $product->product_stock_id = $productData['product_stock_id'];
-            $product->quantity         = $productData['quantity'];
-            $product->unitary_value    = $productData['unitary_value'];
-            $product->total_value      = $productData['total_value'];
-            $product->icms             = $productData['icms'];
-            $product->ipi              = $productData['ipi'];
-            $product->pis              = $productData['pis'];
-            $product->cofins           = $productData['cofins'];
-            $product->imeis            = $imeis;
-
-            $product->save();
-
-            $return[] = $product;
+            $entryProducts[] = [
+                'depot_entry_id'   => $entry->id,
+                'product_sku'      => $product['sku'],
+                'depot_product_id' => $product['depot_product_id'],
+                'quantity'         => $product['quantity'],
+                'unitary_value'    => $product['cost'],
+                'taxed'            => $product['taxes']['taxed'],
+                'icms'             => $product['taxes']['icms'],
+                'ipi'              => $product['taxes']['ipi'],
+                'pis'              => $product['taxes']['pis'],
+                'cofins'           => $product['taxes']['cofins'],
+                'serials'          => $product['serials']
+            ];
         }
 
-        return $return;
+        $entry->products()->createMany($entryProducts);
     }
 
     /**
-     * Check if exists and saves supplier
-     *
-     * @param  array $supplierData
-     * @return Supplier
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function importSupplier($supplierData)
+    public function destroy($id)
     {
-        $supplier = null;
+        try {
+            $data = DepotEntry::findOrFail($id);
 
-        if (isset($supplierData['id'])) {
-            $supplier = Supplier::find($supplierData['id']);
-        }
+            if ($data->confirmed === true) {
+                throw new \Exception("Não é possível realizar alterações em entradas confirmadas.");
+            }
 
-        if (!$supplier) {
-            $supplier = Supplier::firstOrNew([
-                'cnpj' => $supplierData['cnpj'],
+            $data->delete();
+
+            return deletedResponse();
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao excluir recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
-
-        $supplier->company_name = $supplierData['company_name'];
-        $supplier->name         = $supplierData['name'];
-        $supplier->cnpj         = $supplierData['cnpj'];
-        $supplier->ie           = $supplierData['ie'];
-        $supplier->crt          = $supplierData['crt'];
-        $supplier->fone         = $supplierData['fone'];
-        $supplier->street       = $supplierData['street'];
-        $supplier->number       = $supplierData['number'];
-        $supplier->complement   = $supplierData['complement'];
-        $supplier->neighborhood = $supplierData['neighborhood'];
-        $supplier->city         = $supplierData['city'];
-        $supplier->uf           = $supplierData['uf'];
-        $supplier->cep          = $supplierData['cep'];
-        $supplier->country      = $supplierData['country'];
-
-        return $supplier->save() ? $supplier : null;
     }
 }
