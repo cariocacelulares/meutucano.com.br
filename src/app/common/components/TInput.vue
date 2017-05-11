@@ -3,7 +3,7 @@
     <span v-if="label" class="label">{{ label }}</span>
     <Icon v-if="leftIcon" :name="leftIcon" classes="leftIcon" :size="size" color="dark" />
     <input :id="`input-${_uid}`" :type="type" :class="classList" :required="required"
-      :placeholder="placeholder" :value="value" min="min" max="max" step="step"
+      :placeholder="placeholder" :value="value" :min="min" :max="max" :step="step"
       @input="updateValue($event.target.value)" :disabled="disabled" />
     <Icon v-if="rightIcon" :name="rightIcon" classes="rightIcon" :size="size" color="dark" />
   </label>

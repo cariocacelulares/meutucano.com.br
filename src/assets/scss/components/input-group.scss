@@ -1,15 +1,59 @@
-.InputGroup {
-  > .inputWrapper {
-    &:first-child input {
-      border-radius: 3px 0 0 3px;
-    }
-
-    &:nth-child(2) input {
-      border-radius: 0;
-    }
-
-    &:last-child input {
-      border-radius: 0 3px 3px 0;
-    }
+.InputGroup.has-left:not(.has-right) {
+  .left .TButton,
+  .left .Icon {
+    border-radius: 3px 0 0 3px;
   }
+
+  .input .inputWrapper input {
+    border-radius: 0 3px 3px 0;
+  }
+}
+
+.InputGroup.has-right:not(.has-left) {
+  .input .inputWrapper input {
+    border-radius: 3px 0 0 3px;
+  }
+
+  .right .TButton,
+  .right .Icon {
+    border-radius: 0 3px 3px 0;
+  }
+}
+
+.InputGroup.has-right.has-left {
+  .left .TButton,
+  .left .Icon {
+    border-radius: 3px 0 0 3px;
+  }
+
+  .input .inputWrapper input {
+    border-radius: 0;
+  }
+
+  .right .TButton,
+  .right .Icon {
+    border-radius: 0 3px 3px 0;
+  }
+}
+
+.InputGroup.normal > * > .Icon {
+  width: 40px;
+  height: 40px;
+  font-size: 18px !important;
+}
+
+.InputGroup.small > * > .Icon {
+  width: 30px;
+  height: 30px;
+  font-size: 14px !important;
+}
+
+.InputGroup > * > .Icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $dark;
+  border: 1px solid $default;
+  border-right: none;
+  background-color: $light;
 }

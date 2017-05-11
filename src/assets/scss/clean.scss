@@ -55,18 +55,13 @@ input {
 }
 
 a {
-  color: inherit;
+  color: $link;
   text-decoration: none;
   transition: color linear 100ms;
 
-  &[href]:not([href="#"]) {
-    color: $link;
-    transition: all linear 150ms;
-
-    &:hover,
-    &:focus {
-      opacity: .9;
-    }
+  &:hover,
+  &:focus {
+    opacity: .9;
   }
 }
 

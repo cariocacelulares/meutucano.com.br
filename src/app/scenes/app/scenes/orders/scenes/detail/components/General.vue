@@ -54,7 +54,7 @@
       </Card>
 
       <Card header-icon="list-alt" header-text="Produtos" class="products">
-        <table>
+        <table class="discrete-table">
           <thead>
             <tr>
               <th>SKU</th>
@@ -349,36 +349,6 @@ $gap: 20px;
   }
 
   .products {
-    table {
-      width: 100%;
-      margin-top: -10px;
-      font-size: 12px;
-      border-spacing: 0;
-      border-collapse: collapse;
-
-      a {
-        color: $link;
-      }
-
-      th, td {
-        height: 45px;
-        padding: 15px 20px;
-        text-align: center;
-      }
-
-      tbody td:last-child {
-        font-weight: bold;
-      }
-
-      tr {
-        border-bottom: 1px solid $light;
-      }
-
-      p {
-        margin-bottom: 3px;
-      }
-    }
-
     .table-values {
       display: flex;
       align-items: center;

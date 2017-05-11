@@ -1,57 +1,157 @@
 <template>
-  <label class="InputGroup">
-  <!-- <label :class="classList"> -->
-    <slot name="left"></slot>
-    <slot name="input"></slot>
-    <slot name="right"></slot>
+  <label :class="classList">
+    <div v-if="hasLeft" :class="leftClasses">
+      <slot name="left"></slot>
+    </div>
+    <div v-if="hasInput" :class="inputClasses">
+      <slot name="input"></slot>
+    </div>
+    <div v-if="hasRight" :class="rightClasses">
+      <slot name="right"></slot>
+  </div>
   </label>
 </template>
 
 <script>
 export default {
   props: {
-    /*labeled: {
+    fixLabel: {
       type: Boolean,
       default: false
-    }*/
+    },
+    size: {
+      type: String,
+      default: 'normal'
+    },
+    leftShrink: {
+      type: Number,
+      default: null
+    },
+    inputShrink: {
+      type: Number,
+      default: null
+    },
+    rightShrink: {
+      type: Number,
+      default: null
+    },
   },
 
   computed: {
-    /*classList() {
+    hasLeft() {
+      return (typeof(this.$slots.left) !== 'undefined')
+    },
+
+    hasInput() {
+      return (typeof(this.$slots.input) !== 'undefined')
+    },
+
+    hasRight() {
+      return (typeof(this.$slots.right) !== 'undefined')
+    },
+
+    classList() {
       let classList = []
 
       classList.push('InputGroup')
+      classList.push(this.size)
 
-      if (this.labeled) {
-        classList.push('labeled')
+      if (this.fixLabel) {
+        classList.push('fix-label')
+      }
+
+      if (this.hasLeft) {
+        classList.push('has-left')
+      }
+
+      if (this.hasInput) {
+        classList.push('has-input')
+      }
+
+      if (this.hasRight) {
+        classList.push('has-right')
+      }
+
+      if (this.leftShrink || this.inputShrink || this.rightShrink) {
+        classList.push('has-shrink')
       }
 
       return notEmpty(classList).join(' ')
-    }*/
+    },
+
+    leftClasses() {
+      let classList = []
+
+      classList.push('left')
+
+      if (this.leftShrink) {
+        classList.push(`shrink-${this.leftShrink}`)
+      }
+
+      return notEmpty(classList).join(' ')
+    },
+
+    inputClasses() {
+      let classList = []
+
+      classList.push('input')
+
+      if (this.inputShrink) {
+        classList.push(`shrink-${this.inputShrink}`)
+      }
+
+      return notEmpty(classList).join(' ')
+    },
+
+    rightClasses() {
+      let classList = []
+
+      classList.push('right')
+
+      if (this.rightShrink) {
+        classList.push(`shrink-${this.rightShrink}`)
+      }
+
+      return notEmpty(classList).join(' ')
+    },
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.InputGroup.fix-label.has-right:not(.has-left) .right,
+.InputGroup.fix-label.has-left:not(.has-right) .left {
+  position: relative;
+  top: 17px;
+}
+
 .InputGroup {
   display: flex;
 
-  > * {
-    display: inline-block;
+  &.normal {
+    height: 40px;
+
+    * {
+      max-height: 40px;
+    }
+  }
+
+  &.small {
+    height: 30px;
+
+    * {
+      max-height: 30px;
+    }
+  }
+
+  &.has-shrink > * {
     flex-shrink: 0;
-    max-height: 40px;
+  }
 
-    &:not(.inputWrapper) {
-      align-self: flex-end;
-    }
-
-    &:first-child:not(.inputWrapper) {
-      border-radius: 3px 0 0 3px;
-    }
-
-    &:last-child:not(.inputWrapper) {
-      border-radius: 0 3px 3px 0;
-    }
+  > * {
+    display: flex;
+    align-items: center;
+    height: 100%;
   }
 }
 </style>

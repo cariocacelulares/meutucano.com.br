@@ -1,12 +1,12 @@
 <template>
-  <div class="Help">
-    <Icon name="question-circle" size="big" :class="classList" />
+  <div :class="classList">
+    <Icon name="question-circle" size="big" :class="iconClass" />
 
     <div class="help-box">
       <Icon name="info" />
       <div>
         <span>{{ title }}</span>
-        <p>{{ message }}</p>
+        <p v-if="message">{{ message }}</p>
       </div>
     </div>
   </div>
@@ -34,10 +34,22 @@ export default {
     classList() {
       let classList = []
 
+      classList.push('Help')
+
+      if (!this.message) {
+        classList.push('no-message')
+      }
+
+      return notEmpty(classList).join(' ')
+    },
+
+    iconClass() {
+      let classList = []
+
       classList.push(`text-${this.color}`)
 
       return notEmpty(classList).join(' ')
-    }
+    },
   },
 }
 </script>
@@ -63,11 +75,43 @@ export default {
     z-index: 999;
   }
 
+  &:not(.no-message) {
+    .help-box {
+      top: -12px;
+      left: 45px;
+      height: 58px;
+
+      &:before {
+        top: 6px;
+        left: -15px;
+        border-top: 15px solid transparent;
+        border-bottom: 15px solid transparent;
+        border-right: 15px solid #DAEFFD;
+      }
+
+      .Icon {
+        padding-top: 4px;
+      }
+    }
+  }
+
+  &.no-message {
+    .help-box {
+      top: -10px;
+      left: 40px;
+
+      &:before {
+        top: 8px;
+        left: -10px;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-right: 10px solid #DAEFFD;
+      }
+    }
+  }
+
   .help-box {
     position: absolute;
-    top: -11px;
-    left: 45px;
-    height: 58px;
     padding: 10px 15px;
     border-radius: 4px;
     color: #2B6A94;
@@ -84,18 +128,12 @@ export default {
     &:before {
       content: '';
       position: absolute;
-      top: 6px;
-      left: -15px;
-      border-top: 15px solid transparent;
-      border-bottom: 15px solid transparent;
-      border-right: 15px solid #DAEFFD;
     }
 
     .Icon {
       margin-right: 10px;
       font-size: 14px;
       align-self: flex-start;
-      padding-top: 4px;
     }
 
     span {

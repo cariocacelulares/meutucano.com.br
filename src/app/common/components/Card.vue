@@ -1,6 +1,6 @@
 <template>
   <article :class="classList">
-    <header v-if="noHeader">
+    <header v-if="hasHeader">
       <div v-if="headerIcon || headerText">
         <Icon v-if="headerIcon" :name="headerIcon" />
         <h1>{{ headerText }}</h1>
@@ -30,10 +30,12 @@ export default {
       default: ''
     },
     headerIcon: {
-      type: String
+      type: String,
+      default: null
     },
     headerText: {
-      type: String
+      type: String,
+      default: null
     },
     loading: {
       type: Boolean,
@@ -66,8 +68,8 @@ export default {
       return notEmpty(classList).join(' ')
     },
 
-    noHeader() {
-      return (typeof(this.$slots.header) !== 'undefined' && this.$slots.header.length)
+    hasHeader() {
+      return (typeof(this.$slots.header) !== 'undefined' || this.headerText || this.headerIcon)
     },
   }
 }
@@ -84,7 +86,7 @@ export default {
   display: flex;
   flex-direction: column;
   color: $darker;
-  overflow: hidden;
+  // overflow: hidden;
 
   &.important {
     border-top: 5px solid $warning;

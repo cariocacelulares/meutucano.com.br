@@ -17,9 +17,11 @@
     </PageHeader>
     <ContentBox :boxed="true">
       <div class="grid-4 m-b-20">
-        <InputGroup>
-          <TInput v-model="sku" label="SKU" placeholder="Cód. único" slot="input" class="shrink-1" :disabled="!sku" />
-          <TButton size="big" color="info" slot="right" @click="generateSku" :disabled="!sku">
+        <InputGroup :input-shrink="1" :fix-label="true">
+          <TInput v-model="sku" label="SKU" placeholder="Cód. único" slot="input" />
+          <!-- <TInput v-model="sku" label="SKU" placeholder="Cód. único" slot="input" class="shrink-1" :disabled="!sku" /> -->
+          <TButton size="big" color="info" slot="right" @click="generateSku">
+          <!-- <TButton size="big" color="info" slot="right" @click="generateSku" :disabled="!sku"> -->
             <Icon name="refresh" text="Gerar" />
           </TButton>
         </InputGroup>
