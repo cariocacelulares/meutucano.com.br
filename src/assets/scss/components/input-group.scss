@@ -36,19 +36,19 @@
   }
 }
 
-.InputGroup.normal > * > .Icon {
+.InputGroup.normal .ig-container > * > .Icon {
   width: 40px;
   height: 40px;
   font-size: 18px !important;
 }
 
-.InputGroup.small > * > .Icon {
+.InputGroup.small .ig-container > * > .Icon {
   width: 30px;
   height: 30px;
   font-size: 14px !important;
 }
 
-.InputGroup > * > .Icon {
+.InputGroup .ig-container > * > .Icon {
   display: flex;
   justify-content: center;
   align-items: center;

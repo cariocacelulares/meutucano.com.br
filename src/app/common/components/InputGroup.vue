@@ -1,14 +1,17 @@
 <template>
   <label :class="classList">
-    <div v-if="hasLeft" :class="leftClasses">
-      <slot name="left"></slot>
+    <label v-if="label">{{ label }}</label>
+    <div class="ig-container">
+      <div v-if="hasLeft" :class="leftClasses">
+        <slot name="left"></slot>
+      </div>
+      <div v-if="hasInput" :class="inputClasses">
+        <slot name="input"></slot>
+      </div>
+      <div v-if="hasRight" :class="rightClasses">
+        <slot name="right"></slot>
+      </div>
     </div>
-    <div v-if="hasInput" :class="inputClasses">
-      <slot name="input"></slot>
-    </div>
-    <div v-if="hasRight" :class="rightClasses">
-      <slot name="right"></slot>
-  </div>
   </label>
 </template>
 
@@ -33,6 +36,10 @@ export default {
     },
     rightShrink: {
       type: Number,
+      default: null
+    },
+    label: {
+      type: String,
       default: null
     },
   },
@@ -119,6 +126,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '~style/vars';
+
 .InputGroup.fix-label.has-right:not(.has-left) .right,
 .InputGroup.fix-label.has-left:not(.has-right) .left {
   position: relative;
@@ -127,6 +136,7 @@ export default {
 
 .InputGroup {
   display: flex;
+  flex-direction: column;
 
   &.normal {
     height: 40px;
@@ -144,14 +154,27 @@ export default {
     }
   }
 
-  &.has-shrink > * {
+  &.has-shrink .ig-container > * {
     flex-shrink: 0;
   }
 
-  > * {
-    display: flex;
-    align-items: center;
-    height: 100%;
+  .ig-container {
+      display: flex;
+
+    > * {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+  }
+
+  > label {
+    display: block;
+    line-height: 1;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 12px;
+    color: $inputLabel;
   }
 }
 </style>

@@ -105,7 +105,7 @@ export default {
         left: -10px;
         border-top: 10px solid transparent;
         border-bottom: 10px solid transparent;
-        border-right: 10px solid #DAEFFD;
+        border-right: 10px solid $lightPrimary;
       }
     }
   }
@@ -114,8 +114,8 @@ export default {
     position: absolute;
     padding: 10px 15px;
     border-radius: 4px;
-    color: #2B6A94;
-    background-color: #DAEFFD;
+    color: $darkPrimary;
+    background-color: $lightPrimary;
     transition: all linear 200ms;
     display: flex;
     align-items: center;

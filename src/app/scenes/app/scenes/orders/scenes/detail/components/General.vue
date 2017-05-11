@@ -131,12 +131,10 @@
       <Card header-icon="file-code-o" header-text="44318/1" :no-footer-sep="true">
         <div slot="header">
           <a href="#" class="text-bold">
-            <Icon name="print" text="Imprimir" color="link" />
+            <Icon name="print" color="link" />
           </a>
           <VSeparator :height="10" :spacing="10" />
-          <a href="#">
-            <Icon name="times" />
-          </a>
+          <Icon name="times" />
         </div>
 
         <div class="grid-2 no-card-spacing">
@@ -151,27 +149,25 @@
           </div>
         </div>
 
-        <div slot="footer" class="devolution">
-          <span>Devolução em <b>08/02/1995</b></span>
-          <div>
-            <a href="#"><Icon name="print" /></a>
-            <VSeparator :height="10" :spacing="10" />
-            <a href="#">
+        <template slot="footer">
+          <div class="devolution">
+            <span>Devolução em <b>08/02/1995</b></span>
+            <div>
+              <a href="#"><Icon name="print" /></a>
+              <VSeparator :height="10" :spacing="10" />
               <Icon name="times" />
-            </a>
+            </div>
           </div>
-        </div>
+        </template>
       </Card>
 
       <Card header-icon="file-code-o" header-text="44318/1">
         <div slot="header">
           <a href="#">
-            <Icon name="print" text="Imprimir" color="link" />
+            <Icon name="print" color="link" />
           </a>
           <VSeparator :height="10" :spacing="10" />
-          <a href="#">
-            <Icon name="times" />
-          </a>
+          <Icon name="times" />
         </div>
 
         <div class="grid-2">
@@ -194,12 +190,10 @@
       <Card header-icon="truck" header-text="PN717347694BR">
         <div slot="header">
           <a href="#">
-            <Icon name="print" text="Imprimir" color="link" />
+            <Icon name="print" color="link" />
           </a>
           <VSeparator :height="10" :spacing="10" />
-          <a href="#">
-            <Icon name="times" />
-          </a>
+          <Icon name="times" />
         </div>
 
         <div class="grid-3">
@@ -218,9 +212,9 @@
 
         <div slot="footer" class="card-footer">
           <div>
-            <a href="#" class="disabled"><Icon name="exchange" /></a>
-            <a href="#" disabled><Icon name="undo" /></a>
-            <a href="#"><Icon name="exclamation-triangle" /></a>
+            <a href="#" @click.prevent="openLogistic" class="disabled"><Icon name="exchange" /></a>
+            <a href="#" @click.prevent="openDevolution"><Icon name="undo" /></a>
+            <a href="#" @click.prevent="openIssue"><Icon name="exclamation-triangle" /></a>
           </div>
 
           <div>
@@ -233,12 +227,10 @@
       <Card header-icon="truck" header-text="PN717347694BR">
         <div slot="header">
           <a href="#">
-            <Icon name="print" text="Imprimir" color="link" />
+            <Icon name="print" color="link" />
           </a>
           <VSeparator :height="10" :spacing="10" />
-          <a href="#">
-            <Icon name="times" />
-          </a>
+          <Icon name="times" />
         </div>
 
         <div class="grid-3">
@@ -256,15 +248,43 @@
         </div>
       </Card>
     </div>
+
+    <Devolution />
+    <Logistic />
+    <Issue />
   </ContentBox>
 </template>
 
 <script>
+import Devolution from './general/Devolution'
+import Logistic from './general/Logistic'
+import Issue from './general/Issue'
+
 export default {
+  components: {
+    Devolution,
+    Logistic,
+    Issue,
+  },
+
   data() {
     return {
       loading: false
     }
+  },
+
+  methods: {
+    openDevolution() {
+      this.$root.$emit('show::modal-Devolution')
+    },
+
+    openLogistic() {
+      this.$root.$emit('show::modal-Logistic')
+    },
+
+    openIssue() {
+      this.$root.$emit('show::modal-Issue')
+    },
   },
 }
 </script>
@@ -328,6 +348,10 @@ $gap: 20px;
       color: $white;
       background-color: #C9403C;
       box-shadow: $defaultShadow;
+
+      a {
+        color: $white;
+      }
     }
   }
 
@@ -346,6 +370,10 @@ $gap: 20px;
       .disabled,
       [disabled] {
         opacity: .5;
+      }
+
+      a {
+        color: $dark;
       }
     }
   }

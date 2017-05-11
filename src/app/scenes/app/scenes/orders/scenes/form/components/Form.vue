@@ -19,7 +19,7 @@
       </TButton>
     </PageHeader>
 
-    <ContentBox :discret="true" :class="{ grid: true, loading: loading }">
+    <ContentBox :boxed="!id" :discret="true" :class="{ grid: true, create: !id, loading: loading }">
       <div>
         <Card header-icon="user" header-text="Informações do cliente">
           <div v-if="true" class="grid-2">
@@ -143,9 +143,9 @@
         </Card>
       </div>
 
-      <VSeparator :spacing="0" />
+      <VSeparator v-if="id" :spacing="0" />
 
-      <div>
+      <div v-if="id">
         <CommentsBox :form="false" :only-important="true" />
       </div>
     </ContentBox>
@@ -226,9 +226,11 @@ export default {
 $gap: 20px;
 
 .ContentBox {
-  grid-template-columns: auto 1px 440px;
-  grid-gap: $gap;
-  grid-auto-flow: row;
+  &:not(.create) {
+    grid-template-columns: auto 1px 440px;
+    grid-gap: $gap;
+    grid-auto-flow: row;
+  }
 
   .card-data.address * {
     color: $dark;

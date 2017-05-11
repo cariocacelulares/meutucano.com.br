@@ -1,24 +1,38 @@
 <template>
   <div class="modal-overlay" @click="close" v-show="show">
-    <div class="modal-container" @click.stop>
-      <header v-if="title || icon">
-        <h1>
-          <Icon v-if="icon" :name="icon" />
-          {{ title }}
-        </h1>
-        <button type="button" class="close-modal" @click="close">
-          <Icon name="close" color="dark" />
-        </button>
-      </header>
-      <article>
-        <slot></slot>
-      </article>
-      <footer>
-        <TButton v-if="cancel" @click="canceled" :color="cancelColor"
+    <div :class="{
+      'modal-container': true,
+      'has-left': hasLeft,
+      'has-right': hasRight,
+    }" @click.stop>
+      <aside v-if="hasLeft" class="left">
+        <slot name="left"></slot>
+      </aside>
+
+      <div class="modal-content">
+        <header v-if="title || icon">
+          <h1>
+            <Icon v-if="icon" :name="icon" />
+            {{ title }}
+          </h1>
+          <button type="button" class="close-modal" @click="close">
+            <Icon name="close" color="dark" />
+          </button>
+        </header>
+        <article>
+          <slot></slot>
+        </article>
+        <footer>
+          <TButton v-if="cancel" @click="canceled" :color="cancelColor"
           :text="cancelTextColor" :leftIcon="cancelIcon">{{ cancelText }}</TButton>
-        <TButton v-if="confirm" @click="confirmed" :color="confirmColor"
+          <TButton v-if="confirm" @click="confirmed" :color="confirmColor"
           :text="confirmTextColor" :leftIcon="confirmIcon" class="m-l-10">{{ confirmText }}</TButton>
-      </footer>
+        </footer>
+      </div>
+
+      <aside v-if="hasRight" class="right">
+        <slot name="right"></slot>
+      </aside>
     </div>
   </div>
 </template>
@@ -114,6 +128,16 @@ export default {
     }
   },
 
+  computed: {
+    hasLeft() {
+      return (typeof(this.$slots.left) !== 'undefined')
+    },
+
+    hasRight() {
+      return (typeof(this.$slots.right) !== 'undefined')
+    },
+  },
+
   methods: {
     close() {
       if (this.onClose) {
@@ -183,16 +207,45 @@ export default {
   justify-content: center;
 
   .modal-container {
-    position: relative;
     max-width: 100vw;
     width: 600px;
     max-height: calc(100vh - 20px);
-    padding: 20px;
     box-shadow: $defaultShadow;
     border-radius: $borderRadius;
     background-color: $white;
     overflow-y: auto;
     z-index: 999;
+
+    &.has-left,
+    &.has-right {
+      display: grid;
+      grid-gap: 0;
+      grid-auto-flow: row;
+      width: 950px;
+    }
+
+    &.has-left.has-right {
+      grid-template-columns: 200px auto 200px;
+    }
+
+    &.has-left:not(.has-right) {
+      grid-template-columns: auto 350px;
+    }
+
+    &.has-right:not(.has-left) {
+      grid-template-columns: auto 350px;
+    }
+
+    .left,
+    .right {
+      padding: 20px;
+      background-color: $lighter;
+    }
+
+    .modal-content {
+      position: relative;
+      padding: 20px;
+    }
 
     header {
       display: flex;
