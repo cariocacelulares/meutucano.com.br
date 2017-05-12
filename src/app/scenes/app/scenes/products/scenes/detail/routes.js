@@ -12,7 +12,6 @@ export default [
       breadcrumb: 'Detalhe'
     },
     redirect: '/products/detail/:sku/general',
-    props: (route) => ({ productSku: route.params.sku }),
     children: [
       {
         path: '/products/detail/:sku/general',

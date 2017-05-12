@@ -1,6 +1,6 @@
 <template>
-  <ContentBox :discret="true" :boxed="true" :class="{ grid: true, loading: loading }">
-    <CommentsBox/>
+  <ContentBox :discret="true" :boxed="true" :class="{ loading: loading }">
+    <CommentsBox :order="id" />
   </ContentBox>
 </template>
 
@@ -10,7 +10,13 @@ export default {
     return {
       loading: false,
     }
-  }
+  },
+
+  computed: {
+    id() {
+      return this.$route.params.id
+    }
+  },
 }
 </script>
 

@@ -37,5 +37,14 @@ export default {
     }
 
     return value
+  },
+
+  /**
+   * Data diff for humans
+   * @param  {String | Date} date
+   * @return {String}
+   */
+  humanDiff: (date) => {
+    return moment(date).fromNow()
   }
 }

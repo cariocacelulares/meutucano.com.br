@@ -4,17 +4,17 @@
       <Card header-icon="info" header-text="Detalhes">
         <div class="card-data">
           <span>Data do pedido</span>
-          <strong>08/02/1995</strong>
+          <strong>{{ order.created_at | date }}</strong>
         </div>
 
         <div class="card-data">
           <span>Método de pagamento</span>
-          <strong>Cartão de Crédito (12x)</strong>
+          <strong>{{ order.payment_method }} ({{ order.installments }}x)</strong>
         </div>
 
         <div class="card-data">
           <span>Método de envio</span>
-          <strong>Correios PAC</strong>
+          <strong>{{ order.shipment_method }}</strong>
         </div>
       </Card>
 
@@ -22,32 +22,33 @@
         <div class="grid-2 row-gap-0">
           <div class="card-data">
             <span>Nome do cliente</span>
-            <strong><a href="#">Ceiton Souza</a></strong>
+            <strong><a href="#">{{ order.customer.name }}</a></strong>
           </div>
 
           <div class="card-data">
             <span>Documento</span>
-            <strong>048.137.609.70 <Icon name="paperclip"/></strong>
+            <strong>{{ order.customer.taxvat }} <Icon name="paperclip"/></strong>
           </div>
 
           <div>
             <div class="card-data">
               <span>E-mail de contato</span>
-              <strong>cleiton7souza@gmail.com</strong>
+              <strong>{{ order.customer.email }}</strong>
             </div>
 
             <div class="card-data span-2">
               <span>Telefone</span>
-              <strong>(47) 3521-3183<!--b><br/>(47) 98898-3927</b--></strong>
+              <strong>{{ order.customer.phone }}<!--b><br/>(47) 98898-3927</b--></strong>
             </div>
           </div>
 
           <div class="card-data address">
             <span>
-              Rua Padre Anchieta #200 - Canoas<br/>
+              {{ order.customer_address.street }}
+              <!-- Rua Padre Anchieta #200 - Canoas<br/>
               Rio do Sul / SC<br/>
               89160-000<br/>
-              Sala 201
+              Sala 201 -->
             </span>
           </div>
         </div>
@@ -65,60 +66,50 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td><a href="#">630</a></td>
+            <tr v-for="order_product in order.order_products">
+              <td><a href="#">{{ order_product.product.sku }}</a></td>
               <td class="text-left">
-                <p>Fone de ouvido Multilaser Pulse Fun Bluetooth PH218 Azul/Verde</p>
-                <b>CA000000000000251</b>
+                <p>{{ order_product.product.title }}</p>
+                <b>{{ order_product.product_serial.serial }}</b>
               </td>
-              <td>R$119,90</td>
-              <td>2</td>
-              <td>R$238,80</td>
-            </tr>
-            <tr>
-              <td><a href="#">630</a></td>
-              <td class="text-left">
-                <p>Fone de ouvido Multilaser Pulse Fun Bluetooth PH218 Azul/Verde</p>
-                <b>CA000000000000251</b>
-              </td>
-              <td>R$119,90</td>
-              <td>2</td>
-              <td>R$238,80</td>
+              <td>{{ order_product.price | money }}</td>
+              <td>falta</td>
+              <td>price * qty</td>
             </tr>
           </tbody>
         </table>
         <div class="table-values">
           <div class="card-data">
             <span>Subtotal</span>
-            <strong>R$1567,90</strong>
+            <strong>falta</strong>
           </div>
 
           <span class="signal">+</span>
 
           <div class="card-data">
             <span>Valor de frete</span>
-            <strong>R$13,90</strong>
+            <strong>{{ order.shipment_cost | money }}</strong>
           </div>
 
           <span class="signal">+</span>
 
           <div class="card-data">
             <span>Taxas</span>
-            <strong>R$24,00</strong>
+            <strong>falta</strong>
           </div>
 
           <span class="signal">-</span>
 
           <div class="card-data">
             <span>Descontos</span>
-            <strong>R$0,00</strong>
+            <strong>falta</strong>
           </div>
 
           <span class="signal">=</span>
 
           <div class="card-data">
             <span>Total</span>
-            <strong>R$2001,42</strong>
+            <strong>{{ order.total | money }}</strong>
           </div>
         </div>
       </Card>
@@ -269,7 +260,96 @@ export default {
 
   data() {
     return {
-      loading: false
+      loading: false,
+      order: {
+        id: null,
+    		customer_id: null,
+    		customer_address_id: null,
+    		shipment_cost: null,
+    		shipment_method: null,
+    		payment_method: null,
+    		installments: null,
+    		api_code: null,
+    		marketplace: null,
+    		total: null,
+    		estimated_delivery: null,
+    		status: null,
+    		cancel_protocol: null,
+    		holded: null,
+    		refunded: null,
+    		priority: null,
+    		created_at: null,
+    		updated_at: null,
+    		deleted_at: null,
+    		can_hold: null,
+    		can_prioritize: null,
+    		can_approve: null,
+    		can_cancel: null,
+    		count_on_stock: null,
+    		customer: {
+    			id: null,
+    			taxvat: null,
+    			mercadolivre_id: null,
+    			type: null,
+    			name: null,
+    			phone: null,
+    			email: null,
+    			document: null,
+    			created_at: null,
+    			updated_at: null,
+    		},
+    		customer_address: {
+    			id: null,
+    			customer_id: null,
+    			zipcode: null,
+    			street: null,
+    			number: null,
+    			complement: null,
+    			district: null,
+    			city: null,
+    			state: null,
+    			created_at: null,
+    			updated_at: null,
+    		},
+    		order_products: [
+    			{
+    				id: null,
+    				order_id: null,
+    				product_sku: null,
+    				depot_product_id: null,
+    				product_serial_id: null,
+    				price: null,
+    				created_at: null,
+    				updated_at: null,
+    				product: {
+    					sku: null,
+    					brand_id: null,
+    					line_id: null,
+    					title: null,
+    					ean: null,
+    					ncm: null,
+    					price: null,
+    					cost: null,
+    					condition: null,
+    					warranty: null,
+    					created_at: null,
+    					updated_at: null,
+    					deleted_at: null,
+    					reserved_stock: null,
+    					available_stock: null,
+    				},
+    				product_serial: {
+    					id: null,
+    					depot_product_id: null,
+    					serial: null,
+    					cost: null,
+    					created_at: null,
+    					updated_at: null,
+    					deleted_at: null,
+    				}
+    			}
+        ]
+      }
     }
   },
 
@@ -285,6 +365,17 @@ export default {
     openIssue() {
       this.$root.$emit('show::modal-Issue')
     },
+  },
+
+  mounted() {
+    axios.get(`orders/${this.$route.params.id}`).then(
+      (response) => {
+        this.order = response.data
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
   },
 }
 </script>

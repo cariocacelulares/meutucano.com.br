@@ -34,18 +34,18 @@
         </thead>
         <tbody slot="body">
           <tr v-for="order in orders">
-            <td>{{ order.codigo_marketplace || order.id }}</td>
+            <td>{{ order.api_code || order.id }}</td>
             <td>{{ order.marketplace }}</td>
-            <td class="text-left text-bold">{{ order.cliente.nome }}</td>
-            <td>{{ order.total }}</td>
-            <td>{{ order.created_at }}</td>
+            <td class="text-left text-bold">{{ order.customer.name }}</td>
+            <td>{{ order.total | money }}</td>
+            <td>{{ order.created_at | date }}</td>
             <td>
               <TLabel :color="order.status.color" text="white">
                 {{ order.status.description }}
               </TLabel>
             </td>
             <td>
-              <router-link :to="{ name: 'orders.list' }">
+              <router-link :to="{ name: 'orders.detail', params: { id: order.id } }">
                 <Icon name="eye" />
               </router-link>
             </td>

@@ -5,17 +5,17 @@ import Calls from './components/Calls'
 
 export default [
   {
-    path: '/orders/detail',
+    path: '/orders/detail/:id',
     component: Detail,
     name: 'orders.detail',
     meta: {
       auth: true,
       breadcrumb: 'Detalhe'
     },
-    redirect: '/orders/detail/general',
+    redirect: '/orders/detail/:id/general',
     children: [
       {
-        path: '/orders/detail/general',
+        path: '/orders/detail/:id/general',
         component: General,
         name: 'orders.detail.general',
         meta: {
@@ -24,7 +24,7 @@ export default [
         },
       },
       {
-        path: '/orders/detail/comments',
+        path: '/orders/detail/:id/comments',
         component: Comments,
         name: 'orders.detail.comments',
         meta: {
@@ -33,7 +33,7 @@ export default [
         },
       },
       {
-        path: '/orders/detail/calls',
+        path: '/orders/detail/:id/calls',
         component: Calls,
         name: 'orders.detail.calls',
         meta: {

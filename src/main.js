@@ -8,6 +8,7 @@ import VueBreadcrumbs  from 'vue2-breadcrumbs'
 
 import Helpers from './imports/helpers'
 import Axios from './imports/axios'
+import moment from 'moment'
 
 import { default as CommonTransformer } from 'common/transformer'
 
@@ -25,6 +26,8 @@ Object.keys(globalComponents).map((component) => {
  * Globals
  */
 window.Vue = Vue
+window.moment = moment
+moment.locale('pt-BR')
 
 /**
  * Breadcrumbs
@@ -109,6 +112,7 @@ Vue.directive('confirm', {
 
 Vue.filter('money', (value) => CommonTransformer.monetary(value))
 Vue.filter('date', (value) => CommonTransformer.date(value))
+Vue.filter('humanDiff', (value) => CommonTransformer.humanDiff(value))
 
 /* eslint-disable no-new */
 new Vue({

@@ -6,7 +6,7 @@
       </router-link>
     </li>
     <li>
-      <router-link :to="{ name: 'orders.list' }">
+      <router-link :to="{ name: 'orders' }">
         <Icon name="list" text="Pedidos" />
       </router-link>
     </li>
@@ -16,7 +16,7 @@
       </a>
     </li>
     <li>
-      <router-link :to="{ name: 'products.list' }">
+      <router-link :to="{ name: 'products' }">
         <Icon name="futbol-o" text="Produtos" />
       </router-link>
     </li>

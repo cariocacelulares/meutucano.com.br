@@ -15,6 +15,7 @@
     "axios": "^0.16.0",
     "font-awesome": "^4.7.0",
     "lodash": "^4.17.4",
+    "moment": "^2.18.1",
     "vue": "^2.2.2",
     "vue-progressbar": "^0.7.1",
     "vue-router": "^2.2.0",

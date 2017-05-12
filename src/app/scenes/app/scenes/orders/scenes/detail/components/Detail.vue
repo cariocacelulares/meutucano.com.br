@@ -27,12 +27,12 @@
             </TButton>
 
             <VSeparator :spacing="20" :height="40" />
-            <FeaturedValue label="Mercado Livre" value="03-102973901" color="darker" />
+            <FeaturedValue :label="order.marketplace" :value="order.api_code" color="darker" />
 
-            <VSeparator v-if="reference" :spacing="20" :height="40" />
+            <VSeparator :spacing="20" :height="40" />
             <!-- <TLabel color="primary">Aprovado</TLabel> -->
-            <TLabel color="danger">Cancelado (Reembolso)</TLabel>
-            <FeaturedValue label="Protocolo" value="123817189" color="darker" class="m-l-20" />
+            <TLabel color="danger">{{ order.status }} <span v-if="order.refund">&nbsp;(Reembolso)</span></TLabel>
+            <FeaturedValue v-if="order.cancel_protocol" label="Protocolo" :value="order.cancel_protocol" color="darker" class="m-l-20" />
           </div>
 
           <div>
@@ -56,25 +56,26 @@ export default {
 
   data() {
     return {
-      sku: 1384,
-      title: 'Motorola Moto G 2ª Geração XT1068 8GB Preto	',
-      reference: 'CA1384',
+      order: {
+        id: null,
+        marketplace: null,
+        api_code: null,
+        status: null,
+        refund: null,
+        cancel_protocol: null,
+      },
     }
   },
 
-  beforeRouteEnter(to, from, next) {
-    // if (to.name == 'orders.create') {
-      next()
-    /*} else {
-      axios.get('product/' + to.params.sku).then(
-        (response) => {
-          next()
-        },
-        (error) => {
-          next({ name: 'orders.list' })
-        }
-      )
-    }*/
+  mounted() {
+    axios.get(`orders/${this.$route.params.id}`).then(
+      (response) => {
+        this.order = response.data
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
   },
 }
 </script>

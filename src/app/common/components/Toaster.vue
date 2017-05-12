@@ -73,7 +73,7 @@ export default {
 @import '~style/vars';
 
 #toaster-container {
-  position: absolute;
+  position: fixed;
   top: 20px;
   right: 20px;
   color: $white;
