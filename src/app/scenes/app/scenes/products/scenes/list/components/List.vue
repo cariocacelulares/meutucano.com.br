@@ -33,8 +33,8 @@
             <td>{{ product.sku }}</td>
             <td>{{ product.ean }}</td>
             <td class="text-left text-bold">{{ product.title }}</td>
-            <td>{{ product.cost }}</td>
-            <td>{{ product.price }}</td>
+            <td>{{ product.cost | money }}</td>
+            <td>{{ product.price | money }}</td>
             <td>{{ product.condition }}</td>
             <td>
               <!-- <Badge color="default" text="darker" v-if="product.estoque.pendente">{{ product.estoque.pendente }}</Badge> -->

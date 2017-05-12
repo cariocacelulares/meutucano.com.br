@@ -9,6 +9,8 @@ import VueBreadcrumbs  from 'vue2-breadcrumbs'
 import Helpers from './imports/helpers'
 import Axios from './imports/axios'
 
+import { default as CommonTransformer } from 'common/transformer'
+
 import * as layoutComponents from 'common/layout'
 Object.keys(layoutComponents).map((component) => {
   Vue.component(component, layoutComponents[component])
@@ -104,6 +106,9 @@ Vue.directive('confirm', {
     el.removeEventListener('click', el.handleClick)
   }
 })
+
+Vue.filter('money', (value) => CommonTransformer.monetary(value))
+Vue.filter('date', (value) => CommonTransformer.date(value))
 
 /* eslint-disable no-new */
 new Vue({

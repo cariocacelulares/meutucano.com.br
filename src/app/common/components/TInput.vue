@@ -4,12 +4,14 @@
     <Icon v-if="leftIcon" :name="leftIcon" classes="leftIcon" :size="size" color="dark" />
     <input :id="`input-${_uid}`" :type="type" :class="classList" :required="required"
       :placeholder="placeholder" :value="value" :min="min" :max="max" :step="step"
-      @input="updateValue($event.target.value)" :disabled="disabled" />
+      :disabled="disabled" />
+      <!-- @input="updateValue($event.target.value)" @blur="formatValue" ref="input" :disabled="disabled" /> -->
     <Icon v-if="rightIcon" :name="rightIcon" classes="rightIcon" :size="size" color="dark" />
   </label>
 </template>
 
 <script>
+import { default as CommonTransformer } from 'common/transformer'
 import { isEmpty } from 'lodash'
 
 export default {
@@ -70,6 +72,10 @@ export default {
       type: Boolean,
       default: false
     },
+    /*filter: {
+      type: String,
+      default: null
+    },*/
   },
 
   data() {
@@ -116,13 +122,36 @@ export default {
   },
 
   methods: {
+    /*format(data) {
+      data = data ? data : ''
+
+      if (this.filter) {
+        if (this.filter == 'money') {
+          return CommonTransformer.monetary(data)
+        } else if (this.filter == 'date') {
+          return CommonTransformer.date(data)
+        }
+      }
+
+      return data
+    },*/
+
     updateValue(value) {
       if (!isEmpty(value) || this.oldValue != value) {
-        this.$emit('input', value);
-        this.oldValue = value
+        // this.$emit('input', this.format(value))
+        this.$emit('input', value)
+        this.oldValue = this.format(value)
       }
-    }
-  }
+    },
+
+    /*formatValue() {
+      this.$refs.input.value = this.format(this.value)
+    },*/
+  },
+
+  mounted() {
+    // this.formatValue()
+  },
 }
 </script>
 

@@ -9,8 +9,8 @@ export default {
       parseParams(context.getters['global/tableList/GET_PARAMS'])
     )
       .then(
-          (response) => {
-          const data = response.data.data;
+        (response) => {
+          const data = response.data;
 
           context.commit(`${namespace}/RECEIVED`, data.data)
 
