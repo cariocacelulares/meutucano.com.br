@@ -78,8 +78,8 @@
 </template>
 
 <script>
-import AddDepot from './AddDepot'
-import TransferStock from './TransferStock'
+import AddDepot from './depots/AddDepot'
+import TransferStock from './depots/TransferStock'
 
 export default {
   components: {

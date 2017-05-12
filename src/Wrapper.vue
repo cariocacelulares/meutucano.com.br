@@ -71,7 +71,7 @@ export default {
       (response) => {
         this.$Progress.finish()
 
-        return response
+        return response.data
       },
       (error) => {
         this.$Progress.fail()

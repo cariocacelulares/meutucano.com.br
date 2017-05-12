@@ -4,53 +4,53 @@
       <Card header-icon="info" header-text="Detalhes">
         <div class="card-data">
           <span>Título</span>
-          <strong>{{ title }}</strong>
+          <strong>{{ product.title }}</strong>
         </div>
 
         <div class="grid-3 m-t-20">
           <div class="card-data">
             <span>EAN</span>
-            <strong>{{ ean }}</strong>
+            <strong>{{ product.ean }}</strong>
           </div>
 
           <div class="card-data">
             <span>Marca</span>
-            <strong>{{ brand }}</strong>
+            <strong>{{ product.brand || 'falta' }}</strong>
           </div>
 
           <div class="card-data">
             <span>Linha</span>
-            <strong>{{ line }}</strong>
+            <strong>{{ product.line || 'falta' }}</strong>
           </div>
 
           <div class="card-data">
             <span>NCM</span>
-            <strong>{{ ncm }}</strong>
+            <strong>{{ product.ncm }}</strong>
           </div>
 
           <div class="card-data">
             <span>Tipo de unidade</span>
-            <strong>{{ unity }}</strong>
+            <strong>{{ product.unity || 'falta' }}</strong>
           </div>
 
           <div class="card-data">
             <span>Origem</span>
-            <strong>{{ origin }}</strong>
+            <strong>{{ product.origin || 'falta' }}</strong>
           </div>
 
           <div class="card-data">
             <span>Condição</span>
-            <strong>{{ condition }}</strong>
+            <strong>{{ product.condition }}</strong>
           </div>
 
           <div class="card-data">
             <span>Custo</span>
-            <strong>{{ cost }}</strong>
+            <strong>{{ product.cost }}</strong>
           </div>
 
           <div class="card-data">
             <span>Valor</span>
-            <strong>{{ value }}</strong>
+            <strong>{{ product.price }}</strong>
           </div>
         </div>
       </Card>
@@ -59,17 +59,17 @@
         <div class="grid-3">
           <div class="card-data">
             <span>Em estoque</span>
-            <strong>{{ stock.available }}</strong>
+            <strong>{{ stock/*.available*/ }}</strong>
           </div>
 
           <div class="card-data">
             <span>Com defeito</span>
-            <strong>{{ stock.defect }}</strong>
+            <strong>{{ stock/*.defect*/ }}</strong>
           </div>
 
           <div class="card-data">
             <span>Baixados</span>
-            <strong>{{ stock.dropped }}</strong>
+            <strong>{{ stock/*.dropped*/ }}</strong>
           </div>
         </div>
       </Card>
@@ -100,28 +100,28 @@
 
         <div class="card-data">
           <span>Fornecedor</span>
-          <strong>{{ last_entry.supplier }}</strong>
+          <strong>{{ last_entry/*.supplier*/ }}</strong>
         </div>
 
         <div class="grid-2 m-t-20">
           <div class="card-data">
             <span>Data</span>
-            <strong>{{ last_entry.date }}</strong>
+            <strong>{{ last_entry/*.date*/ }}</strong>
           </div>
 
           <div class="card-data">
             <span>Quantidade</span>
-            <strong>{{ last_entry.quantity }}</strong>
+            <strong>{{ last_entry/*.quantity*/ }}</strong>
           </div>
 
           <div class="card-data">
             <span>Custo</span>
-            <strong>{{ last_entry.cost }}</strong>
+            <strong>{{ last_entry/*.cost*/ }}</strong>
           </div>
 
           <div class="card-data">
             <span>Total</span>
-            <strong>{{ last_entry.total }}</strong>
+            <strong>{{ last_entry/*.total*/ }}</strong>
           </div>
         </div>
 
@@ -142,27 +142,17 @@ export default {
   },
 
   mounted() {
-    setTimeout(() => {
+    axios.get(`products/${this.$route.params.sku}`).then(
+      (response) => {
         this.loading = false
+        this.product = response.data
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
 
-        this.sku = 1384
-        this.title = 'Motorola Moto G 2ª Geração XT1068 8GB Preto'
-        this.reference = 'CA1384'
-        this.ean = '5616515616515'
-        this.ncm = '45645645'
-        this.brand = 'Harman Kardon'
-        this.line = 'Smartphones'
-        this.unity = 'UN'
-        this.origin = '0 - Nacional'
-        this.condition = 'Novo'
-        this.cost = 'R$57,54'
-        this.value = 'R$293,90'
-        this.stock = {
-          available: '243 unidades',
-          defect: '12 unidades',
-          dropped: '43 unidades',
-        }
-
+    setTimeout(() => {
         this.graphs.sold = [32, 41, 33, 84, 65]
         this.graphs.cost = [12, 21, 8, 18, 33]
         this.graphs.channel = [
@@ -187,15 +177,6 @@ export default {
             color: '#F5E135',
           },
         ]
-
-        this.last_entry = {
-          id: 123,
-          supplier: 'Carioca Celulares Ltda Me',
-          date: '09/04/2017',
-          quantity: 1230,
-          cost: 'R$67,23',
-          total: 'R$82.692,90',
-        }
 
         this.$refs.salesHistory.addSeries({
           data: this.graphs.sold
@@ -336,55 +317,16 @@ export default {
 
       loading: true,
 
-      sku: null,
-      title: null,
-      reference: null,
-      ean: null,
-      ncm: null,
-      brand: null,
-      line: null,
-      unity: null,
-      origin: null,
-      condition: null,
-      cost: null,
-      value: null,
-      stock: {
-        available: null,
-        defect: null,
-        dropped: null,
-      },
+      product: {},
+      stock: {},
+      last_entry: {},
+
       graphs: {
         sold: [],
         cost: [],
         channel: [],
       },
-      last_entry: {
-        id: null,
-        supplier: null,
-        date: null,
-        quantity: null,
-        cost: null,
-        total: null,
-      },
     }
-  },
-
-  computed() {
-  },
-
-  beforeRouteEnter(to, from, next) {
-    // if (to.name == 'products.create') {
-      next()
-    /*} else {
-      axios.get('product/' + to.params.sku).then(
-        (response) => {
-          next()
-        },
-        (error) => {
-          next({ name: 'products.list' })
-        }
-      )
-    }*/
   },
 }
 </script>

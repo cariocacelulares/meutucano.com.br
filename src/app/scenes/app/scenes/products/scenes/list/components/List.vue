@@ -32,17 +32,17 @@
           <tr v-for="product in products">
             <td>{{ product.sku }}</td>
             <td>{{ product.ean }}</td>
-            <td class="text-left text-bold">{{ product.titulo }}</td>
+            <td class="text-left text-bold">{{ product.title }}</td>
             <td>{{ product.cost }}</td>
-            <td>{{ product.valor }}</td>
-            <td>{{ product.estado }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ product.condition }}</td>
             <td>
-              <Badge color="default" text="darker" v-if="product.estoque.pendente">{{ product.estoque.pendente }}</Badge>
-              <Badge v-if="product.estoque.pago">{{ product.estoque.pago }}</Badge>
-              {{ product.estoque.disponivel }}
+              <!-- <Badge color="default" text="darker" v-if="product.estoque.pendente">{{ product.estoque.pendente }}</Badge> -->
+              <Badge v-if="product.reserved_stock">{{ product.reserved_stock }}</Badge>
+              <!-- {{ product.estoque.disponivel }} -->0
             </td>
             <td>
-              <router-link :to="{ name: 'products.list' }">
+              <router-link :to="{ name: 'products.detail', params: { sku: product.sku } }">
                 <Icon name="eye" size="big" />
               </router-link>
             </td>

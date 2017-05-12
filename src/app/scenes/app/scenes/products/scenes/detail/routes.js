@@ -4,21 +4,18 @@ import Depots from './components/Depots'
 
 export default [
   {
-    // path: '/products/detail/:sku',
-    path: '/products/detail',
+    path: '/products/detail/:sku',
     component: Detail,
     name: 'products.detail',
     meta: {
       auth: true,
       breadcrumb: 'Detalhe'
     },
-    redirect: '/products/detail/general',
-    // props: (route) => ({ productSku: route.params.sku })
-    //
+    redirect: '/products/detail/:sku/general',
+    props: (route) => ({ productSku: route.params.sku }),
     children: [
       {
-        // path: '/products/detail/:sku/general',
-        path: '/products/detail/general',
+        path: '/products/detail/:sku/general',
         component: General,
         name: 'products.detail.general',
         meta: {
@@ -27,8 +24,7 @@ export default [
         },
       },
       {
-        // path: '/products/detail/:sku/depots',
-        path: '/products/detail/depots',
+        path: '/products/detail/:sku/depots',
         component: Depots,
         name: 'products.detail.depots',
         meta: {

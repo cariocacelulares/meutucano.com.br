@@ -1,17 +1,6 @@
 <template>
   <div>
-    <PageHeader :tabs="[
-    {
-      text: 'Informações gerais',
-      active: true,
-      link: { name: 'products.detail.general' }
-      },
-      {
-        text: 'Depósitos',
-        label: 3,
-        link: { name: 'products.detail.depots' }
-        },
-        ]">
+    <PageHeader :tabs="tabs">
         <div slot="left" class="left">
           <TButton size="big" color="light" text="dark" :back="true" class="m-r-10">
             <Icon name="angle-left" />
@@ -26,10 +15,10 @@
           </TButton>
 
           <VSeparator :spacing="20" :height="40" />
-          <FeaturedValue label="SKU" :value="sku" color="darker" />
+          <FeaturedValue label="SKU" :value="product.sku" color="darker" />
 
-          <VSeparator v-if="reference" :spacing="20" :height="40" />
-          <FeaturedValue v-if="reference" label="Referência" :value="reference" color="darker" />
+          <VSeparator v-if="product.reference" :spacing="20" :height="40" />
+          <FeaturedValue v-if="product.reference" label="Referência" :value="product.reference" color="darker" />
         </div>
 
         <TButton size="big" color="danger" type="submit" leftIcon="close">Excluir</TButton>
@@ -44,28 +33,46 @@
 export default {
   data() {
     return {
-      sku: 1384,
-      title: 'Motorola Moto G 2ª Geração XT1068 8GB Preto	',
-      reference: 'CA1384',
+      product: {
+        sku: null,
+        brand_id: null,
+        line_id: null,
+        title: null,
+        ean: null,
+        ncm: null,
+        price: null,
+        cost: null,
+        condition: null,
+        warranty: null,
+        created_at: null,
+        updated_at: null,
+        deleted_at: null,
+        reserved_stock: null,
+      },
+      tabs: [
+        {
+          text: 'Informações gerais',
+          active: true,
+          link: { name: 'products.detail.general' }
+        },
+        {
+          text: 'Depósitos',
+          label: 3,
+          link: { name: 'products.detail.depots' }
+        },
+      ],
     }
   },
 
-  computed() {
-  },
-
-  beforeRouteEnter(to, from, next) {
-    // if (to.name == 'products.create') {
-      next()
-    /*} else {
-      axios.get('product/' + to.params.sku).then(
-        (response) => {
-          next()
-        },
-        (error) => {
-          next({ name: 'products.list' })
-        }
-      )
-    }*/
+  mounted() {
+    axios.get(`products/${this.$route.params.sku}`).then(
+      (response) => {
+        this.product = response.data
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
   },
 }
 </script>
