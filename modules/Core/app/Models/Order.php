@@ -52,6 +52,11 @@ class Order extends \Eloquent
         'can_approve',
         'can_cancel',
         'count_on_stock'
+      ];
+
+    protected $casts = [
+        'total' => 'float',
+        'shipment_cost' => 'float'
     ];
 
     /**

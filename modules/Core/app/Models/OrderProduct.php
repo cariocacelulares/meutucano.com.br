@@ -21,6 +21,10 @@ class OrderProduct extends \Eloquent
         'product_serial_id',
         'order_invoice_devolution_id',
         'price',
+      ];
+
+    protected $casts = [
+      'price' => 'float'
     ];
 
     /**

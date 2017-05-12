@@ -49,6 +49,11 @@ class Product extends \Eloquent
         'available_stock'
     ];
 
+    protected $casts = [
+      'price' => 'float',
+      'cost'  => 'float'
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
