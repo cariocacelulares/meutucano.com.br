@@ -1,6 +1,8 @@
 <?php namespace Core\Http\Controllers\Depot;
 
 use Core\Models\Depot;
+use Core\Models\Product;
+use Core\Models\DepotProduct;
 use App\Http\Controllers\Controller;
 use Core\Http\Requests\DepotRequest as Request;
 use App\Http\Controllers\Rest\RestControllerTrait;
@@ -9,7 +11,11 @@ class DepotController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:depot_list', ['only' => ['index']]);
+        $this->middleware('permission:depot_list', ['only' => [
+            'index',
+            'listByAvailableFromProduct',
+            'listByAvailableToTransferFromProduct'
+        ]]);
         $this->middleware('permission:depot_show', ['only' => ['show']]);
         $this->middleware('permission:depot_create', ['only' => ['store']]);
         $this->middleware('permission:depot_update', ['only' => ['update']]);
@@ -24,6 +30,55 @@ class DepotController extends Controller
         $data = Depot::orderBy('priority', 'ASC');
 
         return tableListResponse($data);
+    }
+
+    /**
+     * List depots available for product
+     *
+     * @param int $sku
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function listByAvailableFromProduct($sku)
+    {
+        try {
+            $data = Depot::whereDoesntHave('depotProducts', function($query) use ($sku) {
+                $query->where('product_sku', '=', $sku);
+            })->get();
+
+            return listResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao obter recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Returns a list of product depots available to transfer from the given depot
+     *
+     * @param  int $depotProductId
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function listByTransferable($depotProductId)
+    {
+        try {
+            $depotProduct = DepotProduct::findOrFail($depotProductId);
+
+            $data = Depot::whereHas('depotProducts', function($query) use ($depotProduct) {
+                $query->where('product_sku', $depotProduct->product_sku)
+                    ->where('id', '!=', $depotProduct->id);
+            })->get();
+
+            return listResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao obter recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
     }
 
     /**

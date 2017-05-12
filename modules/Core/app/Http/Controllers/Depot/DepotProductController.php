@@ -1,31 +1,25 @@
-<?php namespace Core\Http\Controllers\Produto;
+<?php namespace Core\Http\Controllers\Depot;
 
+use Core\Models\Depot;
+use Core\Models\Pedido;
+use Core\Models\Product;
+use Core\Models\DepotProduct;
+use Core\Models\ProductSerial;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Input;
-use App\Http\Controllers\Rest\RestControllerTrait;
 use App\Http\Controllers\Controller;
-use Core\Models\Pedido;
-use Core\Models\Stock;
-use Core\Models\Stock\RemovalProduct;
-use Core\Models\Produto;
-use Core\Models\Produto\ProductStock;
-use Core\Models\Produto\ProductImei;
-use Core\Transformers\ProductStockTransformer;
+use Illuminate\Support\Facades\Input;
+use Core\Models\DepotWithdrawProduct;
 
-/**
- * Class ProductStockController
- * @package Core\Http\Controllers\Produto
- */
-class ProductStockController extends Controller
+class DepotProductController extends Controller
 {
-    use RestControllerTrait;
-
-    const MODEL = ProductStock::class;
-
     public function __construct()
     {
-        $this->middleware('permission:product_depot_list', ['only' => ['index']]);
+        $this->middleware('permission:product_depot_list', ['only' => [
+            'index',
+            'listByProduct',
+            'listByDepot'
+        ]]);
         $this->middleware('permission:product_depot_show', ['only' => ['show']]);
         $this->middleware('permission:product_depot_create', ['only' => ['store']]);
         $this->middleware('permission:product_depot_update', ['only' => ['update']]);
@@ -33,199 +27,96 @@ class ProductStockController extends Controller
     }
 
     /**
-     * Returns a list of ProductStock filtered by sku
+     * Returns a list of DepotProduct filtered by sku
      *
      * @param  int $sku
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listBySku($sku)
+    public function listByProduct($sku)
     {
-        $this->middleware('permission:product_depot_list');
-
         try {
-            $productStocks = ProductStock::with('stock')
-                ->join('stocks', 'stocks.slug', 'product_stocks.stock_slug')
+            $depotProducts = DepotProduct::with(['depot'])
                 ->where('product_sku', '=', $sku)
-                ->orderBy('stocks.priority', 'ASC')
+                ->orderBy('quantity', 'DESC')
                 ->get();
 
-            return $this->listResponse($productStocks);
+            return listResponse($depotProducts);
         } catch (\Exception $exception) {
-            return $this->clientErrorResponse([
+            return clientErrorResponse([
                 'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
 
     /**
-     * Returns a list of ProductStock filtered by slug
+     * Returns a list of DepotProduct filtered by slug
      *
      * @param  int $slug
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listBySlug($slug)
+    public function listByDepot($slug)
     {
-        $this->middleware('permission:product_depot_list');
-
         try {
-            $productStocks = ProductStock::with('product')
-                ->join('produtos', 'produtos.sku', 'product_stocks.product_sku')
-                ->where('stock_slug', '=', $slug)
+            $depotProducts = DepotProduct::with(['product'])
+                ->where('depot_slug', '=', $slug)
                 ->orderBy('quantity', 'DESC');
 
-            $productStocks = $this->handleRequest($productStocks);
-
-            return $this->listResponse(ProductStockTransformer::listBySlug($productStocks));
+            return tableListResponse($depotProducts);
         } catch (\Exception $exception) {
-            return $this->clientErrorResponse([
+            return clientErrorResponse([
                 'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
 
     /**
-     * Atualiza um recurso
-     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function store(Request $request)
+    {
+        try {
+            $data = DepotProduct::create($request->all());
+
+            return createdResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function update($id)
+    public function destroy($id)
     {
         try {
-            $productStock = ProductStock::findOrFail($id);
+            $data = DepotProduct::findOrFail($id);
+            $data->delete();
 
-            $data = Input::all();
-
-            if (isset($data['quantity'])
-                && $data['quantity'] !== $productStock->quantity
-                && $productStock->serial_enabled
-            ) {
-                unset($data['quantity']);
-            }
-
-            $productStock->fill($data);
-            $productStock->save();
-
-            return $this->showResponse($productStock);
+            return deletedResponse();
         } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
+            \Log::error(logMessage($exception, 'Erro ao excluir recurso'));
 
-            return $this->clientErrorResponse([
+            return clientErrorResponse([
                 'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
-    }
-
-    /**
-     * Returns a list of product stocks available to add to given product
-     *
-     * @param  int $sku
-     * @return Response
-     */
-    public function addOptions($sku)
-    {
-        $this->middleware('permission:product_depot_list');
-
-        $product = Produto::findOrFail($sku);
-
-        $options = Stock::whereDoesntHave('productStocks', function($query) use ($sku) {
-            $query->where('product_sku', '=', $sku);
-        })->get();
-
-        return $this->listResponse($options);
-    }
-
-    /**
-     * Returns a list of product stocks available to transfer from the given stock
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function transferOptions($id)
-    {
-        $this->middleware('permission:product_depot_list');
-
-        $productStock = ProductStock::findOrFail($id);
-
-        $options = ProductStock::with('stock')
-            ->where('serial_enabled', '=', $productStock->serial_enabled)
-            ->where('product_sku', '=', $productStock->product_sku)
-            ->where('id', '!=', $productStock->id)
-            ->get();
-
-        return $this->listResponse($options);
-    }
-
-    /**
-     * Transfer $qty of products $from $to
-     *
-     * @param  ProductStock $from
-     * @param  ProductStock $to
-     * @param  int          $qty
-     * @return boolean|Response
-     */
-    private function transferQty(ProductStock $from, ProductStock $to, $qty)
-    {
-        $this->middleware('permission:depot_transfer');
-
-        if (!$qty) {
-            return $this->validationFailResponse([
-                'Nenhuma quantidade foi informada.'
-            ]);
-        }
-
-        if ($qty > $from->quantity) {
-            return $this->validationFailResponse([
-                'A quantidade que você está tentando transferir é maior que a que o estoque de origem possui.'
-            ]);
-        }
-
-        DB::beginTransaction();
-        Log::debug('Transaction - begin');
-
-        try {
-            $from->quantity = $from->quantity - $qty;
-            $to->quantity   = $to->quantity + $qty;
-
-            if (!$from->save() || !$to->save()) {
-                throw new \Exception('Erro ao salvar recursos', 1);
-            }
-        } catch (\Exception $exception) {
-            DB::rollBack();
-            Log::debug('Transaction - rollback');
-            Log::warning('Não foi possível realizar a transferência de estoque!', [
-                'from'     => $from->id,
-                'to'       => $to->id,
-                'from_qty' => $from->quantity,
-                'to_qty'   => $to->quantity,
-                'qty'      => $qty,
-            ]);
-
-            return false;
-        }
-
-        DB::commit();
-        Log::debug('Transaction - commit');
-        Log::info('Transferencia de estoque realizada com sucesso', [
-            'from'     => $from->id,
-            'to'       => $to->id,
-            'from_qty' => $from->quantity,
-            'to_qty'   => $to->quantity,
-            'qty'      => $qty,
-        ]);
-
-        return true;
     }
 
     /**
      * Transfer $imeis of products $from $to
      *
-     * @param  ProductStock $from
-     * @param  ProductStock $to
+     * @param  DepotProduct $from
+     * @param  DepotProduct $to
      * @param  array        $imeis
      * @return boolean|Response
      */
-    private function transferImeis(ProductStock $from, ProductStock $to, array $imeis)
+    private function transferImeis(DepotProduct $from, DepotProduct $to, array $imeis)
     {
         $this->middleware('permission:depot_transfer');
 
@@ -242,7 +133,7 @@ class ProductStockController extends Controller
             foreach ($imeis as $imei) {
                 $error = false;
 
-                $productImei = ProductImei
+                $productImei = ProductSerial
                     ::where('imei', '=', $imei)
                     ->first();
 
@@ -250,11 +141,11 @@ class ProductStockController extends Controller
                     $error = 'Os estoques de destino e origem não possuem a mesma opção de controle serial!';
                 }
 
-                if ('product_stock_id' != $from->id) {
+                if ('product_depot_id' != $from->id) {
                     $error = 'Os estoques de destino e origem não possuem a mesma opção de controle serial!';
                 }
 
-                $productImei->product_stock_id = $to->id;
+                $productImei->product_depot_id = $to->id;
                 $from->quantity                = $from->quantity - 1;
                 $to->quantity                  = $to->quantity + 1;
 
@@ -309,8 +200,8 @@ class ProductStockController extends Controller
             }
         }
 
-        $from = ProductStock::findOrFail($from);
-        $to   = ProductStock::findOrFail($to);
+        $from = DepotProduct::findOrFail($from);
+        $to   = DepotProduct::findOrFail($to);
 
         if ($from->serial_enabled !== $to->serial_enabled) {
             return $this->validationFailResponse([
@@ -328,7 +219,7 @@ class ProductStockController extends Controller
     }
 
     /**
-     * Verifica se um $imei pode ser transferido de um product stock $id
+     * Verifica se um $imei pode ser transferido de um product depot $id
      *
      * @param  int $id
      * @param  string $imei
@@ -337,9 +228,9 @@ class ProductStockController extends Controller
     public function verifyTransfer($id, $imei)
     {
         try {
-            $productStock = ProductStock::findOrFail($id);
+            $depotProduct = DepotProduct::findOrFail($id);
 
-            $productImei = ProductImei::where('imei', '=', $imei)->first();
+            $productImei = ProductSerial::where('imei', '=', $imei)->first();
 
             if (!$productImei) {
                 return $this->listResponse([
@@ -349,7 +240,7 @@ class ProductStockController extends Controller
                 ]);
             }
 
-            if ($productImei->product_stock_id != $productStock->id) {
+            if ($productImei->product_depot_id != $depotProduct->id) {
                 return $this->listResponse([
                     'icon'    => 'exclamation',
                     'message' => 'Serial não pertence ao estoque selecionado!',
@@ -357,14 +248,14 @@ class ProductStockController extends Controller
                 ]);
             }
 
-            $removalProduct = RemovalProduct::where('product_imei_id', '=', $productImei->id)
+            $removalProduct = DepotWithdrawProduct::where('product_imei_id', '=', $productImei->id)
                 ->whereNotIn('status', [2, 3])
                 ->first();
 
             if ($removalProduct) {
                 return $this->listResponse([
                     'icon'    => 'shopping-cart',
-                    'message' => "Serial em aberto na retirada #{$removalProduct->stock_removal_id}",
+                    'message' => "Serial em aberto na retirada #{$removalProduct->depot_removal_id}",
                     'ok'      => false,
                 ]);
             }

@@ -77,7 +77,12 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     /**
      * Product Serials
      */
-    Route::get('products/serials/find/{serial}', 'Product\ProductSerialController@find');
+    Route::group(['prefix' => 'products/serials'], function() {
+        Route::get('find/{serial}', 'Product\ProductSerialController@find');
+        Route::get('check', 'Product\ProductSerialController@checkTransfer');
+
+        Route::post('transfer', 'Product\ProductSerialController@transfer');
+    });
 
     /**
      * Product Defects
@@ -112,8 +117,22 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     api('depots/entries', 'Depot\DepotEntryController');
 
     /**
+     * Product stock
+     */
+    Route::group(['prefix' => 'depots/products'], function () {
+        Route::get('from/product/{sku}', 'Depot\DepotProductController@listByProduct');
+        Route::get('from/depot/{slug}', 'Depot\DepotProductController@listByDepot');
+        // Route::get('transferencia/{id}', 'Depot/DepotProductController@transferOptions');
+        // Route::get('transferencia/verificar/{id}/{imei}', 'Depot/DepotProductController@verifyTransfer');
+        // Route::post('transferencia', 'Depot/DepotProductController@transfer');
+    });
+    api('depots/products', 'Depot\DepotProductController', ['index', 'show', 'update']);
+
+    /**
      * Depots
      */
+    Route::get('depots/from/product/{sku}/available', 'Depot\DepotController@listByAvailableFromProduct');
+    Route::get('depots/transferable/{depotProductId}', 'Depot\DepotController@listByTransferable');
     api('depots', 'Depot\DepotController');
 
     /*
@@ -125,19 +144,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     // });
     //
     //
-    // /**
-    //  * Product stock
-    //  */
-    // Route::group(['prefix' => 'produto-estoque', 'namespace' => 'Product'], function () {
-    //     Route::get('list/{sku}', 'ProductStockController@listBySku');
-    //     Route::get('slug/{slug}', 'ProductStockController@listBySlug');
-    //     Route::post('refresh', 'ProductStockController@refresh');
-    //     Route::get('adicionar/{sku}', 'ProductStockController@addOptions');
-    //     Route::get('transferencia/{id}', 'ProductStockController@transferOptions');
-    //     Route::get('transferencia/verificar/{id}/{imei}', 'ProductStockController@verifyTransfer');
-    //     Route::post('transferencia', 'ProductStockController@transfer');
-    // });
-    // api('produto-estoque', 'Product\ProductStockController');
+
     //
     // /**
     //  * Product imei

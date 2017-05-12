@@ -43,7 +43,7 @@ class ProductSerial extends \Eloquent
      */
     public function withdrawProducts()
     {
-        return $this->hasMany(WithdrawProduct::class);
+        return $this->hasMany(DepotWithdrawProduct::class);
     }
 
     /**
@@ -75,7 +75,11 @@ class ProductSerial extends \Eloquent
      */
     public function lastOrderProduct()
     {
-        return $this->orderProducts()->orderBy('created_at', 'desc')->first();
+        if (!array_key_exists('orderProducts', $this->relations)) {
+            $this->load('orderProducts');
+        }
+
+        return $this->getRelation('orderProducts')->sortByDesc('created_at')->first();
     }
 
     /**
@@ -83,9 +87,9 @@ class ProductSerial extends \Eloquent
      *
      * @param string $imei upper and trim
      */
-    public function setSerialAttribute($imei)
+    public function setSerialAttribute($serial)
     {
-        $this->attributes['imei'] = mb_strtoupper(trim($imei));
+        $this->attributes['serial'] = mb_strtoupper(trim($serial));
     }
 
     /**

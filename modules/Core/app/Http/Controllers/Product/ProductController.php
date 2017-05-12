@@ -23,7 +23,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $data = Product::with('reservedStockCount')
+        $data = Product::with(['reservedStockCount', 'availableStockCount'])
             ->orderBy('created_at', 'DESC');
 
         return tableListResponse($data);

@@ -16,16 +16,7 @@ class DepotProduct extends \Eloquent
      */
     protected $fillable = [
         'depot_slug',
-        'product_sku',
-        'quantity',
-        'serial_enabled',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $casts = [
-        'serial_enabled' => 'boolean',
+        'product_sku'
     ];
 
     /**

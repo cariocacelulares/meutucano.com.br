@@ -38,13 +38,15 @@ class Product extends \Eloquent
      */
     protected $hidden = [
         'reservedStockCount',
+        'availableStockCount'
     ];
 
     /**
      * @return array
      */
     protected $appends = [
-        'reserved_stock'
+        'reserved_stock',
+        'available_stock'
     ];
 
     /**
@@ -96,7 +98,7 @@ class Product extends \Eloquent
     }
 
     /**
-     * Return orders that are reserving the stream_set_blocking
+     * Return orders that are reserving the stock
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -106,6 +108,19 @@ class Product extends \Eloquent
             ->selectRaw('order_products.product_sku, count(*) as aggregate_reserved_stock')
             ->join('orders', 'orders.id', 'order_products.order_id')
             ->whereIn('orders.status', [Order::STATUS_PENDING, Order::STATUS_PAID]);
+    }
+
+    /**
+     * Return depot products that are included to the stock
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function availableStockCount()
+    {
+        return $this->hasMany(DepotProduct::class, 'product_sku')
+            ->selectRaw('depot_products.product_sku, quantity')
+            ->join('depots', 'depots.slug', 'depot_products.depot_slug')
+            ->where('depots.include', '=', true);
     }
 
     /**
@@ -131,12 +146,15 @@ class Product extends \Eloquent
      */
     public function getAvailableStockAttribute()
     {
-        $stock = $this->depotProducts()
-                ->join('depots', 'depots.slug', 'depot_products.depot_slug')
-                ->where('depots.include', '=', true)
-                ->sum('quantity');
+        if (!array_key_exists('availableStockCount', $this->relations)) {
+          return;
+        }
 
-        $this->load('reservedStockCount');
+        if (!array_key_exists('reservedStockCount', $this->relations)) {
+            $this->load('reservedStockCount');
+        }
+
+        $stock    = $this->availableStockCount->sum('quantity');
         $reserved = $this->reserved_stock;
 
         return ($stock - $reserved);
