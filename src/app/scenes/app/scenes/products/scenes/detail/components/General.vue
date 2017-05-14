@@ -77,18 +77,18 @@
 
     <div>
       <Card header-icon="area-chart" header-text="Histórico de vendas por mês" :loading="loading">
-        <vue-highcharts :options="salesHistoryOptions" ref="salesHistory"></vue-highcharts>
+        <!--vue-highcharts :options="salesHistoryOptions" ref="salesHistory"></vue-highcharts-->
       </Card>
 
       <Card header-icon="money" header-text="Histórico de custo por mês" :loading="loading">
-        <vue-highcharts :options="costHistoryOptions" ref="costHistory"></vue-highcharts>
+        <!--vue-highcharts :options="costHistoryOptions" ref="costHistory"></vue-highcharts-->
       </Card>
     </div>
 
     <div>
       <Card header-icon="pie-chart" header-text="Vendas no mês por canal" :loading="loading"
         :header-margin-bottom="10" class="p-b-10">
-        <vue-highcharts :options="channelSalesOptions" ref="channelSales"></vue-highcharts>
+        <!--vue-highcharts :options="channelSalesOptions" ref="channelSales"></vue-highcharts-->
       </Card>
 
       <Card header-icon="shopping-cart" header-text="Última compra">
@@ -131,11 +131,11 @@
 </template>
 
 <script>
-import VueHighcharts from 'vue2-highcharts'
+// import VueHighcharts from 'vue2-highcharts'
 
 export default {
   components: {
-    VueHighcharts
+    // VueHighcharts
   },
 
   props: {
