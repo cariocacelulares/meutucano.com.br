@@ -92,7 +92,7 @@ class ProductController extends Controller
                 'availableStockCount',
                 'issuesCount',
                 'defectsCount'
-            ])->findOrFail($id);
+            ])->withCount('depotProducts')->findOrFail($id);
 
             return showResponse($data);
         } catch (\Exception $exception) {
