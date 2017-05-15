@@ -5,6 +5,7 @@ import Wrapper from './Wrapper'
 
 import VueProgressBar from 'vue-progressbar'
 import VueBreadcrumbs  from 'vue2-breadcrumbs'
+import VTooltip from 'v-tooltip'
 
 import Helpers from './imports/helpers'
 import Axios from './imports/axios'
@@ -28,6 +29,11 @@ Object.keys(globalComponents).map((component) => {
 window.Vue = Vue
 window.moment = moment
 moment.locale('pt-BR')
+
+/**
+ * Tooltips
+ */
+Vue.use(VTooltip)
 
 /**
  * Breadcrumbs
