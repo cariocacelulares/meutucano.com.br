@@ -156,35 +156,4 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::get('depots/from/product/{sku}/available', 'Depot\DepotController@listByAvailableFromProduct');
     Route::get('depots/transferable/{depotProductId}', 'Depot\DepotController@listByTransferable');
     api('depots', 'Depot\DepotController');
-
-    /*
-    // /**
-    //  * Stock
-    //  */
-    // Route::group(['prefix' => 'estoque', 'namespace' => 'Stock'], function () {
-    //     Route::get('imei/generate', 'ImeiController@generate');
-    // });
-    //
-    //
-
-    //
-    // /**
-    //  * Product imei
-    //  */
-
-    //
-
-    //
-    // /**
-    //  * Stock removal product
-    //  */
-
-    //
-
-    //
-    //
-
-    //
-
-    //
 });

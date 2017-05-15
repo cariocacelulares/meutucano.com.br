@@ -39,17 +39,15 @@ class DepotWithdrawController extends Controller
     public function show($id)
     {
         try {
-            $withdraw = DepotWithdraw::with([
-                'withdrawProducts',
-                'withdrawProducts.productImei',
-                'withdrawProducts.productStock',
-                'withdrawProducts.productStock.stock',
-                'withdrawProducts.productStock.product',
-                'withdrawProducts.productStock.product.productStocks',
-                'withdrawProducts.productStock.product.productStocks.stock',
+            $data = DepotWithdraw::with([
+                'depot',
+                'products',
+                'products.productSerial',
+                'products.depotProduct',
+                'products.depotProduct.product',
             ])->findOrFail($id);
 
-            return showResponse(StockRemovalTransformer::show($withdraw));
+            return showResponse($data);
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao obter recurso'));
 
