@@ -9,12 +9,12 @@
 
         <div class="card-data">
           <span>Método de pagamento</span>
-          <strong>{{ order.payment_method }} ({{ order.installments }}x)</strong>
+          <strong>{{ order.payment_method_cast }} ({{ order.installments }}x)</strong>
         </div>
 
         <div class="card-data">
           <span>Método de envio</span>
-          <strong>{{ order.shipment_method }}</strong>
+          <strong>{{ order.shipment_method_cast }}</strong>
         </div>
       </Card>
 
@@ -43,13 +43,7 @@
           </div>
 
           <div class="card-data address">
-            <span>
-              {{ order.customer_address.street }}
-              <!-- Rua Padre Anchieta #200 - Canoas<br/>
-              Rio do Sul / SC<br/>
-              89160-000<br/>
-              Sala 201 -->
-            </span>
+            <span v-html="order.customer_address.address"></span>
           </div>
         </div>
       </Card>
@@ -66,22 +60,22 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="order_product in order.order_products">
+            <tr v-for="order_product in order.order_products_grouped">
               <td><a href="#">{{ order_product.product.sku }}</a></td>
               <td class="text-left">
                 <p>{{ order_product.product.title }}</p>
                 <b>{{ order_product.product_serial.serial }}</b>
               </td>
               <td>{{ order_product.price | money }}</td>
-              <td>falta</td>
-              <td>price * qty</td>
+              <td>{{ order_product.quantity }}</td>
+              <td>{{ order_product.subtotal | money }}</td>
             </tr>
           </tbody>
         </table>
         <div class="table-values">
           <div class="card-data">
             <span>Subtotal</span>
-            <strong>falta</strong>
+            <strong>{{ order.subtotal | money }}</strong>
           </div>
 
           <span class="signal">+</span>
@@ -95,14 +89,14 @@
 
           <div class="card-data">
             <span>Taxas</span>
-            <strong>falta</strong>
+            <strong>{{ order.taxes | money }}</strong>
           </div>
 
           <span class="signal">-</span>
 
           <div class="card-data">
             <span>Descontos</span>
-            <strong>falta</strong>
+            <strong>{{ order.discount | money }}</strong>
           </div>
 
           <span class="signal">=</span>
@@ -247,6 +241,7 @@
 </template>
 
 <script>
+import { default as OrderTransformer } from '../../../transformer'
 import Devolution from './general/Devolution'
 import Logistic from './general/Logistic'
 import Issue from './general/Issue'
@@ -273,7 +268,11 @@ export default {
     		marketplace: null,
     		total: null,
     		estimated_delivery: null,
-    		status: null,
+    		status: {
+          code: null,
+          description: null,
+          color: null,
+        },
     		cancel_protocol: null,
     		holded: null,
     		refunded: null,
@@ -370,7 +369,7 @@ export default {
   mounted() {
     axios.get(`orders/${this.$route.params.id}`).then(
       (response) => {
-        this.order = response.data
+        this.order = OrderTransformer.transform(response.data)
       },
       (error) => {
         console.log(error)

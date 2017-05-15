@@ -146,6 +146,14 @@ export default {
       opacity: .5;
     }
 
+    tbody:not(.no-results),
+    tbody:not(.loading) {
+      tr:hover,
+      tr:focus {
+        background-color: darken($lighter, 11) !important;
+      }
+    }
+
     tbody {
       &.no-results,
       &.loading {
@@ -161,11 +169,6 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
-      }
-
-      tr:hover,
-      tr:focus {
-        background-color: darken($lighter, 11) !important;
       }
 
       tr:nth-child(2n) {

@@ -1,22 +1,6 @@
 <template>
   <div>
-    <PageHeader :tabs="[
-    {
-      text: 'Informações gerais',
-      active: true,
-      link: { name: 'orders.detail.general' }
-      },
-      {
-        text: 'Comentários',
-        link: { name: 'orders.detail.comments' },
-        label: 2,
-        },
-        {
-          text: 'Ligações',
-          link: { name: 'orders.detail.calls' },
-          label: 1,
-          },
-          ]">
+    <PageHeader :tabs="tabs">
           <div slot="left" class="left">
             <TButton size="big" color="light" text="dark" :back="true" class="m-r-10">
               <Icon name="angle-left" />
@@ -31,13 +15,13 @@
 
             <VSeparator :spacing="20" :height="40" />
             <!-- <TLabel color="primary">Aprovado</TLabel> -->
-            <TLabel color="danger">{{ order.status }} <span v-if="order.refund">&nbsp;(Reembolso)</span></TLabel>
+            <TLabel :color="order.status.color">{{ order.status.description }} <span v-if="order.refund">&nbsp;(Reembolso)</span></TLabel>
             <FeaturedValue v-if="order.cancel_protocol" label="Protocolo" :value="order.cancel_protocol" color="darker" class="m-l-20" />
           </div>
 
           <div>
             <TButton size="big" color="success" type="submit" leftIcon="check">Aprovar</TButton>
-            <TButton v-confirm="destroy" size="big" color="danger" type="submit" leftIcon="close" class="m-l-5">Excluir</TButton>
+            <TButton @click="$confirm(destroy)" size="big" color="danger" type="submit" leftIcon="close" class="m-l-5">Excluir</TButton>
           </div>
         </PageHeader>
 
@@ -46,6 +30,7 @@
 </template>
 
 <script>
+import { default as OrderTransformer } from '../../../transformer'
 
 export default {
   methods: {
@@ -60,17 +45,41 @@ export default {
         id: null,
         marketplace: null,
         api_code: null,
-        status: null,
+    		status: {
+          code: null,
+          description: null,
+          color: null,
+        },
         refund: null,
         cancel_protocol: null,
       },
+      tabs: [
+        {
+          text: 'Informações gerais',
+          active: true,
+          link: { name: 'orders.detail.general' }
+        },
+        {
+          text: 'Comentários',
+          link: { name: 'orders.detail.comments' },
+          label: 0,
+        },
+        {
+          text: 'Ligações',
+          link: { name: 'orders.detail.calls' },
+          label: 0,
+        },
+      ]
     }
   },
 
   mounted() {
     axios.get(`orders/${this.$route.params.id}`).then(
       (response) => {
-        this.order = response.data
+        this.order = OrderTransformer.transform(response.data)
+
+        this.tabs[1].label = this.order.comments_count
+        this.tabs[2].label = this.order.calls_count
       },
       (error) => {
         console.log(error)

@@ -10,7 +10,7 @@
       <li v-for="(tab, index) in tabs">
         <router-link :to="tab.link">
           {{ tab.text }}
-          <span v-if="tab.label">{{ tab.label }}</span>
+          <span v-if="tab.label || tab.label === 0">{{ tab.label }}</span>
         </router-link>
       </li>
     </ul>

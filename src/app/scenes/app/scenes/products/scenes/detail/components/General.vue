@@ -10,17 +10,17 @@
         <div class="grid-3 m-t-20">
           <div class="card-data">
             <span>EAN</span>
-            <strong>{{ product.ean }}</strong>
+            <strong>{{ product.ean || 'N/A' }}</strong>
           </div>
 
           <div class="card-data">
             <span>Marca</span>
-            <strong>{{ product.brand || 'falta' }}</strong>
+            <strong>{{ product.brand ? product.brand.title : '' }}</strong>
           </div>
 
           <div class="card-data">
             <span>Linha</span>
-            <strong>{{ product.line || 'falta' }}</strong>
+            <strong>{{ product.line ? product.line.title : '' }}</strong>
           </div>
 
           <div class="card-data">
@@ -30,12 +30,12 @@
 
           <div class="card-data">
             <span>Tipo de unidade</span>
-            <strong>{{ product.unity || 'falta' }}</strong>
+            <strong>{{ product.unity_type }}</strong>
           </div>
 
           <div class="card-data">
             <span>Origem</span>
-            <strong>{{ product.origin || 'falta' }}</strong>
+            <strong>{{ product.origin }}</strong>
           </div>
 
           <div class="card-data">

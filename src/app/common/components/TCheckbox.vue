@@ -30,6 +30,12 @@ export default {
     },
   },
 
+  watch: {
+    value() {
+      this.currentValue = this.value
+    }
+  },
+
   computed: {
     wrapperClasses() {
       let classList = []

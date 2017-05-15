@@ -2,7 +2,8 @@
   <div :class="{
     CommentsBox: true,
     loading,
-    'no-results': !comments.length && !loading
+    'no-results': !comments.length && !loading,
+    'has-form': form,
   }">
     <Card v-if="form">
       <form @submit.prevent="save">
@@ -27,7 +28,7 @@
     <Card v-for="comment in comments" :key="comment.id" class="comment" :important="comment.important">
       <div class="card-header" slot="header">
         <UserInfo :name="comment.user.name" avatar="/static/images/logo.png" :sub="comment.created_at | humanDiff" />
-        <a href="#" @click.prevent="destroy(comment.id)"><Icon v-if="!onlyImportant" name="close" /></a>
+        <a href="#" @click.prevent="$confirm(destroy, comment.id)"><Icon v-if="!onlyImportant" name="close" /></a>
       </div>
 
       <div>{{ comment.comment }}</div>
@@ -79,7 +80,10 @@ export default {
 
       this.loading = true
 
-      axios.get(`orders/comments/from/${this.order}`).then(
+      const route = `orders/comments/from/${this.order}`
+        + (this.onlyImportant ? '/important' : '')
+
+      axios.get(route).then(
         (response) => {
           this.comments = response.data
           this.loading = false
@@ -94,10 +98,12 @@ export default {
     save() {
       axios.post('orders/comments', {
         order_id: this.order,
-        comment: this.newComment
+        comment: this.newComment,
+        important: this.important
       }).then(
         (response) => {
-          this.newComment = ''
+          this.newComment = null
+          this.important = false
           this.$toaster.success('Sucesso!', 'Seu comentário foi registrado!')
           this.load()
         },
@@ -138,7 +144,19 @@ export default {
     height: 100%;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     color: $darker;
+
+    &.has-form {
+      & > span,
+      & > .Icon {
+        padding: 30px 0;
+      }
+    }
+  }
+
+  .Card {
+    width: 100%;
   }
 
   form {

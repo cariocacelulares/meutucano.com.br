@@ -4,7 +4,7 @@
     <Icon v-if="leftIcon" :name="leftIcon" classes="leftIcon" :size="size" color="dark" />
     <textarea :id="`textarea-${_uid}`" :class="classList" :required="required"
       :disabled="disabled" :placeholder="placeholder" @input="updateValue($event.target.value)"
-      :rows="rows">{{ value }}</textarea>
+      :rows="rows" ref="textarea">{{ value }}</textarea>
     <Icon v-if="rightIcon" :name="rightIcon" classes="rightIcon" :size="size" color="dark" />
   </label>
 </template>
@@ -79,6 +79,12 @@ export default {
   data() {
     return {
       oldValue: null
+    }
+  },
+
+  watch: {
+    value() {
+      this.$refs.textarea.value = this.value
     }
   },
 

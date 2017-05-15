@@ -16,7 +16,7 @@ export default {
 
     order.status = {
       code: status,
-      description: status,
+      description: order.status_cast,
       color: STATUS_COLORS[status],
     }
 
@@ -24,7 +24,6 @@ export default {
 
     // order.created_at = CommonTransformer.date(order.created_at)
     // order.total = CommonTransformer.monetary(order.total)
-
     return order
   }
 }

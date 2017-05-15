@@ -82,39 +82,27 @@ const Dialog = Vue.extend({
   `
 })
 
-Vue.directive('confirm', {
-  bind(el, binding, vnode) {
-    const onConfirm = () => {
-      binding.value()
+Vue.prototype.$confirm = (callback, ...args) => {
+  let dialog = new Dialog({ data: {
+    show: true,
+    doConfirm: () => {
+      callback(...args)
 
       return false
+    },
+  }}).$mount()
+
+  document.getElementById('app').appendChild(dialog.$el)
+
+  const closeConfirm = () => {
+    if (dialog.$data.show && event.keyCode == 27) {
+      dialog.$data.show = false
+      document.removeEventListener('keydown', closeConfirm)
     }
-
-    el.handleClick = (e) => {
-      const data = {
-        doConfirm: onConfirm,
-        show: true
-      }
-
-      let dialog = new Dialog({ data: data }).$mount()
-      document.getElementById('app').appendChild(dialog.$el)
-
-      const closeConfirm = () => {
-        if (dialog.$data.show && event.keyCode == 27) {
-          dialog.$data.show = false
-          document.removeEventListener('keydown', closeConfirm)
-        }
-      }
-
-      document.addEventListener('keydown', closeConfirm)
-    }
-
-    el.addEventListener('click', el.handleClick)
-  },
-  unbind(el) {
-    el.removeEventListener('click', el.handleClick)
   }
-})
+
+  document.addEventListener('keydown', closeConfirm)
+}
 
 const clipboardIcon = Vue.extend({
   template: `<Icon name="paperclip" class="m-l-5"/>`
