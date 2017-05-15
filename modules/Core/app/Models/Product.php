@@ -54,14 +54,45 @@ class Product extends \Eloquent
      * @return array
      */
     protected $appends = [
+        'origin_cast',
+        'condition_cast',
         'reserved_stock',
         'available_stock'
     ];
 
+    /**
+     * @return array
+     */
     protected $casts = [
         'price' => 'float',
         'cost'  => 'float'
     ];
+
+    /**
+     * @return string
+     */
+    public function getOriginCastAttribute()
+    {
+        switch ($this->origin) {
+            case self::ORIGIN_NATIONAL:
+                return 'Nacional';
+            case self::ORIGIN_INTERNATIONAL:
+                return 'Internacional';
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getConditionCastAttribute()
+    {
+        switch ($this->origin) {
+            case self::CONDITION_NEW:
+                return 'Novo';
+            case self::CONDITION_USED:
+                return 'Usado';
+        }
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
