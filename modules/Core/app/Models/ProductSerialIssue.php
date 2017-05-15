@@ -33,7 +33,7 @@ class ProductSerialIssue extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function serial()
+    public function productSerial()
     {
         return $this->belongsTo(ProductSerial::class)->withTrashed();
     }

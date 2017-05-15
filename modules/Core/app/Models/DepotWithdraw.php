@@ -16,6 +16,7 @@ class DepotWithdraw extends \Eloquent
      * @var array
      */
     protected $fillable = [
+        'depot_slug',
         'user_id',
         'is_continuous',
         'closed_at',
@@ -46,6 +47,14 @@ class DepotWithdraw extends \Eloquent
     public function scopeClosed($query)
     {
         return $query->whereNotNull('closed_at');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function depot()
+    {
+        return $this->belongsTo(Depot::class);
     }
 
     /**

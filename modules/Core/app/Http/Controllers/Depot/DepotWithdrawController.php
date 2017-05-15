@@ -1,25 +1,17 @@
-<?php namespace Core\Http\Controllers\Stock;
+<?php namespace Core\Http\Controllers\Depot;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Input;
-use App\Http\Controllers\Rest\RestControllerTrait;
+use Core\Models\OrderProduct;
+use Core\Models\DepotWithdraw;
+use Core\Models\ProductSerial;
 use App\Http\Controllers\Controller;
-use Core\Models\Pedido\PedidoProduto;
-use Core\Models\Stock\Removal;
-use Core\Models\Stock\RemovalProduct;
-use Core\Http\Requests\Stock\RemovalRequest as Request;
-use Core\Transformers\StockRemovalTransformer;
+use Core\Models\DepotWithdrawProduct;
+use Core\Http\Controllers\Product\ProductSerialController;
+use Core\Http\Requests\Depot\DepotWithdrawRequest as Request;
+use Core\Http\Requests\Depot\DepotWithdrawUpdateRequest as UpdateRequest;
 
-/**
- * Class RemovalController
- * @package Core\Http\Controllers\Stock
- */
-class RemovalController extends Controller
+class DepotWithdrawController extends Controller
 {
-    use RestControllerTrait;
-
-    const MODEL = Removal::class;
-
     public function __construct()
     {
         $this->middleware('permission:withdraw_list', ['only' => ['index']]);
@@ -27,151 +19,244 @@ class RemovalController extends Controller
         $this->middleware('permission:withdraw_create', ['only' => ['store']]);
         $this->middleware('permission:withdraw_update', ['only' => ['update']]);
         $this->middleware('permission:withdraw_delete', ['only' => ['destroy']]);
+        $this->middleware('permission:withdraw_close', ['only' => ['close']]);
     }
 
     /**
-     * Lista para a tabela
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableList()
+    public function index()
     {
-        $this->middleware('permission:withdraw_list');
+        $data = DepotWithdraw::orderBy('created_at', 'DESC');
 
-        $list = Removal::orderBy('created_at', 'DESC');
-        $list = $this->handleRequest($list);
-
-        return $this->listResponse(StockRemovalTransformer::tableList($list));
+        return tableListResponse($data);
     }
 
     /**
-     * Cria novo recurso
-     *
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function store(Request $request)
-    {
-        try {
-            $openRemoval = Removal::where('user_id', '=', Input::get('user_id'))
-                ->whereNull('closed_at')
-                ->where('is_continuous', '=', false)
-                ->first();
-
-            if ($openRemoval) {
-                return $this->validationFailResponse([
-                    'Este usuário possui uma retirada em aberto!'
-                ]);
-            }
-
-            $removal = Removal::create(Input::except('removal_products'));
-
-            $removalProducts = [];
-            foreach (Input::get('removal_products') as $product) {
-                $removalProducts = [
-                    'product_stock_id' => $product['product_stock_id'],
-                    'product_imei_id'  => $product['product_imei_id'],
-                    'stock_removal_id' => $removal->id,
-                ];
-
-                RemovalProduct::insert($removalProducts);
-            }
-
-            return $this->createdResponse($removal);
-        } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
-
-            return $this->clientErrorResponse([
-                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
-            ]);
-        }
-    }
-
-    /**
-     * Atualiza um recurso
-     *
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function update($id)
-    {
-        try {
-            $removal = Removal::findOrFail($id);
-            $removal->fill(Input::except('removal_products'));
-            $removal->save();
-
-            $removalProducts = [];
-            foreach (Input::get('removal_products') as $product) {
-                $removalProducts = [
-                    'product_stock_id' => $product['product_stock_id'],
-                    'product_imei_id'  => $product['product_imei_id'],
-                    'stock_removal_id' => $removal->id,
-                ];
-
-                RemovalProduct::insert($removalProducts);
-            }
-
-            return $this->showResponse($removal);
-        } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
-
-            return $this->clientErrorResponse([
-                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
-            ]);
-        }
-    }
-
-    /**
-     * Retorna um único recurso
-     *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function show($id)
     {
         try {
-            $removal = Removal::with([
-                'removalProducts',
-                'removalProducts.productImei',
-                'removalProducts.productStock',
-                'removalProducts.productStock.stock',
-                'removalProducts.productStock.product',
-                'removalProducts.productStock.product.productStocks',
-                'removalProducts.productStock.product.productStocks.stock',
+            $withdraw = DepotWithdraw::with([
+                'withdrawProducts',
+                'withdrawProducts.productImei',
+                'withdrawProducts.productStock',
+                'withdrawProducts.productStock.stock',
+                'withdrawProducts.productStock.product',
+                'withdrawProducts.productStock.product.productStocks',
+                'withdrawProducts.productStock.product.productStocks.stock',
             ])->findOrFail($id);
 
-            return $this->showResponse(StockRemovalTransformer::show($removal));
+            return showResponse(StockRemovalTransformer::show($withdraw));
         } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Erro ao obter recurso'), ['model' => self::MODEL]);
+            \Log::error(logMessage($exception, 'Erro ao obter recurso'));
 
-            return $this->clientErrorResponse([
+            return clientErrorResponse([
                 'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
 
     /**
-     * Verify and closes a stock removal
-     *
-     * @param  int $id
-     * @return Response
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function close($id)
+    public function store(Request $request)
     {
-        $this->middleware('permission:withdraw_close');
+        try {
+            $check = ProductSerialController::checkSerials(
+                $request->input('serials'),
+                $request->input('depot_slug')
+            );
 
-        $stockRemoval = Removal::findOrFail($id);
+            if ($check !== true)
+                return validationFailResponse([
+                    'available' => false,
+                    'message'   => $check
+                ]);
 
-        $openProducts = $stockRemoval->removalProducts->whereIn('status', [0, 1]);
+            \DB::transaction(function() use ($request, &$withdraw) {
+                $withdraw = DepotWithdraw::create($request->except('serials'));
 
-        if ($openProducts->count()) {
-            return $this->validationFailResponse([
-                'Existem produtos que não foram faturados ou devolvidos ao estoque!'
+                $checkSerials = ProductSerial::with('depotProduct')
+                    ->whereIn('serial', $request->input('serials'))
+                    ->get();
+
+                foreach ($checkSerials as $serial) {
+                    $withdrawProducts[] = new DepotWithdrawProduct([
+                        'depot_product_id'  => $serial->depotProduct->id,
+                        'product_serial_id' => $serial->id
+                    ]);
+                }
+
+                $withdraw->products()->saveMany($withdrawProducts);
+            });
+
+            return createdResponse($withdraw);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function update(UpdateRequest $request, $id)
+    {
+        try {
+            $withdraw = DepotWithdraw::with([
+                'products',
+                'products.productSerial'
+            ])->findOrFail($id);
+
+            if ($withdraw->user_id != $request->input('user_id')) {
+                if ($this->checkNonConfirmed($withdraw->id) === false) {
+                    throw new \Exception("Não é possível alterar o usuário da retirada pois existem produtos com retirada confirmada.");
+                }
+            }
+
+            $deletedSerials = $withdraw->products->pluck('productSerial.serial')
+                ->diff($request->serials)
+                ->toArray();
+
+            if ($this->checkNonConfirmed($withdraw->id, $deletedSerials) === false) {
+                throw new \Exception("Não é possível deletar um produto da retirada que não esteja no status pendente.");
+            }
+
+            $newSerials = collect($request->serials)
+                ->diff($withdraw->products->pluck('productSerial.serial'))
+                ->toArray();
+
+            $check = ProductSerialController::checkSerials(
+                $newSerials,
+                $withdraw->depot_slug
+            );
+
+            if ($check !== true)
+                return validationFailResponse([
+                    'available' => false,
+                    'message'   => $check
+                ]);
+
+            \DB::transaction(function() use ($request, &$withdraw) {
+                $withdraw->user_id = $request->input('user_id');
+                $withdraw->save();
+
+                $withdraw->products()->delete();
+
+                $checkSerials = ProductSerial::with('depotProduct')
+                    ->whereIn('serial', $request->input('serials'))
+                    ->get();
+
+                foreach ($checkSerials as $serial) {
+                    $withdrawProducts[] = new DepotWithdrawProduct([
+                        'depot_product_id'  => $serial->depotProduct->id,
+                        'product_serial_id' => $serial->id
+                    ]);
+                }
+
+                $withdraw->products()->saveMany($withdrawProducts);
+            });
+
+            return showResponse($withdraw);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function destroy($id)
+    {
+        try {
+            $data = DepotProduct::findOrFail($id);
+
+            if ($this->checkNonConfirmed($data->id, $deletedSerials) === false) {
+                throw new \Exception("Não é possível deletar uma retirada que tenha produtos confirmados.");
+            }
+
+            $data->delete();
+
+            return deletedResponse();
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao excluir recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Check if serials are still pending in the withdraw
+     *
+     * @param  int   $withdrawId
+     * @param  array $serials
+     * @return boolean
+     */
+    private function checkNonConfirmed($withdrawId, $serials = null)
+    {
+        $checkSerials = DepotWithdrawProduct::where('depot_withdraw_id', $withdrawId)
+            ->where('status', '!=', DepotWithdrawProduct::STATUS_WITHDRAWN);
+
+        if ($serials) {
+            $checkSerials = $checkSerials->with([
+                'productSerial' => function($query) use ($serials) {
+                    $query->whereIn('serial', $serials);
+                }
             ]);
         }
 
-        $stockRemoval->closed_at = Carbon::now();
-        $stockRemoval->save();
+        if ($checkSerials->count())
+            return false;
 
-        return $this->showResponse($stockRemoval);
+        return true;
+    }
+
+    /**
+     * Verify and closes a depot withdraw
+     *
+     * @param  int $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function close($id)
+    {
+        try {
+            $depotWithdraw = DepotWithdraw::findOrFail($id);
+
+            $checkSerials = $depotWithdraw->products()
+                ->whereIn('status', [
+                    DepotWithdrawProduct::STATUS_WITHDRAWN,
+                    DepotWithdrawProduct::STATUS_CONFIRMED
+                ]);
+
+            if ($checkSerials->count()) {
+                throw new \Exception('Não é possível fechar uma retirada com produtos pendentes ou confirmados.');
+            }
+
+            $depotWithdraw->closed_at = Carbon::now();
+            $depotWithdraw->save();
+
+            return showResponse($depotWithdraw);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao fechar recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
     }
 }

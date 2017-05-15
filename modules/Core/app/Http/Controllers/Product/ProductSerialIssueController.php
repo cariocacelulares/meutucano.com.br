@@ -1,20 +1,23 @@
 <?php namespace Core\Http\Controllers\Product;
 
 use Core\Models\ProductSerial;
-use Core\Models\ProductSerialDefect;
+use Core\Models\ProductSerialIssue;
 use App\Http\Controllers\Controller;
 use Core\Http\Controllers\Product\ProductSerialController;
-use Core\Http\Requests\ProductSerialDefectRequest as Request;
+use Core\Http\Requests\ProductSerialIssueRequest as Request;
 
-class ProductSerialDefectController extends Controller
+class ProductSerialIssueController extends Controller
 {
+
     public function __construct()
     {
-        $this->middleware('permission:product_defect_list', ['only' => ['index']]);
-        $this->middleware('permission:product_defect_show', ['only' => ['show']]);
-        $this->middleware('permission:product_defect_create', ['only' => ['store']]);
-        $this->middleware('permission:product_defect_update', ['only' => ['update']]);
-        $this->middleware('permission:product_defect_return', ['only' => ['destroy']]);
+        $this->middleware('permission:stock_issue_list', ['only' => ['index']]);
+        $this->middleware('permission:stock_issue_show', ['only' => ['show']]);
+        $this->middleware('permission:stock_issue_create', ['only' => ['store']]);
+        $this->middleware('permission:stock_issue_update', ['only' => ['update']]);
+        $this->middleware('permission:stock_issue_delete', ['only' => ['destroy']]);
+
+        $this->middleware('currentUser', ['only' => ['store']]);
     }
 
     /**
@@ -22,8 +25,13 @@ class ProductSerialDefectController extends Controller
      */
     public function index()
     {
-        $data = ProductSerialDefect::with(['productSerial'])
-            ->orderBy('created_at', 'DESC');
+        $data = ProductSerialIssue::with([
+            'user',
+            'productSerial',
+            'productSerial.depotProduct',
+            'productSerial.depotProduct.depot',
+            'productSerial.depotProduct.product',
+        ])->orderBy('created_at', 'DESC');
 
         return tableListResponse($data);
     }
@@ -46,7 +54,7 @@ class ProductSerialDefectController extends Controller
             $issueSerial = ProductSerial::where('serial', $request->input('serial'))
                 ->first();
 
-            $data = new ProductSerialDefect;
+            $data = new ProductSerialIssue;
             $data->fill($request->except('serial'));
 
             $data->product_serial_id = $issueSerial->id;
@@ -69,7 +77,7 @@ class ProductSerialDefectController extends Controller
     public function destroy($id)
     {
         try {
-            $data = ProductSerialDefect::findOrFail($id);
+            $data = ProductSerialIssue::findOrFail($id);
             $data->delete();
 
             return deletedResponse();

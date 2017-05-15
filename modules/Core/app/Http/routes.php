@@ -85,9 +85,14 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     });
 
     /**
-     * Product Defects
+     * Product Serial Issues
      */
-    api('products/serials/defects', 'Product\ProductSerialDefectController');
+    api('products/serials/issues', 'Product\ProductSerialIssueController', ['show', 'update']);
+
+    /**
+     * Product Serial Defects
+     */
+    api('products/serials/defects', 'Product\ProductSerialDefectController', ['show', 'update']);
 
     /**
      * Products
@@ -102,7 +107,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     api('suppliers', 'Supplier\SupplierController');
 
     /**
-     * Depot Entry Invoice
+     * Depot Entry Invoices
      */
     Route::group(['prefix' => 'depots/entries/invoices'], function() {
         Route::get('parse/{id}', 'Depot\DepotEntryInvoiceController@parse');
@@ -111,22 +116,39 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     api('depots/entries/invoices', 'Depot\DepotEntryInvoiceController');
 
     /**
-     * Depot Entry
+     * Depot Entries
      */
     Route::put('depots/entries/confirm/{id}', 'Depot\DepotEntryController@confirm');
     api('depots/entries', 'Depot\DepotEntryController');
 
     /**
-     * Product stock
+     * Depot Products
      */
     Route::group(['prefix' => 'depots/products'], function () {
         Route::get('from/product/{sku}', 'Depot\DepotProductController@listByProduct');
         Route::get('from/depot/{slug}', 'Depot\DepotProductController@listByDepot');
-        // Route::get('transferencia/{id}', 'Depot/DepotProductController@transferOptions');
-        // Route::get('transferencia/verificar/{id}/{imei}', 'Depot/DepotProductController@verifyTransfer');
-        // Route::post('transferencia', 'Depot/DepotProductController@transfer');
     });
     api('depots/products', 'Depot\DepotProductController', ['index', 'show', 'update']);
+
+    /**
+     * Depot Withdraw Products
+     */
+    Route::group(['prefix' => 'depots/withdraws/products'], function () {
+        Route::get('check/confirm', 'Depot\DepotWithdrawProductcontroller@checkConfirm');
+        Route::get('check/return', 'Depot\DepotWithdrawProductcontroller@checkReturn');
+
+        Route::put('confirm', 'Depot\DepotWithdrawProductcontroller@confirm');
+        Route::put('return', 'Depot\DepotWithdrawProductcontroller@return');
+    });
+    api('depots/withdraws/products', 'Depot\DepotWithdrawProductcontroller');
+
+    /**
+     * Depot Withdraws
+     */
+     Route::group(['prefix' => 'depots/withdraws'], function () {
+         Route::put('close/{id}', 'Depot\DepotWithdrawController@close');
+     });
+    api('depots/withdraws', 'Depot\DepotWithdrawController');
 
     /**
      * Depots
@@ -151,32 +173,14 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     //  */
 
     //
-    // /**
-    //  * Stock removal
-    //  */
-    // Route::group(['prefix' => 'estoque/retirada', 'namespace' => 'Stock'], function () {
-    //     Route::post('fechar/{id}', 'RemovalController@close');
-    // });
-    // api('estoque/retirada', 'Stock\RemovalController');
+
     //
     // /**
     //  * Stock removal product
     //  */
-    // Route::group(['prefix' => 'estoque/retirada/produto', 'namespace' => 'Stock'], function () {
-    //     Route::get('verificar/{imei}', 'RemovalProductController@verify');
-    //     Route::get('verificar/{imei}/{stockRemovalId}', 'RemovalProductController@check');
-    //     Route::post('confirmar/{stockRemovalId}', 'RemovalProductController@confirm');
-    //     Route::post('retornar/{stockRemovalId}', 'RemovalProductController@return');
-    //     Route::post('status/{id}', 'RemovalProductController@changeStatus');
-    // });
-    // api('estoque/retirada/produto', 'Stock\RemovalProductController');
+
     //
-    // /**
-    //  * Stock issue
-    //  */
-    // Route::group(['prefix' => 'estoque/baixa', 'namespace' => 'Stock'], function () {
-    // });
-    // api('estoque/baixa', 'Stock\IssueController');
+
     //
     //
 

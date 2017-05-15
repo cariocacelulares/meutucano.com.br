@@ -1,9 +1,9 @@
-<?php namespace Core\Http\Requests;
+<?php namespace Core\Http\Requests\Depot;
 
 use App\Http\Requests\JsonResponseTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProductSerialDefectRequest extends FormRequest
+class DepotWithdrawProductRequest extends FormRequest
 {
     use JsonResponseTrait;
 
@@ -21,8 +21,8 @@ class ProductSerialDefectRequest extends FormRequest
     public function rules()
     {
         return [
-            'serial'      => 'required',
-            'description' => 'required|min:5',
+            'serials'           => "required|array",
+            'depot_withdraw_id' => "required"
         ];
     }
 }

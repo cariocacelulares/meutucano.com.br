@@ -1,228 +1,189 @@
-<?php namespace Core\Http\Controllers\Stock;
+<?php namespace Core\Http\Controllers\Depot;
 
-use Illuminate\Support\Facades\Input;
-use App\Http\Controllers\Rest\RestControllerTrait;
+use Core\Models\ProductSerial;
+use Core\Models\DepotWithdraw;
 use App\Http\Controllers\Controller;
-use Core\Models\Pedido;
-use Core\Models\Produto\ProductImei;
-use Core\Models\Stock\Removal;
-use Core\Models\Stock\RemovalProduct;
-use Core\Transformers\StockRemovalProductTransformer;
+use Core\Models\DepotWithdrawProduct;
+use Core\Http\Requests\Depot\DepotWithdrawProductRequest as Request;
 
-/**
- * Class RemovalProductController
- * @package Core\Http\Controllers\Stock
- */
-class RemovalProductController extends Controller
+class DepotWithdrawProductController extends Controller
 {
-    use RestControllerTrait;
-
-    const MODEL = RemovalProduct::class;
-
     /**
-     * Change stock removal product status
+     * Check if serial can be confirmed or returned
      *
-     * @param  int $id
-     * @return Response
+     * @param  array $serials
+     * @param  int   $depotWithdrawId
+     * @return boolean|string
      */
-    public function changeStatus($id)
-    {
-        $removalProduct = RemovalProduct::findOrFail($id);
-
-        $status = (int) Input::get('status');
-        if ($status !== null && isset(\Config::get('core.stock_removal_status')[$status])) {
-            $removalProduct->status = $status;
-            $removalProduct->save();
-        }
-
-        $removalProduct = $removalProduct->with([
-            'productImei',
-            'productStock',
-            'productStock.stock',
-            'productStock.product',
-            'productStock.product.productStocks',
-            'productStock.product.productStocks.stock',
-        ])->find($removalProduct->id);
-
-        return $this->showResponse(StockRemovalProductTransformer::show($removalProduct));
-    }
-
-    /**
-     * Verify imei status when add to a stock removal
-     *
-     * @param  string $imei
-     * @return Response
-     */
-    public function verify($imei)
+    public function checkSerialsConfirmOrReturn($serials, $depotWithdrawId, $checkStatus = DepotWithdrawProduct::STATUS_WITHDRAWN)
     {
         try {
-            $productImei = ProductImei
-                ::where('imei', '=', $imei)
-                ->first();
+            $depotWithdraw = DepotWithdraw::with([
+                'products',
+                'products.productSerial'
+            ])->findOrFail($depotWithdrawId);
 
-            if (!$productImei) {
-                return $this->listResponse([
-                    'icon'    => 'ban',
-                    'message' => 'Serial não registrado!',
-                    'ok'      => false,
-                ]);
-            }
+            if ($depotWithdraw->closed_at)
+                throw new \Exception("Não é possível confirmar/retornar produtos de uma retirada fechada.");
 
-            $removalProduct = RemovalProduct::where('product_imei_id', '=', $productImei->id)
-                ->whereNotIn('status', [2, 3])
-                ->first();
+            $checkSerials = collect($serials)
+                ->diff($depotWithdraw->products->pluck('productSerial.serial'));
 
-            if ($removalProduct) {
-                return $this->listResponse([
-                    'icon'    => 'shopping-cart',
-                    'message' => "Serial em aberto na retirada #{$removalProduct->stock_removal_id}",
-                    'ok'      => false,
-                ]);
-            }
+            if ($checkSerials->count())
+                throw new \Exception("Produto não pertence à retirada.");
 
-            $order = Pedido::join('pedido_produtos', 'pedido_produtos.pedido_id', 'pedidos.id')
-                ->where('pedido_produtos.product_imei_id', '=', $productImei->id)
-                ->whereIn('pedidos.status', [2, 3])
-                ->orderBy('pedidos.created_at', 'DESC')
-                ->first();
+            $depotWithdrawProducts = $depotWithdraw->products()->whereHas('productSerial', function($query) use ($serials) {
+                $query->whereIn('serial', $serials);
+            });
 
-            if ($order) {
-                return $this->listResponse([
-                    'icon'    => 'exclamation',
-                    'message' => 'Serial já faturado!',
-                    'ok'      => false,
-                ]);
-            }
+            if ($depotWithdrawProducts->pluck('status')->diff($checkStatus)->count())
+                throw new \Exception("Produto não elegível para essa ação, cheque seu status para prosseguir.");
 
-            return $this->listResponse([
-                'icon'    => 'check',
-                'message' => 'Serial disponível!',
-                'ok'      => true,
-            ]);
-        } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Não foi possível verificar o imei!'));
-
-            return $this->listResponse([
-                'icon'    => 'times',
-                'message' => 'Não foi possível verificar o imei!',
-                'ok'      => false,
-            ]);
+            return true;
+        } catch (\Exception $e) {
+            return $e->getMessage();
         }
     }
 
     /**
-     * Check if imei is able to be confirmed in stock removal_products
+     * Check if serial can be confirmed
      *
-     * @param  string $imei
-     * @param  int $stockRemovalId
-     * @return Response
+     * @param  string $serial
+     * @param  int $depotWithdrawId
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function check($imei, $stockRemovalId)
+    public function checkConfirm(Request $request)
     {
         try {
-            $productImei = ProductImei
-                ::where('imei', '=', $imei)
-                ->first();
+            $data = self::checkSerialsConfirmOrReturn(
+                $request->input('serials'),
+                $request->input('depot_withdraw_id')
+            );
 
-            if (!$productImei) {
-                return $this->listResponse([
-                    'icon'    => 'ban',
-                    'message' => 'Serial não registrado!',
-                    'ok'      => false,
+            if ($data !== true)
+                return validationFailResponse([
+                    'available' => false,
+                    'message'   => $data
                 ]);
-            }
 
-            $removalProduct = RemovalProduct::where('stock_removal_id', '=', $stockRemovalId)
-                ->where('product_imei_id', '=', $productImei->id)
-                ->where('status', '!=', 3)
-                ->first();
-
-            if (!$removalProduct) {
-                return $this->listResponse([
-                    'icon'    => 'times',
-                    'message' => 'Serial não registrado nesta retirada!',
-                    'ok'      => false,
-                ]);
-            }
-
-            return $this->listResponse([
-                'icon'    => 'check',
-                'message' => 'Serial disponível p/ confirmação!',
-                'ok'      => true,
+            return showResponse([
+                'available' => true
             ]);
         } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Não foi possível verificar o serial!'));
+            \Log::error(logMessage($exception, 'Erro ao realizar conferência'));
 
-            return $this->listResponse([
-                'icon'    => 'times',
-                'message' => 'Não foi possível verificar o serial!',
-                'ok'      => false,
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
 
     /**
-     * Update status
+     * Check if serial can be returned
      *
-     * @param  int $stockRemovalId
-     * @param  int $status          new status
-     * @return Response
+     * @param  string $serial
+     * @param  int $depotWithdrawId
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function updateStatus($stockRemovalId, $status)
+    public function checkReturn(Request $request)
     {
-        $stockRemoval = Removal::findOrFail($stockRemovalId);
-        $itens        = Input::get('itens');
+        try {
+            $data = self::checkSerialsConfirmOrReturn(
+                $request->input('serials'),
+                $request->input('depot_withdraw_id'),
+                DepotWithdrawProduct::STATUS_CONFIRMED
+            );
 
-        if (($status == 1 && $stockRemoval->user_id == getCurrentUserId()) || $status != 1) {
-            try {
-                if ($itens) {
-                    if (!is_array($itens)) {
-                        $itens = [$itens];
-                    }
+            if ($data !== true)
+                return validationFailResponse([
+                    'available' => false,
+                    'message'   => $data
+                ]);
 
-                    $update = RemovalProduct::whereIn('id', $itens)
-                        ->where('stock_removal_id', '=', $stockRemoval->id)
-                        ->update([
-                            'status' => $status
-                        ]);
+            return showResponse([
+                'available' => true
+            ]);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao realizar conferência'));
 
-                    return $this->listResponse([
-                        'count' => $update
-                    ]);
-                }
-            } catch (\Exception $exception) {
-                \Log::error(logMessage($exception, 'Não foi possível alterar o status dos produtos da retirada ' . $stockRemoval->id), [$itens]);
-            }
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
         }
-
-        return $this->listResponse([
-            'count' => 0
-        ]);
     }
 
     /**
-     * Change stock removal product status to 1 - Entregue
+     * Verify and confirm serials
      *
-     * @param  int $stockRemovalId
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function confirm($stockRemovalId)
+    public function confirm(Request $request)
     {
-        $this->middleware('permission:withdraw_confirm');
+        try {
+            $data = self::checkSerialsConfirmOrReturn(
+                $request->input('serials'),
+                $request->input('depot_withdraw_id')
+            );
 
-        return $this->updateStatus($stockRemovalId, 1);
+            if ($data !== true)
+                return validationFailResponse([
+                    'available' => false,
+                    'message'   => $data
+                ]);
+
+            $depotWithdraw = DepotWithdraw::findOrFail($request->input('depot_withdraw_id'));
+
+            $depotWithdrawProducts = $depotWithdraw->products()->whereHas('productSerial', function($query) use ($request) {
+                $query->whereIn('serial', $request->input('serials'));
+            });
+
+            $depotWithdrawProducts->update(['status' => DepotWithdrawProduct::STATUS_CONFIRMED]);
+
+            return showResponse($depotWithdraw);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao fechar recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
     }
 
     /**
-     * Change stock removal product status to 3 - Retornado
+     * Verify and return serials
      *
-     * @param  int $stockRemovalId
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function return($stockRemovalId)
+    public function return(Request $request)
     {
-        $this->middleware('permission:withdraw_return');
+        try {
+            $data = self::checkSerialsConfirmOrReturn(
+                $request->input('serials'),
+                $request->input('depot_withdraw_id'),
+                DepotWithdrawProduct::STATUS_CONFIRMED
+            );
 
-        return $this->updateStatus($stockRemovalId, 3);
+            if ($data !== true)
+                return validationFailResponse([
+                    'available' => false,
+                    'message'   => $data
+                ]);
+
+            $depotWithdraw = DepotWithdraw::findOrFail($request->input('depot_withdraw_id'));
+
+            $depotWithdrawProducts = $depotWithdraw->products()->whereHas('productSerial', function($query) use ($request) {
+                $query->whereIn('serial', $request->input('serials'));
+            });
+
+            $depotWithdrawProducts->update(['status' => DepotWithdrawProduct::STATUS_RETURNED]);
+
+            return showResponse($depotWithdraw);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao fechar recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
     }
 }

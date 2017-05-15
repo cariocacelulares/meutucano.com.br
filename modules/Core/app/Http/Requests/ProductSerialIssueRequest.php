@@ -3,7 +3,7 @@
 use App\Http\Requests\JsonResponseTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProductSerialDefectRequest extends FormRequest
+class ProductSerialIssueRequest extends FormRequest
 {
     use JsonResponseTrait;
 
@@ -22,6 +22,7 @@ class ProductSerialDefectRequest extends FormRequest
     {
         return [
             'serial'      => 'required',
+            'reason'      => 'required',
             'description' => 'required|min:5',
         ];
     }

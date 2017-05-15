@@ -1,6 +1,7 @@
 <?php namespace Core\Http\Controllers\Product;
 
 use Core\Models\ProductSerial;
+use Core\Models\DepotProduct;
 use Core\Models\DepotWithdrawProduct;
 use App\Http\Controllers\Controller;
 use Core\Http\Requests\ProductSerialTransferRequest as TransferRequest;
@@ -39,7 +40,7 @@ class ProductSerialController extends Controller
      * @param  int $productSku
      * @return boolean
      */
-    private function checkSerialsTransferable($serials, $depotSlug, $productSku = null)
+    public static function checkSerials($serials, $depotSlug = null, $productSku = null)
     {
         try {
             $checkSerials = ProductSerial::with([
@@ -66,7 +67,7 @@ class ProductSerialController extends Controller
             if ($checkSerials->count() != sizeof($serials))
                 throw new \Exception("Serial inexistente.");
 
-            if ($checkSerials->pluck('depotProduct.depot_slug')->diff($depotSlug)->count())
+            if ($depotSlug && $checkSerials->pluck('depotProduct.depot_slug')->diff($depotSlug)->count())
                 throw new \Exception("Serial não pertence ao estoque informado.");
 
             if ($productSku && $checkSerials->pluck('depotProduct.product_sku')->diff($productSku)->count())
@@ -89,7 +90,7 @@ class ProductSerialController extends Controller
     public function checkTransfer(CheckTransferRequest $request)
     {
         try {
-            $data = $this->checkSerialsTransferable(
+            $data = self::checkSerials(
                 $request->input('serials'),
                 $request->input('depot_from'),
                 $request->input('product_sku')
@@ -121,7 +122,7 @@ class ProductSerialController extends Controller
     public function transfer(TransferRequest $request)
     {
         try {
-            $data = $this->checkSerialsTransferable(
+            $data = self::checkSerials(
                 $request->input('serials'),
                 $request->input('depot_from'),
                 $request->input('product_sku')
@@ -133,7 +134,24 @@ class ProductSerialController extends Controller
                     'message'   => $data
                 ]);
 
-            // Realiza transferência
+            \DB::transaction(function() use ($request) {
+                $checkSerials = ProductSerial::with('depotProduct')
+                    ->whereIn('serial', $request->input('serials'))
+                    ->get();
+
+                foreach ($checkSerials as $serial) {
+                    $depotProductFrom = $serial->depotProduct;
+                    $depotProductTo   = DepotProduct::firstOrCreate([
+                        'depot_slug'  => $request->input('depot_to'),
+                        'product_sku' => $depotProductFrom->product_sku
+                    ]);
+
+                    $serial->depot_product_id = $depotProductTo->id;
+                    $serial->save();
+                }
+            });
+
+            return showResponse([]);
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao realizar conferência '));
 
