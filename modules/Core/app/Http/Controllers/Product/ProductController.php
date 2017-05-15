@@ -86,7 +86,13 @@ class ProductController extends Controller
     public function show($id)
     {
         try {
-            $data = Product::with(['line', 'brand'])->findOrFail($id);
+            $data = Product::with([
+                'line',
+                'brand',
+                'availableStockCount',
+                'issuesCount',
+                'defectsCount'
+            ])->findOrFail($id);
 
             return showResponse($data);
         } catch (\Exception $exception) {

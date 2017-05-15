@@ -47,7 +47,9 @@ class Product extends \Eloquent
      */
     protected $hidden = [
         'reservedStockCount',
-        'availableStockCount'
+        'availableStockCount',
+        'issuesCount',
+        'defectsCount',
     ];
 
     /**
@@ -56,6 +58,8 @@ class Product extends \Eloquent
     protected $appends = [
         'origin_cast',
         'condition_cast',
+        'issues',
+        'defects',
         'reserved_stock',
         'available_stock'
     ];
@@ -177,6 +181,32 @@ class Product extends \Eloquent
     }
 
     /**
+     * Return issues from product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function issuesCount()
+    {
+        return $this->hasMany(DepotProduct::class, 'product_sku')
+            ->selectRaw('depot_products.product_sku, count(*) as aggregate_issues_count')
+            ->join('product_serials', 'product_serials.depot_product_id', 'depot_products.id')
+            ->join('product_serial_issues', 'product_serial_issues.product_serial_id', 'product_serials.id');
+    }
+
+    /**
+     * Return defects from product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function defectsCount()
+    {
+        return $this->hasMany(DepotProduct::class, 'product_sku')
+            ->selectRaw('depot_products.product_sku, count(*) as aggregate_defects_count')
+            ->join('product_serials', 'product_serials.depot_product_id', 'depot_products.id')
+            ->join('product_serial_defects', 'product_serial_defects.product_serial_id', 'product_serials.id');
+    }
+
+    /**
      * Return count of reserved stock from product
      *
      * @return int
@@ -212,4 +242,36 @@ class Product extends \Eloquent
 
         return ($stock - $reserved);
     }
+
+    /**
+     * Return count of issues from product
+     *
+     * @return int
+     */
+    public function getIssuesAttribute()
+    {
+        if (!array_key_exists('issuesCount', $this->relations)) {
+          return;
+        }
+
+
+        $related = $this->getRelation('issuesCount')->first();
+        return $related ? (int) $related->aggregate_issues_count : 0;
+    }
+
+    /**
+     * Return count of defects from product
+     *
+     * @return int
+     */
+    public function getDefectsAttribute()
+    {
+        if (!array_key_exists('defectsCount', $this->relations)) {
+          return;
+        }
+
+        $related = $this->getRelation('defectsCount')->first();
+        return $related ? (int) $related->aggregate_defects_count : 0;
+    }
+
 }
