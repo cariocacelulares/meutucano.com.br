@@ -7,6 +7,12 @@ class Product extends \Eloquent
 {
     use RevisionableTrait;
 
+    const ORIGIN_NATIONAL = 0;
+    const ORIGIN_INTERNATIONAL = 1;
+
+    const CONDITION_NEW = 0;
+    const CONDITION_USED = 1;
+
     /**
      * @var boolean
      */
@@ -28,8 +34,10 @@ class Product extends \Eloquent
         'reference',
         'ean',
         'ncm',
+        'unity_type',
         'price',
         'cost',
+        'origin',
         'condition',
         'warranty'
     ];
@@ -51,8 +59,8 @@ class Product extends \Eloquent
     ];
 
     protected $casts = [
-      'price' => 'float',
-      'cost'  => 'float'
+        'price' => 'float',
+        'cost'  => 'float'
     ];
 
     /**
