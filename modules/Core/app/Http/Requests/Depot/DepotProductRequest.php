@@ -22,7 +22,7 @@ class DepotProductRequest extends FormRequest
     {
         return [
             'product_sku' => "required",
-            'depot_slug'  => "required"
+            'depot_slug'  => "required|unique_with:depot_products,product_sku"
         ];
     }
 }

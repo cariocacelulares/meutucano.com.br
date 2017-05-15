@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b2d285813c7ed1348928c9fa3619d646",
+    "content-hash": "8a78591f085fc0fb0fd20ea01a09dc5f",
     "packages": [
         {
             "name": "barryvdh/laravel-cors",
@@ -728,6 +728,52 @@
                 "parser"
             ],
             "time": "2017-03-29T16:04:15+00:00"
+        },
+        {
+            "name": "felixkiss/uniquewith-validator",
+            "version": "3.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/felixkiss/uniquewith-validator.git",
+                "reference": "d899ef30071c8522fdb55b19b8593cf040e53c88"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/felixkiss/uniquewith-validator/zipball/d899ef30071c8522fdb55b19b8593cf040e53c88",
+                "reference": "d899ef30071c8522fdb55b19b8593cf040e53c88",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "5.*",
+                "illuminate/validation": "5.*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "bossa/phpspec2-expect": "dev-phpspec-3.2",
+                "phpspec/phpspec": "^3.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Felixkiss\\UniqueWithValidator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Felix Kiss",
+                    "email": "felix@felixkiss.com"
+                }
+            ],
+            "description": "Custom Laravel Validator for combined unique indexes",
+            "homepage": "https://github.com/felixkiss/uniquewith-validator",
+            "keywords": [
+                "laravel"
+            ],
+            "time": "2017-05-12T15:57:09+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

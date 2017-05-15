@@ -41,7 +41,8 @@
         "doctrine/dbal": "^2.5",
         "barryvdh/laravel-cors": "^0.9.2",
         "lanin/laravel-api-debugger": "^0.3",
-        "nwidart/laravel-modules": "^1.20"
+        "nwidart/laravel-modules": "^1.20",
+        "felixkiss/uniquewith-validator": "^3.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

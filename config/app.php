@@ -56,6 +56,7 @@ return [
         Livepixel\MercadoLivre\MeliServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
         Lanin\Laravel\ApiDebugger\ServiceProvider::class,
+        Felixkiss\UniqueWithValidator\ServiceProvider::class,
     ],
 
     'aliases' => [
