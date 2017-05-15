@@ -7,7 +7,6 @@
 
 <script>
 import 'font-awesome/css/font-awesome.css'
-import { isEmpty } from 'lodash'
 
 export default {
   props: {
@@ -66,13 +65,7 @@ export default {
         classList.push('fa-spin')
       }
 
-      classList = classList.filter((item) => {
-        if (typeof(item) === 'boolean' || !isEmpty(item)) {
-          return item
-        }
-      });
-
-      return classList.join(' ')
+      return notEmpty(classList).join(' ')
     }
   }
 }

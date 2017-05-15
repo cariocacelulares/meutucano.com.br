@@ -11,8 +11,7 @@
 </template>
 
 <script>
-import { default as CommonTransformer } from 'common/transformer'
-import { isEmpty } from 'lodash'
+// import { default as CommonTransformer } from 'common/transformer'
 
 export default {
   props: {

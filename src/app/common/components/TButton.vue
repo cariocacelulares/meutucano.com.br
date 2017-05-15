@@ -10,8 +10,6 @@
 </template>
 
 <script>
-import { isEmpty } from 'lodash'
-
 export default {
   props: {
     link: {
@@ -86,13 +84,7 @@ export default {
         classList.push(this.size)
       }
 
-      classList = classList.filter((item) => {
-        if (typeof(item) === 'boolean' || !isEmpty(item)) {
-          return item
-        }
-      });
-
-      return classList.join(' ')
+      return notEmpty(classList).join(' ')
     }
   },
   methods: {

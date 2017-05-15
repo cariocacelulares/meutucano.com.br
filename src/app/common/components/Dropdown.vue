@@ -16,7 +16,6 @@
 
 <script>
 import 'font-awesome/css/font-awesome.css'
-import { isEmpty } from 'lodash'
 
 export default {
   props: {

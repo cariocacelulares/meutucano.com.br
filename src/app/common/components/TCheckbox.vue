@@ -6,9 +6,8 @@
     <span v-if="label" class="label">{{ label }}</span>
   </label>
 </template>
-<script>
-import { isEmpty } from 'lodash'
 
+<script>
 export default {
   props: {
     value: {

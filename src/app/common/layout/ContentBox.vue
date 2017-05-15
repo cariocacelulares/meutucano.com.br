@@ -5,8 +5,6 @@
 </template>
 
 <script>
-import { isEmpty } from 'lodash'
-
 export default {
   props: {
     boxed: {
@@ -38,13 +36,7 @@ export default {
         classList.push('discret')
       }
 
-      classList = classList.filter((item) => {
-        if (typeof(item) === 'boolean' || !isEmpty(item)) {
-          return item
-        }
-      });
-
-      return classList.join(' ')
+      return notEmpty(classList).join(' ')
     }
   },
 }

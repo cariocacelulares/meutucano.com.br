@@ -9,8 +9,6 @@
 </template>
 
 <script>
-import { isEmpty } from 'lodash'
-
 export default {
   props: {
     height: {
@@ -46,13 +44,7 @@ export default {
       classList.push(this.classes)
       classList.push(`bg-${this.color}`)
 
-      classList = classList.filter((item) => {
-        if (typeof(item) === 'boolean' || !isEmpty(item)) {
-          return item
-        }
-      });
-
-      return classList.join(' ')
+      return notEmpty(classList).join(' ')
     }
   }
 }

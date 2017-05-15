@@ -1,5 +1,5 @@
 <template>
-  <span :class="classes" :style="{
+  <span :class="classList" :style="{
       width,
       height,
     }">
@@ -9,8 +9,6 @@
 </template>
 
 <script>
-import { isEmpty } from 'lodash'
-
 export default {
   props: {
     color: {
@@ -33,20 +31,14 @@ export default {
   },
 
   computed: {
-    classes() {
-      let classes = []
+    classList() {
+      let classList = []
 
-      classes.push('Alert')
-      classes.push(`bg-${this.color}`)
-      classes.push(`text-${this.text}`)
+      classList.push('Alert')
+      classList.push(`bg-${this.color}`)
+      classList.push(`text-${this.text}`)
 
-      classes = classes.filter((item) => {
-        if (typeof(item) === 'boolean' || !isEmpty(item)) {
-          return item
-        }
-      });
-
-      return classes.join(' ')
+      return notEmpty(classList).join(' ')
     }
   },
 }

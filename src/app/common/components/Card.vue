@@ -86,7 +86,6 @@ export default {
   display: flex;
   flex-direction: column;
   color: $darker;
-  // overflow: hidden;
 
   &.important {
     border-top: 5px solid $warning;
