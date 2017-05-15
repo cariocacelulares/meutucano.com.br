@@ -13,8 +13,7 @@ class ScheduleServiceProvider extends ServiceProvider
      * @var array
      */
     protected $commands = [
-        CancelOldOrders::class,
-        InvoiceOrders::class,
+        CancelOldOrders::class
     ];
 
     /**

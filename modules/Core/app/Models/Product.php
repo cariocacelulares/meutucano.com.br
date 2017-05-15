@@ -25,6 +25,7 @@ class Product extends \Eloquent
         'brand_id',
         'line_id',
         'title',
+        'reference',
         'ean',
         'ncm',
         'price',
