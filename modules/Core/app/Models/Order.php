@@ -126,6 +126,14 @@ class Order extends \Eloquent
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function calls()
+    {
+        return $this->hasMany(OrderCall::class)->orderBy('created_at');
+    }
+
+    /**
      * Define if an order can be holded
      *
      * @return boolean

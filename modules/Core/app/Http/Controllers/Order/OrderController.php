@@ -145,7 +145,7 @@ class OrderController extends Controller
                 'orderProductsGrouped',
                 'orderProductsGrouped.product',
                 'orderProductsGrouped.productSerial'
-            ])->findOrFail($id);
+            ])->withCount(['comments', 'calls'])->findOrFail($id);
 
             return showResponse($data);
         } catch (\Exception $exception) {
