@@ -110,6 +110,47 @@ Vue.directive('confirm', {
   }
 })
 
+const clipboardIcon = Vue.extend({
+  template: `<Icon name="paperclip" class="m-l-5"/>`
+})
+
+Vue.directive('clipboard', {
+  bind(el, binding, vnode) {
+    const closeConfirm = () => {
+      const app = document.getElementById('app')
+
+      let clipboard = document.createElement('input')
+      clipboard.type = 'text'
+      clipboard.id = 'clipboard'
+      clipboard.value = text
+      app.appendChild(clipboard)
+
+      document.getElementById('clipboard').select()
+      document.execCommand('copy')
+
+      app.removeChild(clipboard)
+    }
+
+    let text = binding.value
+
+    if (!text) {
+      text = el.innerHTML
+    }
+
+    text = text ? text.replace(/<[^>]*>/g, '') : null
+
+    if (text) {
+      el.appendChild((new clipboardIcon().$mount()).$el)
+      el.className += ' clipboard'
+
+      el.addEventListener('click', closeConfirm)
+    }
+  },
+  unbind(el) {
+    el.removeEventListener('click', el.closeConfirm)
+  }
+})
+
 Vue.filter('money', (value) => CommonTransformer.monetary(value))
 Vue.filter('date', (value) => CommonTransformer.date(value))
 Vue.filter('humanDiff', (value) => CommonTransformer.humanDiff(value))
