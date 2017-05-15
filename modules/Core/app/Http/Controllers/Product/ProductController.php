@@ -69,7 +69,7 @@ class ProductController extends Controller
                 'lastEntryProduct.depotEntry.supplier',
             ])->findOrFail($id);
 
-            return showResponse($data->lastEntryProduct->depotEntry);
+            return showResponse($data->lastEntryProduct ? $data->lastEntryProduct->depotEntry : []);
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao obter recurso'));
 
