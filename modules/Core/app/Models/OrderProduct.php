@@ -27,7 +27,8 @@ class OrderProduct extends \Eloquent
      * @return array
      */
     protected $casts = [
-        'price' => 'float'
+        'price'    => 'float',
+        'subtotal' => 'float'
     ];
 
     /**

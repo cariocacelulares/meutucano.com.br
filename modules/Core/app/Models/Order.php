@@ -64,6 +64,9 @@ class Order extends \Eloquent
      * @return array
      */
     protected $casts = [
+        'taxes'         => 'float',
+        'discount'      => 'float',
+        'subtotal'      => 'float',
         'total'         => 'float',
         'shipment_cost' => 'float'
     ];
@@ -98,7 +101,7 @@ class Order extends \Eloquent
     public function orderProductsGrouped()
     {
         return $this->hasMany(OrderProduct::class)
-            ->selectRaw('order_products.*, count(*) as quantity, count(*) * price as subtotal')
+            ->selectRaw('order_products.*, count(*) as quantity, (count(*) * price) as subtotal')
             ->groupBy('product_sku', 'price');
     }
 

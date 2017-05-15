@@ -31,9 +31,18 @@ class DepotEntry extends \Eloquent
     ];
 
     /**
+     * @return array
+     */
+    protected $hidden = [
+        'productsSummary'
+    ];
+
+    /**
      * @var array
      */
     protected $appends = [
+        'total',
+        'quantity',
         'confirmed'
     ];
 
@@ -77,5 +86,45 @@ class DepotEntry extends \Eloquent
     public function products()
     {
         return $this->hasMany(DepotEntryProduct::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function productsSummary()
+    {
+        return $this->hasMany(DepotEntryProduct::class)
+            ->selectRaw('depot_entry_products.depot_entry_id, sum(quantity) as quantity, (quantity * unitary_value) as total')
+            ->groupBy('depot_entry_id');
+    }
+
+    /**
+     * Return total value from entry
+     *
+     * @return int
+     */
+    public function getTotalAttribute()
+    {
+        if (!array_key_exists('productsSummary', $this->relations)) {
+            return;
+        }
+
+        $related = $this->getRelation('productsSummary')->first();
+        return $related ? (float) $related->total : 0;
+    }
+
+    /**
+     * Return quantity of products from entry
+     *
+     * @return int
+     */
+    public function getQuantityAttribute()
+    {
+        if (!array_key_exists('productsSummary', $this->relations)) {
+            return;
+        }
+
+        $related = $this->getRelation('productsSummary')->first();
+        return $related ? (int) $related->quantity : 0;
     }
 }

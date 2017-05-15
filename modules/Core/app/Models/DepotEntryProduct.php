@@ -41,7 +41,7 @@ class DepotEntryProduct extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function entry()
+    public function depotEntry()
     {
         return $this->belongsTo(DepotEntry::class);
     }

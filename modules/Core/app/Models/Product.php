@@ -115,7 +115,15 @@ class Product extends \Eloquent
      */
     public function entryProducts()
     {
-        return $this->hasMany(EntryProduct::class, 'product_sku');
+        return $this->hasMany(DepotEntryProduct::class, 'product_sku');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function lastEntryProduct()
+    {
+        return $this->hasOne(DepotEntryProduct::class, 'product_sku')->latest();
     }
 
     /**

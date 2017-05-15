@@ -45,6 +45,31 @@ class ProductController extends Controller
     }
 
     /**
+     * Return last depot entry from product
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function lastDepotEntry($id)
+    {
+        try {
+            $data = Product::with([
+                'lastEntryProduct.depotEntry',
+                'lastEntryProduct.depotEntry.productsSummary',
+                'lastEntryProduct.depotEntry.supplier',
+            ])->findOrFail($id);
+
+            return showResponse($data->lastEntryProduct->depotEntry);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao obter recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
