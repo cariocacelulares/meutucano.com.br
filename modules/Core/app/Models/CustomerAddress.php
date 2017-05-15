@@ -20,11 +20,28 @@ class CustomerAddress extends \Eloquent
         'state',
     ];
 
+    protected $appends = [
+        'address'
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    /**
+     * Return full address attribute
+     *
+     * @return string
+     */
+    public function getAddressAttribute()
+    {
+        return "{$this->street} #{$this->number} - {$this->district}
+            {$this->city} / {$this->state}
+            {$this->zipcode}
+            {$this->complement}";
     }
 }
