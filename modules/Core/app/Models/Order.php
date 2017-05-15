@@ -49,6 +49,9 @@ class Order extends \Eloquent
      * @return array
      */
     protected $appends = [
+        'status_cast',
+        'payment_method_cast',
+        'shipment_method_cast',
         'subtotal',
         'can_hold',
         'can_prioritize',
@@ -137,6 +140,61 @@ class Order extends \Eloquent
     public function calls()
     {
         return $this->hasMany(OrderCall::class)->orderBy('created_at');
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusCastAttribute()
+    {
+        switch ($this->status) {
+            case self::STATUS_PENDING:
+                return 'Pendente';
+            case self::STATUS_PAID:
+                return 'Pago';
+            case self::STATUS_INVOICED:
+                return 'Faturado';
+            case self::STATUS_SHIPPED:
+                return 'Em transporte';
+            case self::STATUS_COMPLETE:
+                return 'Completo';
+            case self::STATUS_CANCELED:
+                return 'Cancelado';
+            case self::STATUS_RETURNED:
+                return 'Retornado';
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentMethodCastAttribute()
+    {
+        switch (strtoupper($this->payment_method)) {
+            case 'CREDITO':
+                return 'Cartão de Crédito';
+            case 'BOLETO':
+                return 'Boleto Bancário';
+            case 'DEBITO':
+                return 'Cartão de Débito';
+            case 'MERCADOPAGO':
+                return 'Mercado Pago';
+            default:
+                return 'Outro';
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getShipmentMethodCastAttribute()
+    {
+        switch (strtoupper($this->shipment_method)) {
+            case 'PAC':
+                return 'Correios PAC';
+            case 'SEDEX':
+                return 'Correios SEDEX';
+        }
     }
 
     /**

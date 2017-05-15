@@ -23,8 +23,11 @@ class OrderProduct extends \Eloquent
         'price',
       ];
 
+    /**
+     * @return array
+     */
     protected $casts = [
-      'price' => 'float'
+        'price' => 'float'
     ];
 
     /**
