@@ -34,6 +34,8 @@ class Order extends \Eloquent
         'installments',
         'api_code',
         'marketplace',
+        'taxes',
+        'discount',
         'total',
         'estimated_delivery',
         'status',
@@ -47,6 +49,7 @@ class Order extends \Eloquent
      * @return array
      */
     protected $appends = [
+        'subtotal',
         'can_hold',
         'can_prioritize',
         'can_approve',
@@ -54,8 +57,11 @@ class Order extends \Eloquent
         'count_on_stock'
       ];
 
+    /**
+     * @return array
+     */
     protected $casts = [
-        'total' => 'float',
+        'total'         => 'float',
         'shipment_cost' => 'float'
     ];
 
@@ -89,7 +95,7 @@ class Order extends \Eloquent
     public function orderProductsGrouped()
     {
         return $this->hasMany(OrderProduct::class)
-            ->selectRaw('order_products.*, count(*) as quantity')
+            ->selectRaw('order_products.*, count(*) as quantity, count(*) * price as subtotal')
             ->groupBy('product_sku', 'price');
     }
 
@@ -131,6 +137,16 @@ class Order extends \Eloquent
     public function calls()
     {
         return $this->hasMany(OrderCall::class)->orderBy('created_at');
+    }
+
+    /**
+     * Return subtotal from order
+     *
+     * @return float
+     */
+    public function getSubtotalAttribute()
+    {
+        return $this->total + $this->taxes - $this->discount;
     }
 
     /**
