@@ -1,5 +1,5 @@
 <template>
-  <Modal name="Logistic" icon="exchange" title="Logística reversa" :on-show="fetch" :on-confirm="save">
+  <Modal name="Logistic" icon="exchange" title="Logística reversa" :on-show="fetch" :on-confirm="save" :on-close="close">
     <form>
       <Alert icon="info" color="lightPrimary" text="darkPrimary">O rastreio assumirá o status de "Devolvido" caso receber ação.</Alert>
 
@@ -17,20 +17,31 @@
     </form>
 
     <template slot="right">
-      <CommentsBox :form="false" :only-important="true" />
+      <CommentsBox :order="id" :form="false" :only-important="true" />
     </template>
   </Modal>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      id: null
+    }
+  },
+
   methods: {
     fetch() {
-      console.log('depot fetch')
+      this.id = this.$route.params.id
+      console.log('depot fetch', this.id)
     },
 
     save() {
       console.log('depot save')
+    },
+
+    close() {
+      this.id = null
     },
   },
 }

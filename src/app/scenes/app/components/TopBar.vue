@@ -35,8 +35,12 @@ export default {
     text-decoration: none;
   }
 
-  .help .Icon {
-    font-size: 13px;
+  .help {
+    color: inherit;
+
+    .Icon {
+      font-size: 13px;
+    }
   }
 }
 </style>

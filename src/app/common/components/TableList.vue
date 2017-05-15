@@ -163,6 +163,11 @@ export default {
         justify-content: center;
       }
 
+      tr:hover,
+      tr:focus {
+        background-color: darken($lighter, 11) !important;
+      }
+
       tr:nth-child(2n) {
         background-color: $lighter;
       }

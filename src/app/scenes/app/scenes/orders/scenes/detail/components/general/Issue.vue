@@ -1,5 +1,5 @@
 <template>
-  <Modal name="Issue" icon="exclamation-triangle" title="Pedido de informação" :on-show="fetch" :on-confirm="save">
+  <Modal name="Issue" icon="exclamation-triangle" title="Pedido de informação" :on-show="fetch" :on-confirm="save" :on-close="close">
     <form>
       <Alert icon="info" color="lightPrimary" text="darkPrimary">O rastreio assumirá o status de "Tratado" caso receber pagamento da PI.</Alert>
 
@@ -37,20 +37,31 @@
     </form>
 
     <template slot="right">
-      <CommentsBox :form="false" :only-important="true" />
+      <CommentsBox :order="id" :form="false" :only-important="true" />
     </template>
   </Modal>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      id: null
+    }
+  },
+
   methods: {
     fetch() {
-      console.log('depot fetch')
+      this.id = this.$route.params.id
+      console.log('depot fetch', this.id)
     },
 
     save() {
       console.log('depot save')
+    },
+
+    close() {
+      this.id = null
     },
   },
 }

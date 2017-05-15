@@ -1,5 +1,9 @@
 <template>
-  <div class="CommentsBox">
+  <div :class="{
+    CommentsBox: true,
+    loading,
+    'no-results': !comments.length && !loading
+  }">
     <Card v-if="form">
       <form @submit.prevent="save">
         <!-- <p>* Você pode mencionar um usuário utilizando o sinal @ ou um grupo utilizando #.</p> -->
@@ -16,6 +20,9 @@
         </footer>
       </form>
     </Card>
+
+    <Icon v-if="loading" name="refresh" :spin="true" size="giant" />
+    <span v-if="!comments.length && !loading">Nenhum comentário {{ onlyImportant ? 'importante' : '' }}</span>
 
     <Card v-for="comment in comments" :key="comment.id" class="comment" :important="comment.important">
       <div class="card-header" slot="header">
@@ -50,7 +57,7 @@ export default {
       newComment: null,
       important: false,
       comments: [],
-      teste: null
+      loading: true,
     }
   },
 
@@ -58,14 +65,28 @@ export default {
     this.load()
   },
 
+  watch: {
+    order() {
+      this.load()
+    }
+  },
+
   methods: {
     load() {
+      if (!this.order) {
+        return;
+      }
+
+      this.loading = true
+
       axios.get(`orders/comments/from/${this.order}`).then(
         (response) => {
           this.comments = response.data
+          this.loading = false
         },
         (error) => {
           console.log(error)
+          this.loading = false
         }
       )
     },
@@ -109,6 +130,15 @@ export default {
     &:not(:first-child) {
       margin-top: 20px;
     }
+  }
+
+  &.loading,
+  &.no-results {
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    color: $darker;
   }
 
   form {

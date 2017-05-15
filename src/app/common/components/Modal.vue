@@ -1,40 +1,42 @@
 <template>
-  <div class="modal-overlay" @click="close" v-show="show">
-    <div :class="{
-      'modal-container': true,
-      'has-left': hasLeft,
-      'has-right': hasRight,
-    }" @click.stop>
-      <aside v-if="hasLeft" class="left">
-        <slot name="left"></slot>
-      </aside>
+  <transition name="fade">
+    <div class="modal-overlay" @click="close" v-show="show">
+      <div :class="{
+        'modal-container': true,
+        'has-left': hasLeft,
+        'has-right': hasRight,
+      }" @click.stop>
+        <aside v-if="hasLeft" class="left">
+          <slot name="left"></slot>
+        </aside>
 
-      <div class="modal-content">
-        <header v-if="title || icon">
-          <h1>
-            <Icon v-if="icon" :name="icon" />
-            {{ title }}
-          </h1>
-          <button type="button" class="close-modal" @click="close">
-            <Icon name="close" color="dark" />
-          </button>
-        </header>
-        <article>
-          <slot></slot>
-        </article>
-        <footer>
-          <TButton v-if="cancel" @click="canceled" :color="cancelColor"
-          :text="cancelTextColor" :leftIcon="cancelIcon">{{ cancelText }}</TButton>
-          <TButton v-if="confirm" @click="confirmed" :color="confirmColor"
-          :text="confirmTextColor" :leftIcon="confirmIcon" class="m-l-10">{{ confirmText }}</TButton>
-        </footer>
+        <div class="modal-content">
+          <header v-if="title || icon">
+            <h1>
+              <Icon v-if="icon" :name="icon" />
+              {{ title }}
+            </h1>
+            <button type="button" class="close-modal" @click="close">
+              <Icon name="close" color="dark" />
+            </button>
+          </header>
+          <article>
+            <slot></slot>
+          </article>
+          <footer>
+            <TButton v-if="cancel" @click="canceled" :color="cancelColor"
+            :text="cancelTextColor" :leftIcon="cancelIcon">{{ cancelText }}</TButton>
+            <TButton v-if="confirm" @click="confirmed" :color="confirmColor"
+            :text="confirmTextColor" :leftIcon="confirmIcon" class="m-l-10">{{ confirmText }}</TButton>
+          </footer>
+        </div>
+
+        <aside v-if="hasRight" class="right">
+          <slot name="right"></slot>
+        </aside>
       </div>
-
-      <aside v-if="hasRight" class="right">
-        <slot name="right"></slot>
-      </aside>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -218,10 +220,12 @@ export default {
 
     &.has-left,
     &.has-right {
+      width: 950px;
       display: grid;
       grid-gap: 0;
       grid-auto-flow: row;
-      width: 950px;
+      grid-template-rows: 1fr;
+      // grid-template-rows: calc(100vh - 20px);
     }
 
     &.has-left.has-right {
@@ -240,11 +244,15 @@ export default {
     .right {
       padding: 20px;
       background-color: $lighter;
+      overflow-y: auto;
     }
 
     .modal-content {
       position: relative;
       padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
     }
 
     header {
@@ -274,6 +282,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: flex-end;
+      margin-top: auto;
     }
   }
 }
