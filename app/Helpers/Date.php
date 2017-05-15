@@ -123,3 +123,19 @@ function diffForHumans($date = null, $from = 'Y-m-d H:i:s')
 
     return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date)->diffForHumans();
 }
+
+/**
+ * Return array of the last x months
+ *
+ * @param  integer $number
+ * @return array
+ */
+function lastMonthsAsArray($number = 6)
+{
+    $months = [];
+    for ($i = 5; $i >= 0; $i--) {
+        $months[] = \Carbon\Carbon::now()->subMonths($i)->month;
+    }
+
+    return $months;
+}

@@ -1,5 +1,6 @@
 <?php namespace Core\Http\Controllers\Product;
 
+use Carbon\Carbon;
 use Core\Models\Order;
 use Core\Models\Product;
 use Core\Models\OrderProduct;
@@ -155,6 +156,41 @@ class ProductController extends Controller
             $data->delete();
 
             return deletedResponse();
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao excluir recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Return graph of orders from month
+     * @param  int $sku
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function graphOrderPeriod($sku)
+    {
+        try {
+            $data = Product::with(['orderProducts', 'orderProducts.order' => function($query) {
+                $query->where("created_at", ">", Carbon::now()->subMonths(5));
+            }])->findOrFail($sku);
+
+            $orders = $data->orderProducts->pluck('order')->filter(function($order) {
+                return !is_null($order);
+            })->groupBy(function ($order) {
+                return $order->created_at->month;
+            });
+
+            foreach (lastMonthsAsArray() as $month) {
+                $graph[] = [
+                    'month'    => config('core.meses')[$month],
+                    'quantity' => sizeof($orders->get($month))
+                ];
+            }
+
+            return showResponse($graph);
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao excluir recurso'));
 

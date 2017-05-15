@@ -99,8 +99,14 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     /**
      * Products
      */
-    Route::get('products/find/{term}', 'Product\ProductController@find');
-    Route::get('products/{id}/entry', 'Product\ProductController@lastDepotEntry');
+    Route::group(['prefix' => 'products'], function() {
+        Route::get('{id}/graph/orders-period', 'Product\ProductController@graphOrderPeriod');
+        Route::get('{id}/graph/cost-period', 'Product\ProductController@graphCostPeriod');
+        Route::get('{id}/graph/orders-marketplace', 'Product\ProductController@graphOrderMarketplace');
+
+        Route::get('find/{term}', 'Product\ProductController@find');
+        Route::get('{id}/entry', 'Product\ProductController@lastDepotEntry');
+    });
     api('products', 'Product\ProductController');
 
     /**
