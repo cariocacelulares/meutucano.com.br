@@ -4,7 +4,7 @@
     <Icon v-if="leftIcon" :name="leftIcon" classes="leftIcon" :size="size" color="dark" />
     <input :id="`input-${_uid}`" :type="type" :class="classList" :required="required"
       :placeholder="placeholder" :value="value" :min="min" :max="max" :step="step"
-      :disabled="disabled" />
+      :disabled="disabled" @input="updateValue($event.target.value)" />
       <!-- @input="updateValue($event.target.value)" @blur="formatValue" ref="input" :disabled="disabled" /> -->
     <Icon v-if="rightIcon" :name="rightIcon" classes="rightIcon" :size="size" color="dark" />
   </label>
@@ -140,7 +140,8 @@ export default {
       if (!isEmpty(value) || this.oldValue != value) {
         // this.$emit('input', this.format(value))
         this.$emit('input', value)
-        this.oldValue = this.format(value)
+        // this.oldValue = this.format(value)
+        this.oldValue = value
       }
     },
 

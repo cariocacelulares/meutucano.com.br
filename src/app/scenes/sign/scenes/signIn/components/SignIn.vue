@@ -42,6 +42,7 @@ export default {
           this.$root.$emit('authAttemp');
         },
         (error) => {
+          console.log('signin error', error, error.response)
           this.$toaster.error('Falha na autenticação!', error.response.data.msg)
         }
       )

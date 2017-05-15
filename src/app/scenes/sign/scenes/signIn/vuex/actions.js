@@ -7,8 +7,8 @@ export default {
 
     return axios.post('/authenticate', credentials)
       .then((response) => {
-        context.commit('global/TOKEN_RECEIVED', response.data.token)
-        context.dispatch('global/FETCH_USER', response.data.token)
+        context.commit('global/TOKEN_RECEIVED', response.token)
+        context.dispatch('global/FETCH_USER', response.token)
       })
   },
 }

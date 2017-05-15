@@ -7,7 +7,7 @@ export default {
   'global/FETCH_USER' (context, token) {
     return axios.get('authenticate/user')
       .then(response => {
-        context.commit('global/USER_RECEIVED', response.data.user);
+        context.commit('global/USER_RECEIVED', response.user);
       })
       .catch(error => {
         console.log(error);
@@ -18,8 +18,8 @@ export default {
     return axios.get('token')
       .then(
         (response) => {
-          context.commit('global/TOKEN_RECEIVED', response.data.token)
-          context.dispatch('global/FETCH_USER', response.data.token)
+          context.commit('global/TOKEN_RECEIVED', response.token)
+          context.dispatch('global/FETCH_USER', response.token)
         }
       )
   },
