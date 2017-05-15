@@ -32,13 +32,17 @@ class DepotProductController extends Controller
      * @param  int $sku
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listByProduct($sku)
+    public function listByProduct($sku, $slug = null)
     {
         try {
             $depotProducts = DepotProduct::with(['depot'])
-                ->where('product_sku', '=', $sku)
-                ->orderBy('quantity', 'DESC')
-                ->get();
+                ->where('product_sku', $sku);
+
+            if ($slug) {
+                $depotProducts = $depotProducts->where('depot_slug', $slug);
+            }
+
+            $depotProducts = $depotProducts->orderBy('quantity', 'DESC')->get();
 
             return listResponse($depotProducts);
         } catch (\Exception $exception) {
