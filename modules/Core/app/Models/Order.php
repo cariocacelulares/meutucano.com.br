@@ -86,6 +86,16 @@ class Order extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function orderProductsGrouped()
+    {
+        return $this->hasMany(OrderProduct::class)
+            ->selectRaw('order_products.*, count(*) as quantity')
+            ->groupBy('product_sku', 'price');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function shipments()
     {
         return $this->hasMany(Rastreio::class);

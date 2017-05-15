@@ -142,9 +142,9 @@ class OrderController extends Controller
             $data = Order::with([
                 'customer',
                 'customerAddress',
-                'orderProducts',
-                'orderProducts.product',
-                'orderProducts.productSerial'
+                'orderProductsGrouped',
+                'orderProductsGrouped.product',
+                'orderProductsGrouped.productSerial'
             ])->findOrFail($id);
 
             return showResponse($data);
