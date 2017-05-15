@@ -37,6 +37,15 @@ class OrderComment extends \Eloquent
     ];
 
     /**
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeImportant($query)
+    {
+        return $query->where('important', true);
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function order()

@@ -28,6 +28,19 @@ class OrderCommentController extends Controller
     }
 
     /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function listImportantByOrder($order_id)
+    {
+        $data = OrderComment::important()
+            ->where('order_id', $order_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return listResponse($data);
+    }
+
+    /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */

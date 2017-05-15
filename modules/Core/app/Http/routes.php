@@ -22,6 +22,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     * Order Comments
     */
     Route::get('orders/comments/from/{order_id}', 'Order\OrderCommentController@listByOrder');
+    Route::get('orders/comments/from/{order_id}/important', 'Order\OrderCommentController@listImportantByOrder');
     api('orders/comments', 'Order\OrderCommentController', ['index', 'update']);
 
     /**
