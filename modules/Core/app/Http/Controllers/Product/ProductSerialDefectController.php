@@ -24,7 +24,13 @@ class ProductSerialDefectController extends Controller
     {
         $search = request('search');
 
-        $data = ProductSerialDefect::with(['productSerial'])
+        $data = ProductSerialDefect::with([
+            'user',
+            'productSerial',
+            'productSerial.depotProduct',
+            'productSerial.depotProduct.depot',
+            'productSerial.depotProduct.product',
+        ])
             ->join('product_serials', 'product_serials.id', '=', 'product_serial_defects.product_serial_id')
             ->where(function($query) use ($search) {
                 $query->where('product_serials.serial', 'LIKE', "%{$search}%")

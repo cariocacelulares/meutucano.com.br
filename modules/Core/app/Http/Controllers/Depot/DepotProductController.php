@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Core\Models\DepotWithdrawProduct;
+use Core\Http\Requests\Depot\DepotProductRequest as Request;
 
 class DepotProductController extends Controller
 {
