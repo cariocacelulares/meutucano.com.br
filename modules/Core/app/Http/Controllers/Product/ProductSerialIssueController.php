@@ -25,15 +25,26 @@ class ProductSerialIssueController extends Controller
      */
     public function index()
     {
+        $search = request('search');
+
         $data = ProductSerialIssue::with([
             'user',
             'productSerial',
             'productSerial.depotProduct',
             'productSerial.depotProduct.depot',
             'productSerial.depotProduct.product',
-        ])->orderBy('created_at', 'DESC');
+        ])
+            ->join('product_serials', 'product_serials.id', '=', 'product_serial_issues.product_serial_id')
+            ->where(function($query) use ($search) {
+                $query->where('product_serials.serial', 'LIKE', "%{$search}%");
+            })
+            ->select('product_serial_issues.*')
+            ->orderBy('created_at', 'DESC')
+            ->paginate(
+                request('per_page', 10)
+            );
 
-        return tableListResponse($data);
+        return listResponse($data);
     }
 
     /**

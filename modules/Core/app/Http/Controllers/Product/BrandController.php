@@ -20,9 +20,15 @@ class BrandController extends Controller
      */
     public function index()
     {
-        $data = Brand::orderBy('created_at', 'DESC');
+        $search = request('search');
 
-        return tablelistResponse($data);
+        $data = Brand::orderBy('created_at', 'DESC')
+            ->where('title', 'LIKE', "%{$search}%")
+            ->paginate(
+                request('per_page', 10)
+            );
+
+        return listResponse($data);
     }
 
     /**

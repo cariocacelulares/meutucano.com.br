@@ -29,10 +29,20 @@ class DepotEntryController extends Controller
      */
     public function index()
     {
-        $data = DepotEntry::with(['supplier', 'user'])
-            ->orderBy('created_at', 'DESC');
+        $search = request('search');
 
-        return tableListResponse($data);
+        $data = DepotEntry::with(['supplier', 'user'])
+            ->join('suppliers', 'suppliers.id', '=', 'depot_entries.supplier_id')
+            ->where(function($query) use ($search) {
+                $query->where('suppliers.taxvat', 'LIKE', "%{$search}%")
+                    ->orWhere('suppliers.name', 'LIKE', "%{$search}%");
+            })
+            ->select('depot_entries.*')
+            ->paginate(
+                request('per_page', 10)
+            );
+
+        return listResponse($data);
     }
 
     /**

@@ -21,9 +21,19 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $data = Customer::orderBy('created_at', 'DESC');
+        $search = request('search');
 
-        return tableListResponse($data);
+        $data = Customer::orderBy('created_at', 'DESC')
+            ->where(function($query) use ($search) {
+                $query->where('taxvat', 'LIKE', "%{$search}%")
+                    ->orWhere('name', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%");
+            })
+            ->paginate(
+                request('per_page', 10)
+            );
+
+        return listResponse($data);
     }
 
     /**

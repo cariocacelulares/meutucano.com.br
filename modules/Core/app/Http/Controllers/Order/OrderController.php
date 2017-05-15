@@ -29,23 +29,48 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $data = Order::with(['customer', 'customerAddress'])
-            ->orderBy('orders.created_at', 'DESC');
+        $search = request('search');
 
-        return tableListResponse($data);
+        $data = Order::with(['customer'])
+            ->join('customers', 'customers.id', '=', 'orders.customer_id')
+            ->where(function($query) use ($search) {
+                $query->where('orders.api_code', 'LIKE', "%{$search}%")
+                    ->orWhere('customers.name', 'LIKE', "%{$search}%");
+            })
+            ->select('orders.*')
+            ->orderBy('created_at', 'DESC')
+            ->paginate(
+                request('per_page', 10)
+            );
+
+        return listResponse($data);
     }
 
     /**
+     * Return paid orders
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function invoiceable()
     {
-        $data = Order::where('status', Order::STATUS_PAID)
+        $search = request('search');
+
+        $data = Order::with(['customer'])
+            ->join('customers', 'customers.id', '=', 'orders.customer_id')
+            ->where('status', Order::STATUS_PAID)
+            ->where(function($query) use ($search) {
+                $query->where('orders.api_code', 'LIKE', "%{$search}%")
+                    ->orWhere('customers.name', 'LIKE', "%{$search}%");
+            })
+            ->select('orders.*')
             ->orderBy('priority', 'DESC')
             ->orderBy('estimated_delivery', 'ASC')
-            ->orderBy('created_at', 'ASC');
+            ->orderBy('created_at', 'ASC')
+            ->paginate(
+                request('per_page', 10)
+            );
 
-        return tableListResponse($data);
+        return listResponse($data);
     }
 
     /**

@@ -32,17 +32,13 @@ class DepotProductController extends Controller
      * @param  int $sku
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listByProduct($sku, $slug = null)
+    public function listByProduct($sku)
     {
         try {
             $depotProducts = DepotProduct::with(['depot'])
-                ->where('product_sku', $sku);
-
-            if ($slug) {
-                $depotProducts = $depotProducts->where('depot_slug', $slug);
-            }
-
-            $depotProducts = $depotProducts->orderBy('quantity', 'DESC')->get();
+                ->where('product_sku', $sku)
+                ->orderBy('quantity', 'DESC')
+                ->get();
 
             return listResponse($depotProducts);
         } catch (\Exception $exception) {
@@ -60,18 +56,24 @@ class DepotProductController extends Controller
      */
     public function listByDepot($slug)
     {
-        try {
-            $depotProducts = DepotProduct::with(['product'])
-                ->where('depot_slug', '=', $slug)
-                ->orderBy('quantity', 'DESC');
+        $search = request('search');
 
-            return tableListResponse($depotProducts);
-        } catch (\Exception $exception) {
-            return clientErrorResponse([
-                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
-            ]);
-        }
+        $data = DepotProduct::with(['product'])
+            ->where('depot_slug', '=', $slug)
+            ->join('products', 'products.sku', '=', 'depot_products.product_sku')
+            ->where(function($query) use ($search) {
+                $query->where('products.sku', 'LIKE', "%{$search}%")
+                    ->orWhere('products.title', 'LIKE', "%{$search}%");
+            })
+            ->select('depot_products.*')
+            ->orderBy('quantity', 'DESC')
+            ->paginate(
+                request('per_page', 10)
+            );
+
+        return listResponse($data);
     }
+
 
     /**
      * @param Request $request

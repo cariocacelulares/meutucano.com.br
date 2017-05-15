@@ -23,10 +23,20 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $data = Product::with(['reservedStockCount', 'availableStockCount'])
-            ->orderBy('created_at', 'DESC');
+        $search = request('search');
 
-        return tableListResponse($data);
+        $data = Product::with(['reservedStockCount', 'availableStockCount'])
+            ->where(function($query) use ($search) {
+                $query->where('sku', 'LIKE', "%{$search}%")
+                    ->orWhere('ean', 'LIKE', "%{$search}%")
+                    ->orWhere('title', 'LIKE', "%{$search}%");
+            })
+            ->orderBy('created_at', 'DESC')
+            ->paginate(
+                request('per_page', 10)
+            );
+
+        return listResponse($data);
     }
 
     /**

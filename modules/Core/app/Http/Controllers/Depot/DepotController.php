@@ -25,12 +25,18 @@ class DepotController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function index()
-    {
-        $data = Depot::orderBy('priority', 'ASC');
+     public function index()
+     {
+         $search = request('search');
 
-        return tableListResponse($data);
-    }
+         $data = Depot::orderBy('created_at', 'DESC')
+             ->where('title', 'LIKE', "%{$search}%")
+             ->paginate(
+                 request('per_page', 10)
+             );
+
+         return listResponse($data);
+     }
 
     /**
      * List depots available for product

@@ -20,9 +20,15 @@ class LineController extends Controller
      */
     public function index()
     {
-        $data = Line::orderBy('created_at', 'DESC');
+        $search = request('search');
 
-        return tableListResponse($data);
+        $data = Line::orderBy('created_at', 'DESC')
+            ->where('title', 'LIKE', "%{$search}%")
+            ->paginate(
+                request('per_page', 10)
+            );
+
+        return listResponse($data);
     }
 
     /**

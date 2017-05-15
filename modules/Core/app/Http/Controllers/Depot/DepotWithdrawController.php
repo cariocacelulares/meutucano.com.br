@@ -27,9 +27,23 @@ class DepotWithdrawController extends Controller
      */
     public function index()
     {
-        $data = DepotWithdraw::orderBy('created_at', 'DESC');
+        $search = request('search');
 
-        return tableListResponse($data);
+        $data = DepotWithdraw::with(['user', 'depot'])
+            ->join('users', 'users.id', '=', 'depot_withdraws.user_id')
+            ->leftJoin('depots', 'depots.slug', '=', 'depot_withdraws.depot_slug')
+            ->where(function($query) use ($search) {
+                $query->where('depot_withdraws.id', 'LIKE', "%{$search}%")
+                    ->orWhere('users.name', 'LIKE', "%{$search}%")
+                    ->orWhere('depots.title', 'LIKE', "%{$search}%");
+            })
+            ->select('depot_withdraws.*')
+            ->orderBy('created_at', 'DESC')
+            ->paginate(
+                request('per_page', 10)
+            );
+
+        return listResponse($data);
     }
 
     /**

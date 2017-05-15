@@ -22,10 +22,21 @@ class ProductSerialDefectController extends Controller
      */
     public function index()
     {
-        $data = ProductSerialDefect::with(['productSerial'])
-            ->orderBy('created_at', 'DESC');
+        $search = request('search');
 
-        return tableListResponse($data);
+        $data = ProductSerialDefect::with(['productSerial'])
+            ->join('product_serials', 'product_serials.id', '=', 'product_serial_defects.product_serial_id')
+            ->where(function($query) use ($search) {
+                $query->where('product_serials.serial', 'LIKE', "%{$search}%")
+                    ->orWhere('product_serial_defects.description', 'LIKE', "%{$search}%");
+            })
+            ->select('product_serial_defects.*')
+            ->orderBy('created_at', 'DESC')
+            ->paginate(
+                request('per_page', 10)
+            );
+
+        return listResponse($data);
     }
 
     /**

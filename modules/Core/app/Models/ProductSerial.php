@@ -67,7 +67,7 @@ class ProductSerial extends \Eloquent
      */
     public function entrySerials()
     {
-        return $this->hasMany(Serial::class);
+        return $this->hasMany(DepotEntryProductSerial::class);
     }
 
     /**

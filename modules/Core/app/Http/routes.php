@@ -81,6 +81,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::group(['prefix' => 'products/serials'], function() {
         Route::get('find/{serial}', 'Product\ProductSerialController@find');
         Route::get('check', 'Product\ProductSerialController@checkTransfer');
+        Route::get('from/{depotProduct}', 'Product\ProductSerialController@listByDepotProduct');
 
         Route::post('transfer', 'Product\ProductSerialController@transfer');
     });
@@ -127,7 +128,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
      * Depot Products
      */
     Route::group(['prefix' => 'depots/products'], function () {
-        Route::get('from/product/{sku}/{slug?}', 'Depot\DepotProductController@listByProduct');
+        Route::get('from/product/{sku}', 'Depot\DepotProductController@listByProduct');
         Route::get('from/depot/{slug}', 'Depot\DepotProductController@listByDepot');
     });
     api('depots/products', 'Depot\DepotProductController', ['index', 'show', 'update']);

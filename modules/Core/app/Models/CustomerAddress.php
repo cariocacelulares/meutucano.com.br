@@ -20,6 +20,9 @@ class CustomerAddress extends \Eloquent
         'state',
     ];
 
+    /**
+     * @return array
+     */
     protected $appends = [
         'address'
     ];

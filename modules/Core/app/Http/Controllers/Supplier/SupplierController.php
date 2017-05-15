@@ -21,9 +21,18 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        $data = Supplier::orderBy('created_at', 'DESC');
+        $search = request('search');
 
-        return tableListResponse($data);
+        $data = Supplier::orderBy('created_at', 'DESC')
+            ->where(function($query) use ($search) {
+                $query->where('taxvat', 'LIKE', "%{$search}%")
+                    ->orWhere('name', 'LIKE', "%{$search}%");
+            })
+            ->paginate(
+                request('per_page', 10)
+            );
+
+        return listResponse($data);
     }
 
     /**

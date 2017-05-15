@@ -15,6 +15,26 @@ class ProductSerialController extends Controller
     }
 
     /**
+     * List serials from depot product
+     *
+     * @param  int $depotProduct
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function listByDepotProduct($depotProduct)
+    {
+        $search = request('search');
+
+        $data = ProductSerial::orderBy('created_at', 'DESC')
+            ->where('depot_product_id', $depotProduct)
+            ->where('serial', 'LIKE', "%{$search}%")
+            ->paginate(
+                request('per_page', 10)
+            );
+
+        return listResponse($data);
+    }
+
+    /**
      * @param $serial
      * @return \Symfony\Component\HttpFoundation\Response
      */

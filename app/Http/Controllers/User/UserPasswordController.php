@@ -3,7 +3,6 @@
 use App\Models\User\UserPassword;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Input;
 use App\Http\Requests\UserPasswordRequest as Request;
 
 class UserPasswordController extends Controller
@@ -28,9 +27,18 @@ class UserPasswordController extends Controller
      */
     public function listFromUser($id)
     {
-        $data = UserPassword::where('user_id', $id);
+        $search = request('search');
 
-        return tableListResponse($data);
+        $data = UserPassword::where('user_id', $id)
+            ->where(function($query) use ($search) {
+                $query->where('description', 'LIKE', "%{$search}%")
+                    ->orWhere('url', 'LIKE', "%{$search}%");
+            })
+            ->paginate(
+                request('per_page', 10)
+            );
+
+        return listResponse($data);
     }
 
     /**
@@ -40,9 +48,18 @@ class UserPasswordController extends Controller
      */
     public function listCurrentUser()
     {
-        $data = UserPassword::where('user_id', Input::get('user_id'));
+        $search = request('search');
 
-        return tableListResponse($data);
+        $data = UserPassword::where('user_id', request('user_id'))
+            ->where(function($query) use ($search) {
+                $query->where('description', 'LIKE', "%{$search}%")
+                    ->orWhere('url', 'LIKE', "%{$search}%");
+            })
+            ->paginate(
+                request('per_page', 10)
+            );
+
+        return listResponse($data);
     }
 
     /**

@@ -21,9 +21,18 @@ class UserController extends Controller
      */
     public function index()
     {
-        $data = new User();
+        $search = request('search');
 
-        return tableListResponse($data);
+        $data = User::orderBy('id')
+            ->where(function($query) use ($search) {
+                $query->where('email', 'LIKE', "%{$search}%")
+                    ->orWhere('name', 'LIKE', "%{$search}%");
+            })
+            ->paginate(
+                request('per_page', 10)
+            );
+
+        return listResponse($data);
     }
 
     /**
