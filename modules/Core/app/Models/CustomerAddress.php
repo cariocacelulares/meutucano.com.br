@@ -39,9 +39,9 @@ class CustomerAddress extends \Eloquent
      */
     public function getAddressAttribute()
     {
-        return "{$this->street} #{$this->number} - {$this->district}
-            {$this->city} / {$this->state}
-            {$this->zipcode}
+        return "{$this->street} #{$this->number} - {$this->district} <br>
+            {$this->city} / {$this->state} <br>
+            {$this->zipcode} <br>
             {$this->complement}";
     }
 }
