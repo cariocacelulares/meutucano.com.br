@@ -18,6 +18,7 @@ class OrderComment extends \Eloquent
     protected $fillable = [
         'order_id',
         'user_id',
+        'important',
         'comment',
     ];
 
@@ -26,6 +27,13 @@ class OrderComment extends \Eloquent
      */
     protected $with = [
         'user',
+    ];
+
+    /**
+     * @return array
+     */
+    protected $casts = [
+        'important' => 'boolean'
     ];
 
     /**
