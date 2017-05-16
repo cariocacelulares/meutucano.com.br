@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'from' => ['address' => 'naoresponda@cariocacelulares.com.br', 'name' => 'Carioca Celulares On-line'],
+    'from' => ['address' => 'naoresponda@meutucano.com.br', 'name' => 'Meu Tucano'],
 
     /*
     |--------------------------------------------------------------------------
