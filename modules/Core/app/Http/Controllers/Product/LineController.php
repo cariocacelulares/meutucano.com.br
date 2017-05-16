@@ -32,6 +32,19 @@ class LineController extends Controller
     }
 
     /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function fetch()
+    {
+        $search = request('search');
+
+        $data = Line::where('title', 'LIKE', "%{$search}%")
+            ->get();
+
+        return listResponse($data);
+    }
+
+    /**
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */

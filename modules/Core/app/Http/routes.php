@@ -68,11 +68,13 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     /**
      * Lines
      */
+    Route::get('lines/fetch', 'Product\LineController@fetch');
     api('lines', 'Product\LineController');
 
     /**
      * Brands
      */
+    Route::get('brands/fetch', 'Product\BrandController@fetch');
     api('brands', 'Product\BrandController');
 
     /**

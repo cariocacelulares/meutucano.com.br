@@ -31,6 +31,7 @@ Route::group(['prefix' => '/api'], function () {
         Route::get('token', 'Auth\AuthenticateController@refreshToken');
 
         Route::group(['namespace' => 'User'], function () {
+            Route::get('users/fetch', 'UserController@fetch');
             api('users', 'UserController');
 
             Route::group(['prefix' => 'passwords'], function() {
