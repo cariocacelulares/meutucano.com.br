@@ -76,30 +76,32 @@ export default {
       (error) => {
         this.$Progress.fail()
 
-        if (error.response.status == 400) {
-          if (typeof(error.response.data.error) !== 'undefined' && error.response.data.error == 'token_not_provided') {
-            this.$store.dispatch('global/SIGN_OUT')
-            this.$router.push({ name: 'sign.signin' })
+        if (typeof(error.response) !== 'undefined') {
+          if (error.response.status == 400) {
+            if (typeof(error.response.data.error) !== 'undefined' && error.response.data.error == 'token_not_provided') {
+              this.$store.dispatch('global/SIGN_OUT')
+              this.$router.push({ name: 'sign.signin' })
 
-            return;
-          } else if (typeof(error.response.data.status) !== 'undefined' && error.response.data.status == 'ValidationFail') {
-              console.log('ValidationFail', error.response.data)
-          }
-        } else if (error.response.status == 401) {
-          if (
-              (typeof(error.response.data.error) !== 'undefined' && error.response.data.error == 'token_expired')
-              ||
-              (typeof(error.response.data[0]) !== 'undefined' && error.response.data[0] == 'token_expired')
-          ) {
-            this.$store.dispatch('global/REFRESH_TOKEN')
-              .then(() => {},
-                (error) => {
-                  this.$store.dispatch('global/SIGN_OUT')
-                  this.$router.push({ name: 'sign.signin' })
+              return;
+            } else if (typeof(error.response.data.status) !== 'undefined' && error.response.data.status == 'ValidationFail') {
+                console.log('ValidationFail', error.response.data)
+            }
+          } else if (error.response.status == 401) {
+            if (
+                (typeof(error.response.data.error) !== 'undefined' && error.response.data.error == 'token_expired')
+                ||
+                (typeof(error.response.data[0]) !== 'undefined' && error.response.data[0] == 'token_expired')
+            ) {
+              this.$store.dispatch('global/REFRESH_TOKEN')
+                .then(() => {},
+                  (error) => {
+                    this.$store.dispatch('global/SIGN_OUT')
+                    this.$router.push({ name: 'sign.signin' })
 
-                  return;
-                }
-              )
+                    return;
+                  }
+                )
+            }
           }
         }
 

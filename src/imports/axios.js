@@ -17,7 +17,7 @@ window.axios.interceptors.request.use(
     const token = localStorage.getItem('auth_token')
 
     if (!isEmpty(token)) {
-      config.headers.Authorization = 'Bearer ' + localStorage.getItem('auth_token')
+      config.headers.Authorization = `Bearer ${token}`
     }
 
     return config

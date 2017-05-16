@@ -2,7 +2,7 @@ import store from 'common/vuex'
 import { isEmpty } from 'lodash'
 
 export default (to, from, next) => {
-  window.scrollTo(0, 0)
+  // window.scrollTo(0, 0)
 
   const requirePermission = to.meta.permission || null
   const requireLogin = !!requirePermission || to.meta.auth || false

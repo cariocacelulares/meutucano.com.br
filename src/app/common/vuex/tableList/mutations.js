@@ -31,14 +31,12 @@ export default {
   },
 
   'global/tableList/SEARCH_CHANGED' (state, term) {
-    if (isEmpty(state.namespace)) {
-      state.tableList.searchTerm = term
+    state.tableList.searchTerm = term || null
+
+    if (!isEmpty(term)) {
+      localStorage.setItem(`${state.namespace}/searchTerm`, term)
     } else {
-      if (!isEmpty(term)) {
-        localStorage.setItem(`${state.namespace}/searchTerm`, term)
-      } else {
-        localStorage.setItem(`${state.namespace}/searchTerm`, '')
-      }
+      localStorage.removeItem(`${state.namespace}/searchTerm`)
     }
   },
 }

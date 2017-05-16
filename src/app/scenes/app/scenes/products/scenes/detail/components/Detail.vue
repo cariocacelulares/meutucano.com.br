@@ -57,7 +57,7 @@ export default {
         },
         {
           text: 'Depósitos',
-          label: 3,
+          label: 0,
           link: { name: 'products.detail.depots' }
         },
       ],
@@ -68,6 +68,8 @@ export default {
     axios.get(`products/${this.$route.params.sku}`).then(
       (response) => {
         this.product = response.data
+
+        this.tabs[1].label = this.product.depot_products_count
       },
       (error) => {
         console.log(error)

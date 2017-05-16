@@ -1,6 +1,7 @@
 import Detail from './components/Detail'
 import General from './components/General'
 import Depots from './components/Depots'
+import DepotDetail from './components/depots/DepotDetail'
 
 export default [
   {
@@ -30,6 +31,17 @@ export default [
           auth: true,
           breadcrumb: 'Depósitos'
         },
+        children: [
+          {
+            path: '/products/detail/:sku/depots/:id',
+            component: DepotDetail,
+            name: 'products.detail.depots.detail',
+            meta: {
+              auth: true,
+              breadcrumb: 'Detalhe'
+            },
+          },
+        ],
       },
     ],
   },

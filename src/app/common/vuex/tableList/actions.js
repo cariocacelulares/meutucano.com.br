@@ -1,12 +1,16 @@
 export default {
   'global/tableList/FETCH' (context) {
     const namespace = context.getters['global/GET_NAMESPACE']
+    const params = Object.assign(
+      context.getters['global/tableList/GET_PARAMS'],
+      { search: localStorage.getItem(`${namespace}/searchTerm`) }
+    )
 
     context.commit('global/tableList/LOADING_CHANGED', true)
 
     return context.dispatch(
       `${namespace}/FETCH`,
-      parseParams(context.getters['global/tableList/GET_PARAMS'])
+      parseParams(params)
     )
       .then(
         (response) => {

@@ -2,112 +2,107 @@
   <ContentBox :discret="true">
     <aside class="sidebar">
       <ul>
-        <li>
-          <a href="#" class="active">
-            <strong>Estoque físico</strong>
-            <span>Quantidade em estoque: 233</span>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <strong>A revisar</strong>
-            <span>Quantidade em estoque: 13</span>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <strong>Loja física</strong>
-            <span>Quantidade em estoque: 42</span>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <strong>Estoque antigo</strong>
-            <span>Quantidade em estoque: 0</span>
+        <li v-for="(depotProduct, index) in depotsProduct">
+          <a href="#" @click.prevent="changeDepot(depotProduct, index)"
+            :class="{ active: depotProduct.id == depotId }">
+            <strong>{{ depotProduct.depot.title }}</strong>
+            <span>Quantidade em estoque: {{ depotProduct.quantity }}</span>
           </a>
         </li>
       </ul>
       <TButton color="light" text="darker" leftIcon="plus" @click="openAddDepot">Adicionar depósito</TButton>
     </aside>
 
-    <div :class="'content-wrapper depot-' + depotIndex">
-      <article class="inner-content">
-        <header>
-          <FeaturedValue label="Depósito" value="Estoque físico" color="darker" />
-          <FeaturedValue label="Incluir para venda" value="Sim" color="darker" />
-          <FeaturedValue label="Ordem de saída" value="0" color="darker" />
-          <FeaturedValue label="Controle de serial" value="Sim" color="darker" />
-          <FeaturedValue label="Quantidade" value="223" color="darker" />
+    <router-view></router-view>
 
-          <div class="buttons">
-            <TButton @click="openTransferStock" color="info" text="white" leftIcon="exchange" class="m-r-10">Transferir</TButton>
-            <TButton color="danger" text="white" leftIcon="close">Excluir</TButton>
-          </div>
-        </header>
-
-        <HSeparator :spacing="20" />
-
-        <TableList :namespace="namespace" searchText="Pesquisar seriais">
-          <thead slot="head">
-            <tr>
-              <th>Serial</th>
-              <th>Entrada</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody slot="body">
-            <tr v-for="serial in serials">
-              <td>{{ serial.serial }}</td>
-              <td>{{ `${serial.entry.date} por ${serial.entry.user.name}` }}</td>
-              <td>
-                <router-link :to="{ name: 'products.list' }">
-                  <Icon name="eye" size="big" text="Ver histórico" color="link" />
-                  <VSeparator :spacing="10"/>
-                  <Icon name="angle-double-down" size="big" text="Baixa manual" color="danger" />
-                </router-link>
-              </td>
-            </tr>
-          </tbody>
-        </TableList>
-      </article>
-    </div>
-
-    <AddDepot />
-    <TransferStock />
+    <AddDepot @close="load" />
   </ContentBox>
 </template>
 
 <script>
 import AddDepot from './depots/AddDepot'
-import TransferStock from './depots/TransferStock'
 
 export default {
   components: {
     AddDepot,
-    TransferStock,
   },
 
   data() {
     return {
+      depotsProduct: [],
       depotIndex: 0,
-      namespace: 'products/detail/depots/serials',
     }
   },
 
   computed: {
-    serials() {
-      return this.$store.getters[`${this.namespace}/GET`]
+    sku() {
+      return this.$route.params.sku
+    },
+
+    depotId() {
+      return this.$route.params.id
     },
   },
 
   methods: {
+    setDepotProduct(depotProduct) {
+      return this.$store.dispatch('products/detail/depots/CURRENT', depotProduct);
+    },
+
+    load() {
+      axios.get(`depots/products/from/product/${this.sku}`).then(
+        (response) => {
+          this.depotsProduct = response.data
+
+          if (!this.depotId && this.depotsProduct.length) {
+            this.depotsProduct[0].index = 0
+            this.setDepotProduct(this.depotsProduct[0])
+
+            this.$router.push({
+              name: 'products.detail.depots.detail',
+              params: {
+                sku: this.sku,
+                id: this.depotsProduct[0].id,
+                depotIndex: 0,
+              }
+            })
+          } else {
+            this.depotsProduct.forEach((item, index) => {
+              if (item.id == this.depotId) {
+                item.index = index
+                this.setDepotProduct(item)
+
+                return;
+              }
+            })
+          }
+        },
+        (error) => {
+        },
+      )
+    },
+
+    changeDepot(depotProduct, index) {
+      depotProduct.index = index
+      this.setDepotProduct(depotProduct)
+
+      this.$router.push({
+        name: 'products.detail.depots.detail',
+        params: {
+          sku: this.sku,
+          id: depotProduct.id,
+          depotIndex: index,
+        }
+      })
+    },
+
     openAddDepot() {
       this.$root.$emit('show::modal-AddDepot')
     },
+  },
 
-    openTransferStock() {
-      this.$root.$emit('show::modal-TransferStock')
-    },
+  mounted() {
+    this.load()
   },
 }
 </script>
@@ -120,8 +115,7 @@ export default {
   justify-content: space-between;
 }
 
-.sidebar,
-.inner-content {
+.sidebar {
   padding: 20px;
   border-radius: $borderRadius;
   box-shadow: $defaultShadow;
@@ -166,77 +160,6 @@ export default {
 
   .TButton {
     width: 100%;
-  }
-}
-
-.content-wrapper {
-  position: relative;
-  flex-basis: calc(100% - 295px);
-  min-height: calc(100vh - 275px);
-
-  $diff: 5px;
-  $initial: 24px;
-  @for $i from 0 through 11 {
-    $before: 0;
-    @if ($i == 0) {
-      $before: $initial;
-    } @else {
-      $before: $initial + (56px * $i);
-    }
-
-    &.depot-#{$i} {
-      &:before {
-        top: $before;
-      }
-
-      &:after {
-        top: $before - $diff;
-      }
-    }
-  }
-
-  &:before {
-    content: '';
-    position: absolute;
-    top: 6px;
-    left: -13.5px;
-    box-shadow: $defaultShadow;
-    width: 27px;
-    height: 27px;
-    transform: rotate(45deg);
-    background-color: $white;
-    z-index: 1;
-  }
-
-  &:after {
-    content: '';
-    position: absolute;
-    top: 1px;
-    left: -18px;
-    border-top: 18px solid transparent;
-    border-bottom: 18px solid transparent;
-    border-right: 18px solid $white;
-    z-index: 3;
-  }
-}
-
-.inner-content {
-  position: relative;
-  height: 100%;
-  z-index: 2;
-
-  header {
-    display: flex;
-    justify-content: space-between;
-    height: 40px;
-
-    * {
-      max-height: 100%;
-    }
-  }
-
-  .buttons {
-    margin-left: 50px;
   }
 }
 </style>

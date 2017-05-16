@@ -40,17 +40,17 @@
 
           <div class="card-data">
             <span>Condição</span>
-            <strong>{{ product.condition }}</strong>
+            <strong>{{ product.condition_cast }}</strong>
           </div>
 
           <div class="card-data">
             <span>Custo</span>
-            <strong>{{ product.cost }}</strong>
+            <strong>{{ product.cost | money }}</strong>
           </div>
 
           <div class="card-data">
             <span>Valor</span>
-            <strong>{{ product.price }}</strong>
+            <strong>{{ product.price | money }}</strong>
           </div>
         </div>
       </Card>
@@ -59,17 +59,17 @@
         <div class="grid-3">
           <div class="card-data">
             <span>Em estoque</span>
-            <strong>{{ stock/*.available*/ }}</strong>
+            <strong>{{ product.available_stock }}</strong>
           </div>
 
           <div class="card-data">
             <span>Com defeito</span>
-            <strong>{{ stock/*.defect*/ }}</strong>
+            <strong>{{ product.defects }}</strong>
           </div>
 
           <div class="card-data">
             <span>Baixados</span>
-            <strong>{{ stock/*.dropped*/ }}</strong>
+            <strong>{{ product.issues }}</strong>
           </div>
         </div>
       </Card>
@@ -100,28 +100,28 @@
 
         <div class="card-data">
           <span>Fornecedor</span>
-          <strong>{{ last_entry/*.supplier*/ }}</strong>
+          <strong>{{ last_entry.supplier.name }}</strong>
         </div>
 
         <div class="grid-2 m-t-20">
           <div class="card-data">
             <span>Data</span>
-            <strong>{{ last_entry/*.date*/ }}</strong>
+            <strong>{{ last_entry.date | date }}</strong>
           </div>
 
           <div class="card-data">
             <span>Quantidade</span>
-            <strong>{{ last_entry/*.quantity*/ }}</strong>
+            <strong>{{ last_entry.quantity }}</strong>
           </div>
 
           <div class="card-data">
             <span>Custo</span>
-            <strong>{{ last_entry/*.cost*/ }}</strong>
+            <strong>{{ last_entry.cost | money }}</strong>
           </div>
 
           <div class="card-data">
             <span>Total</span>
-            <strong>{{ last_entry/*.total*/ }}</strong>
+            <strong>{{ last_entry.total | money }}</strong>
           </div>
         </div>
 
@@ -146,6 +146,23 @@ export default {
       (response) => {
         this.loading = false
         this.product = response.data
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+
+    axios.get(`products/${this.$route.params.sku}/entry`).then(
+      (response) => {
+        this.last_entry = response.data.length ? response.data : {
+          date: null,
+          quantity: null,
+          cost: null,
+          total: null,
+          supplier: {
+            name: null,
+          },
+        }
       },
       (error) => {
         console.log(error)
@@ -319,7 +336,15 @@ export default {
 
       product: {},
       stock: {},
-      last_entry: {},
+      last_entry: {
+        date: null,
+        quantity: null,
+        cost: null,
+        total: null,
+        supplier: {
+          name: null,
+        },
+      },
 
       graphs: {
         sold: [],

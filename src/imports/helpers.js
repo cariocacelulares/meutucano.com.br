@@ -6,14 +6,19 @@ import { isEmpty } from 'lodash'
  * @return {String}
  */
 window.parseParams = (params) => {
-  var parsed = '?';
+  var parsed = '?'
+  var value = null
 
   for (var key in params) {
-    if (parsed != '?') {
-      parsed += '&';
-    }
+    value = encodeURIComponent(params[key])
 
-    parsed += `${key}=` + encodeURIComponent(params[key]);
+    if (value && value != 'null') {
+      if (parsed != '?') {
+        parsed += '&'
+      }
+
+      parsed += `${key}=${value}`
+    }
   }
 
   return parsed

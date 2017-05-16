@@ -3,8 +3,8 @@
     <div class="ListActions">
       <Pagination :namespace="namespace" />
       <form @submit.prevent="search" class="actions">
-        <TInput v-model="searchTerm" size="small" :placeholder="searchText"
-          leftIcon="search" classes="m-r-10" />
+        <TInput v-model="searchTerm" size="small" placeholder="Pesquisar na listagem"
+          leftIcon="search" class="m-r-10" />
         <TButton size="small" color="info" type="submit">
           <Icon name="refresh" text="Atualizar" />
         </TButton>
@@ -51,10 +51,11 @@ export default {
       type: String,
       required: true
     },
-    searchText: {
-      type: String,
-      default: 'Pesquisar'
-    }
+
+    wait: {
+      type: Boolean,
+      default: false
+    },
   },
 
   computed: {
@@ -73,7 +74,13 @@ export default {
 
   watch: {
     stateSearchTerm() {
-      this.searchTerm = this.stateSearchTerm;
+      this.searchTerm = this.stateSearchTerm
+    },
+
+    wait() {
+      if (!this.wait) {
+        this.load()
+      }
     }
   },
 
@@ -97,7 +104,7 @@ export default {
     },
 
     load() {
-      return this.$store.dispatch('global/tableList/FETCH')
+      return this.wait ? [] : this.$store.dispatch('global/tableList/FETCH')
     },
   },
 
@@ -146,11 +153,10 @@ export default {
       opacity: .5;
     }
 
-    tbody:not(.no-results),
-    tbody:not(.loading) {
-      tr:hover,
-      tr:focus {
-        background-color: darken($lighter, 11) !important;
+    tbody.no-results,
+    tbody.loading {
+      tr:hover {
+        background-color: $white !important;
       }
     }
 
@@ -171,8 +177,16 @@ export default {
         justify-content: center;
       }
 
-      tr:nth-child(2n) {
-        background-color: $lighter;
+      tr {
+        transition: all linear 150ms;
+
+        &:nth-child(2n) {
+          background-color: $lighter;
+        }
+
+        &:hover {
+          background-color: darken($lighter, 11) !important;
+        }
       }
 
       a {

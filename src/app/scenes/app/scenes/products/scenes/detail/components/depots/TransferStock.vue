@@ -1,16 +1,7 @@
 <template>
   <Modal name="TransferStock" icon="exchange" title="Transferir estoque" :on-show="fetch" :on-confirm="save">
     <form @submit.prevent>
-      <TSelect class="m-b-20" label="Depósito de destino" placeholder="Selecione o depósito" :block="true" :options="[
-        {
-          value: 1,
-          text: 'Aqui'
-        },
-        {
-          value: 2,
-          text: 'Ali'
-        },
-      ]"/>
+      <TSelect class="m-b-20" label="Depósito de destino" placeholder="Selecione o depósito" :block="true" :options="depots"/>
 
       <SerialBox label="Seriais" :serials="serials" @add="validate" />
     </form>
@@ -21,6 +12,7 @@
 export default {
   data() {
     return {
+      depots: [],
       valid: 0,
       serials: []
     }
@@ -57,7 +49,21 @@ export default {
 
   methods: {
     fetch() {
-      console.log('transfer fetch')
+      axios.get(`/transferable/${this.$route.params.sku}`).then(
+        (response) => {
+          this.depots = response.data
+
+          this.options = this.depots.map((item) => {
+            return {
+              value: item.slug,
+              text: item.title
+            }
+          })
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
     },
 
     save() {

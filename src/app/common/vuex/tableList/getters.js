@@ -14,13 +14,7 @@ export default {
   },
 
   'global/tableList/GET_SEARCHTERM' ({ namespace, tableList }) {
-    let searchTerm = localStorage.getItem(`${namespace}/searchTerm`);
-
-    if (!isEmpty(searchTerm)) {
-      return searchTerm
-    }
-
-    return tableList.searchTerm
+    return localStorage.getItem(`${namespace}/searchTerm`) || tableList.searchTerm
   },
 
   'global/tableList/GET_PERPAGE' ({ namespace, tableList }) {
@@ -35,7 +29,7 @@ export default {
 
   'global/tableList/GET_PARAMS' ({ namespace, tableList }) {
     return {
-      fields: localStorage.getItem(`${namespace}/searchTerm`) || tableList.searchTerm,
+      search: localStorage.getItem(`${namespace}/searchTerm`) || tableList.searchTerm,
       page: tableList.page.current,
       per_page: tableList.perPage,
     }

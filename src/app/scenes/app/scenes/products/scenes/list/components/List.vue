@@ -15,31 +15,31 @@
     </PageHeader>
 
     <ContentBox>
-      <TableList :namespace="namespace" searchText="Pesquisar nos produtos">
+      <TableList :namespace="namespace">
         <thead slot="head">
           <tr>
-            <th>SKU</th>
-            <th>EAN</th>
+            <th width="100">SKU</th>
+            <th width="170">EAN</th>
             <th class="text-left">Produto</th>
-            <th>Custo</th>
-            <th>Valor</th>
-            <th>Estado</th>
-            <th>Estoque</th>
-            <th></th>
+            <th width="150">Custo</th>
+            <th width="150">Valor</th>
+            <th width="100">Estado</th>
+            <th width="100">Estoque</th>
+            <th width="70"></th>
           </tr>
         </thead>
         <tbody slot="body">
           <tr v-for="product in products">
             <td>{{ product.sku }}</td>
-            <td>{{ product.ean }}</td>
+            <td>{{ product.ean || 'N/A' }}</td>
             <td class="text-left text-bold">{{ product.title }}</td>
             <td>{{ product.cost | money }}</td>
             <td>{{ product.price | money }}</td>
-            <td>{{ product.condition }}</td>
+            <td>{{ product.condition_cast }}</td>
             <td>
               <!-- <Badge color="default" text="darker" v-if="product.estoque.pendente">{{ product.estoque.pendente }}</Badge> -->
               <Badge v-if="product.reserved_stock">{{ product.reserved_stock }}</Badge>
-              <!-- {{ product.estoque.disponivel }} -->0
+              {{ product.available_stock }}
             </td>
             <td>
               <router-link :to="{ name: 'products.detail', params: { sku: product.sku } }">

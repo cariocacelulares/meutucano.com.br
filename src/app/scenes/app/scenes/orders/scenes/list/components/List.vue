@@ -20,16 +20,16 @@
       </TButton>
     </PageHeader>
     <ContentBox>
-      <TableList :namespace="namespace" searchText="Pesquisar nos pedidos">
+      <TableList :namespace="namespace">
         <thead slot="head">
           <tr>
-            <th>Código</th>
-            <th>Canal</th>
+            <th width="160">Código</th>
+            <th width="160">Canal</th>
             <th class="text-left">Cliente</th>
-            <th>Valor</th>
-            <th>Data</th>
-            <th>Status</th>
-            <th></th>
+            <th width="140">Valor</th>
+            <th width="190">Data</th>
+            <th width="150">Status</th>
+            <th width="70"></th>
           </tr>
         </thead>
         <tbody slot="body">
