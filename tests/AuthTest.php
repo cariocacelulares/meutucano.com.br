@@ -1,7 +1,7 @@
 <?php namespace Tests;
 
 use JWTAuth;
-use App\Models\Usuario\Usuario;
+use App\Models\User\User;
 use App\Http\Controllers\Auth\AuthenticateController;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
@@ -18,13 +18,11 @@ class AuthTest extends TestCase
     {
         $authData = ['email' => 'test@example.com', 'password' => 'test'];
 
-        $usuario = CreateUsuario::create($authData);
+        $usuario = CreateUser::create($authData);
 
-        $this->json('POST', '/api/authenticate', $authData)->seeJsonStructure([
+        $this->json('POST', '/api/authenticate', $authData)->assertJsonStructure([
             'token'
-        ]);
-
-        $this->seeStatusCode(200);
+        ])->assertStatus(200);
     }
 
     /**
@@ -37,11 +35,9 @@ class AuthTest extends TestCase
         $this->json('POST', '/api/authenticate', [
             'email'    => 'test@example.com',
             'password' => 'test2'
-        ])->seeJson([
+        ])->assertJson([
             'error' => 'invalid_credentials'
-        ]);
-
-        $this->seeStatusCode(401);
+        ])->assertStatus(401);
     }
 
     /**
@@ -51,7 +47,7 @@ class AuthTest extends TestCase
     */
     public function test__it_should_not_be_able_to_use_api_when_unauthenticated()
     {
-        $this->json('GET', '/api/pedidos', [])->seeJson([
+        $this->json('GET', '/api/orders', [])->assertJson([
             'error' => 'token_not_provided'
         ]);
     }

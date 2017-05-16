@@ -2,17 +2,14 @@
 
 $faker = Faker\Factory::create('pt_BR');
 
-/**
-* Cliente
-*/
-$factory->define(\Core\Models\Cliente::class, function () use ($faker) {
+$factory->define(\Core\Models\Customer::class, function () use ($faker) {
     return [
-        'taxvat'    => $faker->randomNumber(5) . $faker->randomNumber(6),
-        'tipo'      => 0,
-        'nome'      => $faker->name,
-        'fone'      => $faker->randomNumber(5) . $faker->randomNumber(5),
-        'email'     => $faker->email,
-        'inscricao' => null,
+        'taxvat'   => $faker->randomNumber(5) . $faker->randomNumber(6),
+        'type'     => 0,
+        'name'     => $faker->name,
+        'phone'    => $faker->randomNumber(5) . $faker->randomNumber(5),
+        'email'    => $faker->email,
+        'document' => null,
     ];
 });
 
