@@ -32,6 +32,10 @@ class ProductController extends Controller
                     ->orWhere('ean', 'LIKE', "%{$search}%")
                     ->orWhere('title', 'LIKE', "%{$search}%");
             })
+            ->where(function($query) {
+                if (request('filter.line_id'))
+                    $query->where('line_id', request('filter.line_id'));
+            })
             ->orderBy('created_at', 'DESC')
             ->paginate(
                 request('per_page', 10)

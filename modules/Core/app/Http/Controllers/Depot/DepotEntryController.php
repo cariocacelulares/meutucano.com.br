@@ -37,6 +37,10 @@ class DepotEntryController extends Controller
                 $query->where('suppliers.taxvat', 'LIKE', "%{$search}%")
                     ->orWhere('suppliers.name', 'LIKE', "%{$search}%");
             })
+            ->where(function($query) {
+                $query->whereMonth('depot_entries.created_at', request('filter.month'))
+                    ->whereYear('depot_entries.created_at', request('filter.year'));
+            })
             ->select('depot_entries.*')
             ->paginate(
                 request('per_page', 10)

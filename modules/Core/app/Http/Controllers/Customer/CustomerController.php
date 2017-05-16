@@ -29,6 +29,10 @@ class CustomerController extends Controller
                     ->orWhere('name', 'LIKE', "%{$search}%")
                     ->orWhere('email', 'LIKE', "%{$search}%");
             })
+            ->where(function($query) {
+                if (request('filter.type'))
+                    $query->where('type', request('filter.type'));
+            })
             ->paginate(
                 request('per_page', 10)
             );

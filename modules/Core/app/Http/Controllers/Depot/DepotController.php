@@ -31,6 +31,10 @@ class DepotController extends Controller
 
          $data = Depot::orderBy('created_at', 'DESC')
              ->where('title', 'LIKE', "%{$search}%")
+             ->where(function($query) {
+                 if (request('filter.include'))
+                     $query->where('include', request('filter.include'));
+             })
              ->paginate(
                  request('per_page', 10)
              );

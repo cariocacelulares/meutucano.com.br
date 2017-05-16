@@ -37,6 +37,10 @@ class DepotWithdrawController extends Controller
                     ->orWhere('users.name', 'LIKE', "%{$search}%")
                     ->orWhere('depots.title', 'LIKE', "%{$search}%");
             })
+            ->where(function($query) {
+                $query->whereMonth('depot_withdraws.created_at', request('filter.month'))
+                    ->whereYear('depot_withdraws.created_at', request('filter.year'));
+            })
             ->select('depot_withdraws.*')
             ->orderBy('created_at', 'DESC')
             ->paginate(

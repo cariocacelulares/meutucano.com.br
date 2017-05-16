@@ -38,6 +38,10 @@ class ProductSerialIssueController extends Controller
             ->where(function($query) use ($search) {
                 $query->where('product_serials.serial', 'LIKE', "%{$search}%");
             })
+            ->where(function($query) {
+                $query->whereMonth('product_serial_issues.created_at', request('filter.month'))
+                    ->whereYear('product_serial_issues.created_at', request('filter.year'));
+            })
             ->select('product_serial_issues.*')
             ->orderBy('created_at', 'DESC')
             ->paginate(

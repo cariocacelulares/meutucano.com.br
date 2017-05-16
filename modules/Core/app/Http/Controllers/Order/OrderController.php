@@ -37,6 +37,10 @@ class OrderController extends Controller
                 $query->where('orders.api_code', 'LIKE', "%{$search}%")
                     ->orWhere('customers.name', 'LIKE', "%{$search}%");
             })
+            ->where(function($query) {
+                $query->whereMonth('orders.created_at', request('filter.month'))
+                    ->whereYear('orders.created_at', request('filter.year'));
+            })
             ->select('orders.*')
             ->orderBy('created_at', 'DESC')
             ->paginate(
@@ -61,6 +65,10 @@ class OrderController extends Controller
             ->where(function($query) use ($search) {
                 $query->where('orders.api_code', 'LIKE', "%{$search}%")
                     ->orWhere('customers.name', 'LIKE', "%{$search}%");
+            })
+            ->where(function($query) {
+                if (request('filter.marketplace'))
+                    $query->where('orders.marketplace', request('filter.marketplace'));
             })
             ->select('orders.*')
             ->orderBy('priority', 'DESC')

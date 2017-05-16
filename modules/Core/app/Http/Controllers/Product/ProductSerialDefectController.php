@@ -36,6 +36,10 @@ class ProductSerialDefectController extends Controller
                 $query->where('product_serials.serial', 'LIKE', "%{$search}%")
                     ->orWhere('product_serial_defects.description', 'LIKE', "%{$search}%");
             })
+            ->where(function($query) {
+                $query->whereMonth('product_serial_defects.created_at', request('filter.month'))
+                    ->whereYear('product_serial_defects.created_at', request('filter.year'));
+            })
             ->select('product_serial_defects.*')
             ->orderBy('created_at', 'DESC')
             ->paginate(
