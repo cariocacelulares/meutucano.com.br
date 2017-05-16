@@ -1,12 +1,17 @@
 <template>
   <div :class="{ dropdown: true, opened: opened }" @click="open">
     <div class="selection">
-      <span v-if="selected">{{ selected.label }}</span>
-      <span v-if="!selected">{{ placeholder }}</span>
+      <input v-model="term" :placeholder="placeholder" @input="doSearch"/>
+         <!-- <input @blur="blurInput"
+         @keydown.up="prevItem"
+         @keydown.down="nextItem"
+         @keyup.enter="enterItem"
+         @keyup.escape="enterItem"
+         @keydown.delete="deleteTextOrItem"> -->
       <Icon name="angle-down" />
     </div>
     <ul>
-      <li v-for="item in itens"
+      <li v-for="item in options"
         @click="select(item)">
         {{ item.label }}
       </li>
@@ -34,13 +39,16 @@ export default {
     search: {
       type: Function,
       default: null
-    }
+    },
   },
 
   data() {
     return {
       selected: null,
       opened: false,
+      term: null,
+      options: [],
+      debounce: null
     }
   },
 
@@ -66,7 +74,57 @@ export default {
         document.addEventListener('click', this.close, false);
       }
     },
-  }
+
+    doSearch(event) {
+      clearTimeout(this.debounce)
+
+      this.debounce = setTimeout(function() {
+        axios.get('lines/fetch' + parseParams({
+          search: event.target.value
+        })).then(
+          (response) => {
+            this.options = []
+            response.data.forEach((item) => {
+              this.options.push({
+                label: item.title,
+                value: item.id
+              })
+            })
+
+            console.log(this.options)
+          },
+          (error) => {
+            console.log(error)
+          },
+        )
+      }.bind(this), 500)
+    }
+    // doSearch(event) {
+       /*_.debounce((event) => {
+        console.log(event.target.value)
+
+      }, 500)*/
+    // },
+  },
+
+  watch: {
+    selected: {
+      handler() {
+        if (this.selected) {
+          this.term = this.selected.label
+        }
+      },
+      deep: true
+    },
+  },
+
+  mounted() {
+    if (this.selected) {
+      this.term = this.selected.label
+    }
+
+    this.options = this.itens
+  },
 }
 </script>
 

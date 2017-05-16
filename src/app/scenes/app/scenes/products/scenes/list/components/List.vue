@@ -3,7 +3,8 @@
     <PageHeader>
       <div slot="left" class="left">
         <Dropdown placeholder="Linha de produtos"
-        :itens="lines" name="productLines"/>
+          :itens="lines" name="productLines"/>
+
         <VSeparator :spacing="20" :height="40" />
         <FeaturedValue label="Em estoque (144)"
         value="R$133.619,00" color="success" />
