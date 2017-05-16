@@ -188,6 +188,7 @@ class ProductController extends Controller
                 return $order->created_at->month;
             });
 
+            $graph = [];
             foreach (lastMonthsAsArray() as $month) {
                 $graph[] = [
                     'month'    => config('core.meses')[$month],
@@ -226,6 +227,7 @@ class ProductController extends Controller
                 return sizeof($order);
             });
 
+            $graph = [];
             $sumValues = $orders->sum();
             foreach ($orders as $marketplace => $order) {
                 $graph[] = [
@@ -267,6 +269,7 @@ class ProductController extends Controller
                 return $sumValue / $products->sum('quantity');
             });
 
+            $graph = [];
             $lastMonth = null;
             foreach (lastMonthsAsArray() as $month) {
                 if (!$entryProducts->get($month) && $lastMonth && $entryProducts->get($lastMonth))
