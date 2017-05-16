@@ -4,6 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
+    "hash": "419bc8b61138717d3f0dbff9f8538c01",
     "content-hash": "8a78591f085fc0fb0fd20ea01a09dc5f",
     "packages": [
         {
@@ -62,7 +63,7 @@
                 "crossdomain",
                 "laravel"
             ],
-            "time": "2017-03-22T08:40:10+00:00"
+            "time": "2017-03-22 08:40:10"
         },
         {
             "name": "container-interop/container-interop",
@@ -93,7 +94,7 @@
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
-            "time": "2017-02-14T19:40:03+00:00"
+            "time": "2017-02-14 19:40:03"
         },
         {
             "name": "doctrine/annotations",
@@ -161,7 +162,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2017-02-24T16:22:25+00:00"
+            "time": "2017-02-24 16:22:25"
         },
         {
             "name": "doctrine/cache",
@@ -231,7 +232,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2016-10-29T11:16:17+00:00"
+            "time": "2016-10-29 11:16:17"
         },
         {
             "name": "doctrine/collections",
@@ -298,7 +299,7 @@
                 "collections",
                 "iterator"
             ],
-            "time": "2017-01-03T10:49:41+00:00"
+            "time": "2017-01-03 10:49:41"
         },
         {
             "name": "doctrine/common",
@@ -371,7 +372,7 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2017-01-13T14:02:13+00:00"
+            "time": "2017-01-13 14:02:13"
         },
         {
             "name": "doctrine/dbal",
@@ -442,7 +443,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2017-02-08T12:53:47+00:00"
+            "time": "2017-02-08 12:53:47"
         },
         {
             "name": "doctrine/inflector",
@@ -509,7 +510,7 @@
                 "singularize",
                 "string"
             ],
-            "time": "2015-11-06T14:35:42+00:00"
+            "time": "2015-11-06 14:35:42"
         },
         {
             "name": "doctrine/lexer",
@@ -563,7 +564,7 @@
                 "lexer",
                 "parser"
             ],
-            "time": "2014-09-09T13:34:57+00:00"
+            "time": "2014-09-09 13:34:57"
         },
         {
             "name": "dompdf/dompdf",
@@ -625,7 +626,7 @@
             ],
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
-            "time": "2017-02-16T02:40:40+00:00"
+            "time": "2017-02-16 02:40:40"
         },
         {
             "name": "endroid/qrcode",
@@ -685,7 +686,7 @@
                 "qrcode",
                 "symfony"
             ],
-            "time": "2017-04-08T09:13:59+00:00"
+            "time": "2017-04-08 09:13:59"
         },
         {
             "name": "erusev/parsedown",
@@ -727,7 +728,7 @@
                 "markdown",
                 "parser"
             ],
-            "time": "2017-03-29T16:04:15+00:00"
+            "time": "2017-03-29 16:04:15"
         },
         {
             "name": "felixkiss/uniquewith-validator",
@@ -773,7 +774,7 @@
             "keywords": [
                 "laravel"
             ],
-            "time": "2017-05-12T15:57:09+00:00"
+            "time": "2017-05-12 15:57:09"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -835,7 +836,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2017-02-28T22:50:30+00:00"
+            "time": "2017-02-28 22:50:30"
         },
         {
             "name": "guzzlehttp/promises",
@@ -886,7 +887,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2016-12-20T10:07:11+00:00"
+            "time": "2016-12-20 10:07:11"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -951,7 +952,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2017-03-20T17:10:46+00:00"
+            "time": "2017-03-20 17:10:46"
         },
         {
             "name": "intervention/image",
@@ -1013,7 +1014,7 @@
                 "thumbnail",
                 "watermark"
             ],
-            "time": "2017-04-23T18:45:36+00:00"
+            "time": "2017-04-23 18:45:36"
         },
         {
             "name": "itbz/fpdf",
@@ -1044,7 +1045,7 @@
             ],
             "description": "Unofficial PSR-0 compliant version of the FPDF library",
             "homepage": "http://www.fpdf.org/",
-            "time": "2016-05-27T09:02:54+00:00"
+            "time": "2016-05-27 09:02:54"
         },
         {
             "name": "jenssegers/mongodb",
@@ -1105,7 +1106,7 @@
                 "mongo",
                 "mongodb"
             ],
-            "time": "2017-03-12T09:23:10+00:00"
+            "time": "2017-03-12 09:23:10"
         },
         {
             "name": "jeremeamia/SuperClosure",
@@ -1163,7 +1164,7 @@
                 "serialize",
                 "tokenizer"
             ],
-            "time": "2016-12-07T09:37:55+00:00"
+            "time": "2016-12-07 09:37:55"
         },
         {
             "name": "lanin/laravel-api-debugger",
@@ -1220,20 +1221,20 @@
                 "log",
                 "queries"
             ],
-            "time": "2017-05-03T09:25:42+00:00"
+            "time": "2017-05-03 09:25:42"
         },
         {
             "name": "laravel/framework",
-            "version": "v5.4.22",
+            "version": "v5.4.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "fc5c7a18644f231bcb8d02f4ec2f3a2517f5015d"
+                "reference": "ad82327705658dbf5f0ce72805caa950dfbe150d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/fc5c7a18644f231bcb8d02f4ec2f3a2517f5015d",
-                "reference": "fc5c7a18644f231bcb8d02f4ec2f3a2517f5015d",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/ad82327705658dbf5f0ce72805caa950dfbe150d",
+                "reference": "ad82327705658dbf5f0ce72805caa950dfbe150d",
                 "shasum": ""
             },
             "require": {
@@ -1349,7 +1350,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2017-05-08T21:45:45+00:00"
+            "time": "2017-05-11 20:10:35"
         },
         {
             "name": "league/flysystem",
@@ -1432,7 +1433,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2017-04-28T10:15:08+00:00"
+            "time": "2017-04-28 10:15:08"
         },
         {
             "name": "livepixel/mercado-livre",
@@ -1465,7 +1466,7 @@
                 }
             ],
             "description": "Mercado Livre API SDK for Laravel",
-            "time": "2016-10-13T19:25:09+00:00"
+            "time": "2016-10-13 19:25:09"
         },
         {
             "name": "maatwebsite/excel",
@@ -1533,7 +1534,7 @@
                 "import",
                 "laravel"
             ],
-            "time": "2017-04-04T18:28:12+00:00"
+            "time": "2017-04-04 18:28:12"
         },
         {
             "name": "milon/barcode",
@@ -1582,7 +1583,7 @@
                 "qr code",
                 "qrcode"
             ],
-            "time": "2017-04-21T01:08:30+00:00"
+            "time": "2017-04-21 01:08:30"
         },
         {
             "name": "mongodb/mongodb",
@@ -1640,7 +1641,7 @@
                 "mongodb",
                 "persistence"
             ],
-            "time": "2017-02-16T18:40:32+00:00"
+            "time": "2017-02-16 18:40:32"
         },
         {
             "name": "monolog/monolog",
@@ -1718,7 +1719,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2017-03-13T07:08:03+00:00"
+            "time": "2017-03-13 07:08:03"
         },
         {
             "name": "mpdf/mpdf",
@@ -1761,7 +1762,7 @@
                 "php",
                 "utf-8"
             ],
-            "time": "2015-03-01T10:27:49+00:00"
+            "time": "2015-03-01 10:27:49"
         },
         {
             "name": "mtdowling/cron-expression",
@@ -1805,7 +1806,7 @@
                 "cron",
                 "schedule"
             ],
-            "time": "2017-01-23T04:29:33+00:00"
+            "time": "2017-01-23 04:29:33"
         },
         {
             "name": "namshi/jose",
@@ -1855,7 +1856,7 @@
                 "jwt",
                 "token"
             ],
-            "time": "2015-06-29T05:41:44+00:00"
+            "time": "2015-06-29 05:41:44"
         },
         {
             "name": "nesbot/carbon",
@@ -1908,7 +1909,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2017-01-16T07:55:07+00:00"
+            "time": "2017-01-16 07:55:07"
         },
         {
             "name": "nfephp-org/nfephp",
@@ -2052,24 +2053,24 @@
                 "parser",
                 "php"
             ],
-            "time": "2017-03-05T18:23:57+00:00"
+            "time": "2017-03-05 18:23:57"
         },
         {
             "name": "nwidart/laravel-modules",
-            "version": "1.20.0",
+            "version": "1.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nWidart/laravel-modules.git",
-                "reference": "c259422a0c8303d552324ce13c5dbd672468676c"
+                "reference": "48347cc927f378da5aabfda94a7caef32755b1ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nWidart/laravel-modules/zipball/c259422a0c8303d552324ce13c5dbd672468676c",
-                "reference": "c259422a0c8303d552324ce13c5dbd672468676c",
+                "url": "https://api.github.com/repos/nWidart/laravel-modules/zipball/48347cc927f378da5aabfda94a7caef32755b1ec",
+                "reference": "48347cc927f378da5aabfda94a7caef32755b1ec",
                 "shasum": ""
             },
             "require": {
-                "laravel/framework": "5.1.*|5.2.*|5.3.*|5.4.*",
+                "laravel/framework": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*",
                 "php": ">=5.5"
             },
             "require-dev": {
@@ -2105,7 +2106,7 @@
                 "nwidart",
                 "rad"
             ],
-            "time": "2017-04-19T13:47:31+00:00"
+            "time": "2017-05-10 15:57:02"
         },
         {
             "name": "paragonie/random_compat",
@@ -2153,7 +2154,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2017-03-13T16:27:32+00:00"
+            "time": "2017-03-13 16:27:32"
         },
         {
             "name": "phenx/php-font-lib",
@@ -2190,7 +2191,7 @@
             ],
             "description": "A library to read, parse, export and make subsets of different types of font files.",
             "homepage": "https://github.com/PhenX/php-font-lib",
-            "time": "2017-02-11T10:58:43+00:00"
+            "time": "2017-02-11 10:58:43"
         },
         {
             "name": "phenx/php-svg-lib",
@@ -2227,7 +2228,7 @@
             ],
             "description": "A library to read, parse and export to PDF SVG files.",
             "homepage": "https://github.com/PhenX/php-svg-lib",
-            "time": "2016-12-13T20:25:45+00:00"
+            "time": "2016-12-13 20:25:45"
         },
         {
             "name": "phpoffice/phpexcel",
@@ -2284,7 +2285,7 @@
                 "xls",
                 "xlsx"
             ],
-            "time": "2015-05-01T07:00:55+00:00"
+            "time": "2015-05-01 07:00:55"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -2382,7 +2383,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2015-01-28T21:50:33+00:00"
+            "time": "2015-01-28 21:50:33"
         },
         {
             "name": "predis/predis",
@@ -2432,7 +2433,7 @@
                 "predis",
                 "redis"
             ],
-            "time": "2016-06-16T16:22:20+00:00"
+            "time": "2016-06-16 16:22:20"
         },
         {
             "name": "psr/container",
@@ -2481,7 +2482,7 @@
                 "container-interop",
                 "psr"
             ],
-            "time": "2017-02-14T16:28:37+00:00"
+            "time": "2017-02-14 16:28:37"
         },
         {
             "name": "psr/http-message",
@@ -2531,7 +2532,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06T14:39:51+00:00"
+            "time": "2016-08-06 14:39:51"
         },
         {
             "name": "psr/log",
@@ -2578,7 +2579,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-10-10T12:19:37+00:00"
+            "time": "2016-10-10 12:19:37"
         },
         {
             "name": "ramsey/uuid",
@@ -2660,7 +2661,7 @@
                 "identifier",
                 "uuid"
             ],
-            "time": "2017-03-26T20:37:53+00:00"
+            "time": "2017-03-26 20:37:53"
         },
         {
             "name": "sabberworm/php-css-parser",
@@ -2701,7 +2702,7 @@
                 "parser",
                 "stylesheet"
             ],
-            "time": "2015-08-24T08:48:52+00:00"
+            "time": "2015-08-24 08:48:52"
         },
         {
             "name": "sofa/eloquence",
@@ -2757,7 +2758,7 @@
                 "mutable",
                 "searchable"
             ],
-            "time": "2017-04-22T14:38:11+00:00"
+            "time": "2017-04-22 14:38:11"
         },
         {
             "name": "sofa/hookable",
@@ -2803,7 +2804,7 @@
                 "eloquent",
                 "laravel"
             ],
-            "time": "2017-04-22T13:01:44+00:00"
+            "time": "2017-04-22 13:01:44"
         },
         {
             "name": "soundasleep/html2text",
@@ -2853,20 +2854,20 @@
                 "php",
                 "text"
             ],
-            "time": "2017-04-19T22:01:50+00:00"
+            "time": "2017-04-19 22:01:50"
         },
         {
             "name": "spatie/browsershot",
-            "version": "1.8.0",
+            "version": "1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/browsershot.git",
-                "reference": "de814b9fc301b26f93dae7378370a934f5000f11"
+                "reference": "351ae2beefee61d00e33e576c02d911419f2e66d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/browsershot/zipball/de814b9fc301b26f93dae7378370a934f5000f11",
-                "reference": "de814b9fc301b26f93dae7378370a934f5000f11",
+                "url": "https://api.github.com/repos/spatie/browsershot/zipball/351ae2beefee61d00e33e576c02d911419f2e66d",
+                "reference": "351ae2beefee61d00e33e576c02d911419f2e66d",
                 "shasum": ""
             },
             "require": {
@@ -2878,7 +2879,8 @@
                 "phpspec/phpspec": "~2.1"
             },
             "bin": [
-                "bin/phantomjs"
+                "bin/phantomjs",
+                "bin/phantomjs_macosx"
             ],
             "type": "library",
             "autoload": {
@@ -2907,20 +2909,20 @@
                 "screenshot",
                 "webpage"
             ],
-            "time": "2017-04-27T22:39:13+00:00"
+            "time": "2017-05-13 14:38:39"
         },
         {
             "name": "spatie/db-dumper",
-            "version": "2.6.0",
+            "version": "2.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/db-dumper.git",
-                "reference": "ab73fe5230541438caf1597b585c09f540c7243e"
+                "reference": "3495a15545643a4fc19e914cd5e55d35f2734a88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/db-dumper/zipball/ab73fe5230541438caf1597b585c09f540c7243e",
-                "reference": "ab73fe5230541438caf1597b585c09f540c7243e",
+                "url": "https://api.github.com/repos/spatie/db-dumper/zipball/3495a15545643a4fc19e914cd5e55d35f2734a88",
+                "reference": "3495a15545643a4fc19e914cd5e55d35f2734a88",
                 "shasum": ""
             },
             "require": {
@@ -2957,20 +2959,20 @@
                 "mysqldump",
                 "spatie"
             ],
-            "time": "2017-04-13T18:13:10+00:00"
+            "time": "2017-05-15 14:52:41"
         },
         {
             "name": "spatie/laravel-backup",
-            "version": "4.14.0",
+            "version": "4.14.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-backup.git",
-                "reference": "09585a737029001bb0f994ed0531712f1da646e5"
+                "reference": "7d452a9eb5cecaef742f0a8833120f95532eeac0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-backup/zipball/09585a737029001bb0f994ed0531712f1da646e5",
-                "reference": "09585a737029001bb0f994ed0531712f1da646e5",
+                "url": "https://api.github.com/repos/spatie/laravel-backup/zipball/7d452a9eb5cecaef742f0a8833120f95532eeac0",
+                "reference": "7d452a9eb5cecaef742f0a8833120f95532eeac0",
                 "shasum": ""
             },
             "require": {
@@ -3023,7 +3025,7 @@
                 "laravel-backup",
                 "spatie"
             ],
-            "time": "2017-05-09T15:33:55+00:00"
+            "time": "2017-05-15 15:00:27"
         },
         {
             "name": "spatie/laravel-failed-job-monitor",
@@ -3080,7 +3082,7 @@
                 "slack",
                 "spatie"
             ],
-            "time": "2017-01-23T13:47:34+00:00"
+            "time": "2017-01-23 13:47:34"
         },
         {
             "name": "spatie/temporary-directory",
@@ -3126,7 +3128,7 @@
                 "spatie",
                 "temporary-directory"
             ],
-            "time": "2017-02-02T13:08:42+00:00"
+            "time": "2017-02-02 13:08:42"
         },
         {
             "name": "stavarengo/php-sigep",
@@ -3199,7 +3201,7 @@
                 }
             ],
             "description": "Unofficial FPDF library - Cópia do FPDF 1.7 usado pelo projeto stavarengo/php-sigep.",
-            "time": "2017-04-05T22:18:20+00:00"
+            "time": "2017-04-05 22:18:20"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
@@ -3247,7 +3249,7 @@
                 "html",
                 "parser"
             ],
-            "time": "2016-11-22T22:57:47+00:00"
+            "time": "2016-11-22 22:57:47"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -3301,7 +3303,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2017-05-01T15:54:03+00:00"
+            "time": "2017-05-01 15:54:03"
         },
         {
             "name": "symfony/console",
@@ -3364,7 +3366,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-26T01:39:17+00:00"
+            "time": "2017-04-26 01:39:17"
         },
         {
             "name": "symfony/css-selector",
@@ -3417,7 +3419,7 @@
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-02T20:31:54+00:00"
+            "time": "2017-01-02 20:31:54"
         },
         {
             "name": "symfony/debug",
@@ -3474,7 +3476,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-19T20:17:50+00:00"
+            "time": "2017-04-19 20:17:50"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -3534,7 +3536,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2017-05-01T14:58:48+00:00"
+            "time": "2017-05-01 14:58:48"
         },
         {
             "name": "symfony/finder",
@@ -3583,7 +3585,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-12T14:13:17+00:00"
+            "time": "2017-04-12 14:13:17"
         },
         {
             "name": "symfony/http-foundation",
@@ -3636,7 +3638,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
-            "time": "2017-05-01T14:55:58+00:00"
+            "time": "2017-05-01 14:55:58"
         },
         {
             "name": "symfony/http-kernel",
@@ -3718,7 +3720,7 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "https://symfony.com",
-            "time": "2017-05-01T17:46:48+00:00"
+            "time": "2017-05-01 17:46:48"
         },
         {
             "name": "symfony/options-resolver",
@@ -3772,7 +3774,7 @@
                 "configuration",
                 "options"
             ],
-            "time": "2017-04-12T14:13:17+00:00"
+            "time": "2017-04-12 14:13:17"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -3831,7 +3833,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-11-14T01:06:16+00:00"
+            "time": "2016-11-14 01:06:16"
         },
         {
             "name": "symfony/polyfill-php56",
@@ -3887,7 +3889,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-11-14T01:06:16+00:00"
+            "time": "2016-11-14 01:06:16"
         },
         {
             "name": "symfony/polyfill-util",
@@ -3939,7 +3941,7 @@
                 "polyfill",
                 "shim"
             ],
-            "time": "2016-11-14T01:06:16+00:00"
+            "time": "2016-11-14 01:06:16"
         },
         {
             "name": "symfony/process",
@@ -3988,7 +3990,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-12T14:13:17+00:00"
+            "time": "2017-04-12 14:13:17"
         },
         {
             "name": "symfony/routing",
@@ -4063,7 +4065,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2017-04-12T14:13:17+00:00"
+            "time": "2017-04-12 14:13:17"
         },
         {
             "name": "symfony/translation",
@@ -4127,7 +4129,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-12T14:13:17+00:00"
+            "time": "2017-04-12 14:13:17"
         },
         {
             "name": "symfony/var-dumper",
@@ -4195,7 +4197,7 @@
                 "debug",
                 "dump"
             ],
-            "time": "2017-05-01T14:55:58+00:00"
+            "time": "2017-05-01 14:55:58"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
@@ -4242,7 +4244,7 @@
             ],
             "description": "CssToInlineStyles is a class that enables you to convert HTML-pages/files into HTML-pages/files with inline styles. This is very useful when you're sending emails.",
             "homepage": "https://github.com/tijsverkoyen/CssToInlineStyles",
-            "time": "2016-09-20T12:50:39+00:00"
+            "time": "2016-09-20 12:50:39"
         },
         {
             "name": "tymon/jwt-auth",
@@ -4305,7 +4307,7 @@
                 "laravel",
                 "tymon"
             ],
-            "time": "2017-04-06T19:57:45+00:00"
+            "time": "2017-04-06 19:57:45"
         },
         {
             "name": "venturecraft/revisionable",
@@ -4353,7 +4355,7 @@
                 "model",
                 "revision"
             ],
-            "time": "2016-08-02T02:32:00+00:00"
+            "time": "2016-08-02 02:32:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -4403,7 +4405,7 @@
                 "env",
                 "environment"
             ],
-            "time": "2016-09-01T10:05:43+00:00"
+            "time": "2016-09-01 10:05:43"
         },
         {
             "name": "zendframework/zend-loader",
@@ -4447,7 +4449,7 @@
                 "loader",
                 "zf2"
             ],
-            "time": "2015-06-03T14:05:47+00:00"
+            "time": "2015-06-03 14:05:47"
         },
         {
             "name": "zendframework/zend-mail",
@@ -4507,7 +4509,7 @@
                 "mail",
                 "zf2"
             ],
-            "time": "2017-02-14T18:03:34+00:00"
+            "time": "2017-02-14 18:03:34"
         },
         {
             "name": "zendframework/zend-mime",
@@ -4556,7 +4558,7 @@
                 "mime",
                 "zf2"
             ],
-            "time": "2017-01-16T16:43:38+00:00"
+            "time": "2017-01-16 16:43:38"
         },
         {
             "name": "zendframework/zend-stdlib",
@@ -4601,7 +4603,7 @@
                 "stdlib",
                 "zf2"
             ],
-            "time": "2016-09-13T14:38:50+00:00"
+            "time": "2016-09-13 14:38:50"
         },
         {
             "name": "zendframework/zend-validator",
@@ -4672,7 +4674,7 @@
                 "validator",
                 "zf2"
             ],
-            "time": "2017-03-17T10:15:50+00:00"
+            "time": "2017-03-17 10:15:50"
         },
         {
             "name": "zizaco/entrust",
@@ -4740,7 +4742,7 @@
                 "permission",
                 "roles"
             ],
-            "time": "2016-12-29T06:25:06+00:00"
+            "time": "2016-12-29 06:25:06"
         }
     ],
     "packages-dev": [
@@ -4797,7 +4799,7 @@
                 "assertion",
                 "validation"
             ],
-            "time": "2017-05-04T02:00:24+00:00"
+            "time": "2017-05-04 02:00:24"
         },
         {
             "name": "doctrine/instantiator",
@@ -4851,7 +4853,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2015-06-14T21:17:01+00:00"
+            "time": "2015-06-14 21:17:01"
         },
         {
             "name": "fzaninotto/faker",
@@ -4899,7 +4901,7 @@
                 "faker",
                 "fixtures"
             ],
-            "time": "2016-04-29T12:21:54+00:00"
+            "time": "2016-04-29 12:21:54"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -4944,51 +4946,7 @@
             "keywords": [
                 "test"
             ],
-            "time": "2015-05-11T14:41:42+00:00"
-        },
-        {
-            "name": "laracasts/generators",
-            "version": "1.1.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laracasts/Laravel-5-Generators-Extended.git",
-                "reference": "d6afcc60dff846980393d59f6df2074b8a297b08"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laracasts/Laravel-5-Generators-Extended/zipball/d6afcc60dff846980393d59f6df2074b8a297b08",
-                "reference": "d6afcc60dff846980393d59f6df2074b8a297b08",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/support": "~5.0",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "phpspec/phpspec": "~2.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Laracasts\\Generators\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jeffrey Way",
-                    "email": "jeffrey@laracasts.com"
-                }
-            ],
-            "description": "Extend Laravel 5's generators.",
-            "keywords": [
-                "generators",
-                "laravel"
-            ],
-            "time": "2015-12-31T18:44:32+00:00"
+            "time": "2015-05-11 14:41:42"
         },
         {
             "name": "mockery/mockery",
@@ -5053,7 +5011,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2017-02-28T12:52:32+00:00"
+            "time": "2017-02-28 12:52:32"
         },
         {
             "name": "myclabs/deep-copy",
@@ -5095,7 +5053,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2017-04-12T18:52:22+00:00"
+            "time": "2017-04-12 18:52:22"
         },
         {
             "name": "php-vcr/php-vcr",
@@ -5146,7 +5104,7 @@
                 }
             ],
             "description": "Record your test suite's HTTP interactions and replay them during future test runs for fast, deterministic, accurate tests.",
-            "time": "2016-12-23T13:28:14+00:00"
+            "time": "2016-12-23 13:28:14"
         },
         {
             "name": "php-vcr/phpunit-testlistener-vcr",
@@ -5177,7 +5135,7 @@
                 }
             ],
             "description": "Integrates PHPUnit with PHP-VCR.",
-            "time": "2016-01-12T21:15:47+00:00"
+            "time": "2016-01-12 21:15:47"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -5231,7 +5189,7 @@
                 "reflection",
                 "static analysis"
             ],
-            "time": "2015-12-27T11:43:31+00:00"
+            "time": "2015-12-27 11:43:31"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -5276,7 +5234,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2016-09-30T07:12:33+00:00"
+            "time": "2016-09-30 07:12:33"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -5323,7 +5281,7 @@
                     "email": "me@mikevanriel.com"
                 }
             ],
-            "time": "2016-11-25T06:54:22+00:00"
+            "time": "2016-11-25 06:54:22"
         },
         {
             "name": "phpspec/prophecy",
@@ -5386,7 +5344,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2017-03-02T20:05:34+00:00"
+            "time": "2017-03-02 20:05:34"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -5449,7 +5407,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-04-02T07:44:40+00:00"
+            "time": "2017-04-02 07:44:40"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -5496,7 +5454,7 @@
                 "filesystem",
                 "iterator"
             ],
-            "time": "2016-10-03T07:40:28+00:00"
+            "time": "2016-10-03 07:40:28"
         },
         {
             "name": "phpunit/php-text-template",
@@ -5537,7 +5495,7 @@
             "keywords": [
                 "template"
             ],
-            "time": "2015-06-21T13:50:34+00:00"
+            "time": "2015-06-21 13:50:34"
         },
         {
             "name": "phpunit/php-timer",
@@ -5586,7 +5544,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2017-02-26T11:10:40+00:00"
+            "time": "2017-02-26 11:10:40"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -5635,7 +5593,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2017-02-27T10:12:30+00:00"
+            "time": "2017-02-27 10:12:30"
         },
         {
             "name": "phpunit/phpunit",
@@ -5717,7 +5675,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-04-03T02:22:27+00:00"
+            "time": "2017-04-03 02:22:27"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -5776,7 +5734,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2016-12-08T20:27:08+00:00"
+            "time": "2016-12-08 20:27:08"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -5821,7 +5779,7 @@
             ],
             "description": "Looks up which function or method a line of code belongs to",
             "homepage": "https://github.com/sebastianbergmann/code-unit-reverse-lookup/",
-            "time": "2017-03-04T06:30:41+00:00"
+            "time": "2017-03-04 06:30:41"
         },
         {
             "name": "sebastian/comparator",
@@ -5885,7 +5843,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2017-01-29T09:50:25+00:00"
+            "time": "2017-01-29 09:50:25"
         },
         {
             "name": "sebastian/diff",
@@ -5937,7 +5895,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2015-12-08T07:14:41+00:00"
+            "time": "2015-12-08 07:14:41"
         },
         {
             "name": "sebastian/environment",
@@ -5987,7 +5945,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2016-11-26T07:53:53+00:00"
+            "time": "2016-11-26 07:53:53"
         },
         {
             "name": "sebastian/exporter",
@@ -6054,7 +6012,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2016-11-19T08:54:04+00:00"
+            "time": "2016-11-19 08:54:04"
         },
         {
             "name": "sebastian/global-state",
@@ -6105,7 +6063,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2015-10-12T03:26:01+00:00"
+            "time": "2015-10-12 03:26:01"
         },
         {
             "name": "sebastian/object-enumerator",
@@ -6151,7 +6109,7 @@
             ],
             "description": "Traverses array structures and object graphs to enumerate all referenced objects",
             "homepage": "https://github.com/sebastianbergmann/object-enumerator/",
-            "time": "2017-02-18T15:18:39+00:00"
+            "time": "2017-02-18 15:18:39"
         },
         {
             "name": "sebastian/recursion-context",
@@ -6204,7 +6162,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2016-11-19T07:33:16+00:00"
+            "time": "2016-11-19 07:33:16"
         },
         {
             "name": "sebastian/resource-operations",
@@ -6246,7 +6204,7 @@
             ],
             "description": "Provides a list of PHP built-in functions that operate on resources",
             "homepage": "https://www.github.com/sebastianbergmann/resource-operations",
-            "time": "2015-07-28T20:34:47+00:00"
+            "time": "2015-07-28 20:34:47"
         },
         {
             "name": "sebastian/version",
@@ -6289,7 +6247,7 @@
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
-            "time": "2016-10-03T07:35:21+00:00"
+            "time": "2016-10-03 07:35:21"
         },
         {
             "name": "symfony/dom-crawler",
@@ -6345,7 +6303,7 @@
             ],
             "description": "Symfony DomCrawler Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-21T17:13:55+00:00"
+            "time": "2017-01-21 17:13:55"
         },
         {
             "name": "symfony/yaml",
@@ -6400,20 +6358,20 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-05-01T14:55:58+00:00"
+            "time": "2017-05-01 14:55:58"
         },
         {
             "name": "tightenco/mailthief",
-            "version": "v0.3.5",
+            "version": "v0.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tightenco/mailthief.git",
-                "reference": "3269c0baf1b926ee759b5eee6cccca783beecfed"
+                "reference": "fda78fe3dc649ea405378fe77c016d96a1d2eae7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tightenco/mailthief/zipball/3269c0baf1b926ee759b5eee6cccca783beecfed",
-                "reference": "3269c0baf1b926ee759b5eee6cccca783beecfed",
+                "url": "https://api.github.com/repos/tightenco/mailthief/zipball/fda78fe3dc649ea405378fe77c016d96a1d2eae7",
+                "reference": "fda78fe3dc649ea405378fe77c016d96a1d2eae7",
                 "shasum": ""
             },
             "require": {
@@ -6442,7 +6400,7 @@
                 }
             ],
             "description": "A fake Mailer for Laravel applications that takes the pain out of testing mail.",
-            "time": "2017-04-22T17:42:32+00:00"
+            "time": "2017-05-16 15:04:00"
         },
         {
             "name": "webmozart/assert",
@@ -6492,7 +6450,7 @@
                 "check",
                 "validate"
             ],
-            "time": "2016-11-23T20:04:58+00:00"
+            "time": "2016-11-23 20:04:58"
         }
     ],
     "aliases": [],
