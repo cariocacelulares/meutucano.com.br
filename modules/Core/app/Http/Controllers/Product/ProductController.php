@@ -226,7 +226,15 @@ class ProductController extends Controller
                 return sizeof($order);
             });
 
-            return showResponse($orders);
+            $sumValues = $orders->sum();
+            foreach ($orders as $marketplace => $order) {
+                $graph[] = [
+                    'marketplace' => $marketplace,
+                    'percent'     => round(($order / $sumValues) * 100)
+                ];
+            }
+
+            return showResponse($graph);
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao excluir recurso'));
 
