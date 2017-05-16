@@ -41,9 +41,9 @@ class OrderInvoice extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function devolution()
+    public function devolutions()
     {
-        return $this->hasOne(OrderInvoiceDevolution::class);
+        return $this->hasMany(OrderInvoiceDevolution::class);
     }
 
     /**

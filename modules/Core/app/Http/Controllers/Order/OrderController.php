@@ -169,7 +169,9 @@ class OrderController extends Controller
                 'customerAddress',
                 'orderProductsGrouped',
                 'orderProductsGrouped.product',
-                'orderProductsGrouped.productSerial'
+                'orderProductsGrouped.productSerial',
+                'orderInvoices',
+                'orderInvoices.devolutions',
             ])->withCount(['comments', 'calls'])->findOrFail($id);
 
             return showResponse($data);
