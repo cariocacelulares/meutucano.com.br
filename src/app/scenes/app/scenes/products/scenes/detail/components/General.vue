@@ -77,21 +77,21 @@
 
     <div>
       <Card header-icon="area-chart" header-text="Histórico de vendas por mês" :loading="loading">
-        <!--vue-highcharts :options="salesHistoryOptions" ref="salesHistory"></vue-highcharts-->
+        <vue-highcharts :options="ordersPeriodOptions" ref="ordersPeriod"></vue-highcharts>
       </Card>
 
       <Card header-icon="money" header-text="Histórico de custo por mês" :loading="loading">
-        <!--vue-highcharts :options="costHistoryOptions" ref="costHistory"></vue-highcharts-->
+        <vue-highcharts :options="costPeriodOptions" ref="costPeriod"></vue-highcharts>
       </Card>
     </div>
 
     <div>
       <Card header-icon="pie-chart" header-text="Vendas no mês por canal" :loading="loading"
         :header-margin-bottom="10" class="p-b-10">
-        <!--vue-highcharts :options="channelSalesOptions" ref="channelSales"></vue-highcharts-->
+        <vue-highcharts :options="ordersMarketplaceOptions" ref="ordersMarketplace"></vue-highcharts>
       </Card>
 
-      <Card header-icon="shopping-cart" header-text="Última compra">
+      <Card v-if="last_entry.date" header-icon="shopping-cart" header-text="Última compra">
         <div slot="header">
           <router-link :to="{ name: 'products.detail' }">
             <Icon name="eye" text="Ver entrada" />
@@ -131,18 +131,10 @@
 </template>
 
 <script>
-// import VueHighcharts from 'vue2-highcharts'
-
 export default {
-  components: {
-    // VueHighcharts
-  },
-
-  props: {
-  },
-
   mounted() {
-    axios.get(`products/${this.$route.params.sku}`).then(
+    // product detail
+    axios.get(`products/${this.sku}`).then(
       (response) => {
         this.loading = false
         this.product = response.data
@@ -152,199 +144,98 @@ export default {
       }
     )
 
-    axios.get(`products/${this.$route.params.sku}/entry`).then(
+    // last entry
+    axios.get(`products/${this.sku}/entry`).then(
       (response) => {
-        this.last_entry = response.data.length ? response.data : {
-          date: null,
-          quantity: null,
-          cost: null,
-          total: null,
-          supplier: {
-            name: null,
-          },
-        }
+        this.last_entry = response.data
       },
       (error) => {
         console.log(error)
       }
     )
 
-    setTimeout(() => {
-        this.graphs.sold = [32, 41, 33, 84, 65]
-        this.graphs.cost = [12, 21, 8, 18, 33]
-        this.graphs.channel = [
-          {
-            name: 'Mercado Livre',
-            y: 16,
-            color: '#584FF1',
-          },
-          {
-            name: 'E-commerce',
-            y: 32,
-            color: '#AB00C3',
-          },
-          {
-            name: 'B2W',
-            y: 12,
-            color: '#00E5CB',
-          },
-          {
-            name: 'CNOVA',
-            y: 40,
-            color: '#F5E135',
-          },
-        ]
-
-        this.$refs.salesHistory.addSeries({
-          data: this.graphs.sold
+    // graph: orders per month
+    axios.get(`products/${this.sku}/graph/orders-period`).then(
+      (response) => {
+        let series = []
+        let categories = []
+        response.data.forEach((item) => {
+          series.push(item.quantity)
+          categories.push(item.month)
         })
 
-        this.$refs.salesHistory.hideLoading()
-
-        this.$refs.costHistory.addSeries({
-          data: this.graphs.cost
+        this.$refs.ordersPeriod.chart.xAxis[0].categories = categories
+        this.$refs.ordersPeriod.addSeries({
+          data: series
         })
 
-        this.$refs.costHistory.hideLoading()
+        this.$refs.ordersPeriod.hideLoading()
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
 
-        this.$refs.channelSales.addSeries({
-          data: this.graphs.channel
+    // graph: cost per month
+    axios.get(`products/${this.sku}/graph/cost-period`).then(
+      (response) => {
+        let series = []
+        let categories = []
+        response.data.forEach((item) => {
+          series.push(item.quantity)
+          categories.push(item.month)
         })
 
-        this.$refs.channelSales.hideLoading()
-    }, 1000)
+        this.$refs.costPeriod.chart.xAxis[0].categories = categories
+        this.$refs.costPeriod.addSeries({
+          data: series
+        })
+
+        this.$refs.costPeriod.hideLoading()
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+
+    // graph: cost per month
+    axios.get(`products/${this.sku}/graph/orders-marketplace`).then(
+      (response) => {
+
+        let series = []
+        response.data.forEach((item) => {
+          series.push({
+            name: item.marketplace,
+            y: item.percent,
+          })
+        })
+
+        this.$refs.ordersMarketplace.addSeries({
+          data: series
+        })
+
+        this.$refs.ordersMarketplace.hideLoading()
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
   },
 
   data() {
-    const lineChartOptions = {
-      chart: {
-        height: 130,
-        marginTop: 0,
-        marginLeft: 0,
-        marginRight: 0,
-        spacingTop: 0,
-        spacingBottom: 0,
-        spacingLeft: 0,
-        spacingRight: 0,
-      },
-      title: false,
-      yAxis: {
-        title: false,
-        visible: false,
-      },
-      legend: false,
-      credits: false,
-      loading: true,
-      exporting: {
-        enabled: false
-      },
-      xAxis: {
-        categories: monthList(),
-        tickLength: 10,
-        labels: {
-          style: {
-            color: '#999',
-            cursor: 'default',
-            fontSize: '11px',
-          }
-        }
-      },
-      plotOptions: {
-        line: {
-          size:'100%',
-          color: '#6D5CAE',
-          dataLabels: {
-            enabled: true,
-            y: -1,
-            inside: true,
-            style: {
-              color: '#666',
-              fontSize: '11px',
-              fontWeight: 'normal',
-              textOutline: 'none',
-              cursor: 'default',
-            },
-          },
-          enableMouseTracking: false
-        }
-      },
-    }
-
-    const costHistoryOptions = _.cloneDeep(lineChartOptions)
-    costHistoryOptions.plotOptions.line.dataLabels.format = 'R${y}'
-
-    const channelSalesOptions = {
-      chart: {
-        type: 'pie',
-        height: 150,
-        marginTop: 10,
-        marginBottom: 10,
-        marginLeft: 0,
-        // marginRight: 0,
-        spacingTop: 0,
-        spacingBottom: 0,
-        spacingLeft: 0,
-        spacingRight: 0,
-      },
-      title: false,
-      legend: {
-        align: 'right',
-        verticalAlign: 'middle',
-        layout: 'vertical',
-        itemMarginBottom: 5,
-        symbolRadius: 3,
-        itemStyle: {
-          color: '#999',
-          cursor: 'pointer',
-          fontSize: '12px',
-          fontWeight: 'normal',
-        },
-      },
-      credits: false,
-      loading: true,
-      exporting: {
-        enabled: false
-      },
-      plotOptions: {
-        pie: {
-          size:'100%',
-          slicedOffset: 0,
-          enableMouseTracking: false,
-          dataLabels: {
-            distance: -20,
-            inside: true,
-            format: '{y}%',
-            style: {
-              color: '#FFF',
-              fontSize: '12px',
-              fontWeight: 'bold',
-              textOutline: 'none',
-              cursor: 'default',
-            },
-          },
-          showInLegend: true
-        }
-      },
-    }
+    const costPeriodOptions = _.cloneDeep(lineChartOptions)
+    costPeriodOptions.plotOptions.line.dataLabels.format = 'R${y}'
 
     return {
-      salesHistoryOptions: lineChartOptions,
-      costHistoryOptions: costHistoryOptions,
-      channelSalesOptions: channelSalesOptions,
+      ordersPeriodOptions: lineChartOptions,
+      costPeriodOptions: costPeriodOptions,
+      ordersMarketplaceOptions: pieChartOptions,
 
       loading: true,
 
       product: {},
       stock: {},
-      last_entry: {
-        date: null,
-        quantity: null,
-        cost: null,
-        total: null,
-        supplier: {
-          name: null,
-        },
-      },
+      last_entry: {},
 
       graphs: {
         sold: [],
@@ -353,6 +244,12 @@ export default {
       },
     }
   },
+
+  computed: {
+    sku() {
+      return this.$route.params.sku
+    }
+  }
 }
 </script>
 

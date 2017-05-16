@@ -31,6 +31,10 @@ export default {
       type: String,
       required: true
     },
+    search: {
+      type: Function,
+      default: null
+    }
   },
 
   data() {

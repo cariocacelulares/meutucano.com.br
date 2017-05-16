@@ -7,9 +7,11 @@ import VueProgressBar from 'vue-progressbar'
 import VueBreadcrumbs  from 'vue2-breadcrumbs'
 import VTooltip from 'v-tooltip'
 
-import Helpers from './imports/helpers'
-import Axios from './imports/axios'
 import moment from 'moment'
+import Helpers from './imports/helpers'
+import Vars from './imports/vars'
+import Axios from './imports/axios'
+import VueHighcharts from './imports/vue2-highcharts/VueHighcharts'
 
 import { default as CommonTransformer } from 'common/transformer'
 
@@ -29,6 +31,8 @@ Object.keys(globalComponents).map((component) => {
 window.Vue = Vue
 window.moment = moment
 moment.locale('pt-BR')
+
+Vue.component('vue-highcharts', VueHighcharts)
 
 /**
  * Tooltips

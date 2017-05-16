@@ -38,6 +38,7 @@
         <TSelect v-model="condition" :options="[]" label="Condição" placeholder="Selecione" />
       </div>
 
+      <!--
       <HSeparator :spacing="20" />
 
       <div class="clear">
@@ -60,6 +61,7 @@
           title="Uma notificação será disparada quando o estoque do produto estiver acima no máximo."
           message="Os destinatários dessa notificação podem ser configurados em Configurações." />
       </div>
+      -->
     </ContentBox>
   </form>
 </template>
@@ -83,9 +85,9 @@ export default {
       line: null,
       unity: null,
       condition: null,
-      stock_time: null,
+      /*stock_time: null,
       stock_min: null,
-      stock_max: null,
+      stock_max: null,*/
     }
   },
 

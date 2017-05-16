@@ -27,7 +27,7 @@
 
           <div class="card-data">
             <span>Documento</span>
-            <strong>{{ order.customer.taxvat }} <Icon name="paperclip"/></strong>
+            <strong v-clipboard>{{ order.customer.taxvat }}</strong>
           </div>
 
           <div>
