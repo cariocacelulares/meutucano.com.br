@@ -145,16 +145,6 @@ class DepotEntryController extends Controller
     {
         try {
             $data = DepotEntry::findOrFail($id);
-
-            /**
-             * User from entry must be the same from request
-             */
-            if ($data->user_id !== getCurrentUserId()) {
-                return clientErrorResponse([
-                    'message' => 'Não é possível confirmar a entrada de outro usuário.'
-                ]);
-            }
-
             $data->confirmed_at = Carbon::now();
             $data->save();
 

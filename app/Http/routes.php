@@ -34,7 +34,7 @@ Route::group(['prefix' => '/api'], function () {
             Route::get('users/fetch', 'UserController@fetch');
             api('users', 'UserController');
 
-            Route::group(['prefix' => 'passwords'], function() {
+            Route::group(['prefix' => 'passwords'], function () {
                 Route::get('from/{user_id}', 'UserPasswordController@listFromUser');
                 Route::get('current', 'UserPasswordController@listCurrentUser');
             });
