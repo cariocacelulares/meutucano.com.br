@@ -166,7 +166,8 @@ class ProductController extends Controller
     }
 
     /**
-     * Return graph of orders from month
+     * Return graph of orders per month
+     *
      * @param  int $sku
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -188,6 +189,83 @@ class ProductController extends Controller
                     'month'    => config('core.meses')[$month],
                     'quantity' => sizeof($orders->get($month))
                 ];
+            }
+
+            return showResponse($graph);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao excluir recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Return graph of orders per marketplace from current month
+     *
+     * @param  int $sku
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function graphOrderMarketplace($sku)
+    {
+        try {
+            $data = Product::with(['orderProducts', 'orderProducts.order' => function($query) {
+                $query->where("created_at", '>', Carbon::now()->startOfMonth());
+            }])->findOrFail($sku);
+
+            $orders = $data->orderProducts->pluck('order')->filter(function($order) {
+                return !is_null($order);
+            })->groupBy(function ($order) {
+                return $order->marketplace;
+            })->transform(function($order) {
+                return sizeof($order);
+            });
+
+            return showResponse($orders);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao excluir recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Return graph of costs from product per month
+     *
+     * @param  int $sku
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function graphCostPeriod($sku)
+    {
+        try {
+            $data = Product::with(['entryProducts' => function($query) {
+                $query->where("created_at", ">", Carbon::now()->subMonths(5));
+            }])->findOrFail($sku);
+
+            $entryProducts = $data->entryProducts->groupBy(function ($product) {
+                return $product->created_at->month;
+            })->transform(function($products) {
+                $sumValue = $products->sum(function ($product) {
+                    return $product->quantity * $product->unitary_value;
+                });
+
+                return $sumValue / $products->sum('quantity');
+            });
+
+            $lastMonth = null;
+            foreach (lastMonthsAsArray() as $month) {
+                if (!$entryProducts->get($month) && $lastMonth && $entryProducts->get($lastMonth))
+                    $month = $lastMonth;
+
+                $graph[] = [
+                    'month'    => config('core.meses')[$month],
+                    'quantity' => $entryProducts->get($month) ?: 0
+                ];
+
+                $lastMonth = $month;
             }
 
             return showResponse($graph);
