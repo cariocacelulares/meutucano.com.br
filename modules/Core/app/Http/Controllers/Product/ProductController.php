@@ -271,14 +271,13 @@ class ProductController extends Controller
 
             $graph = [];
             $lastMonth = null;
-            foreach (lastMonthsAsArray() as $month) {
+            foreach (lastMonthsAsArray() as $key => $month) {
+                $graph[$key]['month'] = config('core.meses')[$month];
+
                 if (!$entryProducts->get($month) && $lastMonth && $entryProducts->get($lastMonth))
                     $month = $lastMonth;
 
-                $graph[] = [
-                    'month'    => config('core.meses')[$month],
-                    'quantity' => $entryProducts->get($month) ?: 0
-                ];
+                $graph[$key]['quantity'] = $entryProducts->get($month) ?: 0;
 
                 $lastMonth = $month;
             }
