@@ -45,7 +45,7 @@ export default {
       type: Boolean,
       default: false
     },
-    noFooterSep: {
+    footerSep: {
       type: Boolean,
       default: false
     },
@@ -61,8 +61,8 @@ export default {
         classList.push('important')
       }
 
-      if (this.noFooterSep) {
-        classList.push('no-footer-sep')
+      if (this.footerSep) {
+        classList.push('footer-sep')
       }
 
       return notEmpty(classList).join(' ')
@@ -130,7 +130,7 @@ export default {
     }
   }
 
-  &:not(.no-footer-sep) > footer:before {
+  &.footer-sep > footer:before {
     content: '';
     position: absolute;
     top: 0;

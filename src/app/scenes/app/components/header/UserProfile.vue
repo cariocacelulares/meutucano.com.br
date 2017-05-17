@@ -2,7 +2,7 @@
   <div class="user-profile">
     <div :class="{ info: true, opened: opened }" @click="open">
       <div class="personal">
-        <span class="name">Meu Tucano</span>
+        <span class="name">{{ user.name }}</span>
         <span class="role">Administrador</span>
       </div>
       <div class="avatar">
@@ -15,20 +15,26 @@
       </ul>
     </div>
 
-    <div class="profile">
+    <!-- <div class="profile">
       <span>Carioca Celulares</span> &nbsp; <Icon name="angle-down" />
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   data() {
     return {
       opened: false
     }
+  },
+
+  computed: {
+    ...mapGetters({
+      user: 'global/GET_USER',
+    }),
   },
 
   methods: {

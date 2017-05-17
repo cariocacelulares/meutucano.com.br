@@ -1,7 +1,7 @@
 import { default as CommonTransformer } from 'common/transformer'
 
 const STATUS_COLORS = {
-  0: 'dark',
+  0: 'default',
   1: 'primary',
   2: 'warning',
   4: 'info',
@@ -10,9 +10,18 @@ const STATUS_COLORS = {
   6: 'darker',
 }
 
-export default {
+const SHIPMENT_STATUS_COLORS = {
+  0: 'default',
+  1: 'primary',
+  2: 'warning',
+  3: 'danger',
+  4: 'success',
+  5: 'darker',
+}
+
+const Transformer = {
   transform: (order) => {
-    const status = order.status;
+    const status = order.status
 
     order.status = {
       code: status,
@@ -20,10 +29,25 @@ export default {
       color: STATUS_COLORS[status],
     }
 
-    // order.marketplace = order.marketplace_readable
+    order.shipments = order.shipments.map((item) => {
+      return Transformer.transformShipment(item)
+    })
 
-    // order.created_at = CommonTransformer.date(order.created_at)
-    // order.total = CommonTransformer.monetary(order.total)
+
     return order
-  }
+  },
+
+  transformShipment: (shipment) => {
+    const status = shipment.status
+
+    shipment.status = {
+      code: status,
+      description: shipment.status_cast,
+      color: SHIPMENT_STATUS_COLORS[status],
+    }
+
+    return shipment
+  },
 }
+
+export default Transformer

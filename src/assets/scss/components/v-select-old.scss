@@ -1,0 +1,120 @@
+html body .v-select {
+  height: 35px;
+  line-height: 35px;
+
+  &.searching {
+    &, & * {
+      cursor: progress !important;
+    }
+  }
+
+  .dropdown-menu {
+    padding: 0;
+    border-radius: 0 0 $borderRadius $borderRadius;
+    border: 1px solid $default;
+    border-top: none;
+    color: $darker;
+    background-color: $white;
+    box-shadow: 0 3px 3px rgba(204, 204, 204, 0.5);
+    overflow-y: auto;
+
+    > * {
+      padding: 2px 0;
+    }
+
+    > .highlight > a {
+      color: inherit;
+      background-color: $light !important;
+      text-decoration: underline;
+    }
+
+    .active > a {
+      color: inherit;
+      background-color: $lighter;
+      text-decoration: underline;
+    }
+  }
+
+  .dropdown-toggle {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 15px;
+    border-radius: $borderRadius;
+    border: 1px solid $default;
+    color: $darker;
+    background-color: $white;
+
+    > * {
+      flex-shrink: 0;
+      flex-grow: 0;
+    }
+
+    input {
+      &, &:focus {
+        float: none;
+        padding: 0 15px 0 0;
+        line-height: inherit;
+        font-size: inherit;
+        height: auto;
+        max-width: none;
+      }
+
+      &::placeholder {
+        color: $dark;
+      }
+    }
+
+    .selected-tag {
+      float: none;
+      height: auto;
+      padding: 0;
+      margin: 0;
+      line-height: inherit;
+      background: none;
+      border: none;
+      border-radius: 0;
+      color: $darker;
+    }
+
+    .open-indicator {
+      position: static;
+      bottom: auto;
+      right: auto;
+      width: auto;
+      height: auto;
+      line-height: 1;
+
+      &,
+      &:before {
+        font-style: normal;
+        transition: none !important;
+        transform: none !important;
+      }
+
+      &:before {
+        content: '\F107';
+        font-family: 'FontAwesome';
+        width: auto;
+        height: auto;
+        vertical-align: inherit;
+        border: none;
+        border-width: 1px 1px 0 0;
+      }
+    }
+  }
+
+  &.open {
+    .dropdown-toggle {
+      .selected-tag {
+        display: none;
+      }
+
+      .open-indicator {
+        &:before {
+          content: '\F106';
+        }
+      }
+    }
+  }
+}

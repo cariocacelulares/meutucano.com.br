@@ -106,7 +106,7 @@
         <div class="grid-2 m-t-20">
           <div class="card-data">
             <span>Data</span>
-            <strong>{{ last_entry.date | date }}</strong>
+            <strong>{{ last_entry.date | dateTime }}</strong>
           </div>
 
           <div class="card-data">

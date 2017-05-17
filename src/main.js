@@ -6,6 +6,8 @@ import Wrapper from './Wrapper'
 import VueProgressBar from 'vue-progressbar'
 import VueBreadcrumbs  from 'vue2-breadcrumbs'
 import VTooltip from 'v-tooltip'
+// import vSelect from 'vue-select'
+import VueSelect from './imports/select'
 
 import moment from 'moment'
 import Helpers from './imports/helpers'
@@ -33,6 +35,9 @@ window.moment = moment
 moment.locale('pt-BR')
 
 Vue.component('vue-highcharts', VueHighcharts)
+// Vue.component('v-select', vSelect)
+Vue.component('v-select', VueSelect)
+
 
 /**
  * Tooltips
@@ -113,8 +118,12 @@ const clipboardIcon = Vue.extend({
 })
 
 Vue.directive('clipboard', {
+  componentUpdated(el, binding, vnode) {
+    el.init(el, binding)
+  },
+
   bind(el, binding, vnode) {
-    const closeConfirm = () => {
+    const copyText = (text) => {
       const app = document.getElementById('app')
 
       let clipboard = document.createElement('input')
@@ -129,29 +138,84 @@ Vue.directive('clipboard', {
       app.removeChild(clipboard)
     }
 
-    let text = binding.value
+    el.init = (element, bind) => {
+      if (element.classList.contains('clipboard')) {
+        return
+      }
 
-    if (!text) {
-      text = el.innerHTML
+      let text = bind.value
+
+      if (!text) {
+        text = element.innerHTML
+      }
+
+      text = text ? text.replace(/<[^>]*>/g, '') : null
+
+      if (text) {
+        element.appendChild((new clipboardIcon().$mount()).$el)
+        element.className += ' clipboard'
+
+        element.addEventListener('click', () => {
+          copyText(text)
+        })
+      }
     }
 
-    text = text ? text.replace(/<[^>]*>/g, '') : null
-
-    if (text) {
-      el.appendChild((new clipboardIcon().$mount()).$el)
-      el.className += ' clipboard'
-
-      el.addEventListener('click', closeConfirm)
-    }
+    el.init(el, binding)
   },
   unbind(el) {
-    el.removeEventListener('click', el.closeConfirm)
+    el.removeEventListener('click', el.copyText)
   }
 })
 
 Vue.filter('money', (value) => CommonTransformer.monetary(value))
-Vue.filter('date', (value) => CommonTransformer.date(value))
 Vue.filter('humanDiff', (value) => CommonTransformer.humanDiff(value))
+Vue.filter('dateTime', (value) => CommonTransformer.date(value))
+Vue.filter('date', (value) => CommonTransformer.date(value).substring(0, 10))
+
+Vue.filter('phone', (value) => {
+  if (!value) {
+    return value
+  }
+
+  value = value.match(/\d+/g, '').join('')
+
+  const length = value.length
+
+  if (length > 11) {
+    return `+${value.substring(0, 2)} ` +
+           `(${value.substring(2, 4)}) ` +
+           `${value.substring(4, (length - 4))}-` +
+           value.substring(length - 4)
+  }
+
+  return `(${value.substring(0, 2)}) ` +
+         `${value.substring(2, (length - 4))}-` +
+         value.substring(length - 4)
+})
+
+Vue.filter('taxvat', (value) => {
+  if (!value) {
+    return value
+  }
+
+  value = value.match(/\d+/g, '').join('')
+
+  const length = value.length
+
+  if (length > 11) {
+    return `${value.substring(0, 2)}.` +
+           `${value.substring(2, 5)}.` +
+           `${value.substring(5, 8)}/` +
+           `${value.substring(8, 12)}-` +
+           value.substring(12)
+  }
+
+  return `${value.substring(0, 3)}.` +
+         `${value.substring(3, 6)}.` +
+         `${value.substring(6, 9)}-` +
+         value.substring(9)
+})
 
 /* eslint-disable no-new */
 new Vue({

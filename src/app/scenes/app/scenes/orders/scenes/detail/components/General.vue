@@ -4,7 +4,7 @@
       <Card header-icon="info" header-text="Detalhes">
         <div class="card-data">
           <span>Data do pedido</span>
-          <strong>{{ order.created_at | date }}</strong>
+          <strong>{{ order.created_at | dateTime }}</strong>
         </div>
 
         <div class="card-data">
@@ -14,7 +14,7 @@
 
         <div class="card-data">
           <span>Método de envio</span>
-          <strong>{{ order.shipment_method_cast }}</strong>
+          <strong>{{ order.shipment_method.title }}</strong>
         </div>
       </Card>
 
@@ -27,18 +27,20 @@
 
           <div class="card-data">
             <span>Documento</span>
-            <strong v-clipboard>{{ order.customer.taxvat }}</strong>
+            <!-- <strong v-clipboard="order.customer.taxvat">{{ order.customer.taxvat | taxvat }}</strong> -->
+            <strong v-clipboard>{{ order.customer.taxvat | taxvat }}</strong>
           </div>
 
           <div>
             <div class="card-data">
               <span>E-mail de contato</span>
-              <strong>{{ order.customer.email }}</strong>
+              <strong v-if="order.customer.email">{{ order.customer.email }}</strong>
+              <strong v-if="!order.customer.email" class="text-dark">não informado</strong>
             </div>
 
             <div class="card-data span-2">
               <span>Telefone</span>
-              <strong>{{ order.customer.phone }}<!--b><br/>(47) 98898-3927</b--></strong>
+              <strong>{{ order.customer.phone | phone }}<!--b><br/>(47) 98898-3927</b--></strong>
             </div>
           </div>
 
@@ -113,66 +115,102 @@
 
     <div class="invoices">
       <strong>Notas fiscais</strong>
-      <Card header-icon="file-code-o" header-text="44318/1" :no-footer-sep="true">
-        <div slot="header">
-          <a href="#" class="text-bold">
-            <Icon name="print" color="link" />
-          </a>
-          <VSeparator :height="10" :spacing="10" />
-          <Icon name="times" />
-        </div>
-
-        <div class="grid-2 no-card-spacing">
-          <div class="card-data">
-            <span>Emitida em</span>
-            <strong>09/04/2017</strong>
-          </div>
-
-          <div class="card-data">
-            <span>Emitida por</span>
-            <strong>Lidiane Martins</strong>
-          </div>
-        </div>
-
-        <template slot="footer">
-          <div class="devolution">
-            <span>Devolução em <b>08/02/1995</b></span>
-            <div>
-              <a href="#"><Icon name="print" /></a>
-              <VSeparator :height="10" :spacing="10" />
+      <template v-for="invoice in order.invoices">
+        <Card header-icon="file-code-o" :header-text="invoice.invoice.number + ' / ' + invoice.invoice.series">
+          <div slot="header">
+            <a :href="invoice.print_url" target="_blank" class="text-bold text-darker">
+              <Icon name="print" />
+            </a>
+            <VSeparator :height="10" :spacing="10" />
+            <a href="#" @click.prevent="$confirm(destroyInvoice, invoice.id)" class="text-darker">
               <Icon name="times" />
+            </a>
+          </div>
+
+          <div class="grid-2 no-card-spacing">
+            <div class="card-data">
+              <span>Emitida em</span>
+              <strong>{{ invoice.created_at | date }}</strong>
+            </div>
+
+            <div class="card-data">
+              <span>Emitida por</span>
+              <strong>{{ invoice.user.name }}</strong>
             </div>
           </div>
-        </template>
-      </Card>
 
-      <Card header-icon="file-code-o" header-text="44318/1">
-        <div slot="header">
-          <a href="#">
-            <Icon name="print" color="link" />
-          </a>
-          <VSeparator :height="10" :spacing="10" />
-          <Icon name="times" />
-        </div>
-
-        <div class="grid-2">
-          <div class="card-data">
-            <span>Emitida em</span>
-            <strong>09/04/2017</strong>
-          </div>
-
-          <div class="card-data">
-            <span>Emitida por</span>
-            <strong>Lidiane Martins</strong>
-          </div>
-        </div>
-      </Card>
+          <template v-if="invoice.devolutions" slot="footer">
+            <div v-for="devolution in invoice.devolutions" class="devolution">
+              <span>Devolução em <b>{{ devolution.created_at | date }}</b></span>
+              <div>
+                <a :href="devolution.print_url" target="_blank"><Icon name="print" /></a>
+                <VSeparator :height="10" :spacing="10" />
+                <a href="#" @click.prevent="$confirm(destroyInvoiceDevolution, devolution.id)">
+                  <Icon name="times" />
+                </a>
+              </div>
+            </div>
+          </template>
+        </Card>
+      </template>
     </div>
 
     <div class="shipments">
       <strong>Rastreios</strong>
 
-      <Card header-icon="truck" header-text="PN717347694BR">
+      <template v-for="shipment in order.shipments">
+        <Card header-icon="truck" :header-text="shipment.tracking_code" :footer-sep="true">
+          <div slot="header">
+            <a :href="shipment.print_url" target="_blank" class="text-darker">
+              <Icon name="print" />
+            </a>
+            <VSeparator :height="10" :spacing="10" />
+            <a href="#" @click.prevent="$confirm(destroyShipment, shipment.id)" class="text-darker">
+              <Icon name="times" />
+            </a>
+          </div>
+
+          <div class="grid-3">
+            <div class="card-data">
+              <span>Enviado em</span>
+              <strong>{{ shipment.sent_at | date }}</strong>
+            </div>
+
+            <div class="card-data">
+              <span>Prazo</span>
+              <strong>{{ shipment.deadline }} dias</strong>
+            </div>
+
+            <TLabel height="26px" :color="shipment.status.color">{{ shipment.status.description }}</TLabel>
+          </div>
+
+          <div slot="footer" class="card-footer">
+            <div>
+              <a href="#" @click.prevent="openLogistic" v-tooltip="'Logística reversa'"
+                :class="{ disabled: !shipment.logistic }">
+                <Icon name="exchange" />
+              </a>
+              <a href="#" @click.prevent="openDevolution" v-tooltip="'Devolução'"
+                :class="{ disabled: !shipment.devolution }">
+                <Icon name="undo" />
+              </a>
+              <a href="#" @click.prevent="openIssue" v-tooltip="'Pedido de informação'"
+                :class="{ disabled: !shipment.issue }">
+                <Icon name="exclamation-triangle" />
+              </a>
+            </div>
+
+            <div>
+              <a href="#" :class="{ disabled: !shipment.monitored }" @click.prevent="toggleMonited(shipment)"
+                v-tooltip="shipment.monitored ? 'Parar de monitorar' : 'Monitorar'">
+                <Icon name="video-camera" />
+              </a>
+            </div>
+          </div>
+        </Card>
+      </template>
+
+      <!-- <Card header-icon="truck" header-text="PN717347694BR">
         <div slot="header">
           <a href="#">
             <Icon name="print" color="link" />
@@ -231,7 +269,7 @@
 
           <TLabel height="26px" color="primary">Enviado</TLabel>
         </div>
-      </Card>
+      </Card> -->
     </div>
 
     <Devolution />
@@ -258,96 +296,71 @@ export default {
       loading: false,
       order: {
         id: null,
-    		customer_id: null,
-    		customer_address_id: null,
-    		shipment_cost: null,
-    		shipment_method: null,
-    		payment_method: null,
-    		installments: null,
-    		api_code: null,
-    		marketplace: null,
-    		total: null,
-    		estimated_delivery: null,
-    		status: {
-          code: null,
-          description: null,
-          color: null,
+        customer_id: null,
+        customer_address_id: null,
+        shipment_cost: null,
+        shipment_method_slug: null,
+        payment_method: null,
+        installments: null,
+        api_code: null,
+        marketplace: null,
+        taxes: null,
+        discount: null,
+        total: null,
+        estimated_delivery: null,
+        status: null,
+        cancel_protocol: null,
+        holded: null,
+        refunded: null,
+        priority: null,
+        created_at: null,
+        updated_at: null,
+        deleted_at: null,
+        comments_count: null,
+        calls_count: null,
+        status_cast: null,
+        payment_method_cast: null,
+        shipment_method_cast: null,
+        subtotal: null,
+        can_hold: null,
+        can_prioritize: null,
+        can_approve: null,
+        can_cancel: null,
+        count_on_stock: null,
+        customer: {
+          id: null,
+          taxvat: null,
+          mercadolivre_id: null,
+          type: null,
+          name: null,
+          phone: null,
+          email: null,
+          document: null,
+          created_at: null,
+          updated_at: null,
         },
-    		cancel_protocol: null,
-    		holded: null,
-    		refunded: null,
-    		priority: null,
-    		created_at: null,
-    		updated_at: null,
-    		deleted_at: null,
-    		can_hold: null,
-    		can_prioritize: null,
-    		can_approve: null,
-    		can_cancel: null,
-    		count_on_stock: null,
-    		customer: {
-    			id: null,
-    			taxvat: null,
-    			mercadolivre_id: null,
-    			type: null,
-    			name: null,
-    			phone: null,
-    			email: null,
-    			document: null,
-    			created_at: null,
-    			updated_at: null,
-    		},
-    		customer_address: {
-    			id: null,
-    			customer_id: null,
-    			zipcode: null,
-    			street: null,
-    			number: null,
-    			complement: null,
-    			district: null,
-    			city: null,
-    			state: null,
-    			created_at: null,
-    			updated_at: null,
-    		},
-    		order_products: [
-    			{
-    				id: null,
-    				order_id: null,
-    				product_sku: null,
-    				depot_product_id: null,
-    				product_serial_id: null,
-    				price: null,
-    				created_at: null,
-    				updated_at: null,
-    				product: {
-    					sku: null,
-    					brand_id: null,
-    					line_id: null,
-    					title: null,
-    					ean: null,
-    					ncm: null,
-    					price: null,
-    					cost: null,
-    					condition: null,
-    					warranty: null,
-    					created_at: null,
-    					updated_at: null,
-    					deleted_at: null,
-    					reserved_stock: null,
-    					available_stock: null,
-    				},
-    				product_serial: {
-    					id: null,
-    					depot_product_id: null,
-    					serial: null,
-    					cost: null,
-    					created_at: null,
-    					updated_at: null,
-    					deleted_at: null,
-    				}
-    			}
-        ]
+        customer_address: {
+          id: null,
+          customer_id: null,
+          zipcode: null,
+          street: null,
+          number: null,
+          complement: null,
+          district: null,
+          city: null,
+          state: null,
+          created_at: null,
+          updated_at: null,
+          address: null,
+        },
+        shipment_method: {
+          slug: null,
+          title: null,
+          service: null,
+        },
+        order_products_grouped: [],
+        shipments: [],
+        invoices: [],
       }
     }
   },
@@ -363,6 +376,43 @@ export default {
 
     openIssue() {
       this.$root.$emit('show::modal-Issue')
+    },
+
+    destroyInvoice(id) {
+      axios.delete(`orders/invoices/${id}`).then(
+        (response) => {
+          this.load()
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
+    },
+
+    destroyInvoiceDevolution(id) {
+      axios.delete(`orders/invoices/devolutions/${id}`).then(
+        (response) => {
+          this.load()
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
+    },
+
+    destroyShipment(id) {
+      axios.delete(`orders/shipments/${id}`).then(
+        (response) => {
+          this.load()
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
+    },
+
+    toggleMonited(shipment) {
+      console.log('toggle', shipment)
     },
   },
 
@@ -439,6 +489,10 @@ $gap: 20px;
       background-color: #C9403C;
       box-shadow: $defaultShadow;
 
+      &:last-child {
+        border-radius: 0 0 $borderRadius $borderRadius;
+      }
+
       a {
         color: $white;
       }
@@ -464,6 +518,11 @@ $gap: 20px;
 
       a {
         color: $dark;
+
+        &:hover,
+        &:focus {
+          color: $darker;
+        }
       }
     }
   }
