@@ -15,7 +15,7 @@ class ScheduleServiceProvider extends ServiceProvider
      */
     protected $commands = [
         RefreshRastreio::class,
-        RefreshRastreios::class,
+
         UpdateDeadline::class,
     ];
 

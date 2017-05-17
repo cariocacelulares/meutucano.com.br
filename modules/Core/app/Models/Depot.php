@@ -22,11 +22,6 @@ class Depot extends \Eloquent
     protected $revisionCreationsEnabled = true;
 
     /**
-     * @var boolean
-     */
-    public $timestamps = false;
-
-    /**
      * @var array
      */
     protected $fillable = [

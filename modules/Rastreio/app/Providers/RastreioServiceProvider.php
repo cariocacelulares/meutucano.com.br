@@ -24,8 +24,6 @@ class RastreioServiceProvider extends ServiceProvider
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
-
-        Rastreio::observe(RastreioObserver::class);
     }
 
     /**

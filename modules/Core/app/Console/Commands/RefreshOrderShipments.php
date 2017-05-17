@@ -1,16 +1,16 @@
-<?php namespace Rastreio\Console\Commands;
+<?php namespace Core\Console\Commands;
 
 use Illuminate\Console\Command;
 use Rastreio\Http\Controllers\RastreioController;
 
-class RefreshRastreios extends Command
+class RefreshOrderShipments extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'refresh:rastreios';
+    protected $signature = 'order-shipments:refresh';
 
     /**
      * The console command description.

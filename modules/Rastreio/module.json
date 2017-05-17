@@ -3,7 +3,7 @@
     "alias": "rastreio",
     "description": "",
     "keywords": [],
-    "active": 1,
+    "active": 0,
     "order": 1,
     "providers": [
         "Rastreio\\Providers\\RastreioServiceProvider"

@@ -6,6 +6,7 @@ use Core\Models\DepotEntry;
 use Core\Models\OrderProduct;
 use Core\Models\DepotProduct;
 use Core\Models\ProductSerial;
+use Core\Models\OrderShipment;
 use Core\Models\ProductSerialIssue;
 use Core\Models\ProductSerialDefect;
 use Illuminate\Support\ServiceProvider;
@@ -40,8 +41,9 @@ class CoreServiceProvider extends ServiceProvider
         DepotEntry::observe(DepotEntryObserver::class);
         OrderProduct::observe(OrderProductObserver::class);
         DepotProduct::observe(DepotProductObserver::class);
-        ProductSerial::observe(ProductSerialObserver::class);
         ProductSerialDefect::observe(DefectObserver::class);
+        OrderShipment::observe(OrderShipmentObserver::class);
+        ProductSerial::observe(ProductSerialObserver::class);
         ProductSerialIssue::observe(ProductSerialIssueObserver::class);
     }
 

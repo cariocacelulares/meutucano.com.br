@@ -178,8 +178,16 @@ class OrderController extends Controller
                 'orderProductsGrouped',
                 'orderProductsGrouped.product',
                 'orderProductsGrouped.productSerial',
-                'orderInvoices',
-                'orderInvoices.devolutions',
+                'shipmentMethod',
+                'shipments',
+                'shipments.monitoredByUser',
+                'shipments.devolution',
+                'shipments.logistic',
+                'shipments.issue',
+                'invoices',
+                'invoices.user',
+                'invoices.invoice',
+                'invoices.devolutions',
             ])->withCount(['comments', 'calls'])->findOrFail($id);
 
             return showResponse($data);

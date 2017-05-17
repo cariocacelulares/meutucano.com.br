@@ -1,6 +1,5 @@
 <?php namespace Core\Models;
 
-use Rastreio\Models\Rastreio;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 
@@ -29,7 +28,7 @@ class Order extends \Eloquent
         'customer_id',
         'customer_address_id',
         'shipment_cost',
-        'shipment_method',
+        'shipment_method_slug',
         'payment_method',
         'installments',
         'api_code',
@@ -74,7 +73,7 @@ class Order extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\hasMany
      */
-    public function orderInvoices()
+    public function invoices()
     {
         return $this->hasMany(OrderInvoice::class);
     }
@@ -82,7 +81,7 @@ class Order extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function orderTaxes()
+    public function taxes()
     {
         return $this->hasOne(OrderTax::class);
     }
@@ -106,11 +105,19 @@ class Order extends \Eloquent
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function shipmentMethod()
+    {
+        return $this->belongsTo(ShipmentMethod::class);
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function shipments()
     {
-        return $this->hasMany(Rastreio::class);
+        return $this->hasMany(OrderShipment::class);
     }
 
     /**

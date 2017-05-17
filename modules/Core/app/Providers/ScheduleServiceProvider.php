@@ -1,9 +1,9 @@
 <?php namespace Core\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Console\Scheduling\Schedule;
 use Core\Console\Commands\CancelOldOrders;
-use Core\Console\Commands\InvoiceOrders;
+use Illuminate\Console\Scheduling\Schedule;
+use Core\Console\Commands\RefreshOrderShipments;
 
 class ScheduleServiceProvider extends ServiceProvider
 {
@@ -13,7 +13,8 @@ class ScheduleServiceProvider extends ServiceProvider
      * @var array
      */
     protected $commands = [
-        CancelOldOrders::class
+        CancelOldOrders::class,
+        RefreshOrderShipments::class,
     ];
 
     /**
@@ -30,6 +31,9 @@ class ScheduleServiceProvider extends ServiceProvider
 
             $schedule->command('orders:cancel-old')
                 ->daily();
+
+            $schedule->command('order-shipments:refresh')
+                ->twiceDaily(1, 12);
         });
     }
 

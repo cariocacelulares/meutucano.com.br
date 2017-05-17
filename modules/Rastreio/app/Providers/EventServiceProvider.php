@@ -17,8 +17,7 @@ class EventServiceProvider extends ServiceProvider
     ];
 
     protected $subscribe = [
-        AddRastreioToQueue::class,
-        AttachRastreio::class,
+
     ];
 
     /**

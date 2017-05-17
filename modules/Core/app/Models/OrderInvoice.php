@@ -1,7 +1,8 @@
 <?php namespace Core\Models;
 
-use Core\Models\Traits\InvoiceableTrait;
+use App\Models\User\User;
 use App\Models\Traits\UploadableTrait;
+use Core\Models\Traits\InvoiceableTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 
@@ -36,6 +37,14 @@ class OrderInvoice extends \Eloquent
     public function order()
     {
         return $this->belongsTo(Order::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**

@@ -1,13 +1,6 @@
 <?php namespace Core\Providers;
 
 use Illuminate\Support\Facades\Event;
-use Core\Events\Handlers\SetRefund;
-use Core\Events\Handlers\UpdateStock;
-use Core\Events\Handlers\SetProductCost;
-use Core\Events\Handlers\DeleteProductSerial;
-use Core\Events\Handlers\RestoreProductSerial;
-use Core\Events\Handlers\ConvertEntrySerials;
-use Core\Events\Handlers\SetProductSerialCost;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -22,13 +15,15 @@ class EventServiceProvider extends ServiceProvider
     ];
 
     protected $subscribe = [
-        SetRefund::class,
-        UpdateStock::class,
-        SetProductCost::class,
-        DeleteProductSerial::class,
-        ConvertEntrySerials::class,
-        RestoreProductSerial::class,
-        SetProductSerialCost::class,
+        \Core\Events\Handlers\SetRefund::class,
+        \Core\Events\Handlers\UpdateStock::class,
+        \Core\Events\Handlers\SetProductCost::class,
+        \Core\Events\Handlers\AttachOrderShipment::class,
+        \Core\Events\Handlers\DeleteProductSerial::class,
+        \Core\Events\Handlers\ConvertEntrySerials::class,
+        \Core\Events\Handlers\RestoreProductSerial::class,
+        \Core\Events\Handlers\SetProductSerialCost::class,
+        \Core\Events\Handlers\AddOrderShipmentToQueue::class,
     ];
 
     /**
