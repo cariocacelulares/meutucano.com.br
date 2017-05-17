@@ -23,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
         Validator::replacer('same_size_from', function($message, $attribute, $rule, $parameters) {
             return str_replace(':field', $parameters[0], $message);
         });
+
+        $this->loadMigrationsFrom(base_path('vendor/venturecraft/revisionable/src/migrations'));
     }
     /**
      * Register any application services.

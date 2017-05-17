@@ -50,7 +50,6 @@ class Order extends \Eloquent
     protected $appends = [
         'status_cast',
         'payment_method_cast',
-        'shipment_method_cast',
         'subtotal',
         'can_hold',
         'can_prioritize',
@@ -191,19 +190,6 @@ class Order extends \Eloquent
                 return 'Mercado Pago';
             default:
                 return 'Outro';
-        }
-    }
-
-    /**
-     * @return string
-     */
-    public function getShipmentMethodCastAttribute()
-    {
-        switch (strtoupper($this->shipment_method)) {
-            case 'PAC':
-                return 'Correios PAC';
-            case 'SEDEX':
-                return 'Correios SEDEX';
         }
     }
 

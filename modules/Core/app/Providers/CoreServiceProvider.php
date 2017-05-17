@@ -20,6 +20,9 @@ use Core\Observers\ProductSerialObserver;
 use Core\Observers\ProductSerialIssueObserver;
 use Core\Observers\ProductSerialDefectObserver;
 
+use App\Interfaces\ShipmentApiInterface;
+use Core\Http\Controllers\Order\OrderShipmentController;
+
 class CoreServiceProvider extends ServiceProvider
 {
     /**

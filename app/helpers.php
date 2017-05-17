@@ -3,6 +3,7 @@
 include_once 'Helpers/Date.php';
 include_once 'Helpers/Formatters.php';
 include_once 'Helpers/ApiResponse.php';
+include_once 'Helpers/Integrations.php';
 
 /**
  * Retorna a mensagem de log formatada

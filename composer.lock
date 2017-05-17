@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "419bc8b61138717d3f0dbff9f8538c01",
+    "hash": "2fadd446023f17ef52fd3953f1421644",
     "content-hash": "8a78591f085fc0fb0fd20ea01a09dc5f",
     "packages": [
         {
@@ -2963,7 +2963,7 @@
         },
         {
             "name": "spatie/laravel-backup",
-            "version": "4.14.1",
+            "version": "4.14.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-backup.git",
@@ -3136,7 +3136,7 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:cariocacelulares/php-sigep.git",
-                "reference": "56007a281b33f8018eee89c7100019e8b111d70d"
+                "reference": "459cb7a2774445d3e724df6fcedb7c517c430bba"
             },
             "require": {
                 "php": ">=5.4",
@@ -3168,7 +3168,7 @@
                 "correios",
                 "sigep"
             ],
-            "time": "2017-05-05 14:06:03"
+            "time": "2017-05-17 21:08:43"
         },
         {
             "name": "stavarengo/php-sigep-fpdf",

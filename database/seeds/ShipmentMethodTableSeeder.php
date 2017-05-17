@@ -9,24 +9,28 @@ class ShipmentMethodTableSeeder extends Seeder
     {
         $data = [
             [
-                'slug'    => 'withdraw',
-                'title'   => 'Retirada em mãos',
-                'service' => null
+                'slug'     => 'withdraw',
+                'title'    => 'Retirada em mãos',
+                'service'  => null,
+                'api_code' => null
             ],
             [
-                'slug'    => 'correios-pac',
-                'title'   => 'Correios PAC',
-                'service' => 'correios'
+                'slug'     => 'correios-pac',
+                'title'    => 'Correios PAC',
+                'service'  => 'correios',
+                'api_code' => '04510'
             ],
             [
-                'slug'    => 'correios-sedex',
-                'title'   => 'Correios SEDEX',
-                'service' => 'correios'
+                'slug'     => 'correios-sedex',
+                'title'    => 'Correios SEDEX',
+                'service'  => 'correios',
+                'api_code' => '04014'
             ],
             [
-                'slug'    => 'correios-esedex',
-                'title'   => 'Correios e-SEDEX',
-                'service' => 'correios'
+                'slug'     => 'correios-esedex',
+                'title'    => 'Correios e-SEDEX',
+                'service'  => 'correios',
+                'api_code' => '81019'
             ]
         ];
 

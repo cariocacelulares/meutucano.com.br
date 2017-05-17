@@ -64,7 +64,7 @@
             "Bootstrap\\": "bootstrap/",
             "Core\\": "modules/Core/app",
             "Magento\\": "modules/Magento/app",
-            "Rastreio\\": "modules/Rastreio/app",
+            "Correios\\": "modules/Correios/app",
             "Mercadolivre\\": "modules/Mercadolivre/app"
         },
         "files": [

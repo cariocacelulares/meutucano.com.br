@@ -48,6 +48,17 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     api('orders/invoices/devolutions', 'Order\OrderInvoiceDevolutionController', ['index', 'update']);
 
     /**
+     * Order Shipments
+     */
+    Route::group(['prefix' => 'orders/shipments'], function () {
+        Route::get('important', 'Order\OrderShipmentController@important');
+
+        Route::get('{id}/history', 'Order\OrderShipmentController@history');
+        Route::get('{id}/label', 'Order\OrderShipmentController@label');
+    });
+    api('orders/shipments', 'Order\OrderShipmentController');
+
+    /**
      * Orders
      */
     Route::group(['prefix' => 'orders'], function () {
@@ -167,4 +178,46 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::get('depots/from/product/{sku}/available', 'Depot\DepotController@listByAvailableFromProduct');
     Route::get('depots/transferable/{depotProductId}', 'Depot\DepotController@listByTransferable');
     api('depots', 'Depot\DepotController');
+
+
+    //
+    // /**
+    //  * Atendimento
+    //  */
+    // Route::group(['middleware' => 'role:admin|atendimento'], function () {
+    //     /**
+    //      * PI's
+    //      */
+    //     Route::group(['prefix' => 'pis'], function () {
+    //
+    //     });
+    //     Route::resource('pis', 'PiController', ['except' => ['create', 'edit']]);
+    //
+    //     /**
+    //      * Devoluções
+    //      */
+    //     Route::group(['prefix' => 'devolucoes'], function () {
+    //
+    //     });
+    //     Route::resource('devolucoes', 'DevolucaoController', ['except' => ['create', 'edit']]);
+    //
+    //     /**
+    //      * Logística reversa
+    //      */
+    //      Route::group(['prefix' => 'logisticas'], function () {
+    //
+    //      });
+    //     Route::resource('logisticas', 'LogisticaController', ['except' => ['create', 'edit']]);
+    //
+    //     /**
+    //      * Rastreios monitorados
+    //      */
+    //     Route::group(['prefix' => 'rastreio/monitorados'], function () {
+    //         Route::get('simple-list', 'MonitoradoController@simpleList');
+    //         Route::get('list', 'MonitoradoController@tableList');
+    //
+    //         Route::delete('parar/{rastreio_id}', 'MonitoradoController@stop');
+    //     });
+    //     Route::resource('rastreio/monitorados', 'MonitoradoController', ['except' => ['create', 'edit']]);
+    // });
 });

@@ -1,0 +1,13 @@
+{
+    "name": "Correios",
+    "alias": "correios",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 1,
+    "providers": [
+        "Correios\\Providers\\CorreiosServiceProvider"
+    ],
+    "aliases":{},
+    "files": []
+}

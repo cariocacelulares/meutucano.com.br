@@ -1,12 +1,10 @@
 <?php namespace Core\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 class OrderShipment extends \Eloquent
 {
-    use SoftDeletes,
-        RevisionableTrait;
+    use RevisionableTrait;
 
     const STATUS_PENDING  = 0;
     const STATUS_NORMAL   = 1;
@@ -56,12 +54,30 @@ class OrderShipment extends \Eloquent
         'status_cast'
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function($orderShipment) {
+            $orderShipment->tracking_code = shipment($orderShipment)
+                ->generateTrackingCode();
+        });
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function order()
     {
         return $this->belongsTo(Order::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function shipmentMethod()
+    {
+        return $this->belongsTo(ShipmentMethod::class);
     }
 
     /**
@@ -94,6 +110,14 @@ class OrderShipment extends \Eloquent
     public function monitors()
     {
         return $this->hasMany(OrderShipmentMonitor::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function history()
+    {
+        return $this->hasMany(OrderShipmentHistory::class);
     }
 
     /**

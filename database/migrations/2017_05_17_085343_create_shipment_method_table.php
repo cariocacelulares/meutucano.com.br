@@ -17,6 +17,7 @@ class CreateShipmentMethodTable extends Migration
             $table->string('slug', 100);
             $table->string('title', 100);
             $table->string('service', 50)->nullable();
+            $table->string('api_code', 50)->nullable();
             $table->primary('slug');
         });
     }

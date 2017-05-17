@@ -10,7 +10,6 @@ trait UploadableTrait
         if (!defined('self::UPLOAD_PATH') || !defined('self::UPLOAD_ATTR'))
             throw new \Exception("Upload path and attr are required on uploadable models.");
 
-
         static::creating(function($parent) {
             foreach (self::UPLOAD_ATTR as $attr) {
                 $file = Input::file($attr);

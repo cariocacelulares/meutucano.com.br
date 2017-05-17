@@ -23,14 +23,28 @@ class ShipmentMethod extends \Eloquent
     protected $fillable = [
         'slug',
         'title',
-        'service'
+        'service',
+        'api_code'
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shipmentMethod()
+    public function trackingCodes()
     {
-        return $this->belongsTo(ShipmentMethod::class);
+        return $this->hasMany(TrackingCode::class);
+    }
+
+    /**
+     * Return first valid Tracking Code
+     *
+     * @return TrackingCode
+     */
+    public function validTrackingCode()
+    {
+        return $this->trackingCodes()
+            ->where('last', '>', 'current')
+            ->orderBy('created_at')
+            ->first();
     }
 }
