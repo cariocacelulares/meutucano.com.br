@@ -14,6 +14,8 @@ class UserController extends Controller
         $this->middleware('permission:user_create', ['only' => ['store']]);
         $this->middleware('permission:user_update', ['only' => ['update']]);
         $this->middleware('permission:user_delete', ['only' => ['destroy']]);
+
+        $this->middleware('convertJson', ['only' => ['index']]);
     }
 
     /**

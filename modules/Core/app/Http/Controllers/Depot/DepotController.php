@@ -20,6 +20,8 @@ class DepotController extends Controller
         $this->middleware('permission:depot_create', ['only' => ['store']]);
         $this->middleware('permission:depot_update', ['only' => ['update']]);
         $this->middleware('permission:depot_delete', ['only' => ['destroy']]);
+
+        $this->middleware('convertJson', ['only' => ['index']]);
     }
 
     /**

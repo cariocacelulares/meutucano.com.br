@@ -13,7 +13,9 @@ class ConvertJsonString
      */
     public function handle($request, Closure $next)
     {
-        $request->merge(array_map('json_decode', $request->all()));
+        $request->merge(array_map(function($input) {
+            return json_decode(stripslashes(urldecode($input)));
+        }, $request->all()));
 
         return $next($request);
     }

@@ -17,6 +17,8 @@ class ProductController extends Controller
         $this->middleware('permission:product_create', ['only' => ['store']]);
         $this->middleware('permission:product_update', ['only' => ['update']]);
         $this->middleware('permission:product_delete', ['only' => ['destroy']]);
+
+        $this->middleware('convertJson', ['only' => ['index']]);
     }
 
     /**

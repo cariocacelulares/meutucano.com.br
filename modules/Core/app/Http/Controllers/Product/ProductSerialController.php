@@ -15,6 +15,8 @@ class ProductSerialController extends Controller
     {
         $this->middleware('permission:depot_transfer', ['only' => ['transfer']]);
         $this->middleware('permission:serial_generate', ['only' => ['generate']]);
+
+        $this->middleware('convertJson', ['only' => 'listByDepotProduct']);
     }
 
     /**

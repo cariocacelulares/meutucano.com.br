@@ -25,6 +25,8 @@ class DepotProductController extends Controller
         $this->middleware('permission:product_depot_create', ['only' => ['store']]);
         $this->middleware('permission:product_depot_update', ['only' => ['update']]);
         $this->middleware('permission:product_depot_delete', ['only' => ['destroy']]);
+
+        $this->middleware('convertJson', ['only' => ['listByProduct', 'listByDepot']]);
     }
 
     /**

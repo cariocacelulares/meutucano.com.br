@@ -16,6 +16,8 @@ class OrderShipmentController extends Controller
         $this->middleware('permission:order_shipment_update', ['only' => ['update']]);
         $this->middleware('permission:order_shipment_print', ['only' => ['label']]);
         $this->middleware('permission:order_shipment_important_list', ['only' => ['important']]);
+
+        $this->middleware('convertJson', ['only' => 'important']);
     }
 
     /**

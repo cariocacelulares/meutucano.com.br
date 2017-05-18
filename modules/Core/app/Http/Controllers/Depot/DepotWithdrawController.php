@@ -20,6 +20,8 @@ class DepotWithdrawController extends Controller
         $this->middleware('permission:withdraw_update', ['only' => ['update']]);
         $this->middleware('permission:withdraw_delete', ['only' => ['destroy']]);
         $this->middleware('permission:withdraw_close', ['only' => ['close']]);
+
+        $this->middleware('convertJson', ['only' => 'index']);
     }
 
     /**

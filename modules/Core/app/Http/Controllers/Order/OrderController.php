@@ -22,6 +22,8 @@ class OrderController extends Controller
         $this->middleware('permission:order_prioritize', ['only' => ['prioritize', 'unprioritize']]);
         $this->middleware('permission:order_hold', ['only' => ['hold', 'unhold']]);
         $this->middleware('permission:order_invoice_create', ['only' => ['invoice']]);
+
+        $this->middleware('convertJson', ['only' => 'index', 'important']);
     }
 
     /**

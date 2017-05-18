@@ -17,6 +17,7 @@ class UserPasswordController extends Controller
         $this->middleware('permission:user_password_delete',    ['only' => ['destroy']]);
 
         $this->middleware('currentUser', ['only' => 'listCurrentUser']);
+        $this->middleware('convertJson', ['only' => ['listFromUser', 'listCurrentUser']]);
     }
 
     /**

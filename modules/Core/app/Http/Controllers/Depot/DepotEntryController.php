@@ -22,6 +22,7 @@ class DepotEntryController extends Controller
         $this->middleware('permission:entry_confirm', ['only' => ['confirm']]);
 
         $this->middleware('currentUser', ['only' => ['store']]);
+        $this->middleware('convertJson', ['only' => ['index']]);
     }
 
     /**

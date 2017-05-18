@@ -15,6 +15,8 @@ class ProductSerialDefectController extends Controller
         $this->middleware('permission:product_defect_create', ['only' => ['store']]);
         $this->middleware('permission:product_defect_update', ['only' => ['update']]);
         $this->middleware('permission:product_defect_return', ['only' => ['destroy']]);
+
+        $this->middleware('convertJson', ['only' => ['index']]);
     }
 
     /**

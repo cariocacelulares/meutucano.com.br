@@ -18,6 +18,7 @@ class ProductSerialIssueController extends Controller
         $this->middleware('permission:stock_issue_delete', ['only' => ['destroy']]);
 
         $this->middleware('currentUser', ['only' => ['store']]);
+        $this->middleware('convertJson', ['only' => ['index']]);
     }
 
     /**

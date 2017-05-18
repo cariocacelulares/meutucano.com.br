@@ -14,6 +14,8 @@ class SupplierController extends Controller
         $this->middleware('permission:supplier_create', ['only' => ['store']]);
         $this->middleware('permission:supplier_update', ['only' => ['update']]);
         $this->middleware('permission:supplier_delete', ['only' => ['destroy']]);
+
+        $this->middleware('convertJson', ['only' => ['index']]);
     }
 
     /**
