@@ -10,7 +10,7 @@
         <slot name="header"></slot>
       </div>
     </header>
-    <span v-if="loading" class="loading">
+    <span v-if="loading" class="loading-spinner">
       <Icon name="refresh" :spin="true" size="giant" />
     </span>
     <div class="card-content">
@@ -152,7 +152,7 @@ export default {
     }
   }
 
-  .loading {
+  .loading-spinner {
     position: absolute;
     top: 0;
     left: 0;

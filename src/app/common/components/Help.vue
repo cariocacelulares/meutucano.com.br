@@ -26,6 +26,10 @@ export default {
     color: {
       type: String
     },
+    side: {
+      type: String,
+      side: 'left'
+    },
   },
 
   computed: {
@@ -33,6 +37,7 @@ export default {
       let classList = []
 
       classList.push('Help')
+      classList.push(`side-${this.side}`)
 
       if (!this.message) {
         classList.push('no-message')
@@ -74,17 +79,36 @@ export default {
   }
 
   &:not(.no-message) {
+    &.side-left {
+      .help-box {
+        left: 45px;
+
+        &:before {
+          left: -15px;
+          border-right: 15px solid #DAEFFD;
+        }
+      }
+    }
+
+    &.side-right {
+      .help-box {
+        right: 45px;
+
+        &:before {
+          right: -15px;
+          border-left: 15px solid #DAEFFD;
+        }
+      }
+    }
+
     .help-box {
       top: -12px;
-      left: 45px;
       height: 58px;
 
       &:before {
         top: 6px;
-        left: -15px;
         border-top: 15px solid transparent;
         border-bottom: 15px solid transparent;
-        border-right: 15px solid #DAEFFD;
       }
 
       .Icon {
@@ -94,16 +118,35 @@ export default {
   }
 
   &.no-message {
+    &.side-left {
+      .help-box {
+        left: 40px;
+
+        &:before {
+          left: -10px;
+          border-right: 10px solid $lightPrimary;
+        }
+      }
+    }
+
+    &.side-right {
+      .help-box {
+        right: 40px;
+
+        &:before {
+          right: -10px;
+          border-left: 10px solid $lightPrimary;
+        }
+      }
+    }
+
     .help-box {
       top: -10px;
-      left: 40px;
 
       &:before {
         top: 8px;
-        left: -10px;
         border-top: 10px solid transparent;
         border-bottom: 10px solid transparent;
-        border-right: 10px solid $lightPrimary;
       }
     }
   }

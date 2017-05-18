@@ -7,7 +7,7 @@
           :options="options"
           :on-change="filterChanged"
           placeholder="Linha de produtos"
-          search-placeholder="Faça uma busca">
+          search-placeholder="Buscar linha">
           <template slot="no-options">Nada foi encontrado</template>
         </v-select>
 

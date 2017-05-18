@@ -181,7 +181,7 @@
               <strong>{{ shipment.deadline }} dias</strong>
             </div>
 
-            <TLabel height="26px" :color="shipment.status.color">{{ shipment.status.description }}</TLabel>
+            <Badge type="label" height="26px" :color="shipment.status.color">{{ shipment.status.description }}</Badge>
           </div>
 
           <div slot="footer" class="card-footer">
@@ -230,7 +230,7 @@
             <strong>2 dias</strong>
           </div>
 
-          <TLabel height="26px" color="warning">Atrasado</TLabel>
+          <Badge type="label" height="26px" color="warning">Atrasado</Badge>
         </div>
 
         <div slot="footer" class="card-footer">
@@ -267,7 +267,7 @@
             <strong>2 dias</strong>
           </div>
 
-          <TLabel height="26px" color="primary">Enviado</TLabel>
+          <Badge type="label" height="26px" color="primary">Enviado</Badge>
         </div>
       </Card> -->
     </div>
@@ -500,7 +500,7 @@ $gap: 20px;
   }
 
   .shipments {
-    .TLabel {
+    .Badge {
       margin-top: 4px;
     }
 

@@ -3,19 +3,25 @@
     <PageHeader>
       <div slot="left" class="left">
         <MonthPicker v-model="filter" />
+
         <VSeparator :spacing="20" :height="40" />
+
         <FeaturedValue label="Cancelados (144)"
-        value="R$8.125,00" color="danger" />
+          value="R$8.125,00" color="danger" />
+
         <VSeparator :spacing="20" :height="40" />
+
         <FeaturedValue label="Aprovados (14)"
-        value="R$3.619,00" color="success" />
+          value="R$3.619,00" color="success" />
+
         <VSeparator :spacing="20" :height="40" />
+
         <FeaturedValue label="Faturados (89)"
-        value="R$53.923,00" color="primary" />
+          value="R$53.923,00" color="primary" />
       </div>
 
-      <TButton size="big" color="success">
-        <Icon name="plus" text="Novo pedidos" />
+      <TButton size="big" color="success" :link="{ name: 'orders.create' }">
+        <Icon name="plus" text="Novo pedido" />
       </TButton>
     </PageHeader>
     <ContentBox>
@@ -39,9 +45,9 @@
             <td>{{ order.total | money }}</td>
             <td>{{ order.created_at | dateTime }}</td>
             <td>
-              <TLabel :color="order.status.color" text="white">
+              <Badge type="label" :color="order.status.color" text="white">
                 {{ order.status.description }}
-              </TLabel>
+              </Badge>
             </td>
             <td>
               <router-link :to="{ name: 'orders.detail', params: { id: order.id } }">
@@ -77,37 +83,6 @@ export default {
     orders() {
       return this.$store.getters[`${this.namespace}/GET`]
     },
-
-    periods() {
-      return [
-        {
-          label: 'Abril/2017',
-          value: 1
-        },
-        {
-          label: 'Março/2017',
-          value: 2
-        },
-        {
-          label: 'Fevereiro/2017',
-          value: 3
-        },
-      ]
-    }
-  },
-
-  mounted() {
-    this.$root.$on('dropdownChanged.orderPeriods', (item) => {
-      // alguma ação pra quando troca a linha dos pedidos
-      console.log(item);
-    })
-  },
-
-  beforeDestroy() {
-    this.$root.$off('dropdownChanged.orderPeriods')
-  },
-
-  methods: {
   },
 };
 </script>

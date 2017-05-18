@@ -14,8 +14,8 @@
             <FeaturedValue :label="order.marketplace" :value="order.api_code" color="darker" />
 
             <VSeparator :spacing="20" :height="40" />
-            <!-- <TLabel color="primary">Aprovado</TLabel> -->
-            <TLabel :color="order.status.color">{{ order.status.description }} <span v-if="order.refund">&nbsp;(Reembolso)</span></TLabel>
+            <!-- <Badge type="label" color="primary">Aprovado</Badge> -->
+            <Badge type="label" :color="order.status.color">{{ order.status.description }} <span v-if="order.refund">&nbsp;(Reembolso)</span></Badge>
             <FeaturedValue v-if="order.cancel_protocol" label="Protocolo" :value="order.cancel_protocol" color="darker" class="m-l-20" />
           </div>
 

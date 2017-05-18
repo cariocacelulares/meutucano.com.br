@@ -7,6 +7,7 @@
   .dropdown-toggle {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     height: 100%;
     padding: 0 15px;
     color: $darker;
@@ -20,7 +21,9 @@
     }
 
     input[type="search"] {
-      flex-grow: 1;
+      position: absolute;
+      top: 0;
+      left: 15px;
       height: 100%;
       padding: 0 15px 0 0;
 
@@ -68,14 +71,16 @@
       }
     }
 
+    .search-item input[type="search"] {
+      padding: 0 15px;
+    }
+
     .active > a {
-      background-color: $lighter;
       text-decoration: underline;
     }
 
     > .highlight {
       > a {
-        background: #5897fb;
         background-color: $light !important;
         text-decoration: underline;
       }
@@ -132,11 +137,6 @@
 
   &.searchable .dropdown-toggle {
     cursor: text;
-  }
-
-  &.open .dropdown-toggle .selected-tag,
-  &.loading .dropdown-toggle .selected-tag {
-    display: none;
   }
 
   &.open {

@@ -15,11 +15,14 @@
     border-radius: $borderRadius;
     white-space: normal;
 
+    .selected-tag {
+      //
+    }
+
     input[type="search"] {
       position: absolute;
       top: 0;
       left: 15px;
-      // flex-grow: 1;
       height: 100%;
       padding: 0 15px 0 0;
 

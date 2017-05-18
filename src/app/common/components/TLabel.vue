@@ -1,28 +1,16 @@
 <template>
-  <span :class="classList" :style="{
-    width,
-    height,
-    }">
+  <label class="TLabel">
+    <span v-if="text" class="label">{{ text }}</span>
     <slot></slot>
-  </span>
+  </label>
 </template>
 
 <script>
 export default {
   props: {
-    color: {
-      type: String,
-      default: 'info'
-    },
     text: {
       type: String,
-      default: 'white'
-    },
-    width: {
-      type: String,
-    },
-    height: {
-      type: String,
+      required: true,
     },
   },
 
@@ -44,15 +32,21 @@ export default {
 @import '~style/vars';
 
 .TLabel {
-  line-height: 26px;
-  padding: 0 20px;
-  border-radius: $borderRadius;
-  font-size: 11px;
-  font-weight: bold;
-  cursor: default;
+  position: relative;
+  display: inline-block;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  .label {
+    display: block;
+    line-height: 1;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 12px;
+    color: $inputLabel;
+  }
+
+  > :not(.label) {
+    height: 40px;
+    line-height: 40px;
+  }
 }
 </style>

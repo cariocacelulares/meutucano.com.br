@@ -6,11 +6,11 @@
     <br>
     <div style="width:300px">
       <v-select theme="tucano"
-      :on-search="getOptions"
-      :options="options"
-      placeholder="Search GitHub Repositories...">
-      <template slot="no-options">Nada foi encontrado</template>
-    </v-select>
+        :on-search="getOptions"
+        :options="options"
+        placeholder="Search GitHub Repositories...">
+        <template slot="no-options">Nada foi encontrado</template>
+      </v-select>
     </div>
   </ContentBox>
 </template>

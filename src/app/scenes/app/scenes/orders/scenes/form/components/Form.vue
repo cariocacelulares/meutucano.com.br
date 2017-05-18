@@ -7,11 +7,15 @@
         </TButton>
 
         <VSeparator :spacing="20" :height="40" />
-        <FeaturedValue label="Mercado Livre"
-          value="03-102973901" color="darker" />
 
-        <VSeparator :spacing="20" :height="40" />
-        <TLabel color="primary">Aprovado</TLabel>
+        <template v-if="!creating">
+          <FeaturedValue :label="order.marketplace" :value="order.api_code" color="darker" />
+
+          <VSeparator :spacing="20" :height="40" />
+          <Badge type="label" color="primary">Aprovado</Badge>
+        </template>
+
+        <FeaturedValue v-else label="" value="Criação de um novo pedido" color="darker" />
       </div>
 
       <TButton size="big" color="success" type="submit">
@@ -19,34 +23,28 @@
       </TButton>
     </PageHeader>
 
-    <ContentBox :boxed="!id" :discret="true" :class="{ grid: true, create: !id, loading: loading }">
+    <ContentBox :boxed="creating" :discret="true" :class="{ grid: true, creating, loading: loading }">
       <div>
         <Card header-icon="user" header-text="Informações do cliente">
           <div v-if="true" class="grid-2">
-            <TSelect label="Cliente" placeholder="Selecione um cliente" :options="[
-              {
-                value: 1,
-                text: 'Aprovado'
-              },
-              {
-                value: 2,
-                text: 'Cancelado'
-              },
-            ]" />
+            <TLabel text="Cliente">
+              <v-select theme="discrete"
+                :inside-search="true"
+                :on-search="getCustomers"
+                :options="customerList"
+                :on-change="customerChanged"
+                label="name"
+                placeholder="Selecione um cliente"
+                search-placeholder="Buscar cliente">
+                <template slot="no-options">Nada foi encontrado</template>
+              </v-select>
+            </TLabel>
 
-            <TSelect label="Endereço" placeholder="Selecione um cliente" :options="[
-              {
-                value: 1,
-                text: 'Aprovado'
-              },
-              {
-                value: 2,
-                text: 'Cancelado'
-              },
-            ]" />
+            <TSelect label="Endereço" :placeholder="'Selecione um ' + (customer ? 'endereço' : 'cliente')"
+              :options="addressList" />
           </div>
 
-          <div v-if="false" class="grid-2">
+          <div v-if="!creating" class="grid-2">
             <div class="card-data">
               <span>Nome do cliente</span>
               <strong>Cleiton Souza</strong>
@@ -115,30 +113,39 @@
                   <Icon name="close" color="danger" />
                 </td>
               </tr>
+              <tr>
+                <td>
+                  <InputGroup size="small">
+                    <Icon name="search" slot="left" />
+                    <TInput v-model="newProduct.sku" slot="input" />
+                  </InputGroup>
+                </td>
+                <td class="text-left">{{ newProduct.title }}</td>
+                <td>
+                  <InputGroup v-if="newProduct.sku" size="small">
+                    <Icon name="usd" slot="left" />
+                    <TInput v-model="newProduct.price" slot="input" />
+                  </InputGroup>
+                </td>
+                <td>
+                  <TInput v-if="newProduct.sku" v-model="newProduct.quantity" size="small" type="number" :min="1"/>
+                </td>
+                <td>{{ newProduct.total }}</td>
+                <td>
+                  <Icon name="plus" color="success" />
+                  <Icon v-if="newProduct.sku" name="close" color="danger" />
+                </td>
+              </tr>
             </tbody>
           </table>
 
           <div class="table-values">
-            <label>Status</label>
-            <TSelect :options="[
-              {
-                value: 1,
-                text: 'Aprovado'
-              },
-              {
-                value: 2,
-                text: 'Cancelado'
-              },
-            ]" />
-
-            <VSeparator :spacing="20" color="light" />
+            <Help side="right" title="Valor formado pela soma do subtotal, frete e taxas subtraído pelo desconto aplicado" />
 
             <div class="card-data">
               <span>Valor Total</span>
               <strong>R$1567,90</strong>
             </div>
-
-            <Help title="Valor formado pela soma do subtotal, frete e taxas subtraído pelo desconto aplicado" />
           </div>
         </Card>
       </div>
@@ -157,22 +164,26 @@ export default {
   props: {
     orderId: {
       default: null,
-    }
+    },
   },
 
   data() {
     return {
-      loading: false,
+      order: {},
+      customer: null,
+      customerList: [],
+      addressList: [],
+      products: [],
 
-      products: [
-        {
-          sku: 384,
-          title: 'Alcatel Pixi4 Colors Azul',
-          price: 119.90,
-          quantity: 2,
-          total: 200.52,
-        },
-      ],
+      newProduct: {
+        sku: null,
+        title: null,
+        price: null,
+        quantity: null,
+        total: null,
+      },
+
+      loading: false,
     }
   },
 
@@ -180,9 +191,47 @@ export default {
     id() {
       return this.orderId
     },
+
+    creating() {
+      return !this.orderId ? true : false
+    }
   },
 
   methods: {
+    getCustomers(search, loading) {
+      clearTimeout(this.debounce)
+
+      this.debounce = setTimeout(function() {
+        loading(true)
+        axios.get(`customers/fetch?search=${search}`).then(
+          (response) => {
+            this.customerList = response.data
+
+            loading(false)
+          }
+        )
+      }.bind(this), 500)
+    },
+
+    customerChanged(customer) {
+      if (!customer) {
+        return;
+      }
+
+      this.customer = customer
+
+      axios.get(`customers/addresses/from/${customer.id}`).then(
+        (response) => {
+          this.addressList = response.data.map((item) => {
+            return {
+              text: item.address.replace(/<\/?[^>]+(>|$)/g, ''),
+              value: item.id,
+            }
+          })
+        }
+      )
+    },
+
     generateSku() {
       this.id = 384
     },
@@ -226,7 +275,7 @@ export default {
 $gap: 20px;
 
 .ContentBox {
-  &:not(.create) {
+  &:not(.creating) {
     grid-template-columns: auto 1px 440px;
     grid-gap: $gap;
     grid-auto-flow: row;
@@ -247,17 +296,12 @@ $gap: 20px;
   .table-values {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     height: 40px;
     margin-top: 20px;
 
-    label {
-      margin-right: 10px;
-      font-weight: bold;
-      font-size: 14px;
-    }
-
     .card-data {
-      margin-right: 10px;
+      margin-left: 10px;
 
       strong {
         font-size: 24px;
