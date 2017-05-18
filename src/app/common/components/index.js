@@ -21,5 +21,6 @@ export { default as UserInfo } from './UserInfo'
 export { default as FileUpload } from './FileUpload'
 export { default as CommentsBox } from './CommentsBox'
 export { default as Alert } from './Alert'
+export { default as MonthPicker } from './MonthPicker'
 
 export { default as TableList } from './TableList'

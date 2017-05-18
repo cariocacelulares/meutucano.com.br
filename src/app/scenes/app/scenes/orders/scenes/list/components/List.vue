@@ -2,8 +2,7 @@
   <div>
     <PageHeader>
       <div slot="left" class="left">
-        <Dropdown placeholder="Período"
-        :itens="periods" name="orderPeriods"/>
+        <MonthPicker v-model="filter" />
         <VSeparator :spacing="20" :height="40" />
         <FeaturedValue label="Cancelados (144)"
         value="R$8.125,00" color="danger" />
@@ -60,7 +59,17 @@
 export default {
   data() {
     return {
-      namespace: 'orders/list'
+      namespace: 'orders/list',
+      filter: null,
+    }
+  },
+
+  watch: {
+    filter() {
+      this.$store.dispatch(`${this.namespace}/CHANGE_FILTER`, {
+        month: this.filter.month,
+        year: this.filter.year,
+      })
     }
   },
 
@@ -104,4 +113,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.MonthPicker {
+  width: 212px;
+}
 </style>

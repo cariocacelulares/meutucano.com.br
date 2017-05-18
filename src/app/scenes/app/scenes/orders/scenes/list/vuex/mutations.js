@@ -8,4 +8,8 @@ export default {
 
     state.orders = orders
   },
+
+  'orders/list/FILTER_CHANGED' (state, filter) {
+    state.filter = filter
+  },
 }

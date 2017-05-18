@@ -29,10 +29,11 @@ const Transformer = {
       color: STATUS_COLORS[status],
     }
 
-    order.shipments = order.shipments.map((item) => {
-      return Transformer.transformShipment(item)
-    })
-
+    if (typeof(order.shipments) != 'undefined' && order.shipments) {
+      order.shipments = order.shipments.map((item) => {
+        return Transformer.transformShipment(item)
+      })
+    }
 
     return order
   },
