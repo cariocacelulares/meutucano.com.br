@@ -102,7 +102,7 @@ class OrderInvoiceController extends Controller
          * Verify products
          */
         $nfeProducts = (sizeof($nfe->det) > 1) ? $nfe->det : [$nfe->det];
-        $orderProducts = $order->products;
+        $orderProducts = $order->orderProducts;
         if ($orderProducts->count() != sizeof($nfeProducts)) {
             throw new \Exception("A nota fiscal não possui os mesmos produtos que no pedido.");
         }

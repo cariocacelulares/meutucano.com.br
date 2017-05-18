@@ -32,6 +32,13 @@ class OrderInvoice extends \Eloquent
     ];
 
     /**
+     * @return array
+     */
+    protected $appends = [
+        'print_url'
+    ];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function order()
@@ -64,5 +71,15 @@ class OrderInvoice extends \Eloquent
     public function getFileAttribute($file)
     {
         return fileUrl(self::UPLOAD_PATH . '/' . $file);
+    }
+
+    /**
+     * Return print URL for Model
+     *
+     * @return string
+     */
+    public function getPrintUrlAttribute()
+    {
+        return url("api/orders/invoices/{$this->id}/danfe?token=" . \JWTAuth::getToken());
     }
 }

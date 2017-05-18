@@ -41,6 +41,19 @@ class CustomerController extends Controller
     }
 
     /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function fetch()
+    {
+        $search = request('search');
+
+        $data = Customer::where('name', 'LIKE', "%{$search}%")
+            ->get();
+
+        return listResponse($data);
+    }
+
+    /**
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */

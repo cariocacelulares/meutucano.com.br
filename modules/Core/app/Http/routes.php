@@ -16,6 +16,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     /**
      * Customers
      */
+    Route::get('customers/fetch', 'Customer\CustomerController@fetch');
     api('customers', 'Customer\CustomerController');
 
     /**
@@ -34,7 +35,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     /**
      * Order Invoices
      */
-    Route::get('orders/invoices/danfe/{invoice_id}/{return?}', 'Order\OrderInvoiceController@danfe');
+    Route::get('orders/invoices/{invoice_id}/danfe/{return?}', 'Order\OrderInvoiceController@danfe');
     api('orders/invoices', 'Order\OrderInvoiceController', ['index', 'update']);
 
     /**

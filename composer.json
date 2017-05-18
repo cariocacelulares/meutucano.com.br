@@ -98,15 +98,5 @@
         "preferred-install": "dist",
         "minimum-stability": "dev",
         "secure-http": false
-    },
-    "repositories": {
-        "php-sigep": {
-            "type": "git",
-            "url": "git@github.com:cariocacelulares/php-sigep.git"
-        },
-        "nfephp": {
-            "type": "git",
-            "url": "git@github.com:cariocacelulares/nfephp.git"
-        }
     }
 }

@@ -51,7 +51,8 @@ class OrderShipment extends \Eloquent
      */
     protected $appends = [
         'monitored',
-        'status_cast'
+        'status_cast',
+        'print_url'
     ];
 
     public static function boot()
@@ -161,5 +162,15 @@ class OrderShipment extends \Eloquent
             case self::STATUS_RETURNED:
                 return 'Devolvido';
         }
+    }
+
+    /**
+     * Return print URL for Model
+     *
+     * @return string
+     */
+    public function getPrintUrlAttribute()
+    {
+        return url("api/orders/shipments/{$this->id}/label?token=" . \JWTAuth::getToken());
     }
 }

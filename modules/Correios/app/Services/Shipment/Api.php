@@ -227,20 +227,24 @@ class Api implements ShipmentApiInterface
         /**
          * Registro
          */
-        $servicoAdicional = new ServicoAdicional();
-        $servicoAdicional->setCodigoServicoAdicional(ServicoAdicional::SERVICE_REGISTRO);
+        $servicoAdicionalRegistro = new \PhpSigep\Model\ServicoAdicional();
+        $servicoAdicionalRegistro->setCodigoServicoAdicional(\PhpSigep\Model\ServicoAdicional::SERVICE_REGISTRO);
+
+        $servicoAdicionalVD = new ServicoAdicional();
+
+        $servicoAdicionalVD->setCodigoServicoAdicional(\PhpSigep\Model\ServicoAdicional::SERVICE_VALOR_DECLARADO);
+        $servicoAdicionalVD->setValorDeclarado(300);
 
         /**
          * Encomenda
          */
         $encomenda = new ObjetoPostal();
-        $encomenda->setServicosAdicionais(array($servicoAdicional));
+        $encomenda->setServicosAdicionais([$servicoAdicionalRegistro, $servicoAdicionalVD]);
         $encomenda->setDestinatario($destinatario);
         $encomenda->setDestino($destino);
         $encomenda->setDimensao($dimensao);
         $encomenda->setEtiqueta($etiqueta);
         $encomenda->setPeso(0.500 * (int) $this->shipment->order->orderProducts->count());
-        $encomenda->setLote(round($this->shipment->order->total - $this->shipment->order->shipping_cost));
         $encomenda->setServicoDePostagem(new ServicoDePostagem($this->shipment->shipmentMethod->api_code));
 
         $plp = new PreListaDePostagem();
@@ -251,7 +255,7 @@ class Api implements ShipmentApiInterface
 
         $pdf = new \PhpSigep\Pdf\CartaoDePostagem($plp, null, null);
 
-        $pdf->render('I', 'etiquetas.pdf');
+        $pdf->render('I', "etiqueta-{$this->shipment->tracking_code}.pdf");
         die();
     }
 

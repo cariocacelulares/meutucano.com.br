@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2fadd446023f17ef52fd3953f1421644",
-    "content-hash": "8a78591f085fc0fb0fd20ea01a09dc5f",
+    "hash": "3a761888fbad87dce01db34c7dab6bbe",
+    "content-hash": "90cbc93234eb289cb58ea04e8dce6052",
     "packages": [
         {
             "name": "barryvdh/laravel-cors",
@@ -1916,8 +1916,14 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git@github.com:cariocacelulares/nfephp.git",
-                "reference": "37c6e3a7a900b7c8cfb06744fa1ed3015518ffa4"
+                "url": "https://github.com/nfephp-org/nfephp.git",
+                "reference": "69050a61050f9e8d58db3d167951868fbb0f85ee"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nfephp-org/nfephp/zipball/69050a61050f9e8d58db3d167951868fbb0f85ee",
+                "reference": "69050a61050f9e8d58db3d167951868fbb0f85ee",
+                "shasum": ""
             },
             "require": {
                 "endroid/qrcode": "1.*@dev",
@@ -1939,7 +1945,7 @@
                 "zendframework/zend-mail": "^2.5"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.*",
+                "phpunit/phpunit": "^5.7",
                 "scrutinizer/ocular": "~1.1",
                 "squizlabs/php_codesniffer": "~2.3"
             },
@@ -1979,6 +1985,7 @@
                     "./libs/Extras/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0+",
                 "LGPL-3.0+"
@@ -2002,7 +2009,7 @@
                 "nfephp",
                 "sped"
             ],
-            "time": "2017-03-02 18:29:26"
+            "time": "2017-05-17 12:09:29"
         },
         {
             "name": "nikic/php-parser",
@@ -3135,8 +3142,14 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git@github.com:cariocacelulares/php-sigep.git",
-                "reference": "459cb7a2774445d3e724df6fcedb7c517c430bba"
+                "url": "https://github.com/stavarengo/php-sigep.git",
+                "reference": "4acd1b49aa93913d2545233ff27b0cc225e0e81f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stavarengo/php-sigep/zipball/4acd1b49aa93913d2545233ff27b0cc225e0e81f",
+                "reference": "4acd1b49aa93913d2545233ff27b0cc225e0e81f",
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.4",
@@ -3154,6 +3167,7 @@
                     "PhpSigep": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -3168,7 +3182,7 @@
                 "correios",
                 "sigep"
             ],
-            "time": "2017-05-17 21:08:43"
+            "time": "2017-05-12 02:37:04"
         },
         {
             "name": "stavarengo/php-sigep-fpdf",
@@ -4607,16 +4621,16 @@
         },
         {
             "name": "zendframework/zend-validator",
-            "version": "2.9.0",
+            "version": "2.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-validator.git",
-                "reference": "b71641582297eab52753b72cd4eb45a5ded4485c"
+                "reference": "c9a8160a0191e34bb98ac1ecd4e453391c424bb3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-validator/zipball/b71641582297eab52753b72cd4eb45a5ded4485c",
-                "reference": "b71641582297eab52753b72cd4eb45a5ded4485c",
+                "url": "https://api.github.com/repos/zendframework/zend-validator/zipball/c9a8160a0191e34bb98ac1ecd4e453391c424bb3",
+                "reference": "c9a8160a0191e34bb98ac1ecd4e453391c424bb3",
                 "shasum": ""
             },
             "require": {
@@ -4674,7 +4688,7 @@
                 "validator",
                 "zf2"
             ],
-            "time": "2017-03-17 10:15:50"
+            "time": "2017-05-17 22:06:13"
         },
         {
             "name": "zizaco/entrust",
