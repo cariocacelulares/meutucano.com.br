@@ -49,6 +49,21 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     api('orders/invoices/devolutions', 'Order\OrderInvoiceDevolutionController', ['index', 'update']);
 
     /**
+     * Order Shipment Devolutions
+     */
+    api('orders/shipments/devolutions', 'Order\OrderShipmentDevolutionController', ['index']);
+
+    /**
+     * Order Shipment Logistics
+     */
+    api('orders/shipments/logistics', 'Order\OrderShipmentLogisticController', ['index']);
+
+    /**
+     * Order Shipment Issues
+     */
+    api('orders/shipments/issues', 'Order\OrderShipmentIssueController', ['index']);
+
+    /**
      * Order Shipments
      */
     Route::group(['prefix' => 'orders/shipments'], function () {
@@ -56,8 +71,9 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
 
         Route::get('{id}/history', 'Order\OrderShipmentController@history');
         Route::get('{id}/label', 'Order\OrderShipmentController@label');
+        Route::put('{id}/refresh', 'Order\OrderShipmentController@refresh');
     });
-    api('orders/shipments', 'Order\OrderShipmentController');
+    api('orders/shipments', 'Order\OrderShipmentController', ['index', 'update', 'destroy']);
 
     /**
      * Orders

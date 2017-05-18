@@ -1,5 +1,6 @@
 <?php namespace Correios\Services\Shipment;
 
+use Carbon\Carbon;
 use PhpSigep\Bootstrap;
 use PhpSigep\Model\Dimensao;
 use PhpSigep\Model\Etiqueta;
@@ -34,70 +35,35 @@ class Api implements ShipmentApiInterface
     }
 
     /**
-     * Boot API starting bootstrap
-     *
-     * @return void
-     */
-    private function bootApi()
-    {
-        $config = new \PhpSigep\Config();
-        $config->setAccessData($this->accessData);
-        $config->setEnv(\PhpSigep\Config::ENV_PRODUCTION);
-        $config->setCacheOptions([
-            'storageOptions' => [
-                'enabled'  => false
-            ],
-        ]);
-
-        Bootstrap::start($config);
-    }
-
-    /**
      * Refresh shipment status
      *
      * @return int
      */
     public function refreshStatus()
     {
-        $ultimoEvento = $this->lastStatus($rastreio->rastreio);
+        $lastEvent = $this->shipment->history->first()->toArray();
 
-        $prazoEntrega = date('d/m/Y', strtotime($rastreio->data_envio));
-        $prazoEntrega = \SomaDiasUteis($prazoEntrega, $rastreio->prazo);
-        $prazoEntrega = date('Ymd', \dataToTimestamp($prazoEntrega));
+        $deadlineDate = date('d/m/Y', strtotime($this->shipment->sent_at));
+        $deadlineDate = \SomaDiasUteis($deadlineDate, $this->shipment->deadline);
+        $deadlineDate = date('Ymd', \dataToTimestamp($deadlineDate));
 
-        $dateDiff = 0;
-        if ($rastreio->data_envio) {
-            $dateDiff = (Carbon::createFromFormat('Y-m-d', date('Y-m-d')))
-                ->diffInDays(Carbon::createFromFormat('Y-m-d', $rastreio->data_envio));
+        if (!$lastEvent) {
+            return $this->shipment->status;
+        } elseif (in_array($lastEvent['status'], [9, 28, 37, 43, 50, 51, 52, 80])) {
+            return OrderShipment::STATUS_LOSS;
+        } elseif (in_array($lastEvent['status'], [4, 5, 6, 8, 10, 21, 26, 33, 36, 40, 42, 48, 49, 56])) {
+            //TODO: AVisa retorno ao inves de status?
+            return OrderShipment::STATUS_RETURNED;
+        } elseif (strpos($lastEvent['action'], 'entregue') !== false) {
+            return OrderShipment::STATUS_COMPLETE;
+        } elseif (in_array($lastEvent['status'], [2])) {
+            //TODO: Avisa aguardando retirada
+            // $status = 6;
+        } elseif ($deadlineDate < date('Ymd')) {
+            return OrderShipment::STATUS_LATE;
         }
 
-        $status = 1;
-        if ($ultimoEvento === false) {
-                    return $rastreio;
-        } else if (!$ultimoEvento['acao']) {
-            $status = $rastreio->status;
-        } elseif (in_array($ultimoEvento['status'], [9, 28, 37, 43, 50, 51, 52, 80])) {
-            $status = 3;
-        } elseif (in_array($ultimoEvento['status'], [4, 5, 6, 8, 10, 21, 26, 33, 36, 40, 42, 48, 49, 56])) {
-            $status = 5;
-        } elseif (strpos($ultimoEvento['acao'], 'entregue') !== false) {
-            $rastreio->order->status = 3;
-            $rastreio->order->save();
-
-            $status = 4;
-        } elseif (in_array($ultimoEvento['status'], [2])) {
-            $status = 6;
-        } elseif ($prazoEntrega < date('Ymd')) {
-            $status = 2;
-        } else if ($dateDiff > 15) {
-            $status = 9;
-        }
-
-        if ($rastreio->status == 0 && ($rastreio->status != $status)) {
-            if ($firstStatusDate = $this->firstStatus($rastreio->rastreio)['data']) {
-                $rastreio->data_envio = Carbon::createFromFormat('Y-m-d H:i', $firstStatusDate)->format('Y-m-d');
-            }
-        }
+        return OrderShipment::STATUS_NORMAL;
     }
 
     /**
@@ -107,7 +73,16 @@ class Api implements ShipmentApiInterface
      */
     public function calculateDeadline()
     {
-        $this->bootApi();
+        $config = new \PhpSigep\Config();
+        $config->setAccessData($this->accessData);
+        $config->setEnv(\PhpSigep\Config::ENV_PRODUCTION);
+        $config->setCacheOptions([
+            'storageOptions' => [
+                'enabled' => false
+            ],
+        ]);
+
+        Bootstrap::start($config);
 
         $dimention = new \PhpSigep\Model\Dimensao();
         $dimention->setTipo(\PhpSigep\Model\Dimensao::TIPO_PACOTE_CAIXA);
@@ -137,7 +112,16 @@ class Api implements ShipmentApiInterface
      */
     public function history()
     {
-        $this->bootApi();
+        $config = new \PhpSigep\Config();
+        $config->setAccessData($this->accessData);
+        $config->setEnv(\PhpSigep\Config::ENV_PRODUCTION);
+        $config->setCacheOptions([
+            'storageOptions' => [
+                'enabled' => false
+            ],
+        ]);
+
+        Bootstrap::start($config);
 
         $label = new \PhpSigep\Model\Etiqueta();
         $label->setEtiquetaComDv($this->shipment->tracking_code);
@@ -153,6 +137,7 @@ class Api implements ShipmentApiInterface
         $result = $phpSigep->rastrearObjeto($params);
 
         $history = [];
+
 
         if (!$result->getResult())
           return false;
@@ -176,7 +161,16 @@ class Api implements ShipmentApiInterface
      */
     public function printLabel()
     {
-        $this->bootApi();
+        $config = new \PhpSigep\Config();
+        $config->setAccessData($this->accessData);
+        $config->setEnv(\PhpSigep\Config::ENV_PRODUCTION);
+        $config->setCacheOptions([
+            'storageOptions' => [
+                'enabled' => false
+            ],
+        ]);
+
+        Bootstrap::start($config);
 
         /**
          * Remetente
@@ -285,19 +279,19 @@ class Api implements ShipmentApiInterface
      */
     public function pi()
     {
-        $infoPi = http_build_query([
-            'rastreio'    => $this->shipment->rastreio,
-            'nome'        => $this->shipment->order->customer->nome,
-            'cep'         => $this->shipment->order->customerAddress->cep,
-            'customerAddress'    => $this->shipment->order->customerAddress->rua,
-            'numero'      => $this->shipment->order->customerAddress->numero,
-            'complemento' => $this->shipment->order->customerAddress->complemento,
-            'bairro'      => $this->shipment->order->customerAddress->bairro,
-            'data'        => $this->shipment->data_envio_readable,
-            'tipo'        => $this->shipment->servico,
-            'status'      => ($this->shipment->status == 3) ? 'e' : 'a'
-        ]);
-
-        return redirect()->away('http://www2.correios.com.br/sistemas/falecomoscorreios/?' . $infoPi);
+        // $infoPi = http_build_query([
+        //     'rastreio'    => $this->shipment->rastreio,
+        //     'nome'        => $this->shipment->order->customer->nome,
+        //     'cep'         => $this->shipment->order->customerAddress->cep,
+        //     'customerAddress'    => $this->shipment->order->customerAddress->rua,
+        //     'numero'      => $this->shipment->order->customerAddress->numero,
+        //     'complemento' => $this->shipment->order->customerAddress->complemento,
+        //     'bairro'      => $this->shipment->order->customerAddress->bairro,
+        //     'data'        => $this->shipment->data_envio_readable,
+        //     'tipo'        => $this->shipment->servico,
+        //     'status'      => ($this->shipment->status == 3) ? 'e' : 'a'
+        // ]);
+        //
+        // return redirect()->away('http://www2.correios.com.br/sistemas/falecomoscorreios/?' . $infoPi);
     }
 }

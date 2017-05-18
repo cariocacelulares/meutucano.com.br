@@ -1,20 +1,12 @@
 <?php namespace Core\Http\Controllers\Order;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Input;
-use GuzzleHttp\Client;
-use Sunra\PhpSimple\HtmlDomParser;
-use App\Http\Controllers\Controller;
 use Core\Models\Order;
-use Core\Models\OrderProduct;
 use Core\Models\OrderShipment;
+use App\Http\Controllers\Controller;
 use Core\Models\OrderShipmentHistory;
-use Rastreio\Transformers\RastreioTransformer;
-use Rastreio\Transformers\Parsers\RastreioParser;
-use Rastreio\Http\Requests\Rastreio\DeleteRequest;
-use Core\Http\Requests\Order\OrderShipmentRequest as Request;
 use App\Interfaces\ShipmentApiInterface;
+use Core\Http\Requests\Order\OrderShipmentRequest as Request;
 
 class OrderShipmentController extends Controller
 {
@@ -54,7 +46,7 @@ class OrderShipmentController extends Controller
     public function store(Request $request)
     {
         try {
-            $data = OrderShipment::create(Input::all());
+            $data = OrderShipment::create($request->all());
 
             return createdResponse($data);
         } catch (\Exception $exception) {
@@ -93,6 +85,12 @@ class OrderShipmentController extends Controller
         $orderShipment = $this->refreshHistory($orderShipment);
 
         $orderShipment->status = shipment($orderShipment)->refreshStatus();
+
+        if ($orderShipment->isDirty('status') && ($orderShipment->getOriginal('status') == OrderShipment::STATUS_PENDING)) {
+            $firstEvent = $orderShipment->history->last()->toArray();
+            $orderShipment->sent_at = Carbon::createFromFormat('Y-m-d H:i:s', $firstEvent['date'])->format('Y-m-d');
+        }
+
         $orderShipment->save();
 
         return $orderShipment;

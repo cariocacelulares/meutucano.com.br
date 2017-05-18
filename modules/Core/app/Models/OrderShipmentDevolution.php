@@ -15,9 +15,8 @@ class OrderShipmentDevolution extends \Eloquent
      * @var array
      */
     protected $fillable = [
-        'order_shipment_id_id',
+        'order_shipment_id',
         'reason',
-        'action',
         'note'
     ];
 

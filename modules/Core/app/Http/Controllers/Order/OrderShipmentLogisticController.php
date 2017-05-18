@@ -1,27 +1,13 @@
-<?php namespace Rastreio\Http\Controllers;
+<?php namespace Core\Http\Controllers\Order;
 
-use Illuminate\Support\Facades\Input;
+use Core\Models\OrderShipmentLogistic;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Rest\RestControllerTrait;
-use Rastreio\Http\Controllers\Traits\RastreioTrait;
-use Rastreio\Models\Rastreio;
-use Rastreio\Models\Logistica;
-use Rastreio\Http\Requests\LogisticaRequest as Request;
-use Rastreio\Transformers\LogisticaTransformer;
+use Core\Http\Requests\Order\OrderShipmentLogisticRequest as Request;
 
-/**
- * Class LogisticaController
- * @package Rastreio\Http\Controllers
- */
-class LogisticaController extends Controller
+class OrderShipmentLogisticController extends Controller
 {
-    use RestControllerTrait, RastreioTrait;
-
-    const MODEL = Logistica::class;
-
     public function __construct()
     {
-        $this->middleware('permission:order_shipment_logistic_list', ['only' => ['index']]);
         $this->middleware('permission:order_shipment_logistic_show', ['only' => ['show']]);
         $this->middleware('permission:order_shipment_logistic_create', ['only' => ['store']]);
         $this->middleware('permission:order_shipment_logistic_update', ['only' => ['update']]);
@@ -29,78 +15,80 @@ class LogisticaController extends Controller
     }
 
     /**
-     * Retorna uma pi com base no rastreio
-     *
      * @param  int $id
      * @return array
      */
     public function show($id)
     {
-        if ($data = Rastreio::with(['pedido'])->where('id', '=', $id)->first()) {
-            if ($data->logistica) {
-                $data = Logistica::with(['rastreio', 'rastreio.pedido'])->where('id', '=', $data->logistica->id)->first();
-
-                if ($data) {
-                    return $this->showResponse(LogisticaTransformer::show($data));
-                }
-            }
-
-            return $this->showResponse([
-                'rastreio_id' => $data->id,
-                'rastreio'    => $data
-            ]);
-        }
-    }
-
-    /**
-     * Cria novo recurso
-     *
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function store(Request $request)
-    {
         try {
-            $logistica = (self::MODEL)::create(Input::except(['protocolo', 'imagem']));
+            $data = OrderShipmentLogistic::findOrFail($id);
 
-            if (Input::has('acao')) {
-                $rastreio = Rastreio::find(Input::get('rastreio_id'));
-                $rastreio->status = 5;
-                $rastreio->save();
-
-                $this->updateProtocolAndStatus($logistica, Input::get('protocolo'), Input::file('imagem'));
-            }
-
-            return $this->createdResponse($logistica);
+            return showResponse($data);
         } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
+            \Log::error(logMessage($exception, 'Erro ao obter recurso'));
 
-            return $this->clientErrorResponse([
+            return clientErrorResponse([
                 'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
 
     /**
-     * Atualiza um recurso
-     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function store(Request $request)
+    {
+        try {
+            $data = OrderShipmentLogistic::create($request->all());
+
+
+            return createdResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function update($id, Request $request)
+    public function update(Request $request, $id)
     {
         try {
-            $logistica = (self::MODEL)::findOrFail($id);
-            $logistica->fill(Input::except(['protocolo']));
-            $logistica->save();
+            $data = OrderShipmentLogistic::findOrFail($id);
+            $data->fill($request->all());
+            $data->save();
 
-            $this->updateProtocolAndStatus($logistica, Input::get('protocolo'));
-
-            return $this->showResponse($logistica);
+            return showResponse($data);
         } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'));
 
-            return $this->clientErrorResponse([
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function destroy($id)
+    {
+        try {
+            $data = OrderShipmentLogistic::findOrFail($id);
+            $data->delete();
+
+            return deletedResponse();
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao excluir recurso'));
+
+            return clientErrorResponse([
                 'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }

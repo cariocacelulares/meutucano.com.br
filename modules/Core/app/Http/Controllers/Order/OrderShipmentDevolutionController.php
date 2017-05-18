@@ -1,28 +1,14 @@
-<?php namespace Rastreio\Http\Controllers;
+<?php namespace Core\Http\Controllers\Order;
 
-use Illuminate\Support\Facades\Input;
+use Core\Models\OrderShipment;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Rest\RestControllerTrait;
-use Rastreio\Http\Controllers\Traits\RastreioTrait;
-use Rastreio\Models\Rastreio;
-use Rastreio\Models\Devolucao;
-use Rastreio\Http\Requests\DevolucaoRequest as Request;
-use Rastreio\Transformers\DevolucaoTransformer;
+use Core\Models\OrderShipmentDevolution;
+use Core\Http\Requests\Order\OrderShipmentDevolutionRequest as Request;
 
-/**
- * Class DevolucaoController
- * @package Rastreio\Http\Controllers
- */
-class DevolucaoController extends Controller
+class OrderShipmentDevolutionController extends Controller
 {
-    use RestControllerTrait,
-        RastreioTrait;
-
-    const MODEL = Devolucao::class;
-
     public function __construct()
     {
-        $this->middleware('permission:order_shipment_devolution_list', ['only' => ['index']]);
         $this->middleware('permission:order_shipment_devolution_show', ['only' => ['show']]);
         $this->middleware('permission:order_shipment_devolution_create', ['only' => ['store']]);
         $this->middleware('permission:order_shipment_devolution_update', ['only' => ['update']]);
@@ -30,78 +16,82 @@ class DevolucaoController extends Controller
     }
 
     /**
-     * Retorna uma devolução com base no rastreio
-     *
      * @param  int $id
      * @return array
      */
     public function show($id)
     {
-        if ($data = Rastreio::with(['pedido'])->where('id', '=', $id)->first()) {
-            if ($data->devolucao) {
-                $data = Devolucao::with(['rastreio', 'rastreio.pedido'])->where('id', '=', $data->devolucao->id)->first();
-
-                if ($data) {
-                    return $this->showResponse(DevolucaoTransformer::show($data));
-                }
-            }
-
-            return $this->showResponse([
-                'rastreio_id' => $data->id,
-                'rastreio'    => $data
-            ]);
-        }
-
-        return $this->notFoundResponse();
-    }
-
-    /**
-     * Cria novo recurso
-     *
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function store(Request $request)
-    {
         try {
-            $devolucao = Devolucao::create(Input::except(['protocolo', 'imagem']));
+            $data = OrderShipmentDevolution::findOrFail($id);
 
-            $rastreio = Rastreio::find(Input::get('rastreio_id'));
-            $rastreio->status = 5;
-            $rastreio->save();
-
-            $this->updateProtocolAndStatus($devolucao, Input::get('protocolo'), Input::file('imagem'));
-
-            return $this->createdResponse($devolucao);
+            return showResponse($data);
         } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
+            \Log::error(logMessage($exception, 'Erro ao obter recurso'));
 
-            return $this->clientErrorResponse([
+            return clientErrorResponse([
                 'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
     }
 
     /**
-     * Atualiza um recurso
-     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function store(Request $request)
+    {
+        try {
+            $data = OrderShipmentDevolution::create($request->all());
+
+            $data->orderShipment->status = OrderShipment::STATUS_RETURNED;
+            $data->orderShipment->save();
+
+            return createdResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function update($id, Request $request)
+    public function update(Request $request, $id)
     {
         try {
-            $devolucao = Devolucao::findOrFail($id);
-            $devolucao->fill(Input::except(['protocolo']));
-            $devolucao->save();
+            $data = OrderShipmentDevolution::findOrFail($id);
+            $data->fill($request->all());
+            $data->save();
 
-            $this->updateProtocolAndStatus($devolucao, Input::get('protocolo'));
-
-            return $this->showResponse($devolucao);
+            return showResponse($data);
         } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'), ['model' => self::MODEL]);
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'));
 
-            return $this->clientErrorResponse([
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function destroy($id)
+    {
+        try {
+            $data = OrderShipmentDevolution::findOrFail($id);
+            $data->delete();
+
+            return deletedResponse();
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao excluir recurso'));
+
+            return clientErrorResponse([
                 'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
