@@ -2,8 +2,14 @@
   <div>
     <PageHeader>
       <div slot="left" class="left">
-        <Dropdown placeholder="Linha de produtos"
-          :itens="lines" name="productLines"/>
+        <v-select theme="gray" :inside-search="true"
+          :on-search="getOptions"
+          :options="options"
+          :on-change="filterChanged"
+          placeholder="Linha de produtos"
+          search-placeholder="Faça uma busca">
+          <template slot="no-options">Nada foi encontrado</template>
+        </v-select>
 
         <VSeparator :spacing="20" :height="40" />
         <FeaturedValue label="Em estoque (144)"
@@ -58,7 +64,9 @@
 export default {
   data() {
     return {
-      namespace: 'products/list'
+      options: [],
+      debounce: null,
+      namespace: 'products/list',
     }
   },
 
@@ -86,20 +94,51 @@ export default {
   },
 
   mounted() {
-    this.$root.$on('dropdownChanged.productLines', (item) => {
+    /*this.$root.$on('dropdownChanged.productLines', (item) => {
       // alguma ação pra quando troca a linha dos products
-      console.log(item);
-    })
+      console.log(item)
+    })*/
   },
 
   beforeDestroy() {
-    this.$root.$off('dropdownChanged.productLines')
+    // this.$root.$off('dropdownChanged.productLines')
   },
 
   methods: {
+    filterChanged(filter) {
+      this.$store.dispatch(`${this.namespace}/CHANGE_FILTER`, {
+        line_id: filter.value
+      })
+    },
+
+    getOptions(search, loading) {
+      clearTimeout(this.debounce)
+
+      this.debounce = setTimeout(function() {
+        loading(true)
+
+        axios.get('lines/fetch' + parseParams({ search })).then(
+          (response) => {
+            this.options = []
+
+            response.data.forEach((item) => {
+              this.options.push({
+                label: item.title,
+                value: item.id
+              })
+            })
+
+            loading(false)
+          }
+        )
+      }.bind(this), 500)
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.v-select {
+  width: 230px;
+}
 </style>

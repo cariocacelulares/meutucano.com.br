@@ -7,9 +7,9 @@
         </router-link>
         <Icon name="angle-right" classes="right-icon" />
       </li>
-      <li v-for="(crumb, i) in $breadcrumbs">
-        <router-link :to="{ path: crumb.path }">{{ crumb.meta.breadcrumb }}</router-link>
-        <Icon v-if="crumb.path != $route.path" name="angle-right" classes="right-icon" />
+      <li v-for="(crumb, index) in $breadcrumbs">
+        <router-link :to="{ name: crumb.name }">{{ crumb.meta.breadcrumb }}</router-link>
+        <Icon v-if="crumb.name != $route.name" name="angle-right" classes="right-icon" />
       </li>
     </ul>
   </nav>

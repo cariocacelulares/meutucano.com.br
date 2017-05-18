@@ -1,26 +1,25 @@
 /* normal state */
-.v-select.theme-tucano {
+.v-select.theme-gray {
   position: relative;
-  height: 35px;
-  line-height: 35px;
+  height: 40px;
+  line-height: 40px;
 
   .dropdown-toggle {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     height: 100%;
-    padding: 0 15px;
+    padding: 0 20px;
     color: $darker;
-    background-color: $white;
-    border: 1px solid $default;
+    background-color: $lighter;
     border-radius: $borderRadius;
     white-space: normal;
 
-    .selected-tag {
-      //
-    }
-
     input[type="search"] {
-      flex-grow: 1;
+      position: absolute;
+      top: 0;
+      left: 15px;
+      // flex-grow: 1;
       height: 100%;
       padding: 0 15px 0 0;
 
@@ -47,9 +46,9 @@
     left: 0;
     width: 100%;
     list-style: none;
-    border: 1px solid $default;
-    border-top: none;
-    background-color: $white;
+    color: $darker;
+    background-color: $lighter;
+    border-radius: $borderRadius;
     box-shadow: 0 3px 3px rgba(204, 204, 204, 0.5);
     border-radius: 0 0 $borderRadius $borderRadius;
     overflow-y: auto;
@@ -62,20 +61,22 @@
         display: block;
         padding: 0 20px;
         white-space: nowrap;
-        line-height: 25px;
+        line-height: 35px;
         color: $darker;
         clear: both;
       }
     }
 
+    .search-item input[type="search"] {
+      padding: 0 15px;
+    }
+
     .active > a {
-      background-color: $lighter;
       text-decoration: underline;
     }
 
     > .highlight {
       > a {
-        background: #5897fb;
         background-color: $light !important;
         text-decoration: underline;
       }
@@ -113,7 +114,7 @@
 }
 
 /* custom states */
-.v-select.theme-tucano {
+.v-select.theme-gray {
   &.searching {
     &, & * {
       cursor: progress !important;
@@ -132,11 +133,6 @@
 
   &.searchable .dropdown-toggle {
     cursor: text;
-  }
-
-  &.open .dropdown-toggle .selected-tag,
-  &.loading .dropdown-toggle .selected-tag {
-    display: none;
   }
 
   &.open {

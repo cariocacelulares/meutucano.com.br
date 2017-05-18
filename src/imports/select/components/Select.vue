@@ -2,6 +2,8 @@
   .v-select.theme-default {
     position: relative;
     font-family: sans-serif;
+    height: 34px;
+    line-height: 34px;
   }
   .v-select.theme-default,
   .v-select.theme-default * {
@@ -53,6 +55,7 @@
     -moz-appearance: none;
     appearance: none;
     display: block;
+    height: 100%;
     padding: 0;
     background: none;
     border: 1px solid rgba(60, 60, 60, .26);
@@ -91,7 +94,7 @@
     padding: 5px 0;
     margin: 0;
     width: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
     border: 1px solid rgba(0, 0, 0, .26);
     box-shadow: 0px 3px 6px 0px rgba(0,0,0,.15);
     border-top: none;
@@ -161,9 +164,7 @@
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    line-height: 1.42857143;
     font-size:1em;
-    height: 34px;
     display: inline-block;
     border: none;
     outline: none;
@@ -171,11 +172,16 @@
     padding: 0 .5em;
     width: 10em;
     max-width: 100%;
+    height: 100%;
     background: none;
     position: relative;
     box-shadow: none;
     float: left;
     clear: none;
+  }
+  .placeholder {
+    padding: 0 .5em;
+    opacity: .6;
   }
   /* Search Input States */
   .v-select.theme-default.unsearchable input[type="search"] {
@@ -194,6 +200,12 @@
   }
   .v-select.theme-default li:hover {
     cursor: pointer;
+  }
+  .v-select.theme-default .search-item,
+  .v-select.theme-default .search-item input[type="search"],
+  .v-select.theme-default .search-item input[type="search"]:focus {
+    height: 30px;
+    line-height: 30px;
   }
   .v-select.theme-default .dropdown-menu .active > a {
     color: #333;
@@ -276,7 +288,10 @@
         </button>
       </span>
 
-      <input
+      <span v-if="insideSearch && !valueAsArray.length" ref="placeholder"
+        class="placeholder">{{ placeholder }}</span>
+
+      <input  v-if="!insideSearch"
               ref="search"
               v-model="search"
               @keydown.delete="maybeDeleteValue"
@@ -288,7 +303,7 @@
               @focus="onSearchFocus"
               type="search"
               class="form-control"
-              :placeholder="searchPlaceholder"
+              :placeholder="searchPlaceholder || placeholder"
               :readonly="!searchable"
               :style="{ width: isValueEmpty ? '100%' : 'auto' }"
               :id="inputId"
@@ -303,6 +318,26 @@
 
     <transition :name="transition">
       <ul ref="dropdownMenu" v-if="dropdownOpen" class="dropdown-menu" :style="{ 'max-height': maxHeight }">
+        <li v-if="insideSearch" class="search-item">
+          <input
+                  ref="search"
+                  v-model="search"
+                  @keydown.delete="maybeDeleteValue"
+                  @keyup.esc="onEscape"
+                  @keydown.up.prevent="typeAheadUp"
+                  @keydown.down.prevent="typeAheadDown"
+                  @keyup.enter.prevent="typeAheadSelect"
+                  @blur="onSearchBlur"
+                  @focus="onSearchFocus"
+                  type="search"
+                  class="form-control"
+                  :placeholder="searchPlaceholder || placeholder"
+                  :readonly="!searchable"
+                  :style="{ width: isValueEmpty ? '100%' : 'auto' }"
+                  :id="inputId"
+          >
+        </li>
+
         <li v-for="(option, index) in filteredOptions" v-bind:key="index" :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }" @mouseover="typeAheadPointer = index">
           <a @mousedown.prevent="select(option)">
             {{ getOptionLabel(option) }}
@@ -325,6 +360,30 @@
     mixins: [pointerScroll, typeAheadPointer, ajax],
 
     props: {
+      /**
+       * A fallback to the searchPlaceholder prop,
+       * is insideSearch is true, this prop will
+       * be placed in the root box, and
+       * searchPlaceholder in the search input
+       * @type {String}
+       */
+      placeholder: {
+        type: String,
+        default: ''
+      },
+
+      /**
+       * A boolean value that define the position
+       * of the serach input. If false, the input
+       * will be placed in the root box. If true,
+       * the input will be placed inside the dropdown list
+       * @type {Boolean}
+       */
+      insideSearch: {
+        type: Boolean,
+        default: false
+      },
+
       /**
        * A string that define the component theme. If 'default',
        * the css defined here will be applied, if it is another value,
@@ -393,7 +452,7 @@
        * Equivalent to the `placeholder` attribute on an `<input>`.
        * @type {Object}
        */
-      placeholder: {
+      searchPlaceholder: {
         type: String,
         default: ''
       },
@@ -610,7 +669,21 @@
     },
 
     methods: {
-
+      /**
+       * Remove accents in a string to improve
+       * filtered search results
+       * @param  {String} string
+       * @return {String}
+       */
+      removeAccents(string) {
+        return string.toLowerCase()
+          .replace(/[àáâãä]/,"a")
+          .replace(/[èéêẽë]/,"e")
+          .replace(/[ìíîĩï]/,"i")
+          .replace(/[òóôõö]/,"o")
+          .replace(/[ùúûũü]/,"u")
+          .replace(/[ç]/,"c")
+      },
       /**
        * Select a given option.
        * @param  {Object|String} option
@@ -678,12 +751,14 @@
        * @return {void}
        */
       toggleDropdown(e) {
-        if (e.target === this.$refs.openIndicator || e.target === this.$refs.search || e.target === this.$refs.toggle || e.target === this.$el) {
+        if (e.target === this.$refs.placeholder || e.target === this.$refs.openIndicator || e.target === this.$refs.search || e.target === this.$refs.toggle || e.target === this.$el) {
           if (this.open) {
             this.$refs.search.blur() // dropdown will close on blur
           } else {
             this.open = true
-            this.$refs.search.focus()
+            setTimeout(() => { // prevent browser delay
+              this.$refs.search.focus()
+            }, 1)
           }
         }
       },
@@ -836,18 +911,7 @@
        * @return {Boolean} True if open
        */
       dropdownOpen() {
-        return this.noDrop ? false : this.open && !this.mutableLoading
-      },
-
-      /**
-       * Return the placeholder string if it's set
-       * & there is no value selected.
-       * @return {String} Placeholder text
-       */
-      searchPlaceholder() {
-        if (this.isValueEmpty && this.placeholder) {
-          return this.placeholder;
-        }
+        return this.noDrop ? false : this.open// && !this.mutableLoading
       },
 
       /**
@@ -861,7 +925,7 @@
       filteredOptions() {
         let options = this.mutableOptions.filter((option) => {
           if (typeof option === 'object' && option.hasOwnProperty(this.label)) {
-            return option[this.label].toLowerCase().indexOf(this.search.toLowerCase()) > -1
+            return this.removeAccents(option[this.label]).indexOf(this.removeAccents(this.search)) > -1
           } else if (typeof option === 'object' && !option.hasOwnProperty(this.label)) {
             return console.warn(`[vue-select warn]: Label key "option.${this.label}" does not exist in options object.\nhttp://sagalbot.github.io/vue-select/#ex-labels`)
           }

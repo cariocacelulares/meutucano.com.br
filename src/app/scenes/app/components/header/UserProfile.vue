@@ -3,10 +3,10 @@
     <div :class="{ info: true, opened: opened }" @click="open">
       <div class="personal">
         <span class="name">{{ user.name }}</span>
-        <span class="role">Administrador</span>
+        <span class="role">{{ user.role || 'Usuário' }}</span>
       </div>
       <div class="avatar">
-        <img src="/static/images/logo.png" alt="Meu Tucano">
+        <img :src="user.avatar || '/static/images/logo.png'" alt="Meu Tucano">
       </div>
 
       <ul class="user-menu">

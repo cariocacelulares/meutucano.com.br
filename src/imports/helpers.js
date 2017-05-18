@@ -10,6 +10,15 @@ window.parseParams = (params) => {
   var value = null
 
   for (var key in params) {
+    if (params[key] && typeof(params[key]) == 'object') {
+      const clearedObj = {}
+      for(var index in params[key]) {
+        clearedObj[index] = params[key][index]
+      }
+
+      params[key] = JSON.stringify(clearedObj)
+    }
+
     value = encodeURIComponent(params[key])
 
     if (value && value != 'null') {

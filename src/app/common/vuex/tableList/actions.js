@@ -1,9 +1,16 @@
 export default {
   'global/tableList/FETCH' (context) {
     const namespace = context.getters['global/GET_NAMESPACE']
+
+    let filter = context.getters[`${namespace}/GET_FILTER`]
+    filter = (typeof(filter) != 'undefined') ? filter : ''
+
     const params = Object.assign(
       context.getters['global/tableList/GET_PARAMS'],
-      { search: localStorage.getItem(`${namespace}/searchTerm`) }
+      {
+        search: localStorage.getItem(`${namespace}/searchTerm`),
+        filter,
+      }
     )
 
     context.commit('global/tableList/LOADING_CHANGED', true)
