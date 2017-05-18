@@ -32,10 +32,27 @@ class OrderInvoiceDevolution extends \Eloquent
     ];
 
     /**
+     * @var array
+     */
+    protected $appends = [
+        'print_url',
+    ];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function orderInvoice()
     {
         return $this->belongsTo(OrderInvoice::class);
+    }
+
+    /**
+     * Return print URL for Model
+     *
+     * @return string
+     */
+    public function getPrintUrlAttribute()
+    {
+        return url("api/orders/invoices/devolutions/{$this->id}/danfe?token=" . \JWTAuth::getToken());
     }
 }

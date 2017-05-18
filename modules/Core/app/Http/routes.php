@@ -35,7 +35,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     /**
      * Order Invoices
      */
-    Route::get('orders/invoices/{invoice_id}/danfe/{return?}', 'Order\OrderInvoiceController@danfe');
+    Route::get('orders/invoices/{id}/danfe', 'Order\OrderInvoiceController@danfe');
     api('orders/invoices', 'Order\OrderInvoiceController', ['index', 'update']);
 
     /**
@@ -44,7 +44,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::group(['prefix' => 'orders/invoices/devolutions'], function() {
         Route::post('upload', 'Order\OrderInvoiceDevolutionController@upload');
         Route::post('proceed/{devolution_id}', 'Order\OrderInvoiceDevolutionController@proceed');
-        Route::get('danfe/{devolution_id}/{retorno?}', 'Order\OrderInvoiceDevolutionController@danfe');
+        Route::get('{id}/danfe', 'Order\OrderInvoiceDevolutionController@danfe');
     });
     api('orders/invoices/devolutions', 'Order\OrderInvoiceDevolutionController', ['index', 'update']);
 

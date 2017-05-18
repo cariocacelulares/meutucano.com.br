@@ -3,7 +3,7 @@
     "alias": "mercadolivre",
     "description": "",
     "keywords": [],
-    "active": 1,
+    "active": 0,
     "order": 0,
     "providers": [
         "Mercadolivre\\Providers\\MercadolivreServiceProvider"
