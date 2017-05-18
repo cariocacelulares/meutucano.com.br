@@ -14,7 +14,7 @@ class ConvertJsonString
     public function handle($request, Closure $next)
     {
         $request->merge(array_map(function($input) {
-            return json_decode(stripslashes(urldecode($input)));
+            return json_decode(stripslashes(urldecode($input))) ?: $input;
         }, $request->all()));
 
         return $next($request);
