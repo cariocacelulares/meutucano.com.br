@@ -63,17 +63,6 @@ class OrderInvoice extends \Eloquent
     }
 
     /**
-     * Return file full url
-     *
-     * @param  string $file
-     * @return string
-     */
-    public function getFileAttribute($file)
-    {
-        return fileUrl(self::UPLOAD_PATH . '/' . $file);
-    }
-
-    /**
      * Return print URL for Model
      *
      * @return string
