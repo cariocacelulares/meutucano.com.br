@@ -8,6 +8,7 @@ Route::get('/', function () { return 'Hello Toucan!'; });
 Route::group(['prefix' => '/api'], function () {
 
     Route::post('authenticate', 'Auth\AuthenticateController@authenticate');
+    Route::get('token', 'Auth\AuthenticateController@refreshToken');
 
     Route::group(['middleware' => 'jwt.auth'], function () {
 
@@ -28,7 +29,6 @@ Route::group(['prefix' => '/api'], function () {
         });
 
         Route::get('authenticate/user', 'Auth\AuthenticateController@getAuthenticatedUser');
-        Route::get('token', 'Auth\AuthenticateController@refreshToken');
 
         Route::group(['namespace' => 'User'], function () {
             Route::get('users/fetch', 'UserController@fetch');
