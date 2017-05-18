@@ -106,17 +106,6 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     api('brands', 'Product\BrandController');
 
     /**
-     * Product Serials
-     */
-    Route::group(['prefix' => 'products/serials'], function() {
-        Route::get('find/{serial}', 'Product\ProductSerialController@find');
-        Route::get('check', 'Product\ProductSerialController@checkTransfer');
-        Route::get('from/{depotProduct}', 'Product\ProductSerialController@listByDepotProduct');
-
-        Route::post('transfer', 'Product\ProductSerialController@transfer');
-    });
-
-    /**
      * Product Serial Issues
      */
     api('products/serials/issues', 'Product\ProductSerialIssueController', ['show', 'update']);
@@ -125,6 +114,18 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
      * Product Serial Defects
      */
     api('products/serials/defects', 'Product\ProductSerialDefectController', ['show', 'update']);
+
+    /**
+     * Product Serials
+     */
+    Route::group(['prefix' => 'products/serials'], function() {
+        Route::get('find/{serial}', 'Product\ProductSerialController@find');
+        Route::get('check', 'Product\ProductSerialController@checkTransfer');
+        Route::get('from/{depotProduct}', 'Product\ProductSerialController@listByDepotProduct');
+        Route::get('generate/{listSize?}', 'Product\ProductSerialController@generate');
+
+        Route::post('transfer', 'Product\ProductSerialController@transfer');
+    });
 
     /**
      * Products
@@ -198,34 +199,6 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
 
 
     //
-    // /**
-    //  * Atendimento
-    //  */
-    // Route::group(['middleware' => 'role:admin|atendimento'], function () {
-    //     /**
-    //      * PI's
-    //      */
-    //     Route::group(['prefix' => 'pis'], function () {
-    //
-    //     });
-    //     Route::resource('pis', 'PiController', ['except' => ['create', 'edit']]);
-    //
-    //     /**
-    //      * Devoluções
-    //      */
-    //     Route::group(['prefix' => 'devolucoes'], function () {
-    //
-    //     });
-    //     Route::resource('devolucoes', 'DevolucaoController', ['except' => ['create', 'edit']]);
-    //
-    //     /**
-    //      * Logística reversa
-    //      */
-    //      Route::group(['prefix' => 'logisticas'], function () {
-    //
-    //      });
-    //     Route::resource('logisticas', 'LogisticaController', ['except' => ['create', 'edit']]);
-    //
     //     /**
     //      * Rastreios monitorados
     //      */
@@ -236,5 +209,5 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     //         Route::delete('parar/{rastreio_id}', 'MonitoradoController@stop');
     //     });
     //     Route::resource('rastreio/monitorados', 'MonitoradoController', ['except' => ['create', 'edit']]);
-    // });
+
 });
