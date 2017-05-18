@@ -2,13 +2,19 @@
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use App\Models\Traits\UploadableTrait;
 use Illuminate\Notifications\Notifiable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use EntrustUserTrait, Notifiable;
+    use EntrustUserTrait,
+        UploadableTrait,
+        Notifiable;
+
+    const UPLOAD_PATH = 'avatar';
+    const UPLOAD_ATTR = ['avatar'];
 
     /**
      * @var array
@@ -18,6 +24,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'avatar',
         'remember_token',
     ];
 
