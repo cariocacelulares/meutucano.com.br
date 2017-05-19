@@ -140,7 +140,7 @@ class OrderShipment extends \Eloquent
         }
 
         $related = $this->getRelation('monitoredByUser')->first();
-        return $related ? true : false;
+        return $related ?: null;
     }
 
     /**
