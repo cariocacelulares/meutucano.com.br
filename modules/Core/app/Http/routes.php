@@ -7,6 +7,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
 
     Route::get('payment-methods', 'PaymentMethodController@index');
     Route::get('shipment-methods', 'ShipmentMethodController@index');
+    Route::get('marketplaces', 'MarketplaceController@index');
     Route::get('zipcode/{zipcode}', 'ZipcodeController@getAddress');
 
     /**

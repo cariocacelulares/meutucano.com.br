@@ -32,7 +32,7 @@ class Order extends \Eloquent
         'payment_method_slug',
         'installments',
         'api_code',
-        'marketplace',
+        'marketplace_slug',
         'taxes',
         'discount',
         'total',
@@ -117,6 +117,14 @@ class Order extends \Eloquent
     public function paymentMethod()
     {
         return $this->belongsTo(PaymentMethod::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function marketplace()
+    {
+        return $this->belongsTo(Marketplace::class);
     }
 
     /**
