@@ -2,13 +2,13 @@
   <label :class="classList">
     <label v-if="label">{{ label }}</label>
     <div class="ig-container">
-      <div v-if="hasLeft" :class="leftClasses">
+      <div v-if="hasLeft" :class="leftClassList">
         <slot name="left"></slot>
       </div>
-      <div v-if="hasInput" :class="inputClasses">
+      <div v-if="hasInput" :class="inputClassList">
         <slot name="input"></slot>
       </div>
-      <div v-if="hasRight" :class="rightClasses">
+      <div v-if="hasRight" :class="rightClassList">
         <slot name="right"></slot>
       </div>
     </div>
@@ -41,6 +41,15 @@ export default {
     label: {
       type: String,
       default: null
+    },
+    leftClasses: {
+      type: String
+    },
+    inputClasses: {
+      type: String
+    },
+    rightClasses: {
+      type: String
     },
   },
 
@@ -86,10 +95,11 @@ export default {
       return notEmpty(classList).join(' ')
     },
 
-    leftClasses() {
+    leftClassList() {
       let classList = []
 
       classList.push('left')
+      classList.push(this.leftClasses)
 
       if (this.leftShrink) {
         classList.push(`shrink-${this.leftShrink}`)
@@ -98,10 +108,11 @@ export default {
       return notEmpty(classList).join(' ')
     },
 
-    inputClasses() {
+    inputClassList() {
       let classList = []
 
       classList.push('input')
+      classList.push(this.inputClasses)
 
       if (this.inputShrink) {
         classList.push(`shrink-${this.inputShrink}`)
@@ -110,10 +121,11 @@ export default {
       return notEmpty(classList).join(' ')
     },
 
-    rightClasses() {
+    rightClassList() {
       let classList = []
 
       classList.push('right')
+      classList.push(this.rightClasses)
 
       if (this.rightShrink) {
         classList.push(`shrink-${this.rightShrink}`)

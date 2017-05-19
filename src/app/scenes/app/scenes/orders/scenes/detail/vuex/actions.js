@@ -1,5 +1,13 @@
 export default {
-  // 'products/detail/depots/serials/FETCH' (context, params) {
-  //   return axios.get('serials/list' + params)
-  // },
+  'orders/detail/FETCH_ORDER' (context, id) {
+    if (!id) {
+      return;
+    }
+
+    return axios.get(`orders/${id}`).then(
+      (response) => {
+        context.commit('orders/detail/ORDER_RECEIVED', response.data)
+      }
+    )
+  },
 }

@@ -1,5 +1,5 @@
 export default {
-  // 'products/detail/depots/serials/GET' ({ serials }) {
-  //   return serials
-  // },
+  'orders/detail/GET_ORDER' ({ order }) {
+    return order
+  },
 }

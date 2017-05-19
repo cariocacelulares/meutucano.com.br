@@ -28,6 +28,10 @@ export default {
     icon: {
       type: String,
     },
+    textCenter: {
+      type: Boolean,
+      default: false
+    },
   },
 
   computed: {
@@ -37,6 +41,10 @@ export default {
       classList.push('Alert')
       classList.push(`bg-${this.color}`)
       classList.push(`text-${this.text}`)
+
+      if (this.textCenter) {
+        classList.push('centered')
+      }
 
       return notEmpty(classList).join(' ')
     }
@@ -57,8 +65,24 @@ export default {
   display: flex;
   align-items: center;
 
+  &.centered {
+    justify-content: center;
+  }
+
   .Icon {
     margin-right: 15px;
+  }
+
+  &.ValidationBox {
+    padding: 20px;
+    height: auto;
+    line-height: 1.6;
+    box-shadow: $defaultShadow;
+
+    ul {
+      padding-left: 20px;
+      font-size: 13px;
+    }
   }
 }
 </style>

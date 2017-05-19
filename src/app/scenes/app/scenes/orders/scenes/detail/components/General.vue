@@ -9,7 +9,7 @@
 
         <div class="card-data">
           <span>Método de pagamento</span>
-          <strong>{{ order.payment_method_cast }} ({{ order.installments }}x)</strong>
+          <strong>{{ order.payment_method.title }} ({{ order.installments }}x)</strong>
         </div>
 
         <div class="card-data">
@@ -28,7 +28,7 @@
           <div class="card-data">
             <span>Documento</span>
             <!-- <strong v-clipboard="order.customer.taxvat">{{ order.customer.taxvat | taxvat }}</strong> -->
-            <strong v-clipboard>{{ order.customer.taxvat | taxvat }}</strong>
+            <strong v-clipboard="order.customer.taxvat">{{ order.customer.taxvat | taxvat }}</strong>
           </div>
 
           <div>
@@ -66,7 +66,7 @@
               <td><a href="#">{{ order_product.product.sku }}</a></td>
               <td class="text-left">
                 <p>{{ order_product.product.title }}</p>
-                <b>{{ order_product.product_serial.serial }}</b>
+                <b>{{ order_product.product_serial ? order_product.product_serial.serial : '' }}</b>
               </td>
               <td>{{ order_product.price | money }}</td>
               <td>{{ order_product.quantity }}</td>
@@ -115,6 +115,9 @@
 
     <div class="invoices">
       <strong>Notas fiscais</strong>
+
+      <Alert v-if="!order.invoices.length" color="light" text="dark" :text-center="true">Nenhuma nota fiscal cadastrada</Alert>
+
       <template v-for="invoice in order.invoices">
         <Card header-icon="file-code-o" :header-text="invoice.invoice.number + ' / ' + invoice.invoice.series">
           <div slot="header">
@@ -158,6 +161,8 @@
     <div class="shipments">
       <strong>Rastreios</strong>
 
+      <Alert v-if="!order.shipments.length" color="light" text="dark" :text-center="true">Nenhum rastreio cadastrado</Alert>
+
       <template v-for="shipment in order.shipments">
         <Card header-icon="truck" :header-text="shipment.tracking_code" :footer-sep="true">
           <div slot="header">
@@ -181,7 +186,7 @@
               <strong>{{ shipment.deadline }} dias</strong>
             </div>
 
-            <Badge type="label" height="26px" :color="shipment.status.color">{{ shipment.status.description }}</Badge>
+            <Badge type="label" height="26px" :color="shipment.status_color">{{ shipment.status_cast }}</Badge>
           </div>
 
           <div slot="footer" class="card-footer">
@@ -201,7 +206,7 @@
             </div>
 
             <div>
-              <a href="#" :class="{ disabled: !shipment.monitored }" @click.prevent="toggleMonited(shipment)"
+              <a href="#" :class="{ disabled: !shipment.monitored }" @click.prevent="toggleMonitored(shipment)"
                 v-tooltip="shipment.monitored ? 'Parar de monitorar' : 'Monitorar'">
                 <Icon name="video-camera" />
               </a>
@@ -279,7 +284,6 @@
 </template>
 
 <script>
-import { default as OrderTransformer } from '../../../transformer'
 import Devolution from './general/Devolution'
 import Logistic from './general/Logistic'
 import Issue from './general/Issue'
@@ -294,78 +298,14 @@ export default {
   data() {
     return {
       loading: false,
-      order: {
-        id: null,
-        customer_id: null,
-        customer_address_id: null,
-        shipment_cost: null,
-        shipment_method_slug: null,
-        payment_method: null,
-        installments: null,
-        api_code: null,
-        marketplace: null,
-        taxes: null,
-        discount: null,
-        total: null,
-        estimated_delivery: null,
-        status: null,
-        cancel_protocol: null,
-        holded: null,
-        refunded: null,
-        priority: null,
-        created_at: null,
-        updated_at: null,
-        deleted_at: null,
-        comments_count: null,
-        calls_count: null,
-        status_cast: null,
-        payment_method_cast: null,
-        shipment_method_cast: null,
-        subtotal: null,
-        can_hold: null,
-        can_prioritize: null,
-        can_approve: null,
-        can_cancel: null,
-        count_on_stock: null,
-        customer: {
-          id: null,
-          taxvat: null,
-          mercadolivre_id: null,
-          type: null,
-          name: null,
-          phone: null,
-          email: null,
-          document: null,
-          created_at: null,
-          updated_at: null,
-        },
-        customer_address: {
-          id: null,
-          customer_id: null,
-          zipcode: null,
-          street: null,
-          number: null,
-          complement: null,
-          district: null,
-          city: null,
-          state: null,
-          created_at: null,
-          updated_at: null,
-          address: null,
-        },
-        shipment_method: {
-          slug: null,
-          title: null,
-          service: null,
-        },
-        order_products_grouped: [],
-        shipments: [],
-        invoices: [],
-      }
     }
   },
 
   methods: {
+    fetch() {
+      this.$store.dispatch('orders/detail/FETCH_ORDER', this.$route.params.id)
+    },
+
     openDevolution() {
       this.$root.$emit('show::modal-Devolution')
     },
@@ -379,52 +319,46 @@ export default {
     },
 
     destroyInvoice(id) {
-      axios.delete(`orders/invoices/${id}`).then(
-        (response) => {
-          this.load()
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
+      axios.delete(`orders/invoices/${id}`).then((response) => {
+        this.fetch()
+      })
     },
 
     destroyInvoiceDevolution(id) {
-      axios.delete(`orders/invoices/devolutions/${id}`).then(
-        (response) => {
-          this.load()
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
+      axios.delete(`orders/invoices/devolutions/${id}`).then((response) => {
+        this.fetch()
+      })
     },
 
     destroyShipment(id) {
-      axios.delete(`orders/shipments/${id}`).then(
-        (response) => {
-          this.load()
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
+      axios.delete(`orders/shipments/${id}`).then((response) => {
+        this.fetch()
+      })
     },
 
-    toggleMonited(shipment) {
-      console.log('toggle', shipment)
+    toggleMonitored(shipment) {
+      if (shipment.monitored) {
+        axios.delete(`orders/shipments/monitors/${shipment.monitored.id}`).then((response) => {
+          this.fetch()
+        })
+      } else {
+        axios.post(`orders/shipments/monitors`, {
+          order_shipment_id: shipment.id
+        }).then((response) => {
+          this.fetch()
+        })
+      }
+    },
+  },
+
+  computed: {
+    order() {
+      return this.$store.getters['orders/detail/GET_ORDER']
     },
   },
 
   mounted() {
-    axios.get(`orders/${this.$route.params.id}`).then(
-      (response) => {
-        this.order = OrderTransformer.transform(response.data)
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
+    this.fetch()
   },
 }
 </script>

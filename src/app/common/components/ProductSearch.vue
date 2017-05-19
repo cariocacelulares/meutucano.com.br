@@ -2,7 +2,7 @@
   <div :class="['ProductSearch', { open: open }]">
     <div class="input-wrapper">
       <Icon name="search" />
-      <input v-model="sku" placeholder="SKU..."
+      <input placeholder="SKU..."
         @keyup.esc="onEscape"
         @keydown.up.prevent="typeAheadUp"
         @keydown.down.prevent="typeAheadDown"
@@ -34,11 +34,17 @@
 export default {
   data() {
     return {
-      sku: null,
+      product_sku: null,
       open: false,
       active: null,
       highlight: null,
       options: [],
+    }
+  },
+
+  watch: {
+    value() {
+      // this.$refs.input.value = this.value
     }
   },
 
@@ -85,7 +91,6 @@ export default {
 
     typeAheadSelect() {
       this.active = this.highlight
-      this.sku = this.options[this.highlight].object.sku
 
       this.$emit('input', this.options[this.highlight].object)
       this.closeDropdown()
@@ -106,10 +111,20 @@ export default {
         axios.get(`products/find/${search}`).then(
           (response) => {
             this.options = response.data.map((item) => {
+              let object = Object.assign({
+                sku: null,
+                title: null,
+                price: 0,
+                quantity: 1,
+                total: 0,
+              }, item)
+              object.product_sku = object.sku
+              delete object.sku
+
               return {
                 value: item.sku,
                 label: item.title,
-                object: item,
+                object
               }
             })
           }
@@ -164,6 +179,7 @@ export default {
     line-height: 30px;
 
     .Icon {
+      flex-shrink: 0;
       width: 30px;
       height: 100%;
       color: $dark;
@@ -173,6 +189,7 @@ export default {
     }
 
     input {
+      width: 100%;
       height: 100%;
       padding: 0 10px;
       color: $darker;
@@ -192,7 +209,7 @@ export default {
     list-style: none;
     text-align: left;
     border: 1px solid $default;
-    border-radius: 0 $borderRadius $borderRadius $borderRadius;
+    border-radius: $borderRadius;
     background-color: $white;
     overflow-y: auto;
 
@@ -201,11 +218,13 @@ export default {
       white-space: nowrap;
       cursor: pointer;
 
-      &.highlight,
-      &:hover,
-      &:focus {
-        text-decoration: underline;
-        background-color: $light;
+      &:not(.no-results) {
+        &.highlight,
+        &:hover,
+        &:focus {
+          text-decoration: underline;
+          background-color: $light;
+        }
       }
 
       &.active {

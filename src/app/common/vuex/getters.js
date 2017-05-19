@@ -18,4 +18,8 @@ export default {
   'global/GET_NAMESPACE' ({ namespace }) {
     return namespace
   },
+
+  'global/GET_VALIDATION' ({ validation }) {
+    return validation
+  },
 }

@@ -1,7 +1,7 @@
-import { default as ProductTransformer } from '../../../transformer'
+import { default as OrderTransformer } from '../../../transformer'
 
 export default {
-  // 'products/detail/depots/serials/RECEIVED' (state, serials) {
-  //   state.serials = serials
-  // },
+  'orders/detail/ORDER_RECEIVED' (state, order) {
+    state.order = OrderTransformer.transform(order)
+  },
 }

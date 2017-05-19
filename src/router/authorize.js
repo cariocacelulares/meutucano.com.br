@@ -23,6 +23,8 @@ export default (to, from, next) => {
     }
   }
 
+  store.dispatch('global/VALIDATION')
+
   if (redirect) {
     next(redirect)
   } else {

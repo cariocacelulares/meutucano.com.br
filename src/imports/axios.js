@@ -21,7 +21,7 @@ window.axios.interceptors.request.use(
       let parsedToken = token.split('.')[1].replace('-', '+').replace('_', '/')
       parsedToken = JSON.parse(window.atob(parsedToken))
 
-      if (parsedToken.exp < Date.now() / 1000 && config.url.search('/token') < 0) { // expired
+      if (parsedToken.exp < Date.now() / 1000 && !config.url.match('/token')) { // expired
         store.dispatch('global/REFRESH_TOKEN').then(
           (response) => {
             token = localStorage.getItem('auth_token')

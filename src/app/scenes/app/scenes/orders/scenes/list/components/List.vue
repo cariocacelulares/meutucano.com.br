@@ -45,8 +45,8 @@
             <td>{{ order.total | money }}</td>
             <td>{{ order.created_at | dateTime }}</td>
             <td>
-              <Badge type="label" :color="order.status.color" text="white">
-                {{ order.status.description }}
+              <Badge type="label" :color="order.status_color" text="white">
+                {{ order.status_cast }}
               </Badge>
             </td>
             <td>

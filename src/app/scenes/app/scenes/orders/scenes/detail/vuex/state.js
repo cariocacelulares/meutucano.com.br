@@ -1,3 +1,20 @@
 export default {
-  // serials: [],
+  order: {
+    shipment_cost: null,
+    taxes: null,
+    discount: null,
+    payment_method_slug: null,
+    comments_count: 0,
+    calls_count: 0,
+    status: {},
+    customer: {},
+    customer_address: {},
+    marketplace: {},
+    payment_method: {},
+    shipment_method: {},
+    status: {},
+    order_products_grouped: [],
+    invoices: [],
+    shipments: [],
+  },
 }

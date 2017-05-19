@@ -84,7 +84,8 @@ export default {
 
               return;
             } else if (typeof(error.response.data.status) !== 'undefined' && error.response.data.status == 'ValidationFail') {
-                console.log('ValidationFail', error.response.data)
+              this.$toaster.warning('Ocorreu um erro', 'Verifique os campos e tente novamente.')
+              this.$store.dispatch('global/VALIDATION', error.response.data.data)
             }
           } else if (error.response.status == 401) {
             if (

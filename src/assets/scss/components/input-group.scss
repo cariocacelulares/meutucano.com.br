@@ -1,19 +1,26 @@
 .InputGroup.has-left:not(.has-right) {
+  .left .TSelect,
+  .left .TSelect,
   .left .TButton,
   .left .Icon {
     border-radius: 3px 0 0 3px;
   }
 
+  .input .TSelect,
   .input .inputWrapper input {
+    border-left: none;
     border-radius: 0 3px 3px 0;
   }
 }
 
 .InputGroup.has-right:not(.has-left) {
+  .input .TSelect,
   .input .inputWrapper input {
+    border-right: none;
     border-radius: 3px 0 0 3px;
   }
 
+  .right .TSelect,
   .right .TButton,
   .right .Icon {
     border-radius: 0 3px 3px 0;
@@ -21,15 +28,20 @@
 }
 
 .InputGroup.has-right.has-left {
+  .left .TSelect,
   .left .TButton,
   .left .Icon {
     border-radius: 3px 0 0 3px;
   }
 
+  .input .TSelect,
   .input .inputWrapper input {
+    border-right: none;
+    border-left: none;
     border-radius: 0;
   }
 
+  .right .TSelect,
   .right .TButton,
   .right .Icon {
     border-radius: 0 3px 3px 0;

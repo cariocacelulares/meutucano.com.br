@@ -31,4 +31,10 @@ export default {
   'global/SET_NAMESPACE' (context, namespace) {
     context.commit('global/NAMESPACE_CHANGED', namespace)
   },
+
+  'global/VALIDATION' (context, validation) {
+    validation = (typeof(validation) == 'undefined' || !validation) ? null : validation
+
+    context.commit('global/VALIDATION_RECEIVED', validation)
+  },
 }

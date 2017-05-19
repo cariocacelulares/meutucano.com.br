@@ -1,6 +1,6 @@
 <template>
   <footer class="TFooter">
-    <span>Desenvolvido por Carioca Celulares &copy; 2017</span>
+    <span>Feito com <Icon name="heart" color="danger" /> por Meu Tucano</span>
     <div>
       <a href="mailto:suporte@meutucano.com.br">suporte@meutucano.com.br</a>
       <a href="tel:+554735213280">(47) 3521-3280</a>
@@ -10,6 +10,7 @@
 
 <script>
 export default {
+
 }
 </script>
 

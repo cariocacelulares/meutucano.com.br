@@ -38,4 +38,8 @@ export default {
   'global/NAMESPACE_CHANGED' (state, namespace) {
     state.namespace = namespace
   },
+
+  'global/VALIDATION_RECEIVED' (state, validation) {
+    state.validation = validation
+  },
 }

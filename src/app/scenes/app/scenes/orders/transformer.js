@@ -21,13 +21,7 @@ const SHIPMENT_STATUS_COLORS = {
 
 const Transformer = {
   transform: (order) => {
-    const status = order.status
-
-    order.status = {
-      code: status,
-      description: order.status_cast,
-      color: STATUS_COLORS[status],
-    }
+    order.status_color = STATUS_COLORS[order.status]
 
     if (typeof(order.shipments) != 'undefined' && order.shipments) {
       order.shipments = order.shipments.map((item) => {

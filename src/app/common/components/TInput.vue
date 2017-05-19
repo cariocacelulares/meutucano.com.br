@@ -2,17 +2,16 @@
   <label :for="`input-${_uid}`" :class="wrapperClasses">
     <span v-if="label" class="label">{{ label }}</span>
     <Icon v-if="leftIcon" :name="leftIcon" classes="leftIcon" :size="size" color="dark" />
-    <input :id="`input-${_uid}`" :type="type" :class="classList" :required="required"
+    <input :id="`input-${_uid}`" :type="type" :class="[classList, { error }]" :required="required"
       :placeholder="placeholder" :value="value" :min="min" :max="max" :step="step"
       :disabled="disabled" @input="updateValue($event.target.value)" ref="input" />
-      <!-- @input="updateValue($event.target.value)" @blur="formatValue" ref="input" :disabled="disabled" /> -->
     <Icon v-if="rightIcon" :name="rightIcon" classes="rightIcon" :size="size" color="dark" />
   </label>
 </template>
 
 <script>
-// import { default as CommonTransformer } from 'common/transformer'
 import { isEmpty } from 'lodash'
+import { mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -72,19 +71,23 @@ export default {
       type: Boolean,
       default: false
     },
-    /*filter: {
+    name: {
       type: String,
-      default: null
-    },*/
+    },
   },
 
   data() {
     return {
-      oldValue: null
+      oldValue: null,
+      error: false,
     }
   },
 
   computed: {
+    ...mapGetters({
+      validation: 'global/GET_VALIDATION',
+    }),
+
     wrapperClasses() {
       let classList = []
 
@@ -124,7 +127,17 @@ export default {
   watch: {
     value() {
       this.$refs.input.value = this.value
-    }
+    },
+
+    validation() {
+      if (this.name) {
+        if (this.validation && typeof(this.validation[this.name]) != 'undefined') {
+          this.error = true
+        } else {
+          this.error = false
+        }
+      }
+    },
   },
 
   methods: {
@@ -148,6 +161,7 @@ export default {
         this.$emit('input', value)
         // this.oldValue = this.format(value)
         this.oldValue = value
+        this.error = false
       }
     },
 

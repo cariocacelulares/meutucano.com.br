@@ -3,4 +3,5 @@ export default {
   user: null,
   toasts: [],
   namespace: '',
+  validation: null,
 }

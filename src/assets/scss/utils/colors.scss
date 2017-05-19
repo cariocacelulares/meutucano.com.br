@@ -37,3 +37,7 @@
 
 .text-lightPrimary { color: $lightPrimary !important }
 .text-darkPrimary { color: $darkPrimary !important }
+
+.error {
+  border-color: $danger !important;
+}

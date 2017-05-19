@@ -2,11 +2,11 @@
   <label :for="`select-${_uid}`" :class="wrapperClasses">
     <span v-if="label" class="label">{{ label }}</span>
     <Icon v-if="leftIcon" :name="leftIcon" classes="leftIcon" :size="size" color="dark" />
-    <select :id="`select-${_uid}`" :class="classList" :required="required"
+    <select :id="`select-${_uid}`" :class="[classList, { error }]" :required="required"
       :placeholder="placeholder" :value="value"
       @input="updateValue($event.target.value)">
       <option v-if="!value && placeholder" selected disabled value="">{{ placeholder }}</option>
-      <option v-for="option in options" :value="option.value">
+      <option v-for="option in options" :value="option.value" :selected="option.value == value">
         {{ option.text }}
       </option>
     </select>
@@ -16,11 +16,18 @@
 
 <script>
 import { isEmpty } from 'lodash'
+import { mapGetters } from 'vuex'
 
 export default {
+  data() {
+    return {
+      error: false,
+    }
+  },
+
   props: {
     value: {
-      type: String | Number
+      type: String | Number,
     },
     label: {
       type: String
@@ -59,9 +66,16 @@ export default {
     rightIcon: {
       type: String
     },
+    name: {
+      type: String,
+    },
   },
 
   computed: {
+    ...mapGetters({
+      validation: 'global/GET_VALIDATION',
+    }),
+
     wrapperClasses() {
       let classList = []
 
@@ -99,8 +113,20 @@ export default {
       if (!isEmpty(value)) {
         this.$emit('input', value)
       }
-    }
-  }
+    },
+  },
+
+  watch: {
+    validation() {
+      if (this.name) {
+        if (this.validation && typeof(this.validation[this.name]) != 'undefined') {
+          this.error = true
+        } else {
+          this.error = false
+        }
+      }
+    },
+  },
 }
 </script>
 
