@@ -16,7 +16,27 @@ class ProductSerialDefectController extends Controller
         $this->middleware('permission:product_defect_update', ['only' => ['update']]);
         $this->middleware('permission:product_defect_return', ['only' => ['destroy']]);
 
-        $this->middleware('convertJson', ['only' => ['index']]);
+        $this->middleware('convertJson', ['only' => ['index', 'header']]);
+    }
+
+    /**
+     * Render list based on filters
+     *
+     * @return Builder
+     */
+    public function list()
+    {
+        return ProductSerialDefect::with([
+            'productSerial',
+            'productSerial.depotProduct',
+            'productSerial.depotProduct.depot',
+            'productSerial.depotProduct.product'
+        ])
+            ->join('product_serials', 'product_serials.id', '=', 'product_serial_defects.product_serial_id')
+            ->where(function($query) {
+                $query->whereMonth('product_serial_defects.created_at', request('filter.month'))
+                    ->whereYear('product_serial_defects.created_at', request('filter.year'));
+            });
     }
 
     /**
@@ -26,21 +46,10 @@ class ProductSerialDefectController extends Controller
     {
         $search = request('search');
 
-        $data = ProductSerialDefect::with([
-            'user',
-            'productSerial',
-            'productSerial.depotProduct',
-            'productSerial.depotProduct.depot',
-            'productSerial.depotProduct.product',
-        ])
-            ->join('product_serials', 'product_serials.id', '=', 'product_serial_defects.product_serial_id')
+        $data = $this->list()
             ->where(function($query) use ($search) {
                 $query->where('product_serials.serial', 'LIKE', "%{$search}%")
                     ->orWhere('product_serial_defects.description', 'LIKE', "%{$search}%");
-            })
-            ->where(function($query) {
-                $query->whereMonth('product_serial_defects.created_at', request('filter.month'))
-                    ->whereYear('product_serial_defects.created_at', request('filter.year'));
             })
             ->select('product_serial_defects.*')
             ->orderBy('created_at', 'DESC')
@@ -49,6 +58,21 @@ class ProductSerialDefectController extends Controller
             );
 
         return listResponse($data);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function header()
+    {
+        $data = $this->list()->get();
+
+        $header['defect'] = [
+            'quantity' => $data->count(),
+            'total'    => $data->sum('productSerial.depotProduct.product.price')
+        ];
+
+        return showResponse($header);
     }
 
     /**

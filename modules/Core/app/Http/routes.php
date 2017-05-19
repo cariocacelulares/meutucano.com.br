@@ -123,6 +123,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     /**
      * Product Serial Defects
      */
+    Route::get('products/serials/defects/header', 'Product\ProductSerialDefectController@header');
     api('products/serials/defects', 'Product\ProductSerialDefectController', ['show', 'update']);
 
     /**
