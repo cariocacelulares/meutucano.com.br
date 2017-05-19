@@ -56,6 +56,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     /**
      * Order Shipment Logistics
      */
+    Route::put('orders/shipments/logistics/{id}/received', 'Order\OrderShipmentLogisticController@received');
     api('orders/shipments/logistics', 'Order\OrderShipmentLogisticController', ['index']);
 
     /**

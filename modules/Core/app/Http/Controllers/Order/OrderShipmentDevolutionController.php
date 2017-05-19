@@ -41,10 +41,12 @@ class OrderShipmentDevolutionController extends Controller
     public function store(Request $request)
     {
         try {
-            $data = OrderShipmentDevolution::create($request->all());
+            \DB::transaction(function() use ($request, &$data) {
+                $data = OrderShipmentDevolution::create($request->all());
 
-            $data->orderShipment->status = OrderShipment::STATUS_RETURNED;
-            $data->orderShipment->save();
+                $data->orderShipment->status = OrderShipment::STATUS_RETURNED;
+                $data->orderShipment->save();
+            });
 
             return createdResponse($data);
         } catch (\Exception $exception) {

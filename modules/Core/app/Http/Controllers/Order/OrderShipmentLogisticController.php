@@ -1,7 +1,9 @@
 <?php namespace Core\Http\Controllers\Order;
 
-use Core\Models\OrderShipmentLogistic;
+use Carbon\Carbon;
+use Core\Models\OrderShipment;
 use App\Http\Controllers\Controller;
+use Core\Models\OrderShipmentLogistic;
 use Core\Http\Requests\Order\OrderShipmentLogisticRequest as Request;
 
 class OrderShipmentLogisticController extends Controller
@@ -63,6 +65,34 @@ class OrderShipmentLogisticController extends Controller
             $data = OrderShipmentLogistic::findOrFail($id);
             $data->fill($request->all());
             $data->save();
+
+            return showResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Mark logistic as received
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function received($id)
+    {
+        try {
+            \DB::transaction(function() use ($id, &$data) {
+                $data = OrderShipmentLogistic::findOrFail($id);
+                $data->received_at = Carbon::now();
+                $data->save();
+
+                $data->orderShipment->status = OrderShipment::STATUS_RETURNED;
+                $data->orderShipment->save();
+            });
 
             return showResponse($data);
         } catch (\Exception $exception) {
