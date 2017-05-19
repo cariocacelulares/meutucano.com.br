@@ -21,8 +21,26 @@ class DepotEntryController extends Controller
         $this->middleware('permission:entry_delete', ['only' => ['destroy']]);
         $this->middleware('permission:entry_confirm', ['only' => ['confirm']]);
 
-        $this->middleware('currentUser', ['only' => ['store', 'index']]);
-        $this->middleware('convertJson', ['only' => ['index']]);
+        $this->middleware('currentUser', ['only' => ['store', 'index', 'header']]);
+        $this->middleware('convertJson', ['only' => ['index', 'header']]);
+    }
+
+    /**
+     * Render list based on filters
+     *
+     * @return Builder
+     */
+    public function list()
+    {
+        return DepotEntry::with(['supplier', 'user', 'products.product'])
+            ->where(function($query) {
+                if (!\Auth::user()->can('entry_list'))
+                    $query->where('depot_entries.user_id', request('user_id'));
+            })
+            ->where(function($query) {
+                $query->whereMonth('depot_entries.created_at', request('filter.month'))
+                    ->whereYear('depot_entries.created_at', request('filter.year'));
+            });
     }
 
     /**
@@ -32,19 +50,11 @@ class DepotEntryController extends Controller
     {
         $search = request('search');
 
-        $data = DepotEntry::with(['supplier', 'user'])
+        $data = $this->list()
             ->join('suppliers', 'suppliers.id', '=', 'depot_entries.supplier_id')
-            ->where(function($query) {
-                if (!\Auth::user()->can('entry_list'))
-                    $query->where('depot_entries.user_id', request('user_id'));
-            })
             ->where(function($query) use ($search) {
                 $query->where('suppliers.taxvat', 'LIKE', "%{$search}%")
                     ->orWhere('suppliers.name', 'LIKE', "%{$search}%");
-            })
-            ->where(function($query) {
-                $query->whereMonth('depot_entries.created_at', request('filter.month'))
-                    ->whereYear('depot_entries.created_at', request('filter.year'));
             })
             ->select('depot_entries.*')
             ->paginate(
@@ -52,6 +62,27 @@ class DepotEntryController extends Controller
             );
 
         return listResponse($data);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function header()
+    {
+        $data = $this->list()->get();
+
+        $header['entries'] = [
+            'quantity' => $data->sum(function($entry) {
+                return collect($entry->products)->sum('quantity');
+            }),
+            'total'    => $data->sum(function($entry) {
+                return collect($entry->products)->sum(function($product) {
+                    return $product->quantity * $product->unitary_value;
+                });
+            })
+        ];
+
+        return showResponse($header);
     }
 
     /**

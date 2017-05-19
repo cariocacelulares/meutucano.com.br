@@ -172,6 +172,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     /**
      * Depot Entries
      */
+    Route::get('depots/entries/header', 'Depot\DepotEntryController@header');
     Route::put('depots/entries/confirm/{id}', 'Depot\DepotEntryController@confirm');
     api('depots/entries', 'Depot\DepotEntryController');
 
