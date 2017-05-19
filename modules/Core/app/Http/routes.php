@@ -5,6 +5,8 @@ Route::get('orders/shopsystem/{taxvat}', 'Core\Http\Controllers\Order\OrderContr
 
 Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'Core\Http\Controllers'], function () {
 
+    Route::get('payment-methods', 'PaymentMethodController@index');
+    Route::get('shipment-methods', 'ShipmentMethodController@index');
     Route::get('zipcode/{zipcode}', 'ZipcodeController@getAddress');
 
     /**

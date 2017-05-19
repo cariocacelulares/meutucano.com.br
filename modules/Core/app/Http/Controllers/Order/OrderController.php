@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Core\Models\Order\OrderProduct;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
-use Core\Http\Requests\OrderRequest as Request;
+use Core\Http\Requests\Order\OrderRequest as Request;
 
 class OrderController extends Controller
 {
@@ -93,6 +93,10 @@ class OrderController extends Controller
     {
         try {
             $order = Order::findOrFail($order_id);
+
+            if ($order->can_prioritize === false)
+                throw new \Exception("Não é possível priorizar o pedido.");
+
             $order->priority = 1;
             $order->save();
 
@@ -114,6 +118,10 @@ class OrderController extends Controller
     {
         try {
             $order = Order::findOrFail($order_id);
+
+            if ($order->can_prioritize === false)
+                throw new \Exception("Não é possível despriorizar o pedido.");
+
             $order->priority = 0;
             $order->save();
 
@@ -135,6 +143,10 @@ class OrderController extends Controller
     {
         try {
             $order = Order::findOrFail($order_id);
+
+            if ($order->can_hold === false)
+                throw new \Exception("Não é possível segurar o pedido.");
+
             $order->holded = 1;
             $order->save();
 
@@ -156,6 +168,10 @@ class OrderController extends Controller
     {
         try {
             $order = Order::findOrFail($order_id);
+
+            if ($order->can_hold === false)
+                throw new \Exception("Não é possível liberar o pedido.");
+
             $order->holded = 0;
             $order->save();
 
@@ -212,6 +228,10 @@ class OrderController extends Controller
     {
         try {
             $order = Order::find($order_id);
+
+            if ($order->can_approve === false)
+                throw new \Exception("Não é possível aprovar o pedido.");
+
             $order->status = Order::STATUS_PAID;
             $order->save();
 
@@ -254,6 +274,10 @@ class OrderController extends Controller
     {
         try {
             $order = Order::find($order_id);
+
+            if ($order->can_cancel === false)
+                throw new \Exception("Não é possível aprovar o pedido.");
+
             $order->status = Order::STATUS_CANCELED;
             $order->save();
 
@@ -302,17 +326,12 @@ class OrderController extends Controller
     }
 
     /**
-     * Create a new resource
-     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
-            Log::debug('Transaction - begin');
-
             $order = Order::create(Input::except([
                 'customer',
                 'products',

@@ -29,7 +29,7 @@ class Order extends \Eloquent
         'customer_address_id',
         'shipment_cost',
         'shipment_method_slug',
-        'payment_method',
+        'payment_method_slug',
         'installments',
         'api_code',
         'marketplace',
@@ -109,6 +109,14 @@ class Order extends \Eloquent
     public function shipmentMethod()
     {
         return $this->belongsTo(ShipmentMethod::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class);
     }
 
     /**
