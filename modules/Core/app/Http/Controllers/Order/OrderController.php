@@ -240,6 +240,8 @@ class OrderController extends Controller
                 'orderProductsGrouped.product',
                 'orderProductsGrouped.productSerial',
                 'shipmentMethod',
+                'paymentMethod',
+                'marketplace',
                 'shipments',
                 'shipments.monitoredByUser',
                 'shipments.devolution',

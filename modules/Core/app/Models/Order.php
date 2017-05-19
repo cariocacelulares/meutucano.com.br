@@ -191,25 +191,6 @@ class Order extends \Eloquent
     }
 
     /**
-     * @return string
-     */
-    public function getPaymentMethodCastAttribute()
-    {
-        switch (strtoupper($this->payment_method)) {
-            case 'CREDITO':
-                return 'Cartão de Crédito';
-            case 'BOLETO':
-                return 'Boleto Bancário';
-            case 'DEBITO':
-                return 'Cartão de Débito';
-            case 'MERCADOPAGO':
-                return 'Mercado Pago';
-            default:
-                return 'Outro';
-        }
-    }
-
-    /**
      * Return subtotal from order
      *
      * @return float
