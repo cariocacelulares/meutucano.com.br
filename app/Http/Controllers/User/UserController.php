@@ -122,7 +122,7 @@ class UserController extends Controller
      * @param  Request $request
      * @return void
      */
-    private function syncRoutesAndPermissions($user, $request)
+    private function syncRolesAndPermissions($user, $request)
     {
         if ($roleIds = $request->input('roles')) {
             $roles = Role::whereIn('id', $roleIds)->get();
