@@ -92,7 +92,7 @@ class OrderController extends Controller
             'total'    => $invoiced->sum('total')
         ];
 
-        dd($header);
+        return showResponse($header);
     }
 
     /**

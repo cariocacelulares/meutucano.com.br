@@ -141,6 +141,8 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
      * Products
      */
     Route::group(['prefix' => 'products'], function() {
+        Route::get('header', 'Product\ProductController@header');
+
         Route::get('{id}/graph/orders-period', 'Product\ProductController@graphOrderPeriod');
         Route::get('{id}/graph/cost-period', 'Product\ProductController@graphCostPeriod');
         Route::get('{id}/graph/orders-marketplace', 'Product\ProductController@graphOrderMarketplace');

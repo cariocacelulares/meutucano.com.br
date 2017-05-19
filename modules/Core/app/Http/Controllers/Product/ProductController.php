@@ -18,7 +18,21 @@ class ProductController extends Controller
         $this->middleware('permission:product_update', ['only' => ['update']]);
         $this->middleware('permission:product_delete', ['only' => ['destroy']]);
 
-        $this->middleware('convertJson', ['only' => ['index']]);
+        $this->middleware('convertJson', ['only' => ['index', 'header']]);
+    }
+
+    /**
+     * Render list based on filters
+     *
+     * @return Builder
+     */
+    private function list()
+    {
+        return Product::with(['reservedStockCount', 'availableStockCount'])
+            ->where(function($query) {
+                if (request('filter.line_id'))
+                    $query->where('line_id', request('filter.line_id'));
+            });
     }
 
     /**
@@ -28,15 +42,11 @@ class ProductController extends Controller
     {
         $search = request('search');
 
-        $data = Product::with(['reservedStockCount', 'availableStockCount'])
+        $data = $this->list()
             ->where(function($query) use ($search) {
                 $query->where('sku', 'LIKE', "%{$search}%")
                     ->orWhere('ean', 'LIKE', "%{$search}%")
                     ->orWhere('title', 'LIKE', "%{$search}%");
-            })
-            ->where(function($query) {
-                if (request('filter.line_id'))
-                    $query->where('line_id', request('filter.line_id'));
             })
             ->orderBy('created_at', 'DESC')
             ->paginate(
@@ -44,6 +54,24 @@ class ProductController extends Controller
             );
 
         return listResponse($data);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function header()
+    {
+        $data = $this->list()->get();
+
+        $in_stock = $data->where('available_stock', '>', 0);
+        $header['in_stock'] = [
+            'quantity' => $in_stock->sum('available_stock'),
+            'total'    => $in_stock->sum(function($product) {
+                return $product->price * $product->available_stock;
+            })
+        ];
+
+        return showResponse($header);
     }
 
     /**
