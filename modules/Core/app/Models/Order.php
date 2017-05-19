@@ -49,7 +49,6 @@ class Order extends \Eloquent
      */
     protected $appends = [
         'status_cast',
-        'payment_method_cast',
         'subtotal',
         'can_hold',
         'can_prioritize',
