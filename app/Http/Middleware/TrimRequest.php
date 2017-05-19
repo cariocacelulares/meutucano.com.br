@@ -13,9 +13,14 @@ class TrimRequest
      */
     public function handle($request, Closure $next)
     {
-        $request->merge(array_map(function($input) {
-            return trim($input);
-        }, $request->all()));
+        $input = $request->all();
+        array_walk_recursive($input, function (&$item, $key) {
+            if (is_string($item)) {
+                $item = trim($item);
+            }
+        });
+
+        $request->merge($input);
 
         return $next($request);
     }
