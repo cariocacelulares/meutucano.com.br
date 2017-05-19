@@ -14,7 +14,7 @@ class AddUserToRequest
     public function handle($request, Closure $next)
     {
         $request->merge([
-            'user_id' => getCurrentUserId()
+            'user_id' => \Auth::user()->id ?: null
         ]);
 
         return $next($request);

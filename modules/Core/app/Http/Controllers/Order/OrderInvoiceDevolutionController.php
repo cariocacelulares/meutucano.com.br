@@ -108,7 +108,7 @@ class OrderInvoiceDevolutionController extends Controller
             ->get();
 
         $withdraw = DepotWithdraw::continuous()->open()->firstOrCreate([
-            'user_id'       => getCurrentUserId(),
+            'user_id'       => request('user_id'),
             'is_continuous' => true
         ]);
 

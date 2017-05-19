@@ -47,32 +47,6 @@ function reportError($error)
 }
 
 /**
- * Retorna o id do usuário logado
- *
- * @return int
- */
-function getCurrentUserId()
-{
-    try {
-        return Tymon\JWTAuth\Facades\JWTAuth::parseToken()->authenticate()->id;
-    } catch (\Exception $e) {
-    }
-
-    return null;
-}
-
-/**
- * Check if module is active based in your config file
- *
- * @param  string  $module nome do modulo
- * @return boolean         if module is active
- */
-function hasModule($module)
-{
-    return !is_null(\Config::get(str_slug($module)));
-}
-
-/**
  * Create API routes except create and edit
  *
  * @param  string $url
