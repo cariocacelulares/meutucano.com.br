@@ -33,7 +33,7 @@ class SetProductSerialCost
         $order = $event->order;
 
         try {
-            foreach ($order->products as $orderProduct) {
+            foreach ($order->orderProducts as $orderProduct) {
                 $productSerial = $orderProduct->productSerial;
 
                 if ($productSerial) {

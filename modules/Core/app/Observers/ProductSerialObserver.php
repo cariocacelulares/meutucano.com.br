@@ -11,33 +11,33 @@ class ProductSerialObserver
     /**
      * Listen to the ProductSerial created event.
      *
-     * @param  ProductSerial $serial
+     * @param  ProductSerial $productSerial
      * @return void
      */
-    public function created(ProductSerial $serial)
+    public function created(ProductSerial $productSerial)
     {
-        Event::fire(new ProductSerialCreated($serial));
+        Event::fire(new ProductSerialCreated($productSerial));
     }
 
     /**
      * Listen to the ProductSerial deleted event.
      *
-     * @param  ProductSerial $serial
+     * @param  ProductSerial $productSerial
      * @return void
      */
-    public function deleted(ProductSerial $serial)
+    public function deleted(ProductSerial $productSerial)
     {
-        Event::fire(new ProductSerialDeleted($serial));
+        Event::fire(new ProductSerialDeleted($productSerial));
     }
 
     /**
      * Listen to the ProductSerial restored event.
      *
-     * @param  ProductSerial $serial
+     * @param  ProductSerial $productSerial
      * @return void
      */
-    public function restored(ProductSerial $serial)
+    public function restored(ProductSerial $productSerial)
     {
-        Event::fire(new ProductSerialRestored($serial));
+        Event::fire(new ProductSerialRestored($productSerial));
     }
 }

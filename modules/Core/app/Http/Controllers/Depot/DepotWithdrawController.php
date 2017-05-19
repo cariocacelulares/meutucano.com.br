@@ -14,13 +14,14 @@ class DepotWithdrawController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:withdraw_list', ['only' => ['index']]);
+        $this->middleware('permission:withdraw_list|withdraw_list_mine', ['only' => ['index']]);
         $this->middleware('permission:withdraw_show', ['only' => ['show']]);
         $this->middleware('permission:withdraw_create', ['only' => ['store']]);
         $this->middleware('permission:withdraw_update', ['only' => ['update']]);
         $this->middleware('permission:withdraw_delete', ['only' => ['destroy']]);
         $this->middleware('permission:withdraw_close', ['only' => ['close']]);
 
+        $this->middleware('currentUser', ['only' => 'index']);
         $this->middleware('convertJson', ['only' => 'index']);
     }
 
@@ -34,6 +35,10 @@ class DepotWithdrawController extends Controller
         $data = DepotWithdraw::with(['user', 'depot'])
             ->join('users', 'users.id', '=', 'depot_withdraws.user_id')
             ->leftJoin('depots', 'depots.slug', '=', 'depot_withdraws.depot_slug')
+            ->where(function($query) {
+                if (!\Auth::user()->can('withdraw_list'))
+                    $query->where('depot_withdraws.user_id', request('user_id'));
+            })
             ->where(function($query) use ($search) {
                 $query->where('depot_withdraws.id', 'LIKE', "%{$search}%")
                     ->orWhere('users.name', 'LIKE', "%{$search}%")

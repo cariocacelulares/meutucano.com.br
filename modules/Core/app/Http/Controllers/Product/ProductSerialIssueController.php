@@ -11,13 +11,13 @@ class ProductSerialIssueController extends Controller
 
     public function __construct()
     {
-        $this->middleware('permission:stock_issue_list', ['only' => ['index']]);
+        $this->middleware('permission:stock_issue_list|stock_issue_list_mine', ['only' => ['index']]);
         $this->middleware('permission:stock_issue_show', ['only' => ['show']]);
         $this->middleware('permission:stock_issue_create', ['only' => ['store']]);
         $this->middleware('permission:stock_issue_update', ['only' => ['update']]);
         $this->middleware('permission:stock_issue_delete', ['only' => ['destroy']]);
 
-        $this->middleware('currentUser', ['only' => ['store']]);
+        $this->middleware('currentUser', ['only' => ['index', 'store']]);
         $this->middleware('convertJson', ['only' => ['index']]);
     }
 
@@ -36,6 +36,10 @@ class ProductSerialIssueController extends Controller
             'productSerial.depotProduct.product',
         ])
             ->join('product_serials', 'product_serials.id', '=', 'product_serial_issues.product_serial_id')
+            ->where(function($query) {
+                if (!\Auth::user()->can('stock_issue_list'))
+                    $query->where('product_serial_issues.user_id', request('user_id'));
+            })
             ->where(function($query) use ($search) {
                 $query->where('product_serials.serial', 'LIKE', "%{$search}%");
             })

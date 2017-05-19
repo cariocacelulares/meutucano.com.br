@@ -41,7 +41,6 @@ class CoreServiceProvider extends ServiceProvider
 
         Order::observe(OrderObserver::class);
         Product::observe(ProductObserver::class);
-        DepotEntry::observe(DepotEntryObserver::class);
         OrderProduct::observe(OrderProductObserver::class);
         DepotProduct::observe(DepotProductObserver::class);
         ProductSerialDefect::observe(DefectObserver::class);

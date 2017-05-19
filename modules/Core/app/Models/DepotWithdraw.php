@@ -37,7 +37,7 @@ class DepotWithdraw extends \Eloquent
      */
     public function scopeOpen($query)
     {
-        return $query->whereNull('closed_at');
+        return $query->where('closed_at', null);
     }
 
     /**

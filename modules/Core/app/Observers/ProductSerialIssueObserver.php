@@ -8,24 +8,24 @@ use Core\Events\ProductSerialIssueDeleted;
 class ProductSerialIssueObserver
 {
     /**
-     * Listen to the Issue created event.
+     * Listen to the ProductSerialIssue created event.
      *
-     * @param  Issue $issue
+     * @param  ProductSerialIssue $productSerialIssue
      * @return void
      */
-    public function created(Issue $issue)
+    public function created(ProductSerialIssue $productSerialIssue)
     {
-        Event::fire(new ProductSerialIssueCreated($issue));
+        Event::fire(new ProductSerialIssueCreated($productSerialIssue));
     }
 
     /**
-     * Listen to the Issue deleted event.
+     * Listen to the ProductSerialIssue deleted event.
      *
-     * @param  Issue $issue
+     * @param  ProductSerialIssue $productSerialIssue
      * @return void
      */
-    public function deleted(Issue $issue)
+    public function deleted(ProductSerialIssue $productSerialIssue)
     {
-        Event::fire(new ProductSerialIssueDeleted($issue));
+        Event::fire(new ProductSerialIssueDeleted($productSerialIssue));
     }
 }

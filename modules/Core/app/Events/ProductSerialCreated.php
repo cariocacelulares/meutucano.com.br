@@ -8,16 +8,16 @@ class ProductSerialCreated extends \Event
     use SerializesModels;
 
     /**
-     * @param ProductSerial $productImei
+     * @param ProductSerial $productSerial
      */
-    public $serial;
+    public $productSerial;
 
     /**
      * @return void
      */
-    public function __construct(ProductSerial $serial)
+    public function __construct(ProductSerial $productSerial)
     {
         \Log::debug('Evento ProductSerialCreated disparado');
-        $this->serial = $serial;
+        $this->productSerial = $productSerial;
     }
 }

@@ -117,7 +117,7 @@ class Product extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function entryProducts()
+    public function depotEntryProducts()
     {
         return $this->hasMany(DepotEntryProduct::class, 'product_sku');
     }

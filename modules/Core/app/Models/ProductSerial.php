@@ -80,7 +80,7 @@ class ProductSerial extends \Eloquent
         }
 
         return $this->getRelation('orderProducts')
-            ->whereNull('returned_at')
+            ->where('returned_at', null)
             ->sortByDesc('created_at')
             ->first();
     }

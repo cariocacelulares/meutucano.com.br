@@ -8,16 +8,16 @@ class ProductSerialIssueCreated extends \Event
     use SerializesModels;
 
     /**
-     * @param ProductSerialIssue $issue
+     * @param ProductSerialIssue $productSerialIssue
      */
-    public $issue;
+    public $productSerialIssue;
 
     /**
      * @return void
      */
-    public function __construct(ProductSerialIssue $issue)
+    public function __construct(ProductSerialIssue $productSerialIssue)
     {
         \Log::debug('Evento ProductSerialIssueCreated disparado');
-        $this->issue = $issue;
+        $this->productSerialIssue = $productSerialIssue;
     }
 }

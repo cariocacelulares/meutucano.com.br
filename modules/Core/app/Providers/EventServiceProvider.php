@@ -20,7 +20,6 @@ class EventServiceProvider extends ServiceProvider
         \Core\Events\Handlers\SetProductCost::class,
         \Core\Events\Handlers\AttachOrderShipment::class,
         \Core\Events\Handlers\DeleteProductSerial::class,
-        \Core\Events\Handlers\ConvertEntrySerials::class,
         \Core\Events\Handlers\RestoreProductSerial::class,
         \Core\Events\Handlers\SetProductSerialCost::class,
         \Core\Events\Handlers\AddOrderShipmentToQueue::class,

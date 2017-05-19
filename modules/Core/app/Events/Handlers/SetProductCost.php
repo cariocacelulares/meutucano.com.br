@@ -30,11 +30,11 @@ class SetProductCost
     public function onDepotEntryConfirmed(DepotEntryConfirmed $event)
     {
         Log::debug('Handler SetProductCost/onDepotEntryConfirmed acionado!', [$event]);
-        $entry = $event->entry;
+        $depotEntry = $event->depotEntry;
 
         try {
-            foreach ($entry->products as $entryProduct) {
-                $product = Product::find($entryProduct->product->sku);
+            foreach ($depotEntry->products as $depotEntryProduct) {
+                $product = Product::find($depotEntryProduct->product->sku);
 
                 if ($product) {
                     $product->cost = $this->getCost($product);
@@ -42,7 +42,7 @@ class SetProductCost
                 }
             }
         } catch (\Exception $exception) {
-            Log::warning(logMessage($exception, 'Erro ao calcular o custo dos produtos'), [$entry->toArray()]);
+            Log::warning(logMessage($exception, 'Erro ao calcular o custo dos produtos'), [$depotEntry->toArray()]);
         }
     }
 
@@ -59,12 +59,12 @@ class SetProductCost
         $totalQty   = 0;
         $totalValue = 0;
 
-        foreach ($product->entryProducts as $entryProduct) {
+        foreach ($product->depotEntryProducts as $entryProduct) {
             $qty = 0;
 
             if ($entryProduct->entry->confirmed) {
                 foreach ($entryProduct->serials as $serial) {
-                    if ($serial->productSerial->inStock()) {
+                    if ($serial->productSerial->in_stock) {
                         $qty++;
                     }
                 }

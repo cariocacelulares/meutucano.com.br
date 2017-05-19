@@ -8,16 +8,16 @@ class ProductSerialDefectCreated extends \Event
     use SerializesModels;
 
     /**
-     * @param ProductSerialDefect $defect
+     * @param ProductSerialDefect $productSerialDefect
      */
-    public $defect;
+    public $productSerialDefect;
 
     /**
      * @return void
      */
-    public function __construct(ProductSerialDefect $defect)
+    public function __construct(ProductSerialDefect $productSerialDefect)
     {
         \Log::debug('Evento ProductSerialDefectCreated disparado');
-        $this->defect = $defect;
+        $this->productSerialDefect = $productSerialDefect;
     }
 }

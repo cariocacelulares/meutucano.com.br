@@ -8,16 +8,16 @@ class ProductSerialDeleted extends \Event
     use SerializesModels;
 
     /**
-     * @param ProductSerial $serial
+     * @param ProductSerial $productSerial
      */
-    public $serial;
+    public $productSerial;
 
     /**
      * @return void
      */
-    public function __construct(ProductSerial $serial)
+    public function __construct(ProductSerial $productSerial)
     {
         \Log::debug('Evento ProductSerialDeleted disparado');
-        $this->serial = $serial;
+        $this->productSerial = $productSerial;
     }
 }

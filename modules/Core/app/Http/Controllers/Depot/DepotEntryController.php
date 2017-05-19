@@ -14,14 +14,14 @@ class DepotEntryController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:entry_list', ['only' => ['index']]);
+        $this->middleware('permission:entry_list|entry_list_mine', ['only' => ['index']]);
         $this->middleware('permission:entry_show', ['only' => ['show']]);
         $this->middleware('permission:entry_create', ['only' => ['store']]);
         $this->middleware('permission:entry_update', ['only' => ['update']]);
         $this->middleware('permission:entry_delete', ['only' => ['destroy']]);
         $this->middleware('permission:entry_confirm', ['only' => ['confirm']]);
 
-        $this->middleware('currentUser', ['only' => ['store']]);
+        $this->middleware('currentUser', ['only' => ['store', 'index']]);
         $this->middleware('convertJson', ['only' => ['index']]);
     }
 
@@ -34,6 +34,10 @@ class DepotEntryController extends Controller
 
         $data = DepotEntry::with(['supplier', 'user'])
             ->join('suppliers', 'suppliers.id', '=', 'depot_entries.supplier_id')
+            ->where(function($query) {
+                if (!\Auth::user()->can('entry_list'))
+                    $query->where('depot_entries.user_id', request('user_id'));
+            })
             ->where(function($query) use ($search) {
                 $query->where('suppliers.taxvat', 'LIKE', "%{$search}%")
                     ->orWhere('suppliers.name', 'LIKE', "%{$search}%");

@@ -17,12 +17,12 @@ class DeleteProductSerial
     {
         $events->listen(
             ProductSerialIssueCreated::class,
-            '\Core\Events\Handlers\DeleteProductImei@onProductSerialIssueCreated'
+            '\Core\Events\Handlers\DeleteProductSerial@onProductSerialIssueCreated'
         );
 
         $events->listen(
             ProductSerialDefectCreated::class,
-            '\Core\Events\Handlers\DeleteProductImei@onProductSerialDefectCreated'
+            '\Core\Events\Handlers\DeleteProductSerial@onProductSerialDefectCreated'
         );
     }
 
@@ -34,13 +34,13 @@ class DeleteProductSerial
      */
     public function onProductSerialIssueCreated(ProductSerialIssueCreated $event)
     {
-        Log::debug('Handler DeleteProductImei/onProductSerialIssueCreated acionado!', [$event]);
-        $issue = $event->issue;
+        Log::debug('Handler DeleteProductSerial/onProductSerialIssueCreated acionado!', [$event]);
+        $productSerialIssue = $event->productSerialIssue;
 
         try {
-            $issue->serial->delete();
+            $productSerialIssue->productSerial->delete();
         } catch (Exception $exception) {
-            Log::warning('Ocorreu um erro ao excluir serial (DeleteProductImei/onProductSerialIssueCreated/onProductSerialIssueCreated)', [$issue]);
+            Log::warning('Ocorreu um erro ao excluir serial (DeleteProductSerial/onProductSerialIssueCreated/onProductSerialIssueCreated)', [$productSerialIssue]);
         }
     }
 
@@ -52,13 +52,13 @@ class DeleteProductSerial
      */
     public function onProductSerialDefectCreated(ProductSerialDefectCreated $event)
     {
-        Log::debug('Handler DeleteProductImei/onProductSerialDefectCreated acionado!', [$event]);
-        $defect = $event->defect;
+        Log::debug('Handler DeleteProductSerial/onProductSerialDefectCreated acionado!', [$event]);
+        $productSerialDefect = $event->productSerialDefect;
 
         try {
-            $defect->serial->delete();
+            $productSerialDefect->productSerial->delete();
         } catch (Exception $exception) {
-            Log::warning('Ocorreu um erro ao excluir serial (DeleteProductImei/onProductSerialDefectCreated/onProductSerialIssueCreated)', [$defect]);
+            Log::warning('Ocorreu um erro ao excluir serial (DeleteProductSerial/onProductSerialDefectCreated/onProductSerialIssueCreated)', [$productSerialDefect]);
         }
     }
 }

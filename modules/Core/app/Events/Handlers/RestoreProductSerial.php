@@ -35,12 +35,12 @@ class RestoreProductSerial
     public function onProductSerialIssueDeleted(ProductSerialIssueDeleted $event)
     {
         Log::debug('Handler RestoreProductSerial/onProductSerialIssueDeleted acionado!', [$event]);
-        $issue = $event->issue;
+        $productSerialIssue = $event->productSerialIssue;
 
         try {
-            $issue->serial->restore();
+            $productSerialIssue->productSerial->restore();
         } catch (Exception $exception) {
-            Log::warning('Ocorreu um erro ao restaurar serial (RestoreProductSerial/onProductSerialIssueDeleted/onProductSerialIssueDeleted)', [$issue]);
+            Log::warning('Ocorreu um erro ao restaurar serial (RestoreProductSerial/onProductSerialIssueDeleted/onProductSerialIssueDeleted)', [$productSerialIssue]);
         }
     }
 
@@ -53,12 +53,12 @@ class RestoreProductSerial
     public function onProductSerialDefectDeleted(ProductSerialDefectDeleted $event)
     {
         Log::debug('Handler RestoreProductSerial/onProductSerialDefectDeleted acionado!', [$event]);
-        $defect = $event->defect;
+        $productSerialDefect = $event->productSerialDefect;
 
         try {
-            $defect->serial->restore();
+            $productSerialDefect->productSerial->restore();
         } catch (Exception $exception) {
-            Log::warning('Ocorreu um erro ao restaurar serial (RestoreProductSerial/onProductSerialDefectDeleted/onProductSerialIssueDeleted)', [$defect]);
+            Log::warning('Ocorreu um erro ao restaurar serial (RestoreProductSerial/onProductSerialDefectDeleted/onProductSerialIssueDeleted)', [$productSerialDefect]);
         }
     }
 }

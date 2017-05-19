@@ -10,22 +10,22 @@ class ProductSerialDefectObserver
     /**
      * Listen to the ProductSerialDefect created event.
      *
-     * @param  ProductSerialDefect $defect
+     * @param  ProductSerialDefect $productSerialDefect
      * @return void
      */
-    public function created(ProductSerialDefect $defect)
+    public function created(ProductSerialDefect $productSerialDefect)
     {
-        Event::fire(new ProductSerialDefectCreated($defect));
+        Event::fire(new ProductSerialDefectCreated($productSerialDefect));
     }
 
     /**
      * Listen to the ProductSerialDefect deleted event.
      *
-     * @param  ProductSerialDefect $defect
+     * @param  ProductSerialDefect $productSerialDefect
      * @return void
      */
-    public function deleted(ProductSerialDefect $defect)
+    public function deleted(ProductSerialDefect $productSerialDefect)
     {
-        Event::fire(new ProductSerialDefectDeleted($defect));
+        Event::fire(new ProductSerialDefectDeleted($productSerialDefect));
     }
 }

@@ -17,6 +17,6 @@ class OrderShipmentSaved extends \Event
     public function __construct(OrderShipment $orderShipment)
     {
         \Log::debug('Evento RastreioSaved disparado');
-        $this->$orderShipment = $orderShipment;
+        $this->orderShipment = $orderShipment;
     }
 }
