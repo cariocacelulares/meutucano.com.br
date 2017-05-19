@@ -115,12 +115,12 @@
               </tr>
               <tr>
                 <td>
-                  <InputGroup size="small">
-                    <Icon name="search" slot="left" />
-                    <TInput v-model="newProduct.sku" slot="input" />
-                  </InputGroup>
+                  <ProductSearch v-model="newProduct" />
                 </td>
-                <td class="text-left">{{ newProduct.title }}</td>
+                <td class="text-left">
+                  {{ newProduct.title }}
+                  <span v-if="!newProduct.sku" class="text-dark">Adicionar produto</span>
+                </td>
                 <td>
                   <InputGroup v-if="newProduct.sku" size="small">
                     <Icon name="usd" slot="left" />
@@ -132,8 +132,7 @@
                 </td>
                 <td>{{ newProduct.total }}</td>
                 <td>
-                  <Icon name="plus" color="success" />
-                  <Icon v-if="newProduct.sku" name="close" color="danger" />
+                  <Icon v-if="newProduct.sku" name="plus" color="success" />
                 </td>
               </tr>
             </tbody>
