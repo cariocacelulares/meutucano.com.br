@@ -23,5 +23,6 @@ class PaymentMethod extends \Eloquent
     protected $fillable = [
         'slug',
         'title',
+        'installments',
     ];
 }
