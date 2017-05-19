@@ -65,6 +65,11 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     api('orders/shipments/issues', 'Order\OrderShipmentIssueController', ['index']);
 
     /**
+     * Order Shipment Monitors
+     */
+    api('orders/shipments/monitors', 'Order\OrderShipmentMonitorController', ['update']);
+
+    /**
      * Order Shipments
      */
     Route::group(['prefix' => 'orders/shipments'], function () {
@@ -197,18 +202,5 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::get('depots/from/product/{sku}/available', 'Depot\DepotController@listByAvailableFromProduct');
     Route::get('depots/transferable/{depotProductId}', 'Depot\DepotController@listByTransferable');
     api('depots', 'Depot\DepotController');
-
-
-    //
-    //     /**
-    //      * Rastreios monitorados
-    //      */
-    //     Route::group(['prefix' => 'rastreio/monitorados'], function () {
-    //         Route::get('simple-list', 'MonitoradoController@simpleList');
-    //         Route::get('list', 'MonitoradoController@tableList');
-    //
-    //         Route::delete('parar/{rastreio_id}', 'MonitoradoController@stop');
-    //     });
-    //     Route::resource('rastreio/monitorados', 'MonitoradoController', ['except' => ['create', 'edit']]);
 
 });

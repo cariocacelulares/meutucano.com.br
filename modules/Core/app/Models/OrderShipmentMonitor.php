@@ -23,7 +23,7 @@ class OrderShipmentMonitor extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function shipment()
+    public function orderShipment()
     {
         return $this->belongsTo(OrderShipment::class);
     }
