@@ -23,9 +23,9 @@ class OrderRequest extends FormRequest
         return [
             'customer_id'          => 'required',
             'customer_address_id'  => 'required',
-            'shipment_cost'        => 'required',
             'shipment_method_slug' => 'required',
-            'payment_method'       => 'required',
+            'shipment_cost'        => 'required',
+            'payment_method_slug'  => 'required',
             'installments'         => 'required',
             'taxes'                => 'required',
             'discount'             => 'required',

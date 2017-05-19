@@ -142,11 +142,11 @@ class UpdateStock
         $orderProduct = $event->orderProduct;
         $orderProduct = $orderProduct->fresh();
 
-        if (in_array((int) $orderProduct->pedido->status, [2, 3])) {
+        if ($orderProduct->order->count_on_stock) {
             Log::debug('Handler UpdateStock/onOrderProductCreated acionado.', [$event]);
 
-            $stock = \Stock::choose($orderProduct->product_sku);
-            \Stock::substract($orderProduct->product_sku, 1, $stock);
+            $depot = \Stock::choose($orderProduct->product_sku);
+            \Stock::substract($orderProduct->product_sku, 1, $depot);
         }
     }
 }

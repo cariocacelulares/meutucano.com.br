@@ -2,9 +2,10 @@
 
 use Carbon\Carbon;
 use Core\Models\Order;
+use Core\Models\Product;
+use Core\Models\OrderProduct;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Core\Models\Order\OrderProduct;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Core\Http\Requests\Order\OrderRequest as Request;
@@ -332,55 +333,84 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         try {
-            $order = Order::create(Input::except([
-                'customer',
-                'products',
-            ]));
+            \DB::transaction(function() use ($request, &$order) {
+                $order = Order::create($request->all());
 
-            $orderProducts = Input::get('products');
-            if ($orderProducts) {
-                $products   = [];
-                $quantities = [];
-                foreach ($orderProducts as $orderProduct) {
-                    for ($i=0; $i < $orderProduct['qtd']; $i++) {
-                        $products[] = $orderProduct;
-                        $quantities[$orderProduct['sku']] = isset($quantities[$orderProduct['sku']]) ? $quantities[$orderProduct['sku']] +1 : 1;
-                    }
-                }
+                $products = collect($request->input('products'));
+                $orderProducts = $this->processOrderProducts($products);
 
-                foreach ($quantities as $sku => $qtd) {
-                    $stock = \Stock::get($sku)[0];
+                $order->orderProducts()->saveMany($orderProducts);
+            });
 
-                    if ($stock < $qtd) {
-                        return $this->validationFailResponse([
-                            "Você está solicitando {$qtd} quantidades do product {$sku}, mas existem apenas {$stock} em estoque."
-                        ]);
-                    }
-                }
-
-                foreach ($products as $orderProduct) {
-                    OrderProduct::create([
-                        'order_id'    => $order->id,
-                        'product_sku' => $orderProduct['sku'],
-                        'price'       => $orderProduct['price'],
-                    ]);
-                }
-            }
-
-            DB::commit();
-            Log::debug('Transaction - commit');
-
-            return $this->createdResponse($order);
+            return createdResponse($order);
         } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Erro ao salvar recurso'), ['model' => self::MODEL]);
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'));
 
-            DB::rollBack();
-            Log::debug('Transaction - rollback');
-
-            return $this->clientErrorResponse([
+            return clientErrorResponse([
                 'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function update(Request $request, $id)
+    {
+        try {
+            $order = Order::findOrFail($id);
+            \DB::transaction(function() use ($request, &$order) {
+                $order->fill($request->all());
+                $order->save();
+
+                $order->orderProducts()->delete();
+
+                $products = collect($request->input('products'));
+                $orderProducts = $this->processOrderProducts($products);
+
+                $order->orderProducts()->saveMany($orderProducts);
+            });
+
+            return createdResponse($order);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao salvar recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Verify if OrderProduct can be created
+     *
+     * @param Arrayable $products
+     */
+    private function processOrderProducts($products)
+    {
+        $productSkus = Product::with(['reservedStockCount', 'availableStockCount'])
+            ->whereIn('sku', $products->pluck('product_sku'))
+            ->get();
+
+        foreach ($products as $product) {
+            $compareProduct = $productSkus->where('sku', $product['product_sku'])->first();
+
+            if (!$compareProduct)
+                throw new \Exception("Produto com SKU {$product['product_sku']} não cadastrado no sistema.");
+
+            if ($compareProduct->available_stock === 0)
+                throw new \Exception("Produto com SKU {$product['product_sku']} não possui unidades em estoque.");
+
+            if ($product['quantity'] > $compareProduct->available_stock)
+                throw new \Exception("Produto com SKU {$product['product_sku']} possui apenas {$compareProduct->available_stock} unidade(s) em estoque.");
+
+            for ($i = 0; $i < $product['quantity']; $i++) {
+                $orderProducts[] = new OrderProduct($product);
+            }
+        }
+
+        return $orderProducts;
     }
 
     /**
