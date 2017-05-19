@@ -118,6 +118,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     /**
      * Product Serial Issues
      */
+    Route::get('products/serials/issues/header', 'Product\ProductSerialIssueController@header');
     api('products/serials/issues', 'Product\ProductSerialIssueController', ['show', 'update']);
 
     /**

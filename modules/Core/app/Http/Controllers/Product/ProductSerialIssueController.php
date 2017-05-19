@@ -17,18 +17,18 @@ class ProductSerialIssueController extends Controller
         $this->middleware('permission:stock_issue_update', ['only' => ['update']]);
         $this->middleware('permission:stock_issue_delete', ['only' => ['destroy']]);
 
-        $this->middleware('currentUser', ['only' => ['index', 'store']]);
-        $this->middleware('convertJson', ['only' => ['index']]);
+        $this->middleware('currentUser', ['only' => ['index', 'store', 'header']]);
+        $this->middleware('convertJson', ['only' => ['index', 'header']]);
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
+     * Render list based on filters
+     *
+     * @return Builder
      */
-    public function index()
+    public function list()
     {
-        $search = request('search');
-
-        $data = ProductSerialIssue::with([
+        return ProductSerialIssue::with([
             'user',
             'productSerial',
             'productSerial.depotProduct',
@@ -40,12 +40,22 @@ class ProductSerialIssueController extends Controller
                 if (!\Auth::user()->can('stock_issue_list'))
                     $query->where('product_serial_issues.user_id', request('user_id'));
             })
-            ->where(function($query) use ($search) {
-                $query->where('product_serials.serial', 'LIKE', "%{$search}%");
-            })
             ->where(function($query) {
                 $query->whereMonth('product_serial_issues.created_at', request('filter.month'))
                     ->whereYear('product_serial_issues.created_at', request('filter.year'));
+            });
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function index()
+    {
+        $search = request('search');
+
+        $data = $this->list()
+            ->where(function($query) use ($search) {
+                $query->where('product_serials.serial', 'LIKE', "%{$search}%");
             })
             ->select('product_serial_issues.*')
             ->orderBy('created_at', 'DESC')
@@ -54,6 +64,21 @@ class ProductSerialIssueController extends Controller
             );
 
         return listResponse($data);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function header()
+    {
+        $data = $this->list()->get();
+
+        $header['issues'] = [
+            'quantity' => $data->count(),
+            'total'    => $data->sum('productSerial.depotProduct.product.price')
+        ];
+
+        return showResponse($header);
     }
 
     /**
