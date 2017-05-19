@@ -24,7 +24,23 @@ class OrderController extends Controller
         $this->middleware('permission:order_hold', ['only' => ['hold', 'unhold']]);
         $this->middleware('permission:order_invoice_create', ['only' => ['invoice']]);
 
-        $this->middleware('convertJson', ['only' => 'index', 'important']);
+        $this->middleware('convertJson', ['only' => ['index', 'important', 'header']]);
+    }
+
+    /**
+     * Render list based on filters
+     *
+     * @return Builder
+     */
+    private function list()
+    {
+        return Order::with(['customer'])
+            ->join('customers', 'customers.id', '=', 'orders.customer_id')
+            ->where(function($query) {
+                $query->whereMonth('orders.created_at', request('filter.month'))
+                    ->whereYear('orders.created_at', request('filter.year'));
+            })
+            ->select('orders.*');
     }
 
     /**
@@ -34,23 +50,49 @@ class OrderController extends Controller
     {
         $search = request('search');
 
-        $data = Order::with(['customer'])
-            ->join('customers', 'customers.id', '=', 'orders.customer_id')
+        $data = $this->list()
             ->where(function($query) use ($search) {
                 $query->where('orders.api_code', 'LIKE', "%{$search}%")
                     ->orWhere('customers.name', 'LIKE', "%{$search}%");
             })
-            ->where(function($query) {
-                $query->whereMonth('orders.created_at', request('filter.month'))
-                    ->whereYear('orders.created_at', request('filter.year'));
-            })
-            ->select('orders.*')
             ->orderBy('created_at', 'DESC')
             ->paginate(
                 request('per_page', 10)
             );
 
         return listResponse($data);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function header()
+    {
+        $data = $this->list()->get();
+
+        $canceled = $data->where('status', Order::STATUS_CANCELED);
+        $header['canceled'] = [
+            'quantity' => $canceled->count(),
+            'total'    => $canceled->sum('total')
+        ];
+
+        $approved = $data->where('status', Order::STATUS_PAID);
+        $header['approved'] = [
+            'quantity' => $approved->count(),
+            'total'    => $approved->sum('total')
+        ];
+
+        $invoiced = $data->whereIn('status', [
+            Order::STATUS_INVOICED,
+            Order::STATUS_SHIPPED,
+            Order::STATUS_COMPLETE
+        ]);
+        $header['invoiced'] = [
+            'quantity' => $invoiced->count(),
+            'total'    => $invoiced->sum('total')
+        ];
+
+        dd($header);
     }
 
     /**

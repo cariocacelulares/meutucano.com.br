@@ -88,6 +88,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
      * Orders
      */
     Route::group(['prefix' => 'orders'], function () {
+        Route::get('header', 'Order\OrderController@header');
         Route::get('invoiceable', 'Order\OrderController@invoiceable');
 
         Route::put('approve/{order_id}', 'Order\OrderController@approve');
