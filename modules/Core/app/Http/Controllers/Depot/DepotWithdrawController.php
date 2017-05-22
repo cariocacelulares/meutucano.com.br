@@ -95,7 +95,7 @@ class DepotWithdrawController extends Controller
             );
 
             if ($check !== true)
-                return validationFailResponse([
+                return showResponse([
                     'available' => false,
                     'message'   => $check
                 ]);
@@ -163,7 +163,7 @@ class DepotWithdrawController extends Controller
             );
 
             if ($check !== true)
-                return validationFailResponse([
+                return showResponse([
                     'available' => false,
                     'message'   => $check
                 ]);

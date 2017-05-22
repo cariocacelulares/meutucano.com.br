@@ -136,7 +136,7 @@ class ProductSerialController extends Controller
             );
 
             if ($data !== true)
-                return validationFailResponse([
+                return showResponse([
                     'available' => false,
                     'message'   => $data
                 ]);
@@ -169,7 +169,7 @@ class ProductSerialController extends Controller
             );
 
             if ($data !== true)
-                return validationFailResponse([
+                return showResponse([
                     'available' => false,
                     'message'   => $data
                 ]);
@@ -201,7 +201,7 @@ class ProductSerialController extends Controller
             );
 
             if ($data !== true)
-                return validationFailResponse([
+                return showResponse([
                     'available' => false,
                     'message'   => $data
                 ]);
