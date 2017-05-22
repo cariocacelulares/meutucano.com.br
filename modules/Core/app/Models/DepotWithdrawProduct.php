@@ -34,7 +34,7 @@ class DepotWithdrawProduct extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function withdraw()
+    public function depotWithdraw()
     {
         return $this->belongsTo(DepotWithdraw::class);
     }

@@ -11,11 +11,11 @@ class ProductSerialIssueController extends Controller
 
     public function __construct()
     {
-        $this->middleware('permission:stock_issue_list|stock_issue_list_mine', ['only' => ['index']]);
-        $this->middleware('permission:stock_issue_show', ['only' => ['show']]);
-        $this->middleware('permission:stock_issue_create', ['only' => ['store']]);
-        $this->middleware('permission:stock_issue_update', ['only' => ['update']]);
-        $this->middleware('permission:stock_issue_delete', ['only' => ['destroy']]);
+        $this->middleware('permission:product_serial_issue_list|product_serial_issue_list_mine', ['only' => ['index']]);
+        $this->middleware('permission:product_serial_issue_show', ['only' => ['show']]);
+        $this->middleware('permission:product_serial_issue_create', ['only' => ['store']]);
+        $this->middleware('permission:product_serial_issue_update', ['only' => ['update']]);
+        $this->middleware('permission:product_serial_issue_delete', ['only' => ['destroy']]);
 
         $this->middleware('currentUser', ['only' => ['index', 'store', 'header']]);
         $this->middleware('convertJson', ['only' => ['index', 'header']]);
@@ -37,7 +37,7 @@ class ProductSerialIssueController extends Controller
         ])
             ->join('product_serials', 'product_serials.id', '=', 'product_serial_issues.product_serial_id')
             ->where(function($query) {
-                if (!\Auth::user()->can('stock_issue_list'))
+                if (!\Auth::user()->can('product_serial_issue_list'))
                     $query->where('product_serial_issues.user_id', request('user_id'));
             })
             ->where(function($query) {

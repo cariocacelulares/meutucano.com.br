@@ -90,7 +90,7 @@ class Product extends \Eloquent
      */
     public function getConditionCastAttribute()
     {
-        switch ($this->origin) {
+        switch ($this->condition) {
             case self::CONDITION_NEW:
                 return 'Novo';
             case self::CONDITION_USED:

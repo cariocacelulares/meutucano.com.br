@@ -388,6 +388,8 @@ class OrderController extends Controller
                 $orderProducts = $this->processOrderProducts($products);
 
                 $order->orderProducts()->saveMany($orderProducts);
+
+                $this->calculateOrderTotal($order);
             });
 
             return createdResponse($order);
@@ -418,6 +420,8 @@ class OrderController extends Controller
                 $orderProducts = $this->processOrderProducts($products);
 
                 $order->orderProducts()->saveMany($orderProducts);
+
+                $this->calculateOrderTotal($order);
             });
 
             return createdResponse($order);
@@ -428,6 +432,19 @@ class OrderController extends Controller
                 'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
             ]);
         }
+    }
+
+    /**
+     * Calculate order total based on products
+     *
+     * @param Order $order
+     */
+    private function calculateOrderTotal($order)
+    {
+        $orderTotal = $order->orderProducts->sum('price');
+
+        $order->total = $orderTotal + $order->taxes - $order->discount;
+        $order->save();
     }
 
     /**

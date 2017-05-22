@@ -21,7 +21,7 @@ class ProductSerialTransferRequest extends FormRequest
     public function rules()
     {
         return [
-            'serials'    => "required|array",
+            'serials'    => "required",
             'depot_from' => "required",
             'depot_to'   => "required"
         ];

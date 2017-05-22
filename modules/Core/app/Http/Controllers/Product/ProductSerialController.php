@@ -7,6 +7,7 @@ use Core\Models\DepotProduct;
 use Core\Models\DepotWithdrawProduct;
 use App\Http\Controllers\Controller;
 use Core\Http\Requests\ProductSerialTransferRequest as TransferRequest;
+use Core\Http\Requests\ProductSerialCheckInvoiceRequest as CheckInvoiceRequest;
 use Core\Http\Requests\ProductSerialCheckTransferRequest as CheckTransferRequest;
 
 class ProductSerialController extends Controller
@@ -65,26 +66,39 @@ class ProductSerialController extends Controller
      * @param  int $productSku
      * @return boolean
      */
-    public static function checkSerials($serials, $depotSlug = null, $productSku = null)
+    public static function checkSerials($serials, $depotSlug = null, $productSku = null, $checkUserWithdraw = false)
     {
         try {
+            $serials = (array) $serials;
+
             $checkSerials = ProductSerial::with([
                 'depotProduct',
                 'withdrawProducts',
+                'withdrawProducts.depotWithdraw',
                 'orderProducts',
                 'orderProducts.order'
             ])->whereIn('serial', $serials)->get();
 
-            $checkSerials->map(function($serial) {
-                $verifyWithdraw = $serial->withdrawProducts->pluck('status')->search(function($status) {
-                    return in_array($status, [
-                        DepotWithdrawProduct::STATUS_WITHDRAWN,
-                        DepotWithdrawProduct::STATUS_CONFIRMED
-                    ]);
-                });
+            $checkSerials->map(function($serial) use ($checkUserWithdraw) {
+                if ($checkUserWithdraw === true) {
+                    $verifyWithdraw = $serial->withdrawProducts->search(function($withdrawProduct) {
+                        return $withdrawProduct->status === DepotWithdrawProduct::STATUS_CONFIRMED
+                            && $withdrawProduct->depotWithdraw->user_id === \Auth::user()->id;
+                    });
 
-                if ($verifyWithdraw !== false)
-                    throw new \Exception("Serial pertence a uma retirada de estoque em aberto.");
+                    if ($verifyWithdraw === false)
+                        throw new \Exception("Serial não confirmado em uma retirada do usuário.");
+                } else {
+                    $verifyWithdraw = $serial->withdrawProducts->pluck('status')->search(function($status) {
+                        return in_array($status, [
+                            DepotWithdrawProduct::STATUS_WITHDRAWN,
+                            DepotWithdrawProduct::STATUS_CONFIRMED
+                        ]);
+                    });
+
+                    if ($verifyWithdraw !== false)
+                        throw new \Exception("Serial pertence à uma retirada de estoque em aberto.");
+                }
 
                 $serial->append('in_stock');
             });
@@ -131,7 +145,40 @@ class ProductSerialController extends Controller
                 'available' => true
             ]);
         } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Erro ao realizar conferência '));
+            \Log::error(logMessage($exception, 'Erro ao realizar conferência'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Check if serials are invoiceable
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function checkInvoice(CheckInvoiceRequest $request)
+    {
+        try {
+            $data = self::checkSerials(
+                $request->input('serials'),
+                false,
+                $request->input('product_sku'),
+                true
+            );
+
+            if ($data !== true)
+                return validationFailResponse([
+                    'available' => false,
+                    'message'   => $data
+                ]);
+
+            return showResponse([
+                'available' => true
+            ]);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao realizar conferência'));
 
             return clientErrorResponse([
                 'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()

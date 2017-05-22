@@ -2,7 +2,10 @@
 
 use Core\Models\Order;
 use Core\Models\OrderInvoice;
+use Core\Models\OrderProduct;
+use Core\Models\ProductSerial;
 use App\Http\Controllers\Controller;
+use Core\Models\DepotWithdrawProduct;
 use Core\Http\Controllers\OrderController;
 use Core\Http\Requests\InvoiceRequest as Request;
 use Core\Http\Requests\InvoiceDeleteRequest as DeleteRequest;
@@ -17,6 +20,7 @@ class OrderInvoiceController extends Controller
         $this->middleware('permission:order_invoice_print', ['only' => ['danfe']]);
 
         $this->middleware('currentUser', ['only' => 'store']);
+        $this->middleware('convertJson', ['only' => 'store']);
     }
 
     /**
@@ -28,7 +32,36 @@ class OrderInvoiceController extends Controller
         try {
             $this->processUpload($request->input('order_id'), $request->file('file'));
 
-            $data = OrderInvoice::create($request->all());
+            \DB::transaction(function() use ($request, &$data) {
+                $data = OrderInvoice::create($request->all());
+
+                $products = collect($request->input('products'));
+                $invoiceSerials = ProductSerial::with(['depotProduct', 'withdrawProducts.depotWithdraw'])
+                    ->whereHas('withdrawProducts', function($query) {
+                        $query->where('status', DepotWithdrawProduct::STATUS_CONFIRMED);
+                    })
+                    ->whereIn('serial', $products->pluck('serial'))
+                    ->get();
+
+                $orderProducts = OrderProduct::whereIn('id', $products->pluck('order_product_id'))
+                    ->get();
+
+                if($orderProducts->pluck('order_id')->diff($request->input('order_id'))->count() || $orderProducts->count() === 0)
+                    throw new \Exception("Produto não existe ou pertence a esse pedido.");
+
+                foreach ($products as $product) {
+                    $orderProduct    = $orderProducts->where('id', $product->order_product_id)->first();
+                    $productSerial   = $invoiceSerials->where('serial', $product->serial)->first();
+                    $withdrawProduct = $productSerial->withdrawProducts->first();
+
+                    $withdrawProduct->status = DepotWithdrawProduct::STATUS_INVOICED;
+                    $withdrawProduct->save();
+
+                    $orderProduct->product_serial_id = $productSerial->id;
+                    $orderProduct->depot_product_id = $productSerial->depotProduct->id;
+                    $orderProduct->save();
+                }
+            });
 
             return createdResponse($data);
         } catch (\Exception $exception) {

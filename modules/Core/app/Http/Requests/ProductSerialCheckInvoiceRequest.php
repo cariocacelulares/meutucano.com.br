@@ -3,7 +3,7 @@
 use App\Http\Requests\JsonResponseTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProductSerialCheckTransferRequest extends FormRequest
+class ProductSerialCheckInvoiceRequest extends FormRequest
 {
     use JsonResponseTrait;
 
@@ -21,8 +21,8 @@ class ProductSerialCheckTransferRequest extends FormRequest
     public function rules()
     {
         return [
-            'serials'    => "required",
-            'depot_from' => "required"
+            'serials'     => "required",
+            'product_sku' => "required"
         ];
     }
 }

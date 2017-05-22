@@ -133,6 +133,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
     Route::group(['prefix' => 'products/serials'], function() {
         Route::get('find/{serial}', 'Product\ProductSerialController@find');
         Route::get('check', 'Product\ProductSerialController@checkTransfer');
+        Route::get('check-invoice', 'Product\ProductSerialController@checkInvoice');
         Route::get('from/{depotProduct}', 'Product\ProductSerialController@listByDepotProduct');
         Route::get('generate/{listSize?}', 'Product\ProductSerialController@generate');
 

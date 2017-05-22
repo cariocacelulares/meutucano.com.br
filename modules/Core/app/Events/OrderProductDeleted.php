@@ -3,7 +3,7 @@
 use Core\Models\OrderProduct;
 use Illuminate\Queue\SerializesModels;
 
-class OrderProductDeleting extends \Event
+class OrderProductDeleted extends \Event
 {
     use SerializesModels;
 

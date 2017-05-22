@@ -10,11 +10,11 @@ class ProductSerialDefectController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:product_defect_list', ['only' => ['index']]);
-        $this->middleware('permission:product_defect_show', ['only' => ['show']]);
-        $this->middleware('permission:product_defect_create', ['only' => ['store']]);
-        $this->middleware('permission:product_defect_update', ['only' => ['update']]);
-        $this->middleware('permission:product_defect_return', ['only' => ['destroy']]);
+        $this->middleware('permission:product_serial_defect_list', ['only' => ['index']]);
+        $this->middleware('permission:product_serial_defect_show', ['only' => ['show']]);
+        $this->middleware('permission:product_serial_defect_create', ['only' => ['store']]);
+        $this->middleware('permission:product_serial_defect_update', ['only' => ['update']]);
+        $this->middleware('permission:product_serial_defect_return', ['only' => ['destroy']]);
 
         $this->middleware('convertJson', ['only' => ['index', 'header']]);
     }
