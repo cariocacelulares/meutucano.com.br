@@ -1,47 +1,35 @@
 <?php namespace Core\Events\Handlers;
 
-use Core\Events\OrderSent;
-use Core\Jobs\SetDeadline;
+use Core\Events\OrderInvoiced;
 use Core\Models\OrderShipment;
+use Core\Jobs\CalculateDeadline;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;
-use Core\Events\OrderShipmentSaved;
 
 class AddOrderShipmentToQueue
 {
     /**
-     * Set events that this will listen
-     *
      * @param  Dispatcher $events
      * @return void
      */
     public function subscribe(Dispatcher $events)
     {
         $events->listen(
-            OrderShipmentSaved::class,
-            '\Core\Events\Handlers\AddOrderShipmentToQueue@onOrderShipmentSaved'
-        );
-
-        $events->listen(
-            OrderSent::class,
-            '\Core\Events\Handlers\AddOrderShipmentToQueue@onOrderSent'
+            OrderInvoiced::class,
+            '\Core\Events\Handlers\AddOrderShipmentToQueue@onOrderInvoiced'
         );
     }
 
     /**
-     * Handle the event.
-     *
-     * @param  onOrderSent  $event
+     * @param  onOrderInvoiced  $event
      * @return void
      */
-    public function onOrderSent(OrderSent $event)
+    public function onOrderInvoiced(OrderInvoiced $event)
     {
-        $order         = $event->order;
-        $orderShipment = (isset($order->shipments[0])) ? $order->shipments[0] : null;
+        $order = $event->order;
 
-        if (!is_null($orderShipment)) {
-            Log::debug('Handler AddOrderShipmentToQueue/onOrderSent acionado!', [$event]);
-            dispatch(with(new SetDeadline($orderShipment))->onQueue('medium'));
+        if ($orderShipment = $order->shipments()->first()) {
+            dispatch(with(new CalculateDeadline($orderShipment))->onQueue('medium'));
         }
     }
 }

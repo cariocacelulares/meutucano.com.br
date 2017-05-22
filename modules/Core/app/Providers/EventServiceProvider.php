@@ -18,6 +18,7 @@ class EventServiceProvider extends ServiceProvider
         \Core\Events\Handlers\SetRefund::class,
         \Core\Events\Handlers\UpdateStock::class,
         \Core\Events\Handlers\SetProductCost::class,
+        \Core\Events\Handlers\CalculateOrderTotal::class,
         \Core\Events\Handlers\AttachOrderShipment::class,
         \Core\Events\Handlers\DeleteProductSerial::class,
         \Core\Events\Handlers\RestoreProductSerial::class,

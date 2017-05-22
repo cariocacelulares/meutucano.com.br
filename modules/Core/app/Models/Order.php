@@ -196,7 +196,7 @@ class Order extends \Eloquent
      */
     public function getSubtotalAttribute()
     {
-        return $this->total + $this->taxes - $this->discount;
+        return $this->total - $this->taxes + $this->discount;
     }
 
     /**

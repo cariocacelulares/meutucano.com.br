@@ -1,11 +1,12 @@
 <?php namespace Core\Observers;
 
 use Core\Models\OrderProduct;
+use Core\Events\OrderProductSaved;
 use Core\Events\OrderProductCreated;
 use Core\Events\OrderProductUpdated;
 use Core\Events\OrderProductDeleting;
-use Core\Events\OrderProductProductChanged;
 use Illuminate\Support\Facades\Event;
+use Core\Events\OrderProductProductChanged;
 
 class OrderProductObserver
 {
@@ -24,6 +25,17 @@ class OrderProductObserver
         if (isset($dirty['product_sku'])) {
             Event::fire(new OrderProductProductChanged($orderProduct));
         }
+    }
+
+    /**
+     * Listen to the OrderProduct saved event.
+     *
+     * @param  OrderProduct $orderProduct
+     * @return void
+     */
+    public function saved(OrderProduct $orderProduct)
+    {
+        Event::fire(new OrderProductSaved($orderProduct));
     }
 
     /**

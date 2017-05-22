@@ -3,7 +3,7 @@
 use Core\Models\Order;
 use Illuminate\Queue\SerializesModels;
 
-class OrderSent extends \Event
+class OrderInvoiced extends \Event
 {
     use SerializesModels;
 
@@ -17,7 +17,7 @@ class OrderSent extends \Event
      */
     public function __construct(Order $order)
     {
-        \Log::debug('Evento OrderSent disparado');
+        \Log::debug('Evento OrderInvoiced disparado');
         $this->order = $order;
     }
 }

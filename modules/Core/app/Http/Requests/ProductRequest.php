@@ -21,7 +21,7 @@ class ProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'sku'   => "required|unique:products,sku,{$this->product},sku",
+            'sku'   => "unique:products,sku,{$this->product},sku",
             'title' => "required|min:2",
             'price' => "required"
         ];

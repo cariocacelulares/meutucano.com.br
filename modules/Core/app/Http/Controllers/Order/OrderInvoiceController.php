@@ -129,16 +129,4 @@ class OrderInvoiceController extends Controller
 
         return true;
     }
-
-    //
-    // /**
-    //  *
-    //  *
-    //  * @param $id
-    //  * @return \Symfony\Component\HttpFoundation\Response
-    //  */
-    // public function invoice($pedido_id)
-    // {
-    //     return with(new PedidoController())->faturar($pedido_id);
-    // }
 }

@@ -298,6 +298,10 @@ class OrderController extends Controller
     {
         try {
             $order = Order::find($order_id);
+
+            if ($order->invoices()->count() === 0)
+                throw new \Exception("Não é possível faturar um pedido sem nota fiscal.");
+
             $order->status = Order::STATUS_INVOICED;
             $order->save();
 
