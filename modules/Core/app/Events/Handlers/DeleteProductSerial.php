@@ -2,14 +2,12 @@
 
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;
-use Core\Events\ProductSerialDefectCreated;
 use Core\Events\ProductSerialIssueCreated;
+use Core\Events\ProductSerialDefectCreated;
 
 class DeleteProductSerial
 {
     /**
-     * Set events that this will listen
-     *
      * @param  Dispatcher $events
      * @return void
      */
@@ -27,38 +25,32 @@ class DeleteProductSerial
     }
 
     /**
-     * Handle the event.
-     *
      * @param  ProductSerialIssueCreated $event
      * @return void
      */
     public function onProductSerialIssueCreated(ProductSerialIssueCreated $event)
     {
-        Log::debug('Handler DeleteProductSerial/onProductSerialIssueCreated acionado!', [$event]);
         $productSerialIssue = $event->productSerialIssue;
 
         try {
             $productSerialIssue->productSerial->delete();
-        } catch (Exception $exception) {
-            Log::warning('Ocorreu um erro ao excluir serial (DeleteProductSerial/onProductSerialIssueCreated/onProductSerialIssueCreated)', [$productSerialIssue]);
+        } catch (Exception $e) {
+            Log::warning(logMessage($e, 'DeleteProductSerial@onProductSerialIssueCreated'));
         }
     }
 
     /**
-     * Handle the event.
-     *
      * @param  ProductSerialDefectCreated $event
      * @return void
      */
     public function onProductSerialDefectCreated(ProductSerialDefectCreated $event)
     {
-        Log::debug('Handler DeleteProductSerial/onProductSerialDefectCreated acionado!', [$event]);
         $productSerialDefect = $event->productSerialDefect;
 
         try {
             $productSerialDefect->productSerial->delete();
-        } catch (Exception $exception) {
-            Log::warning('Ocorreu um erro ao excluir serial (DeleteProductSerial/onProductSerialDefectCreated/onProductSerialIssueCreated)', [$productSerialDefect]);
+        } catch (Exception $e) {
+            Log::warning(logMessage($e, 'DeleteProductSerial@onProductSerialDefectCreated'));
         }
     }
 }

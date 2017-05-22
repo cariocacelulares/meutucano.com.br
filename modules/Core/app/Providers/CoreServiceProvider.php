@@ -46,10 +46,10 @@ class CoreServiceProvider extends ServiceProvider
         OrderProduct::observe(OrderProductObserver::class);
         DepotProduct::observe(DepotProductObserver::class);
         OrderInvoice::observe(OrderInvoiceObserver::class);
-        ProductSerialDefect::observe(DefectObserver::class);
         OrderShipment::observe(OrderShipmentObserver::class);
         ProductSerial::observe(ProductSerialObserver::class);
         ProductSerialIssue::observe(ProductSerialIssueObserver::class);
+        ProductSerialDefect::observe(ProductSerialDefectObserver::class);
     }
 
     /**
