@@ -20,6 +20,7 @@ class OrderProduct extends \Eloquent
         'depot_product_id',
         'product_serial_id',
         'order_invoice_devolution_id',
+        'returned_at',
         'price',
       ];
 

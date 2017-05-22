@@ -1,11 +1,11 @@
 <?php namespace Core\Http\Controllers\Order;
 
+use Carbon\Carbon;
 use Core\Models\Order;
 use Core\Models\Product;
 use Core\Models\OrderInvoice;
 use Core\Models\OrderProduct;
 use Core\Models\DepotWithdraw;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Core\Models\DepotWithdrawProduct;
@@ -114,6 +114,7 @@ class OrderInvoiceDevolutionController extends Controller
 
         foreach ($orderProducts as $orderProduct) {
             $orderProduct->order_invoice_devolution_id = $invoiceDevolutionId;
+            $orderProduct->returned_at                 = Carbon::now();
             $orderProduct->save();
 
             DepotWithdrawProduct::create([
