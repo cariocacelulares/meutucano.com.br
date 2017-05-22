@@ -285,11 +285,11 @@ class ProductController extends Controller
     public function graphCostPeriod($sku)
     {
         try {
-            $data = Product::with(['entryProducts' => function($query) {
+            $data = Product::with(['depotEntryProducts' => function($query) {
                 $query->where("created_at", ">", Carbon::now()->subMonths(5));
             }])->findOrFail($sku);
 
-            $entryProducts = $data->entryProducts->groupBy(function ($product) {
+            $depotEntryProducts = $data->depotEntryProducts->groupBy(function ($product) {
                 return $product->created_at->month;
             })->transform(function($products) {
                 $sumValue = $products->sum(function ($product) {
@@ -304,10 +304,10 @@ class ProductController extends Controller
             foreach (lastMonthsAsArray() as $key => $month) {
                 $graph[$key]['month'] = config('core.meses')[$month];
 
-                if (!$entryProducts->get($month) && $lastMonth && $entryProducts->get($lastMonth))
+                if (!$depotEntryProducts->get($month) && $lastMonth && $depotEntryProducts->get($lastMonth))
                     $month = $lastMonth;
 
-                $graph[$key]['quantity'] = $entryProducts->get($month) ?: 0;
+                $graph[$key]['quantity'] = $depotEntryProducts->get($month) ?: 0;
 
                 $lastMonth = $month;
             }
