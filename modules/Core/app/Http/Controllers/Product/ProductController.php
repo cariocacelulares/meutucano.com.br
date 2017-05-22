@@ -228,7 +228,7 @@ class ProductController extends Controller
 
             return showResponse($graph);
         } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Erro ao excluir recurso'));
+            \Log::error(logMessage($exception, 'Erro ao exibir recurso'));
 
             return clientErrorResponse([
                 'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
@@ -245,14 +245,15 @@ class ProductController extends Controller
     public function graphOrderMarketplace($sku)
     {
         try {
-            $data = Product::with(['orderProducts', 'orderProducts.order' => function($query) {
-                $query->where("created_at", '>', Carbon::now()->startOfMonth());
+            $data = Product::with(['orderProducts', 'orderProducts.order.marketplace' , 'orderProducts.order' => function($query) {
+                $query->where("created_at", '>', Carbon::now()->startOfMonth())
+                    ->where("created_at", '<', Carbon::now()->endOfMonth());
             }])->findOrFail($sku);
 
             $orders = $data->orderProducts->pluck('order')->filter(function($order) {
                 return !is_null($order);
             })->groupBy(function ($order) {
-                return $order->marketplace;
+                return $order->marketplace->title;
             })->transform(function($order) {
                 return sizeof($order);
             });
@@ -268,7 +269,7 @@ class ProductController extends Controller
 
             return showResponse($graph);
         } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Erro ao excluir recurso'));
+            \Log::error(logMessage($exception, 'Erro ao exibir recurso'));
 
             return clientErrorResponse([
                 'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
@@ -314,7 +315,7 @@ class ProductController extends Controller
 
             return showResponse($graph);
         } catch (\Exception $exception) {
-            \Log::error(logMessage($exception, 'Erro ao excluir recurso'));
+            \Log::error(logMessage($exception, 'Erro ao exibir recurso'));
 
             return clientErrorResponse([
                 'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
