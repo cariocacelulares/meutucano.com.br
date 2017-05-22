@@ -23,6 +23,20 @@ class ProductSerial extends \Eloquent
     ];
 
     /**
+     * @var array
+     */
+    protected $appends = [
+        'in_stock'
+    ];
+
+    /**
+     * @var array
+     */
+    protected $hidden = [
+        'inStockRelation'
+    ];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function depotProduct()
@@ -73,16 +87,18 @@ class ProductSerial extends \Eloquent
     /**
      * @return object
      */
-    public function lastOrderProduct()
+    public function inStockRelation()
     {
-        if (!array_key_exists('orderProducts', $this->relations)) {
-            $this->load('orderProducts');
-        }
-
-        return $this->getRelation('orderProducts')
+        return $this->hasMany(OrderProduct::class)
+            ->whereHas('order', function($query) {
+                $query->whereIn('orders.status', [
+                    Order::STATUS_INVOICED,
+                    Order::STATUS_SHIPPED,
+                    Order::STATUS_COMPLETE
+                ]);
+            })
             ->where('returned_at', null)
-            ->sortByDesc('created_at')
-            ->first();
+            ->orderBy('created_at', 'DESC');
     }
 
     /**
@@ -102,13 +118,15 @@ class ProductSerial extends \Eloquent
      */
     public function getInStockAttribute()
     {
+        if (!array_key_exists('inStockRelation', $this->relations)) {
+            return;
+        }
+
+        $lastOrderProduct = $this->getRelation('inStockRelation')->first();
+
         if ($this->trashed()) return false;
 
-        $lastOrderProduct = $this->lastOrderProduct();
-
-        if (!$lastOrderProduct) {
-            return true;
-        } elseif ($lastOrderProduct->order->count_on_stock) {
+        if ($lastOrderProduct) {
             return false;
         }
 

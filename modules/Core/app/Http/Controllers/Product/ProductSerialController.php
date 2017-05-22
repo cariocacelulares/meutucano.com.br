@@ -30,7 +30,9 @@ class ProductSerialController extends Controller
     {
         $search = request('search');
 
-        $data = ProductSerial::orderBy('created_at', 'DESC')
+        $data = ProductSerial::with('inStockRelation')
+            ->whereDoesntHave('inStockRelation')
+            ->orderBy('created_at', 'DESC')
             ->where('depot_product_id', $depotProduct)
             ->where('serial', 'LIKE', "%{$search}%")
             ->paginate(
@@ -47,8 +49,9 @@ class ProductSerialController extends Controller
     public function find($serial)
     {
         try {
-            $data = ProductSerial::where('serial', $serial)->firstOrFail();
-            $data->setAppends(['in_stock']);
+            $data = ProductSerial::with('inStockRelation')
+                ->where('serial', $serial)
+                ->firstOrFail();
 
             return showResponse($data);
         } catch (\Exception $exception) {
@@ -75,8 +78,7 @@ class ProductSerialController extends Controller
                 'depotProduct',
                 'withdrawProducts',
                 'withdrawProducts.depotWithdraw',
-                'orderProducts',
-                'orderProducts.order'
+                'inStockRelation'
             ])->whereIn('serial', $serials)->get();
 
             $checkSerials->map(function($serial) use ($checkUserWithdraw) {
@@ -99,8 +101,6 @@ class ProductSerialController extends Controller
                     if ($verifyWithdraw !== false)
                         throw new \Exception("Serial pertence à uma retirada de estoque em aberto.");
                 }
-
-                $serial->append('in_stock');
             });
 
             if ($checkSerials->count() != sizeof($serials))

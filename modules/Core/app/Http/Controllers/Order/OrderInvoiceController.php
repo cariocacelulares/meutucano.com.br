@@ -30,7 +30,7 @@ class OrderInvoiceController extends Controller
     public function store(Request $request)
     {
         try {
-            $this->processUpload($request->input('order_id'), $request->file('file'));
+            $this->checkUpload($request->input('order_id'), $request->file('file'));
 
             \DB::transaction(function() use ($request, &$data) {
                 $data = OrderInvoice::create($request->all());
@@ -117,7 +117,7 @@ class OrderInvoiceController extends Controller
      * @param  File $file
      * @return boolean
      */
-    private function processUpload($orderId, $file)
+    private function checkUpload($orderId, $file)
     {
         $nfe = \Invoice::validateNfeUpload($file->getRealPath(), config('core.notas.venda'));
 

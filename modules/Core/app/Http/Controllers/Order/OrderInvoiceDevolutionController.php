@@ -32,7 +32,7 @@ class OrderInvoiceDevolutionController extends Controller
     public function store(Request $request)
     {
         try {
-            $this->processUpload($request->input('order_invoice_id'),
+            $this->checkUpload($request->input('order_invoice_id'),
                 $request->file('file'), $request->input('serials'));
 
             $data = OrderInvoiceDevolution::create($request->all());
@@ -139,7 +139,7 @@ class OrderInvoiceDevolutionController extends Controller
      * @param  File $file
      * @return boolean
      */
-    private function processUpload($invoiceId, $file, $serials)
+    private function checkUpload($invoiceId, $file, $serials)
     {
         $nfe = \Invoice::validateNfeUpload($file->getRealPath(), config('core.notas.devolucao'));
 
