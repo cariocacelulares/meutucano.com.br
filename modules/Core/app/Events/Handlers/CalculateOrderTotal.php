@@ -34,7 +34,7 @@ class CalculateOrderTotal
             $order->total = $orderTotal + $order->taxes - $order->discount;
             $order->save();
         } catch (\Exception $e) {
-            Log::warning('CalculateOrderTotal@onProductSaved', [$event->orderProduct]);
+            Log::warning(logMessage($e, 'CalculateOrderTotal@onProductSaved'));
         }
     }
 }
