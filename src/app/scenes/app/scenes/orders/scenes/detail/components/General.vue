@@ -214,67 +214,6 @@
           </div>
         </Card>
       </template>
-
-      <!-- <Card header-icon="truck" header-text="PN717347694BR">
-        <div slot="header">
-          <a href="#">
-            <Icon name="print" color="link" />
-          </a>
-          <VSeparator :height="10" :spacing="10" />
-          <Icon name="times" />
-        </div>
-
-        <div class="grid-3">
-          <div class="card-data">
-            <span>Enviado em</span>
-            <strong>08/02/1995</strong>
-          </div>
-
-          <div class="card-data">
-            <span>Prazo</span>
-            <strong>2 dias</strong>
-          </div>
-
-          <Badge type="label" height="26px" color="warning">Atrasado</Badge>
-        </div>
-
-        <div slot="footer" class="card-footer">
-          <div>
-            <a href="#" @click.prevent="openLogistic" class="disabled"><Icon name="exchange" /></a>
-            <a href="#" @click.prevent="openDevolution"><Icon name="undo" /></a>
-            <a href="#" @click.prevent="openIssue"><Icon name="exclamation-triangle" /></a>
-          </div>
-
-          <div>
-            <a href="#"><Icon name="video-camera" /></a>
-            <a href="#"><Icon name="picture-o" /></a>
-          </div>
-        </div>
-      </Card>
-
-      <Card header-icon="truck" header-text="PN717347694BR">
-        <div slot="header">
-          <a href="#">
-            <Icon name="print" color="link" />
-          </a>
-          <VSeparator :height="10" :spacing="10" />
-          <Icon name="times" />
-        </div>
-
-        <div class="grid-3">
-          <div class="card-data">
-            <span>Enviado em</span>
-            <strong>08/02/1995</strong>
-          </div>
-
-          <div class="card-data">
-            <span>Prazo</span>
-            <strong>2 dias</strong>
-          </div>
-
-          <Badge type="label" height="26px" color="primary">Enviado</Badge>
-        </div>
-      </Card> -->
     </div>
 
     <Devolution />
@@ -297,13 +236,15 @@ export default {
 
   data() {
     return {
-      loading: false,
+      loading: true,
     }
   },
 
   methods: {
     fetch() {
-      this.$store.dispatch('orders/detail/FETCH_ORDER', this.$route.params.id)
+      this.$store.dispatch('orders/detail/FETCH_ORDER', this.$route.params.id).then((response) => {
+        this.loading = false
+      })
     },
 
     openDevolution() {
@@ -357,7 +298,7 @@ export default {
     },
   },
 
-  mounted() {
+  beforeMount() {
     this.fetch()
   },
 }

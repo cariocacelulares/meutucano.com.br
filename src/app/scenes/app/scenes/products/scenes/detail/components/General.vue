@@ -132,94 +132,73 @@
 
 <script>
 export default {
-  mounted() {
-    // product detail
-    axios.get(`products/${this.sku}`).then(
-      (response) => {
+  methods: {
+    fetch() {
+      this.$store.dispatch('products/detail/FETCH_PRODUCT', this.$route.params.sku).then((response) => {
         this.loading = false
-        this.product = response.data
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
+      })
+    },
+  },
+
+  beforeMount() {
+    // product detail
+    this.fetch()
 
     // last entry
-    axios.get(`products/${this.sku}/entry`).then(
-      (response) => {
-        this.last_entry = response.data
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
+    axios.get(`products/${this.sku}/entry`).then((response) => {
+      this.last_entry = response.data
+    })
 
     // graph: orders per month
-    axios.get(`products/${this.sku}/graph/orders-period`).then(
-      (response) => {
-        let series = []
-        let categories = []
-        response.data.forEach((item) => {
-          series.push(item.quantity)
-          categories.push(item.month)
-        })
+    axios.get(`products/${this.sku}/graph/orders-period`).then((response) => {
+      let series = []
+      let categories = []
+      response.data.forEach((item) => {
+        series.push(item.quantity)
+        categories.push(item.month)
+      })
 
-        this.$refs.ordersPeriod.chart.xAxis[0].categories = categories
-        this.$refs.ordersPeriod.addSeries({
-          data: series
-        })
+      this.$refs.ordersPeriod.chart.xAxis[0].categories = categories
+      this.$refs.ordersPeriod.addSeries({
+        data: series
+      })
 
-        this.$refs.ordersPeriod.hideLoading()
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
+      this.$refs.ordersPeriod.hideLoading()
+    })
 
     // graph: cost per month
-    axios.get(`products/${this.sku}/graph/cost-period`).then(
-      (response) => {
-        let series = []
-        let categories = []
-        response.data.forEach((item) => {
-          series.push(item.quantity)
-          categories.push(item.month)
-        })
+    axios.get(`products/${this.sku}/graph/cost-period`).then((response) => {
+      let series = []
+      let categories = []
+      response.data.forEach((item) => {
+        series.push(item.quantity)
+        categories.push(item.month)
+      })
 
-        this.$refs.costPeriod.chart.xAxis[0].categories = categories
-        this.$refs.costPeriod.addSeries({
-          data: series
-        })
+      this.$refs.costPeriod.chart.xAxis[0].categories = categories
+      this.$refs.costPeriod.addSeries({
+        data: series
+      })
 
-        this.$refs.costPeriod.hideLoading()
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
+      this.$refs.costPeriod.hideLoading()
+    })
 
     // graph: cost per month
-    axios.get(`products/${this.sku}/graph/orders-marketplace`).then(
-      (response) => {
-
-        let series = []
-        response.data.forEach((item) => {
-          series.push({
-            name: item.marketplace,
-            y: item.percent,
-          })
+    axios.get(`products/${this.sku}/graph/orders-marketplace`).then((response) => {
+      let series = []
+      response.data.forEach((item) => {
+        series.push({
+          name: item.marketplace,
+          y: item.percent,
         })
+      })
 
-        this.$refs.ordersMarketplace.addSeries({
-          data: series
-        })
+      this.$refs.ordersMarketplace.addSeries({
+        data: series
+      })
 
-        this.$refs.ordersMarketplace.hideLoading()
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
+      this.$refs.ordersMarketplace.hideLoading()
+    })
   },
 
   data() {
@@ -233,7 +212,6 @@ export default {
 
       loading: true,
 
-      product: {},
       stock: {},
       last_entry: {},
 
@@ -248,7 +226,11 @@ export default {
   computed: {
     sku() {
       return this.$route.params.sku
-    }
+    },
+
+    product() {
+      return this.$store.getters['products/detail/GET_PRODUCT']
+    },
   }
 }
 </script>

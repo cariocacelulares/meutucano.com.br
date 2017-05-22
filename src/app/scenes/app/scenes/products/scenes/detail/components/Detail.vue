@@ -33,22 +33,6 @@
 export default {
   data() {
     return {
-      product: {
-        sku: null,
-        brand_id: null,
-        line_id: null,
-        title: null,
-        ean: null,
-        ncm: null,
-        price: null,
-        cost: null,
-        condition: null,
-        warranty: null,
-        created_at: null,
-        updated_at: null,
-        deleted_at: null,
-        reserved_stock: null,
-      },
       tabs: [
         {
           text: 'Informações gerais',
@@ -64,17 +48,26 @@ export default {
     }
   },
 
-  mounted() {
-    axios.get(`products/${this.$route.params.sku}`).then(
-      (response) => {
-        this.product = response.data
+  computed: {
+    product() {
+      return this.$store.getters['products/detail/GET_PRODUCT']
+    },
+  },
 
-        this.tabs[1].label = this.product.depot_products_count
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
+  watch: {
+    'product.depot_products_count'() {
+      this.tabs[1].label = this.product.depot_products_count
+    },
+  },
+
+  methods: {
+    fetch() {
+      this.$store.dispatch('products/detail/FETCH_PRODUCT', this.$route.params.sku)
+    },
+  },
+
+  beforeMount() {
+    this.fetch()
   },
 }
 </script>
