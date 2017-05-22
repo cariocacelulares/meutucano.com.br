@@ -14,10 +14,10 @@ class AddPriceToQueue
      */
     public function subscribe(Dispatcher $events)
     {
-        $events->listen(
-            ProductPriceUpdated::class,
-            '\Magento\Events\Handlers\AddPriceToQueue@onProductPriceUpdated'
-        );
+        // $events->listen(
+        //     ProductPriceUpdated::class,
+        //     '\Magento\Events\Handlers\AddPriceToQueue@onProductPriceUpdated'
+        // );
     }
 
     /**

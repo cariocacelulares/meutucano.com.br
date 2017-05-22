@@ -16,15 +16,15 @@ class AddOrderToQueue
      */
     public function subscribe(Dispatcher $events)
     {
-        $events->listen(
-            OrderCanceled::class,
-            '\Magento\Events\Handlers\AddOrderToQueue@onOrderCanceled'
-        );
-
-        $events->listen(
-            OrderSent::class,
-            '\Magento\Events\Handlers\AddOrderToQueue@onOrderSent'
-        );
+        // $events->listen(
+        //     OrderCanceled::class,
+        //     '\Magento\Events\Handlers\AddOrderToQueue@onOrderCanceled'
+        // );
+        //
+        // $events->listen(
+        //     OrderSent::class,
+        //     '\Magento\Events\Handlers\AddOrderToQueue@onOrderSent'
+        // );
     }
 
     /**

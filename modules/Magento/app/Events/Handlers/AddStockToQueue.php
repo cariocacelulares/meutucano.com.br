@@ -15,15 +15,15 @@ class AddStockToQueue
      */
     public function subscribe(Dispatcher $events)
     {
-        $events->listen(
-            ProductStockUpdated::class,
-            '\Magento\Events\Handlers\AddStockToQueue@onProductStockUpdated'
-        );
-
-        $events->listen(
-            OrderProductCreated::class,
-            '\Magento\Events\Handlers\AddStockToQueue@onOrderProductCreated'
-        );
+        // $events->listen(
+        //     ProductStockUpdated::class,
+        //     '\Magento\Events\Handlers\AddStockToQueue@onProductStockUpdated'
+        // );
+        //
+        // $events->listen(
+        //     OrderProductCreated::class,
+        //     '\Magento\Events\Handlers\AddStockToQueue@onOrderProductCreated'
+        // );
     }
 
     /**
