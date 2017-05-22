@@ -6,7 +6,7 @@
             <Icon name="angle-left" />
           </TButton>
 
-          <TButton size="big" color="light" text="darker" :link="{ name: 'products.edit' }">
+          <TButton size="big" color="light" text="darker" :link="{ name: 'products.edit', params: { sku: product.sku } }">
             <Icon name="pencil" text="Editar" />
           </TButton>
 

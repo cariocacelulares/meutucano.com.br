@@ -6,36 +6,65 @@
           <Icon name="angle-left" />
         </TButton>
 
-        <VSeparator v-if="sku" :spacing="20" :height="40" />
-        <FeaturedValue v-if="sku" label="SKU"
-          :value="sku" color="darker" />
+        <VSeparator v-if="!creating" :spacing="20" :height="40" />
+        <FeaturedValue v-if="!creating" label="SKU"
+          :value="product.sku" color="darker" />
       </div>
 
       <TButton size="big" color="success" type="submit">
         <Icon name="check" text="Salvar" />
       </TButton>
     </PageHeader>
-    <ContentBox :boxed="true">
-      <div class="grid-4 m-b-20">
-        <InputGroup :input-shrink="1" :fix-label="true">
-          <TInput v-model="sku" label="SKU" placeholder="Cód. único" slot="input" class="shrink-1" :disabled="!sku" />
-          <TButton size="big" color="info" slot="right" @click="generateSku" :disabled="!sku">
-            <Icon name="refresh" text="Gerar" />
-          </TButton>
-        </InputGroup>
 
-        <TInput v-model="title" label="Título" placeholder="Ex: Iphone 6S Plus Dourado" class="span-3" />
+    <ContentBox :boxed="true">
+      <ValidationBox class="m-b-20" />
+
+      <div class="grid-4 m-b-20">
+        <TInput v-model="product.sku" label="SKU" placeholder="Cód. único" slot="input" class="shrink-1" :disabled="true" />
+        <TInput v-model="product.title" label="Título" placeholder="Ex: Iphone 6S Plus Dourado" class="span-3" />
       </div>
 
       <div class="grid-5">
-        <TInput v-model="reference" label="Referência" placeholder="Ref. do produto" />
-        <TInput v-model="ean" label="EAN" placeholder="Cód. de barras" />
-        <TInput v-model="ncm" label="NCM" placeholder="Nomenclatura Comum do MERCOSUL " />
-        <TSelect v-model="brand" :options="[]" label="Marca" placeholder="Selecione" />
-        <TSelect v-model="line" :options="[]" label="Linha" placeholder="Selecione" />
+        <TInput v-model="product.reference" label="Referência" placeholder="Ref. do produto" />
+        <TInput v-model="product.ean" label="EAN" placeholder="Cód. de barras" />
+        <TInput v-model="product.ncm" label="NCM" placeholder="Nomenclatura Comum do MERCOSUL " />
+        <TLabel text="Marca">
+          <v-select theme="discrete" :inside-search="true"
+            :on-search="getBrands"
+            :options="brands"
+            :on-change="brandChanged"
+            :value.sync="product.brand_option"
+            placeholder="Marca do produto"
+            search-placeholder="Buscar marca">
+            <template slot="no-options">Nada foi encontrado</template>
+          </v-select>
+        </TLabel>
+        <TLabel text="Linha">
+          <v-select theme="discrete" :inside-search="true"
+            :on-search="getLines"
+            :options="lines"
+            :on-change="lineChanged"
+            :value.sync="product.line_option"
+            placeholder="Linha do produto"
+            search-placeholder="Buscar linha">
+            <template slot="no-options">Nada foi encontrado</template>
+          </v-select>
+        </TLabel>
 
-        <TSelect v-model="unity" :options="[]" label="Tipo de unidade" placeholder="Selecione" />
-        <TSelect v-model="condition" :options="[]" label="Condição" placeholder="Selecione" />
+        <TSelect v-model="product.unity_type" :options="unityTypes" label="Tipo de unidade" placeholder="Selecione" />
+
+        <TSelect v-model="product.condition" :options="conditions" label="Condição" placeholder="Selecione" />
+
+        <TSelect v-model="product.origin" :options="origins" label="Origem" placeholder="Selecione" />
+
+        <TInput v-model="product.warranty" label="Garantia" placeholder="Ex: 3 meses"/>
+
+        <TLabel text="Preço">
+          <InputGroup>
+            <Icon name="usd" slot="left" />
+            <TInput v-model="product.price" placeholder="R$ 999,90" slot="input" />
+          </InputGroup>
+        </TLabel>
       </div>
 
       <!--
@@ -76,56 +105,161 @@ export default {
 
   data() {
     return {
-      sku: null,
-      title: null,
-      reference: null,
-      ean: null,
-      ncm: null,
-      brand: null,
-      line: null,
-      unity: null,
-      condition: null,
+      lines: [],
+      brands: [],
+
+      unityTypes: [
+        {
+          text: 'Unidade',
+          value: 'UN',
+        }
+      ],
+
+      conditions: [
+        {
+          text: 'Novo',
+          value: 0,
+        },
+        {
+          text: 'Usado',
+          value: 1,
+        },
+      ],
+
+      origins: [
+        {
+          text: 'Nacional',
+          value: 0,
+        },
+        {
+          text: 'Importado',
+          value: 1,
+        },
+      ],
       /*stock_time: null,
       stock_min: null,
       stock_max: null,*/
     }
   },
 
-  computed() {
-    this.sku = this.productSku
+  computed: {
+    creating() {
+      return (typeof(this.$route.params.sku) != 'undefined' && this.$route.params.sku) ? false : true
+    },
+
+    product() {
+      if (this.creating) {
+        return {
+          brand: {},
+          line: {},
+          condition: null,
+        }
+      } else {
+        return this.$store.getters['products/detail/GET_PRODUCT']
+      }
+    },
   },
 
   methods: {
-    generateSku() {
-      this.sku = 384
+    lineChanged(line) {
+      if (line) {
+        this.product.line_id = line.value
+      }
+    },
+
+    getLines(search, loading) {
+      clearTimeout(this.debounce)
+
+      this.debounce = setTimeout(function() {
+        loading(true)
+
+        axios.get('lines/fetch' + parseParams({ search })).then(
+          (response) => {
+            this.lines = []
+
+            response.data.forEach((item) => {
+              this.lines.push({
+                label: item.title,
+                value: item.id
+              })
+            })
+
+            loading(false)
+          }
+        )
+      }.bind(this), 500)
+    },
+
+    brandChanged(brand) {
+      if (brand) {
+        this.product.brand_id = brand.value
+      }
+    },
+
+    getBrands(search, loading) {
+      clearTimeout(this.debounce)
+
+      this.debounce = setTimeout(function() {
+        loading(true)
+
+        axios.get('brands/fetch' + parseParams({ search })).then(
+          (response) => {
+            this.brands = []
+
+            response.data.forEach((item) => {
+              this.brands.push({
+                label: item.title,
+                value: item.id
+              })
+            })
+
+            loading(false)
+          }
+        )
+      }.bind(this), 500)
     },
 
     save() {
-      axios.post('product/create', this.$data).then(
-        (response) => {
-          if (validationFail(response)) {
-            console.log('validationFail', response.data)
-          } else {
-            this.$router.push({ name: 'products.list' })
-          }
-        },
-        (error) => {
-          this.$toaster.error('Não foi possível salvar o salvar produto!')
-        }
-      )
+      if (this.creating) {
+        axios.post('products', this.product).then((response) => {
+          this.$router.push({ name: 'products.detail', params: { sku: response.data.sku } })
+          this.$toaster.success('Produto criado com sucesso!')
+        })
+      } else {
+        axios.put(`products/${this.product.sku}`, this.product).then((response) => {
+          this.$router.push({ name: 'products.detail', params: { sku: response.data.sku } })
+          this.$toaster.success('Produto alterado com sucesso!')
+        })
+      }
     },
   },
 
-  beforeRouteEnter(to, from, next) {
-    if (to.name == 'products.create') {
-      next()
-    } else {
-      axios.get('product/' + to.params.sku).then(
+  beforeMount() {
+    this.$store.dispatch('global/VALIDATION')
+
+    const creating = (typeof(this.$route.params.sku) != 'undefined' && this.$route.params.sku) ? false : true
+
+    if (!creating) {
+      this.$store.dispatch('products/detail/FETCH_PRODUCT', this.$route.params.sku).then(
         (response) => {
-          next()
+          if (this.product.line) {
+            this.product.line_option = {
+              label: this.product.line.title,
+              value: this.product.line.id
+            }
+            this.lines = [this.product.line_option]
+          }
+
+          if (this.product.brand) {
+            this.product.brand_option = {
+              label: this.product.brand.title,
+              value: this.product.brand.id
+            }
+            this.brands = [this.product.brand_option]
+          }
         },
         (error) => {
-          next({ name: 'products.list' })
+          this.$router.push({ name: 'products.list' })
         }
       )
     }

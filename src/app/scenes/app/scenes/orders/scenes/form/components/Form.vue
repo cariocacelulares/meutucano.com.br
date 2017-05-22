@@ -321,19 +321,15 @@ export default {
       order.products = this.order.order_products_grouped
 
       if (this.creating) {
-        axios.post('orders', order).then(
-          (response) => {
-            this.$router.push({ name: 'orders.detail', params: { id: response.data.id } })
-            this.$toaster.success('Pedido salvo com sucesso!')
-          }
-        )
+        axios.post('orders', order).then((response) => {
+          this.$router.push({ name: 'orders.detail', params: { id: response.data.id } })
+          this.$toaster.success('Pedido salvo com sucesso!')
+        })
       } else {
-        axios.put(`orders/${order.id}`, order).then(
-          (response) => {
-            this.$router.push({ name: 'orders.detail', params: { id: response.data.id } })
-            this.$toaster.success('Pedido salvo com sucesso!')
-          }
-        )
+        axios.put(`orders/${order.id}`, order).then((response) => {
+          this.$router.push({ name: 'orders.detail', params: { id: response.data.id } })
+          this.$toaster.success('Pedido salvo com sucesso!')
+        })
       }
     },
   },

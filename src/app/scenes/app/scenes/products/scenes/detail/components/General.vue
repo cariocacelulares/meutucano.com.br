@@ -35,7 +35,7 @@
 
           <div class="card-data">
             <span>Origem</span>
-            <strong>{{ product.origin }}</strong>
+            <strong>{{ product.origin_cast }}</strong>
           </div>
 
           <div class="card-data">
