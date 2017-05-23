@@ -6,18 +6,15 @@
 
         <VSeparator :spacing="20" :height="40" />
 
-        <FeaturedValue label="Cancelados (144)"
-          value="R$8.125,00" color="danger" />
+        <FeaturedValue :label="`Cancelados (${header.canceled.quantity})`" :value="header.canceled.total | money" color="danger" />
 
         <VSeparator :spacing="20" :height="40" />
 
-        <FeaturedValue label="Aprovados (14)"
-          value="R$3.619,00" color="success" />
+        <FeaturedValue :label="`Aprovados (${header.approved.quantity})`" :value="header.approved.total | money" color="success" />
 
         <VSeparator :spacing="20" :height="40" />
 
-        <FeaturedValue label="Faturados (89)"
-          value="R$53.923,00" color="primary" />
+        <FeaturedValue :label="`Faturados (${header.invoiced.quantity})`" :value="header.invoiced.total | money" color="primary" />
       </div>
 
       <TButton size="big" color="success" :link="{ name: 'orders.create' }">
@@ -65,6 +62,20 @@
 export default {
   data() {
     return {
+      header: {
+        canceled: {
+          quantity: 0,
+          total: 0,
+        },
+        approved: {
+          quantity: 0,
+          total: 0,
+        },
+        invoiced: {
+          quantity: 0,
+          total: 0,
+        },
+      },
       namespace: 'orders/list',
       filter: null,
     }
@@ -76,6 +87,8 @@ export default {
         month: this.filter.month,
         year: this.filter.year,
       })
+
+      this.fetchHeader()
     }
   },
 
@@ -83,6 +96,27 @@ export default {
     orders() {
       return this.$store.getters[`${this.namespace}/GET`]
     },
+  },
+
+  methods: {
+    fetchHeader() {
+      const filter = {
+        filter: {
+          month: this.filter.month,
+          year: this.filter.year,
+        }
+      }
+
+      if (filter) {
+        axios.get('orders/header' + parseParams(filter)).then((response) => {
+          this.header = response.data
+        })
+      }
+    },
+  },
+
+  beforeMount() {
+    this.fetchHeader()
   },
 };
 </script>
