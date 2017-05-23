@@ -21,7 +21,7 @@ class InvoiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'file' => 'required|mimes:xml',
+            'file' => 'required|mimes:xml'
         ];
     }
 }

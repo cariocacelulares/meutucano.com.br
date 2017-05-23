@@ -32,6 +32,9 @@ class OrderInvoiceController extends Controller
         try {
             $this->checkUpload($request->input('order_id'), $request->file('file'));
 
+            if (OrderInvoice::where('order_id', $request->input('order_id'))->first())
+                throw new \Exception("O pedido já possui nota fiscal associada, delete-a ou crie uma recompra");
+
             \DB::transaction(function() use ($request, &$data) {
                 $data = OrderInvoice::create($request->all());
 
@@ -45,6 +48,9 @@ class OrderInvoiceController extends Controller
 
                 $orderProducts = OrderProduct::whereIn('id', $products->pluck('order_product_id'))
                     ->get();
+
+                if($products->count() != $invoiceSerials->count())
+                    throw new \Exception("Um ou mais seriais faturados não estão confirmados em uma retirada de estoque.");
 
                 if($orderProducts->pluck('order_id')->diff($request->input('order_id'))->count() || $orderProducts->count() === 0)
                     throw new \Exception("Produto não existe ou pertence a esse pedido.");
