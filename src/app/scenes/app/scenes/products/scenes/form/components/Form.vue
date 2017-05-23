@@ -6,9 +6,11 @@
           <Icon name="angle-left" />
         </TButton>
 
-        <VSeparator v-if="!creating" :spacing="20" :height="40" />
-        <FeaturedValue v-if="!creating" label="SKU"
-          :value="product.sku" color="darker" />
+        <VSeparator :spacing="20" :height="40" />
+
+        <FeaturedValue v-if="!creating" label="SKU" :value="product.sku" color="darker" />
+
+        <FeaturedValue v-else label="" value="Criar um novo produto" color="darker" />
       </div>
 
       <TButton size="big" color="success" type="submit">
@@ -105,6 +107,12 @@ export default {
 
   data() {
     return {
+      product: {
+        brand: {},
+        line: {},
+        condition: null,
+      },
+
       lines: [],
       brands: [],
 
@@ -144,19 +152,7 @@ export default {
 
   computed: {
     creating() {
-      return (typeof(this.$route.params.sku) != 'undefined' && this.$route.params.sku) ? false : true
-    },
-
-    product() {
-      if (this.creating) {
-        return {
-          brand: {},
-          line: {},
-          condition: null,
-        }
-      } else {
-        return this.$store.getters['products/detail/GET_PRODUCT']
-      }
+      return (typeof(this.productSku) != 'undefined' && this.productSku) ? false : true
     },
   },
 
@@ -237,11 +233,16 @@ export default {
   beforeMount() {
     this.$store.dispatch('global/VALIDATION')
 
-    const creating = (typeof(this.$route.params.sku) != 'undefined' && this.$route.params.sku) ? false : true
-
-    if (!creating) {
-      this.$store.dispatch('products/detail/FETCH_PRODUCT', this.$route.params.sku).then(
+    if (typeof(this.$route.params.sku) !== 'undefined') {
+      axios.get(`products/${this.$route.params.sku}`).then(
         (response) => {
+          this.product = Object.assign(this.product, response.data)
+
+          if (!this.productSku) { // is creating
+            delete this.product.sku
+            this.product.title += ' (duplicado)'
+          }
+
           if (this.product.line) {
             this.product.line_option = {
               label: this.product.line.title,

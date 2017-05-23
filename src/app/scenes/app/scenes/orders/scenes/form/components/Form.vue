@@ -193,8 +193,26 @@
 
 <script>
 export default {
+  props: {
+    orderId: {
+      default: null
+    }
+  },
+
   data() {
     return {
+      order: {
+        shipment_cost: null,
+        taxes: null,
+        discount: null,
+        payment_method_slug: null,
+        marketplace: {},
+        shipmentMethod: {},
+        customer: {},
+        customer_address: {},
+        order_products_grouped: [],
+      },
+
       // select options
       customerList: [],
       addressList: [],
@@ -216,21 +234,8 @@ export default {
   },
 
   computed: {
-    order() {
-      if (this.creating) {
-        return {
-          shipment_cost: null,
-          taxes: null,
-          discount: null,
-          payment_method_slug: null,
-        }
-      } else {
-        return this.$store.getters['orders/detail/GET_ORDER']
-      }
-    },
-
     creating() {
-      return (typeof(this.$route.params.id) != 'undefined' && this.$route.params.id) ? false : true
+      return (typeof(this.orderId) != 'undefined' && this.orderId) ? false : true
     },
   },
 
@@ -337,11 +342,11 @@ export default {
   beforeMount() {
     this.$store.dispatch('global/VALIDATION')
 
-    const creating = (typeof(this.$route.params.id) != 'undefined' && this.$route.params.id) ? false : true
-
-    if (!creating) {
-      this.$store.dispatch('orders/detail/FETCH_ORDER', this.$route.params.id).then(
-        (response) => {},
+    if (this.orderId) {
+      axios.get(`orders/${this.orderId}`).then(
+        (response) => {
+          this.order = Object.assign(this.order, response.data)
+        },
         (error) => {
           this.$router.push({ name: 'orders.list' })
         }
