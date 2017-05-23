@@ -39,7 +39,8 @@ class Product extends \Eloquent
         'cost',
         'origin',
         'condition',
-        'warranty'
+        'warranty',
+        'active'
     ];
 
     /**
@@ -68,8 +69,9 @@ class Product extends \Eloquent
      * @return array
      */
     protected $casts = [
-        'price' => 'float',
-        'cost'  => 'float'
+        'price'  => 'float',
+        'cost'   => 'float',
+        'active' => 'boolean',
     ];
 
     /**

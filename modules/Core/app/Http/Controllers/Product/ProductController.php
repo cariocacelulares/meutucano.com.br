@@ -183,6 +183,48 @@ class ProductController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    public function activate($id)
+    {
+        try {
+            $data = Product::findOrFail($id);
+            $data->active = true;
+            $data->save();
+
+            return showResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deactivate($id)
+    {
+        try {
+            $data = Product::findOrFail($id);
+            $data->active = false;
+            $data->save();
+
+            return showResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao atualizar recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function destroy($id)
     {
         try {

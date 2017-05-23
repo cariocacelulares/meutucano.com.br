@@ -152,6 +152,9 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
 
         Route::get('find/{term}', 'Product\ProductController@find');
         Route::get('{id}/entry', 'Product\ProductController@lastDepotEntry');
+
+        Route::put('{id}/activate', 'Product\ProductController@activate');
+        Route::put('{id}/deactivate', 'Product\ProductController@deactivate');
     });
     api('products', 'Product\ProductController');
 
