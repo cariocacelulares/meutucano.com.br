@@ -89,6 +89,9 @@ class OrderShipmentController extends Controller
         $orderShipment->status = shipment($orderShipment)->refreshStatus();
 
         if ($orderShipment->isDirty('status') && ($orderShipment->getOriginal('status') == OrderShipment::STATUS_PENDING)) {
+            $orderShipment->order->status = Order::STATUS_SHIPPED;
+            $orderShipment->order->save();
+
             $firstEvent = $orderShipment->history->last()->toArray();
             $orderShipment->sent_at = Carbon::createFromFormat('Y-m-d H:i:s', $firstEvent['date'])->format('Y-m-d');
         }
