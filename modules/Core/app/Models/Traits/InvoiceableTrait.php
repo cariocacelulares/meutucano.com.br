@@ -23,7 +23,7 @@ trait InvoiceableTrait
                 'series'    => (int) substr($xml->protNFe->infProt->chNFe, 34, 1),
                 'cfop'      => (int) $cfop,
                 'key'       => (string) $xml->protNFe->infProt->chNFe,
-                'issued_at' => dateConvert($xml->NFe->infNFe->ide->dhEmi, 'Y-m-d\TH:i:sP', 'Y-m-d')
+                'issued_at' => dateConvert($xml->NFe->infNFe->ide->dhEmi, 'Y-m-d\TH:i:sP', 'Y-m-d H:i:s')
             ];
 
             $invoice = new Invoice($data);
