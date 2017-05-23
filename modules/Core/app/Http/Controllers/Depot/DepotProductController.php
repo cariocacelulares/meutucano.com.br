@@ -77,6 +77,25 @@ class DepotProductController extends Controller
         return listResponse($data);
     }
 
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function show($id)
+    {
+        try {
+            $data = DepotProduct::with(['depot'])->findOrFail($id);
+
+            return showResponse($data);
+        } catch (\Exception $exception) {
+            \Log::error(logMessage($exception, 'Erro ao obter recurso'));
+
+            return clientErrorResponse([
+                'exception' => '[' . $exception->getLine() . '] ' . $exception->getMessage()
+            ]);
+        }
+    }
+
 
     /**
      * @param Request $request
