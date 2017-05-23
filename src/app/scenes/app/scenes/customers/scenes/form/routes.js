@@ -2,22 +2,22 @@ import Form from './components/Form'
 
 export default [
   {
-    path: '/products/create/:sku?',
+    path: '/customers/create',
     component: Form,
-    name: 'products.create',
+    name: 'customers.create',
     meta: {
       auth: true,
       breadcrumb: 'Novo'
     },
   },
   {
-    path: '/products/edit/:sku',
+    path: '/customers/edit/:id',
     component: Form,
-    name: 'products.edit',
+    name: 'customers.edit',
     meta: {
       auth: true,
       breadcrumb: 'Editar'
     },
-    props: (route) => ({ productSku: route.params.sku })
+    props: (route) => ({ customerId: route.params.id })
   },
 ]

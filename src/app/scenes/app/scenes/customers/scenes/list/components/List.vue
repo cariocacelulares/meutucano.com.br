@@ -28,7 +28,7 @@
             <td>{{ customer.phone | phone }}</td>
             <td>{{ customer.email || '-' }}</td>
             <td>
-              <router-link :to="{ name: 'products.detail', params: { sku: customer.id } }">
+              <router-link :to="{ name: 'customers.detail', params: { id: customer.id } }">
                 <Icon name="eye" size="big" />
               </router-link>
             </td>
