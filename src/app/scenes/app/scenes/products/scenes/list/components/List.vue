@@ -32,6 +32,7 @@
             <th width="150">Valor</th>
             <th width="100">Estado</th>
             <th width="100">Estoque</th>
+            <th width="100">Ativo</th>
             <th width="70"></th>
           </tr>
         </thead>
@@ -47,6 +48,10 @@
               <!-- <Badge color="default" text="darker" v-if="product.estoque.pendente">{{ product.estoque.pendente }}</Badge> -->
               <Badge v-if="product.reserved_stock">{{ product.reserved_stock }}</Badge>
               {{ product.available_stock }}
+            </td>
+            <td>
+              <Badge v-if="product.active" :circular="true" color="success"><Icon name="check" /></Badge>
+              <Badge v-if="!product.active" :circular="true" color="danger"><Icon name="close" /></Badge>
             </td>
             <td>
               <router-link :to="{ name: 'products.detail', params: { sku: product.sku } }">

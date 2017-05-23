@@ -19,6 +19,10 @@ export default {
       type: String,
       default: 'badge'
     },
+    circular: {
+      type: Boolean,
+      default: false
+    },
   },
 
   computed: {
@@ -29,6 +33,10 @@ export default {
       classList.push(`bg-${this.color}`)
       classList.push(`text-${this.text}`)
       classList.push(this.type)
+
+      if (this.circular) {
+        classList.push('circular')
+      }
 
       return notEmpty(classList).join(' ')
     }
@@ -50,6 +58,11 @@ export default {
     padding: 0 8px;
     border-radius: 10px;
     font-size: 10px;
+
+    &.circular {
+      width: 18px;
+      border-radius: 50%;
+    }
   }
 
   &.label {

@@ -21,7 +21,8 @@
           <FeaturedValue v-if="product.reference" label="Referência" :value="product.reference" color="darker" />
         </div>
 
-        <TButton size="big" color="danger" type="submit" leftIcon="close">Excluir</TButton>
+        <TButton @click="activate" v-if="!product.active" size="big" color="success" leftIcon="check">Ativar</TButton>
+        <TButton @click="deactivate" v-if="product.active" size="big" color="danger" leftIcon="close">Desativar</TButton>
       </PageHeader>
 
       <router-view></router-view>
@@ -64,6 +65,19 @@ export default {
     fetch() {
       this.$store.dispatch('products/detail/FETCH_PRODUCT', this.$route.params.sku)
     },
+
+    activate() {
+      axios.put(`products/${this.product.sku}/activate`).then((response) => {
+        this.fetch()
+      })
+    },
+
+    deactivate() {
+      axios.put(`products/${this.product.sku}/deactivate`).then((response) => {
+        this.fetch()
+      })
+    },
+
   },
 
   beforeMount() {
