@@ -17,6 +17,15 @@ class Invoice extends \Eloquent
     ];
 
     /**
+     * @var array
+     */
+    protected $dates = [
+        'issued_at',
+        'created_at',
+        'updated_at'
+    ];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
     public function invoiceable()

@@ -1,9 +1,11 @@
 <?php namespace Core\Http\Controllers\Order;
 
+use Carbon\Carbon;
 use Core\Models\Order;
 use Core\Models\OrderInvoice;
 use Core\Models\OrderProduct;
 use Core\Models\ProductSerial;
+use Core\Models\DepotWithdraw;
 use App\Http\Controllers\Controller;
 use Core\Models\DepotWithdrawProduct;
 use Core\Http\Controllers\OrderController;
@@ -39,7 +41,7 @@ class OrderInvoiceController extends Controller
                 $data = OrderInvoice::create($request->all());
 
                 $products = collect($request->input('products'));
-                $invoiceSerials = ProductSerial::with(['depotProduct', 'withdrawProducts.depotWithdraw'])
+                $invoiceSerials = ProductSerial::with(['depotProduct', 'withdrawProducts'])
                     ->whereHas('withdrawProducts', function($query) {
                         $query->where('status', DepotWithdrawProduct::STATUS_CONFIRMED);
                     })
@@ -86,10 +88,48 @@ class OrderInvoiceController extends Controller
     public function destroy($id, DeleteRequest $request)
     {
         try {
-            $data = OrderInvoice::findOrFail($id);
-            $data->fill($request->all());
-            $data->save();
-            $data->delete();
+            \DB::transaction(function() use ($id, $request) {
+                $data = OrderInvoice::with([
+                    'invoice',
+                    'order',
+                    'order.orderProducts',
+                    'order.orderProducts.depotProduct',
+                    'order.orderProducts.productSerial',
+                ])->findOrFail($id);
+
+                if ($data->invoice->issued_at->diffInDays(Carbon::now()) > 0)
+                    throw new \Exception("Não é possível deletar notas fiscais após 24h de sua emissão.");
+
+                if ($data->order->status !== Order::STATUS_INVOICED)
+                    throw new \Exception("Não é possível deletar notas fiscais de pedidos que já foram despachados.");
+
+                $data->fill($request->all());
+                $data->save();
+                $data->delete();
+
+                $data->order->status = Order::STATUS_PAID;
+                $data->order->save();
+
+                foreach ($data->order->orderProducts as $orderProduct) {
+                    $orderProduct->fill([
+                        'product_serial_id' => null,
+                        'depot_product_id'  => null
+                    ])->save();
+
+                    $depotWithdraw = DepotWithdraw::with('products')->firstOrCreate([
+                        'user_id'    => \Auth::user()->id,
+                        'closed_at'  => null,
+                        'depot_slug' => $orderProduct->depotProduct->depot_slug
+                    ]);
+
+                    $depotWithdraw->products()->updateOrCreate([
+                        'depot_product_id'  => $orderProduct->depotProduct->id,
+                        'product_serial_id' => $orderProduct->productSerial->id
+                    ], [
+                        'status' => DepotWithdrawProduct::STATUS_CONFIRMED
+                    ]);
+                }
+            });
 
             return deletedResponse();
         } catch (\Exception $exception) {

@@ -50,6 +50,15 @@ class DepotWithdraw extends \Eloquent
     }
 
     /**
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFromCurrentUser($query)
+    {
+        return $query->where('user_id', \Auth::user()->id);
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function depot()
