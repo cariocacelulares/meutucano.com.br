@@ -280,12 +280,14 @@ export default {
     toggleMonitored(shipment) {
       if (shipment.monitored) {
         axios.delete(`orders/shipments/monitors/${shipment.monitored.id}`).then((response) => {
+          this.$toaster.warning('Sucesso', 'Você deixou de monitorar este rastreio!');
           this.fetch()
         })
       } else {
         axios.post(`orders/shipments/monitors`, {
           order_shipment_id: shipment.id
         }).then((response) => {
+          this.$toaster.success('Sucesso', 'Agora você está monitorando este rastreio!');
           this.fetch()
         })
       }
