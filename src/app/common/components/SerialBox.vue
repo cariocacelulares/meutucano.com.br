@@ -3,7 +3,7 @@
     <span v-if="label" class="label">{{ label }}</span>
     <form class="serial-wrapper" @submit.prevent="addSerial">
       <ul :class="{ scrollbar: serials.length > 3 }">
-        <li v-for="(serial, index) in serials">
+        <li v-for="(serial, index) in serials" v-tooltip="serial.message">
           <span>
             <Icon v-if="serial.valid" name="check" color="success" />
             <Icon v-if="serial.valid === false" name="ban" color="danger" />
@@ -11,7 +11,7 @@
           </span>
           <div>
             <strong>{{ serial.serial }}</strong>
-            <p>
+            <p v-if="serial.product.title || serial.product.depot.name">
               {{ serial.product.title }}
               <span v-if="serial.product.depot.name"> | {{ serial.product.depot.name }}</span>
             </p>
@@ -23,7 +23,7 @@
       </ul>
       <div class="input">
         <Icon name="ellipsis-h" color="dark" />
-        <TInput v-model="serial" :block="true" :discrete="true"
+        <TInput v-model="serial" :block="true" :discrete="true" :disabled="disabled"
         placeholder="Digite o serial ou utilize um leitor para inserir o serial e pressione enter" />
       </div>
       <span v-if="serials.length && serials.length !== valid">
@@ -52,6 +52,10 @@ export default {
     serials: {
       type: Array,
       required: true,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -92,9 +96,9 @@ export default {
         valid: null,
         message: null,
         product: {
-          title: 'Samsung Galaxy S5 Preto 15GB',
+          title: null,
           depot: {
-            name: 'Estoque físico'
+            name: null
           },
         },
       })

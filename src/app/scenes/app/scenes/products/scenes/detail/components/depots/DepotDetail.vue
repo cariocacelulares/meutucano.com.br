@@ -9,7 +9,7 @@
 
         <div class="buttons">
           <TButton @click="openTransferStock" color="info" text="white" leftIcon="exchange" class="m-r-10">Transferir</TButton>
-          <TButton color="danger" text="white" leftIcon="close">Excluir</TButton>
+          <TButton @click="$confirm(destroy, depotProduct.id)" color="danger" text="white" leftIcon="close">Excluir</TButton>
         </div>
       </header>
 
@@ -41,7 +41,7 @@
       </TableList>
     </article>
 
-    <TransferStock @close="load" />
+    <TransferStock :from="depotProduct.depot_slug || null" @close="load" />
   </div>
 </template>
 
@@ -98,14 +98,26 @@ export default {
         if (this.wait) {
           this.wait = false
         } else {
-          this.$store.dispatch('global/tableList/FETCH')
+          this.load()
         }
       }
     },
   },
 
   methods: {
+    destroy(id) {
+      axios.delete(`depots/products/${id}`).then((response) => {
+        this.$parent.$forceUpdate()
+        this.$router.push({ name: 'products.detail.depots', params: { sku: this.sku } })
+      })
+    },
+
     load() {
+      axios.get(`depots/products/${this.depotProduct.id}`).then((response) => {
+        this.depotProduct = response.data
+      })
+
+      this.$store.dispatch('global/tableList/FETCH')
     },
 
     openTransferStock() {

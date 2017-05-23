@@ -11,12 +11,16 @@ window.parseParams = (params) => {
 
   for (var key in params) {
     if (params[key] && typeof(params[key]) == 'object') {
-      const clearedObj = {}
-      for(var index in params[key]) {
-        clearedObj[index] = params[key][index]
-      }
+      if (Object.prototype.toString.call(params[key]) == '[object Array]') {
+        params[key] = params[key].join('&')
+      } else {
+        const clearedObj = {}
+        for(var index in params[key]) {
+          clearedObj[index] = params[key][index]
+        }
 
-      params[key] = JSON.stringify(clearedObj)
+        params[key] = JSON.stringify(clearedObj)
+      }
     }
 
     value = encodeURIComponent(params[key])

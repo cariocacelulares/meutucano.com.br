@@ -44,42 +44,45 @@ export default {
     },
   },
 
+  // força o load pra remover os itens quando excluidos
+  // (não está passando pelo mount pq já está na tela)
+  beforeRouteUpdate(to, from, next) {
+    this.load()
+    next()
+  },
+
   methods: {
     setDepotProduct(depotProduct) {
       return this.$store.dispatch('products/detail/depots/CURRENT', depotProduct);
     },
 
     load() {
-      axios.get(`depots/products/from/product/${this.sku}`).then(
-        (response) => {
-          this.depotsProduct = response.data
+      axios.get(`depots/products/from/product/${this.sku}`).then((response) => {
+        this.depotsProduct = response.data
 
-          if (!this.depotId && this.depotsProduct.length) {
-            this.depotsProduct[0].index = 0
-            this.setDepotProduct(this.depotsProduct[0])
+        if (!this.depotId && this.depotsProduct.length) {
+          this.depotsProduct[0].index = 0
+          this.setDepotProduct(this.depotsProduct[0])
 
-            this.$router.push({
-              name: 'products.detail.depots.detail',
-              params: {
-                sku: this.sku,
-                id: this.depotsProduct[0].id,
-                depotIndex: 0,
-              }
-            })
-          } else {
-            this.depotsProduct.forEach((item, index) => {
-              if (item.id == this.depotId) {
-                item.index = index
-                this.setDepotProduct(item)
+          this.$router.push({
+            name: 'products.detail.depots.detail',
+            params: {
+              sku: this.sku,
+              id: this.depotsProduct[0].id,
+              depotIndex: 0,
+            }
+          })
+        } else {
+          this.depotsProduct.forEach((item, index) => {
+            if (item.id == this.depotId) {
+              item.index = index
+              this.setDepotProduct(item)
 
-                return;
-              }
-            })
-          }
-        },
-        (error) => {
-        },
-      )
+              return;
+            }
+          })
+        }
+      })
     },
 
     changeDepot(depotProduct, index) {
@@ -101,7 +104,7 @@ export default {
     },
   },
 
-  mounted() {
+  beforeMount() {
     this.load()
   },
 }

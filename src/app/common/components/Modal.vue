@@ -159,10 +159,12 @@ export default {
 
     confirmed() {
       if (this.onConfirm) {
-        this.onConfirm()
+        if (this.onConfirm() !== false) {
+          this.close()
+        }
+      } else {
+        this.close()
       }
-
-      this.close()
     },
 
     pressEscape(event) {

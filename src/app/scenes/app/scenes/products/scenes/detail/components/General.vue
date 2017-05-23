@@ -158,12 +158,14 @@ export default {
         categories.push(item.month)
       })
 
-      this.$refs.ordersPeriod.chart.xAxis[0].categories = categories
-      this.$refs.ordersPeriod.addSeries({
-        data: series
-      })
+      if (this.$refs.ordersPeriod) {
+        this.$refs.ordersPeriod.chart.xAxis[0].categories = categories
+        this.$refs.ordersPeriod.addSeries({
+          data: series
+        })
 
-      this.$refs.ordersPeriod.hideLoading()
+        this.$refs.ordersPeriod.hideLoading()
+      }
     })
 
     // graph: cost per month
@@ -175,12 +177,14 @@ export default {
         categories.push(item.month)
       })
 
-      this.$refs.costPeriod.chart.xAxis[0].categories = categories
-      this.$refs.costPeriod.addSeries({
-        data: series
-      })
+      if (this.$refs.costPeriod) {
+        this.$refs.costPeriod.chart.xAxis[0].categories = categories
+        this.$refs.costPeriod.addSeries({
+          data: series
+        })
 
-      this.$refs.costPeriod.hideLoading()
+        this.$refs.costPeriod.hideLoading()
+      }
     })
 
     // graph: cost per month
@@ -193,11 +197,13 @@ export default {
         })
       })
 
-      this.$refs.ordersMarketplace.addSeries({
-        data: series
-      })
+      if (this.$refs.ordersMarketplace) {
+        this.$refs.ordersMarketplace.addSeries({
+          data: series
+        })
 
-      this.$refs.ordersMarketplace.hideLoading()
+        this.$refs.ordersMarketplace.hideLoading()
+      }
     })
   },
 

@@ -16,37 +16,31 @@ export default {
     }
   },
 
+  computed: {
+    sku() {
+      return this.$route.params.sku
+    }
+  },
+
   methods: {
     fetch() {
-      axios.get(`depots/from/product/${this.$route.params.sku}/available`).then(
-        (response) => {
-          this.depots = response.data.map((item) => {
-            return {
-              value: item.slug,
-              text: item.title
-            }
-          })
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
+      axios.get(`depots/from/product/${this.sku}/available`).then((response) => {
+        this.depots = response.data.map((item) => {
+          return {
+            value: item.slug,
+            text: item.title
+          }
+        })
+      })
     },
 
     save() {
       axios.post('depots/products', {
-      	"product_sku": 384,
-      	"depot_slug": this.depot
-      }).then(
-        (response) => {
-          console.log(response)
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
-
-      this.$emit('close')
+      	'product_sku': this.sku,
+      	'depot_slug': this.depot
+      }).then((response) => {
+        this.$emit('close')
+      })
     },
   },
 }
