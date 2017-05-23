@@ -4,7 +4,7 @@ use Core\Models\ProductSerial;
 use Core\Models\ProductSerialDefect;
 use App\Http\Controllers\Controller;
 use Core\Http\Controllers\Product\ProductSerialController;
-use Core\Http\Requests\ProductSerialDefectRequest as Request;
+use Core\Http\Requests\Product\ProductSerialDefectRequest as Request;
 
 class ProductSerialDefectController extends Controller
 {

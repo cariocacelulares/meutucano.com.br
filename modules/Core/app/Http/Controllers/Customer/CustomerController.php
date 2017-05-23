@@ -2,7 +2,7 @@
 
 use Core\Models\Customer;
 use App\Http\Controllers\Controller;
-use Core\Http\Requests\CustomerRequest as Request;
+use Core\Http\Requests\Customer\CustomerRequest as Request;
 
 class CustomerController extends Controller
 {
@@ -62,7 +62,11 @@ class CustomerController extends Controller
     public function show($id)
     {
         try {
-            $data = Customer::with(['orders', 'addresses'])->findOrFail($id);
+            $data = Customer::with([
+                'orders',
+                'orders.marketplace',
+                'addresses'
+            ])->findOrFail($id);
 
             return showResponse($data);
         } catch (\Exception $exception) {

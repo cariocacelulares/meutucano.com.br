@@ -10,8 +10,7 @@ use Core\Models\DepotEntryProduct;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Core\Models\DepotEntryProductSerial;
-use App\Http\Controllers\Rest\RestControllerTrait;
-use Core\Http\Requests\DepotEntryRequest as Request;
+use Core\Http\Requests\Depot\DepotEntryRequest as Request;
 
 class DepotEntryController extends Controller
 {

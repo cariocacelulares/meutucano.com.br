@@ -6,7 +6,7 @@ use Core\Models\Product;
 use Core\Models\OrderProduct;
 use App\Http\Controllers\Controller;
 use Core\Transformers\ProductTransformer;
-use Core\Http\Requests\ProductRequest as Request;
+use Core\Http\Requests\Product\ProductRequest as Request;
 
 class ProductController extends Controller
 {

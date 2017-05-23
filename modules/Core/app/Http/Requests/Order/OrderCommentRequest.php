@@ -1,9 +1,9 @@
-<?php namespace Core\Http\Requests;
+<?php namespace Core\Http\Requests\Order;
 
 use App\Http\Requests\JsonResponseTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class SupplierRequest extends FormRequest
+class OrderCommentRequest extends FormRequest
 {
     use JsonResponseTrait;
 
@@ -21,7 +21,7 @@ class SupplierRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => "required|min:2",
+            'comment' => 'required|min:2',
         ];
     }
 }

@@ -1,8 +1,8 @@
 <?php namespace Core\Http\Controllers\Product;
 
 use Core\Models\Brand;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Core\Http\Requests\BrandRequest as Request;
 
 class BrandController extends Controller
 {

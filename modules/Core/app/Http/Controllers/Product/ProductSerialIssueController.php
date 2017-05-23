@@ -4,7 +4,7 @@ use Core\Models\ProductSerial;
 use Core\Models\ProductSerialIssue;
 use App\Http\Controllers\Controller;
 use Core\Http\Controllers\Product\ProductSerialController;
-use Core\Http\Requests\ProductSerialIssueRequest as Request;
+use Core\Http\Requests\Product\ProductSerialIssueRequest as Request;
 
 class ProductSerialIssueController extends Controller
 {

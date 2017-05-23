@@ -2,7 +2,7 @@
 
 use Core\Models\OrderComment;
 use App\Http\Controllers\Controller;
-use Core\Http\Requests\OrderCommentRequest as Request;
+use Core\Http\Requests\Order\OrderCommentRequest as Request;
 
 class OrderCommentController extends Controller
 {

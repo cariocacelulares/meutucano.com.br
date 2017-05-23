@@ -3,7 +3,7 @@
 use Core\Models\Supplier;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Rest\RestControllerTrait;
-use Core\Http\Requests\SupplierRequest as Request;
+use Core\Http\Requests\Supplier\SupplierRequest as Request;
 
 class SupplierController extends Controller
 {

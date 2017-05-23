@@ -1,4 +1,4 @@
-<?php namespace Core\Http\Requests;
+<?php namespace Core\Http\Requests\Depot;
 
 use Illuminate\Validation\Rule;
 use App\Http\Requests\JsonResponseTrait;

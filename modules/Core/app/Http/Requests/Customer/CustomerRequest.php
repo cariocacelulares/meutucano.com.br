@@ -1,9 +1,9 @@
-<?php namespace Core\Http\Requests;
+<?php namespace Core\Http\Requests\Customer;
 
 use App\Http\Requests\JsonResponseTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class DepotRequest extends FormRequest
+class CustomerRequest extends FormRequest
 {
     use JsonResponseTrait;
 
@@ -21,9 +21,10 @@ class DepotRequest extends FormRequest
     public function rules()
     {
         return [
-            'title'    => 'required',
-            'include'  => 'required',
-            'priority' => 'required',
+            'taxvat' => 'required|min:10|numeric',
+            'name'   => 'required|min:3',
+            'phone'  => 'required|min:8',
+            'email'  => 'required|email',
         ];
     }
 }

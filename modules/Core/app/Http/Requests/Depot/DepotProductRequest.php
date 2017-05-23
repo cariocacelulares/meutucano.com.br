@@ -21,8 +21,8 @@ class DepotProductRequest extends FormRequest
     public function rules()
     {
         return [
+            'depot_slug'  => "required|unique_with:depot_products,product_sku",
             'product_sku' => "required",
-            'depot_slug'  => "required|unique_with:depot_products,product_sku"
         ];
     }
 }

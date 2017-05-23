@@ -1,9 +1,9 @@
-<?php namespace Core\Http\Requests;
+<?php namespace Rastreio\Http\Requests;
 
 use App\Http\Requests\JsonResponseTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CustomerRequest extends FormRequest
+class BrandRequest extends FormRequest
 {
     use JsonResponseTrait;
 
@@ -21,10 +21,7 @@ class CustomerRequest extends FormRequest
     public function rules()
     {
         return [
-            'taxvat' => 'required|min:10|numeric',
-            'name'   => 'required|min:3',
-            'phone'  => 'required|min:8',
-            'email'  => 'required|email',
+            'title' => 'required',
         ];
     }
 }

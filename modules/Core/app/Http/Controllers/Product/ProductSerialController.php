@@ -6,9 +6,9 @@ use Core\Models\ProductSerial;
 use Core\Models\DepotProduct;
 use Core\Models\DepotWithdrawProduct;
 use App\Http\Controllers\Controller;
-use Core\Http\Requests\ProductSerialTransferRequest as TransferRequest;
-use Core\Http\Requests\ProductSerialCheckInvoiceRequest as CheckInvoiceRequest;
-use Core\Http\Requests\ProductSerialCheckTransferRequest as CheckTransferRequest;
+use Core\Http\Requests\Product\ProductSerialTransferRequest as TransferRequest;
+use Core\Http\Requests\Product\ProductSerialCheckInvoiceRequest as CheckInvoiceRequest;
+use Core\Http\Requests\Product\ProductSerialCheckTransferRequest as CheckTransferRequest;
 
 class ProductSerialController extends Controller
 {

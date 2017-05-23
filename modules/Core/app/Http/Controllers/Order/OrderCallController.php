@@ -2,9 +2,7 @@
 
 use Core\Models\OrderCall;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Input;
-use Core\Http\Requests\OrderCallRequest as Request;
+use Core\Http\Requests\Order\OrderCallRequest as Request;
 
 class OrderCallController extends Controller
 {

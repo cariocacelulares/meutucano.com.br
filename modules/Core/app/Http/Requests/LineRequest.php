@@ -1,9 +1,9 @@
-<?php namespace Core\Http\Requests;
+<?php namespace Rastreio\Http\Requests;
 
 use App\Http\Requests\JsonResponseTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class OrderCallRequest extends FormRequest
+class LineRequest extends FormRequest
 {
     use JsonResponseTrait;
 
@@ -21,7 +21,7 @@ class OrderCallRequest extends FormRequest
     public function rules()
     {
         return [
-            'file' => 'required|mimes:wav,mp3',
+            'title' => 'required',
         ];
     }
 }

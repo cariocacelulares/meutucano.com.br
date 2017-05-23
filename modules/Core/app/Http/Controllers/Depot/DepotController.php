@@ -4,8 +4,7 @@ use Core\Models\Depot;
 use Core\Models\Product;
 use Core\Models\DepotProduct;
 use App\Http\Controllers\Controller;
-use Core\Http\Requests\DepotRequest as Request;
-use App\Http\Controllers\Rest\RestControllerTrait;
+use Core\Http\Requests\Depot\DepotRequest as Request;
 
 class DepotController extends Controller
 {
@@ -161,11 +160,8 @@ class DepotController extends Controller
         try {
             $data = Depot::with(['depotProducts'])->findOrFail($id);
 
-            if ($data->depotProducts->max('quantity') != 0) {
-                return clientErrorResponse([
-                    'message' => 'Um ou mais produtos do depósito possuem quantidade em estoque, realize uma transferência antes de deletar o depósito'
-                ]);
-            }
+            if ($data->depotProducts->max('quantity') != 0)
+                throw new \Exception("Um ou mais produtos do depósito possuem quantidade em estoque, realize uma transferência antes de deletar o depósito.");
 
             $data->delete();
 

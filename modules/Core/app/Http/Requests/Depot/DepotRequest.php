@@ -1,9 +1,9 @@
-<?php namespace Core\Http\Requests;
+<?php namespace Core\Http\Requests\Depot;
 
 use App\Http\Requests\JsonResponseTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProductRequest extends FormRequest
+class DepotRequest extends FormRequest
 {
     use JsonResponseTrait;
 
@@ -21,9 +21,9 @@ class ProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'sku'   => "unique:products,sku,{$this->product},sku",
-            'title' => "required|min:2",
-            'price' => "required"
+            'title'    => 'required',
+            'include'  => 'required',
+            'priority' => 'required',
         ];
     }
 }

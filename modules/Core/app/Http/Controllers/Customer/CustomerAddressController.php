@@ -3,7 +3,7 @@
 use Core\Models\Customer;
 use Core\Models\CustomerAddress;
 use App\Http\Controllers\Controller;
-use Core\Http\Requests\CustomerAddressRequest as Request;
+use Core\Http\Requests\Customer\CustomerAddressRequest as Request;
 
 class CustomerAddressController extends Controller
 {

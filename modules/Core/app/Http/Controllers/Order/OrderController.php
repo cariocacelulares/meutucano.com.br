@@ -339,42 +339,6 @@ class OrderController extends Controller
     }
 
     /**
-     * Return order information for shopsystem integration
-     *
-     * @param  string $order
-     * @return array
-     */
-    public function shopsystem($api_code)
-    {
-        try {
-            if ($order = Order::where('api_code', $api_code)->first()) {
-                $shipment      = $order->shipments()->orderBy('created_at', 'DESC')->first();
-                $tracking_code = ($shipment) ? $shipment->tracking_code : null;
-
-                return showResponse([
-                    'taxvat'      => $order->customer->taxvat,
-                    'nome'        => mb_strtolower(removeAcentos($order->customer->name)),
-                    'email'       => removeAcentos($order->customer->email),
-                    'cep'         => removeAcentos($order->customerAddress->zipcode),
-                    'telefone'    => numbers($order->customer->phone),
-                    'rua'         => removeAcentos($order->customerAddress->street),
-                    'numero'      => numbers($order->customerAddress->number),
-                    'bairro'      => removeAcentos($order->customerAddress->district),
-                    'complemento' => removeAcentos($order->customerAddress->complement),
-                    'marketplace' => mb_strtolower($order->marketplace),
-                    'order'       => $api_code,
-                    'frete'       => $order->shipment_cost,
-                    'rastreio'    => $tracking_code
-                ]);
-            }
-        } catch (\Exception $e) {
-            \Log::warning(logMessage($e, 'Não foi possível obter os dados do order para o shopsystem!'));
-        }
-
-        return notFoundResponse();
-    }
-
-    /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */

@@ -1,9 +1,9 @@
-<?php namespace Core\Http\Requests;
+<?php namespace Core\Http\Requests\Order;
 
 use App\Http\Requests\JsonResponseTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class OrderCommentRequest extends FormRequest
+class OrderCallRequest extends FormRequest
 {
     use JsonResponseTrait;
 
@@ -21,7 +21,7 @@ class OrderCommentRequest extends FormRequest
     public function rules()
     {
         return [
-            'comment' => 'required|min:2',
+            'file' => 'required|mimes:wav,mp3',
         ];
     }
 }

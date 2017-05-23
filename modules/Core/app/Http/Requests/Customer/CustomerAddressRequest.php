@@ -1,4 +1,4 @@
-<?php namespace Core\Http\Requests;
+<?php namespace Core\Http\Requests\Customer;
 
 use App\Http\Requests\JsonResponseTrait;
 use Illuminate\Foundation\Http\FormRequest;

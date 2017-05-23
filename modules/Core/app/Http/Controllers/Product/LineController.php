@@ -1,8 +1,8 @@
 <?php namespace Core\Http\Controllers\Product;
 
 use Core\Models\Line;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Core\Http\Requests\LineRequest as Request;
 
 class LineController extends Controller
 {
