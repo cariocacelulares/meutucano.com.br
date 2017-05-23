@@ -11,9 +11,9 @@
       </router-link>
     </li>
     <li>
-      <a href="#">
+      <router-link :to="{ name: 'customers' }">
         <Icon name="group" text="Clientes" />
-      </a>
+      </router-link>
     </li>
     <li>
       <router-link :to="{ name: 'products' }">

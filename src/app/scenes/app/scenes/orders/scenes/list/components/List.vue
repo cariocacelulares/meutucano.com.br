@@ -77,7 +77,7 @@ export default {
         },
       },
       namespace: 'orders/list',
-      filter: null,
+      filter: {},
     }
   },
 

@@ -1,66 +1,47 @@
 <template>
   <div :class="{ dropdown: true, opened: opened }" @click="open">
     <div class="selection">
-      <input v-model="term" :placeholder="placeholder" @input="doSearch"/>
-         <!-- <input @blur="blurInput"
-         @keydown.up="prevItem"
-         @keydown.down="nextItem"
-         @keyup.enter="enterItem"
-         @keyup.escape="enterItem"
-         @keydown.delete="deleteTextOrItem"> -->
+      <span v-if="selected.text">{{ selected.text }}</span>
+      <span v-if="!selected.text">{{ placeholder }}</span>
       <Icon name="angle-down" />
     </div>
     <ul>
       <li v-for="item in options"
         @click="select(item)">
-        {{ item.label }}
+        {{ item.text }}
       </li>
     </ul>
   </div>
 </template>
 
 <script>
-import 'font-awesome/css/font-awesome.css'
-
 export default {
   props: {
     placeholder: {
       type: String,
       default: 'Selecione'
     },
-    itens: {
+    options: {
       type: Array,
       required: true
-    },
-    name: {
-      type: String,
-      required: true
-    },
-    search: {
-      type: Function,
-      default: null
     },
   },
 
   data() {
     return {
-      selected: null,
+      selected: {},
       opened: false,
-      term: null,
-      options: [],
-      debounce: null
     }
   },
 
   methods: {
     select(item) {
       this.selected = item
-      this.$root.$emit(`dropdownChanged.${this.name}`, this.selected)
+      this.$emit('input', this.selected)
     },
 
     close() {
       document.removeEventListener('click', this.close, false);
-
       this.opened = false
     },
 
@@ -74,63 +55,12 @@ export default {
         document.addEventListener('click', this.close, false);
       }
     },
-
-    doSearch(event) {
-      clearTimeout(this.debounce)
-
-      this.debounce = setTimeout(function() {
-        axios.get('lines/fetch' + parseParams({
-          search: event.target.value
-        })).then(
-          (response) => {
-            this.options = []
-            response.data.forEach((item) => {
-              this.options.push({
-                label: item.title,
-                value: item.id
-              })
-            })
-
-            console.log(this.options)
-          },
-          (error) => {
-            console.log(error)
-          },
-        )
-      }.bind(this), 500)
-    }
-    // doSearch(event) {
-       /*_.debounce((event) => {
-        console.log(event.target.value)
-
-      }, 500)*/
-    // },
-  },
-
-  watch: {
-    selected: {
-      handler() {
-        if (this.selected) {
-          this.term = this.selected.label
-        }
-      },
-      deep: true
-    },
-  },
-
-  mounted() {
-    if (this.selected) {
-      this.term = this.selected.label
-    }
-
-    this.options = this.itens
-  },
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '~style/vars';
-
 .dropdown {
   position: relative;
   display: flex;
@@ -182,7 +112,6 @@ export default {
     background-color: $lighter;
     box-shadow: 0px 2px 1px 0px $default;
     font-size: .9em;
-
     // transition effect
     max-height: 0;
     // transition: all 250ms ease-out;

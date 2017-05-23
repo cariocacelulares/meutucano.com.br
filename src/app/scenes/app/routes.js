@@ -2,6 +2,7 @@ import App from './components/App'
 import { routes as dashboard } from './scenes/dashboard'
 import { routes as products } from './scenes/products'
 import { routes as orders } from './scenes/orders'
+import { routes as customers } from './scenes/customers'
 
 export default [
   {
@@ -17,6 +18,7 @@ export default [
       ...dashboard,
       ...products,
       ...orders,
+      ...customers,
     ]
   },
 ]
