@@ -12,8 +12,8 @@
         </v-select>
 
         <VSeparator :spacing="20" :height="40" />
-        <FeaturedValue label="Em estoque (144)"
-        value="R$133.619,00" color="success" />
+
+        <FeaturedValue :label="`Em estoque (${header.in_stock.quantity})`" :value="header.in_stock.total | money" color="success" />
       </div>
 
       <TButton size="big" color="success" :link="{ name: 'products.create' }">
@@ -69,6 +69,12 @@
 export default {
   data() {
     return {
+      header: {
+        in_stock: {
+          quantity: 0,
+          total: 0,
+        }
+      },
       options: [],
       debounce: null,
       namespace: 'products/list',
@@ -79,41 +85,27 @@ export default {
     products() {
       return this.$store.getters[`${this.namespace}/GET`]
     },
-
-    lines() {
-      return [
-        {
-          label: 'Item a',
-          value: 1
-        },
-        {
-          label: 'Item b',
-          value: 2
-        },
-        {
-          label: 'Item c',
-          value: 3
-        },
-      ]
-    }
-  },
-
-  mounted() {
-    /*this.$root.$on('dropdownChanged.productLines', (item) => {
-      // alguma ação pra quando troca a linha dos products
-      console.log(item)
-    })*/
-  },
-
-  beforeDestroy() {
-    // this.$root.$off('dropdownChanged.productLines')
   },
 
   methods: {
+    fetchHeader() {
+      let filter = {
+        filter: this.$store.getters[`${this.namespace}/GET_FILTER`]
+      }
+
+      filter = filter ? parseParams(filter) : ''
+
+      axios.get(`products/header${filter}`).then((response) => {
+        this.header = response.data
+      })
+    },
+
     filterChanged(filter) {
       this.$store.dispatch(`${this.namespace}/CHANGE_FILTER`, {
         line_id: filter.value
       })
+
+      this.fetchHeader()
     },
 
     getOptions(search, loading) {
@@ -139,7 +131,11 @@ export default {
       }.bind(this), 500)
     },
   },
-};
+
+  beforeMount() {
+    this.fetchHeader()
+  },
+}
 </script>
 
 <style lang="scss" scoped>
