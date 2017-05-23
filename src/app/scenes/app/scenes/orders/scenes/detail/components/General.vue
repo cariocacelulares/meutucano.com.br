@@ -27,7 +27,6 @@
 
           <div class="card-data">
             <span>Documento</span>
-            <!-- <strong v-clipboard="order.customer.taxvat">{{ order.customer.taxvat | taxvat }}</strong> -->
             <strong v-clipboard="order.customer.taxvat">{{ order.customer.taxvat | taxvat }}</strong>
           </div>
 

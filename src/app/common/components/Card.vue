@@ -34,7 +34,7 @@ export default {
       default: null
     },
     headerText: {
-      type: String,
+      type: String | Number,
       default: null
     },
     loading: {
