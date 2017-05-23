@@ -24,8 +24,9 @@ class DepotEntryRequest extends FormRequest
         return [
             'supplier_id'                 => 'required',
             'shipment_method'             => 'required',
-            'payment_method'              => 'required',
+            'payment_method_slug'         => 'required',
             'products'                    => 'required|array',
+            'products.*.sku'              => 'distinct',
             'products.*.depot_product_id' => 'required',
             'products.*.cost'             => 'required',
             'products.*.serials'          => 'array|same_size_from:quantity',

@@ -32,10 +32,13 @@ class DepotEntryProduct extends \Eloquent
      * @var array
      */
     protected $casts = [
-        'icms'   => 'float',
-        'ipi'    => 'float',
-        'pis'    => 'float',
-        'cofins' => 'float',
+        'unitary_value' => 'float',
+        'taxed'         => 'boolean',
+        'icms'          => 'float',
+        'ipi'           => 'float',
+        'pis'           => 'float',
+        'cofins'        => 'float',
+        'serials'       => 'array',
     ];
 
     /**
@@ -65,32 +68,8 @@ class DepotEntryProduct extends \Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function serials()
+    public function entryProductSerials()
     {
         return $this->hasMany(DepotEntryProductSerial::class);
-    }
-
-    /**
-     * Decode serials from json
-     *
-     * @param  string  $serials
-     * @return array|null
-     */
-    public function getSerialsAttribute($serials)
-    {
-        if (!$serials) return null;
-
-        return json_decode($serials);
-    }
-
-    /**
-     * Encode serials to json
-     *
-     * @param  array  $serials
-     * @return string|null
-     */
-    public function setSerialsAttribute($serials)
-    {
-        $this->attributes['serials'] = json_encode($serials);
     }
 }

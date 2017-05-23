@@ -1,12 +1,15 @@
 <?php namespace Core\Http\Controllers\Depot;
 
 use Carbon\Carbon;
+use Core\Models\Product;
 use Core\Models\Supplier;
 use Core\Models\DepotEntry;
+use Core\Models\ProductSerial;
 use Core\Models\DepotEntryInvoice;
 use Core\Models\DepotEntryProduct;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
+use Core\Models\DepotEntryProductSerial;
 use App\Http\Controllers\Rest\RestControllerTrait;
 use Core\Http\Requests\DepotEntryRequest as Request;
 
@@ -180,11 +183,36 @@ class DepotEntryController extends Controller
     public function confirm($id)
     {
         try {
-            $data = DepotEntry::findOrFail($id);
-            $data->confirmed_at = Carbon::now();
-            $data->save();
+            $entry = DepotEntry::with('products')->findOrFail($id);
 
-            return showResponse($data);
+            if ($entry->confirmed)
+                throw new \Exception("A entrada já foi confirmada.");
+
+            \DB::transaction(function() use (&$entry) {
+                $entry->confirmed_at = Carbon::now();
+                $entry->save();
+
+                foreach ($entry->products as $product) {
+                    foreach ($product->serials as $serial) {
+                        $productSerial = ProductSerial::withTrashed()->updateOrCreate(
+                            ['serial' => $serial],
+                            ['depot_product_id' => $product->depot_product_id, 'cost' => null]
+                        );
+
+                        if ($productSerial->trashed())
+                            $productSerial->restore();
+
+                        DepotEntryProductSerial::firstOrCreate([
+                            'depot_entry_product_id' => $product->id,
+                            'product_serial_id'      => $productSerial->id,
+                        ]);
+                    }
+                }
+
+                $this->calculateEntryProductsCost($entry);
+            });
+
+            return showResponse($entry);
         } catch (\Exception $exception) {
             \Log::error(logMessage($exception, 'Erro ao atualizar recurso'));
 
@@ -195,13 +223,51 @@ class DepotEntryController extends Controller
     }
 
     /**
+     * Calculate the cost from entry products
+     *
+     * @param DepotEntry $entry
+     */
+    private function calculateEntryProductsCost(DepotEntry $entry)
+    {
+        $products = Product::with([
+            'depotEntryProducts',
+            'depotEntryProducts.depotEntry',
+            'depotEntryProducts.entryProductSerials',
+            'depotEntryProducts.entryProductSerials.productSerial',
+            'depotEntryProducts.entryProductSerials.productSerial.inStockRelation',
+        ])->whereIn('sku', $entry->products->pluck('product_sku'))->get();
+
+        $totalValue = $totalQty = 0;
+        foreach ($products as $product) {
+
+            foreach ($product->depotEntryProducts as $depotEntryProduct) {
+                $qty = 0;
+
+                if ($depotEntryProduct->depotEntry->confirmed) {
+                    $qty = $depotEntryProduct->entryProductSerials->count(function($serial) {
+                        return $serial->productSerial->in_stock;
+                    });
+
+                    if ($qty > 0) {
+                        $totalQty   += $qty;
+                        $totalValue += ($depotEntryProduct->unitary_value * $qty);
+                    }
+                }
+            }
+
+            $product->cost = $totalQty ? ($totalValue / $totalQty) : $totalValue;
+            $product->save();
+        }
+    }
+
+    /**
      * Create/update products from entry
      *
      * @param  DepotEntry $entry
      * @param  array $products
      * @return void
      */
-    private function processEntryProducts($entry, $products)
+    private function processEntryProducts(DepotEntry $entry, $products)
     {
         $entry->products()->delete();
 
