@@ -48,7 +48,8 @@ class OrderInvoiceController extends Controller
                     ->whereIn('serial', $products->pluck('serial'))
                     ->get();
 
-                $orderProducts = OrderProduct::whereIn('id', $products->pluck('order_product_id'))
+                $orderProducts = OrderProduct::with('product')
+                    ->whereIn('id', $products->pluck('order_product_id'))
                     ->get();
 
                 if($products->count() != $invoiceSerials->count())
@@ -60,6 +61,10 @@ class OrderInvoiceController extends Controller
                 foreach ($products as $product) {
                     $orderProduct    = $orderProducts->where('id', $product->order_product_id)->first();
                     $productSerial   = $invoiceSerials->where('serial', $product->serial)->first();
+
+                    $productSerial->cost = $orderProduct->product->cost;
+                    $productSerial->save();
+
                     $withdrawProduct = $productSerial->withdrawProducts->first();
 
                     $withdrawProduct->status = DepotWithdrawProduct::STATUS_INVOICED;
