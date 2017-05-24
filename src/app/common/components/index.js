@@ -24,5 +24,7 @@ export { default as Alert } from './Alert'
 export { default as MonthPicker } from './MonthPicker'
 export { default as ProductSearch } from './ProductSearch'
 export { default as ValidationBox } from './ValidationBox'
+export { default as Avatar } from './Avatar'
+export { default as ActiveBadge } from './ActiveBadge'
 
 export { default as TableList } from './TableList'

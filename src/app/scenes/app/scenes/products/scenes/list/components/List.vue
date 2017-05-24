@@ -49,10 +49,7 @@
               <Badge v-if="product.reserved_stock">{{ product.reserved_stock }}</Badge>
               {{ product.available_stock }}
             </td>
-            <td>
-              <Badge v-if="product.active" :circular="true" color="success"><Icon name="check" /></Badge>
-              <Badge v-if="!product.active" :circular="true" color="danger"><Icon name="close" /></Badge>
-            </td>
+            <td><ActiveBadge :active="product.active" /></td>
             <td>
               <router-link :to="{ name: 'products.detail', params: { sku: product.sku } }">
                 <Icon name="eye" size="big" />

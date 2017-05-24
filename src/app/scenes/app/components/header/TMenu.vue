@@ -86,15 +86,6 @@ export default {
       opacity: 1;
       z-index: 999;
     }
-
-    .sub-menu {
-      a.active,
-      a:hover,
-      a:focus {
-        color: $black !important;
-        text-decoration: none;
-      }
-    }
   }
 }
 </style>

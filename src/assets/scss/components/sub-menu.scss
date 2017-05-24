@@ -55,14 +55,28 @@
     }
 
     a {
-      color: $darker;
+      position: relative;
+      color: $darker !important;
       font-size: 14px;
+
+      &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -20px;
+        height: 100%;
+        width: 3px;
+        background-color: transparent;
+      }
 
       &.active,
       &:hover,
       &:focus {
-        color: $black !important;
         text-decoration: none;
+
+        &:before {
+          background-color: $info;
+        }
       }
     }
   }

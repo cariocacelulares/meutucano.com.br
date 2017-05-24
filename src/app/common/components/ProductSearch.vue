@@ -42,12 +42,6 @@ export default {
     }
   },
 
-  watch: {
-    value() {
-      // this.$refs.input.value = this.value
-    }
-  },
-
   methods: {
     adjustScroll() {
       const item = this.$refs[`item-${this.highlight}`][0]
@@ -108,7 +102,7 @@ export default {
       clearTimeout(this.debounce)
 
       this.debounce = setTimeout(function() {
-        axios.get(`products/find/${search}`).then(
+        axios.get(`products/fetch?search=${search}`).then(
           (response) => {
             this.options = response.data.map((item) => {
               let object = Object.assign({

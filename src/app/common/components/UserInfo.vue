@@ -1,8 +1,6 @@
 <template>
   <div class="UserInfo">
-    <div class="avatar">
-      <img :src="avatar" :alt="name">
-    </div>
+    <Avatar :src="avatar" :alt="name" />
     <div class="personal">
       <span class="name">{{ name }}</span>
       <span class="role">{{ sub }}</span>
@@ -53,18 +51,6 @@ export default {
     .role {
       font-size: 11px;
       color: $dark;
-    }
-  }
-
-  .avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    overflow: hidden;
-
-    img {
-      width: 100%;
-      height: 100%;
     }
   }
 }

@@ -5,9 +5,7 @@
         <span class="name">{{ user.name }}</span>
         <span class="role">{{ user.role || 'Usuário' }}</span>
       </div>
-      <div class="avatar">
-        <img :src="user.avatar || '/static/images/logo.png'" alt="Meu Tucano">
-      </div>
+      <Avatar :src="user.avatar" :alt="user.name" />
 
       <ul class="sub-menu">
         <li><strong>Minha conta</strong></li>
@@ -123,14 +121,9 @@ export default {
       }
     }
 
-    .avatar {
-      border-radius: 50%;
-      overflow: hidden;
-
-      img {
-        height: 36px;
-        width: 36px;
-      }
+    .Avatar {
+      height: 36px;
+      width: 36px;
     }
   }
 

@@ -76,7 +76,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.v-select {
-  width: 230px;
-}
 </style>

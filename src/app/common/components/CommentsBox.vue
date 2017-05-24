@@ -27,7 +27,7 @@
 
     <Card v-for="comment in comments" :key="comment.id" class="comment" :important="comment.important">
       <div class="card-header" slot="header">
-        <UserInfo :name="comment.user.name" avatar="/static/images/logo.png" :sub="comment.created_at | humanDiff" />
+        <UserInfo :name="comment.user.name" :avatar="comment.user.avatar" :sub="comment.created_at | humanDiff" />
         <a href="#" @click.prevent="$confirm(destroy, comment.id)"><Icon v-if="!onlyImportant" name="close" /></a>
       </div>
 
