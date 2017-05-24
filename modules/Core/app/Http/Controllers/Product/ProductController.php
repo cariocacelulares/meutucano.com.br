@@ -75,15 +75,18 @@ class ProductController extends Controller
     }
 
     /**
-     * Find products by SKU or title
-     *
      * @param  string $term
      * @return Object
      */
-    public function find($term)
+    public function fetch()
     {
-        $data = Product::where('title', 'LIKE', "%{$term}%")
-            ->orWhere('sku', 'LIKE', "%{$term}%")
+        $search = request('search');
+
+        $data = Product::where('active', true)
+            ->where(function($query) use ($search) {
+                $query->where('title', 'LIKE', "%{$search}%")
+                    ->orWhere('sku', 'LIKE', "%{$search}%");
+            })
             ->get();
 
         return listResponse($data);

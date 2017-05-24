@@ -51,6 +51,7 @@ class UserController extends Controller
         $search = request('search');
 
         $data = User::where('name', 'LIKE', "%{$search}%")
+            ->where('active', true)
             ->get();
 
         return listResponse($data);

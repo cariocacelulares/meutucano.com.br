@@ -150,7 +150,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api', 'namespace' => 'C
         Route::get('{id}/graph/cost-period', 'Product\ProductController@graphCostPeriod');
         Route::get('{id}/graph/orders-marketplace', 'Product\ProductController@graphOrderMarketplace');
 
-        Route::get('find/{term}', 'Product\ProductController@find');
+        Route::get('fetch', 'Product\ProductController@fetch');
         Route::get('{id}/entry', 'Product\ProductController@lastDepotEntry');
 
         Route::put('{id}/activate', 'Product\ProductController@activate');
