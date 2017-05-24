@@ -30,6 +30,9 @@ Route::group(['prefix' => '/api'], function () {
 
         Route::get('authenticate/user', 'Auth\AuthenticateController@getAuthenticatedUser');
 
+        Route::get('roles', 'RoleController@index');
+        Route::get('permissions', 'PermissionController@index');
+
         Route::group(['namespace' => 'User'], function () {
             Route::get('users/fetch', 'UserController@fetch');
             api('users', 'UserController');

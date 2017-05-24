@@ -65,6 +65,7 @@ class UserController extends Controller
     {
         try {
             $data = User::findOrFail($id);
+            $data->append('permissions');
 
             return showResponse($data);
         } catch (\Exception $exception) {

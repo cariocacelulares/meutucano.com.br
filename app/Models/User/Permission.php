@@ -13,13 +13,4 @@ class Permission extends EntrustPermission
         'display_name',
         'description',
     ];
-
-    /**
-     * @var array
-     */
-    protected $visible = [
-        'id',
-        'name',
-        'display_name'
-    ];
 }

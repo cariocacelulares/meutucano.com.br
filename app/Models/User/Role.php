@@ -13,14 +13,4 @@ class Role extends EntrustRole
         'display_name',
         'description',
     ];
-
-    /**
-     * @var array
-     */
-    protected $visible = [
-        'id',
-        'name',
-        'display_name',
-        'perms'
-    ];
 }
