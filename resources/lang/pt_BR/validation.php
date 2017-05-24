@@ -166,9 +166,8 @@ return [
         'line_id'  => "Linha",
         'price'    => "Preço",
 
-        'depot_from' => 'Depósito',
-        'depot_to'   => 'Depósito de destino',
-
+        'depot_from'  => 'Depósito',
+        'depot_to'    => 'Depósito de destino',
         'description' => 'Descrição',
 
         'company_name' => 'Razão social'
