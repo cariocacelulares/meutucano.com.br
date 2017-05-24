@@ -1,6 +1,6 @@
 <template>
   <div class="user-profile">
-    <div :class="{ info: true, opened: opened }" @click="open">
+    <div class="info">
       <div class="personal">
         <span class="name">{{ user.name }}</span>
         <span class="role">{{ user.role || 'Usuário' }}</span>
@@ -9,9 +9,14 @@
         <img :src="user.avatar || '/static/images/logo.png'" alt="Meu Tucano">
       </div>
 
-      <ul class="user-menu">
-        <li><a href="#">Perfil</a></li>
-        <li><a href="#" @click.prevent="signOut">Sair</a></li>
+      <ul class="sub-menu">
+        <li><strong>Minha conta</strong></li>
+        <li><router-link :to="{ name: 'products' }">Editar perfil</router-link></li>
+        <li><router-link :to="{ name: 'products' }">Meus acessos</router-link></li>
+
+        <li><strong>Sistema</strong></li>
+        <li><router-link :to="{ name: 'products' }">Configurações</router-link></li>
+        <li><a href="#" @click.prevent="signOut" class="text-danger">Sair</a></li>
       </ul>
     </div>
 
@@ -78,43 +83,20 @@ export default {
     position: relative;
     cursor: pointer;
 
-    // &:hover .user-menu {
-    &.opened .user-menu {
-      max-height: 500px;
-      transition: all 350ms ease-in;
+    &:hover .sub-menu,
+    &:focus .sub-menu {
+      visibility: visible;
+      opacity: 1;
+      z-index: 999;
     }
 
-    .user-menu {
-      position: absolute;
-      top: 49px;
-      left: -10px;
-      min-width: calc(100% + 10px);
-      text-align: center;
-      background-color: $white;
-      border-radius: 0 0 3px 3px;
-      color: $darker;
-      box-shadow: 0px 2px 2px 0 #CCC;
+    .sub-menu {
+      top: calc(100% + 10px);
 
-      // transition effect
-      max-height: 0;
-      transition: all 250ms ease-out;
-      overflow: hidden;
-      transform: translateZ(0);
-
-      li {
-        list-style: none;
-
-        a {
-          display: block;
-          padding: 8px 10px;
-          transition: all linear 200ms;
-
-          &:focus,
-          &:hover {
-            background-color: $lighter;
-            text-decoration: none;
-          }
-        }
+      &:before,
+      &:after {
+        left: auto;
+        right: 8px;
       }
     }
 

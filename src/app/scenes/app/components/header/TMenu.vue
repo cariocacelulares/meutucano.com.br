@@ -7,18 +7,46 @@
     </li>
     <li>
       <router-link :to="{ name: 'orders' }">
-        <Icon name="list" text="Pedidos" />
+        <Icon name="shopping-cart" text="Vendas" />
       </router-link>
-    </li>
-    <li>
-      <router-link :to="{ name: 'customers' }">
-        <Icon name="group" text="Clientes" />
-      </router-link>
+      <ul class="sub-menu">
+        <li><strong>Pedidos</strong></li>
+        <li><router-link :to="{ name: 'orders' }">Pedidos por mês</router-link></li>
+        <li><router-link :to="{ name: 'products' }">Faturamento</router-link></li>
+
+        <li><strong>Clientes</strong></li>
+        <li><router-link :to="{ name: 'customers' }">Catálogo de clientes</router-link></li>
+
+        <li><strong>Logística</strong></li>
+        <li><router-link :to="{ name: 'products' }">Centro logístico</router-link></li>
+      </ul>
     </li>
     <li>
       <router-link :to="{ name: 'products' }">
-        <Icon name="futbol-o" text="Produtos" />
+        <Icon name="tags" text="Produtos" />
       </router-link>
+      <ul class="sub-menu">
+        <li><strong>Produtos</strong></li>
+        <li><router-link :to="{ name: 'products' }">Catálogo de produtos</router-link></li>
+        <li><router-link :to="{ name: 'products' }">Marcas</router-link></li>
+        <li><router-link :to="{ name: 'products' }">Linhas</router-link></li>
+
+        <li><strong>Estoque</strong></li>
+        <li><router-link :to="{ name: 'products' }">Retiradas</router-link></li>
+        <li><router-link :to="{ name: 'products' }">Depósitos</router-link></li>
+        <li><router-link :to="{ name: 'products' }">Baixas manuais</router-link></li>
+        <li><router-link :to="{ name: 'products' }">Defeitos</router-link></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#" @click.prevent>
+        <Icon name="suitcase" text="Compras" />
+      </a>
+      <ul class="sub-menu">
+        <li><strong>Entradas</strong></li>
+        <li><router-link :to="{ name: 'products' }">Compras</router-link></li>
+        <li><router-link :to="{ name: 'products' }">Fornecedores</router-link></li>
+      </ul>
     </li>
   </ul>
 </template>
@@ -32,38 +60,41 @@ export default {
 @import '~style/vars';
 
 .TMenu {
+  line-height: 60px;
   font-size: 13px;
   color: $darker;
-
-  li {
-    display: inline-block;
-    list-style: none;
-    padding: 0 12px;
-  }
 
   .Icon {
     margin-right: 5px;
   }
 
-  a {
-    color: inherit;
-    transition: color linear 100ms;
-  }
-
-  li:hover,
-  li:focus {
-    color: $primary;
+  > li {
+    position: relative;
+    display: inline-block;
+    list-style: none;
+    padding: 0 12px;
 
     a {
-      text-decoration: none;
+      font-weight: bold;
+      color: inherit;
+      transition: color linear 100ms;
     }
-  }
 
-  a.active,
-  a:hover,
-  a:focus {
-    color: $primary;
-    text-decoration: none;
+    &:hover .sub-menu,
+    &:focus .sub-menu {
+      visibility: visible;
+      opacity: 1;
+      z-index: 999;
+    }
+
+    .sub-menu {
+      a.active,
+      a:hover,
+      a:focus {
+        color: $black !important;
+        text-decoration: none;
+      }
+    }
   }
 }
 </style>
