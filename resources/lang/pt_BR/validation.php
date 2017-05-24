@@ -76,6 +76,8 @@ return [
     'timezone'             => ':Attribute deve ser uma timezone válida.',
     'unique'               => ':Attribute já está em uso.',
     'url'                  => 'O formato de :attribute é inválido.',
+    'distinct'             => 'O campo :attribute deve ser único.',
+    'same_size_from'       => 'A quantidade de :attribute não bate com o campo :field.',
 
     /*
     |--------------------------------------------------------------------------
@@ -106,19 +108,70 @@ return [
     */
 
     'attributes' => [
-        'sku'    => 'SKU',
-        'titulo' => 'Título',
-        'weight' => 'Peso',
-        'width'  => 'Largura',
-        'height' => 'Altura',
-        'length' => 'Comprimento',
-        'valor'  => 'Preço',
+        'street'   => 'Rua',
+        'number'   => 'Número',
+        'district' => 'Bairro',
+        'zipcode'  => 'CEP',
+        'city'     => 'Cidade',
+        'state'    => 'Estado (UF)',
 
-        'title'           => "Título",
-        'price'           => "Preço",
-        'category_id'     => "Categoria",
-        'template_id'     => 'Template',
-        'template_custom' => 'Template personalizada'
+        'taxvat' => 'CPF/CNPJ',
+        'name'   => 'Nome',
+        'phone'  => 'Telefone',
+        'email'  => 'E-mail',
+
+        'supplier_id'                 => 'Fornecedor',
+        'shipment_method'             => 'Método de frete',
+        'payment_method_slug'         => 'Método de pagamento',
+        'products'                    => 'Produtos',
+        'products.*.sku'              => 'SKU do produto',
+        'products.*.depot_product_id' => 'Depósito do produto',
+        'products.*.cost'             => 'Custo do produto',
+        'products.*.serials'          => 'Seriais dos produtos',
+        'products.*.serials.*'        => 'Serial do produto',
+        'quantity'                    => 'Quantidade',
+
+        'depot_slug'  => 'Depósito',
+        'product_sku' => 'SKU do produto',
+
+        'title'    => 'Título',
+        'include'  => 'Incluído',
+        'priority' => 'Prioridade',
+
+        'serials'           => 'Seriais',
+        'depot_withdraw_id' => 'Retirada',
+
+        'user_id' => 'Usuário',
+
+        'file' => 'Arquivo',
+
+        'comment' => 'Comentário',
+
+        'note' => 'Observação',
+
+        'customer_id'          => 'Cliente',
+        'customer_address_id'  => 'Endereço do cliente',
+        'shipment_cost'        => 'Custo de envio',
+        'installments'         => 'Parcelamento',
+        'taxes'                => 'Taxas',
+        'discount'             => 'Desconto',
+
+        'order_shipment_id' => 'Envio do pedido',
+        'reason'            => 'Motivo',
+
+        'order_id' => 'Pedido',
+
+        'sku'      => "SKU",
+        'brand_id' => "Marca",
+        'line_id'  => "Linha",
+        'price'    => "Preço",
+
+        'depot_from' => 'Depósito',
+        'depot_to'   => 'Depósito de destino',
+
+        'description' => 'Descrição',
+
+        'company_name' => 'Razão social'
     ],
 
 ];
