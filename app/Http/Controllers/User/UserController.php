@@ -33,7 +33,7 @@ class UserController extends Controller
                     ->orWhere('name', 'LIKE', "%{$search}%");
             })
             ->where(function($query) {
-                if (isset(request('filter.active')))
+                if (request('filter.active') !== null)
                     $query->where('active', request('filter.active'));
             })
             ->paginate(
