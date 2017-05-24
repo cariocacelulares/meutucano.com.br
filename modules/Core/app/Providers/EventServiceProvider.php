@@ -17,7 +17,6 @@ class EventServiceProvider extends ServiceProvider
     protected $subscribe = [
         \Core\Events\Handlers\SetRefund::class,
         \Core\Events\Handlers\UpdateStock::class,
-        \Core\Events\Handlers\InvoiceOrder::class,
         \Core\Events\Handlers\AttachOrderShipment::class,
         \Core\Events\Handlers\DeleteProductSerial::class,
         \Core\Events\Handlers\RestoreProductSerial::class,

@@ -1,5 +1,6 @@
 <?php namespace Core\Events\Handlers;
 
+use Core\Models\Order;
 use Core\Events\OrderCanceled;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Log;
@@ -7,8 +8,6 @@ use Illuminate\Support\Facades\Log;
 class SetRefund
 {
     /**
-     * Set events that this will listen
-     *
      * @param  Dispatcher $events
      * @return void
      */
@@ -21,37 +20,28 @@ class SetRefund
     }
 
     /**
-     * Handle the event.
-     *
      * @param  OrderCanceled  $event
      * @return void
      */
     public function onOrderCanceled(OrderCanceled $event)
     {
-        Log::debug('Handler SetRefund/onOrderCanceled acionado!', [$event]);
+        $order = $event->order;
 
         try {
-            $order = $event->order;
-
-            if (!$order) {
-                Log::debug('Pedido não encontrado!', [$order]);
-            } else {
-                $dirty = $order->getDirty();
-                if (isset($dirty['status'])) {
-                    if (in_array((int) $order->getOriginal('status'), [1, 2, 3])) {
-                        $order = $order->fresh();
-                        $order->refunded = true;
-                        if ($order->save()) {
-                            Log::notice("Pedido {$order->id} marcado como reembolso!", [$order]);
-                        } else {
-                            Log::notice("Falha ao tentar marcar o pedido {$order->id} como reembolso!", [$order]);
-                        }
-                    }
+            if ($order->isDirty('status') && $order->getDirty()['status'] == Order::STATUS_CANCELED) {
+                if (in_array($order->getOriginal('status'), [
+                    Order::STATUS_PAID,
+                    Order::STATUS_INVOICED,
+                    Order::STATUS_SHIPPED,
+                    Order::STATUS_COMPLETE
+                ])) {
+                    $order = $order->fresh();
+                    $order->refunded = true;
+                    $order->save();
                 }
             }
-        } catch (\Exception $exception) {
-            Log::warning('Ocorreu um erro ao marcar o pedido como reembolso (OrderCanceled/SetRefund/onOrderCanceled)', [$order]);
-            reportError('Ocorreu um erro ao marcar o pedido como reembolso: ' . $exception->getMessage() . ' - ' . $exception->getLine() . ' - ' . (isset($order->id) ? $order->id : ''));
+        } catch (\Exception $e) {
+            Log::warning(logMessage($e, 'SetRefund@onOrderCanceled'));
         }
     }
 }

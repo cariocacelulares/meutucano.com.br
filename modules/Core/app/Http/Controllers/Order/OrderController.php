@@ -325,7 +325,7 @@ class OrderController extends Controller
             $order = Order::find($order_id);
 
             if ($order->can_cancel === false)
-                throw new \Exception("Não é possível aprovar o pedido.");
+                throw new \Exception("Não é possível cancelar o pedido.");
 
             $order->status = Order::STATUS_CANCELED;
             $order->save();

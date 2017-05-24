@@ -40,6 +40,9 @@ class OrderInvoiceController extends Controller
             \DB::transaction(function() use ($request, &$data) {
                 $data = OrderInvoice::create($request->all());
 
+                $data->order->status = Order::STATUS_PAID;
+                $data->order->save();
+
                 $products = collect($request->input('products'));
                 $invoiceSerials = ProductSerial::with(['depotProduct', 'withdrawProducts'])
                     ->whereHas('withdrawProducts', function($query) {
