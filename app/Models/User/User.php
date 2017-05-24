@@ -26,6 +26,7 @@ class User extends Authenticatable
         'password',
         'role',
         'avatar',
+        'active',
         'remember_token',
     ];
 
@@ -36,6 +37,13 @@ class User extends Authenticatable
         'perms',
         'password',
         'remember_token',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'active' => 'boolean'
     ];
 
     /**

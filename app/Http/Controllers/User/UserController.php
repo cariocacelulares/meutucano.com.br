@@ -32,6 +32,10 @@ class UserController extends Controller
                 $query->where('email', 'LIKE', "%{$search}%")
                     ->orWhere('name', 'LIKE', "%{$search}%");
             })
+            ->where(function($query) {
+                if (request('filter.active'))
+                    $query->where('active', request('filter.active'));
+            })
             ->paginate(
                 request('per_page', 10)
             );
