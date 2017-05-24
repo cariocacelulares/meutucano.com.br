@@ -3,7 +3,7 @@
     <button type="button" :name="`checkbox-${_uid}`" class="checkbox">
       <Icon v-if="currentValue" name="check" />
     </button>
-    <span v-if="label" class="label">{{ label }}</span>
+    <span v-if="label" :class="['label', `text-${color}`, { bold }]">{{ label }}</span>
   </label>
 </template>
 
@@ -23,6 +23,14 @@ export default {
     classes: {
       type: String,
       default: null
+    },
+    color: {
+      type: String,
+      default: 'dark'
+    },
+    bold: {
+      type: Boolean,
+      default: true
     },
     disabled: {
       type: Boolean,
@@ -84,42 +92,44 @@ export default {
       cursor: not-allowed;
     }
   }
-}
 
-.label {
-  display: block;
-  line-height: 1;
-  font-size: 12px;
-  // color: $inputLabel;
-  margin-left: 10px;
+  .checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    background: $white;
+    border: 1px solid $default;
+    border-radius: $borderRadius;
 
-  color: $dark;
-  font-weight: bold;
-}
+    &:hover {
+      background-color: darken($white, 1);
+      border-color: darken($default, 1);
+    }
 
-.checkbox {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  background: $white;
-  border: 1px solid $default;
-  border-radius: $borderRadius;
+    &:focus {
+      background-color: darken($white, 3);
+      border-color: darken($default, 3);
+    }
 
-  &:hover {
-    background-color: darken($white, 1);
-    border-color: darken($default, 1);
+    .Icon {
+      color: $darker;
+      font-size: 10px;
+    }
   }
 
-  &:focus {
-    background-color: darken($white, 3);
-    border-color: darken($default, 3);
-  }
+  .label {
+    display: block;
+    line-height: 1;
+    font-size: 12px;
+    margin-left: 10px;
+    color: $dark;
+    cursor: pointer;
 
-  .Icon {
-    color: $darker;
-    font-size: 10px;
+    &.bold {
+      font-weight: bold;
+    }
   }
 }
 </style>

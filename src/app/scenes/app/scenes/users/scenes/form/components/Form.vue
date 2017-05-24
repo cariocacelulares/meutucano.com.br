@@ -8,9 +8,9 @@
 
         <VSeparator :spacing="20" :height="40" />
 
-        <FeaturedValue v-if="!creating" label="Nome do cliente" :value="user.name" color="darker" />
+        <FeaturedValue v-if="!creating" label="Nome do usuário" :value="user.name" color="darker" />
 
-        <FeaturedValue v-else label="" value="Criar um novo cliente" color="darker" />
+        <FeaturedValue v-else label="" value="Criar um novo usuário" color="darker" />
       </div>
 
       <TButton size="big" color="success" type="submit">
@@ -20,16 +20,74 @@
 
     <ContentBox :boxed="true">
       <ValidationBox class="m-b-20" />
-      <TInput v-model="user.name" label="Nome do cliente" placeholder="Nome completo" :block="true"/>
 
-      <div class="grid-2 m-v-20">
-        <TInput v-model="user.taxvat" label="Documento" placeholder="CPF/CNPJ"/>
-        <TInput v-model="user.document" label="Inscrição estadual" placeholder="Vazio para isento"/>
+      <div class="grid-5">
+        <TInput v-model="user.name" label="Nome do usuário" placeholder="Nome completo"/>
+        <TInput v-model="user.email" label="E-mail" placeholder="E-mail profissional" type="email"/>
+        <TInput v-model="user.role" label="Cargo" placeholder="Ex: Vendedor"/>
+        <TInput v-model="user.password" label="Senha" placeholder="Senha secreta" type="password"/>
+        <TSelect v-model="user.active" label="Status" placeholder="Selecione" :options="activeOpitons"/>
       </div>
 
-      <div class="grid-2">
-        <TInput v-model="user.email" label="E-mail" placeholder="Melhor e-mail" type="email"/>
-        <TInput v-model="user.phone" label="Telefone principal" placeholder="(99) 9 9999-9999"/>
+      <div class="grid-4 m-t-20">
+        <TCheckbox v-model="user.test" label="Administrador" color="black"/>
+        <TCheckbox v-model="user.test" label="Gestor" color="black"/>
+        <TCheckbox v-model="user.test" label="Atendimento" color="black"/>
+        <TCheckbox v-model="user.test" label="Faturamento" color="black"/>
+      </div>
+
+      <div class="grid-4 role-descriptions m-b-20">
+        <small>Acesso a todas as funcionalidades</small>
+        <small>Acesso à valores e relatórios</small>
+        <small>Acesso a pedidos, clientes e logística</small>
+        <small>Acesso a faturamento e notas fiscais</small>
+      </div>
+
+      <h2>Permissões</h2>
+      <HSeparator :top="0" :bottom="20" />
+
+      <h3 class="m-t-0">Pedidos</h3>
+
+      <div class="grid-6">
+        <TCheckbox v-model="user.test" label="Visualizar pedido" :bold="false"/>
+        <TCheckbox v-model="user.test" label="Criar pedido" :bold="false"/>
+        <TCheckbox v-model="user.test" label="Alterar pedido" :bold="false"/>
+        <TCheckbox v-model="user.test" label="Aprovar pedido" :bold="false"/>
+        <TCheckbox v-model="user.test" label="Cancelar pedido" :bold="false"/>
+        <TCheckbox v-model="user.test" label="Priorizar pedido" :bold="false"/>
+      </div>
+
+      <h3>Pedidos</h3>
+
+      <div class="grid-6">
+        <TCheckbox v-model="user.test" label="Visualizar pedido" :bold="false"/>
+        <TCheckbox v-model="user.test" label="Criar pedido" :bold="false"/>
+        <TCheckbox v-model="user.test" label="Alterar pedido" :bold="false"/>
+        <TCheckbox v-model="user.test" label="Aprovar pedido" :bold="false"/>
+        <TCheckbox v-model="user.test" label="Cancelar pedido" :bold="false"/>
+        <TCheckbox v-model="user.test" label="Priorizar pedido" :bold="false"/>
+      </div>
+
+      <h3>Pedidos</h3>
+
+      <div class="grid-6">
+        <TCheckbox v-model="user.test" label="Visualizar pedido" :bold="false"/>
+        <TCheckbox v-model="user.test" label="Criar pedido" :bold="false"/>
+        <TCheckbox v-model="user.test" label="Alterar pedido" :bold="false"/>
+        <TCheckbox v-model="user.test" label="Aprovar pedido" :bold="false"/>
+        <TCheckbox v-model="user.test" label="Cancelar pedido" :bold="false"/>
+        <TCheckbox v-model="user.test" label="Priorizar pedido" :bold="false"/>
+      </div>
+
+      <h3>Pedidos</h3>
+
+      <div class="grid-6">
+        <TCheckbox v-model="user.test" label="Visualizar pedido" :bold="false"/>
+        <TCheckbox v-model="user.test" label="Criar pedido" :bold="false"/>
+        <TCheckbox v-model="user.test" label="Alterar pedido" :bold="false"/>
+        <TCheckbox v-model="user.test" label="Aprovar pedido" :bold="false"/>
+        <TCheckbox v-model="user.test" label="Cancelar pedido" :bold="false"/>
+        <TCheckbox v-model="user.test" label="Priorizar pedido" :bold="false"/>
       </div>
     </ContentBox>
   </form>
@@ -46,6 +104,16 @@ export default {
   data() {
     return {
       user: {},
+      activeOpitons: [
+        {
+          text:'Ativo',
+          value:1
+        },
+        {
+          text:'Inativo',
+          value:0
+        },
+      ]
     }
   },
 
@@ -90,4 +158,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '~style/vars';
+
+.role-descriptions {
+  margin-top: 5px;
+  color: $dark;
+
+  small {
+    padding-left: 30px;
+  }
+}
+
+h2, h3 {
+  color: $darker;
+  margin: 30px 0 15px 0;
+}
+
+h2 {
+  font-size: 14px;
+}
+
+h3 {
+  font-size: 12px;
+}
 </style>
