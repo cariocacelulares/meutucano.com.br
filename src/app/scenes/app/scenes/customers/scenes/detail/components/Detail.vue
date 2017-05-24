@@ -60,7 +60,7 @@
         <Alert v-if="!customer.orders.length" color="light" text="dark" :text-center="true">Nenhum pedido para este cliente</Alert>
 
         <template v-if="customer.orders.length" v-for="order in customer.orders">
-          <Card header-icon="cube" :header-text="order.api_code || order.id">
+          <Card header-icon="cube" :header-text="order.api_code || order.id" :header-link="{ name: 'orders.detail', params: { id: order.id } }">
             <div class="grid-3">
               <div class="card-data">
                 <span>Data</span>

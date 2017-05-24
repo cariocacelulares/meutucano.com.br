@@ -178,20 +178,40 @@ Vue.filter('phone', (value) => {
     return value
   }
 
-  value = value.match(/\d+/g, '').join('')
+  value = (value.match(/\d+/g, '') || []).join('')
 
   const length = value.length
 
-  if (length > 11) {
+  if (length > 12) { // +55 (47) 9 1234-5678
+    return `+${value.substring(0, 2)} ` +
+           `(${value.substring(2, 4)}) ` +
+           `${value.substring(4, 5)} ` +
+           `${value.substring(5, (length - 4))}-` +
+           value.substring(length - 4)
+  } else if (length > 11) { // +55 (47) 1234-5678
     return `+${value.substring(0, 2)} ` +
            `(${value.substring(2, 4)}) ` +
            `${value.substring(4, (length - 4))}-` +
            value.substring(length - 4)
+  } else if (length > 10) { // (47) 9 1234-5678
+    return `(${value.substring(0, 2)}) ` +
+          `${value.substring(2, 3)} ` +
+          `${value.substring(3, (length - 4))}-` +
+          value.substring(length - 4)
+  } else if (length > 9) { // (47) 1234-5678
+    return `(${value.substring(0, 2)}) ` +
+          `${value.substring(2, (length - 4))}-` +
+          value.substring(length - 4)
+  } else if (length > 8) { // 9 1234-5678
+    return `${value.substring(0, 1)} ` +
+          `${value.substring(1, (length - 4))}-` +
+          value.substring(length - 4)
+  } else if (length > 7) { // 1234-5678
+    return `${value.substring(0, (length - 4))}-` +
+          value.substring(length - 4)
   }
 
-  return `(${value.substring(0, 2)}) ` +
-         `${value.substring(2, (length - 4))}-` +
-         value.substring(length - 4)
+  return ''
 })
 
 Vue.filter('taxvat', (value) => {
@@ -199,7 +219,7 @@ Vue.filter('taxvat', (value) => {
     return value
   }
 
-  value = value.match(/\d+/g, '').join('')
+  value = (value.match(/\d+/g, '') || []).join('')
 
   const length = value.length
 
@@ -209,12 +229,14 @@ Vue.filter('taxvat', (value) => {
            `${value.substring(5, 8)}/` +
            `${value.substring(8, 12)}-` +
            value.substring(12)
+  } else if (length > 0) {
+    return `${value.substring(0, 3)}.` +
+    `${value.substring(3, 6)}.` +
+    `${value.substring(6, 9)}-` +
+    value.substring(9)
   }
 
-  return `${value.substring(0, 3)}.` +
-         `${value.substring(3, 6)}.` +
-         `${value.substring(6, 9)}-` +
-         value.substring(9)
+  return ''
 })
 
 /* eslint-disable no-new */

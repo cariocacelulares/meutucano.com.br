@@ -12,7 +12,7 @@ const STATUS_COLORS = {
 
 export default {
   transform: (customer) => {
-    if (customer.orders.length) {
+    if (typeof(customer.orders) != 'undefined' && customer.orders.length) {
       customer.orders.forEach((order) => {
         order.status_color = STATUS_COLORS[order.status]
       })

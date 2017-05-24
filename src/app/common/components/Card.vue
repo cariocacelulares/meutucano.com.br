@@ -3,7 +3,10 @@
     <header v-if="hasHeader">
       <div v-if="headerIcon || headerText">
         <Icon v-if="headerIcon" :name="headerIcon" />
-        <h1>{{ headerText }}</h1>
+        <h1 v-if="!headerLink">{{ headerText }}</h1>
+        <router-link v-if="headerLink" :to="headerLink">
+          <h1>{{ headerText }}</h1>
+        </router-link>
       </div>
 
       <div :class="{ 'full-width': !(headerIcon && headerText) }">
@@ -35,6 +38,10 @@ export default {
     },
     headerText: {
       type: String | Number,
+      default: null
+    },
+    headerLink: {
+      type: Object,
       default: null
     },
     loading: {
