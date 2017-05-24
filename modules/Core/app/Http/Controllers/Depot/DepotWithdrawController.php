@@ -14,15 +14,15 @@ class DepotWithdrawController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:withdraw_list|withdraw_list_mine', ['only' => ['index']]);
-        $this->middleware('permission:withdraw_show', ['only' => ['show']]);
-        $this->middleware('permission:withdraw_create', ['only' => ['store']]);
-        $this->middleware('permission:withdraw_update', ['only' => ['update']]);
-        $this->middleware('permission:withdraw_delete', ['only' => ['destroy']]);
-        $this->middleware('permission:withdraw_close', ['only' => ['close']]);
+        $this->middleware('permission:withdraw_list|withdraw_list_mine')->only(['index']);
+        $this->middleware('permission:withdraw_show')->only(['show']);
+        $this->middleware('permission:withdraw_create')->only(['store']);
+        $this->middleware('permission:withdraw_update')->only(['update']);
+        $this->middleware('permission:withdraw_delete')->only(['destroy']);
+        $this->middleware('permission:withdraw_close')->only(['close']);
 
-        $this->middleware('currentUser', ['only' => 'index']);
-        $this->middleware('convertJson', ['only' => 'index']);
+        $this->middleware('currentUser')->only(['index']);
+        $this->middleware('convertJson')->only(['index']);
     }
 
     /**

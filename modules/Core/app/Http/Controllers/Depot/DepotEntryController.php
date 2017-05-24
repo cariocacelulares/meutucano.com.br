@@ -16,15 +16,15 @@ class DepotEntryController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:entry_list|entry_list_mine', ['only' => ['index']]);
-        $this->middleware('permission:entry_show', ['only' => ['show']]);
-        $this->middleware('permission:entry_create', ['only' => ['store']]);
-        $this->middleware('permission:entry_update', ['only' => ['update']]);
-        $this->middleware('permission:entry_delete', ['only' => ['destroy']]);
-        $this->middleware('permission:entry_confirm', ['only' => ['confirm']]);
+        $this->middleware('permission:entry_list|entry_list_mine')->only(['index']);
+        $this->middleware('permission:entry_show')->only(['show']);
+        $this->middleware('permission:entry_create')->only(['store']);
+        $this->middleware('permission:entry_update')->only(['update']);
+        $this->middleware('permission:entry_delete')->only(['destroy']);
+        $this->middleware('permission:entry_confirm')->only(['confirm']);
 
-        $this->middleware('currentUser', ['only' => ['store', 'index', 'header']]);
-        $this->middleware('convertJson', ['only' => ['index', 'header']]);
+        $this->middleware('currentUser')->only(['store', 'index', 'header']);
+        $this->middleware('convertJson')->only(['index', 'header']);
     }
 
     /**

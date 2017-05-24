@@ -10,11 +10,11 @@ class CustomerAddressController extends Controller
 
     public function __construct()
     {
-        $this->middleware('permission:customer_address_list', ['only' => ['listByCustomer']]);
-        $this->middleware('permission:customer_address_show', ['only' => ['show']]);
-        $this->middleware('permission:customer_address_create', ['only' => ['store']]);
-        $this->middleware('permission:customer_address_update', ['only' => ['update']]);
-        $this->middleware('permission:customer_address_delete', ['only' => ['destroy']]);
+        $this->middleware('permission:customer_address_list')->only(['listByCustomer']);
+        $this->middleware('permission:customer_address_show')->only(['show']);
+        $this->middleware('permission:customer_address_create')->only(['store']);
+        $this->middleware('permission:customer_address_update')->only(['update']);
+        $this->middleware('permission:customer_address_delete')->only(['destroy']);
     }
 
     /**

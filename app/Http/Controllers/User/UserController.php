@@ -11,13 +11,13 @@ class UserController extends Controller
 
     public function __construct()
     {
-        $this->middleware('permission:user_list', ['only' => ['index']]);
-        $this->middleware('permission:user_show', ['only' => ['show']]);
-        $this->middleware('permission:user_create', ['only' => ['store']]);
-        $this->middleware('permission:user_update', ['only' => ['update']]);
-        $this->middleware('permission:user_delete', ['only' => ['destroy']]);
+        $this->middleware('permission:user_list')->only(['index']);
+        $this->middleware('permission:user_show')->only(['show']);
+        $this->middleware('permission:user_create')->only(['store']);
+        $this->middleware('permission:user_update')->only(['update']);
+        $this->middleware('permission:user_delete')->only(['destroy']);
 
-        $this->middleware('convertJson', ['only' => ['index', 'store']]);
+        $this->middleware('convertJson')->only(['index', 'store']);
     }
 
     /**

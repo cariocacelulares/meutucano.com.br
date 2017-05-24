@@ -15,16 +15,16 @@ class OrderController extends Controller
 
     public function __construct()
     {
-        $this->middleware('permission:order_list', ['only' => ['index', 'invoiceable']]);
-        $this->middleware('permission:order_show', ['only' => ['show']]);
-        $this->middleware('permission:order_create', ['only' => ['store']]);
-        $this->middleware('permission:order_update', ['only' => ['update']]);
-        $this->middleware('permission:order_delete', ['only' => ['destroy']]);
-        $this->middleware('permission:order_prioritize', ['only' => ['prioritize', 'unprioritize']]);
-        $this->middleware('permission:order_hold', ['only' => ['hold', 'unhold']]);
-        $this->middleware('permission:order_invoice_create', ['only' => ['invoice']]);
+        $this->middleware('permission:order_list')->only(['index', 'invoiceable']);
+        $this->middleware('permission:order_show')->only(['show']);
+        $this->middleware('permission:order_create')->only(['store']);
+        $this->middleware('permission:order_update')->only(['update']);
+        $this->middleware('permission:order_delete')->only(['destroy']);
+        $this->middleware('permission:order_prioritize')->only(['prioritize', 'unprioritize']);
+        $this->middleware('permission:order_hold')->only(['hold', 'unhold']);
+        $this->middleware('permission:order_invoice_create')->only(['invoice']);
 
-        $this->middleware('convertJson', ['only' => ['index', 'important', 'header']]);
+        $this->middleware('convertJson')->only(['index', 'important', 'header']);
     }
 
     /**

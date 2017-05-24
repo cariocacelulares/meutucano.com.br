@@ -14,10 +14,10 @@ class ProductSerialController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:depot_transfer', ['only' => ['transfer']]);
-        $this->middleware('permission:serial_generate', ['only' => ['generate']]);
+        $this->middleware('permission:depot_transfer')->only(['transfer']);
+        $this->middleware('permission:serial_generate')->only(['generate']);
 
-        $this->middleware('convertJson', ['only' => 'listByDepotProduct']);
+        $this->middleware('convertJson')->only(['listByDepotProduct']);
     }
 
     /**

@@ -11,7 +11,7 @@ class OrderShipmentMonitorController extends Controller
     public function __construct()
     {
         $this->middleware('permission:order_shipment_monitor');
-        $this->middleware('currentUser');
+        $this->middleware('currentUser')->only(['index']);
     }
 
     public function index()

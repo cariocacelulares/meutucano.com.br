@@ -16,17 +16,17 @@ class DepotProductController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:product_depot_list', ['only' => [
+        $this->middleware('permission:product_depot_list')->only([
             'index',
             'listByProduct',
             'listByDepot'
-        ]]);
-        $this->middleware('permission:product_depot_show', ['only' => ['show']]);
-        $this->middleware('permission:product_depot_create', ['only' => ['store']]);
-        $this->middleware('permission:product_depot_update', ['only' => ['update']]);
-        $this->middleware('permission:product_depot_delete', ['only' => ['destroy']]);
+        ]);
+        $this->middleware('permission:product_depot_show')->only(['show']);
+        $this->middleware('permission:product_depot_create')->only(['store']);
+        $this->middleware('permission:product_depot_update')->only(['update']);
+        $this->middleware('permission:product_depot_delete')->only(['destroy']);
 
-        $this->middleware('convertJson', ['only' => ['listByProduct', 'listByDepot']]);
+        $this->middleware('convertJson')->only(['listByProduct', 'listByDepot']);
     }
 
     /**

@@ -12,12 +12,12 @@ class OrderShipmentController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:order_shipment_create', ['only' => ['store']]);
-        $this->middleware('permission:order_shipment_update', ['only' => ['update']]);
-        $this->middleware('permission:order_shipment_print', ['only' => ['label']]);
-        $this->middleware('permission:order_shipment_important_list', ['only' => ['important']]);
+        $this->middleware('permission:order_shipment_create')->only(['store']);
+        $this->middleware('permission:order_shipment_update')->only(['update']);
+        $this->middleware('permission:order_shipment_print')->only(['label']);
+        $this->middleware('permission:order_shipment_important_list')->only(['important']);
 
-        $this->middleware('convertJson', ['only' => 'important']);
+        $this->middleware('convertJson')->only(['important']);
     }
 
     /**

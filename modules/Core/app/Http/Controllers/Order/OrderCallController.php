@@ -8,11 +8,11 @@ class OrderCallController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:order_call_list', ['only' => ['listByOrder']]);
-        $this->middleware('permission:order_call_create', ['only' => ['store']]);
-        $this->middleware('permission:order_call_delete', ['only' => ['destroy']]);
+        $this->middleware('permission:order_call_list')->only(['listByOrder']);
+        $this->middleware('permission:order_call_create')->only(['store']);
+        $this->middleware('permission:order_call_delete')->only(['destroy']);
 
-        $this->middleware('currentUser', ['only' => 'store']);
+        $this->middleware('currentUser')->only(['store']);
     }
 
     /**

@@ -8,11 +8,11 @@ class OrderCommentController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:order_comment_list', ['only' => ['commentsFromOrder']]);
-        $this->middleware('permission:order_comment_create', ['only' => ['store']]);
-        $this->middleware('permission:order_comment_delete', ['only' => ['destroy']]);
+        $this->middleware('permission:order_comment_list')->only(['commentsFromOrder']);
+        $this->middleware('permission:order_comment_create')->only(['store']);
+        $this->middleware('permission:order_comment_delete')->only(['destroy']);
 
-        $this->middleware('currentUser', ['only' => 'store']);
+        $this->middleware('currentUser')->only(['store']);
     }
 
     /**

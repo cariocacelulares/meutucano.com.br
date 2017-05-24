@@ -8,13 +8,13 @@ class LineController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:line_list', ['only' => ['index']]);
-        $this->middleware('permission:line_show', ['only' => ['show']]);
-        $this->middleware('permission:line_create', ['only' => ['store']]);
-        $this->middleware('permission:line_update', ['only' => ['update']]);
-        $this->middleware('permission:line_delete', ['only' => ['destroy']]);
+        $this->middleware('permission:line_list')->only(['index']);
+        $this->middleware('permission:line_show')->only(['show']);
+        $this->middleware('permission:line_create')->only(['store']);
+        $this->middleware('permission:line_update')->only(['update']);
+        $this->middleware('permission:line_delete')->only(['destroy']);
 
-        $this->middleware('convertJson', ['only' => 'index']);
+        $this->middleware('convertJson')->only(['index']);
     }
 
     /**

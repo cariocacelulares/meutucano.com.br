@@ -9,10 +9,10 @@ class OrderShipmentDevolutionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:order_shipment_devolution_show', ['only' => ['show']]);
-        $this->middleware('permission:order_shipment_devolution_create', ['only' => ['store']]);
-        $this->middleware('permission:order_shipment_devolution_update', ['only' => ['update']]);
-        $this->middleware('permission:order_shipment_devolution_delete', ['only' => ['destroy']]);
+        $this->middleware('permission:order_shipment_devolution_show')->only(['show']);
+        $this->middleware('permission:order_shipment_devolution_create')->only(['store']);
+        $this->middleware('permission:order_shipment_devolution_update')->only(['update']);
+        $this->middleware('permission:order_shipment_devolution_delete')->only(['destroy']);
     }
 
     /**

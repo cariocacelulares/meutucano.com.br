@@ -9,13 +9,13 @@ class CustomerController extends Controller
 
     public function __construct()
     {
-        $this->middleware('permission:customer_list', ['only' => ['index']]);
-        $this->middleware('permission:customer_show', ['only' => ['show']]);
-        $this->middleware('permission:customer_create', ['only' => ['store']]);
-        $this->middleware('permission:customer_update', ['only' => ['update']]);
-        $this->middleware('permission:customer_delete', ['only' => ['destroy']]);
+        $this->middleware('permission:customer_list')->only(['index']);
+        $this->middleware('permission:customer_show')->only(['show']);
+        $this->middleware('permission:customer_create')->only(['store']);
+        $this->middleware('permission:customer_update')->only(['update']);
+        $this->middleware('permission:customer_delete')->only(['destroy']);
 
-        $this->middleware('convertJson', ['only' => ['index']]);
+        $this->middleware('convertJson')->only(['index']);
     }
 
     /**

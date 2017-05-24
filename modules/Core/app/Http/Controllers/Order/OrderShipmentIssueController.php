@@ -8,11 +8,11 @@ class OrderShipmentIssueController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:order_shipment_issue_list', ['only' => ['index']]);
-        $this->middleware('permission:order_shipment_issue_show', ['only' => ['show']]);
-        $this->middleware('permission:order_shipment_issue_create', ['only' => ['store']]);
-        $this->middleware('permission:order_shipment_issue_update', ['only' => ['update']]);
-        $this->middleware('permission:order_shipment_issue_delete', ['only' => ['destroy']]);
+        $this->middleware('permission:order_shipment_issue_list')->only(['index']);
+        $this->middleware('permission:order_shipment_issue_show')->only(['show']);
+        $this->middleware('permission:order_shipment_issue_create')->only(['store']);
+        $this->middleware('permission:order_shipment_issue_update')->only(['update']);
+        $this->middleware('permission:order_shipment_issue_delete')->only(['destroy']);
     }
 
     /**

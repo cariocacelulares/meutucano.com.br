@@ -8,13 +8,13 @@ class BrandController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:brand_list', ['only' => ['index']]);
-        $this->middleware('permission:brand_show', ['only' => ['show']]);
-        $this->middleware('permission:brand_create', ['only' => ['store']]);
-        $this->middleware('permission:brand_update', ['only' => ['update']]);
-        $this->middleware('permission:brand_delete', ['only' => ['destroy']]);
+        $this->middleware('permission:brand_list')->only(['index']);
+        $this->middleware('permission:brand_show')->only(['show']);
+        $this->middleware('permission:brand_create')->only(['store']);
+        $this->middleware('permission:brand_update')->only(['update']);
+        $this->middleware('permission:brand_delete')->only(['destroy']);
 
-        $this->middleware('convertJson', ['only' => 'index']);
+        $this->middleware('convertJson')->only(['index']);
     }
 
     /**

@@ -10,10 +10,10 @@ class OrderShipmentLogisticController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:order_shipment_logistic_show', ['only' => ['show']]);
-        $this->middleware('permission:order_shipment_logistic_create', ['only' => ['store']]);
-        $this->middleware('permission:order_shipment_logistic_update', ['only' => ['update']]);
-        $this->middleware('permission:order_shipment_logistic_delete', ['only' => ['destroy']]);
+        $this->middleware('permission:order_shipment_logistic_show')->only(['show']);
+        $this->middleware('permission:order_shipment_logistic_create')->only(['store']);
+        $this->middleware('permission:order_shipment_logistic_update')->only(['update']);
+        $this->middleware('permission:order_shipment_logistic_delete')->only(['destroy']);
     }
 
     /**

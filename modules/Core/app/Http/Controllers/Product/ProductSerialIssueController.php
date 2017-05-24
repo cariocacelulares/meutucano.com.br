@@ -11,14 +11,14 @@ class ProductSerialIssueController extends Controller
 
     public function __construct()
     {
-        $this->middleware('permission:product_serial_issue_list|product_serial_issue_list_mine', ['only' => ['index']]);
-        $this->middleware('permission:product_serial_issue_show', ['only' => ['show']]);
-        $this->middleware('permission:product_serial_issue_create', ['only' => ['store']]);
-        $this->middleware('permission:product_serial_issue_update', ['only' => ['update']]);
-        $this->middleware('permission:product_serial_issue_delete', ['only' => ['destroy']]);
+        $this->middleware('permission:product_serial_issue_list|product_serial_issue_list_mine')->only(['index']);
+        $this->middleware('permission:product_serial_issue_show')->only(['show']);
+        $this->middleware('permission:product_serial_issue_create')->only(['store']);
+        $this->middleware('permission:product_serial_issue_update')->only(['update']);
+        $this->middleware('permission:product_serial_issue_delete')->only(['destroy']);
 
-        $this->middleware('currentUser', ['only' => ['index', 'store', 'header']]);
-        $this->middleware('convertJson', ['only' => ['index', 'header']]);
+        $this->middleware('currentUser')->only(['index', 'store', 'header']);
+        $this->middleware('convertJson')->only(['index', 'header']);
     }
 
     /**

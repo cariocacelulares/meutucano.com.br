@@ -9,13 +9,13 @@ class SupplierController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:supplier_list', ['only' => ['index']]);
-        $this->middleware('permission:supplier_show', ['only' => ['show']]);
-        $this->middleware('permission:supplier_create', ['only' => ['store']]);
-        $this->middleware('permission:supplier_update', ['only' => ['update']]);
-        $this->middleware('permission:supplier_delete', ['only' => ['destroy']]);
+        $this->middleware('permission:supplier_list')->only(['index']);
+        $this->middleware('permission:supplier_show')->only(['show']);
+        $this->middleware('permission:supplier_create')->only(['store']);
+        $this->middleware('permission:supplier_update')->only(['update']);
+        $this->middleware('permission:supplier_delete')->only(['destroy']);
 
-        $this->middleware('convertJson', ['only' => ['index']]);
+        $this->middleware('convertJson')->only(['index']);
     }
 
     /**

@@ -11,10 +11,10 @@ class DepotEntryInvoiceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('permission:entry_create', ['only' => ['store', 'parse']]);
-        $this->middleware('permission:entry_show', ['only' => ['danfe']]);
+        $this->middleware('permission:entry_create')->only(['store', 'parse']);
+        $this->middleware('permission:entry_show')->only(['danfe']);
 
-        $this->middleware('currentUser', ['only' => 'store']);
+        $this->middleware('currentUser')->only(['store']);
     }
 
     /**

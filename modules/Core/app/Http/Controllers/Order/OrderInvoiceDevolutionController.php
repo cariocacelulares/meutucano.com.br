@@ -17,12 +17,12 @@ class OrderInvoiceDevolutionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:order_invoice_devolution', ['only' => ['store']]);
-        $this->middleware('permission:order_invoice_delete', ['only' => ['destroy']]);
-        $this->middleware('permission:order_invoice_print', ['only' => ['danfe']]);
+        $this->middleware('permission:order_invoice_devolution')->only(['store']);
+        $this->middleware('permission:order_invoice_delete')->only(['destroy']);
+        $this->middleware('permission:order_invoice_print')->only(['danfe']);
 
-        $this->middleware('currentUser', ['only' => 'store']);
-        $this->middleware('convertJson', ['only' => 'store']);
+        $this->middleware('currentUser')->only(['store']);
+        $this->middleware('convertJson')->only(['store']);
     }
 
     /**
