@@ -17,7 +17,7 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        $data = Permission::with('roles')->get();
+        $data = Permission::with('roles')->get()->groupBy('group');
 
         return listResponse($data);
     }
