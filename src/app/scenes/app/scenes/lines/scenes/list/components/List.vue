@@ -1,14 +1,14 @@
 <template>
   <div class="content-wrapper">
     <form @submit.prevent="save">
-      <Card :header-icon="newBrand.id ? 'pencil' : 'plus'"
-        :header-text="newBrand.id ? 'Editar marca' : 'Cadastrar marca'">
-        <TInput v-model="newBrand.title" label="Título" :required="true"
-          placeholder="Digite um título para a marca" :block="true" ref="brandInput"/>
+      <Card :header-icon="newLine.id ? 'pencil' : 'plus'"
+        :header-text="newLine.id ? 'Editar linha' : 'Cadastrar linha'">
+        <TInput v-model="newLine.title" label="Título" :required="true"
+          placeholder="Digite um título para a linha" :block="true" ref="lineInput"/>
 
         <div class="buttons">
-          <span v-if="!newBrand.id"></span>
-          <TButton v-if="newBrand.id" @click="cancel" left-icon="close"
+          <span v-if="!newLine.id"></span>
+          <TButton v-if="newLine.id" @click="cancel" left-icon="close"
             color="default" text="darker">Cancelar</TButton>
           <TButton left-icon="check" color="success" type="submit">Salvar</TButton>
         </div>
@@ -24,14 +24,14 @@
           </tr>
         </thead>
         <tbody slot="body">
-          <tr v-for="brand in brands">
-            <td class="text-left text-bold">{{ brand.title }}</td>
+          <tr v-for="line in lines">
+            <td class="text-left text-bold">{{ line.title }}</td>
             <td>
-              <a href="#" @click.prevent="edit(brand)">
+              <a href="#" @click.prevent="edit(line)">
                 <Icon name="pencil" text="Editar" color="link" />
               </a>
               <VSeparator :spacing="10" :height="10" />
-              <a href="#" @click.prevent="destroy(brand.id)">
+              <a href="#" @click.prevent="destroy(line.id)">
                 <Icon name="close" text="Excluir" color="danger" />
               </a>
             </td>
@@ -46,8 +46,8 @@
 export default {
   data() {
     return {
-      namespace: 'brands/list',
-      newBrand: {},
+      namespace: 'lines/list',
+      newLine: {},
     }
   },
 
@@ -56,34 +56,34 @@ export default {
       this.$store.dispatch('global/tableList/FETCH')
     },
 
-    edit(brand) {
-      this.newBrand = {
-        id: brand.id,
-        title: brand.title,
+    edit(line) {
+      this.newLine = {
+        id: line.id,
+        title: line.title,
       }
 
-      this.$refs.brandInput.$el.focus()
+      this.$refs.lineInput.$el.focus()
     },
 
     destroy(id) {
-      axios.delete(`brands/${id}`).then((response) => {
+      axios.delete(`lines/${id}`).then((response) => {
         this.fetch()
         this.cancel()
       })
     },
 
     cancel() {
-      this.newBrand = {}
+      this.newLine = {}
     },
 
     save() {
-      if (typeof(this.newBrand.id) != 'undefined' && this.newBrand.id) {
-        axios.put(`brands/${this.newBrand.id}`, this.newBrand).then((response) => {
+      if (typeof(this.newLine.id) != 'undefined' && this.newLine.id) {
+        axios.put(`lines/${this.newLine.id}`, this.newLine).then((response) => {
           this.fetch()
           this.cancel()
         })
       } else {
-        axios.post('brands', this.newBrand).then((response) => {
+        axios.post('lines', this.newLine).then((response) => {
           this.fetch()
           this.cancel()
         })
@@ -92,7 +92,7 @@ export default {
   },
 
   computed: {
-    brands() {
+    lines() {
       return this.$store.getters[`${this.namespace}/GET`]
     },
   },

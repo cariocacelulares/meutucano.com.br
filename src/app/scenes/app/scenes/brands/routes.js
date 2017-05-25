@@ -9,7 +9,7 @@ export default [
     component: Brands,
     meta: {
       auth: true,
-      breadcrumb: 'Usuários'
+      breadcrumb: 'Marcas'
     },
     children: [
       ...list,

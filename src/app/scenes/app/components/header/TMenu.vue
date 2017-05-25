@@ -28,8 +28,8 @@
       <ul class="sub-menu">
         <li><strong>Produtos</strong></li>
         <li><router-link :to="{ name: 'products' }">Catálogo de produtos</router-link></li>
-        <li><router-link :to="{ name: 'products' }">Marcas</router-link></li>
-        <li><router-link :to="{ name: 'products' }">Linhas</router-link></li>
+        <li><router-link :to="{ name: 'brands' }">Marcas</router-link></li>
+        <li><router-link :to="{ name: 'lines' }">Linhas</router-link></li>
 
         <li><strong>Estoque</strong></li>
         <li><router-link :to="{ name: 'products' }">Retiradas</router-link></li>

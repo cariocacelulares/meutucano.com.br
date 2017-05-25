@@ -5,6 +5,7 @@ import { routes as orders } from './scenes/orders'
 import { routes as customers } from './scenes/customers'
 import { routes as users } from './scenes/users'
 import { routes as brands } from './scenes/brands'
+import { routes as lines } from './scenes/lines'
 
 export default [
   {
@@ -23,6 +24,7 @@ export default [
       ...customers,
       ...users,
       ...brands,
+      ...lines,
     ]
   },
 ]
