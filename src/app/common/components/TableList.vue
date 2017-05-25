@@ -4,7 +4,8 @@
       <Pagination :namespace="namespace" />
       <form @submit.prevent="search" class="actions">
         <TInput v-model="searchTerm" size="small" placeholder="Pesquisar na listagem"
-          leftIcon="search" class="m-r-10" />
+          leftIcon="search" class="m-r-10" :style="{ width: inputWidth }" />
+
         <TButton size="small" color="info" type="submit">
           <Icon name="refresh" text="Atualizar" />
         </TButton>
@@ -47,11 +48,14 @@ export default {
   },
 
   props: {
+    inputWidth: {
+      type: String,
+      default: null
+    },
     namespace: {
       type: String,
       required: true
     },
-
     wait: {
       type: Boolean,
       default: false
