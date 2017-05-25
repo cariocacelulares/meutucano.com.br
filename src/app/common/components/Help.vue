@@ -28,7 +28,7 @@ export default {
     },
     side: {
       type: String,
-      side: 'left'
+      default: 'left'
     },
   },
 

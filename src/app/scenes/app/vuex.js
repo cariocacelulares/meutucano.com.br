@@ -4,6 +4,7 @@ import { vuex as customers } from './scenes/customers'
 import { vuex as users } from './scenes/users'
 import { vuex as brands } from './scenes/brands'
 import { vuex as lines } from './scenes/lines'
+import { vuex as depots } from './scenes/depots'
 
 export default [
   ...products,
@@ -12,4 +13,5 @@ export default [
   ...users,
   ...brands,
   ...lines,
+  ...depots,
 ]

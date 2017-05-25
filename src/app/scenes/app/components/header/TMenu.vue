@@ -33,7 +33,7 @@
 
         <li><strong>Estoque</strong></li>
         <li><router-link :to="{ name: 'products' }">Retiradas</router-link></li>
-        <li><router-link :to="{ name: 'products' }">Depósitos</router-link></li>
+        <li><router-link :to="{ name: 'depots' }">Depósitos</router-link></li>
         <li><router-link :to="{ name: 'products' }">Baixas manuais</router-link></li>
         <li><router-link :to="{ name: 'products' }">Defeitos</router-link></li>
       </ul>

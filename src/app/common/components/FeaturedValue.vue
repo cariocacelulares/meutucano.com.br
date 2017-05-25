@@ -1,5 +1,5 @@
 <template>
-  <div class="FeaturedValue">
+  <div v-if="value || value === 0" class="FeaturedValue">
     <span class="label">{{ label }}</span>
     <span :class="classes">{{ value }}</span>
   </div>
