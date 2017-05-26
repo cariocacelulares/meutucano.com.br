@@ -51,11 +51,11 @@ return [
         'remetente' => [
             'nome'        => 'CARIOCA',
             'telefone'    => '(47) 3521-3280',
-            'rua'         => 'AVENIDA OSCAR BARCELOS',
-            'numero'      => '1876',
+            'rua'         => 'RUA CARLOS GOMES',
+            'numero'      => '238',
             'complemento' => 'SALA 1',
-            'bairro'      => 'SANTANA',
-            'cep'         => '89160-314',
+            'bairro'      => 'CENTRO',
+            'cep'         => '89160-051',
             'uf'          => 'SC',
             'cidade'      => 'RIO DO SUL',
         ]
